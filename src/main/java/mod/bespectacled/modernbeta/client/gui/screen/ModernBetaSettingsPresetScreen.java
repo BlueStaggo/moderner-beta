@@ -105,9 +105,8 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
             super(
                 ModernBetaSettingsPresetScreen.this.client,
                 ModernBetaSettingsPresetScreen.this.width,
-                ModernBetaSettingsPresetScreen.this.height,
+                ModernBetaSettingsPresetScreen.this.height - 64,
                 32,
-                ModernBetaSettingsPresetScreen.this.height - 32,
                 ITEM_HEIGHT
             );
             

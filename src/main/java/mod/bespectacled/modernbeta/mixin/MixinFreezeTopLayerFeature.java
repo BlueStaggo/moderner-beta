@@ -51,7 +51,8 @@ public abstract class MixinFreezeTopLayerFeature {
         BiomeSource biomeSource = chunkGenerator.getBiomeSource();
 
         if (chunkGenerator instanceof ModernBetaChunkGenerator modernBetaChunkGenerator
-                && modernBetaChunkGenerator.getChunkProvider() instanceof ChunkProviderEarlyRelease) {
+                && modernBetaChunkGenerator.getChunkProvider() instanceof ChunkProviderEarlyRelease
+                && !modernBetaChunkGenerator.getChunkProvider().getChunkSettings().useSurfaceRules) {
             BetaFreezeTopLayerFeature.setFreezeTopLayer(world, pos, biomeSource);
             info.setReturnValue(true);
             return;

@@ -75,7 +75,7 @@ public class ChunkProviderInfdev611 extends ChunkProviderNoise {
             for (int localZ = 0; localZ < 16; localZ++) {
                 int x = (chunkX << 4) + localX;
                 int z = (chunkZ << 4) + localZ;
-                int surfaceTopY = chunk.getHeightmap(Heightmap.Type.OCEAN_FLOOR_WG).get(localX, localZ);
+                int surfaceTopY = chunk.getHeightmap(Heightmap.Type.OCEAN_FLOOR_WG).get(localX, localZ) - 1;
                 int surfaceMinY = (this.hasNoisePostProcessor()) ? 
                     heightmapChunk.getHeight(x, z, ChunkHeightmap.Type.SURFACE_FLOOR) - 8 : 
                     this.worldMinY;
@@ -191,7 +191,7 @@ public class ChunkProviderInfdev611 extends ChunkProviderNoise {
             for (int localX = 0; localX < 16; localX++) {
                 int x = startX + localX;
                 int z = startZ + localZ;
-                int surfaceTopY = chunk.getHeightmap(Heightmap.Type.OCEAN_FLOOR_WG).get(localX, localZ);
+                int surfaceTopY = chunk.getHeightmap(Heightmap.Type.OCEAN_FLOOR_WG).get(localX, localZ) - 1;
 
                 boolean genSandBeach = this.beachOctaveNoise.sample(
                     x * scale,

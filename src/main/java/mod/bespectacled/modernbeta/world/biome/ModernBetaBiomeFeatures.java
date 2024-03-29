@@ -104,7 +104,10 @@ public class ModernBetaBiomeFeatures {
     }
     
     public static void addPlainsFeatures(GenerationSettings.LookupBackedBuilder builder, boolean pe, boolean earlyRelease) {
-        addDefaultFeatures(builder, pe ? ModernBetaFeatureSettings.PE : ModernBetaFeatureSettings.BETA);
+        addDefaultFeatures(builder,
+            pe ? ModernBetaFeatureSettings.PE
+            : earlyRelease ? ModernBetaFeatureSettings.EARLY_RELEASE
+            : ModernBetaFeatureSettings.BETA);
         
         if (pe) {
             addPEVegetation(builder, true);

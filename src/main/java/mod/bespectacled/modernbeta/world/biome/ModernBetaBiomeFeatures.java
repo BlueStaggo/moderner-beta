@@ -103,7 +103,7 @@ public class ModernBetaBiomeFeatures {
         DefaultBiomeFeatures.addDefaultVegetation(builder);
     }
     
-    public static void addPlainsFeatures(GenerationSettings.LookupBackedBuilder builder, boolean pe) {
+    public static void addPlainsFeatures(GenerationSettings.LookupBackedBuilder builder, boolean pe, boolean earlyRelease) {
         addDefaultFeatures(builder, pe ? ModernBetaFeatureSettings.PE : ModernBetaFeatureSettings.BETA);
         
         if (pe) {
@@ -246,7 +246,7 @@ public class ModernBetaBiomeFeatures {
     }
 
     public static void addExtremeHillsFeatures(GenerationSettings.LookupBackedBuilder builder) {
-        addDefaultFeatures(builder, ModernBetaFeatureSettings.BETA);
+        addDefaultFeatures(builder, ModernBetaFeatureSettings.EARLY_RELEASE);
 
         builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_POPPY);
         builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.TREES_BETA_SPARSE);
@@ -258,7 +258,7 @@ public class ModernBetaBiomeFeatures {
     }
 
     public static void addAdventureSwamplandFeatures(GenerationSettings.LookupBackedBuilder builder, boolean lilypads) {
-        addDefaultFeatures(builder, ModernBetaFeatureSettings.BETA);
+        addDefaultFeatures(builder, ModernBetaFeatureSettings.EARLY_RELEASE);
 
         builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_POPPY);
         builder.feature(Feature.VEGETAL_DECORATION, VegetationPlacedFeatures.TREES_SWAMP);
@@ -275,7 +275,7 @@ public class ModernBetaBiomeFeatures {
     }
 
     public static void addIcePlainsFeatures(GenerationSettings.LookupBackedBuilder builder) {
-        addDefaultFeatures(builder, ModernBetaFeatureSettings.BETA);
+        addDefaultFeatures(builder, ModernBetaFeatureSettings.EARLY_RELEASE);
 
         builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_POPPY);
         builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.TREES_BETA_SPARSE);
@@ -493,7 +493,11 @@ public class ModernBetaBiomeFeatures {
         GenerationSettings.LookupBackedBuilder builder,
         ModernBetaFeatureSettings featureSettings
     ) {
-        addCarvers(builder, featureSettings.addCanyons);
+        if (featureSettings.useBetaCarvers)
+            addCarvers(builder, featureSettings.addCanyons);
+        else
+            DefaultBiomeFeatures.addLandCarvers(builder);
+
         if (featureSettings.addLakes) addLakes(builder);
         DefaultBiomeFeatures.addAmethystGeodes(builder);
         DefaultBiomeFeatures.addDungeons(builder);
@@ -574,16 +578,18 @@ public class ModernBetaBiomeFeatures {
         boolean addClay,
         boolean addAlternateStones,
         boolean addNewMineables,
-        boolean useBetaFreezeTopLayer
+        boolean useBetaFreezeTopLayer,
+        boolean useBetaCarvers
     ) {
         private ModernBetaFeatureSettings(boolean setting) {
-            this(setting, setting, setting, setting, setting, setting, setting);
+            this(setting, setting, setting, setting, setting, setting, setting, setting);
         }
         
+        private static final ModernBetaFeatureSettings EARLY_RELEASE = new ModernBetaFeatureSettings(true, true, true, false, true, true, true, false);
         private static final ModernBetaFeatureSettings BETA = new ModernBetaFeatureSettings(true);
-        private static final ModernBetaFeatureSettings PE = new ModernBetaFeatureSettings(true, false, true, true, false, true, true);
-        private static final ModernBetaFeatureSettings SKY = new ModernBetaFeatureSettings(false, true, true, true, false, false, true);
-        private static final ModernBetaFeatureSettings ALPHA = new ModernBetaFeatureSettings(false, false, true, true, false, false, false);
+        private static final ModernBetaFeatureSettings PE = new ModernBetaFeatureSettings(true, false, true, true, false, true, true, true);
+        private static final ModernBetaFeatureSettings SKY = new ModernBetaFeatureSettings(false, true, true, true, false, false, true, true);
+        private static final ModernBetaFeatureSettings ALPHA = new ModernBetaFeatureSettings(false, false, true, true, false, false, false, true);
         private static final ModernBetaFeatureSettings INFDEV_611 = new ModernBetaFeatureSettings(false);
         private static final ModernBetaFeatureSettings INFDEV_420 = new ModernBetaFeatureSettings(false);
         private static final ModernBetaFeatureSettings INFDEV_415 = new ModernBetaFeatureSettings(false);

@@ -19,7 +19,7 @@ public class BiomeBetaPlains {
         ModernBetaBiomeMobs.addTurtles(spawnSettings);
         
         GenerationSettings.LookupBackedBuilder genSettings = new GenerationSettings.LookupBackedBuilder(featureLookup, carverLookup);
-        ModernBetaBiomeFeatures.addPlainsFeatures(genSettings, false);
+        ModernBetaBiomeFeatures.addPlainsFeatures(genSettings, false, false);
         
         return (new Biome.Builder())
             .precipitation(true)

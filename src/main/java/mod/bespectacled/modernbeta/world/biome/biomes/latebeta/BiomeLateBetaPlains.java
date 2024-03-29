@@ -17,7 +17,7 @@ public class BiomeLateBetaPlains {
         ModernBetaBiomeMobs.addTurtles(spawnSettings);
         
         GenerationSettings.LookupBackedBuilder genSettings = new GenerationSettings.LookupBackedBuilder(featureLookup, carverLookup);
-        ModernBetaBiomeFeatures.addPlainsFeatures(genSettings, false);
+        ModernBetaBiomeFeatures.addPlainsFeatures(genSettings, false, true);
         DefaultBiomeFeatures.addDefaultDisks(genSettings);
 
         return (new Biome.Builder())

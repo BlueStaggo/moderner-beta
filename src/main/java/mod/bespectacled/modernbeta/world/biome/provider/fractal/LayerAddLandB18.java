@@ -6,6 +6,10 @@ import net.minecraft.world.biome.Biome;
 public class LayerAddLandB18 extends Layer {
 	private final BiomeInfo ocean, land, frozenOcean, snowyLand;
 
+	public LayerAddLandB18(long seed, Layer parent) {
+		this(seed, parent, DummyBiome.OCEAN, DummyBiome.PLAINS, DummyBiome.FROZEN_OCEAN, DummyBiome.ICE_PLAINS);
+	}
+
 	public LayerAddLandB18(long seed, Layer parent, RegistryEntry<Biome> ocean, RegistryEntry<Biome> land, RegistryEntry<Biome> frozenOcean, RegistryEntry<Biome> snowyLand) {
 		super(seed);
 		this.parent = parent;
@@ -16,8 +20,8 @@ public class LayerAddLandB18 extends Layer {
 	}
 
 	@Override
-	public BiomeInfo[] getBiomes(int x, int z, int width, int length) {
-		return this.forEachWithNeighbors(x, z, width, length, (input, neighbors) -> {
+	protected BiomeInfo[] getNewBiomes(int x, int z, int width, int length) {
+		return this.forEachWithNeighbors(x, z, width, length, (input, ix, iz, neighbors) -> {
 			if (!input.equals(ocean) || allNeighborsEqual(neighbors, ocean)) {
 				if (!input.equals(land) || allNeighborsEqual(neighbors, land)) {
 					return input;

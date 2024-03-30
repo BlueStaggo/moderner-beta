@@ -7,7 +7,7 @@ public class LayerVoronoiZoom extends Layer {
 	}
 
 	@Override
-	public BiomeInfo[] getBiomes(int x, int z, int width, int length) {
+	protected BiomeInfo[] getNewBiomes(int x, int z, int width, int length) {
 		x -= 2;
 		z -= 2;
 		byte var5 = 2;

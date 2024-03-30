@@ -7,8 +7,8 @@ public class LayerSmooth extends Layer {
 	}
 
 	@Override
-	public BiomeInfo[] getBiomes(int x, int z, int width, int length) {
-		return forEachWithNeighbors(x, z, width, length, (input, neighbors) -> {
+	protected BiomeInfo[] getNewBiomes(int x, int z, int width, int length) {
+		return forEachWithNeighbors(x, z, width, length, (input, ix, iz, neighbors) -> {
 			if (neighbors[0].equals(neighbors[1]) && neighbors[2].equals(neighbors[3])) {
 				return nextInt(2) == 0 ? neighbors[0] : neighbors[2];
 			} else if (neighbors[2].equals(neighbors[3])) {

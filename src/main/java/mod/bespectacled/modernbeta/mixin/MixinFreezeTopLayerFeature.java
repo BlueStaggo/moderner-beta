@@ -2,6 +2,7 @@ package mod.bespectacled.modernbeta.mixin;
 
 import mod.bespectacled.modernbeta.world.chunk.ModernBetaChunkGenerator;
 import mod.bespectacled.modernbeta.world.chunk.provider.ChunkProviderEarlyRelease;
+import mod.bespectacled.modernbeta.world.chunk.provider.ChunkProviderMajorRelease;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -51,9 +52,9 @@ public abstract class MixinFreezeTopLayerFeature {
         BiomeSource biomeSource = chunkGenerator.getBiomeSource();
 
         if (chunkGenerator instanceof ModernBetaChunkGenerator modernBetaChunkGenerator
-                && modernBetaChunkGenerator.getChunkProvider() instanceof ChunkProviderEarlyRelease
-                && !modernBetaChunkGenerator.getChunkProvider().getChunkSettings().useSurfaceRules) {
-            BetaFreezeTopLayerFeature.setFreezeTopLayer(world, pos, biomeSource);
+                && (modernBetaChunkGenerator.getChunkProvider() instanceof ChunkProviderEarlyRelease
+                        || modernBetaChunkGenerator.getChunkProvider() instanceof ChunkProviderMajorRelease)) {
+            BetaFreezeTopLayerFeature.setFreezeTopLayer(world, pos, biomeSource, modernBetaChunkGenerator.getChunkProvider().getChunkSettings().useSurfaceRules);
             info.setReturnValue(true);
             return;
         }
@@ -83,7 +84,7 @@ public abstract class MixinFreezeTopLayerFeature {
                 .anyMatch(list -> list.contains(betaFreezeTopLayer));
             
             if (hasBetaFreezeTopLayer) {
-                BetaFreezeTopLayerFeature.setFreezeTopLayer(world, pos, biomeSource);
+                BetaFreezeTopLayerFeature.setFreezeTopLayer(world, pos, biomeSource, false);
                 info.setReturnValue(true);
             }
         }

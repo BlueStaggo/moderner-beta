@@ -41,7 +41,6 @@ public class NbtTags {
     public static final String NOISE_BOTTOM_SLIDE_OFFSET = "noiseBottomSlideOffset";
 
     // Release
-    public static final String RELEASE_EXTRA_HILL_HEIGHT = "releaseExtraHillHeight";
     public static final String RELEASE_HEIGHT_OVERRIDES = "releaseHeightOverrides";
 
     // Infdev 227
@@ -99,14 +98,17 @@ public class NbtTags {
     public static final String VORONOI_POINTS = "voronoiPoints";
 
     public static final String FRACTAL_BIOMES = "fractalBiomes";
+    public static final String FRACTAL_CLIMATIC_BIOMES = "fractalClimaticBiomes";
     public static final String FRACTAL_HILL_VARIANTS = "fractalHillVariants";
+    public static final String FRACTAL_EDGE_VARIANTS = "fractalEdgeVariants";
+    public static final String FRACTAL_VERY_RARE_VARIANTS = "fractalVeryRareVariants";
     public static final String FRACTAL_SUB_VARIANTS = "fractalSubVariants";
     public static final String FRACTAL_PLAINS = "fractalPlains";
     public static final String FRACTAL_ICE_PLAINS = "fractalIcePlains";
     public static final String FRACTAL_BIOME_SCALE = "fractalBiomeScale";
     public static final String FRACTAL_HILL_SCALE = "fractalHillScale";
     public static final String FRACTAL_SUB_VARIANT_SCALE = "fractalSubVariantScale";
-    public static final String FRACTAL_LARGER_ISLANDS = "fractalLargerIslands";
+    public static final String FRACTAL_TERRAIN_TYPE = "fractalTerrainType";
     public static final String FRACTAL_OCEANS = "fractalOceans";
     public static final String FRACTAL_ADD_RIVERS = "fractalAddRivers";
     public static final String FRACTAL_ADD_SNOW = "fractalAddSnow";
@@ -114,6 +116,9 @@ public class NbtTags {
     public static final String FRACTAL_ADD_BEACHES = "fractalAddBeaches";
     public static final String FRACTAL_ADD_HILLS = "fractalAddHills";
     public static final String FRACTAL_ADD_SWAMP_RIVERS = "fractalAddSwampRivers";
+    public static final String FRACTAL_ADD_DEEP_OCEANS = "fractalAddDeepOceans";
+    public static final String FRACTAL_ADD_MUTATIONS = "fractalAddMutations";
+    public static final String FRACTAL_USE_CLIMATIC_BIOMES = "fractalUseClimaticBiomes";
 
     /* Cave Biome Settings */
     

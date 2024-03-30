@@ -1,16 +1,13 @@
 package mod.bespectacled.modernbeta.world.spawn;
 
-import com.mojang.datafixers.util.Pair;
 import mod.bespectacled.modernbeta.ModernBeta;
 import mod.bespectacled.modernbeta.api.world.chunk.ChunkProvider;
 import mod.bespectacled.modernbeta.api.world.chunk.ChunkProviderNoise;
 import mod.bespectacled.modernbeta.api.world.spawn.SpawnLocator;
 import mod.bespectacled.modernbeta.data.ModernBetaTagProviderBiome;
 import mod.bespectacled.modernbeta.util.chunk.ChunkHeightmap;
-import mod.bespectacled.modernbeta.world.biome.ModernBetaBiomeSource;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.HeightLimitView;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.biome.Biome;
@@ -21,16 +18,16 @@ import java.util.Optional;
 import java.util.Random;
 
 /*
- * Port of Beta 1.7.3 player spawn locator.
+ * Port of Beta 1.8+ player spawn locator.
  * 
  */
-public class SpawnLocatorEarlyRelease implements SpawnLocator {
+public class SpawnLocatorRelease implements SpawnLocator {
     private final Random rand;
 
     private final ChunkProvider chunkProvider;
     private final BiomeSource biomeSource;
 
-    public SpawnLocatorEarlyRelease(ChunkProvider chunkProvider, Random rand) {
+    public SpawnLocatorRelease(ChunkProvider chunkProvider, Random rand) {
         this.rand = rand;
         
         this.chunkProvider = chunkProvider;
@@ -89,7 +86,7 @@ public class SpawnLocatorEarlyRelease implements SpawnLocator {
             int biomeX = minX + i % width;
             int biomeZ = minZ + i / width;
             RegistryEntry<Biome> biome = this.biomeSource.getBiome(biomeX, 16, biomeZ, null);
-            if (biome.isIn(ModernBetaTagProviderBiome.IS_EARLY_RELEASE_SPAWN)
+            if (biome.isIn(ModernBetaTagProviderBiome.IS_RELEASE_SPAWN)
                 && (position == null || this.rand.nextInt(choiceChance) == 0)) {
                 position = new BlockPos(biomeX << 2, 0, biomeZ << 2);
                 choiceChance++;

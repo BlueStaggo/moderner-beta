@@ -1,8 +1,8 @@
 {
   "carvers": {
     "air": [
-      "modern_beta:beta_cave",
-      "modern_beta:beta_cave_deep",
+      "minecraft:cave",
+      "minecraft:cave_extra_underground",
       "minecraft:canyon"
     ]
   },
@@ -31,7 +31,6 @@
     [
       "minecraft:ore_dirt",
       "minecraft:ore_gravel",
-      "modern_beta:ore_clay",
       "minecraft:ore_granite_lower",
       "minecraft:ore_diorite_lower",
       "minecraft:ore_andesite_lower",

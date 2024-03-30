@@ -7,7 +7,7 @@ public abstract class LayerZoomBase extends Layer {
 	}
 
 	@Override
-	public BiomeInfo[] getBiomes(int x, int z, int width, int length) {
+	protected BiomeInfo[] getNewBiomes(int x, int z, int width, int length) {
 		int zoomedX = x >> 1;
 		int zoomedZ = z >> 1;
 		int zoomedWidth = (width >> 1) + 3;

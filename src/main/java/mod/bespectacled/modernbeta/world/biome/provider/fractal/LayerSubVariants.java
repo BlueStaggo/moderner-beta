@@ -12,7 +12,7 @@ public class LayerSubVariants extends Layer {
 	}
 
 	@Override
-	public BiomeInfo[] getBiomes(int x, int z, int width, int length) {
+	protected BiomeInfo[] getNewBiomes(int x, int z, int width, int length) {
 		return forEach(x, z, width, length, b -> subVariants.containsKey(b) ? subVariants.get(b).get(nextInt(subVariants.get(b).size())) : b);
 	}
 }

@@ -1,20 +1,21 @@
 package mod.bespectacled.modernbeta.world.biome.provider.fractal;
 
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.world.biome.Biome;
-
 public class LayerComputeRiver extends Layer {
-	private final BiomeInfo ocean;
-	private final BiomeInfo river;
-
-	public LayerComputeRiver(long seed, Layer parent, RegistryEntry<Biome> ocean, RegistryEntry<Biome> river) {
+	public LayerComputeRiver(long seed, Layer parent) {
 		super(seed, parent);
-		this.ocean = BiomeInfo.of(ocean);
-		this.river = BiomeInfo.of(river);
 	}
 
 	@Override
-	public BiomeInfo[] getBiomes(int x, int z, int width, int length) {
-		return forEachWithNeighbors(x, z, width, length, (b, n) -> b.equals(ocean) || neighborsContain(n, ocean) || !allNeighborsEqual(n, b) ? river : BiomeInfo.of(null));
+	protected BiomeInfo[] getNewBiomes(int x, int z, int width, int length) {
+		return forEachWithNeighbors(x, z, width, length, (b, ix, iz, n) ->
+			b.biome().equals(DummyBiome.RIVER) && b.type() >= 2 && (b.biome().equals(DummyBiome.OCEAN) || neighborsContain(n, DummyBiome.OCEAN.biomeInfo))
+				|| neighborsRiverBorder(n, b) ? DummyBiome.RIVER.biomeInfo : BiomeInfo.of(null));
+	}
+
+	private static boolean neighborsRiverBorder(BiomeInfo[] neighbors, BiomeInfo match) {
+		for (BiomeInfo neighbor : neighbors) {
+			if (neighbor.type() % 2 != match.type() % 2) return true;
+		}
+		return false;
 	}
 }

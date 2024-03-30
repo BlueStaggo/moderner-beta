@@ -13,7 +13,7 @@ public class LayerAddSwampRivers extends Layer {
 	}
 
 	@Override
-	public BiomeInfo[] getBiomes(int x, int z, int width, int length) {
+	protected BiomeInfo[] getNewBiomes(int x, int z, int width, int length) {
 		return forEach(x, z, width, length, b ->
 			b.biome().isIn(ModernBetaTagProviderBiome.FRACTAL_SWAMP_RIVERS) && nextInt(6) == 0
 			|| b.biome().isIn(ModernBetaTagProviderBiome.FRACTAL_JUNGLE_RIVERS) && nextInt(8) == 0

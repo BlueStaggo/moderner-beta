@@ -5,15 +5,13 @@
     "modern_beta:beta_plains",
     "modern_beta:beta_taiga",
     "modern_beta:beta_rainforest",
+    "modern_beta:late_beta_swampland",
     "modern_beta:late_beta_plains",
     "modern_beta:late_beta_taiga",
     "modern_beta:early_release_taiga",
     "minecraft:forest",
     "minecraft:plains",
     "minecraft:taiga",
-    "minecraft:snowy_taiga",
-    "minecraft:jungle",
-    "minecraft:bamboo_jungle",
-    "minecraft:sparse_jungle"
+    "minecraft:jungle"
   ]
 }

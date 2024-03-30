@@ -114,7 +114,7 @@ public class ModernBetaChunkGenerator extends NoiseChunkGenerator {
         if (!this.chunkProvider.skipChunk(chunk.getPos().x, chunk.getPos().z, ModernBetaGenerationStep.SURFACE)) {
             if (this.biomeSource instanceof ModernBetaBiomeSource modernBetaBiomeSource) {
                 if (this.chunkProvider.getChunkSettings().useSurfaceRules) {
-                    super.buildSurface(chunkRegion, structureAccessor, noiseConfig, chunk);
+                    this.buildDefaultSurface(chunkRegion, structureAccessor, noiseConfig, chunk);
                     this.chunkProvider.provideSurfaceExtra(chunkRegion, structureAccessor, chunk, modernBetaBiomeSource, noiseConfig);
                 } else {
                     this.chunkProvider.provideSurface(chunkRegion, structureAccessor, chunk, modernBetaBiomeSource, noiseConfig);
@@ -125,6 +125,10 @@ public class ModernBetaChunkGenerator extends NoiseChunkGenerator {
         }
 
         this.injectBiomes(chunk, noiseConfig.getMultiNoiseSampler(), BiomeInjectionStep.POST);
+    }
+
+    public void buildDefaultSurface(ChunkRegion chunkRegion, StructureAccessor structureAccessor, NoiseConfig noiseConfig, Chunk chunk) {
+        super.buildSurface(chunkRegion, structureAccessor, noiseConfig, chunk);
     }
     
     @Override

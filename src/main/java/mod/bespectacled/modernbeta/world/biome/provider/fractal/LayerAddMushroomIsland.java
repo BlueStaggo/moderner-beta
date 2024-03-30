@@ -6,6 +6,10 @@ import net.minecraft.world.biome.Biome;
 public class LayerAddMushroomIsland extends Layer {
 	private final BiomeInfo ocean, mushroomIsland;
 
+	public LayerAddMushroomIsland(long seed, Layer parent) {
+		this(seed, parent, DummyBiome.OCEAN, DummyBiome.MUSHROOM_ISLAND);
+	}
+
 	public LayerAddMushroomIsland(long seed, Layer parent, RegistryEntry<Biome> ocean, RegistryEntry<Biome> mushroomIsland) {
 		super(seed, parent);
 		this.ocean = BiomeInfo.of(ocean);
@@ -13,8 +17,8 @@ public class LayerAddMushroomIsland extends Layer {
 	}
 
 	@Override
-	public BiomeInfo[] getBiomes(int x, int z, int width, int length) {
+	protected BiomeInfo[] getNewBiomes(int x, int z, int width, int length) {
 		return forEachWithNeighbors(x, z, width, length,
-			(b, n) -> b.equals(ocean) && allNeighborsEqual(n, ocean) && nextInt(100) == 0 ? mushroomIsland : b, true);
+			(b, ix, iz, n) -> b.equals(ocean) && allNeighborsEqual(n, ocean) && nextInt(100) == 0 ? mushroomIsland : b, true);
 	}
 }

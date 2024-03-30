@@ -13,7 +13,7 @@ public class LayerMushroomIslandShore extends Layer {
 	}
 
 	@Override
-	public BiomeInfo[] getBiomes(int x, int z, int width, int length) {
-		return forEachWithNeighbors(x, z, width, length, (b, n) -> b.equals(mushroomIsland) && neighborsContain(n, ocean) ? b.asSpecial() : b);
+	protected BiomeInfo[] getNewBiomes(int x, int z, int width, int length) {
+		return forEachWithNeighbors(x, z, width, length, (b, ix, iz, n) -> b.equals(mushroomIsland) && neighborsContain(n, ocean) ? b.asSpecial() : b);
 	}
 }

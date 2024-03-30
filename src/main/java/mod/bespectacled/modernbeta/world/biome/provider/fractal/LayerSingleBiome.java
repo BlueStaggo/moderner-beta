@@ -14,7 +14,7 @@ public class LayerSingleBiome extends Layer {
     }
 
     @Override
-    public BiomeInfo[] getBiomes(int x, int z, int width, int length) {
+    protected BiomeInfo[] getNewBiomes(int x, int z, int width, int length) {
         BiomeInfo[] output = new BiomeInfo[width * length];
         Arrays.fill(output, land);
         return output;

@@ -32,14 +32,12 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 		super(settings, biomeRegistry, seed);
 
 		List<RegistryEntry<Biome>> selectedBiomes = this.settings.fractalBiomes.stream().map(this::getBiomeEntry).toList();
-		Map<BiomeInfo, BiomeInfo> hillVariants = this.settings.fractalHillVariants.entrySet().stream()
-			.map(kv -> Map.entry(BiomeInfo.fromId(kv.getKey(), this.biomeRegistry), BiomeInfo.fromId(kv.getValue(), this.biomeRegistry)))
-			.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-		Map<BiomeInfo, List<BiomeInfo>> subVariants = this.settings.fractalSubVariants.entrySet().stream()
-			.map(kv -> Map.entry(BiomeInfo.fromId(kv.getKey(), this.biomeRegistry), kv.getValue().stream()
-				.map(v -> BiomeInfo.fromId(v, this.biomeRegistry))
-				.toList()))
-			.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+		List<ClimaticBiomeList<BiomeInfo>> climaticBiomes = qualifyClimaticBiomeLists(biomeRegistry, this.settings.fractalClimaticBiomes);
+		Map<BiomeInfo, BiomeInfo> hillVariants = qualifyBiomeMap(biomeRegistry, this.settings.fractalHillVariants);
+		Map<BiomeInfo, BiomeInfo> edgeVariants = qualifyBiomeMap(biomeRegistry, this.settings.fractalEdgeVariants);
+		Map<BiomeInfo, BiomeInfo> mutatedVariants = qualifyBiomeMap(biomeRegistry, this.settings.fractalMutatedVariants);
+		Map<BiomeInfo, BiomeInfo> veryRareVariants = qualifyBiomeMap(biomeRegistry, this.settings.fractalVeryRareVariants);
+		Map<BiomeInfo, List<BiomeInfo>> subVariants = qualifySubVariants(biomeRegistry, this.settings.fractalSubVariants);
 
 		var allBiomes = new HashSet<RegistryEntry<Biome>>();
 		allBiomes.add(getBiomeEntry("minecraft:ocean"));
@@ -50,22 +48,32 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 			allBiomes.add(getBiomeEntry(this.settings.fractalIcePlains));
 			allBiomes.add(getBiomeEntry("minecraft:frozen_river"));
 		}
+		if (this.settings.fractalAddSnow) allBiomes.add(getBiomeEntry("minecraft:ocean"));
 		if (this.settings.fractalAddMushroomIslands) allBiomes.add(getBiomeEntry("minecraft:mushroom_fields"));
 		if (this.settings.fractalAddBeaches) allBiomes.add(getBiomeEntry("minecraft:beach"));
-		allBiomes.addAll(selectedBiomes);
+		if (this.settings.fractalUseClimaticBiomes) {
+			for (ClimaticBiomeList<BiomeInfo> climate : climaticBiomes) {
+				climate.normalBiomes().forEach(b -> allBiomes.add(b.biome()));
+				climate.rareBiomes().forEach(b -> allBiomes.add(b.biome()));
+			}
+		} else allBiomes.addAll(selectedBiomes);
 		subVariants.values().forEach(v -> v.forEach(b -> allBiomes.add(b.biome())));
 		this.allBiomes = allBiomes.stream().toList();
 
 		var fractalSettings = new FractalSettings.Builder();
 		fractalSettings.biomes = selectedBiomes;
+		fractalSettings.climaticBiomes = climaticBiomes;
 		fractalSettings.hillVariants = hillVariants;
+		fractalSettings.edgeVariants = edgeVariants;
+		fractalSettings.mutatedVariants = mutatedVariants;
+		fractalSettings.veryRareVariants = veryRareVariants;
 		fractalSettings.subVariants = subVariants;
 		fractalSettings.plains = getBiomeEntry(this.settings.fractalPlains);
 		fractalSettings.icePlains = getBiomeEntry(this.settings.fractalIcePlains);
 		fractalSettings.biomeScale = this.settings.fractalBiomeScale;
 		fractalSettings.hillScale = this.settings.fractalHillScale;
 		fractalSettings.subVariantScale = this.settings.fractalSubVariantScale;
-		fractalSettings.largerIslands = this.settings.fractalLargerIslands;
+		fractalSettings.terrainType = FractalSettings.TerrainType.fromString(this.settings.fractalTerrainType);
 		fractalSettings.oceans = this.settings.fractalOceans;
 		fractalSettings.addRivers = this.settings.fractalAddRivers;
 		fractalSettings.addSnow = this.settings.fractalAddSnow;
@@ -73,10 +81,30 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 		fractalSettings.addBeaches = this.settings.fractalAddBeaches;
 		fractalSettings.addHills = this.settings.fractalAddHills;
 		fractalSettings.addSwampRivers = this.settings.fractalAddSwampRivers;
+		fractalSettings.addDeepOceans = this.settings.fractalAddDeepOceans;
+		fractalSettings.addMutations = this.settings.fractalAddMutations;
+		fractalSettings.useClimaticBiomes = this.settings.fractalUseClimaticBiomes;
 
 		biomeGenLayer = Layer.getLayer(biomeRegistry, seed, fractalSettings.build());
 		biomeBlockLayer = new LayerVoronoiZoom(10, biomeGenLayer);
 		biomeBlockLayer.setWorldSeed(seed);
+	}
+
+	private static List<ClimaticBiomeList<BiomeInfo>> qualifyClimaticBiomeLists(RegistryEntryLookup<Biome> biomeRegistry, List<ClimaticBiomeList<String>> lists) {
+		return lists.stream().map(c -> ClimaticBiomeList.qualify(c, biomeRegistry)).toList();
+	}
+
+	private static Map<BiomeInfo, BiomeInfo> qualifyBiomeMap(RegistryEntryLookup<Biome> biomeRegistry, Map<String, String> map) {
+		return map.entrySet().stream()
+			.map(kv -> Map.entry(BiomeInfo.fromId(kv.getKey(), biomeRegistry), BiomeInfo.fromId(kv.getValue(), biomeRegistry)))
+			.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+	}
+
+	private static Map<BiomeInfo, List<BiomeInfo>> qualifySubVariants(RegistryEntryLookup<Biome> biomeRegistry, Map<String, List<String>> subVariants) {
+		return subVariants.entrySet().stream()
+			.map(kv -> Map.entry(BiomeInfo.fromId(kv.getKey(), biomeRegistry), kv.getValue().stream()
+				.map(v -> BiomeInfo.fromId(v, biomeRegistry)).toList()))
+			.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 	}
 
 	private RegistryEntry<Biome> getBiomeEntry(String id) {

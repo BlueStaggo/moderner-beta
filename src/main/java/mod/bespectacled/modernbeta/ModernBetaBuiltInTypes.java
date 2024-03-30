@@ -16,7 +16,8 @@ public final class ModernBetaBuiltInTypes {
         INDEV("indev"),
         CLASSIC_0_30("classic_0_30"),
         PE("pe"),
-        EARLY_RELEASE("early_release")
+        EARLY_RELEASE("early_release"),
+        MAJOR_RELEASE("major_release")
         ;
         
         public final String id;
@@ -100,7 +101,8 @@ public final class ModernBetaBuiltInTypes {
         HEIGHT_CONFIG_JUNGLE_HILLS(ModernBetaTagProviderBiome.HEIGHT_CONFIG_JUNGLE_HILLS.id().toString()),
         HEIGHT_CONFIG_PLATEAU(ModernBetaTagProviderBiome.HEIGHT_CONFIG_PLATEAU.id().toString()),
         HEIGHT_CONFIG_SWAMPLAND_HILLS(ModernBetaTagProviderBiome.HEIGHT_CONFIG_SWAMPLAND_HILLS.id().toString()),
-        HEIGHT_CONFIG_PLATEAU_HILL(ModernBetaTagProviderBiome.HEIGHT_CONFIG_PLATEAU_HILL.id().toString())
+        HEIGHT_CONFIG_PLATEAU_HILL(ModernBetaTagProviderBiome.HEIGHT_CONFIG_PLATEAU_HILL.id().toString()),
+        HEIGHT_CONFIG_DEEP_OCEAN(ModernBetaTagProviderBiome.HEIGHT_CONFIG_DEEP_OCEAN.id().toString())
         ;
 
         public final String id;
@@ -148,7 +150,8 @@ public final class ModernBetaBuiltInTypes {
         RELEASE_1_0_0("release_1_0_0"),
         RELEASE_1_1("release_1_1"),
         RELEASE_1_2_5("release_1_2_5"),
-        RELEASE_1_6_4("release_1_6_4")
+        RELEASE_1_6_4("release_1_6_4"),
+        RELEASE_1_12_2("release_1_12_2")
         ;
         
         public final String id;

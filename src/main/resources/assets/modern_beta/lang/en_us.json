@@ -43,6 +43,7 @@
     "createWorld.customize.modern_beta.preset.name.release_1_1": "1.1",
     "createWorld.customize.modern_beta.preset.name.release_1_2_5": "1.2.5",
     "createWorld.customize.modern_beta.preset.name.release_1_6_4": "1.6.4",
+    "createWorld.customize.modern_beta.preset.name.release_1_12_2": "1.12.2",
 
     "createWorld.customize.modern_beta.preset.name.beta_skylands": "Beta Skylands",
     "createWorld.customize.modern_beta.preset.name.beta_isles": "Beta Isles",
@@ -77,6 +78,7 @@
     "createWorld.customize.modern_beta.preset.desc.release_1_1": "Explore a world with the terrain generation of Minecraft 1.1.",
     "createWorld.customize.modern_beta.preset.desc.release_1_2_5": "Explore a world with the terrain generation of Minecraft 1.2.5.",
     "createWorld.customize.modern_beta.preset.desc.release_1_6_4": "Explore a world with the terrain generation of Minecraft 1.6.4.",
+    "createWorld.customize.modern_beta.preset.desc.release_1_12_2": "Explore a world with the terrain generation of Minecraft 1.12.2. (Note: slightly inaccurate)",
 
     "createWorld.customize.modern_beta.preset.desc.beta_skylands": "Explore a world with the terrain generation of the removed Sky Dimension and Beta biomes.",
     "createWorld.customize.modern_beta.preset.desc.beta_isles": "Explore a world where you start on an archipelago surrounded by a large ocean and outer islands.",

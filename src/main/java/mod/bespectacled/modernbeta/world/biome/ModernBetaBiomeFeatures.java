@@ -496,10 +496,7 @@ public class ModernBetaBiomeFeatures {
         GenerationSettings.LookupBackedBuilder builder,
         ModernBetaFeatureSettings featureSettings
     ) {
-        if (featureSettings.useBetaCarvers)
-            addCarvers(builder, featureSettings.addCanyons);
-        else
-            DefaultBiomeFeatures.addLandCarvers(builder);
+        addCarvers(builder, featureSettings.addCanyons, featureSettings.useBetaCarvers);
 
         if (featureSettings.addLakes) addLakes(builder);
         DefaultBiomeFeatures.addAmethystGeodes(builder);
@@ -524,10 +521,15 @@ public class ModernBetaBiomeFeatures {
         DefaultBiomeFeatures.addAmethystGeodes(builder);
     }
 
-    private static void addCarvers(GenerationSettings.LookupBackedBuilder builder, boolean addCanyons) {
-        builder.carver(GenerationStep.Carver.AIR, ModernBetaConfiguredCarvers.BETA_CAVE);
-        builder.carver(GenerationStep.Carver.AIR, ModernBetaConfiguredCarvers.BETA_CAVE_DEEP);
-        
+    private static void addCarvers(GenerationSettings.LookupBackedBuilder builder, boolean addCanyons, boolean useBetaCarvers) {
+        if (useBetaCarvers) {
+            builder.carver(GenerationStep.Carver.AIR, ModernBetaConfiguredCarvers.BETA_CAVE);
+            builder.carver(GenerationStep.Carver.AIR, ModernBetaConfiguredCarvers.BETA_CAVE_DEEP);
+        } else {
+            builder.carver(GenerationStep.Carver.AIR, ConfiguredCarvers.CAVE);
+            builder.carver(GenerationStep.Carver.AIR, ConfiguredCarvers.CAVE_EXTRA_UNDERGROUND);
+        }
+
         if (addCanyons) {
             builder.carver(GenerationStep.Carver.AIR, ConfiguredCarvers.CANYON);
         }

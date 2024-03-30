@@ -3,7 +3,6 @@ package mod.bespectacled.modernbeta.world.biome.provider.fractal;
 import mod.bespectacled.modernbeta.util.NbtCompoundBuilder;
 import mod.bespectacled.modernbeta.util.NbtListBuilder;
 import mod.bespectacled.modernbeta.util.NbtReader;
-import mod.bespectacled.modernbeta.util.NbtTags;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
@@ -17,14 +16,18 @@ import java.util.Map;
 
 public class FractalSettings {
     public final List<RegistryEntry<Biome>> biomes;
+    public final List<ClimaticBiomeList<BiomeInfo>> climaticBiomes;
     public final Map<BiomeInfo, BiomeInfo> hillVariants;
+    public final Map<BiomeInfo, BiomeInfo> edgeVariants;
+    public final Map<BiomeInfo, BiomeInfo> mutatedVariants;
+    public final Map<BiomeInfo, BiomeInfo> veryRareVariants;
     public final Map<BiomeInfo, List<BiomeInfo>> subVariants;
 	public final RegistryEntry<Biome> plains;
 	public final RegistryEntry<Biome> icePlains;
 	public final int biomeScale;
 	public final int hillScale;
 	public final int subVariantScale;
-    public final boolean largeIslands;
+    public final TerrainType terrainType;
     public final boolean oceans;
     public final boolean addRivers;
     public final boolean addSnow;
@@ -32,17 +35,24 @@ public class FractalSettings {
     public final boolean addBeaches;
     public final boolean addHills;
     public final boolean addSwampRivers;
+    public final boolean addDeepOceans;
+    public final boolean addMutations;
+    public final boolean useClimaticBiomes;
 
 	public FractalSettings(FractalSettings.Builder builder) {
 		this.biomes = builder.biomes;
+		this.climaticBiomes = builder.climaticBiomes;
 		this.hillVariants = builder.hillVariants;
+		this.edgeVariants = builder.edgeVariants;
+		this.mutatedVariants = builder.mutatedVariants;
+		this.veryRareVariants = builder.veryRareVariants;
 		this.subVariants = builder.subVariants;
 		this.plains = builder.plains;
 		this.icePlains = builder.icePlains;
 		this.biomeScale = builder.biomeScale;
 		this.hillScale = builder.hillScale;
 		this.subVariantScale = builder.subVariantScale;
-		this.largeIslands = builder.largerIslands;
+		this.terrainType = builder.terrainType;
 		this.oceans = builder.oceans;
 		this.addRivers = builder.addRivers;
 		this.addSnow = builder.addSnow;
@@ -50,6 +60,9 @@ public class FractalSettings {
 		this.addBeaches = builder.addBeaches;
 		this.addHills = builder.addHills;
 		this.addSwampRivers = builder.addSwampRivers;
+		this.addDeepOceans = builder.addDeepOceans;
+		this.addMutations = builder.addMutations;
+		this.useClimaticBiomes = builder.useClimaticBiomes;
 	}
 
 	public static List<String> listFromReader(String tag, NbtReader reader, List<String> alternate) {
@@ -112,14 +125,18 @@ public class FractalSettings {
 
 	public static class Builder {
 	    public List<RegistryEntry<Biome>> biomes;
+	    public List<ClimaticBiomeList<BiomeInfo>> climaticBiomes;
 	    public Map<BiomeInfo, BiomeInfo> hillVariants;
+	    public Map<BiomeInfo, BiomeInfo> edgeVariants;
+	    public Map<BiomeInfo, BiomeInfo> mutatedVariants;
+	    public Map<BiomeInfo, BiomeInfo> veryRareVariants;
 	    public Map<BiomeInfo, List<BiomeInfo>> subVariants;
 		public RegistryEntry<Biome> plains;
 		public RegistryEntry<Biome> icePlains;
 		public int biomeScale;
 		public int hillScale;
 		public int subVariantScale;
-	    public boolean largerIslands;
+	    public TerrainType terrainType;
 	    public boolean oceans;
 	    public boolean addRivers;
 	    public boolean addSnow;
@@ -127,17 +144,23 @@ public class FractalSettings {
 	    public boolean addBeaches;
 	    public boolean addHills;
 	    public boolean addSwampRivers;
+	    public boolean addDeepOceans;
+	    public boolean addMutations;
+	    public boolean useClimaticBiomes;
 
 		public Builder() {
 			this.biomes = List.of();
 			this.hillVariants = Map.of();
+			this.edgeVariants = Map.of();
+			this.mutatedVariants = Map.of();
+			this.veryRareVariants = Map.of();
 			this.subVariants = Map.of();
 			this.plains = null;
 			this.icePlains = null;
 			this.biomeScale = 4;
 			this.hillScale = 2;
 			this.subVariantScale = 2;
-			this.largerIslands = true;
+			this.terrainType = TerrainType.BETA;
 			this.oceans = true;
 			this.addRivers = true;
 			this.addSnow = false;
@@ -145,10 +168,36 @@ public class FractalSettings {
 			this.addBeaches = false;
 			this.addHills = false;
 			this.addSwampRivers = false;
+			this.addDeepOceans = false;
+			this.addMutations = false;
+			this.useClimaticBiomes = false;
 		}
 
         public FractalSettings build() {
             return new FractalSettings(this);
         }
+	}
+
+	public enum TerrainType {
+		BETA("beta"),
+		EARLY_RELEASE("early_release"),
+		MAJOR_RELEASE("major_release")
+        ;
+
+		public final String id;
+
+		private TerrainType(String id) {
+			this.id = id;
+		}
+
+		public static TerrainType fromString(String id) {
+			for (TerrainType fractalTerrain : values()) {
+				if (fractalTerrain.id.equals(id)) {
+					return fractalTerrain;
+				}
+			}
+
+			return BETA;
+		}
 	}
 }

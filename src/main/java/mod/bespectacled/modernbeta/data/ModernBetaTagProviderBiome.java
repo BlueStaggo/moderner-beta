@@ -36,7 +36,7 @@ public class ModernBetaTagProviderBiome extends FabricTagProvider<Biome> {
     public static final TagKey<Biome> IS_TAIGA = keyOf("is_taiga");
     public static final TagKey<Biome> IS_TUNDRA = keyOf("is_tundra");
     public static final TagKey<Biome> IS_OCEAN = keyOf("is_ocean");
-    public static final TagKey<Biome> IS_EARLY_RELEASE_SPAWN = keyOf("is_early_release_spawn");
+    public static final TagKey<Biome> IS_RELEASE_SPAWN = keyOf("is_early_release_spawn");
 
     public static final TagKey<Biome> INDEV_STRONGHOLD_HAS_STRUCTURE = keyOf("has_structure/indev_stronghold");
     
@@ -87,6 +87,7 @@ public class ModernBetaTagProviderBiome extends FabricTagProvider<Biome> {
     public static final TagKey<Biome> HEIGHT_CONFIG_PLATEAU = keyOf("height_config/plateau");
     public static final TagKey<Biome> HEIGHT_CONFIG_SWAMPLAND_HILLS = keyOf("height_config/swampland_hills");
     public static final TagKey<Biome> HEIGHT_CONFIG_PLATEAU_HILL = keyOf("height_config/plateau_hill");
+    public static final TagKey<Biome> HEIGHT_CONFIG_DEEP_OCEAN = keyOf("height_config/deep_ocean");
 
     public static final TagKey<Biome> FRACTAL_SWAMP_RIVERS = keyOf("fractal_swamp_rivers");
     public static final TagKey<Biome> FRACTAL_JUNGLE_RIVERS = keyOf("fractal_jungle_rivers");
@@ -312,21 +313,19 @@ public class ModernBetaTagProviderBiome extends FabricTagProvider<Biome> {
             ModernBetaBiomes.PE_FROZEN_OCEAN
         );
 
-        getOrCreateTagBuilder(IS_EARLY_RELEASE_SPAWN).add(
+        getOrCreateTagBuilder(IS_RELEASE_SPAWN).add(
             ModernBetaBiomes.BETA_FOREST,
             ModernBetaBiomes.BETA_PLAINS,
             ModernBetaBiomes.BETA_TAIGA,
             ModernBetaBiomes.BETA_RAINFOREST,
+            ModernBetaBiomes.LATE_BETA_SWAMPLAND,
             ModernBetaBiomes.LATE_BETA_PLAINS,
             ModernBetaBiomes.LATE_BETA_TAIGA,
             ModernBetaBiomes.EARLY_RELEASE_TAIGA,
             BiomeKeys.FOREST,
             BiomeKeys.PLAINS,
             BiomeKeys.TAIGA,
-            BiomeKeys.SNOWY_TAIGA,
-            BiomeKeys.JUNGLE,
-            BiomeKeys.BAMBOO_JUNGLE,
-            BiomeKeys.SPARSE_JUNGLE
+            BiomeKeys.JUNGLE
         );
 
         /* Modern Beta Biome Structure Tags */
@@ -422,7 +421,14 @@ public class ModernBetaTagProviderBiome extends FabricTagProvider<Biome> {
         /* Modern Beta Biome Height Tags */
 
         getOrCreateTagBuilder(HEIGHT_CONFIG_OCEAN)
-            .addTag(BiomeTags.IS_OCEAN);
+            .addTag(BiomeTags.IS_OCEAN)
+            .add(
+                BiomeKeys.FROZEN_OCEAN,
+                BiomeKeys.OCEAN,
+                BiomeKeys.COLD_OCEAN,
+                BiomeKeys.LUKEWARM_OCEAN,
+                BiomeKeys.WARM_OCEAN
+            );
 
         getOrCreateTagBuilder(HEIGHT_CONFIG_DESERT)
             .addTag(IS_DESERT)
@@ -502,6 +508,7 @@ public class ModernBetaTagProviderBiome extends FabricTagProvider<Biome> {
                 BiomeKeys.FOREST,
                 BiomeKeys.FLOWER_FOREST,
                 BiomeKeys.BIRCH_FOREST,
+                BiomeKeys.DARK_FOREST,
                 BiomeKeys.OLD_GROWTH_BIRCH_FOREST,
                 BiomeKeys.SNOWY_BEACH
             );
@@ -539,6 +546,14 @@ public class ModernBetaTagProviderBiome extends FabricTagProvider<Biome> {
                     BiomeKeys.BADLANDS,
                     BiomeKeys.ERODED_BADLANDS,
                     BiomeKeys.WOODED_BADLANDS
+            );
+
+        getOrCreateTagBuilder(HEIGHT_CONFIG_DEEP_OCEAN)
+            .add(
+                BiomeKeys.DEEP_FROZEN_OCEAN,
+                BiomeKeys.DEEP_OCEAN,
+                BiomeKeys.DEEP_COLD_OCEAN,
+                BiomeKeys.DEEP_LUKEWARM_OCEAN
             );
 
         /* Modern Beta Fractal Tags */

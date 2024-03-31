@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 public class FractalSettings {
-    public final List<RegistryEntry<Biome>> biomes;
+    public final List<BiomeInfo> biomes;
     public final List<ClimaticBiomeList<BiomeInfo>> climaticBiomes;
     public final Map<BiomeInfo, BiomeInfo> hillVariants;
     public final Map<BiomeInfo, BiomeInfo> edgeVariants;
@@ -124,7 +124,7 @@ public class FractalSettings {
 	}
 
 	public static class Builder {
-	    public List<RegistryEntry<Biome>> biomes;
+	    public List<BiomeInfo> biomes;
 	    public List<ClimaticBiomeList<BiomeInfo>> climaticBiomes;
 	    public Map<BiomeInfo, BiomeInfo> hillVariants;
 	    public Map<BiomeInfo, BiomeInfo> edgeVariants;

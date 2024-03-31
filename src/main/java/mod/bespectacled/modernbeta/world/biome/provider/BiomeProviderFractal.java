@@ -31,7 +31,7 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 	public BiomeProviderFractal(NbtCompound settings, RegistryEntryLookup<Biome> biomeRegistry, long seed) {
 		super(settings, biomeRegistry, seed);
 
-		List<RegistryEntry<Biome>> selectedBiomes = this.settings.fractalBiomes.stream().map(this::getBiomeEntry).toList();
+		List<BiomeInfo> selectedBiomes = this.settings.fractalBiomes.stream().map(b -> BiomeInfo.fromId(b, biomeRegistry)).toList();
 		List<ClimaticBiomeList<BiomeInfo>> climaticBiomes = qualifyClimaticBiomeLists(biomeRegistry, this.settings.fractalClimaticBiomes);
 		Map<BiomeInfo, BiomeInfo> hillVariants = qualifyBiomeMap(biomeRegistry, this.settings.fractalHillVariants);
 		Map<BiomeInfo, BiomeInfo> edgeVariants = qualifyBiomeMap(biomeRegistry, this.settings.fractalEdgeVariants);
@@ -56,7 +56,9 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 				climate.normalBiomes().forEach(b -> allBiomes.add(b.biome()));
 				climate.rareBiomes().forEach(b -> allBiomes.add(b.biome()));
 			}
-		} else allBiomes.addAll(selectedBiomes);
+		} else {
+			selectedBiomes.stream().map(BiomeInfo::biome).forEach(allBiomes::add);
+		}
 		subVariants.values().forEach(v -> v.forEach(b -> allBiomes.add(b.biome())));
 		this.allBiomes = allBiomes.stream().toList();
 

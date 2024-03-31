@@ -123,13 +123,8 @@ public abstract class MixinDebugHud {
                 */
 
                 if (modernBetaChunkGenerator.getBiomeInjector() != null) {
-                    RegistryEntry<Biome> biome = modernBetaChunkGenerator.getBiomeInjector().getBiomeAtBlock(x, y, z, null, BiomeInjectionStep.ALL);
-                    info.getReturnValue().add(
-                        String.format(
-                            "[Modern Beta] Injected biome: %s",
-                            biome.getKey().get().getValue().toString()
-                        )
-                   );
+                    String biome = modernBetaChunkGenerator.getBiomeInjector().getBiomeNameAtBlock(x, y, z, null, BiomeInjectionStep.ALL);
+                    info.getReturnValue().add(String.format("[Modern Beta] Injected biome: %s", biome));
                 }
             }
         }

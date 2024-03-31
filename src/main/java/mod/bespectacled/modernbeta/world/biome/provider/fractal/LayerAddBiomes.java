@@ -13,12 +13,12 @@ public class LayerAddBiomes extends Layer {
 	private final Map<BiomeInfo, BiomeInfo> replacedBiomes;
 	private final List<ClimaticBiomeList<BiomeInfo>> climaticBiomes;
 
-	public LayerAddBiomes(long seed, Layer parent, List<RegistryEntry<Biome>> biomes,
+	public LayerAddBiomes(long seed, Layer parent, List<BiomeInfo> biomes,
 						  Map<BiomeInfo, BiomeInfo> replacedBiomes,
 						  List<ClimaticBiomeList<BiomeInfo>> climaticBiomes) {
 		super(seed);
 		this.parent = parent;
-		this.biomes = biomes.stream().map(BiomeInfo::of).toList();
+		this.biomes = biomes;
 		this.replacedBiomes = replacedBiomes;
 		this.climaticBiomes = climaticBiomes;
 	}

@@ -66,4 +66,8 @@ public record BiomeInfo(RegistryEntry<Biome> biome, int type) {
 		}
 		return id;
 	}
+
+	public String toString() {
+		return this.getId();
+	}
 }

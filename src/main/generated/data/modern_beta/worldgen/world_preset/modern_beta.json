@@ -295,6 +295,7 @@
           "deepslateBlock": "minecraft:deepslate",
           "deepslateMaxY": 8,
           "deepslateMinY": 0,
+          "forceBetaCaves": 1,
           "indevCaveRadius": 1.0,
           "indevLevelHeight": 128,
           "indevLevelLength": 256,

@@ -1,5 +1,6 @@
 package mod.bespectacled.modernbeta.world.chunk;
 
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
@@ -14,10 +15,15 @@ import mod.bespectacled.modernbeta.util.BlockStates;
 import mod.bespectacled.modernbeta.world.biome.ModernBetaBiomeSource;
 import mod.bespectacled.modernbeta.world.biome.injector.BiomeInjector;
 import mod.bespectacled.modernbeta.world.biome.injector.BiomeInjector.BiomeInjectionStep;
+import mod.bespectacled.modernbeta.world.carver.BetaCaveCarver;
+import mod.bespectacled.modernbeta.world.carver.BetaCaveCarverConfig;
+import mod.bespectacled.modernbeta.world.carver.configured.ModernBetaConfiguredCarvers;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.ChunkPos;
@@ -39,6 +45,7 @@ import net.minecraft.world.gen.StructureWeightSampler;
 import net.minecraft.world.gen.carver.CarverContext;
 import net.minecraft.world.gen.carver.CarvingMask;
 import net.minecraft.world.gen.carver.ConfiguredCarver;
+import net.minecraft.world.gen.carver.ConfiguredCarvers;
 import net.minecraft.world.gen.chunk.AquiferSampler;
 import net.minecraft.world.gen.chunk.Blender;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
@@ -67,7 +74,7 @@ public class ModernBetaChunkGenerator extends NoiseChunkGenerator {
         NbtCompound chunkProviderSettings
     ) {
         super(biomeSource, settings);
-        
+
         this.settings = settings;
         this.chunkSettings = chunkProviderSettings;
         this.biomeInjector = this.biomeSource instanceof ModernBetaBiomeSource modernBetaBiomeSource ?
@@ -167,8 +174,28 @@ public class ModernBetaChunkGenerator extends NoiseChunkGenerator {
                 for(RegistryEntry<ConfiguredCarver<?>> carverEntry : carverList) {
                     ConfiguredCarver<?> configuredCarver = carverEntry.value();
                     random.setSeed((long) chunkX * l + (long) chunkZ * l1 ^ seed);
-                    
+
+                    if (this.chunkProvider.getChunkSettings().forceBetaCaves) {
+                        RegistryKey<ConfiguredCarver<?>> carverKey = carverEntry.getKey().orElse(null);
+                        if (carverKey != null) {
+                            ConfiguredCarver<?> replacementCarver = null;
+                            if (carverKey.equals(ConfiguredCarvers.CAVE)) {
+                                replacementCarver = chunkRegion.getRegistryManager().get(RegistryKeys.CONFIGURED_CARVER).get(ModernBetaConfiguredCarvers.BETA_CAVE);
+                            } else if (carverKey.equals(ConfiguredCarvers.CAVE_EXTRA_UNDERGROUND)) {
+                                replacementCarver = chunkRegion.getRegistryManager().get(RegistryKeys.CONFIGURED_CARVER).get(ModernBetaConfiguredCarvers.BETA_CAVE_DEEP);
+                            }
+
+                            if (replacementCarver != null) {
+                                configuredCarver = replacementCarver;
+                            }
+                        }
+                    }
+
                     if (configuredCarver.shouldCarve(random)) {
+                        if (configuredCarver.config() instanceof BetaCaveCarverConfig betaCaveCarverConfig) {
+                            betaCaveCarverConfig.useFixedCaves = Optional.of(this.chunkProvider.getChunkSettings().useFixedCaves);
+                        }
+
                         configuredCarver.carve(carverContext, chunk, biomeAccessWithSource::getBiome, random, aquiferSampler, carverPos, carvingMask);
                     }
                 }

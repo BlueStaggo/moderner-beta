@@ -25,6 +25,8 @@ public class ModernBetaSettingsChunk implements ModernBetaSettings {
     public final boolean useSurfaceRules;
 
     public final boolean useCaves;
+    public final boolean useFixedCaves;
+    public final boolean forceBetaCaves;
 
     public final String noisePostProcessor;
     public final float noiseCoordinateScale;
@@ -86,6 +88,8 @@ public class ModernBetaSettingsChunk implements ModernBetaSettings {
         this.useSurfaceRules = builder.useSurfaceRules;
 
         this.useCaves = builder.useCaves;
+        this.useFixedCaves = builder.useFixedCaves;
+        this.forceBetaCaves = builder.forceBetaCaves;
 
         this.noisePostProcessor = builder.noisePostProcessor;
         this.noiseCoordinateScale = builder.noiseCoordinateScale;
@@ -154,6 +158,7 @@ public class ModernBetaSettingsChunk implements ModernBetaSettings {
             .putBoolean(NbtTags.USE_SURFACE_RULES, this.useSurfaceRules)
 
             .putBoolean(NbtTags.USE_CAVES, this.useCaves)
+            .putBoolean(NbtTags.FORCE_BETA_CAVES, this.forceBetaCaves)
 
             .putFloat(NbtTags.NOISE_COORDINATE_SCALE, this.noiseCoordinateScale)
             .putFloat(NbtTags.NOISE_HEIGHT_SCALE, this.noiseHeightScale)
@@ -214,6 +219,7 @@ public class ModernBetaSettingsChunk implements ModernBetaSettings {
 
         public boolean useCaves;
         public boolean useFixedCaves;
+        public boolean forceBetaCaves;
 
         public String noisePostProcessor;
         public float noiseCoordinateScale;
@@ -272,6 +278,7 @@ public class ModernBetaSettingsChunk implements ModernBetaSettings {
             
             this.useCaves = true;
             this.useFixedCaves = false;
+            this.forceBetaCaves = true;
 
             this.noiseCoordinateScale = 684.412f;
             this.noiseHeightScale = 684.412f;
@@ -335,6 +342,7 @@ public class ModernBetaSettingsChunk implements ModernBetaSettings {
             this.useSurfaceRules = reader.readBoolean(NbtTags.USE_SURFACE_RULES, this.useSurfaceRules);
 
             this.useCaves = reader.readBoolean(NbtTags.USE_CAVES, this.useCaves);
+            this.forceBetaCaves = reader.readBoolean(NbtTags.FORCE_BETA_CAVES, this.forceBetaCaves);
 
             this.noiseCoordinateScale = reader.readFloat(NbtTags.NOISE_COORDINATE_SCALE, this.noiseCoordinateScale);
             this.noiseHeightScale = reader.readFloat(NbtTags.NOISE_HEIGHT_SCALE, this.noiseHeightScale);

@@ -143,7 +143,7 @@ public abstract class Layer {
 		} else {
 			riverLayout = LayerZoom.multi(1000, riverLayout, settings.biomeScale + settings.hillScale);
 		}
-		riverLayout = new LayerComputeRiver(1, riverLayout);
+		riverLayout = new LayerComputeRiver(1, riverLayout, settings.terrainType != FractalSettings.TerrainType.MAJOR_RELEASE);
 		riverLayout = new LayerSmooth(1000, riverLayout);
 
 		Layer biomes = new LayerAddBiomes(200, land, settings.biomes, replacementBiomes, settings.climaticBiomes);

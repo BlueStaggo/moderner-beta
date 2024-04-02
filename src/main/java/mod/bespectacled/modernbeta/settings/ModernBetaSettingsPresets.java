@@ -1295,12 +1295,14 @@ public class ModernBetaSettingsPresets {
         ModernBetaSettingsCaveBiome.Builder settingsCaveBiome = new ModernBetaSettingsCaveBiome.Builder();
 
         settingsChunk.chunkProvider = ModernBetaBuiltInTypes.Chunk.EARLY_RELEASE.id;
+        settingsChunk.useFixedCaves = true;
         settingsChunk.releaseHeightOverrides = Map.ofEntries(
             Map.entry("example:flat_biome", "-0.2;0.1"),
             Map.entry("*example:flat_biome", "-0.1;0.5"),
             Map.entry("2*example:flat_biome", "0.1;1.0"),
             Map.entry("minecraft:ocean", "-1.0;0.5")
         );
+
         settingsBiome.biomeProvider = ModernBetaBuiltInTypes.Biome.FRACTAL.id;
         settingsBiome.fractalBiomes = List.of(
             "minecraft:desert",
@@ -1324,6 +1326,8 @@ public class ModernBetaSettingsPresets {
         ModernBetaSettingsCaveBiome.Builder settingsCaveBiome = new ModernBetaSettingsCaveBiome.Builder();
 
         settingsChunk.chunkProvider = ModernBetaBuiltInTypes.Chunk.EARLY_RELEASE.id;
+        settingsChunk.useFixedCaves = true;
+
         settingsBiome.biomeProvider = ModernBetaBuiltInTypes.Biome.FRACTAL.id;
         settingsBiome.fractalBiomes = List.of(
             "minecraft:desert",
@@ -1350,6 +1354,8 @@ public class ModernBetaSettingsPresets {
         ModernBetaSettingsCaveBiome.Builder settingsCaveBiome = new ModernBetaSettingsCaveBiome.Builder();
 
         settingsChunk.chunkProvider = ModernBetaBuiltInTypes.Chunk.EARLY_RELEASE.id;
+        settingsChunk.useFixedCaves = true;
+
         settingsBiome.biomeProvider = ModernBetaBuiltInTypes.Biome.FRACTAL.id;
         settingsBiome.fractalBiomes = List.of(
             "minecraft:desert",
@@ -1379,6 +1385,8 @@ public class ModernBetaSettingsPresets {
         ModernBetaSettingsCaveBiome.Builder settingsCaveBiome = new ModernBetaSettingsCaveBiome.Builder();
 
         settingsChunk.chunkProvider = ModernBetaBuiltInTypes.Chunk.EARLY_RELEASE.id;
+        settingsChunk.useFixedCaves = true;
+
         settingsBiome.biomeProvider = ModernBetaBuiltInTypes.Biome.FRACTAL.id;
         settingsBiome.fractalBiomes = List.of(
             "minecraft:desert",
@@ -1409,11 +1417,13 @@ public class ModernBetaSettingsPresets {
         ModernBetaSettingsCaveBiome.Builder settingsCaveBiome = new ModernBetaSettingsCaveBiome.Builder();
 
         settingsChunk.chunkProvider = ModernBetaBuiltInTypes.Chunk.EARLY_RELEASE.id;
+        settingsChunk.useFixedCaves = true;
         settingsChunk.releaseHeightOverrides = Map.ofEntries(
             Map.entry("*minecraft:desert", "0.3;0.8"),
             Map.entry("*minecraft:forest", "0.3;0.7"),
             Map.entry("*minecraft:early_release_taiga", "0.3;0.8")
         );
+
         settingsBiome.biomeProvider = ModernBetaBuiltInTypes.Biome.FRACTAL.id;
         settingsBiome.fractalBiomes = List.of(
             "minecraft:desert",
@@ -1505,6 +1515,8 @@ public class ModernBetaSettingsPresets {
             Map.entry("2*minecraft:badlands", "0.45;0.6")
         );
         settingsChunk.useSurfaceRules = true;
+        settingsChunk.useFixedCaves = true;
+        settingsChunk.forceBetaCaves = false;
 
         settingsBiome.biomeProvider = ModernBetaBuiltInTypes.Biome.FRACTAL.id;
         settingsBiome.fractalTerrainType = FractalSettings.TerrainType.MAJOR_RELEASE.id;
@@ -1534,6 +1546,7 @@ public class ModernBetaSettingsPresets {
         ModernBetaSettingsCaveBiome.Builder settingsCaveBiome = new ModernBetaSettingsCaveBiome.Builder();
 
         settingsChunk.chunkProvider = ModernBetaBuiltInTypes.Chunk.EARLY_RELEASE.id;
+        settingsChunk.useFixedCaves = true;
         settingsChunk.releaseHeightOverrides = Map.ofEntries(
             Map.entry("*minecraft:desert", "0.3;0.8"),
             Map.entry("*minecraft:forest", "0.3;0.7"),

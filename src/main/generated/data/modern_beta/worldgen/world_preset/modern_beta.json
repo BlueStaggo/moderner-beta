@@ -159,6 +159,7 @@
             "fractalAddRivers": 1,
             "fractalAddSnow": 0,
             "fractalAddSwampRivers": 0,
+            "fractalBeachShrink": 1,
             "fractalBiomeScale": 4,
             "fractalBiomes": [
               "minecraft:desert",
@@ -267,6 +268,7 @@
               "modern_beta:pe_tundra": "*modern_beta:pe_tundra"
             },
             "fractalIcePlains": "modern_beta:early_release_ice_plains",
+            "fractalOceanShrink": 0,
             "fractalOceans": 1,
             "fractalPlains": "modern_beta:late_beta_plains",
             "fractalSubVariantScale": 2,

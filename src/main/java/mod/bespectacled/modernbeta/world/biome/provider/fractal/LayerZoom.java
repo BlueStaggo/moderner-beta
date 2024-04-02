@@ -26,11 +26,23 @@ public class LayerZoom extends LayerZoomBase {
 			return a;
 		} else if(a.equals(d) && !b.equals(c)) {
 			return a;
+		} else if(b.equals(a) && !c.equals(d)) {
+			return b;
 		} else if(b.equals(c) && !a.equals(d)) {
 			return b;
 		} else if(b.equals(d) && !a.equals(c)) {
 			return b;
+		} else if(c.equals(a) && !b.equals(d)) {
+			return c;
+		} else if(c.equals(b) && !a.equals(d)) {
+			return c;
 		} else if(c.equals(d) && !a.equals(b)) {
+			return c;
+		} else if(d.equals(a) && !b.equals(c)) {
+			return c;
+		} else if(d.equals(b) && !a.equals(c)) {
+			return c;
+		} else if(d.equals(c) && !a.equals(b)) {
 			return c;
 		} else {
 			int choice = this.nextInt(4);

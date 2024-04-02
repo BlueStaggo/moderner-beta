@@ -41,6 +41,8 @@ public class ModernBetaSettingsBiome implements ModernBetaSettings {
     public final int fractalBiomeScale;
     public final int fractalHillScale;
     public final int fractalSubVariantScale;
+    public final int fractalBeachShrink;
+    public final int fractalOceanShrink;
     public final String fractalTerrainType;
     public final boolean fractalOceans;
     public final boolean fractalAddRivers;
@@ -82,6 +84,8 @@ public class ModernBetaSettingsBiome implements ModernBetaSettings {
         this.fractalBiomeScale = builder.fractalBiomeScale;
         this.fractalHillScale = builder.fractalHillScale;
         this.fractalSubVariantScale = builder.fractalSubVariantScale;
+        this.fractalBeachShrink = builder.fractalBeachShrink;
+        this.fractalOceanShrink = builder.fractalOceanShrink;
         this.fractalTerrainType = builder.fractalTerrainType;
         this.fractalOceans = builder.fractalOceans;
         this.fractalAddRivers = builder.fractalAddRivers;
@@ -127,6 +131,8 @@ public class ModernBetaSettingsBiome implements ModernBetaSettings {
             .putInt(NbtTags.FRACTAL_BIOME_SCALE, this.fractalBiomeScale)
             .putInt(NbtTags.FRACTAL_HILL_SCALE, this.fractalHillScale)
             .putInt(NbtTags.FRACTAL_SUB_VARIANT_SCALE, this.fractalSubVariantScale)
+            .putInt(NbtTags.FRACTAL_BEACH_SHRINK, this.fractalBeachShrink)
+            .putInt(NbtTags.FRACTAL_OCEAN_SHRINK, this.fractalOceanShrink)
             .putString(NbtTags.FRACTAL_TERRAIN_TYPE, this.fractalTerrainType)
             .putBoolean(NbtTags.FRACTAL_OCEANS, this.fractalOceans)
             .putBoolean(NbtTags.FRACTAL_ADD_RIVERS, this.fractalAddRivers)
@@ -166,6 +172,8 @@ public class ModernBetaSettingsBiome implements ModernBetaSettings {
         public int fractalBiomeScale;
         public int fractalSubVariantScale;
         public int fractalHillScale;
+        public int fractalBeachShrink;
+        public int fractalOceanShrink;
         public String fractalTerrainType;
         public boolean fractalOceans;
         public boolean fractalAddRivers;
@@ -300,7 +308,8 @@ public class ModernBetaSettingsBiome implements ModernBetaSettings {
                     List.of()
                 )
             );
-            // Bunch of stuff comment out down here because tree generation breaks sometimes for no reason
+            // Bunch of stuff commented out down here because feature generation breaks
+            // when hill variants have differing biomes for some random reason that idk
             this.fractalHillVariants = Map.ofEntries(
                 Map.entry("minecraft:desert", "*minecraft:desert"),
                 Map.entry("modern_beta:beta_desert", "*modern_beta:beta_desert"),
@@ -378,6 +387,8 @@ public class ModernBetaSettingsBiome implements ModernBetaSettings {
             this.fractalBiomeScale = 4;
             this.fractalHillScale = 2;
             this.fractalSubVariantScale = 2;
+            this.fractalBeachShrink = 1;
+            this.fractalOceanShrink = 0;
             this.fractalTerrainType = FractalSettings.TerrainType.BETA.id;
             this.fractalOceans = true;
             this.fractalAddRivers = true;
@@ -414,8 +425,10 @@ public class ModernBetaSettingsBiome implements ModernBetaSettings {
             this.fractalPlains = reader.readString(NbtTags.FRACTAL_PLAINS, this.fractalPlains);
             this.fractalIcePlains = reader.readString(NbtTags.FRACTAL_ICE_PLAINS, this.fractalIcePlains);
             this.fractalBiomeScale = reader.readInt(NbtTags.FRACTAL_BIOME_SCALE, this.fractalBiomeScale);
-            this.fractalSubVariantScale = reader.readInt(NbtTags.FRACTAL_SUB_VARIANT_SCALE, this.fractalSubVariantScale);
             this.fractalHillScale = reader.readInt(NbtTags.FRACTAL_HILL_SCALE, this.fractalHillScale);
+            this.fractalSubVariantScale = reader.readInt(NbtTags.FRACTAL_SUB_VARIANT_SCALE, this.fractalSubVariantScale);
+            this.fractalBeachShrink = reader.readInt(NbtTags.FRACTAL_BEACH_SHRINK, this.fractalBeachShrink);
+            this.fractalOceanShrink = reader.readInt(NbtTags.FRACTAL_OCEAN_SHRINK, this.fractalOceanShrink);
             this.fractalTerrainType = reader.readString(NbtTags.FRACTAL_TERRAIN_TYPE, this.fractalTerrainType);
             this.fractalOceans = reader.readBoolean(NbtTags.FRACTAL_OCEANS, this.fractalOceans);
             this.fractalAddRivers = reader.readBoolean(NbtTags.FRACTAL_ADD_RIVERS, this.fractalAddRivers);

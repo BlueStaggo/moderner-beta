@@ -25,8 +25,6 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 
 	private final Long2ObjectMap<BiomeInfo[]> genCache = Long2ObjectMaps.synchronize(new Long2ObjectOpenHashMap<>());
 	private final Long2ObjectMap<BiomeInfo[]> blockCache = Long2ObjectMaps.synchronize(new Long2ObjectOpenHashMap<>());
-	private final Object genCacheLock = new Object();
-	private final Object blockCacheLock = new Object();
 
 	public BiomeProviderFractal(NbtCompound settings, RegistryEntryLookup<Biome> biomeRegistry, long seed) {
 		super(settings, biomeRegistry, seed);
@@ -75,6 +73,8 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 		fractalSettings.biomeScale = this.settings.fractalBiomeScale;
 		fractalSettings.hillScale = this.settings.fractalHillScale;
 		fractalSettings.subVariantScale = this.settings.fractalSubVariantScale;
+		fractalSettings.beachShrink = this.settings.fractalBeachShrink;
+		fractalSettings.oceanShrink = this.settings.fractalOceanShrink;
 		fractalSettings.terrainType = FractalSettings.TerrainType.fromString(this.settings.fractalTerrainType);
 		fractalSettings.oceans = this.settings.fractalOceans;
 		fractalSettings.addRivers = this.settings.fractalAddRivers;
@@ -126,13 +126,12 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 		long chunkPos = ChunkPos.toLong(chunkX, chunkZ);
 		BiomeInfo[] biomes;
 
-		synchronized (genCacheLock) {
-			if (!genCache.containsKey(chunkPos)) {
-				cleanCache(genCache, chunkX, chunkZ, 16);
+		synchronized (genCache) {
+			biomes = genCache.get(chunkPos);
+			if (biomes == null) {
 				biomes = biomeGenLayer.getBiomes(chunkX << 2, chunkZ << 2, 4, 4);
 				genCache.put(chunkPos, biomes);
-			} else {
-				biomes = genCache.get(chunkPos);
+				cleanCache(genCache, chunkX, chunkZ, 16);
 			}
 		}
 
@@ -152,13 +151,12 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 		long chunkPos = ChunkPos.toLong(chunkX, chunkZ);
 		BiomeInfo[] biomes;
 
-		synchronized (blockCacheLock) {
-			if (!blockCache.containsKey(chunkPos)) {
-				cleanCache(blockCache, chunkX, chunkZ, 16);
+		synchronized (blockCache) {
+			biomes = blockCache.get(chunkPos);
+			if (biomes == null) {
 				biomes = biomeBlockLayer.getBiomes(chunkX << 4, chunkZ << 4, 16, 16);
 				blockCache.put(chunkPos, biomes);
-			} else {
-				biomes = blockCache.get(chunkPos);
+				cleanCache(blockCache, chunkX, chunkZ, 16);
 			}
 		}
 
@@ -175,18 +173,22 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 	private void cleanCache(Long2ObjectMap<BiomeInfo[]> cache, int x, int z, int dist) {
 		if (cache.size() < 256) {
 			return;
+		} else {
+			cache.clear();
+			if (true) return;
 		}
 
 		long[] drops = cache.keySet().longStream()
-			.filter(key -> {
-				int keyX = ChunkPos.getPackedX(key);
-				int keyZ = ChunkPos.getPackedZ(key);
-				return keyX < x - dist || keyX > x + dist || keyZ < z - dist || keyZ > z + dist;
-			})
+			.limit(16)
+//			.filter(key -> {
+//				int keyX = ChunkPos.getPackedX(key);
+//				int keyZ = ChunkPos.getPackedZ(key);
+//				return keyX < x - dist || keyX > x + dist || keyZ < z - dist || keyZ > z + dist;
+//			})
 			.toArray();
 
-		for (long key : drops) {
-			cache.remove(key);
+		for (int i = 0; i < 16; i++) {
+			cache.remove(drops[i]);
 		}
 	}
 }

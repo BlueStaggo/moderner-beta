@@ -108,6 +108,8 @@ public class NbtTags {
     public static final String FRACTAL_BIOME_SCALE = "fractalBiomeScale";
     public static final String FRACTAL_HILL_SCALE = "fractalHillScale";
     public static final String FRACTAL_SUB_VARIANT_SCALE = "fractalSubVariantScale";
+    public static final String FRACTAL_BEACH_SHRINK = "fractalBeachShrink";
+    public static final String FRACTAL_OCEAN_SHRINK = "fractalOceanShrink";
     public static final String FRACTAL_TERRAIN_TYPE = "fractalTerrainType";
     public static final String FRACTAL_OCEANS = "fractalOceans";
     public static final String FRACTAL_ADD_RIVERS = "fractalAddRivers";

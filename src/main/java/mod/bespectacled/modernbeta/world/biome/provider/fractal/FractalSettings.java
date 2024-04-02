@@ -27,6 +27,8 @@ public class FractalSettings {
 	public final int biomeScale;
 	public final int hillScale;
 	public final int subVariantScale;
+	public final int beachShrink;
+	public final int oceanShrink;
     public final TerrainType terrainType;
     public final boolean oceans;
     public final boolean addRivers;
@@ -52,6 +54,8 @@ public class FractalSettings {
 		this.biomeScale = builder.biomeScale;
 		this.hillScale = builder.hillScale;
 		this.subVariantScale = builder.subVariantScale;
+		this.beachShrink = builder.beachShrink;
+		this.oceanShrink = builder.oceanShrink;
 		this.terrainType = builder.terrainType;
 		this.oceans = builder.oceans;
 		this.addRivers = builder.addRivers;
@@ -136,6 +140,8 @@ public class FractalSettings {
 		public int biomeScale;
 		public int hillScale;
 		public int subVariantScale;
+		public int beachShrink;
+		public int oceanShrink;
 	    public TerrainType terrainType;
 	    public boolean oceans;
 	    public boolean addRivers;
@@ -160,6 +166,8 @@ public class FractalSettings {
 			this.biomeScale = 4;
 			this.hillScale = 2;
 			this.subVariantScale = 2;
+			this.beachShrink = 1;
+			this.oceanShrink = 1;
 			this.terrainType = TerrainType.BETA;
 			this.oceans = true;
 			this.addRivers = true;

@@ -17,6 +17,7 @@ public abstract class Layer {
 	private int cacheWidth;
 	private int cacheLength;
 	private BiomeInfo[] cacheData;
+	private final Object cacheLock = new Object();
 	protected Layer parent;
 
 	public static Layer getLayer(RegistryEntryLookup<Biome> biomeLookup, long seed, FractalSettings settings) {
@@ -43,58 +44,93 @@ public abstract class Layer {
 			land = new LayerSingleBiome(DummyBiome.PLAINS);
 		} else {
 			land = new LayerInitLand(1);
-			land = new LayerFuzzyZoom(2000, land);
 			switch (settings.terrainType) {
 				case BETA:
-					land = new LayerAddLandB18(1, land);
-					land = new LayerZoom(2001, land);
-					land = new LayerAddLandB18(2, land);
-					land = new LayerZoom(2002, land);
-					land = new LayerAddLandB18(3, land);
-					if (settings.useClimaticBiomes) {
-						land = new LayerAddClimate(2, land);
-						land = new LayerCoolWarmEdge(2, land);
-						land = new LayerHeatIceEdge(2, land);
-						land = new LayerRareClimate(3, land);
-					} else if (settings.addSnow) land = new LayerAddSnow(2, land);
-					land = new LayerZoom(2003, land);
-					land = new LayerAddLandB18(3, land);
-					land = new LayerZoom(2004, land);
-					land = new LayerAddLandB18(3, land);
+					land = addSnow(land, settings, 3);
+					if (settings.oceanShrink <= 4) {
+						land = new LayerFuzzyZoom(2000, land);
+						land = new LayerAddLandB18(1, land);
+					}
+					land = addSnow(land, settings, 2);
+					if (settings.oceanShrink <= 3) {
+						land = new LayerZoom(2001, land);
+						land = new LayerAddLandB18(2, land);
+					}
+					land = addSnow(land, settings, 1);
+					if (settings.oceanShrink <= 2) {
+						land = new LayerZoom(2002, land);
+						land = new LayerAddLandB18(3, land);
+					}
+					land = addSnow(land, settings, 0);
+					if (settings.oceanShrink <= 1) {
+						land = new LayerZoom(2003, land);
+						land = new LayerAddLandB18(3, land);
+					}
+					if (settings.oceanShrink <= 0) {
+						land = new LayerZoom(2004, land);
+						land = new LayerAddLandB18(3, land);
+					}
+					for (int i = 0; i < -settings.oceanShrink; i++) {
+						land = new LayerZoom(2005 + i, land);
+						land = new LayerAddLandB18(3, land);
+					}
+					break;
 
 				case EARLY_RELEASE:
-					land = new LayerAddLand(1, land);
-					land = new LayerZoom(2001, land);
-					land = new LayerAddLand(2, land);
-					if (settings.useClimaticBiomes) {
-						land = new LayerAddClimate(2, land);
-						land = new LayerCoolWarmEdge(2, land);
-						land = new LayerHeatIceEdge(2, land);
-						land = new LayerRareClimate(3, land);
-					} else if (settings.addSnow) land = new LayerAddSnow(2, land);
-					land = new LayerZoom(2002, land);
-					land = new LayerAddLand(3, land);
-					land = new LayerZoom(2003, land);
-					land = new LayerAddLand(4, land);
+					land = addSnow(land, settings, 2);
+					if (settings.oceanShrink <= 3) {
+						land = new LayerFuzzyZoom(2000, land);
+						land = new LayerAddLand(1, land);
+					}
+					land = addSnow(land, settings, 1);
+					if (settings.oceanShrink <= 2) {
+						land = new LayerZoom(2001, land);
+						land = new LayerAddLand(2, land);
+					}
+					land = addSnow(land, settings, 0);
+					if (settings.oceanShrink <= 1) {
+						land = new LayerZoom(2002, land);
+						land = new LayerAddLand(3, land);
+					}
+					if (settings.oceanShrink <= 0) {
+						land = new LayerZoom(2003, land);
+						land = new LayerAddLand(4, land);
+					}
+					for (int i = 0; i < -settings.oceanShrink; i++) {
+						land = new LayerZoom(2004 + i, land);
+						land = new LayerAddLand(5 + i, land);
+					}
+					break;
 
 				case MAJOR_RELEASE:
-					land = LayerAddLand.r17(1, land);
-					land = new LayerZoom(2001, land);
-					land = LayerAddLand.r17(2, land);
-					land = LayerAddLand.r17(50, land);
-					land = LayerAddLand.r17(70, land);
-					land = new LayerReduceOcean(2, land);
-					if (settings.useClimaticBiomes) land = new LayerAddClimate(2, land);
-					else if (settings.addSnow) land = new LayerAddSnow(2, land);
-					land = LayerAddLand.r17(3, land);
-					if (settings.useClimaticBiomes) {
-						land = new LayerCoolWarmEdge(2, land);
-						land = new LayerHeatIceEdge(2, land);
-						land = new LayerRareClimate(3, land);
+					land = addSnow(land, settings, 2);
+					if (settings.oceanShrink <= 3) {
+						land = new LayerFuzzyZoom(2000, land);
+						land = LayerAddLand.r17(1, land);
 					}
-					land = new LayerZoom(2002, land);
-					land = new LayerZoom(2003, land);
-					land = LayerAddLand.r17(4, land);
+					land = addSnow(land, settings, 1);
+					if (settings.oceanShrink <= 2) {
+						land = new LayerZoom(2001, land);
+						land = LayerAddLand.r17(2, land);
+						land = LayerAddLand.r17(50, land);
+						land = LayerAddLand.r17(70, land);
+						land = new LayerReduceOcean(2, land);
+						land = maybeAddSnow(land, settings, 0);
+						land = LayerAddLand.r17(3, land);
+						land = maybeAddClimateEdge(land, settings, 0);
+					}
+					if (settings.oceanShrink <= 1) {
+						land = new LayerZoom(2002, land);
+					}
+					if (settings.oceanShrink <= 0) {
+						land = new LayerZoom(2003, land);
+						land = LayerAddLand.r17(4, land);
+					}
+					for (int i = 0; i < -settings.oceanShrink; i++) {
+						land = new LayerZoom(2004 + i, land);
+						land = new LayerAddLand(5 + i, land);
+					}
+					break;
 			}
 		}
 		if (settings.addMushroomIslands) land = new LayerAddMushroomIsland(5, land);
@@ -113,6 +149,12 @@ public abstract class Layer {
 		Layer biomes = new LayerAddBiomes(200, land, settings.biomes, replacementBiomes, settings.climaticBiomes);
 		for (int i = 0; i < settings.hillScale; i++) {
 			if (settings.subVariantScale == i && !settings.subVariants.isEmpty()) biomes = new LayerSubVariants(100, biomes, settings.subVariants);
+
+			if (settings.beachShrink == i - 2 - settings.hillScale && settings.addBeaches) {
+				biomes = new LayerAddEdge(1000, biomes, beach, ocean, mushroomIsland,
+					settings.useClimaticBiomes ? null : settings.edgeVariants, settings.useClimaticBiomes ? null : biomeLookup);
+			}
+
 			biomes = new LayerZoom(1000 + i, biomes);
 		}
 		if (settings.subVariantScale == settings.hillScale && !settings.subVariants.isEmpty()) biomes = new LayerSubVariants(100, biomes, settings.subVariants);
@@ -125,6 +167,11 @@ public abstract class Layer {
 		}
 		if (!settings.veryRareVariants.isEmpty()) biomes = new LayerAddRareBiomes(1001, biomes, settings.veryRareVariants);
 
+		if (settings.beachShrink == -1 && settings.addBeaches) {
+			biomes = new LayerAddEdge(1000, biomes, beach, ocean, mushroomIsland,
+				settings.useClimaticBiomes ? null : settings.edgeVariants, settings.useClimaticBiomes ? null : biomeLookup);
+		}
+
 		for (int i = 0; i < settings.biomeScale; i++) {
 			biomes = new LayerZoom(1000 + i, biomes);
 			if (i == 0) {
@@ -136,17 +183,46 @@ public abstract class Layer {
 				if (!settings.addBeaches && settings.addMushroomIslands) biomes = new LayerMushroomIslandShore(biomes, mushroomIsland, ocean);
 			}
 
-			if (i == 1) {
-				if (settings.addBeaches) biomes = new LayerAddEdge(1000, biomes, beach, ocean, mushroomIsland,
+			if (i == settings.beachShrink && settings.addBeaches) {
+				biomes = new LayerAddEdge(1000, biomes, beach, ocean, mushroomIsland,
 					settings.useClimaticBiomes ? null : settings.edgeVariants, settings.useClimaticBiomes ? null : biomeLookup);
-				if (settings.addSwampRivers) biomes = new LayerAddSwampRivers(1000, biomes, river);
 			}
+			if (i == 1 && settings.addSwampRivers) biomes = new LayerAddSwampRivers(1000, biomes, river);
 		}
 
 		biomes = new LayerSmooth(1000, biomes);
 		if (settings.addRivers) biomes = new LayerApplyRiver(biomes, riverLayout, ocean, deepOcean, river, mushroomIsland, icePlains, frozenRiver);
 		biomes.setWorldSeed(seed);
 		return biomes;
+	}
+
+	private static Layer addSnow(Layer layer, FractalSettings settings, int oceanShrink) {
+		if (settings.oceanShrink != oceanShrink) return layer;
+		if (settings.useClimaticBiomes) {
+			layer = new LayerAddClimate(2, layer);
+			layer = new LayerCoolWarmEdge(2, layer);
+			layer = new LayerHeatIceEdge(2, layer);
+			layer = new LayerRareClimate(3, layer);
+		} else if (settings.addSnow) layer = new LayerAddSnow(2, layer);
+		return layer;
+	}
+
+	private static Layer maybeAddSnow(Layer layer, FractalSettings settings, int oceanShrink) {
+		if (settings.oceanShrink != oceanShrink) return layer;
+		if (settings.useClimaticBiomes) return new LayerAddClimate(2, layer);
+		if (settings.addSnow) return new LayerAddSnow(2, layer);
+		return layer;
+	}
+
+	private static Layer maybeAddClimateEdge(Layer layer, FractalSettings settings, int oceanShrink) {
+		if (settings.oceanShrink != oceanShrink) return layer;
+		if (settings.useClimaticBiomes) {
+			layer = new LayerAddClimate(2, layer);
+			layer = new LayerCoolWarmEdge(2, layer);
+			layer = new LayerHeatIceEdge(2, layer);
+			layer = new LayerRareClimate(3, layer);
+		}
+		return layer;
 	}
 
 	public Layer(long seed) {
@@ -204,14 +280,16 @@ public abstract class Layer {
 	protected abstract BiomeInfo[] getNewBiomes(int x, int z, int width, int length);
 
 	public BiomeInfo[] getBiomes(int x, int z, int width, int length) {
-		if (this.cacheData == null || x != this.cacheX || z != this.cacheZ || width != this.cacheWidth || length != this.cacheLength) {
-			this.cacheX = x;
-			this.cacheZ = z;
-			this.cacheWidth = width;
-			this.cacheLength = length;
-			this.cacheData = this.getNewBiomes(x, z, width, length);
+		synchronized (this.cacheLock) {
+			if (this.cacheData == null || x != this.cacheX || z != this.cacheZ || width != this.cacheWidth || length != this.cacheLength) {
+				this.cacheX = x;
+				this.cacheZ = z;
+				this.cacheWidth = width;
+				this.cacheLength = length;
+				this.cacheData = this.getNewBiomes(x, z, width, length);
+			}
+			return this.cacheData;
 		}
-		return this.cacheData;
 	}
 
 	protected BiomeInfo[] forEach(int x, int z, int width, int length, UnaryOperator<BiomeInfo> operator) {

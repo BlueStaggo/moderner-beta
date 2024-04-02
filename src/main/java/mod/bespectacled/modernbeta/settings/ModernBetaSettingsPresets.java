@@ -1455,8 +1455,8 @@ public class ModernBetaSettingsPresets {
             Map.entry("minecraft:river", "-0.5;0"),
             Map.entry("minecraft:frozen_ocean", "-1.0;0.2"),
             Map.entry("minecraft:frozen_river", "-0.5;0"),
-            Map.entry("minecraft:snowy_tundra", "0.125;0.1"),
-            Map.entry("*minecraft:snowy_tundra", "0.45;0.6"),
+            Map.entry("minecraft:snowy_plains", "0.125;0.1"),
+            Map.entry("*minecraft:snowy_plains", "0.45;0.6"),
             Map.entry("minecraft:mushroom_fields", "0.2;0.6"),
             Map.entry("*minecraft:mushroom_fields", "0.0;0.05"),
             Map.entry("minecraft:beach", "0.0;0.05"),
@@ -1512,6 +1512,7 @@ public class ModernBetaSettingsPresets {
             Map.entry("minecraft:plains", "minecraft:sunflower_plains")
         );
         settingsBiome.fractalPlains = "minecraft:plains";
+        settingsBiome.fractalIcePlains = "minecraft:snowy_plains";
         settingsBiome.fractalAddSnow = true;
         settingsBiome.fractalAddMushroomIslands = true;
         settingsBiome.fractalAddBeaches = true;

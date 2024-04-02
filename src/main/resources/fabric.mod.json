@@ -3,9 +3,10 @@
   "id": "modern_beta",
   "version": "${version}",
 
-  "name": "Modern Beta Fabric",
+  "name": "Moderner Beta Fabric",
   "description": "Old world generation for modern Minecraft!",
   "authors": [
+    "BlueStaggo",
     "bespectacled"
   ],
   "contributors": [
@@ -17,8 +18,8 @@
     "ErzeKawek"
   ],
   "contact": {
-    "homepage": "https://github.com/b3spectacled/",
-    "sources": "https://github.com/b3spectacled/modern-beta-fabric",
+    "homepage": "https://github.com/BlueStaggo/",
+    "sources": "https://github.com/BlueStaggo/modern-beta-fabric",
     "issues": "https://github.com/b3spectacled/modern-beta-fabric/issues"
   },
 

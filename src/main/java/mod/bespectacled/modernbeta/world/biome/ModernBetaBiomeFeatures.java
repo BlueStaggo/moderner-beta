@@ -71,7 +71,7 @@ public class ModernBetaBiomeFeatures {
         }
     }
     
-    public static void addForestFeatures(GenerationSettings.LookupBackedBuilder builder, boolean pe) {
+    public static void addForestFeatures(GenerationSettings.LookupBackedBuilder builder, boolean pe, boolean hasBirch) {
         addDefaultFeatures(builder, pe ? ModernBetaFeatureSettings.PE : ModernBetaFeatureSettings.BETA);
         
         if (pe) {
@@ -80,7 +80,9 @@ public class ModernBetaBiomeFeatures {
         } else {
             builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_DANDELION_2);
             builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_POPPY);
-            builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.TREES_BETA_FOREST_BEES);
+            builder.feature(Feature.VEGETAL_DECORATION,
+                hasBirch ? ModernBetaVegetationPlacedFeatures.TREES_BETA_FOREST_BEES
+                : ModernBetaVegetationPlacedFeatures.TREES_BETA_OAK_FOREST_BEES);
 
             builder.feature(Feature.VEGETAL_DECORATION, VegetationPlacedFeatures.FOREST_FLOWERS);
             builder.feature(Feature.VEGETAL_DECORATION, VegetationPlacedFeatures.PATCH_GRASS_FOREST);
@@ -217,7 +219,7 @@ public class ModernBetaBiomeFeatures {
         DefaultBiomeFeatures.addDefaultVegetation(builder);
     }
     
-    public static void addTaigaFeatures(GenerationSettings.LookupBackedBuilder builder, boolean pe) {
+    public static void addTaigaFeatures(GenerationSettings.LookupBackedBuilder builder, boolean pe, boolean spruce) {
         addDefaultFeatures(builder, pe ? ModernBetaFeatureSettings.PE : ModernBetaFeatureSettings.BETA);
         
         if (pe) {
@@ -226,7 +228,9 @@ public class ModernBetaBiomeFeatures {
         } else {
             builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_DANDELION_2);
             builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_POPPY);
-            builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.TREES_BETA_TAIGA);
+            builder.feature(Feature.VEGETAL_DECORATION,
+                spruce ? ModernBetaVegetationPlacedFeatures.TREES_BETA_TAIGA
+                : ModernBetaVegetationPlacedFeatures.TREES_BETA_OAK_FOREST);
             builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_GRASS_TAIGA_1);
         }
         
@@ -277,12 +281,12 @@ public class ModernBetaBiomeFeatures {
         DefaultBiomeFeatures.addDefaultVegetation(builder);
     }
 
-    public static void addIcePlainsFeatures(GenerationSettings.LookupBackedBuilder builder) {
+    public static void addIcePlainsFeatures(GenerationSettings.LookupBackedBuilder builder, boolean grass) {
         addDefaultFeatures(builder, ModernBetaFeatureSettings.EARLY_RELEASE);
 
-        builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_POPPY);
+        if (grass) builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_POPPY);
         builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.TREES_BETA_SPARSE);
-        builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_GRASS_TAIGA_1);
+        if (grass) builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_GRASS_TAIGA_1);
 
         DefaultBiomeFeatures.addDefaultDisks(builder);
         DefaultBiomeFeatures.addDefaultMushrooms(builder);

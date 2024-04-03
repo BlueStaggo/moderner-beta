@@ -8,6 +8,6 @@ public class LayerAddSnow extends Layer {
 	@Override
 	protected BiomeInfo[] getNewBiomes(int x, int z, int width, int length) {
 		return forEach(x, z, width, length, b ->
-			!b.equals(DummyBiome.OCEAN.biomeInfo) && nextInt(5) == 0 ? DummyBiome.ICE_PLAINS.biomeInfo : b);
+			!b.biome().equals(DummyBiome.OCEAN) && nextInt(5) == 0 ? DummyBiome.ICE_PLAINS.biomeInfo : b);
 	}
 }

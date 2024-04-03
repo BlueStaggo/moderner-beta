@@ -33,7 +33,7 @@ public abstract class Layer {
 
 		Map<BiomeInfo, BiomeInfo> replacementBiomes = Map.ofEntries(
 			Map.entry(DummyBiome.OCEAN.biomeInfo, BiomeInfo.of(ocean)),
-			Map.entry(DummyBiome.FROZEN_OCEAN.biomeInfo, BiomeInfo.of(frozenOcean)),
+			Map.entry(DummyBiome.FROZEN_OCEAN.biomeInfo, BiomeInfo.of(icePlains)),
 			Map.entry(DummyBiome.ICE_PLAINS.biomeInfo, BiomeInfo.of(icePlains)),
 			Map.entry(DummyBiome.MUSHROOM_ISLAND.biomeInfo, BiomeInfo.of(mushroomIsland)),
 			Map.entry(DummyBiome.DEEP_OCEAN.biomeInfo, BiomeInfo.of(deepOcean))
@@ -46,37 +46,22 @@ public abstract class Layer {
 			land = new LayerInitLand(1);
 			switch (settings.terrainType) {
 				case BETA:
-					land = addSnow(land, settings, 3);
-					if (settings.oceanShrink <= 4) {
-						land = new LayerFuzzyZoom(2000, land);
-						land = new LayerAddLandB18(1, land);
-					}
-					land = addSnow(land, settings, 2);
-					if (settings.oceanShrink <= 3) {
-						land = new LayerZoom(2001, land);
-						land = new LayerAddLandB18(2, land);
-					}
-					land = addSnow(land, settings, 1);
-					if (settings.oceanShrink <= 2) {
-						land = new LayerZoom(2002, land);
-						land = new LayerAddLandB18(3, land);
-					}
-					land = addSnow(land, settings, 0);
-					if (settings.oceanShrink <= 1) {
-						land = new LayerZoom(2003, land);
-						land = new LayerAddLandB18(3, land);
-					}
-					if (settings.oceanShrink <= 0) {
-						land = new LayerZoom(2004, land);
-						land = new LayerAddLandB18(3, land);
-					}
-					for (int i = 0; i < -settings.oceanShrink; i++) {
-						land = new LayerZoom(2005 + i, land);
-						land = new LayerAddLandB18(3, land);
+					for (int i = 0; i < 5 - settings.oceanShrink; i++) {
+						land = addSnow(land, settings, 3 - i);
+						land = i == 0 ? new LayerFuzzyZoom(2000, land) : new LayerZoom(2000 + i, land);
+						land = new LayerAddLandB18(Math.min(i + 1, 3), land);
 					}
 					break;
 
 				case EARLY_RELEASE:
+					for (int i = 0; i < 4 - settings.oceanShrink; i++) {
+						land = addSnow(land, settings, 2 - i);
+						land = i == 0 ? new LayerFuzzyZoom(2000, land) : new LayerZoom(2000 + i, land);
+						land = new LayerAddLand(i + 1, land);
+					}
+					break;
+
+				case MAJOR_RELEASE:
 					land = addSnow(land, settings, 2);
 					if (settings.oceanShrink <= 3) {
 						land = new LayerFuzzyZoom(2000, land);
@@ -86,47 +71,23 @@ public abstract class Layer {
 					if (settings.oceanShrink <= 2) {
 						land = new LayerZoom(2001, land);
 						land = new LayerAddLand(2, land);
-					}
-					land = addSnow(land, settings, 0);
-					if (settings.oceanShrink <= 1) {
-						land = new LayerZoom(2002, land);
-						land = new LayerAddLand(3, land);
-					}
-					if (settings.oceanShrink <= 0) {
-						land = new LayerZoom(2003, land);
-						land = new LayerAddLand(4, land);
-					}
-					for (int i = 0; i < -settings.oceanShrink; i++) {
-						land = new LayerZoom(2004 + i, land);
-						land = new LayerAddLand(5 + i, land);
-					}
-					break;
-
-				case MAJOR_RELEASE:
-					land = addSnow(land, settings, 2);
-					if (settings.oceanShrink <= 3) {
-						land = new LayerFuzzyZoom(2000, land);
-						land = LayerAddLand.r17(1, land);
-					}
-					land = addSnow(land, settings, 1);
-					if (settings.oceanShrink <= 2) {
-						land = new LayerZoom(2001, land);
-						land = LayerAddLand.r17(2, land);
-						land = LayerAddLand.r17(50, land);
-						land = LayerAddLand.r17(70, land);
+						land = new LayerAddLand(50, land);
+						land = new LayerAddLand(70, land);
 						land = new LayerReduceOcean(2, land);
 						land = maybeAddSnow(land, settings, 0);
-						land = LayerAddLand.r17(3, land);
+						land = new LayerAddLand(3, land);
 						land = maybeAddClimateEdge(land, settings, 0);
 					}
 					if (settings.oceanShrink <= 1) {
 						land = new LayerZoom(2002, land);
 					}
+					land = addSnow(land, settings, -1);
 					if (settings.oceanShrink <= 0) {
 						land = new LayerZoom(2003, land);
-						land = LayerAddLand.r17(4, land);
+						land = new LayerAddLand(4, land);
 					}
 					for (int i = 0; i < -settings.oceanShrink; i++) {
+						land = addSnow(land, settings, -2 - i);
 						land = new LayerZoom(2004 + i, land);
 						land = new LayerAddLand(5 + i, land);
 					}
@@ -148,7 +109,7 @@ public abstract class Layer {
 
 		Layer biomes = new LayerAddBiomes(200, land, settings.biomes, replacementBiomes, settings.climaticBiomes);
 		for (int i = 0; i < settings.hillScale; i++) {
-			if (settings.subVariantScale == i && !settings.subVariants.isEmpty()) biomes = new LayerSubVariants(100, biomes, settings.subVariants);
+			if (settings.subVariantScale == i && !settings.subVariants.isEmpty()) biomes = new LayerSubVariants(200 + i, biomes, settings.subVariants);
 
 			if (settings.beachShrink == i - 2 - settings.hillScale && settings.addBeaches) {
 				biomes = new LayerAddEdge(1000, biomes, beach, ocean, mushroomIsland,
@@ -157,7 +118,7 @@ public abstract class Layer {
 
 			biomes = new LayerZoom(1000 + i, biomes);
 		}
-		if (settings.subVariantScale == settings.hillScale && !settings.subVariants.isEmpty()) biomes = new LayerSubVariants(100, biomes, settings.subVariants);
+		if (settings.subVariantScale == settings.hillScale && !settings.subVariants.isEmpty()) biomes = new LayerSubVariants(200 + settings.hillScale, biomes, settings.subVariants);
 		if (settings.useClimaticBiomes) biomes = new LayerAddEdge(1000, biomes, settings.edgeVariants, biomeLookup);
 		if (settings.addHills) {
 			int neighborRequirement = settings.terrainType == FractalSettings.TerrainType.MAJOR_RELEASE ? 3 : 4;
@@ -177,8 +138,6 @@ public abstract class Layer {
 			if (i == 0) {
 				if (settings.oceans) biomes = settings.terrainType == FractalSettings.TerrainType.BETA
 					? new LayerAddLandB18(3, biomes, ocean, plains, frozenOcean, icePlains)
-					: settings.terrainType == FractalSettings.TerrainType.MAJOR_RELEASE
-					? LayerAddLand.r17(3, biomes, ocean, plains, frozenOcean, icePlains)
 					: new LayerAddLand(3, biomes, ocean, plains, frozenOcean, icePlains);
 				if (!settings.addBeaches && settings.addMushroomIslands) biomes = new LayerMushroomIslandShore(biomes, mushroomIsland, ocean);
 			}

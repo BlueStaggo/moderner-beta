@@ -106,12 +106,14 @@ public class ModernBetaVegetationPlacedFeatures {
     public static final RegistryKey<PlacedFeature> TREES_BETA_SEASONAL_FOREST = ModernBetaPlacedFeatures.of(ModernBetaFeatureTags.TREES_BETA_SEASONAL_FOREST);
     public static final RegistryKey<PlacedFeature> TREES_BETA_SPARSE = ModernBetaPlacedFeatures.of(ModernBetaFeatureTags.TREES_BETA_SPARSE);
     public static final RegistryKey<PlacedFeature> TREES_BETA_TAIGA = ModernBetaPlacedFeatures.of(ModernBetaFeatureTags.TREES_BETA_TAIGA);
+    public static final RegistryKey<PlacedFeature> TREES_BETA_OAK_FOREST = ModernBetaPlacedFeatures.of(ModernBetaFeatureTags.TREES_BETA_OAK_FOREST);
 
     public static final RegistryKey<PlacedFeature> TREES_BETA_FOREST_BEES = ModernBetaPlacedFeatures.of(ModernBetaFeatureTags.TREES_BETA_FOREST_BEES);
     public static final RegistryKey<PlacedFeature> TREES_BETA_RAINFOREST_BEES = ModernBetaPlacedFeatures.of(ModernBetaFeatureTags.TREES_BETA_RAINFOREST_BEES);
     public static final RegistryKey<PlacedFeature> TREES_BETA_SEASONAL_FOREST_BEES = ModernBetaPlacedFeatures.of(ModernBetaFeatureTags.TREES_BETA_SEASONAL_FOREST_BEES);
     public static final RegistryKey<PlacedFeature> TREES_BETA_SPARSE_BEES = ModernBetaPlacedFeatures.of(ModernBetaFeatureTags.TREES_BETA_SPARSE_BEES);
-    
+    public static final RegistryKey<PlacedFeature> TREES_BETA_OAK_FOREST_BEES = ModernBetaPlacedFeatures.of(ModernBetaFeatureTags.TREES_BETA_OAK_FOREST_BEES);
+
     public static final RegistryKey<PlacedFeature> TREES_PE_FOREST = ModernBetaPlacedFeatures.of(ModernBetaFeatureTags.TREES_PE_FOREST);
     public static final RegistryKey<PlacedFeature> TREES_PE_RAINFOREST = ModernBetaPlacedFeatures.of(ModernBetaFeatureTags.TREES_PE_RAINFOREST);
     public static final RegistryKey<PlacedFeature> TREES_PE_SEASONAL_FOREST = ModernBetaPlacedFeatures.of(ModernBetaFeatureTags.TREES_PE_SEASONAL_FOREST);
@@ -162,12 +164,14 @@ public class ModernBetaVegetationPlacedFeatures {
         RegistryEntry.Reference<ConfiguredFeature<?, ?>> treesBetaSeasonalForest = registryConfigured.getOrThrow(ModernBetaVegetationConfiguredFeatures.TREES_BETA_SEASONAL_FOREST);
         RegistryEntry.Reference<ConfiguredFeature<?, ?>> treesBetaSparse = registryConfigured.getOrThrow(ModernBetaVegetationConfiguredFeatures.TREES_BETA_SPARSE);
         RegistryEntry.Reference<ConfiguredFeature<?, ?>> treesBetaTaiga = registryConfigured.getOrThrow(ModernBetaVegetationConfiguredFeatures.TREES_BETA_TAIGA);
+        RegistryEntry.Reference<ConfiguredFeature<?, ?>> treesBetaOakForest = registryConfigured.getOrThrow(ModernBetaVegetationConfiguredFeatures.TREES_BETA_OAK_FOREST);
 
         RegistryEntry.Reference<ConfiguredFeature<?, ?>> treesBetaForestBees = registryConfigured.getOrThrow(ModernBetaVegetationConfiguredFeatures.TREES_BETA_FOREST_BEES);
         RegistryEntry.Reference<ConfiguredFeature<?, ?>> treesBetaRainforestBees = registryConfigured.getOrThrow(ModernBetaVegetationConfiguredFeatures.TREES_BETA_RAINFOREST_BEES);
         RegistryEntry.Reference<ConfiguredFeature<?, ?>> treesBetaSeasonalForestBees = registryConfigured.getOrThrow(ModernBetaVegetationConfiguredFeatures.TREES_BETA_SEASONAL_FOREST_BEES);
         RegistryEntry.Reference<ConfiguredFeature<?, ?>> treesBetaSparseBees = registryConfigured.getOrThrow(ModernBetaVegetationConfiguredFeatures.TREES_BETA_SPARSE_BEES);
-        
+        RegistryEntry.Reference<ConfiguredFeature<?, ?>> treesBetaOakForestBees = registryConfigured.getOrThrow(ModernBetaVegetationConfiguredFeatures.TREES_BETA_OAK_FOREST_BEES);
+
         RegistryEntry.Reference<ConfiguredFeature<?, ?>> treesPEForest = registryConfigured.getOrThrow(ModernBetaVegetationConfiguredFeatures.TREES_PE_FOREST);
         RegistryEntry.Reference<ConfiguredFeature<?, ?>> treesPERainforest = registryConfigured.getOrThrow(ModernBetaVegetationConfiguredFeatures.TREES_PE_RAINFOREST);
         RegistryEntry.Reference<ConfiguredFeature<?, ?>> treesPESeasonalForest = registryConfigured.getOrThrow(ModernBetaVegetationConfiguredFeatures.TREES_PE_SEASONAL_FOREST);
@@ -221,12 +225,14 @@ public class ModernBetaVegetationPlacedFeatures {
         PlacedFeatures.register(featureRegisterable, TREES_BETA_SEASONAL_FOREST, treesBetaSeasonalForest, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_BETA_SEASONAL_FOREST, NoiseBasedCountPlacementModifierBeta.of(2, 0.1f, 1)));
         PlacedFeatures.register(featureRegisterable, TREES_BETA_SPARSE, treesBetaSparse, withCountExtraAndTreeModifier(0, 0.1f, 1));
         PlacedFeatures.register(featureRegisterable, TREES_BETA_TAIGA, treesBetaTaiga, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_BETA_TAIGA, NoiseBasedCountPlacementModifierBeta.of(5, 0.1f, 1)));
-        
+        PlacedFeatures.register(featureRegisterable, TREES_BETA_OAK_FOREST, treesBetaOakForest, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_BETA_OAK_FOREST, NoiseBasedCountPlacementModifierBeta.of(5, 0.1f, 1)));
+
         PlacedFeatures.register(featureRegisterable, TREES_BETA_FOREST_BEES, treesBetaForestBees, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_BETA_FOREST_BEES, NoiseBasedCountPlacementModifierBeta.of(5, 0.1f, 1)));
         PlacedFeatures.register(featureRegisterable, TREES_BETA_RAINFOREST_BEES, treesBetaRainforestBees, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_BETA_RAINFOREST_BEES, NoiseBasedCountPlacementModifierBeta.of(5, 0.1f, 1)));
         PlacedFeatures.register(featureRegisterable, TREES_BETA_SEASONAL_FOREST_BEES, treesBetaSeasonalForestBees, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_BETA_SEASONAL_FOREST_BEES, NoiseBasedCountPlacementModifierBeta.of(2, 0.1f, 1)));
         PlacedFeatures.register(featureRegisterable, TREES_BETA_SPARSE_BEES, treesBetaSparseBees, withCountExtraAndTreeModifier(0, 0.1f, 1));
-        
+        PlacedFeatures.register(featureRegisterable, TREES_BETA_OAK_FOREST_BEES, treesBetaOakForestBees, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_BETA_OAK_FOREST_BEES, NoiseBasedCountPlacementModifierBeta.of(5, 0.1f, 1)));
+
         PlacedFeatures.register(featureRegisterable, TREES_PE_FOREST, treesPEForest, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_PE_FOREST_BEES, NoiseBasedCountPlacementModifierBeta.of(2, 0.1f, 1)));
         PlacedFeatures.register(featureRegisterable, TREES_PE_RAINFOREST, treesPERainforest, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_PE_RAINFOREST_BEES, NoiseBasedCountPlacementModifierBeta.of(2, 0.1f, 1)));
         PlacedFeatures.register(featureRegisterable, TREES_PE_SEASONAL_FOREST, treesPESeasonalForest, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_PE_SEASONAL_FOREST_BEES, NoiseBasedCountPlacementModifierBeta.of(1, 0.1f, 1)));

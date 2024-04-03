@@ -11,7 +11,7 @@ import net.minecraft.world.biome.SpawnSettings;
 import net.minecraft.world.gen.carver.ConfiguredCarver;
 import net.minecraft.world.gen.feature.PlacedFeature;
 
-public class BiomeBetaForest {
+public class BiomeBetaOakForest {
     public static Biome create(RegistryEntryLookup<PlacedFeature> featureLookup, RegistryEntryLookup<ConfiguredCarver<?>> carverLookup) {
         SpawnSettings.Builder spawnSettings = new SpawnSettings.Builder();
         ModernBetaBiomeMobs.addCommonMobs(spawnSettings);
@@ -20,7 +20,7 @@ public class BiomeBetaForest {
         ModernBetaBiomeMobs.addTurtles(spawnSettings);
         
         GenerationSettings.LookupBackedBuilder genSettings = new GenerationSettings.LookupBackedBuilder(featureLookup, carverLookup);
-        ModernBetaBiomeFeatures.addForestFeatures(genSettings, false, true);
+        ModernBetaBiomeFeatures.addForestFeatures(genSettings, false, false);
         
         return (new Biome.Builder())
             .precipitation(true)

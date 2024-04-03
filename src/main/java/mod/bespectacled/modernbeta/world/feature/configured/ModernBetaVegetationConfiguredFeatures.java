@@ -53,12 +53,14 @@ public class ModernBetaVegetationConfiguredFeatures {
     public static final RegistryKey<ConfiguredFeature<?, ?>> TREES_BETA_SEASONAL_FOREST = ModernBetaConfiguredFeatures.of(ModernBetaFeatureTags.TREES_BETA_SEASONAL_FOREST);
     public static final RegistryKey<ConfiguredFeature<?, ?>> TREES_BETA_SPARSE = ModernBetaConfiguredFeatures.of(ModernBetaFeatureTags.TREES_BETA_SPARSE);
     public static final RegistryKey<ConfiguredFeature<?, ?>> TREES_BETA_TAIGA = ModernBetaConfiguredFeatures.of(ModernBetaFeatureTags.TREES_BETA_TAIGA);
+    public static final RegistryKey<ConfiguredFeature<?, ?>> TREES_BETA_OAK_FOREST = ModernBetaConfiguredFeatures.of(ModernBetaFeatureTags.TREES_BETA_OAK_FOREST);
 
     public static final RegistryKey<ConfiguredFeature<?, ?>> TREES_BETA_FOREST_BEES = ModernBetaConfiguredFeatures.of(ModernBetaFeatureTags.TREES_BETA_FOREST_BEES);
     public static final RegistryKey<ConfiguredFeature<?, ?>> TREES_BETA_RAINFOREST_BEES = ModernBetaConfiguredFeatures.of(ModernBetaFeatureTags.TREES_BETA_RAINFOREST_BEES);
     public static final RegistryKey<ConfiguredFeature<?, ?>> TREES_BETA_SEASONAL_FOREST_BEES = ModernBetaConfiguredFeatures.of(ModernBetaFeatureTags.TREES_BETA_SEASONAL_FOREST_BEES);
     public static final RegistryKey<ConfiguredFeature<?, ?>> TREES_BETA_SPARSE_BEES = ModernBetaConfiguredFeatures.of(ModernBetaFeatureTags.TREES_BETA_SPARSE_BEES);
-    
+    public static final RegistryKey<ConfiguredFeature<?, ?>> TREES_BETA_OAK_FOREST_BEES = ModernBetaConfiguredFeatures.of(ModernBetaFeatureTags.TREES_BETA_OAK_FOREST_BEES);
+
     public static final RegistryKey<ConfiguredFeature<?, ?>> TREES_PE_FOREST = ModernBetaConfiguredFeatures.of(ModernBetaFeatureTags.TREES_PE_FOREST);
     public static final RegistryKey<ConfiguredFeature<?, ?>> TREES_PE_RAINFOREST = ModernBetaConfiguredFeatures.of(ModernBetaFeatureTags.TREES_PE_RAINFOREST);
     public static final RegistryKey<ConfiguredFeature<?, ?>> TREES_PE_SEASONAL_FOREST = ModernBetaConfiguredFeatures.of(ModernBetaFeatureTags.TREES_PE_SEASONAL_FOREST);
@@ -107,12 +109,14 @@ public class ModernBetaVegetationConfiguredFeatures {
         ConfiguredFeatures.register(featureRegisterable, TREES_BETA_SEASONAL_FOREST, Feature.RANDOM_SELECTOR, createSeasonalForestRandomTreeConfig(registryPlaced, false));
         ConfiguredFeatures.register(featureRegisterable, TREES_BETA_SPARSE, Feature.RANDOM_SELECTOR, createDefaultRandomTreeConfig(registryPlaced, false));
         ConfiguredFeatures.register(featureRegisterable, TREES_BETA_TAIGA, Feature.RANDOM_SELECTOR, createTaigaRandomTreeConfig(registryPlaced));
+        ConfiguredFeatures.register(featureRegisterable, TREES_BETA_OAK_FOREST, Feature.RANDOM_SELECTOR, createOakForestRandomTreeConfig(registryPlaced, false));
 
         ConfiguredFeatures.register(featureRegisterable, TREES_BETA_FOREST_BEES, Feature.RANDOM_SELECTOR, createForestRandomTreeConfig(registryPlaced, true));
         ConfiguredFeatures.register(featureRegisterable, TREES_BETA_RAINFOREST_BEES, Feature.RANDOM_SELECTOR, createRainforestRandomTreeConfig(registryPlaced, true));
         ConfiguredFeatures.register(featureRegisterable, TREES_BETA_SEASONAL_FOREST_BEES, Feature.RANDOM_SELECTOR, createSeasonalForestRandomTreeConfig(registryPlaced, true));
         ConfiguredFeatures.register(featureRegisterable, TREES_BETA_SPARSE_BEES, Feature.RANDOM_SELECTOR, createDefaultRandomTreeConfig(registryPlaced, true));
-        
+        ConfiguredFeatures.register(featureRegisterable, TREES_BETA_OAK_FOREST_BEES, Feature.RANDOM_SELECTOR, createOakForestRandomTreeConfig(registryPlaced, true));
+
         ConfiguredFeatures.register(featureRegisterable, TREES_PE_FOREST, Feature.RANDOM_SELECTOR, createPEForestRandomTreeConfig(registryPlaced, false));
         ConfiguredFeatures.register(featureRegisterable, TREES_PE_RAINFOREST, Feature.RANDOM_SELECTOR, createOakTreeConfig(registryPlaced, false));
         ConfiguredFeatures.register(featureRegisterable, TREES_PE_SEASONAL_FOREST, Feature.RANDOM_SELECTOR, createOakTreeConfig(registryPlaced, false));
@@ -153,6 +157,14 @@ public class ModernBetaVegetationConfiguredFeatures {
         
         return new RandomFeatureConfig(List.of(withChance(bees ? oakBees : oak, 0.1f)), fancyOak);
     }
+
+    private static RandomFeatureConfig createOakForestRandomTreeConfig(RegistryEntryLookup<PlacedFeature> registryPlaced, boolean bees) {
+        RegistryEntry.Reference<PlacedFeature> fancyOak = registryPlaced.getOrThrow(ModernBetaTreePlacedFeatures.FANCY_OAK);
+        RegistryEntry.Reference<PlacedFeature> oak = registryPlaced.getOrThrow(TreePlacedFeatures.OAK_CHECKED);
+        RegistryEntry.Reference<PlacedFeature> oakBees = registryPlaced.getOrThrow(TreePlacedFeatures.OAK_BEES_0002);
+
+        return new RandomFeatureConfig(List.of(withChance(fancyOak, 1.0f / 3.0f)), bees ? oakBees : oak);
+    }
     
     private static RandomFeatureConfig createForestRandomTreeConfig(RegistryEntryLookup<PlacedFeature> registryPlaced, boolean bees) {
         RegistryEntry.Reference<PlacedFeature> fancyOak = registryPlaced.getOrThrow(ModernBetaTreePlacedFeatures.FANCY_OAK);
@@ -162,7 +174,7 @@ public class ModernBetaVegetationConfiguredFeatures {
         RegistryEntry.Reference<PlacedFeature> birch = registryPlaced.getOrThrow(TreePlacedFeatures.BIRCH_CHECKED);
         RegistryEntry.Reference<PlacedFeature> birchBees = registryPlaced.getOrThrow(TreePlacedFeatures.BIRCH_BEES_0002);
         
-        return new RandomFeatureConfig(List.of(withChance(bees ? birchBees : birch, 0.2f), withChance(fancyOak, 0.33333334f)), bees ? oakBees : oak);
+        return new RandomFeatureConfig(List.of(withChance(bees ? birchBees : birch, 0.2f), withChance(fancyOak, 1.0f / 3.0f)), bees ? oakBees : oak);
     }
     
     private static RandomFeatureConfig createRainforestRandomTreeConfig(RegistryEntryLookup<PlacedFeature> registryPlaced, boolean bees) {
@@ -170,7 +182,7 @@ public class ModernBetaVegetationConfiguredFeatures {
         RegistryEntry.Reference<PlacedFeature> oak = registryPlaced.getOrThrow(TreePlacedFeatures.OAK_CHECKED);
         RegistryEntry.Reference<PlacedFeature> oakBees = registryPlaced.getOrThrow(TreePlacedFeatures.OAK_BEES_0002);
         
-        return new RandomFeatureConfig(List.of(withChance(fancyOak, 0.33333334f)), bees ? oakBees : oak);
+        return new RandomFeatureConfig(List.of(withChance(fancyOak, 1.0f / 3.0f)), bees ? oakBees : oak);
     }
     
     private static RandomFeatureConfig createSeasonalForestRandomTreeConfig(RegistryEntryLookup<PlacedFeature> registryPlaced, boolean bees) {
@@ -185,7 +197,7 @@ public class ModernBetaVegetationConfiguredFeatures {
         RegistryEntry.Reference<PlacedFeature> pine = registryPlaced.getOrThrow(TreePlacedFeatures.PINE_CHECKED);
         RegistryEntry.Reference<PlacedFeature> spruce = registryPlaced.getOrThrow(TreePlacedFeatures.SPRUCE_CHECKED);
         
-        return new RandomFeatureConfig(List.of(withChance(pine, 0.33333334f)), spruce);
+        return new RandomFeatureConfig(List.of(withChance(pine, 1.0f / 3.0f)), spruce);
     }
     
     private static RandomFeatureConfig createPEForestRandomTreeConfig(RegistryEntryLookup<PlacedFeature> registryPlaced, boolean bees) {

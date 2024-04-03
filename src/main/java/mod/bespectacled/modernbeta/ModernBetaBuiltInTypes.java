@@ -135,9 +135,10 @@ public final class ModernBetaBuiltInTypes {
     }
     
     public enum Preset {
-        BETA("beta"),
+        BETA_1_7_3("beta"),
+        BETA_1_1_02("beta_1_1_02"),
         SKYLANDS("skylands"),
-        ALPHA("alpha"),
+        ALPHA_1_1_2_01("alpha"),
         INFDEV_611("infdev_611"),
         INFDEV_420("infdev_420"),
         INFDEV_415("infdev_415"),
@@ -147,6 +148,7 @@ public final class ModernBetaBuiltInTypes {
         CLASSIC_0_30("classic_0_30"),
         PE("pe"),
         BETA_1_8_1("beta_1_8_1"),
+        BETA_1_9_PRE_3("beta_1_9_pre_3"),
         RELEASE_1_0_0("release_1_0_0"),
         RELEASE_1_1("release_1_1"),
         RELEASE_1_2_5("release_1_2_5"),

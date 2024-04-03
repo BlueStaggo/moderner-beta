@@ -3,14 +3,13 @@ package mod.bespectacled.modernbeta.world.biome;
 import mod.bespectacled.modernbeta.api.registry.ModernBetaRegistries;
 import mod.bespectacled.modernbeta.world.biome.provider.fractal.BiomeInfo;
 import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.biome.Biome;
 
 import java.util.List;
 
-public record HeightConfig(float scale, float depth, byte type) {
+public record HeightConfig(float depth, float scale, byte type) {
 	public static final HeightConfig DEFAULT = new HeightConfig(0.1F, 0.3F);
 	public static final HeightConfig OCEAN = new HeightConfig(-1.0F, 0.4F);
 	public static final HeightConfig DESERT = new HeightConfig(0.1F, 0.2F);
@@ -33,12 +32,12 @@ public record HeightConfig(float scale, float depth, byte type) {
 	public static final HeightConfig PLATEAU_HILL = new HeightConfig(1.8F, 0.2F, 1);
 	public static final HeightConfig DEEP_OCEAN = new HeightConfig(-1.8F, 0.2F);
 
-	public HeightConfig(float scale, float depth) {
-		this(scale, depth, 0);
+	public HeightConfig(float depth, float scale) {
+		this(depth, scale, 0);
 	}
 
-	public HeightConfig(float scale, float depth, int type) {
-		this(scale, depth, (byte) type);
+	public HeightConfig(float depth, float scale, int type) {
+		this(depth, scale, (byte) type);
 	}
 
 	public static HeightConfig getHeightConfig(BiomeInfo biomeInfo) {
@@ -55,4 +54,13 @@ public record HeightConfig(float scale, float depth, byte type) {
     private static TagKey<Biome> keyOf(String id) {
         return TagKey.of(RegistryKeys.BIOME, new Identifier(id));
     }
+
+	@Override
+	public String toString() {
+		return String.format(
+			"[depth=%.3f, scale=%.3f]",
+			this.depth,
+			this.scale
+		);
+	}
 }

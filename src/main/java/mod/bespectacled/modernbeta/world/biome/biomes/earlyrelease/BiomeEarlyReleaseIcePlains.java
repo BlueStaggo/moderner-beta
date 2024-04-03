@@ -16,7 +16,7 @@ public class BiomeEarlyReleaseIcePlains {
         ModernBetaBiomeMobs.addSquid(spawnSettings);
 
         GenerationSettings.LookupBackedBuilder genSettings = new GenerationSettings.LookupBackedBuilder(featureLookup, carverLookup);
-        ModernBetaBiomeFeatures.addIcePlainsFeatures(genSettings);
+        ModernBetaBiomeFeatures.addIcePlainsFeatures(genSettings, true);
 
         return (new Biome.Builder())
             .precipitation(true)

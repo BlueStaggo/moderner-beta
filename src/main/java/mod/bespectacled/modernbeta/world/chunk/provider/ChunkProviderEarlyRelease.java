@@ -1,7 +1,6 @@
 package mod.bespectacled.modernbeta.world.chunk.provider;
 
-import mod.bespectacled.modernbeta.ModernBeta;
-import mod.bespectacled.modernbeta.api.world.chunk.ChunkProviderNoise;
+import mod.bespectacled.modernbeta.api.world.chunk.ChunkProviderForcedHeight;
 import mod.bespectacled.modernbeta.api.world.chunk.surface.SurfaceConfig;
 import mod.bespectacled.modernbeta.api.world.spawn.SpawnLocator;
 import mod.bespectacled.modernbeta.util.BlockStates;
@@ -10,7 +9,6 @@ import mod.bespectacled.modernbeta.util.noise.PerlinOctaveNoise;
 import mod.bespectacled.modernbeta.util.noise.SimpleNoisePos;
 import mod.bespectacled.modernbeta.world.biome.HeightConfig;
 import mod.bespectacled.modernbeta.world.biome.ModernBetaBiomeSource;
-import mod.bespectacled.modernbeta.world.biome.provider.fractal.BiomeInfo;
 import mod.bespectacled.modernbeta.world.chunk.ModernBetaChunkGenerator;
 import mod.bespectacled.modernbeta.world.spawn.SpawnLocatorRelease;
 import net.minecraft.block.BlockState;
@@ -18,7 +16,6 @@ import net.minecraft.block.Blocks;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.ChunkRegion;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.biome.Biome;
@@ -26,31 +23,16 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.StructureAccessor;
 import net.minecraft.world.gen.chunk.AquiferSampler;
 import net.minecraft.world.gen.noise.NoiseConfig;
-import org.slf4j.event.Level;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 
-public class ChunkProviderEarlyRelease extends ChunkProviderNoise {
-    private static final float[] BIOME_HEIGHT_WEIGHTS = new float[25];
-
+public class ChunkProviderEarlyRelease extends ChunkProviderForcedHeight {
     private final PerlinOctaveNoise minLimitOctaveNoise;
     private final PerlinOctaveNoise maxLimitOctaveNoise;
     private final PerlinOctaveNoise mainOctaveNoise;
     private final PerlinOctaveNoise surfaceOctaveNoise;
     private final PerlinOctaveNoise depthOctaveNoise;
     private final PerlinOctaveNoise forestOctaveNoise;
-    private final Map<BiomeInfo, HeightConfig> heightOverrideCache;
-
-    static {
-        for (int x = -2; x <= 2; x++) {
-            for (int z = -2; z <= 2; z++) {
-                float value = 10.0F / MathHelper.sqrt((float)(x * x + z * z) + 0.2F);
-                BIOME_HEIGHT_WEIGHTS[x + 2 + (z + 2) * 5] = value;
-            }
-        }
-    }
 
     public ChunkProviderEarlyRelease(ModernBetaChunkGenerator chunkGenerator, long seed) {
         super(chunkGenerator, seed);
@@ -62,8 +44,6 @@ public class ChunkProviderEarlyRelease extends ChunkProviderNoise {
         new PerlinOctaveNoise(this.random, 10, true);
         this.depthOctaveNoise = new PerlinOctaveNoise(this.random, 16, true);
         this.forestOctaveNoise = new PerlinOctaveNoise(this.random, 8, true);
-
-        this.heightOverrideCache = new HashMap<>();
     }
     
     @Override
@@ -257,33 +237,7 @@ public class ChunkProviderEarlyRelease extends ChunkProviderNoise {
         
         double depth = this.depthOctaveNoise.sampleXZWrapped(noiseX, noiseZ, depthNoiseScaleX, depthNoiseScaleZ);
 
-        float biomeHeightStretch = 0.0F;
-        float biomeSurfaceHeight = 0.0F;
-        float totalBiomeHeightWeight = 0.0F;
-
-        BiomeInfo biome = this.getBiomeInfo(noiseX, noiseZ);
-        double minSurfaceHeight = this.getHeightConfig(biome).scale();
-
-        for (int biomeX = -2; biomeX <= 2; biomeX++) {
-            for (int biomeZ = -2; biomeZ <= 2; biomeZ++) {
-                biome = this.getBiomeInfo(noiseX + biomeX, noiseZ + biomeZ);
-                HeightConfig heightConfig = this.getHeightConfig(biome);
-
-                float weight = BIOME_HEIGHT_WEIGHTS[biomeX + 2 + (biomeZ + 2) * 5] / (heightConfig.scale() + 2.0F);
-                if (heightConfig.scale() > minSurfaceHeight) {
-                    weight /= 2.0F;
-                }
-
-                biomeHeightStretch += heightConfig.depth() * weight;
-                biomeSurfaceHeight += heightConfig.scale() * weight;
-                totalBiomeHeightWeight += weight;
-            }
-        }
-
-        biomeHeightStretch /= totalBiomeHeightWeight;
-        biomeSurfaceHeight /= totalBiomeHeightWeight;
-        biomeHeightStretch = biomeHeightStretch * 0.9F + 0.1F;
-        biomeSurfaceHeight = (biomeSurfaceHeight * 4.0F - 1.0F) / 8.0F;
+        HeightConfig heightConfig = this.getHeightConfigAt(noiseX, noiseZ);
 
         depth /= 8000D;
 
@@ -309,7 +263,7 @@ public class ChunkProviderEarlyRelease extends ChunkProviderNoise {
             depth /= 8D;
         }
 
-        depth = biomeSurfaceHeight + depth * 0.2D;
+        depth = heightConfig.depth() + depth * 0.2D;
         depth *= baseSize / 8.0D;
         depth = baseSize + depth * 4.0D;
         
@@ -319,7 +273,7 @@ public class ChunkProviderEarlyRelease extends ChunkProviderNoise {
             double density;
             double heightmapDensity;
             
-            double densityOffset = this.getOffset(noiseY, heightStretch, depth, biomeHeightStretch);
+            double densityOffset = this.getOffset(noiseY, heightStretch, depth, heightConfig.scale());
                        
             double mainNoise = (this.mainOctaveNoise.sampleWrapped(
                 noiseX, noiseY, noiseZ,
@@ -392,35 +346,5 @@ public class ChunkProviderEarlyRelease extends ChunkProviderNoise {
             offset *= 4D;
         
         return offset;
-    }
-
-    private BiomeInfo getBiomeInfo(int biomeX, int biomeZ) {
-        if (chunkGenerator.getBiomeSource() instanceof ModernBetaBiomeSource modernBetaBiomeSource) {
-            return modernBetaBiomeSource.getBiomeForHeightGen(biomeX, 16, biomeZ);
-        } else {
-            return BiomeInfo.of(this.getBiome(biomeX, 16, biomeZ, null));
-        }
-    }
-
-    private HeightConfig getHeightConfig(BiomeInfo biomeInfo) {
-        HeightConfig config = HeightConfig.getHeightConfig(biomeInfo);
-        String id = biomeInfo.getId();
-        if (this.chunkSettings.releaseHeightOverrides.containsKey(id)) {
-            HeightConfig fallbackConfig = config;
-            config = this.heightOverrideCache.computeIfAbsent(biomeInfo, k -> {
-                String heightConfigString = this.chunkSettings.releaseHeightOverrides.get(id);
-                String[] heightConfigPair = heightConfigString.split(";");
-                try {
-                    float scale = Float.parseFloat(heightConfigPair[0]);
-                    float depth = Float.parseFloat(heightConfigPair[1]);
-                    return new HeightConfig(scale, depth);
-                } catch (NumberFormatException | ArrayIndexOutOfBoundsException ignored) {
-                    ModernBeta.log(Level.WARN, String.format("Invalid height config \"%s\"", heightConfigString));
-                    return fallbackConfig;
-                }
-            });
-        }
-
-        return config;
     }
 }

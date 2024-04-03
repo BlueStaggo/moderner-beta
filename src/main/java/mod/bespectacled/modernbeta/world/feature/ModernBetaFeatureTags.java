@@ -44,12 +44,14 @@ public class ModernBetaFeatureTags {
     public static final String TREES_BETA_SEASONAL_FOREST = "trees_beta_seasonal_forest";
     public static final String TREES_BETA_SPARSE = "trees_beta_sparse";
     public static final String TREES_BETA_TAIGA = "trees_beta_taiga";
+    public static final String TREES_BETA_OAK_FOREST = "trees_beta_oak_forest";
 
     public static final String TREES_BETA_FOREST_BEES = "trees_beta_forest_bees";
     public static final String TREES_BETA_RAINFOREST_BEES = "trees_beta_rainforest_bees";
     public static final String TREES_BETA_SEASONAL_FOREST_BEES = "trees_beta_seasonal_forest_bees";
     public static final String TREES_BETA_SPARSE_BEES = "trees_beta_sparse_bees";
-    
+    public static final String TREES_BETA_OAK_FOREST_BEES = "trees_beta_oak_forest_bees";
+
     public static final String TREES_PE_FOREST = "trees_pe_forest";
     public static final String TREES_PE_RAINFOREST = "trees_pe_rainforest";
     public static final String TREES_PE_SEASONAL_FOREST = "trees_pe_seasonal_forest";

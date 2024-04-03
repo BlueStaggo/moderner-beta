@@ -110,10 +110,11 @@ public class ModernBetaBuiltInProviders {
     }
     
     public static void registerSettingsPresets() {
-        ModernBetaRegistries.SETTINGS_PRESET.register(ModernBetaBuiltInTypes.DEFAULT_ID, ModernBetaSettingsPresets.PRESET_BETA);
-        ModernBetaRegistries.SETTINGS_PRESET.register(ModernBetaBuiltInTypes.Preset.BETA.id, ModernBetaSettingsPresets.PRESET_BETA);
+        ModernBetaRegistries.SETTINGS_PRESET.register(ModernBetaBuiltInTypes.DEFAULT_ID, ModernBetaSettingsPresets.PRESET_BETA_1_7_3);
+        ModernBetaRegistries.SETTINGS_PRESET.register(ModernBetaBuiltInTypes.Preset.BETA_1_7_3.id, ModernBetaSettingsPresets.PRESET_BETA_1_7_3);
+        ModernBetaRegistries.SETTINGS_PRESET.register(ModernBetaBuiltInTypes.Preset.BETA_1_1_02.id, ModernBetaSettingsPresets.PRESET_BETA_1_1_02);
         ModernBetaRegistries.SETTINGS_PRESET.register(ModernBetaBuiltInTypes.Preset.SKYLANDS.id, ModernBetaSettingsPresets.PRESET_SKYLANDS);
-        ModernBetaRegistries.SETTINGS_PRESET.register(ModernBetaBuiltInTypes.Preset.ALPHA.id, ModernBetaSettingsPresets.PRESET_ALPHA);
+        ModernBetaRegistries.SETTINGS_PRESET.register(ModernBetaBuiltInTypes.Preset.ALPHA_1_1_2_01.id, ModernBetaSettingsPresets.PRESET_ALPHA);
         ModernBetaRegistries.SETTINGS_PRESET.register(ModernBetaBuiltInTypes.Preset.INFDEV_611.id, ModernBetaSettingsPresets.PRESET_INFDEV_611);
         ModernBetaRegistries.SETTINGS_PRESET.register(ModernBetaBuiltInTypes.Preset.INFDEV_420.id, ModernBetaSettingsPresets.PRESET_INFDEV_420);
         ModernBetaRegistries.SETTINGS_PRESET.register(ModernBetaBuiltInTypes.Preset.INFDEV_415.id, ModernBetaSettingsPresets.PRESET_INFDEV_415);
@@ -123,6 +124,7 @@ public class ModernBetaBuiltInProviders {
         ModernBetaRegistries.SETTINGS_PRESET.register(ModernBetaBuiltInTypes.Preset.CLASSIC_0_30.id, ModernBetaSettingsPresets.PRESET_CLASSIC);
         ModernBetaRegistries.SETTINGS_PRESET.register(ModernBetaBuiltInTypes.Preset.PE.id, ModernBetaSettingsPresets.PRESET_PE);
         ModernBetaRegistries.SETTINGS_PRESET.register(ModernBetaBuiltInTypes.Preset.BETA_1_8_1.id, ModernBetaSettingsPresets.PRESET_BETA_1_8_1);
+        ModernBetaRegistries.SETTINGS_PRESET.register(ModernBetaBuiltInTypes.Preset.BETA_1_9_PRE_3.id, ModernBetaSettingsPresets.PRESET_BETA_1_9_PRE_3);
         ModernBetaRegistries.SETTINGS_PRESET.register(ModernBetaBuiltInTypes.Preset.RELEASE_1_0_0.id, ModernBetaSettingsPresets.PRESET_RELEASE_1_0_0);
         ModernBetaRegistries.SETTINGS_PRESET.register(ModernBetaBuiltInTypes.Preset.RELEASE_1_1.id, ModernBetaSettingsPresets.PRESET_RELEASE_1_1);
         ModernBetaRegistries.SETTINGS_PRESET.register(ModernBetaBuiltInTypes.Preset.RELEASE_1_2_5.id, ModernBetaSettingsPresets.PRESET_RELEASE_1_2_5);

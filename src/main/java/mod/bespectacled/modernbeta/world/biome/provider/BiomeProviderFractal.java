@@ -49,6 +49,7 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 		if (this.settings.fractalAddSnow) allBiomes.add(getBiomeEntry("minecraft:ocean"));
 		if (this.settings.fractalAddMushroomIslands) allBiomes.add(getBiomeEntry("minecraft:mushroom_fields"));
 		if (this.settings.fractalAddBeaches) allBiomes.add(getBiomeEntry("minecraft:beach"));
+		if (this.settings.fractalAddDeepOceans) allBiomes.add(getBiomeEntry("minecraft:deep_ocean"));
 		if (this.settings.fractalUseClimaticBiomes) {
 			for (ClimaticBiomeList<BiomeInfo> climate : climaticBiomes) {
 				climate.normalBiomes().forEach(b -> allBiomes.add(b.biome()));
@@ -58,6 +59,10 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 			selectedBiomes.stream().map(BiomeInfo::biome).forEach(allBiomes::add);
 		}
 		subVariants.values().forEach(v -> v.forEach(b -> allBiomes.add(b.biome())));
+		addBiomeMap(allBiomes, edgeVariants);
+		addBiomeMap(allBiomes, hillVariants);
+		addBiomeMap(allBiomes, mutatedVariants);
+		addBiomeMap(allBiomes, veryRareVariants);
 		this.allBiomes = allBiomes.stream().toList();
 
 		var fractalSettings = new FractalSettings.Builder();
@@ -107,6 +112,14 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 			.map(kv -> Map.entry(BiomeInfo.fromId(kv.getKey(), biomeRegistry), kv.getValue().stream()
 				.map(v -> BiomeInfo.fromId(v, biomeRegistry)).toList()))
 			.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+	}
+
+	private static void addBiomeMap(Set<RegistryEntry<Biome>> allBiomes, Map<BiomeInfo, BiomeInfo> biomes) {
+		biomes.entrySet().stream()
+			.filter(kv -> allBiomes.contains(kv.getKey().biome()))
+			.map(Map.Entry::getValue)
+			.map(BiomeInfo::biome)
+			.forEach(allBiomes::add);
 	}
 
 	private RegistryEntry<Biome> getBiomeEntry(String id) {
@@ -173,22 +186,7 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 	private void cleanCache(Long2ObjectMap<BiomeInfo[]> cache, int x, int z, int dist) {
 		if (cache.size() < 256) {
 			return;
-		} else {
-			cache.clear();
-			if (true) return;
 		}
-
-		long[] drops = cache.keySet().longStream()
-			.limit(16)
-//			.filter(key -> {
-//				int keyX = ChunkPos.getPackedX(key);
-//				int keyZ = ChunkPos.getPackedZ(key);
-//				return keyX < x - dist || keyX > x + dist || keyZ < z - dist || keyZ > z + dist;
-//			})
-			.toArray();
-
-		for (int i = 0; i < 16; i++) {
-			cache.remove(drops[i]);
-		}
+		cache.clear();
 	}
 }

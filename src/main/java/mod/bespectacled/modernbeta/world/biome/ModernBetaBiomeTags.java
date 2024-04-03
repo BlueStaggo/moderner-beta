@@ -2,6 +2,7 @@ package mod.bespectacled.modernbeta.world.biome;
 
 public class ModernBetaBiomeTags {
     public static final String BETA_FOREST = "beta_forest";
+    public static final String BETA_OAK_FOREST = "beta_oak_forest";
     public static final String BETA_SHRUBLAND = "beta_shrubland";
     public static final String BETA_DESERT = "beta_desert";
     public static final String BETA_SAVANNA = "beta_savanna";
@@ -10,6 +11,7 @@ public class ModernBetaBiomeTags {
     public static final String BETA_RAINFOREST = "beta_rainforest";
     public static final String BETA_SWAMPLAND = "beta_swampland";
     public static final String BETA_TAIGA = "beta_taiga";
+    public static final String BETA_OAK_TAIGA = "beta_oak_taiga";
     public static final String BETA_TUNDRA = "beta_tundra";
     public static final String BETA_ICE_DESERT = "beta_ice_desert";
     
@@ -54,6 +56,7 @@ public class ModernBetaBiomeTags {
     public static final String INDEV_WOODS = "indev_woods";
 
     public static final String LATE_BETA_EXTREME_HILLS = "late_beta_extreme_hills";
+    public static final String LATE_BETA_ICE_PLAINS = "late_beta_ice_plains";
     public static final String LATE_BETA_SWAMPLAND = "late_beta_swampland";
     public static final String LATE_BETA_PLAINS = "late_beta_plains";
     public static final String LATE_BETA_TAIGA = "late_beta_taiga";

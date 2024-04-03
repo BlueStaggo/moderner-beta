@@ -308,8 +308,6 @@ public class ModernBetaSettingsBiome implements ModernBetaSettings {
                     List.of()
                 )
             );
-            // Bunch of stuff commented out down here because feature generation breaks
-            // when hill variants have differing biomes for some random reason that idk
             this.fractalHillVariants = Map.ofEntries(
                 Map.entry("minecraft:desert", "*minecraft:desert"),
                 Map.entry("modern_beta:beta_desert", "*modern_beta:beta_desert"),
@@ -341,7 +339,7 @@ public class ModernBetaSettingsBiome implements ModernBetaSettings {
                 Map.entry("minecraft:bamboo_jungle", "*minecraft:bamboo_jungle"),
                 Map.entry("minecraft:sparse_jungle", "*minecraft:sparse_jungle"),
                 Map.entry("minecraft:ocean", "*minecraft:ocean"),
-//                Map.entry("minecraft:windswept_hills", "minecraft:windswept_forest"),
+                Map.entry("minecraft:windswept_hills", "minecraft:windswept_forest"),
                 Map.entry("minecraft:dark_forest", "minecraft:plains"),
                 Map.entry("minecraft:old_growth_pine_taiga", "*minecraft:old_growth_pine_taiga"),
                 Map.entry("minecraft:old_growth_spruce_taiga", "*minecraft:old_growth_spruce_taiga"),
@@ -361,19 +359,19 @@ public class ModernBetaSettingsBiome implements ModernBetaSettings {
             this.fractalMutatedVariants = Map.ofEntries(
                 Map.entry("minecraft:plains", "minecraft:sunflower_plains"),
                 Map.entry("minecraft:desert", "2*minecraft:desert"),
-//                Map.entry("minecraft:forest", "minecraft:flower_forest"),
+                Map.entry("minecraft:forest", "minecraft:flower_forest"),
                 Map.entry("minecraft:taiga", "2*minecraft:taiga"),
                 Map.entry("minecraft:swamp", "*minecraft:swamp"),
                 Map.entry("minecraft:jungle", "2*minecraft:jungle"),
                 Map.entry("minecraft:sparse_jungle", "2*minecraft:sparse_jungle"),
                 Map.entry("minecraft:snowy_taiga", "2*minecraft:snowy_taiga"),
-//                Map.entry("minecraft:savanna", "minecraft:windswept_savanna"),
-//                Map.entry("*minecraft:savanna", "*minecraft:windswept_savanna"),
+                Map.entry("minecraft:savanna", "minecraft:windswept_savanna"),
+                Map.entry("*minecraft:savanna", "*minecraft:windswept_savanna"),
                 Map.entry("minecraft:badlands", "*minecraft:eroded_badlands"),
                 Map.entry("*minecraft:wooded_badlands", "2*minecraft:wooded_badlands"),
                 Map.entry("*minecraft:badlands", "2*minecraft:badlands"),
-//                Map.entry("minecraft:birch_forest", "minecraft:old_growth_birch_forest"),
-//                Map.entry("*minecraft:birch_forest", "*minecraft:old_growth_birch_forest"),
+                Map.entry("minecraft:birch_forest", "minecraft:old_growth_birch_forest"),
+                Map.entry("*minecraft:birch_forest", "*minecraft:old_growth_birch_forest"),
                 Map.entry("minecraft:dark_forest", "*minecraft:dark_forest"),
                 Map.entry("minecraft:old_growth_pine_taiga", "minecraft:old_growth_spruce_taiga"),
                 Map.entry("minecraft:windswept_hills", "minecraft:windswept_gravelly_hills"),
@@ -386,7 +384,7 @@ public class ModernBetaSettingsBiome implements ModernBetaSettings {
 
             this.fractalBiomeScale = 4;
             this.fractalHillScale = 2;
-            this.fractalSubVariantScale = 2;
+            this.fractalSubVariantScale = 0;
             this.fractalBeachShrink = 1;
             this.fractalOceanShrink = 0;
             this.fractalTerrainType = FractalSettings.TerrainType.BETA.id;

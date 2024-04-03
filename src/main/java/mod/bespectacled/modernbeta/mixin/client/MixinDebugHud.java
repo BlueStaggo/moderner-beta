@@ -2,6 +2,8 @@ package mod.bespectacled.modernbeta.mixin.client;
 
 import java.util.List;
 
+import mod.bespectacled.modernbeta.api.world.chunk.ChunkProviderForcedHeight;
+import mod.bespectacled.modernbeta.world.biome.HeightConfig;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -103,6 +105,16 @@ public abstract class MixinDebugHud {
                         String.format(
                             "[Modern Beta] Noise Chunk Provider WSF height: %d", 
                             noiseChunkProvider.getHeight(x, z, ChunkHeightmap.Type.SURFACE_FLOOR)
+                        )
+                    );
+                }
+
+                if (chunkProvider instanceof ChunkProviderForcedHeight forcedHeightChunkProvider) {
+                    HeightConfig heightConfig = forcedHeightChunkProvider.getRawHeightConfigAt(x >> 2, z >> 2);
+                    info.getReturnValue().add(
+                        String.format(
+                            "[Modern Beta] Forced Height Chunk Provider height: %s",
+                            heightConfig.toString()
                         )
                     );
                 }

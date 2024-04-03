@@ -114,8 +114,9 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
             super(
                 ModernBetaSettingsPresetScreen.this.client,
                 ModernBetaSettingsPresetScreen.this.width,
-                ModernBetaSettingsPresetScreen.this.height - 64,
+                ModernBetaSettingsPresetScreen.this.height,
                 32,
+                ModernBetaSettingsPresetScreen.this.height - 32,
                 ITEM_HEIGHT
             );
             
@@ -154,8 +155,9 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
         }
         
         private class PresetEntry extends AlwaysSelectedEntryListWidget.Entry<PresetEntry> {
-            private static final Identifier TEXTURE_JOIN = new Identifier("world_list/join");
-            private static final Identifier TEXTURE_JOIN_HIGHLIGHTED = new Identifier("world_list/join_highlighted");
+            private static final Identifier TEXTURE_WORLD_SELECT = new Identifier("textures/gui/world_selection.png");
+            private static final int TEXTURE_WORLD_SELECT_ATLAS_SIZE = 256;
+            private static final int TEXTURE_WORLD_SELECT_SIZE= 32;
             
             private static final int TEXT_SPACING = 11;
             private static final int TEXT_LENGTH = 240;
@@ -208,15 +210,21 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
 
                 if (ModernBetaSettingsPresetScreen.this.client.options.getTouchscreen().getValue().booleanValue() || hovered) {
                     boolean isMouseHovering = (mouseX - x) < ICON_SIZE;
-                    Identifier texture = isMouseHovering ? TEXTURE_JOIN_HIGHLIGHTED : TEXTURE_JOIN;
+                    float v = isMouseHovering ? TEXTURE_WORLD_SELECT_SIZE : 0;
                     
                     context.fill(x, y, x + ICON_SIZE, y + ICON_SIZE, -1601138544);
-                    context.drawGuiTexture(
-                        texture,
+                    context.drawTexture(
+                        TEXTURE_WORLD_SELECT,
                         x,
                         y,
                         ICON_SIZE,
-                        ICON_SIZE
+                        ICON_SIZE,
+                        0.0f,
+                        v,
+                        TEXTURE_WORLD_SELECT_SIZE,
+                        TEXTURE_WORLD_SELECT_SIZE,
+                        TEXTURE_WORLD_SELECT_ATLAS_SIZE,
+                        TEXTURE_WORLD_SELECT_ATLAS_SIZE
                     );
                 }
             }

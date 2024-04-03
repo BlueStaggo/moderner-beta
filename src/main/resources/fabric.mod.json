@@ -4,7 +4,7 @@
   "version": "${version}",
 
   "name": "Moderner Beta Fabric",
-  "description": "Old world generation for modern Minecraft!",
+  "description": "Old (and not so old) world generation for modern Minecraft!",
   "authors": [
     "BlueStaggo",
     "bespectacled"

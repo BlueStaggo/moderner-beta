@@ -6,7 +6,8 @@ Moderner Beta is a fork of [b3spectacled](https://github.com/b3spectacled)'s [Mo
 
 ## Features
 In addition to everything in Modern Beta...
-- World generation from Beta 1.8 up to 1.6.4 with experimental support for 1.7 to 1.12.2 generation.
+- World generation from Beta 1.8 up to 1.6.4 with experimental support for 1.7 to 1.12.2 generation
+- Fixed surface rules for Beta Vanilla and 1.12.2 presets
 - Highly customisable biome layout for Beta 1.8+ versions
 
 ## Setup

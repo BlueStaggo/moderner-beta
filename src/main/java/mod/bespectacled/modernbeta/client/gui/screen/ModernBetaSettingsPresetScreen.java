@@ -15,6 +15,9 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.sound.PositionedSoundInstance;
+import net.minecraft.client.texture.AbstractTexture;
+import net.minecraft.client.texture.MissingSprite;
+import net.minecraft.client.texture.ResourceTexture;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.MutableText;
@@ -97,6 +100,12 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
         return ModernBeta.createId("textures/gui/preset_" + id + ".png");
     }
 
+    private static Identifier createPresetTextureId(String id) {
+        Identifier idObj = createTextureId(id);
+        return MinecraftClient.getInstance().getResourceManager().getResource(idObj).isPresent()
+            ? idObj : TEXTURE_PRESET_CUSTOM;
+    }
+
     private class PresetsListWidget extends AlwaysSelectedEntryListWidget<PresetsListWidget.PresetEntry> {
         private static final int ITEM_HEIGHT = 60;
         private static final int ICON_SIZE = 56;
@@ -161,7 +170,7 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
             private long time;
             
             public PresetEntry(String presetName, ModernBetaSettingsPreset preset, boolean isCustom) {
-                this.presetTexture = isCustom ? TEXTURE_PRESET_CUSTOM : createTextureId(presetName);
+                this.presetTexture = createPresetTextureId(presetName);
                 this.presetType = isCustom ? Text.translatable(TEXT_PRESET_TYPE_CUSTOM) : Text.translatable(TEXT_PRESET_TYPE_DEFAULT);
                 this.presetName = Text.translatable(TEXT_PRESET_NAME + "." + presetName);
                 this.presetDesc = Text.translatable(TEXT_PRESET_DESC + "." + presetName);

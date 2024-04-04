@@ -1,6 +1,7 @@
 package mod.bespectacled.modernbeta.world.chunk.provider;
 
 import mod.bespectacled.modernbeta.api.world.chunk.ChunkProviderForcedHeight;
+import mod.bespectacled.modernbeta.api.world.chunk.surface.SurfaceBlocks;
 import mod.bespectacled.modernbeta.api.world.chunk.surface.SurfaceConfig;
 import mod.bespectacled.modernbeta.api.world.spawn.SpawnLocator;
 import mod.bespectacled.modernbeta.util.BlockStates;
@@ -199,7 +200,7 @@ public class ChunkProviderEarlyRelease extends ChunkProviderForcedHeight {
                 if (surfaceDepth <= 0) {
                     int y = surfaceTopY;
                     pos.set(localX, y, localZ);
-                    chunk.setBlockState(pos, BlockStates.AIR, false);
+                    chunk.setBlockState(pos, y < this.seaLevel ? BlockStates.WATER : BlockStates.AIR, false);
                     pos.setY(--y);
 
                     BlockState blockState;

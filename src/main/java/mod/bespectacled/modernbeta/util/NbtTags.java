@@ -17,6 +17,7 @@ public class NbtTags {
     public static final String USE_SURFACE_RULES = "useSurfaceRules";
 
     public static final String USE_CAVES = "useCaves";
+    public static final String USE_FIXED_CAVES = "useFixedCaves";
     public static final String FORCE_BETA_CAVES = "forceBetaCaves";
 
     // Noise

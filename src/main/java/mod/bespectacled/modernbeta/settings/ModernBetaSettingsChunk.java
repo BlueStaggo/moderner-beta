@@ -158,6 +158,7 @@ public class ModernBetaSettingsChunk implements ModernBetaSettings {
             .putBoolean(NbtTags.USE_SURFACE_RULES, this.useSurfaceRules)
 
             .putBoolean(NbtTags.USE_CAVES, this.useCaves)
+            .putBoolean(NbtTags.USE_FIXED_CAVES, this.useFixedCaves)
             .putBoolean(NbtTags.FORCE_BETA_CAVES, this.forceBetaCaves)
 
             .putFloat(NbtTags.NOISE_COORDINATE_SCALE, this.noiseCoordinateScale)
@@ -342,6 +343,7 @@ public class ModernBetaSettingsChunk implements ModernBetaSettings {
             this.useSurfaceRules = reader.readBoolean(NbtTags.USE_SURFACE_RULES, this.useSurfaceRules);
 
             this.useCaves = reader.readBoolean(NbtTags.USE_CAVES, this.useCaves);
+            this.useFixedCaves = reader.readBoolean(NbtTags.USE_FIXED_CAVES, this.useFixedCaves);
             this.forceBetaCaves = reader.readBoolean(NbtTags.FORCE_BETA_CAVES, this.forceBetaCaves);
 
             this.noiseCoordinateScale = reader.readFloat(NbtTags.NOISE_COORDINATE_SCALE, this.noiseCoordinateScale);

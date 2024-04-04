@@ -724,6 +724,7 @@ public class ModernBetaSettingsPresets {
         ModernBetaSettingsCaveBiome.Builder settingsCaveBiome = new ModernBetaSettingsCaveBiome.Builder().fromCompound(compoundCaveBiome);
 
         settingsChunk.useSurfaceRules = true;
+        settingsChunk.useFixedCaves = true;
 
         settingsBiome.biomeProvider = ModernBetaBuiltInTypes.Biome.VORONOI.id;
         settingsBiome.climateTempNoiseScale = 0.025f / 3.0f;

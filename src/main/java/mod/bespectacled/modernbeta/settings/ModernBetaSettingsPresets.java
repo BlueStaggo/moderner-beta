@@ -1458,6 +1458,9 @@ public class ModernBetaSettingsPresets {
         settingsChunk.releaseHeightOverrides = Map.ofEntries(
             Map.entry("*minecraft:desert", "0.3;0.8"),
             Map.entry("*minecraft:forest", "0.3;0.7"),
+            Map.entry("minecraft:early_release_extreme_hills", "0.3;1.5"),
+            Map.entry("*minecraft:early_release_ice_plains", "0.3;1.3"),
+            Map.entry("*minecraft:jungle", "1.8;0.5"),
             Map.entry("*minecraft:early_release_taiga", "0.3;0.8")
         );
 

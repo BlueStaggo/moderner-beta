@@ -13,6 +13,7 @@ import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.BiomeKeys;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -38,18 +39,28 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 		Map<BiomeInfo, List<BiomeInfo>> subVariants = qualifySubVariants(biomeRegistry, this.settings.fractalSubVariants);
 
 		var allBiomes = new HashSet<RegistryEntry<Biome>>();
-		allBiomes.add(getBiomeEntry("minecraft:ocean"));
+		allBiomes.add(biomeRegistry.getOrThrow(BiomeKeys.OCEAN));
 		allBiomes.add(getBiomeEntry(this.settings.fractalPlains));
-		allBiomes.add(getBiomeEntry("minecraft:river"));
+		allBiomes.add(biomeRegistry.getOrThrow(BiomeKeys.RIVER));
 		if (this.settings.fractalAddSnow) {
-			allBiomes.add(getBiomeEntry("minecraft:frozen_ocean"));
+			allBiomes.add(biomeRegistry.getOrThrow(BiomeKeys.FROZEN_OCEAN));
 			allBiomes.add(getBiomeEntry(this.settings.fractalIcePlains));
-			allBiomes.add(getBiomeEntry("minecraft:frozen_river"));
+			allBiomes.add(biomeRegistry.getOrThrow(BiomeKeys.FROZEN_RIVER));
 		}
-		if (this.settings.fractalAddSnow) allBiomes.add(getBiomeEntry("minecraft:ocean"));
-		if (this.settings.fractalAddMushroomIslands) allBiomes.add(getBiomeEntry("minecraft:mushroom_fields"));
-		if (this.settings.fractalAddBeaches) allBiomes.add(getBiomeEntry("minecraft:beach"));
-		if (this.settings.fractalAddDeepOceans) allBiomes.add(getBiomeEntry("minecraft:deep_ocean"));
+		if (this.settings.fractalAddMushroomIslands) allBiomes.add(biomeRegistry.getOrThrow(BiomeKeys.MUSHROOM_FIELDS));
+		if (this.settings.fractalAddBeaches) allBiomes.add(biomeRegistry.getOrThrow(BiomeKeys.BEACH));
+		if (this.settings.fractalAddDeepOceans) allBiomes.add(biomeRegistry.getOrThrow(BiomeKeys.DEEP_OCEAN));
+		if (this.settings.fractalAddClimaticOceans) {
+			allBiomes.add(biomeRegistry.getOrThrow(BiomeKeys.LUKEWARM_OCEAN));
+			allBiomes.add(biomeRegistry.getOrThrow(BiomeKeys.WARM_OCEAN));
+			allBiomes.add(biomeRegistry.getOrThrow(BiomeKeys.COLD_OCEAN));
+			allBiomes.add(biomeRegistry.getOrThrow(BiomeKeys.FROZEN_OCEAN));
+			if (this.settings.fractalAddDeepOceans) {
+				allBiomes.add(biomeRegistry.getOrThrow(BiomeKeys.DEEP_LUKEWARM_OCEAN));
+				allBiomes.add(biomeRegistry.getOrThrow(BiomeKeys.DEEP_COLD_OCEAN));
+				allBiomes.add(biomeRegistry.getOrThrow(BiomeKeys.DEEP_FROZEN_OCEAN));
+			}
+		}
 		if (this.settings.fractalUseClimaticBiomes) {
 			for (ClimaticBiomeList<BiomeInfo> climate : climaticBiomes) {
 				climate.normalBiomes().forEach(b -> allBiomes.add(b.biome()));
@@ -78,6 +89,7 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 		fractalSettings.biomeScale = this.settings.fractalBiomeScale;
 		fractalSettings.hillScale = this.settings.fractalHillScale;
 		fractalSettings.subVariantScale = this.settings.fractalSubVariantScale;
+		fractalSettings.subVariantSeed = this.settings.fractalSubVariantSeed;
 		fractalSettings.beachShrink = this.settings.fractalBeachShrink;
 		fractalSettings.oceanShrink = this.settings.fractalOceanShrink;
 		fractalSettings.terrainType = FractalSettings.TerrainType.fromString(this.settings.fractalTerrainType);
@@ -90,6 +102,7 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 		fractalSettings.addSwampRivers = this.settings.fractalAddSwampRivers;
 		fractalSettings.addDeepOceans = this.settings.fractalAddDeepOceans;
 		fractalSettings.addMutations = this.settings.fractalAddMutations;
+		fractalSettings.addClimaticOceans = this.settings.fractalAddClimaticOceans;
 		fractalSettings.useClimaticBiomes = this.settings.fractalUseClimaticBiomes;
 
 		biomeGenLayer = Layer.getLayer(biomeRegistry, seed, fractalSettings.build());

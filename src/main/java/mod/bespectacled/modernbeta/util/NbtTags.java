@@ -15,6 +15,7 @@ public class NbtTags {
     public static final String WORLD_BORDER_LENGTH = "worldBorderLength";
 
     public static final String USE_SURFACE_RULES = "useSurfaceRules";
+    public static final String SEA_LEVEL_OFFSET = "seaLevelOffset";
 
     public static final String USE_CAVES = "useCaves";
     public static final String USE_FIXED_CAVES = "useFixedCaves";
@@ -44,6 +45,10 @@ public class NbtTags {
 
     // Release
     public static final String RELEASE_HEIGHT_OVERRIDES = "releaseHeightOverrides";
+    public static final String RELEASE_BIOME_DEPTH_OFFSET = "releaseBiomeDepthOffset";
+    public static final String RELEASE_BIOME_DEPTH_WEIGHT = "releaseBiomeDepthWeight";
+    public static final String RELEASE_BIOME_SCALE_OFFSET = "releaseBiomeScaleOffset";
+    public static final String RELEASE_BIOME_SCALE_WEIGHT = "releaseBiomeScaleWeight";
 
     // Infdev 227
     public static final String INFDEV_USE_PYRAMID = "infdevUsePyramid";
@@ -110,6 +115,7 @@ public class NbtTags {
     public static final String FRACTAL_BIOME_SCALE = "fractalBiomeScale";
     public static final String FRACTAL_HILL_SCALE = "fractalHillScale";
     public static final String FRACTAL_SUB_VARIANT_SCALE = "fractalSubVariantScale";
+    public static final String FRACTAL_SUB_VARIANT_SEED = "fractalSubVariantSeed";
     public static final String FRACTAL_BEACH_SHRINK = "fractalBeachShrink";
     public static final String FRACTAL_OCEAN_SHRINK = "fractalOceanShrink";
     public static final String FRACTAL_TERRAIN_TYPE = "fractalTerrainType";
@@ -122,6 +128,7 @@ public class NbtTags {
     public static final String FRACTAL_ADD_SWAMP_RIVERS = "fractalAddSwampRivers";
     public static final String FRACTAL_ADD_DEEP_OCEANS = "fractalAddDeepOceans";
     public static final String FRACTAL_ADD_MUTATIONS = "fractalAddMutations";
+    public static final String FRACTAL_ADD_CLIMATIC_OCEANS = "fractalAddClimaticOceans";
     public static final String FRACTAL_USE_CLIMATIC_BIOMES = "fractalUseClimaticBiomes";
 
     /* Cave Biome Settings */

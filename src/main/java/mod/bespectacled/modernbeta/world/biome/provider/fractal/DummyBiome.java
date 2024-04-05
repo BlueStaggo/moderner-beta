@@ -23,7 +23,10 @@ class DummyBiome implements RegistryEntry<Biome> {
 		ICE_PLAINS = makeDummy("ice_plains"),
 		MUSHROOM_ISLAND = makeDummy("mushroom_island"),
 		DEEP_OCEAN = makeDummy("deep_ocean"),
-		CLIMATE = makeDummy("climate");
+		CLIMATE = makeDummy("climate"),
+		WARM_OCEAN = makeDummy("warm_ocean"),
+		LUKEWARM_OCEAN = makeDummy("lukewarm_ocean"),
+		COLD_OCEAN = makeDummy("cold_ocean");
 
 	public final Identifier id;
 	public final BiomeInfo biomeInfo;

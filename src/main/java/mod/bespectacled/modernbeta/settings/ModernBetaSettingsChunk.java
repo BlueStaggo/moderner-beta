@@ -23,6 +23,7 @@ public class ModernBetaSettingsChunk implements ModernBetaSettings {
     public final String deepslateBlock;
 
     public final boolean useSurfaceRules;
+    public final int seaLevelOffset;
 
     public final boolean useCaves;
     public final boolean useFixedCaves;
@@ -50,6 +51,10 @@ public class ModernBetaSettingsChunk implements ModernBetaSettings {
     public final int noiseBottomSlideOffset;
 
     public final Map<String, String> releaseHeightOverrides;
+    public final float releaseBiomeDepthWeight;
+    public final float releaseBiomeDepthOffset;
+    public final float releaseBiomeScaleWeight;
+    public final float releaseBiomeScaleOffset;
 
     public final boolean infdevUsePyramid;
     public final boolean infdevUseWall;
@@ -86,6 +91,7 @@ public class ModernBetaSettingsChunk implements ModernBetaSettings {
         this.deepslateBlock = builder.deepslateBlock;
 
         this.useSurfaceRules = builder.useSurfaceRules;
+        this.seaLevelOffset = builder.seaLevelOffset;
 
         this.useCaves = builder.useCaves;
         this.useFixedCaves = builder.useFixedCaves;
@@ -113,6 +119,10 @@ public class ModernBetaSettingsChunk implements ModernBetaSettings {
         this.noiseBottomSlideOffset = builder.noiseBottomSlideOffset;
 
         this.releaseHeightOverrides = builder.releaseHeightOverrides;
+        this.releaseBiomeDepthWeight = builder.releaseBiomeDepthWeight;
+        this.releaseBiomeDepthOffset = builder.releaseBiomeDepthOffset;
+        this.releaseBiomeScaleWeight = builder.releaseBiomeScaleWeight;
+        this.releaseBiomeScaleOffset = builder.releaseBiomeScaleOffset;
 
         this.infdevUsePyramid = builder.infdevUsePyramid;
         this.infdevUseWall = builder.infdevUseWall;
@@ -156,6 +166,7 @@ public class ModernBetaSettingsChunk implements ModernBetaSettings {
             .putString(NbtTags.DEEPSLATE_BLOCK, this.deepslateBlock)
 
             .putBoolean(NbtTags.USE_SURFACE_RULES, this.useSurfaceRules)
+            .putFloat(NbtTags.SEA_LEVEL_OFFSET, this.seaLevelOffset)
 
             .putBoolean(NbtTags.USE_CAVES, this.useCaves)
             .putBoolean(NbtTags.USE_FIXED_CAVES, this.useFixedCaves)
@@ -182,6 +193,10 @@ public class ModernBetaSettingsChunk implements ModernBetaSettings {
             .putInt(NbtTags.NOISE_BOTTOM_SLIDE_OFFSET, this.noiseBottomSlideOffset)
 
             .putCompound(NbtTags.RELEASE_HEIGHT_OVERRIDES, FractalSettings.mapToNbt(this.releaseHeightOverrides))
+            .putFloat(NbtTags.RELEASE_BIOME_DEPTH_OFFSET, this.releaseBiomeDepthOffset)
+            .putFloat(NbtTags.RELEASE_BIOME_DEPTH_WEIGHT, this.releaseBiomeDepthWeight)
+            .putFloat(NbtTags.RELEASE_BIOME_SCALE_OFFSET, this.releaseBiomeScaleOffset)
+            .putFloat(NbtTags.RELEASE_BIOME_SCALE_WEIGHT, this.releaseBiomeScaleWeight)
 
             .putBoolean(NbtTags.INFDEV_USE_PYRAMID, this.infdevUsePyramid)
             .putBoolean(NbtTags.INFDEV_USE_WALL, this.infdevUseWall)
@@ -217,6 +232,7 @@ public class ModernBetaSettingsChunk implements ModernBetaSettings {
         public String deepslateBlock;
 
         public boolean useSurfaceRules;
+        public int seaLevelOffset;
 
         public boolean useCaves;
         public boolean useFixedCaves;
@@ -244,6 +260,10 @@ public class ModernBetaSettingsChunk implements ModernBetaSettings {
         public int noiseBottomSlideOffset;
 
         public Map<String, String> releaseHeightOverrides;
+        public float releaseBiomeDepthWeight;
+        public float releaseBiomeDepthOffset;
+        public float releaseBiomeScaleWeight;
+        public float releaseBiomeScaleOffset;
 
         public boolean infdevUsePyramid;
         public boolean infdevUseWall;
@@ -276,7 +296,8 @@ public class ModernBetaSettingsChunk implements ModernBetaSettings {
             this.deepslateBlock = "minecraft:deepslate";
 
             this.useSurfaceRules = false;
-            
+            this.seaLevelOffset = 0;
+
             this.useCaves = true;
             this.useFixedCaves = false;
             this.forceBetaCaves = true;
@@ -306,6 +327,10 @@ public class ModernBetaSettingsChunk implements ModernBetaSettings {
                 Map.entry("*example:flat_biome", "-0.1;0.5"),
                 Map.entry("2*example:flat_biome", "0.1;1.0")
             );
+            this.releaseBiomeDepthWeight = 1.0f;
+            this.releaseBiomeDepthOffset = 0.0f;
+            this.releaseBiomeScaleWeight = 1.0f;
+            this.releaseBiomeScaleOffset = 0.0f;
 
             this.infdevUsePyramid = true;
             this.infdevUseWall = true;
@@ -341,6 +366,7 @@ public class ModernBetaSettingsChunk implements ModernBetaSettings {
             this.deepslateBlock = reader.readString(NbtTags.DEEPSLATE_BLOCK, this.deepslateBlock);
 
             this.useSurfaceRules = reader.readBoolean(NbtTags.USE_SURFACE_RULES, this.useSurfaceRules);
+            this.seaLevelOffset = reader.readInt(NbtTags.SEA_LEVEL_OFFSET, this.seaLevelOffset);
 
             this.useCaves = reader.readBoolean(NbtTags.USE_CAVES, this.useCaves);
             this.useFixedCaves = reader.readBoolean(NbtTags.USE_FIXED_CAVES, this.useFixedCaves);
@@ -367,6 +393,10 @@ public class ModernBetaSettingsChunk implements ModernBetaSettings {
             this.noiseBottomSlideOffset = reader.readInt(NbtTags.NOISE_BOTTOM_SLIDE_OFFSET, this.noiseBottomSlideOffset);
 
             this.releaseHeightOverrides = FractalSettings.mapFromReader(NbtTags.RELEASE_HEIGHT_OVERRIDES, reader, this.releaseHeightOverrides);
+            this.releaseBiomeDepthOffset = reader.readFloat(NbtTags.RELEASE_BIOME_DEPTH_OFFSET, this.releaseBiomeDepthOffset);
+            this.releaseBiomeDepthWeight = reader.readFloat(NbtTags.RELEASE_BIOME_DEPTH_WEIGHT, this.releaseBiomeDepthWeight);
+            this.releaseBiomeScaleOffset = reader.readFloat(NbtTags.RELEASE_BIOME_SCALE_OFFSET, this.releaseBiomeScaleOffset);
+            this.releaseBiomeScaleWeight = reader.readFloat(NbtTags.RELEASE_BIOME_SCALE_WEIGHT, this.releaseBiomeScaleWeight);
 
             this.infdevUsePyramid = reader.readBoolean(NbtTags.INFDEV_USE_PYRAMID, this.infdevUsePyramid);
             this.infdevUseWall = reader.readBoolean(NbtTags.INFDEV_USE_WALL, this.infdevUseWall);

@@ -130,13 +130,17 @@ public class ModernBetaBuiltInProviders {
         ModernBetaRegistries.SETTINGS_PRESET.register(ModernBetaBuiltInTypes.Preset.RELEASE_1_2_5.id, ModernBetaSettingsPresets.PRESET_RELEASE_1_2_5);
         ModernBetaRegistries.SETTINGS_PRESET.register(ModernBetaBuiltInTypes.Preset.RELEASE_1_6_4.id, ModernBetaSettingsPresets.PRESET_RELEASE_1_6_4);
         ModernBetaRegistries.SETTINGS_PRESET.register(ModernBetaBuiltInTypes.Preset.RELEASE_1_12_2.id, ModernBetaSettingsPresets.PRESET_RELEASE_1_12_2);
+        ModernBetaRegistries.SETTINGS_PRESET.register(ModernBetaBuiltInTypes.Preset.RELEASE_1_17_1.id, ModernBetaSettingsPresets.PRESET_RELEASE_1_17_1);
     }
     
     public static void registerSettingsPresetAlts() {
         ModernBetaRegistries.SETTINGS_PRESET_ALT.register(ModernBetaBuiltInTypes.PresetAlt.BETA_SKYLANDS.id, ModernBetaSettingsPresets.PRESET_BETA_SKYLANDS);
         ModernBetaRegistries.SETTINGS_PRESET_ALT.register(ModernBetaBuiltInTypes.PresetAlt.BETA_ISLES.id, ModernBetaSettingsPresets.PRESET_BETA_ISLES);
+        ModernBetaRegistries.SETTINGS_PRESET_ALT.register(ModernBetaBuiltInTypes.PresetAlt.BETA_WATER_WORLD.id, ModernBetaSettingsPresets.PRESET_BETA_WATER_WORLD);
         ModernBetaRegistries.SETTINGS_PRESET_ALT.register(ModernBetaBuiltInTypes.PresetAlt.BETA_ISLE_LAND.id, ModernBetaSettingsPresets.PRESET_BETA_ISLE_LAND);
         ModernBetaRegistries.SETTINGS_PRESET_ALT.register(ModernBetaBuiltInTypes.PresetAlt.BETA_CAVE_DELIGHT.id, ModernBetaSettingsPresets.PRESET_BETA_CAVE_DELIGHT);
+        ModernBetaRegistries.SETTINGS_PRESET_ALT.register(ModernBetaBuiltInTypes.PresetAlt.BETA_MOUNTAIN_MADNESS.id, ModernBetaSettingsPresets.PRESET_BETA_MOUNTAIN_MADNESS);
+        ModernBetaRegistries.SETTINGS_PRESET_ALT.register(ModernBetaBuiltInTypes.PresetAlt.BETA_DROUGHT.id, ModernBetaSettingsPresets.PRESET_BETA_DROUGHT);
         ModernBetaRegistries.SETTINGS_PRESET_ALT.register(ModernBetaBuiltInTypes.PresetAlt.BETA_CAVE_CHAOS.id, ModernBetaSettingsPresets.PRESET_BETA_CAVE_CHAOS);
         ModernBetaRegistries.SETTINGS_PRESET_ALT.register(ModernBetaBuiltInTypes.PresetAlt.BETA_LARGE_BIOMES.id, ModernBetaSettingsPresets.PRESET_BETA_LARGE_BIOMES);
         ModernBetaRegistries.SETTINGS_PRESET_ALT.register(ModernBetaBuiltInTypes.PresetAlt.BETA_XBOX_LEGACY.id, ModernBetaSettingsPresets.PRESET_BETA_XBOX_LEGACY);
@@ -148,5 +152,11 @@ public class ModernBetaBuiltInProviders {
         ModernBetaRegistries.SETTINGS_PRESET_ALT.register(ModernBetaBuiltInTypes.PresetAlt.INDEV_PARADISE.id, ModernBetaSettingsPresets.PRESET_INDEV_PARADISE);
         ModernBetaRegistries.SETTINGS_PRESET_ALT.register(ModernBetaBuiltInTypes.PresetAlt.INDEV_WOODS.id, ModernBetaSettingsPresets.PRESET_INDEV_WOODS);
         ModernBetaRegistries.SETTINGS_PRESET_ALT.register(ModernBetaBuiltInTypes.PresetAlt.INDEV_HELL.id, ModernBetaSettingsPresets.PRESET_INDEV_HELL);
+        ModernBetaRegistries.SETTINGS_PRESET_ALT.register(ModernBetaBuiltInTypes.PresetAlt.WATER_WORLD.id, ModernBetaSettingsPresets.PRESET_WATER_WORLD);
+        ModernBetaRegistries.SETTINGS_PRESET_ALT.register(ModernBetaBuiltInTypes.PresetAlt.ISLE_LAND.id, ModernBetaSettingsPresets.PRESET_ISLE_LAND);
+        ModernBetaRegistries.SETTINGS_PRESET_ALT.register(ModernBetaBuiltInTypes.PresetAlt.CAVE_DELIGHT.id, ModernBetaSettingsPresets.PRESET_CAVE_DELIGHT);
+        ModernBetaRegistries.SETTINGS_PRESET_ALT.register(ModernBetaBuiltInTypes.PresetAlt.MOUNTAIN_MADNESS.id, ModernBetaSettingsPresets.PRESET_MOUNTAIN_MADNESS);
+        ModernBetaRegistries.SETTINGS_PRESET_ALT.register(ModernBetaBuiltInTypes.PresetAlt.DROUGHT.id, ModernBetaSettingsPresets.PRESET_DROUGHT);
+        ModernBetaRegistries.SETTINGS_PRESET_ALT.register(ModernBetaBuiltInTypes.PresetAlt.CAVE_CHAOS.id, ModernBetaSettingsPresets.PRESET_CAVE_CHAOS);
     }
 }

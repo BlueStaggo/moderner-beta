@@ -2,12 +2,18 @@ package mod.bespectacled.modernbeta.world.chunk.provider;
 
 import mod.bespectacled.modernbeta.api.world.chunk.ChunkProviderForcedHeight;
 import mod.bespectacled.modernbeta.api.world.spawn.SpawnLocator;
+import mod.bespectacled.modernbeta.util.BlockStates;
 import mod.bespectacled.modernbeta.util.noise.PerlinOctaveNoise;
+import mod.bespectacled.modernbeta.util.noise.SimplexOctaveNoise;
 import mod.bespectacled.modernbeta.world.biome.HeightConfig;
 import mod.bespectacled.modernbeta.world.biome.ModernBetaBiomeSource;
 import mod.bespectacled.modernbeta.world.chunk.ModernBetaChunkGenerator;
 import mod.bespectacled.modernbeta.world.spawn.SpawnLocatorRelease;
+import net.minecraft.block.BlockState;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.ChunkRegion;
+import net.minecraft.world.Heightmap;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.StructureAccessor;
 import net.minecraft.world.gen.noise.NoiseConfig;
@@ -18,6 +24,7 @@ public class ChunkProviderMajorRelease extends ChunkProviderForcedHeight {
     private final PerlinOctaveNoise minLimitOctaveNoise;
     private final PerlinOctaveNoise maxLimitOctaveNoise;
     private final PerlinOctaveNoise mainOctaveNoise;
+    private final SimplexOctaveNoise surfaceOctaveNoise;
     private final PerlinOctaveNoise depthOctaveNoise;
     private final PerlinOctaveNoise forestOctaveNoise;
 
@@ -27,7 +34,7 @@ public class ChunkProviderMajorRelease extends ChunkProviderForcedHeight {
         this.minLimitOctaveNoise = new PerlinOctaveNoise(this.random, 16, true);
         this.maxLimitOctaveNoise = new PerlinOctaveNoise(this.random, 16, true);
         this.mainOctaveNoise = new PerlinOctaveNoise(this.random, 8, true);
-        new PerlinOctaveNoise(this.random, 4, true);
+        this.surfaceOctaveNoise = new SimplexOctaveNoise(this.random, 4);
         new PerlinOctaveNoise(this.random, 10, true);
         this.depthOctaveNoise = new PerlinOctaveNoise(this.random, 16, true);
         this.forestOctaveNoise = new PerlinOctaveNoise(this.random, 8, true);
@@ -41,6 +48,52 @@ public class ChunkProviderMajorRelease extends ChunkProviderForcedHeight {
     @Override
     public void provideSurface(ChunkRegion region, StructureAccessor structureAccessor, Chunk chunk, ModernBetaBiomeSource biomeSource, NoiseConfig noiseConfig) {
         this.chunkGenerator.buildDefaultSurface(region, structureAccessor, noiseConfig, chunk);
+        this.provideSurfaceExtra(region, structureAccessor, chunk, biomeSource, noiseConfig);
+    }
+
+    @Override
+    public void provideSurfaceExtra(ChunkRegion region, StructureAccessor structureAccessor, Chunk chunk, ModernBetaBiomeSource biomeSource, NoiseConfig noiseConfig) {
+        double scale = 0.03125;
+
+        ChunkPos chunkPos = chunk.getPos();
+        int chunkX = chunkPos.x;
+        int chunkZ = chunkPos.z;
+
+        Random rand = this.createSurfaceRandom(chunkX, chunkZ);
+        BlockPos.Mutable pos = new BlockPos.Mutable();
+
+        for (int localZ = 0; localZ < 16; localZ++) {
+            for (int localX = 0; localX < 16; localX++) {
+                int surfaceTopY = chunk.getHeightmap(Heightmap.Type.OCEAN_FLOOR_WG).get(localX, localZ) - 1;
+                int surfaceDepth = (int)
+                    (this.surfaceOctaveNoise.sample((chunkX * 16 + localX) * scale * 2D, (chunkZ * 16 + localZ) * scale * 2D, 1.5D, 1.0D)
+                    / 3D + 3D + rand.nextDouble() * 0.25D);
+
+                if (surfaceDepth <= 0) {
+                    int y = surfaceTopY;
+                    pos.set(localX, y, localZ);
+                    chunk.setBlockState(pos, y < this.seaLevel ? BlockStates.WATER : BlockStates.AIR, false);
+                    pos.setY(--y);
+
+                    BlockState blockState;
+                    while (!(blockState = chunk.getBlockState(pos)).isAir() && !blockState.isOf(this.defaultBlock.getBlock())) {
+                        chunk.setBlockState(pos, this.defaultBlock, false);
+                        pos.setY(--y);
+                    }
+                } else if (surfaceTopY < this.seaLevel - 7 - surfaceDepth) {
+                    int y = surfaceTopY;
+                    pos.set(localX, y, localZ);
+                    chunk.setBlockState(pos, BlockStates.GRAVEL, false);
+                    pos.setY(--y);
+
+                    BlockState blockState;
+                    while (!(blockState = chunk.getBlockState(pos)).isAir() && !blockState.isOf(this.defaultBlock.getBlock())) {
+                        chunk.setBlockState(pos, this.defaultBlock, false);
+                        pos.setY(--y);
+                    }
+                }
+            }
+        }
     }
 
     @Override

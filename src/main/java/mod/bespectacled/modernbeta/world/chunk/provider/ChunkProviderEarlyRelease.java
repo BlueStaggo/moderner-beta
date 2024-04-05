@@ -186,7 +186,7 @@ public class ChunkProviderEarlyRelease extends ChunkProviderForcedHeight {
         Random rand = this.createSurfaceRandom(chunkX, chunkZ);
         BlockPos.Mutable pos = new BlockPos.Mutable();
 
-        double[] surfaceNoise = surfaceOctaveNoise.sampleBeta(
+        double[] surfaceNoise = surfaceOctaveNoise.sampleRelease(
             chunkX * 16, chunkZ * 16, 0.0D,
             16, 16, 1,
             scale * 2D, scale * 2D, scale * 2D

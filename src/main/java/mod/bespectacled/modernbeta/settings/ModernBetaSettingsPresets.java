@@ -35,12 +35,16 @@ public class ModernBetaSettingsPresets {
     public static final ModernBetaSettingsPreset PRESET_RELEASE_1_2_5 = preset125();
     public static final ModernBetaSettingsPreset PRESET_RELEASE_1_6_4 = preset164();
     public static final ModernBetaSettingsPreset PRESET_RELEASE_1_12_2 = preset1122();
+    public static final ModernBetaSettingsPreset PRESET_RELEASE_1_17_1 = preset1171();
 
     public static final ModernBetaSettingsPreset PRESET_BETA_SKYLANDS = presetBetaSkylands();
-    public static final ModernBetaSettingsPreset PRESET_BETA_ISLES = presetBetaIsles();
-    public static final ModernBetaSettingsPreset PRESET_BETA_ISLE_LAND = presetBetaIsleLand();
-    public static final ModernBetaSettingsPreset PRESET_BETA_CAVE_DELIGHT = presetBetaCaveDelight();
-    public static final ModernBetaSettingsPreset PRESET_BETA_CAVE_CHAOS = presetBetaCaveChaos();
+    public static final ModernBetaSettingsPreset PRESET_BETA_ISLES = presetIsles(PRESET_BETA_1_7_3);
+    public static final ModernBetaSettingsPreset PRESET_BETA_WATER_WORLD = presetWaterWorld(PRESET_BETA_1_7_3);
+    public static final ModernBetaSettingsPreset PRESET_BETA_ISLE_LAND = presetIsleLand(PRESET_BETA_1_7_3);
+    public static final ModernBetaSettingsPreset PRESET_BETA_CAVE_DELIGHT = presetCaveDelight(PRESET_BETA_1_7_3);
+    public static final ModernBetaSettingsPreset PRESET_BETA_MOUNTAIN_MADNESS = presetMountainMadness(PRESET_BETA_1_7_3);
+    public static final ModernBetaSettingsPreset PRESET_BETA_DROUGHT = presetDrought(PRESET_BETA_1_7_3);
+    public static final ModernBetaSettingsPreset PRESET_BETA_CAVE_CHAOS = presetCaveChaos(PRESET_BETA_1_7_3);
     public static final ModernBetaSettingsPreset PRESET_BETA_LARGE_BIOMES = presetBetaLargeBiomes();
     public static final ModernBetaSettingsPreset PRESET_BETA_XBOX_LEGACY = presetBetaXboxLegacy();
     public static final ModernBetaSettingsPreset PRESET_BETA_SURVIVAL_ISLAND = presetBetaSurvivalIsland();
@@ -51,6 +55,12 @@ public class ModernBetaSettingsPresets {
     public static final ModernBetaSettingsPreset PRESET_INDEV_PARADISE = presetIndevParadise();
     public static final ModernBetaSettingsPreset PRESET_INDEV_WOODS = presetIndevWoods();
     public static final ModernBetaSettingsPreset PRESET_INDEV_HELL = presetIndevHell();
+    public static final ModernBetaSettingsPreset PRESET_WATER_WORLD = presetWaterWorld(PRESET_RELEASE_1_12_2);
+    public static final ModernBetaSettingsPreset PRESET_ISLE_LAND = presetIsleLand(PRESET_RELEASE_1_12_2);
+    public static final ModernBetaSettingsPreset PRESET_CAVE_DELIGHT = presetCaveDelight(PRESET_RELEASE_1_12_2);
+    public static final ModernBetaSettingsPreset PRESET_MOUNTAIN_MADNESS = presetMountainMadness(PRESET_RELEASE_1_12_2);
+    public static final ModernBetaSettingsPreset PRESET_DROUGHT = presetDrought(PRESET_RELEASE_1_12_2);
+    public static final ModernBetaSettingsPreset PRESET_CAVE_CHAOS = presetCaveChaos(PRESET_RELEASE_1_12_2);
 
     private static ModernBetaSettingsPreset presetBeta() {
         return presetBeta(false);
@@ -553,9 +563,7 @@ public class ModernBetaSettingsPresets {
         );
     }
     
-    private static ModernBetaSettingsPreset presetBetaIsles() {
-        ModernBetaSettingsPreset initial = presetBeta();
-        
+    private static ModernBetaSettingsPreset presetIsles(ModernBetaSettingsPreset initial) {
         NbtCompound compoundChunk = initial.settingsChunk().toCompound();
         NbtCompound compoundBiome = initial.settingsBiome().toCompound();
         NbtCompound compoundCaveBiome = initial.settingsCaveBiome().toCompound();
@@ -572,10 +580,34 @@ public class ModernBetaSettingsPresets {
             settingsCaveBiome.build()
         );
     }
-    
-    private static ModernBetaSettingsPreset presetBetaIsleLand() {
-        ModernBetaSettingsPreset initial = presetBeta();
-        
+
+    private static ModernBetaSettingsPreset presetWaterWorld(ModernBetaSettingsPreset initial) {
+        NbtCompound compoundChunk = initial.settingsChunk().toCompound();
+        NbtCompound compoundBiome = initial.settingsBiome().toCompound();
+        NbtCompound compoundCaveBiome = initial.settingsCaveBiome().toCompound();
+
+        ModernBetaSettingsChunk.Builder settingsChunk = new ModernBetaSettingsChunk.Builder().fromCompound(compoundChunk);
+        ModernBetaSettingsBiome.Builder settingsBiome = new ModernBetaSettingsBiome.Builder().fromCompound(compoundBiome);
+        ModernBetaSettingsCaveBiome.Builder settingsCaveBiome = new ModernBetaSettingsCaveBiome.Builder().fromCompound(compoundCaveBiome);
+
+        settingsChunk.seaLevelOffset = 192;
+        settingsChunk.noiseMainNoiseScaleX = 5000.0f;
+        settingsChunk.noiseMainNoiseScaleY = 1000.0f;
+        settingsChunk.noiseMainNoiseScaleZ = 5000.0f;
+        settingsChunk.noiseStretchY = 8.0f;
+        settingsChunk.releaseBiomeDepthWeight = 2.0f;
+        settingsChunk.releaseBiomeDepthOffset = 0.5f;
+        settingsChunk.releaseBiomeScaleWeight = 2.0f;
+        settingsChunk.releaseBiomeScaleOffset = 0.375f;
+
+        return new ModernBetaSettingsPreset(
+            settingsChunk.build(),
+            settingsBiome.build(),
+            settingsCaveBiome.build()
+        );
+    }
+
+    private static ModernBetaSettingsPreset presetIsleLand(ModernBetaSettingsPreset initial) {
         NbtCompound compoundChunk = initial.settingsChunk().toCompound();
         NbtCompound compoundBiome = initial.settingsBiome().toCompound();
         NbtCompound compoundCaveBiome = initial.settingsCaveBiome().toCompound();
@@ -598,9 +630,7 @@ public class ModernBetaSettingsPresets {
     }
     
 
-    private static ModernBetaSettingsPreset presetBetaCaveDelight() {
-        ModernBetaSettingsPreset initial = presetBeta();
-        
+    private static ModernBetaSettingsPreset presetCaveDelight(ModernBetaSettingsPreset initial) {
         NbtCompound compoundChunk = initial.settingsChunk().toCompound();
         NbtCompound compoundBiome = initial.settingsBiome().toCompound();
         NbtCompound compoundCaveBiome = initial.settingsCaveBiome().toCompound();
@@ -613,17 +643,77 @@ public class ModernBetaSettingsPresets {
         settingsChunk.noiseMainNoiseScaleY = 1000.0f;
         settingsChunk.noiseMainNoiseScaleZ = 5000.0f;
         settingsChunk.noiseStretchY = 5.0f;
-        
+        settingsChunk.releaseBiomeDepthWeight = 2.0f;
+        settingsChunk.releaseBiomeDepthOffset = 1.0f;
+        settingsChunk.releaseBiomeScaleWeight = 4.0f;
+        settingsChunk.releaseBiomeScaleOffset = 1.0f;
+
         return new ModernBetaSettingsPreset(
             settingsChunk.build(),
             settingsBiome.build(),
             settingsCaveBiome.build()
         );
     }
-    
-    private static ModernBetaSettingsPreset presetBetaCaveChaos() {
-        ModernBetaSettingsPreset initial = presetBeta();
-        
+
+    private static ModernBetaSettingsPreset presetMountainMadness(ModernBetaSettingsPreset initial) {
+        NbtCompound compoundChunk = initial.settingsChunk().toCompound();
+        NbtCompound compoundBiome = initial.settingsBiome().toCompound();
+        NbtCompound compoundCaveBiome = initial.settingsCaveBiome().toCompound();
+
+        ModernBetaSettingsChunk.Builder settingsChunk = new ModernBetaSettingsChunk.Builder().fromCompound(compoundChunk);
+        ModernBetaSettingsBiome.Builder settingsBiome = new ModernBetaSettingsBiome.Builder().fromCompound(compoundBiome);
+        ModernBetaSettingsCaveBiome.Builder settingsCaveBiome = new ModernBetaSettingsCaveBiome.Builder().fromCompound(compoundCaveBiome);
+
+        settingsChunk.noiseMainNoiseScaleX = 1355.9908f;
+        settingsChunk.noiseMainNoiseScaleY = 745.5343f;
+        settingsChunk.noiseMainNoiseScaleZ = 1183.464f;
+        settingsChunk.noiseDepthNoiseScaleX = 374.93652f;
+        settingsChunk.noiseDepthNoiseScaleZ = 288.65228f;
+        settingsChunk.noiseBaseSize = 1.8758626f;
+        settingsChunk.noiseCoordinateScale = 738.41864f;
+        settingsChunk.noiseHeightScale = 157.69133f;
+        settingsChunk.noiseStretchY = 1.7137525f;
+        settingsChunk.noiseUpperLimitScale = 801.4267f;
+        settingsChunk.noiseLowerLimitScale = 1254.1643f;
+        settingsChunk.releaseBiomeDepthWeight = 1.7553768f;
+        settingsChunk.releaseBiomeDepthOffset = 3.4701107f;
+        settingsChunk.releaseBiomeScaleWeight = 1.0f;
+        settingsChunk.releaseBiomeScaleOffset = 2.535211f;
+
+        if (settingsChunk.chunkProvider.equals("beta")) {
+            settingsChunk.noiseBaseSize = 8.5f;
+        }
+
+        return new ModernBetaSettingsPreset(
+            settingsChunk.build(),
+            settingsBiome.build(),
+            settingsCaveBiome.build()
+        );
+    }
+
+    private static ModernBetaSettingsPreset presetDrought(ModernBetaSettingsPreset initial) {
+        NbtCompound compoundChunk = initial.settingsChunk().toCompound();
+        NbtCompound compoundBiome = initial.settingsBiome().toCompound();
+        NbtCompound compoundCaveBiome = initial.settingsCaveBiome().toCompound();
+
+        ModernBetaSettingsChunk.Builder settingsChunk = new ModernBetaSettingsChunk.Builder().fromCompound(compoundChunk);
+        ModernBetaSettingsBiome.Builder settingsBiome = new ModernBetaSettingsBiome.Builder().fromCompound(compoundBiome);
+        ModernBetaSettingsCaveBiome.Builder settingsCaveBiome = new ModernBetaSettingsCaveBiome.Builder().fromCompound(compoundCaveBiome);
+
+        settingsChunk.seaLevelOffset = -43;
+        settingsChunk.noiseMainNoiseScaleX = 1000.0f;
+        settingsChunk.noiseMainNoiseScaleY = 3000.0f;
+        settingsChunk.noiseMainNoiseScaleZ = 1000.0f;
+        settingsChunk.noiseStretchY = 10.0f;
+
+        return new ModernBetaSettingsPreset(
+            settingsChunk.build(),
+            settingsBiome.build(),
+            settingsCaveBiome.build()
+        );
+    }
+
+    private static ModernBetaSettingsPreset presetCaveChaos(ModernBetaSettingsPreset initial) {
         NbtCompound compoundChunk = initial.settingsChunk().toCompound();
         NbtCompound compoundBiome = initial.settingsBiome().toCompound();
         NbtCompound compoundCaveBiome = initial.settingsCaveBiome().toCompound();
@@ -631,7 +721,8 @@ public class ModernBetaSettingsPresets {
         ModernBetaSettingsChunk.Builder settingsChunk = new ModernBetaSettingsChunk.Builder().fromCompound(compoundChunk);
         ModernBetaSettingsBiome.Builder settingsBiome = new ModernBetaSettingsBiome.Builder().fromCompound(compoundBiome);
         ModernBetaSettingsCaveBiome.Builder settingsCaveBiome = new ModernBetaSettingsCaveBiome.Builder().fromCompound(compoundCaveBiome);
-        
+
+        settingsChunk.seaLevelOffset = -57;
         settingsChunk.noiseUpperLimitScale = 2.0f;
         settingsChunk.noiseLowerLimitScale = 64.0f;
         
@@ -1487,6 +1578,7 @@ public class ModernBetaSettingsPresets {
             ))
         );
         settingsBiome.fractalSubVariantScale = 0;
+        settingsBiome.fractalSubVariantSeed = 200;
         settingsBiome.fractalAddSnow = true;
         settingsBiome.fractalAddMushroomIslands = true;
         settingsBiome.fractalAddBeaches = true;
@@ -1508,6 +1600,9 @@ public class ModernBetaSettingsPresets {
         settingsChunk.chunkProvider = ModernBetaBuiltInTypes.Chunk.MAJOR_RELEASE.id;
         settingsChunk.releaseHeightOverrides = Map.ofEntries(
             Map.entry("minecraft:ocean", "-1.0;0.2"),
+            Map.entry("minecraft:warm_ocean", "-1.0;0.2"),
+            Map.entry("minecraft:lukewarm_ocean", "-1.0;0.2"),
+            Map.entry("minecraft:cold_ocean", "-1.0;0.2"),
             Map.entry("minecraft:plains", "0.125;0.1"),
             Map.entry("minecraft:desert", "0.125;0.1"),
             Map.entry("minecraft:windswept_hills", "1.0;1.0"),
@@ -1528,8 +1623,13 @@ public class ModernBetaSettingsPresets {
             Map.entry("*minecraft:windswept_hills", "0.8;0.6"),
             Map.entry("minecraft:jungle", "0.1;0.4"),
             Map.entry("*minecraft:jungle", "0.45;0.6"),
+            Map.entry("minecraft:bamboo_jungle", "0.1;0.4"),
+            Map.entry("*minecraft:bamboo_jungle", "0.45;0.6"),
             Map.entry("minecraft:sparse_jungle", "0.1;0.4"),
             Map.entry("minecraft:deep_ocean", "-1.8;0.2"),
+            Map.entry("minecraft:deep_lukewarm_ocean", "-1.8;0.2"),
+            Map.entry("minecraft:deep_cold_ocean", "-1.8;0.2"),
+            Map.entry("minecraft:deep_frozen_ocean", "-1.8;0.2"),
             Map.entry("minecraft:stony_shore", "0.1;1.6"),
             Map.entry("minecraft:snowy_beach", "0.0;0.05"),
             Map.entry("minecraft:birch_forest", "0.1;0.4"),
@@ -1583,6 +1683,123 @@ public class ModernBetaSettingsPresets {
         settingsBiome.fractalAddHills = true;
         settingsBiome.fractalAddDeepOceans = true;
         settingsBiome.fractalAddMutations = true;
+        settingsBiome.fractalUseClimaticBiomes = true;
+
+        return new ModernBetaSettingsPreset(
+            settingsChunk.build(),
+            settingsBiome.build(),
+            settingsCaveBiome.build()
+        );
+    }
+
+    private static ModernBetaSettingsPreset preset1171() {
+        ModernBetaSettingsChunk.Builder settingsChunk = new ModernBetaSettingsChunk.Builder();
+        ModernBetaSettingsBiome.Builder settingsBiome = new ModernBetaSettingsBiome.Builder();
+        ModernBetaSettingsCaveBiome.Builder settingsCaveBiome = new ModernBetaSettingsCaveBiome.Builder();
+
+        settingsChunk.chunkProvider = ModernBetaBuiltInTypes.Chunk.MAJOR_RELEASE.id;
+        settingsChunk.releaseHeightOverrides = Map.ofEntries(
+            Map.entry("minecraft:ocean", "-1.0;0.2"),
+            Map.entry("minecraft:warm_ocean", "-1.0;0.2"),
+            Map.entry("minecraft:lukewarm_ocean", "-1.0;0.2"),
+            Map.entry("minecraft:cold_ocean", "-1.0;0.2"),
+            Map.entry("minecraft:plains", "0.125;0.1"),
+            Map.entry("minecraft:desert", "0.125;0.1"),
+            Map.entry("minecraft:windswept_hills", "1.0;1.0"),
+            Map.entry("minecraft:forest", "0.1;0.4"),
+            Map.entry("minecraft:taiga", "0.2;0.4"),
+            Map.entry("minecraft:swamp", "-0.2;0.2"),
+            Map.entry("minecraft:river", "-0.5;0"),
+            Map.entry("minecraft:frozen_ocean", "-1.0;0.2"),
+            Map.entry("minecraft:frozen_river", "-0.5;0"),
+            Map.entry("minecraft:snowy_plains", "0.125;0.1"),
+            Map.entry("*minecraft:snowy_plains", "0.45;0.6"),
+            Map.entry("minecraft:mushroom_fields", "0.2;0.6"),
+            Map.entry("*minecraft:mushroom_fields", "0.0;0.05"),
+            Map.entry("minecraft:beach", "0.0;0.05"),
+            Map.entry("*minecraft:desert", "0.45;0.6"),
+            Map.entry("*minecraft:forest", "0.45;0.6"),
+            Map.entry("*minecraft:taiga", "0.45;0.6"),
+            Map.entry("*minecraft:windswept_hills", "0.8;0.6"),
+            Map.entry("minecraft:jungle", "0.1;0.4"),
+            Map.entry("*minecraft:jungle", "0.45;0.6"),
+            Map.entry("minecraft:bamboo_jungle", "0.1;0.4"),
+            Map.entry("*minecraft:bamboo_jungle", "0.45;0.6"),
+            Map.entry("minecraft:sparse_jungle", "0.1;0.4"),
+            Map.entry("minecraft:deep_ocean", "-1.8;0.2"),
+            Map.entry("minecraft:deep_lukewarm_ocean", "-1.8;0.2"),
+            Map.entry("minecraft:deep_cold_ocean", "-1.8;0.2"),
+            Map.entry("minecraft:deep_frozen_ocean", "-1.8;0.2"),
+            Map.entry("minecraft:stony_shore", "0.1;1.6"),
+            Map.entry("minecraft:snowy_beach", "0.0;0.05"),
+            Map.entry("minecraft:birch_forest", "0.1;0.4"),
+            Map.entry("*minecraft:birch_forest", "0.45;0.6"),
+            Map.entry("minecraft:dark_forest", "0.1;0.4"),
+            Map.entry("minecraft:snowy_taiga", "0.2;0.4"),
+            Map.entry("*minecraft:snowy_taiga", "0.45;0.6"),
+            Map.entry("minecraft:old_growth_pine_taiga", "0.2;0.4"),
+            Map.entry("*minecraft:old_growth_pine_taiga", "0.45;0.6"),
+            Map.entry("minecraft:windswept_forest", "1.0;1.0"),
+            Map.entry("minecraft:savanna", "0.125;0.1"),
+            Map.entry("*minecraft:savanna", "1.5;0.05"),
+            Map.entry("minecraft:badlands", "0.1;0.4"),
+            Map.entry("*minecraft:wooded_badlands", "1.5;0.05"),
+            Map.entry("*minecraft:badlands", "1.5;0.05"),
+            Map.entry("minecraft:sunflower_plains", "0.125;0.1"),
+            Map.entry("2*minecraft:desert", "0.225;0.5"),
+            Map.entry("2*minecraft:windswept_gravelly_hills", "1.0;1.0"),
+            Map.entry("minecraft:flower_forest", "0.1;0.8"),
+            Map.entry("2*minecraft:taiga", "0.3;0.8"),
+            Map.entry("*minecraft:swamp", "-0.1;0.6"),
+            Map.entry("minecraft:ice_spikes", "0.425;0.9"),
+            Map.entry("2*minecraft:jungle", "0.2;0.8"),
+            Map.entry("2*minecraft:sparse_jungle", "0.2;0.8"),
+            Map.entry("minecraft:old_growth_birch_forest", "0.2;0.8"),
+            Map.entry("*minecraft:old_growth_birch_forest", "0.55;1.0"),
+            Map.entry("*minecraft:dark_forest", "0.2;0.8"),
+            Map.entry("2*minecraft:snowy_taiga", "0.3;0.8"),
+            Map.entry("minecraft:old_growth_spruce_taiga", "0.2;0.4"),
+            Map.entry("*minecraft:old_growth_spruce_taiga", "0.2;0.4"),
+            Map.entry("minecraft:windswept_savanna", "0.3625;2.45"),
+            Map.entry("*minecraft:windswept_savanna", "1.05;2.425"),
+            Map.entry("minecraft:eroded_badlands", "0.1;0.4"),
+            Map.entry("2*minecraft:wooded_badlands", "0.45;0.6"),
+            Map.entry("2*minecraft:badlands", "0.45;0.6")
+        );
+        settingsChunk.useSurfaceRules = true;
+        settingsChunk.useFixedCaves = true;
+        settingsChunk.forceBetaCaves = false;
+
+        settingsBiome.biomeProvider = ModernBetaBuiltInTypes.Biome.FRACTAL.id;
+        settingsBiome.fractalTerrainType = FractalSettings.TerrainType.MAJOR_RELEASE.id;
+        settingsBiome.fractalVeryRareVariants = Map.ofEntries(
+            Map.entry("minecraft:plains", "minecraft:sunflower_plains")
+        );
+        settingsBiome.fractalSubVariants = Map.ofEntries(
+            Map.entry("minecraft:jungle", List.of(
+                "minecraft:bamboo_jungle",
+                "minecraft:jungle",
+                "minecraft:jungle",
+                "minecraft:jungle",
+                "minecraft:jungle",
+                "minecraft:jungle",
+                "minecraft:jungle",
+                "minecraft:jungle",
+                "minecraft:jungle",
+                "minecraft:jungle"
+            ))
+        );
+        settingsBiome.fractalSubVariantScale = 0;
+        settingsBiome.fractalSubVariantSeed = 1001;
+        settingsBiome.fractalPlains = "minecraft:plains";
+        settingsBiome.fractalIcePlains = "minecraft:snowy_plains";
+        settingsBiome.fractalAddSnow = true;
+        settingsBiome.fractalAddMushroomIslands = true;
+        settingsBiome.fractalAddBeaches = true;
+        settingsBiome.fractalAddHills = true;
+        settingsBiome.fractalAddDeepOceans = true;
+        settingsBiome.fractalAddMutations = true;
+        settingsBiome.fractalAddClimaticOceans = true;
         settingsBiome.fractalUseClimaticBiomes = true;
 
         return new ModernBetaSettingsPreset(

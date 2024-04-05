@@ -153,7 +153,8 @@ public final class ModernBetaBuiltInTypes {
         RELEASE_1_1("release_1_1"),
         RELEASE_1_2_5("release_1_2_5"),
         RELEASE_1_6_4("release_1_6_4"),
-        RELEASE_1_12_2("release_1_12_2")
+        RELEASE_1_12_2("release_1_12_2"),
+        RELEASE_1_17_1("release_1_17_1"),
         ;
         
         public final String id;
@@ -166,8 +167,11 @@ public final class ModernBetaBuiltInTypes {
     public enum PresetAlt {
         BETA_SKYLANDS("beta_skylands"),
         BETA_ISLES("beta_isles"),
+        BETA_WATER_WORLD("beta_water_world"),
         BETA_ISLE_LAND("beta_isle_land"),
         BETA_CAVE_DELIGHT("beta_cave_delight"),
+        BETA_MOUNTAIN_MADNESS("beta_mountain_madness"),
+        BETA_DROUGHT("beta_drought"),
         BETA_CAVE_CHAOS("beta_cave_chaos"),
         BETA_LARGE_BIOMES("beta_large_biomes"),
         BETA_XBOX_LEGACY("beta_xbox_legacy"),
@@ -179,6 +183,12 @@ public final class ModernBetaBuiltInTypes {
         INDEV_PARADISE("indev_paradise"),
         INDEV_WOODS("indev_woods"),
         INDEV_HELL("indev_hell"),
+        WATER_WORLD("water_world"),
+        ISLE_LAND("isle_land"),
+        CAVE_DELIGHT("cave_delight"),
+        MOUNTAIN_MADNESS("mountain_madness"),
+        DROUGHT("drought"),
+        CAVE_CHAOS("cave_chaos"),
         ;
         
         public final String id;

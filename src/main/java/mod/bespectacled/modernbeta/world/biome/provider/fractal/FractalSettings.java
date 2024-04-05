@@ -27,6 +27,7 @@ public class FractalSettings {
 	public final int biomeScale;
 	public final int hillScale;
 	public final int subVariantScale;
+	public final int subVariantSeed;
 	public final int beachShrink;
 	public final int oceanShrink;
     public final TerrainType terrainType;
@@ -39,6 +40,7 @@ public class FractalSettings {
     public final boolean addSwampRivers;
     public final boolean addDeepOceans;
     public final boolean addMutations;
+    public final boolean addClimaticOceans;
     public final boolean useClimaticBiomes;
 
 	public FractalSettings(FractalSettings.Builder builder) {
@@ -54,6 +56,7 @@ public class FractalSettings {
 		this.biomeScale = builder.biomeScale;
 		this.hillScale = builder.hillScale;
 		this.subVariantScale = builder.subVariantScale;
+		this.subVariantSeed = builder.subVariantSeed;
 		this.beachShrink = builder.beachShrink;
 		this.oceanShrink = builder.oceanShrink;
 		this.terrainType = builder.terrainType;
@@ -66,6 +69,7 @@ public class FractalSettings {
 		this.addSwampRivers = builder.addSwampRivers;
 		this.addDeepOceans = builder.addDeepOceans;
 		this.addMutations = builder.addMutations;
+		this.addClimaticOceans = builder.addClimaticOceans;
 		this.useClimaticBiomes = builder.useClimaticBiomes;
 	}
 
@@ -140,6 +144,7 @@ public class FractalSettings {
 		public int biomeScale;
 		public int hillScale;
 		public int subVariantScale;
+		public int subVariantSeed;
 		public int beachShrink;
 		public int oceanShrink;
 	    public TerrainType terrainType;
@@ -152,6 +157,7 @@ public class FractalSettings {
 	    public boolean addSwampRivers;
 	    public boolean addDeepOceans;
 	    public boolean addMutations;
+	    public boolean addClimaticOceans;
 	    public boolean useClimaticBiomes;
 
 		public Builder() {
@@ -166,8 +172,9 @@ public class FractalSettings {
 			this.biomeScale = 4;
 			this.hillScale = 2;
 			this.subVariantScale = 2;
+			this.subVariantSeed = 3000;
 			this.beachShrink = 1;
-			this.oceanShrink = 1;
+			this.oceanShrink = 0;
 			this.terrainType = TerrainType.BETA;
 			this.oceans = true;
 			this.addRivers = true;
@@ -178,6 +185,7 @@ public class FractalSettings {
 			this.addSwampRivers = false;
 			this.addDeepOceans = false;
 			this.addMutations = false;
+			this.addClimaticOceans = false;
 			this.useClimaticBiomes = false;
 		}
 

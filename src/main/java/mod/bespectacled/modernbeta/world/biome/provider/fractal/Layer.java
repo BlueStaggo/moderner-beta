@@ -95,6 +95,10 @@ public abstract class Layer {
 			}
 		}
 		if (settings.addMushroomIslands) land = new LayerAddMushroomIsland(5, land);
+		if (settings.addDeepOceans) land = new LayerDeepenOcean(4, land);
+
+		Layer oceanTemperature = new LayerOceanTemperature();
+		oceanTemperature = LayerZoom.multi(2001, oceanTemperature, 6);
 
 		Layer riverLayout = new LayerInitRiver(100, land);
 		Layer mutationLayout = new LayerInitMutation(100, land);
@@ -109,7 +113,7 @@ public abstract class Layer {
 
 		Layer biomes = new LayerAddBiomes(200, land, settings.biomes, replacementBiomes, settings.climaticBiomes);
 		for (int i = 0; i < settings.hillScale; i++) {
-			if (settings.subVariantScale == i && !settings.subVariants.isEmpty()) biomes = new LayerSubVariants(200 + i, biomes, settings.subVariants);
+			if (settings.subVariantScale == i && !settings.subVariants.isEmpty()) biomes = new LayerSubVariants(settings.subVariantSeed, biomes, settings.subVariants);
 
 			if (settings.beachShrink == i - 2 - settings.hillScale && settings.addBeaches) {
 				biomes = new LayerAddEdge(1000, biomes, beach, ocean, mushroomIsland,
@@ -118,7 +122,7 @@ public abstract class Layer {
 
 			biomes = new LayerZoom(1000 + i, biomes);
 		}
-		if (settings.subVariantScale == settings.hillScale && !settings.subVariants.isEmpty()) biomes = new LayerSubVariants(200 + settings.hillScale, biomes, settings.subVariants);
+		if (settings.subVariantScale == settings.hillScale && !settings.subVariants.isEmpty()) biomes = new LayerSubVariants(settings.subVariantSeed, biomes, settings.subVariants);
 		if (settings.useClimaticBiomes) biomes = new LayerAddEdge(1000, biomes, settings.edgeVariants, biomeLookup);
 		if (settings.addHills) {
 			int neighborRequirement = settings.terrainType == FractalSettings.TerrainType.MAJOR_RELEASE ? 3 : 4;
@@ -151,6 +155,7 @@ public abstract class Layer {
 
 		biomes = new LayerSmooth(1000, biomes);
 		if (settings.addRivers) biomes = new LayerApplyRiver(biomes, riverLayout, ocean, deepOcean, river, mushroomIsland, icePlains, frozenRiver);
+		if (settings.addClimaticOceans) biomes = new LayerApplyOceanTemperature(biomes, oceanTemperature, biomeLookup);
 		biomes.setWorldSeed(seed);
 		return biomes;
 	}
@@ -252,6 +257,10 @@ public abstract class Layer {
 	}
 
 	protected BiomeInfo[] forEach(int x, int z, int width, int length, UnaryOperator<BiomeInfo> operator) {
+		return forEach(x, z, width, length, (input, ix, iz) -> operator.apply(input));
+	}
+
+	protected BiomeInfo[] forEach(int x, int z, int width, int length, LayerOperator operator) {
 		BiomeInfo[] input = this.parent != null ? this.parent.getBiomes(x, z, width, length) : null;
 		BiomeInfo[] output = new BiomeInfo[width * length];
 
@@ -259,7 +268,7 @@ public abstract class Layer {
 		for (int zz = 0; zz < length; zz++) {
 			for (int xx = 0; xx < width; xx++) {
 				this.setChunkSeed(xx + x, zz + z);
-				output[i] = operator.apply(input != null ? input[i] : null);
+				output[i] = operator.apply(input != null ? input[i] : null, xx, zz);
 				i++;
 			}
 		}
@@ -325,6 +334,11 @@ public abstract class Layer {
 			}
 		}
 		return count;
+	}
+
+	@FunctionalInterface
+	public interface LayerOperator {
+		BiomeInfo apply(BiomeInfo input, int ix, int iz);
 	}
 
 	@FunctionalInterface

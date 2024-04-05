@@ -64,8 +64,8 @@ public abstract class ChunkProviderForcedHeight extends ChunkProviderNoise {
     }
 
     public HeightConfig getHeightConfigAt(int noiseX, int noiseZ) {
-        float depth = 0.0F;
         float scale = 0.0F;
+        float depth = 0.0F;
         float totalWeight = 0.0F;
 
         BiomeInfo biome = this.getBiomeInfo(noiseX, noiseZ);
@@ -76,22 +76,25 @@ public abstract class ChunkProviderForcedHeight extends ChunkProviderNoise {
                 biome = this.getBiomeInfo(noiseX + biomeX, noiseZ + biomeZ);
                 HeightConfig heightConfig = this.getHeightConfig(biome);
 
-                float weight = BIOME_HEIGHT_WEIGHTS[biomeX + 2 + (biomeZ + 2) * 5] / (heightConfig.depth() + 2.0F);
+                float thisScale = this.chunkSettings.releaseBiomeScaleOffset + heightConfig.scale() * this.chunkSettings.releaseBiomeScaleWeight;
+                float thisDepth = this.chunkSettings.releaseBiomeDepthOffset + heightConfig.depth() * this.chunkSettings.releaseBiomeDepthWeight;
+
+                float weight = BIOME_HEIGHT_WEIGHTS[biomeX + 2 + (biomeZ + 2) * 5] / (thisDepth + 2.0F);
                 if (heightConfig.depth() > minSurfaceHeight) {
                     weight /= 2.0F;
                 }
 
-                depth += heightConfig.scale() * weight;
-                scale += heightConfig.depth() * weight;
+                scale += thisScale * weight;
+                depth += thisDepth * weight;
                 totalWeight += weight;
             }
         }
 
-        depth /= totalWeight;
         scale /= totalWeight;
-        depth = depth * 0.9F + 0.1F;
-        scale = (scale * 4.0F - 1.0F) / 8.0F;
+        depth /= totalWeight;
+        scale = scale * 0.9F + 0.1F;
+        depth = (depth * 4.0F - 1.0F) / 8.0F;
 
-        return new HeightConfig(scale, depth);
+        return new HeightConfig(depth, scale);
     }
 }

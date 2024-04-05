@@ -41,6 +41,7 @@ public class ModernBetaSettingsBiome implements ModernBetaSettings {
     public final int fractalBiomeScale;
     public final int fractalHillScale;
     public final int fractalSubVariantScale;
+    public final int fractalSubVariantSeed;
     public final int fractalBeachShrink;
     public final int fractalOceanShrink;
     public final String fractalTerrainType;
@@ -53,6 +54,7 @@ public class ModernBetaSettingsBiome implements ModernBetaSettings {
     public final boolean fractalAddSwampRivers;
     public final boolean fractalAddDeepOceans;
     public final boolean fractalAddMutations;
+    public final boolean fractalAddClimaticOceans;
     public final boolean fractalUseClimaticBiomes;
 
     public ModernBetaSettingsBiome() {
@@ -84,6 +86,7 @@ public class ModernBetaSettingsBiome implements ModernBetaSettings {
         this.fractalBiomeScale = builder.fractalBiomeScale;
         this.fractalHillScale = builder.fractalHillScale;
         this.fractalSubVariantScale = builder.fractalSubVariantScale;
+        this.fractalSubVariantSeed = builder.fractalSubVariantSeed;
         this.fractalBeachShrink = builder.fractalBeachShrink;
         this.fractalOceanShrink = builder.fractalOceanShrink;
         this.fractalTerrainType = builder.fractalTerrainType;
@@ -96,6 +99,7 @@ public class ModernBetaSettingsBiome implements ModernBetaSettings {
         this.fractalAddSwampRivers = builder.fractalAddSwampRivers;
         this.fractalAddDeepOceans = builder.fractalAddDeepOceans;
         this.fractalAddMutations = builder.fractalAddMutations;
+        this.fractalAddClimaticOceans = builder.fractalAddClimaticOceans;
         this.fractalUseClimaticBiomes = builder.fractalUseClimaticBiomes;
     }
     
@@ -131,6 +135,7 @@ public class ModernBetaSettingsBiome implements ModernBetaSettings {
             .putInt(NbtTags.FRACTAL_BIOME_SCALE, this.fractalBiomeScale)
             .putInt(NbtTags.FRACTAL_HILL_SCALE, this.fractalHillScale)
             .putInt(NbtTags.FRACTAL_SUB_VARIANT_SCALE, this.fractalSubVariantScale)
+            .putInt(NbtTags.FRACTAL_SUB_VARIANT_SEED, this.fractalSubVariantSeed)
             .putInt(NbtTags.FRACTAL_BEACH_SHRINK, this.fractalBeachShrink)
             .putInt(NbtTags.FRACTAL_OCEAN_SHRINK, this.fractalOceanShrink)
             .putString(NbtTags.FRACTAL_TERRAIN_TYPE, this.fractalTerrainType)
@@ -143,6 +148,7 @@ public class ModernBetaSettingsBiome implements ModernBetaSettings {
             .putBoolean(NbtTags.FRACTAL_ADD_SWAMP_RIVERS, this.fractalAddSwampRivers)
             .putBoolean(NbtTags.FRACTAL_ADD_DEEP_OCEANS, this.fractalAddDeepOceans)
             .putBoolean(NbtTags.FRACTAL_ADD_MUTATIONS, this.fractalAddMutations)
+            .putBoolean(NbtTags.FRACTAL_ADD_CLIMATIC_OCEANS, this.fractalAddClimaticOceans)
             .putBoolean(NbtTags.FRACTAL_USE_CLIMATIC_BIOMES, this.fractalUseClimaticBiomes)
             .build();
     }
@@ -171,6 +177,7 @@ public class ModernBetaSettingsBiome implements ModernBetaSettings {
         public String fractalIcePlains;
         public int fractalBiomeScale;
         public int fractalSubVariantScale;
+        public int fractalSubVariantSeed;
         public int fractalHillScale;
         public int fractalBeachShrink;
         public int fractalOceanShrink;
@@ -184,6 +191,7 @@ public class ModernBetaSettingsBiome implements ModernBetaSettings {
         public boolean fractalAddSwampRivers;
         public boolean fractalAddDeepOceans;
         public boolean fractalAddMutations;
+        public boolean fractalAddClimaticOceans;
         public boolean fractalUseClimaticBiomes;
 
         public Builder() {
@@ -385,6 +393,7 @@ public class ModernBetaSettingsBiome implements ModernBetaSettings {
             this.fractalBiomeScale = 4;
             this.fractalHillScale = 2;
             this.fractalSubVariantScale = 0;
+            this.fractalSubVariantSeed = 3000;
             this.fractalBeachShrink = 1;
             this.fractalOceanShrink = 0;
             this.fractalTerrainType = FractalSettings.TerrainType.BETA.id;
@@ -397,6 +406,7 @@ public class ModernBetaSettingsBiome implements ModernBetaSettings {
             this.fractalAddSwampRivers = false;
             this.fractalAddDeepOceans = false;
             this.fractalAddMutations = false;
+            this.fractalAddClimaticOceans = false;
             this.fractalUseClimaticBiomes = false;
         }
         
@@ -425,6 +435,7 @@ public class ModernBetaSettingsBiome implements ModernBetaSettings {
             this.fractalBiomeScale = reader.readInt(NbtTags.FRACTAL_BIOME_SCALE, this.fractalBiomeScale);
             this.fractalHillScale = reader.readInt(NbtTags.FRACTAL_HILL_SCALE, this.fractalHillScale);
             this.fractalSubVariantScale = reader.readInt(NbtTags.FRACTAL_SUB_VARIANT_SCALE, this.fractalSubVariantScale);
+            this.fractalSubVariantSeed = reader.readInt(NbtTags.FRACTAL_SUB_VARIANT_SEED, this.fractalSubVariantSeed);
             this.fractalBeachShrink = reader.readInt(NbtTags.FRACTAL_BEACH_SHRINK, this.fractalBeachShrink);
             this.fractalOceanShrink = reader.readInt(NbtTags.FRACTAL_OCEAN_SHRINK, this.fractalOceanShrink);
             this.fractalTerrainType = reader.readString(NbtTags.FRACTAL_TERRAIN_TYPE, this.fractalTerrainType);
@@ -436,7 +447,8 @@ public class ModernBetaSettingsBiome implements ModernBetaSettings {
             this.fractalAddHills = reader.readBoolean(NbtTags.FRACTAL_ADD_HILLS, this.fractalAddHills);
             this.fractalAddSwampRivers = reader.readBoolean(NbtTags.FRACTAL_ADD_SWAMP_RIVERS, this.fractalAddSwampRivers);
             this.fractalAddDeepOceans = reader.readBoolean(NbtTags.FRACTAL_ADD_DEEP_OCEANS, this.fractalAddDeepOceans);
-            this.fractalAddMutations = reader.readBoolean(NbtTags.FRACTAL_ADD_DEEP_OCEANS, this.fractalAddMutations);
+            this.fractalAddMutations = reader.readBoolean(NbtTags.FRACTAL_ADD_MUTATIONS, this.fractalAddMutations);
+            this.fractalAddClimaticOceans = reader.readBoolean(NbtTags.FRACTAL_ADD_CLIMATIC_OCEANS, this.fractalAddClimaticOceans);
             this.fractalUseClimaticBiomes = reader.readBoolean(NbtTags.FRACTAL_USE_CLIMATIC_BIOMES, this.fractalUseClimaticBiomes);
 
             this.loadDatafix(reader);

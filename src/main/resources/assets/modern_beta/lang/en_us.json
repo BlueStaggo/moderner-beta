@@ -171,6 +171,7 @@
     "text.autoconfig.modern_beta.option.useOldFogColor.@Tooltip[1]": "increasing sky color contribution with render distance.",
     
     "biome.modern_beta.beta_forest": "Beta Forest",
+    "biome.modern_beta.beta_oak_forest": "Beta Oak Forest",
     "biome.modern_beta.beta_shrubland": "Beta Shrubland",
     "biome.modern_beta.beta_desert": "Beta Desert",
     "biome.modern_beta.beta_savanna": "Beta Savanna",
@@ -179,6 +180,7 @@
     "biome.modern_beta.beta_rainforest": "Beta Rainforest",
     "biome.modern_beta.beta_swampland": "Beta Swampland",
     "biome.modern_beta.beta_taiga": "Beta Taiga",
+    "biome.modern_beta.beta_oak_taiga": "Beta Oak Taiga",
     "biome.modern_beta.beta_tundra": "Beta Tundra",
     "biome.modern_beta.beta_ice_desert": "Beta Ice Desert",
     "biome.modern_beta.beta_sky": "Beta Sky",
@@ -195,8 +197,9 @@
     "biome.modern_beta.infdev_611": "Infdev 611",
     "biome.modern_beta.infdev_420": "Infdev 420",
     "biome.modern_beta.infdev_415": "Infdev 415",
+    "biome.modern_beta.infdev_325": "Infdev 325",
     "biome.modern_beta.infdev_227": "Infdev 227",
-    
+
     "biome.modern_beta.indev_normal": "Indev Normal",
     "biome.modern_beta.indev_hell": "Indev Hell",
     "biome.modern_beta.indev_paradise": "Indev Paradise",
@@ -221,11 +224,13 @@
     "biome.modern_beta.pe_frozen_ocean": "PE Frozen Ocean",
 
     "biome.modern_beta.late_beta_extreme_hills": "Late Beta Extreme Hills",
-    "biome.modern_beta.late_beta_swampland": "Late Beta Swampland",
+    "biome.modern_beta.late_beta_ice_plains": "Late Beta Ice Plains",
     "biome.modern_beta.late_beta_plains": "Late Beta Plains",
+    "biome.modern_beta.late_beta_swampland": "Late Beta Swampland",
     "biome.modern_beta.late_beta_taiga": "Late Beta Taiga",
 
+    "biome.modern_beta.early_release_extreme_hills": "Early Release Extreme Hills",
     "biome.modern_beta.early_release_ice_plains": "Early Release Ice Plains",
     "biome.modern_beta.early_release_swampland": "Early Release Swampland",
-    "biome.modern_beta.early_release_extreme_hills": "Early Release Extreme Hills"
+    "biome.modern_beta.early_release_taiga": "Early Release Taiga"
 }

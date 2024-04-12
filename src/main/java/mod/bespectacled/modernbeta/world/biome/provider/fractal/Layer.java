@@ -42,6 +42,11 @@ public abstract class Layer {
 		Layer land;
 		if (!settings.oceans) {
 			land = new LayerSingleBiome(DummyBiome.PLAINS);
+			land = addSnow(land, settings, Integer.MIN_VALUE);
+			if (settings.addSnow || settings.useClimaticBiomes) {
+				land = new LayerZoom(2002, land);
+				land = new LayerZoom(2003, land);
+			}
 		} else {
 			land = new LayerInitLand(1);
 			switch (settings.terrainType) {
@@ -93,12 +98,10 @@ public abstract class Layer {
 					}
 					break;
 			}
-		}
-		if (settings.addMushroomIslands) land = new LayerAddMushroomIsland(5, land);
-		if (settings.addDeepOceans) land = new LayerDeepenOcean(4, land);
 
-		Layer oceanTemperature = new LayerOceanTemperature();
-		oceanTemperature = LayerZoom.multi(2001, oceanTemperature, 6);
+			if (settings.addMushroomIslands) land = new LayerAddMushroomIsland(5, land);
+			if (settings.addDeepOceans) land = new LayerDeepenOcean(4, land);
+		}
 
 		Layer riverLayout = new LayerInitRiver(100, land);
 		Layer mutationLayout = new LayerInitMutation(100, land);
@@ -155,13 +158,17 @@ public abstract class Layer {
 
 		biomes = new LayerSmooth(1000, biomes);
 		if (settings.addRivers) biomes = new LayerApplyRiver(biomes, riverLayout, ocean, deepOcean, river, mushroomIsland, icePlains, frozenRiver);
-		if (settings.addClimaticOceans) biomes = new LayerApplyOceanTemperature(biomes, oceanTemperature, biomeLookup);
+		if (settings.addClimaticOceans && settings.oceans) {
+			Layer oceanTemperature = new LayerOceanTemperature();
+			oceanTemperature = LayerZoom.multi(2001, oceanTemperature, 6);
+			biomes = new LayerApplyOceanTemperature(biomes, oceanTemperature, biomeLookup);
+		}
 		biomes.setWorldSeed(seed);
 		return biomes;
 	}
 
 	private static Layer addSnow(Layer layer, FractalSettings settings, int oceanShrink) {
-		if (settings.oceanShrink != oceanShrink) return layer;
+		if (settings.oceanShrink != oceanShrink && oceanShrink != Integer.MIN_VALUE) return layer;
 		if (settings.useClimaticBiomes) {
 			layer = new LayerAddClimate(2, layer);
 			layer = new LayerCoolWarmEdge(2, layer);

@@ -53,9 +53,4 @@ public class ModernBetaSettingsConfirmScreen extends ModernBetaScreen {
         SimplePositioningWidget.setPos(gridWidgetMain, 0, this.height / 2 - gridWidgetMain.getHeight(), this.width, this.height, 0.5f, 0.0f);
         gridWidgetMain.forEachChild(this::addDrawableChild);
     }
-    
-    @Override
-    protected void renderBackgroundWithOverlay(DrawContext context) {
-//        this.renderBackgroundTexture(context);
-    }
 }

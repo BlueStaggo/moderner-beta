@@ -88,9 +88,6 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
         
         this.listWidget.render(context, mouseX, mouseY, delta);
     }
-    
-    @Override
-    protected void renderBackgroundWithOverlay(DrawContext context) {}
 
     private void updateSelectButton(boolean hasSelected) {
         this.selectPresetButton.active = hasSelected;

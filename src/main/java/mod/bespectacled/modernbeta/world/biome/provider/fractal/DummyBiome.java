@@ -71,6 +71,11 @@ class DummyBiome implements RegistryEntry<Biome> {
 	}
 
 	@Override
+	public boolean matches(RegistryEntry<Biome> entry) {
+		return this == entry;
+	}
+
+	@Override
 	public Stream<TagKey<Biome>> streamTags() {
 		return Stream.empty();
 	}

@@ -84,11 +84,11 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
                 this.preset.settingsCaveBiome().toCompound()
             );
             this.client.setScreen(this.parent);
-        }).dimensions(this.width / 2 - 155, this.height - 28, BUTTON_LENGTH, BUTTON_HEIGHT).build());
+        }).dimensions(this.width / 2 - 154, this.height - 26, BUTTON_LENGTH, BUTTON_HEIGHT).build());
         
         this.addDrawableChild(ButtonWidget.builder(ScreenTexts.CANCEL, button -> 
             this.client.setScreen(this.parent)
-        ).dimensions(this.width / 2 + 5, this.height - 28, BUTTON_LENGTH, BUTTON_HEIGHT).build());
+        ).dimensions(this.width / 2 + 4, this.height - 26, BUTTON_LENGTH, BUTTON_HEIGHT).build());
         
         Text hintText = Text.translatable(this.hintString).formatted(Formatting.GRAY);
         int hintTextWidth = this.textRenderer.getWidth(hintText.asOrderedText());

@@ -11,6 +11,7 @@ import java.util.stream.Stream;
 import com.google.common.collect.Sets;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import mod.bespectacled.modernbeta.ModernBeta;
@@ -45,7 +46,7 @@ import net.minecraft.world.biome.source.util.MultiNoiseUtil;
 import net.minecraft.world.biome.source.util.MultiNoiseUtil.MultiNoiseSampler;
 
 public class ModernBetaBiomeSource extends BiomeSource {
-    public static final Codec<ModernBetaBiomeSource> CODEC = RecordCodecBuilder.create(instance -> instance
+    public static final MapCodec<ModernBetaBiomeSource> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
         .group(
             RegistryOps.getEntryLookupCodec(RegistryKeys.BIOME),
             NbtCompound.CODEC.fieldOf("provider_settings").forGetter(biomeSource -> biomeSource.biomeSettings),
@@ -246,7 +247,7 @@ public class ModernBetaBiomeSource extends BiomeSource {
     }
 
     @Override
-    protected Codec<? extends BiomeSource> getCodec() {
+    protected MapCodec<? extends BiomeSource> getCodec() {
         return ModernBetaBiomeSource.CODEC;
     }
 

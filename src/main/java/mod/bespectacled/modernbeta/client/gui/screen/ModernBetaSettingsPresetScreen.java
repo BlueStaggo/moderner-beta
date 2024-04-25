@@ -72,12 +72,12 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
             onPress -> {
                 ((ModernBetaWorldScreen)this.parent).setPreset(this.preset);
                 this.client.setScreen(this.parent);
-        }).dimensions(this.width / 2 - 155, this.height - 28, 150, 20).build());
+        }).dimensions(this.width / 2 - 154, this.height - 26, 150, 20).build());
         
         this.addDrawableChild(ButtonWidget.builder(
             ScreenTexts.CANCEL,
             button -> this.client.setScreen(this.parent)
-        ).dimensions(this.width / 2 + 5, this.height - 28, 150, 20).build());
+        ).dimensions(this.width / 2 + 4, this.height - 26, 150, 20).build());
         
         this.updateSelectButton(this.listWidget.getSelectedOrNull() != null);
     }
@@ -144,8 +144,8 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
         }
         
         @Override
-        protected int getScrollbarPositionX() {
-            return super.getScrollbarPositionX() + 30;
+        protected int getScrollbarX() {
+            return super.getScrollbarX() + 30;
         }
         
         @Override

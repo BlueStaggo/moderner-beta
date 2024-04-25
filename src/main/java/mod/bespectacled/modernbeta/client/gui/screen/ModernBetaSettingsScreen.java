@@ -48,12 +48,12 @@ public class ModernBetaSettingsScreen extends ModernBetaScreen {
         this.widgetDone = ButtonWidget.builder(Text.translatable(TEXT_SETTINGS_SAVE), button -> {
             this.onDone.accept(this.settingsString);
             this.client.setScreen(this.parent);
-        }).dimensions(this.width / 2 - 155, this.height - 28, BUTTON_LENGTH, BUTTON_HEIGHT).build();
+        }).dimensions(this.width / 2 - 154, this.height - 26, BUTTON_LENGTH, BUTTON_HEIGHT).build();
         
         this.addDrawableChild(this.widgetDone);
         this.addDrawableChild(ButtonWidget.builder(ScreenTexts.CANCEL, button -> 
             this.client.setScreen(this.parent)
-        ).dimensions(this.width / 2 + 5, this.height - 28, BUTTON_LENGTH, BUTTON_HEIGHT).build());
+        ).dimensions(this.width / 2 + 4, this.height - 26, BUTTON_LENGTH, BUTTON_HEIGHT).build());
         
         int editBoxWidth = (int)(this.width * 0.8);
         int editBoxHeight = (int)(this.height * 0.575);

@@ -6,7 +6,7 @@ import mod.bespectacled.modernbeta.ModernBeta;
 import mod.bespectacled.modernbeta.world.biome.ModernBetaBiomes;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
-import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBiomeTags;
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBiomeTags;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.RegistryWrapper.WrapperLookup;
@@ -728,99 +728,99 @@ public class ModernBetaTagProviderBiome extends FabricTagProvider<Biome> {
      * 
      */
     private void configureConventional(WrapperLookup lookup) {
-        getOrCreateTagBuilder(ConventionalBiomeTags.AQUATIC)
+        getOrCreateTagBuilder(ConventionalBiomeTags.IS_AQUATIC)
             .addTag(IS_OCEAN);
         
-        getOrCreateTagBuilder(ConventionalBiomeTags.AQUATIC_ICY).add(
+        getOrCreateTagBuilder(ConventionalBiomeTags.IS_AQUATIC_ICY).add(
             ModernBetaBiomes.BETA_FROZEN_OCEAN,
             ModernBetaBiomes.PE_FROZEN_OCEAN
         );
         
-        getOrCreateTagBuilder(ConventionalBiomeTags.CLIMATE_COLD)
+        getOrCreateTagBuilder(ConventionalBiomeTags.IS_COLD)
             .addTag(IS_TAIGA)
             .addTag(IS_TUNDRA);
         
-        getOrCreateTagBuilder(ConventionalBiomeTags.CLIMATE_DRY)
+        getOrCreateTagBuilder(ConventionalBiomeTags.IS_DRY)
             .addTag(IS_DESERT)
             .addTag(IS_PLAINS)
             .addTag(IS_SAVANNA)
             .addTag(IS_SHRUBLAND)
             .addTag(IS_TUNDRA);
         
-        getOrCreateTagBuilder(ConventionalBiomeTags.CLIMATE_HOT)
+        getOrCreateTagBuilder(ConventionalBiomeTags.IS_HOT)
             .addTag(IS_DESERT)
             .addTag(IS_PLAINS)
             .addTag(IS_SEASONAL_FOREST)
             .addTag(IS_RAINFOREST);
         
-        getOrCreateTagBuilder(ConventionalBiomeTags.CLIMATE_TEMPERATE)
+        getOrCreateTagBuilder(ConventionalBiomeTags.IS_TEMPERATE)
             .addTag(IS_SAVANNA)
             .addTag(IS_SHRUBLAND)
             .addTag(IS_FOREST)
             .addTag(IS_SWAMP);
         
-        getOrCreateTagBuilder(ConventionalBiomeTags.CLIMATE_WET)
+        getOrCreateTagBuilder(ConventionalBiomeTags.IS_WET)
             .addTag(IS_OCEAN)
             .addTag(IS_SWAMP)
             .addTag(IS_RAINFOREST);
         
-        getOrCreateTagBuilder(ConventionalBiomeTags.DESERT)
+        getOrCreateTagBuilder(ConventionalBiomeTags.IS_DESERT)
             .addTag(IS_DESERT);
         
-        getOrCreateTagBuilder(ConventionalBiomeTags.FOREST)
+        getOrCreateTagBuilder(ConventionalBiomeTags.IS_FOREST)
             .addTag(IS_FOREST)
             .addTag(IS_SEASONAL_FOREST);
         
-        getOrCreateTagBuilder(ConventionalBiomeTags.IN_OVERWORLD)
+        getOrCreateTagBuilder(ConventionalBiomeTags.IS_OVERWORLD)
             .addTag(IS_MODERN_BETA);
         
-        getOrCreateTagBuilder(ConventionalBiomeTags.JUNGLE)
+        getOrCreateTagBuilder(ConventionalBiomeTags.IS_JUNGLE)
             .addTag(IS_RAINFOREST);
         
-        getOrCreateTagBuilder(ConventionalBiomeTags.DEEP_OCEAN)
+        getOrCreateTagBuilder(ConventionalBiomeTags.IS_DEEP_OCEAN)
             .addTag(IS_OCEAN);
         
-        getOrCreateTagBuilder(ConventionalBiomeTags.PLAINS)
+        getOrCreateTagBuilder(ConventionalBiomeTags.IS_PLAINS)
             .addTag(IS_PLAINS)
             .addTag(IS_SHRUBLAND);
         
-        getOrCreateTagBuilder(ConventionalBiomeTags.SAVANNA)
+        getOrCreateTagBuilder(ConventionalBiomeTags.IS_SAVANNA)
             .addTag(IS_SAVANNA);
         
-        getOrCreateTagBuilder(ConventionalBiomeTags.SHALLOW_OCEAN)
+        getOrCreateTagBuilder(ConventionalBiomeTags.IS_SHALLOW_OCEAN)
             .addTag(IS_OCEAN);
         
-        getOrCreateTagBuilder(ConventionalBiomeTags.SNOWY)
+        getOrCreateTagBuilder(ConventionalBiomeTags.IS_SNOWY)
             .addTag(IS_TAIGA)
             .addTag(IS_TUNDRA);
         
-        getOrCreateTagBuilder(ConventionalBiomeTags.SNOWY_PLAINS)
+        getOrCreateTagBuilder(ConventionalBiomeTags.IS_SNOWY_PLAINS)
             .addTag(IS_TUNDRA);
         
-        getOrCreateTagBuilder(ConventionalBiomeTags.SWAMP)
+        getOrCreateTagBuilder(ConventionalBiomeTags.IS_SWAMP)
             .addTag(IS_SWAMP);
         
-        getOrCreateTagBuilder(ConventionalBiomeTags.TAIGA)
+        getOrCreateTagBuilder(ConventionalBiomeTags.IS_TAIGA)
             .addTag(IS_TAIGA);
         
-        getOrCreateTagBuilder(ConventionalBiomeTags.TREE_CONIFEROUS)
+        getOrCreateTagBuilder(ConventionalBiomeTags.IS_CONIFEROUS_TREE)
             .addTag(IS_TAIGA);
         
-        getOrCreateTagBuilder(ConventionalBiomeTags.TREE_DECIDUOUS)
+        getOrCreateTagBuilder(ConventionalBiomeTags.IS_DECIDUOUS_TREE)
             .addTag(IS_FOREST)
             .addTag(IS_SEASONAL_FOREST);
         
-        getOrCreateTagBuilder(ConventionalBiomeTags.TREE_JUNGLE)
+        getOrCreateTagBuilder(ConventionalBiomeTags.IS_JUNGLE_TREE)
             .addTag(IS_RAINFOREST);
         
-        getOrCreateTagBuilder(ConventionalBiomeTags.TREE_SAVANNA)
+        getOrCreateTagBuilder(ConventionalBiomeTags.IS_SAVANNA_TREE)
             .addTag(IS_SAVANNA);
         
-        getOrCreateTagBuilder(ConventionalBiomeTags.VEGETATION_DENSE)
+        getOrCreateTagBuilder(ConventionalBiomeTags.IS_VEGETATION_DENSE)
             .addTag(IS_RAINFOREST)
             .addTag(IS_PLAINS);
         
-        getOrCreateTagBuilder(ConventionalBiomeTags.VEGETATION_SPARSE)
+        getOrCreateTagBuilder(ConventionalBiomeTags.IS_VEGETATION_SPARSE)
             .addTag(IS_DESERT)
             .addTag(IS_SAVANNA)
             .addTag(IS_SHRUBLAND)

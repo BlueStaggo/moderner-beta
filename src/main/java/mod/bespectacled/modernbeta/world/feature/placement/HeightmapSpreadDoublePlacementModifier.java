@@ -3,6 +3,7 @@ package mod.bespectacled.modernbeta.world.feature.placement;
 import java.util.stream.Stream;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.util.math.BlockPos;
@@ -13,7 +14,7 @@ import net.minecraft.world.gen.placementmodifier.PlacementModifier;
 import net.minecraft.world.gen.placementmodifier.PlacementModifierType;
 
 public class HeightmapSpreadDoublePlacementModifier extends PlacementModifier {
-    public static final Codec<HeightmapSpreadDoublePlacementModifier> MODIFIER_CODEC = RecordCodecBuilder.create(
+    public static final MapCodec<HeightmapSpreadDoublePlacementModifier> MODIFIER_CODEC = RecordCodecBuilder.mapCodec(
         instance -> instance.group(
             Heightmap.Type.CODEC.fieldOf("heightmap").forGetter(arg -> arg.heightmap)
         ).apply(instance, HeightmapSpreadDoublePlacementModifier::of));

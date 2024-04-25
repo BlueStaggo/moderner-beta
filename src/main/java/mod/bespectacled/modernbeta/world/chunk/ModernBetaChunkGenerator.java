@@ -5,6 +5,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import mod.bespectacled.modernbeta.ModernBeta;
@@ -15,7 +16,6 @@ import mod.bespectacled.modernbeta.util.BlockStates;
 import mod.bespectacled.modernbeta.world.biome.ModernBetaBiomeSource;
 import mod.bespectacled.modernbeta.world.biome.injector.BiomeInjector;
 import mod.bespectacled.modernbeta.world.biome.injector.BiomeInjector.BiomeInjectionStep;
-import mod.bespectacled.modernbeta.world.carver.BetaCaveCarver;
 import mod.bespectacled.modernbeta.world.carver.BetaCaveCarverConfig;
 import mod.bespectacled.modernbeta.world.carver.configured.ModernBetaConfiguredCarvers;
 import net.minecraft.block.BlockState;
@@ -56,7 +56,7 @@ import net.minecraft.world.gen.chunk.VerticalBlockSample;
 import net.minecraft.world.gen.noise.NoiseConfig;
 
 public class ModernBetaChunkGenerator extends NoiseChunkGenerator {
-    public static final Codec<ModernBetaChunkGenerator> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+    public static final MapCodec<ModernBetaChunkGenerator> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             BiomeSource.CODEC.fieldOf("biome_source").forGetter(generator -> generator.biomeSource),
             ChunkGeneratorSettings.REGISTRY_CODEC.fieldOf("settings").forGetter(generator -> generator.settings),
             NbtCompound.CODEC.fieldOf("provider_settings").forGetter(generator -> generator.chunkSettings)
@@ -308,7 +308,7 @@ public class ModernBetaChunkGenerator extends NoiseChunkGenerator {
     }
 
     @Override
-    protected Codec<? extends ChunkGenerator> getCodec() {
+    protected MapCodec<? extends ChunkGenerator> getCodec() {
         return ModernBetaChunkGenerator.CODEC;
     }
     

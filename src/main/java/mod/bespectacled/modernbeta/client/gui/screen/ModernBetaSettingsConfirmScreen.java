@@ -33,7 +33,7 @@ public class ModernBetaSettingsConfirmScreen extends ModernBetaScreen {
         
         ButtonWidget buttonCancel = ButtonWidget.builder(ScreenTexts.CANCEL, button ->
             this.client.setScreen(this.parent)
-        ).dimensions(this.width / 2 + 5, this.height - 28, BUTTON_LENGTH, BUTTON_HEIGHT).build();
+        ).dimensions(this.width / 2 + 4, this.height - 27, BUTTON_LENGTH, BUTTON_HEIGHT).build();
         
         GridWidget gridWidgetMain = this.createGridWidget();
         GridWidget gridWidgetButtons = this.createGridWidget();
@@ -56,6 +56,6 @@ public class ModernBetaSettingsConfirmScreen extends ModernBetaScreen {
     
     @Override
     protected void renderBackgroundWithOverlay(DrawContext context) {
-        this.renderBackgroundTexture(context);
+//        this.renderBackgroundTexture(context);
     }
 }

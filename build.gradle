@@ -3,8 +3,8 @@ plugins {
 	id 'maven-publish'
 }
 
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
+sourceCompatibility = JavaVersion.VERSION_21
+targetCompatibility = JavaVersion.VERSION_21
 
 archivesBaseName = project.archives_base_name
 version = project.mod_version + "+er" + project.moderner_version + "+" + project.minecraft_version
@@ -75,7 +75,8 @@ tasks.withType(JavaCompile).configureEach {
 	it.options.encoding = "UTF-8"
 
 	// Minecraft 1.18 (1.18-pre2) upwards uses Java 17.
-	it.options.release = 17
+	// Minecraft 1.20.5 (24w14a) upwards uses Java 21.
+	it.options.release = 21
 }
 
 java {

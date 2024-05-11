@@ -39,7 +39,7 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
     private final int worldTopY;
     private final int seaLevel;
     
-    private final int lavaLevel;
+    private final int bedrockFloor;
     
     private final BlockState defaultBlock;
     private final BlockState defaultFluid;
@@ -67,7 +67,7 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
         this.worldHeight = shapeConfig.height();
         this.worldTopY = this.worldHeight + this.worldMinY;
         this.seaLevel = generatorSettings.seaLevel();
-        this.lavaLevel = 0;
+        this.bedrockFloor = 0;
 
         this.defaultBlock = generatorSettings.defaultBlock();
         this.defaultFluid = generatorSettings.defaultFluid();
@@ -98,16 +98,22 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
     public void provideSurface(ChunkRegion region, StructureAccessor structureAccessor, Chunk chunk, ModernBetaBiomeSource biomeSource, NoiseConfig noiseConfig) {
         BlockPos.Mutable pos = new BlockPos.Mutable();
         
+        ChunkPos chunkPos = chunk.getPos();
+        int chunkX = chunkPos.x;
+        int chunkZ = chunkPos.z;
+
         int startX = chunk.getPos().getStartX();
         int startZ = chunk.getPos().getStartZ();
-        
-        int lavaLevel = this.worldMinY + this.lavaLevel;
+
+        int bedrockFloor = this.worldMinY + this.bedrockFloor;
+
+        Random bedrockRand = this.createSurfaceRandom(chunkX, chunkZ);
         
         for (int localX = 0; localX < 16; ++localX) {
             for (int localZ = 0; localZ < 16; ++localZ) {
                 int x = startX + localX;
                 int z = startZ + localZ;
-                int surfaceTopY = chunk.getHeightmap(Heightmap.Type.OCEAN_FLOOR_WG).get(localX, localZ) - 1;
+                int surfaceTopY = chunk.getHeightmap(Type.OCEAN_FLOOR_WG).get(localX, localZ) - 1;
                 
                 RegistryEntry<Biome> biome = biomeSource.getBiomeForSurfaceGen(region, pos.set(x, surfaceTopY, z));
                 
@@ -123,9 +129,9 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
                     pos.set(localX, y, localZ);
                     blockState = chunk.getBlockState(pos);
                     
-                    // Place lava
-                    if (y <= lavaLevel) {
-                        chunk.setBlockState(pos, BlockStates.LAVA, false);
+                    // Place bedrock
+                    if (y <= bedrockFloor + bedrockRand.nextInt(5)) {
+                        chunk.setBlockState(pos, BlockStates.BEDROCK, false);
                         continue;
                     }
 

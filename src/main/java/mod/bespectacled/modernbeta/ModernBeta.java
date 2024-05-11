@@ -1,5 +1,8 @@
 package mod.bespectacled.modernbeta;
 
+import mod.bespectacled.modernbeta.world.feature.ModernBetaFoliagePlacers;
+import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
+import net.fabricmc.loader.api.ModContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.event.Level;
@@ -54,6 +57,8 @@ public class ModernBeta implements ModInitializer {
         log(Level.INFO, "Initializing Modern Beta...");
         
         // Register mod stuff
+        registerDataPacks();
+        ModernBetaFoliagePlacers.register();
         ModernBetaPlacementTypes.register();
         ModernBetaFeatures.register();
         ModernBetaCarvers.register();
@@ -99,5 +104,10 @@ public class ModernBeta implements ModInitializer {
         
         // Initializes chunk and biome providers at server start-up.
         ServerLifecycleEvents.SERVER_STARTING.register(ModernBetaWorldInitializer::init);
+    }
+
+    private static void registerDataPacks() {
+        ModContainer modContainer = FabricLoader.getInstance().getModContainer(MOD_ID).orElseThrow();
+        ResourceManagerHelper.registerBuiltinResourcePack(createId("reduced_height"), modContainer, ResourcePackActivationType.NORMAL);
     }
 }

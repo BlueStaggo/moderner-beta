@@ -146,6 +146,7 @@ public final class ModernBetaBuiltInTypes {
         INFDEV_227("infdev_227"),
         INDEV("indev"),
         CLASSIC_0_30("classic_0_30"),
+        CLASSIC_0_0_14A_08("classic_0_0_14a_08"),
         PE("pe"),
         BETA_1_8_1("beta_1_8_1"),
         BETA_1_9_PRE_3("beta_1_9_pre_3"),

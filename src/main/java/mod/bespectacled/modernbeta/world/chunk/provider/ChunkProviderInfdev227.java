@@ -101,19 +101,19 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
         ChunkPos chunkPos = chunk.getPos();
         int chunkX = chunkPos.x;
         int chunkZ = chunkPos.z;
-        
+
         int startX = chunk.getPos().getStartX();
         int startZ = chunk.getPos().getStartZ();
-        
+
         int bedrockFloor = this.worldMinY + this.bedrockFloor;
-        
+
         Random bedrockRand = this.createSurfaceRandom(chunkX, chunkZ);
         
         for (int localX = 0; localX < 16; ++localX) {
             for (int localZ = 0; localZ < 16; ++localZ) {
                 int x = startX + localX;
                 int z = startZ + localZ;
-                int surfaceTopY = chunk.getHeightmap(Heightmap.Type.OCEAN_FLOOR_WG).get(localX, localZ) - 1;
+                int surfaceTopY = chunk.getHeightmap(Type.OCEAN_FLOOR_WG).get(localX, localZ) - 1;
                 
                 RegistryEntry<Biome> biome = biomeSource.getBiomeForSurfaceGen(region, pos.set(x, surfaceTopY, z));
                 
@@ -259,7 +259,7 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
                     
                     blockHolder.setBlock(block);
                     BlockState blockState = blockSources.apply(x, y, z);
-                    
+
                     chunk.setBlockState(mutable.set(localX, y, localZ), blockState, false);
                     
                     heightmapOcean.trackUpdate(localX, y, localZ, blockState);

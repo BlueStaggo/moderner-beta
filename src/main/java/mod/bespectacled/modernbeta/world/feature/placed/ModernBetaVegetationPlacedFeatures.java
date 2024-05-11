@@ -1,31 +1,30 @@
 package mod.bespectacled.modernbeta.world.feature.placed;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 import com.google.common.collect.ImmutableList;
 
 import mod.bespectacled.modernbeta.world.feature.ModernBetaFeatureTags;
 import mod.bespectacled.modernbeta.world.feature.configured.ModernBetaVegetationConfiguredFeatures;
 import mod.bespectacled.modernbeta.world.feature.placement.*;
+import mod.bespectacled.modernbeta.world.feature.placement.NoiseBasedCountPlacementModifier;
+import net.minecraft.block.Blocks;
 import net.minecraft.registry.Registerable;
 import net.minecraft.registry.RegistryEntryLookup;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.util.math.Vec3i;
 import net.minecraft.util.math.intprovider.UniformIntProvider;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.gen.YOffset;
+import net.minecraft.world.gen.blockpredicate.BlockPredicate;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.PlacedFeature;
 import net.minecraft.world.gen.feature.PlacedFeatures;
 import net.minecraft.world.gen.feature.VegetationConfiguredFeatures;
-import net.minecraft.world.gen.placementmodifier.BiomePlacementModifier;
-import net.minecraft.world.gen.placementmodifier.CountPlacementModifier;
-import net.minecraft.world.gen.placementmodifier.HeightRangePlacementModifier;
-import net.minecraft.world.gen.placementmodifier.PlacementModifier;
-import net.minecraft.world.gen.placementmodifier.RarityFilterPlacementModifier;
-import net.minecraft.world.gen.placementmodifier.SquarePlacementModifier;
-import net.minecraft.world.gen.placementmodifier.SurfaceWaterDepthFilterPlacementModifier;
+import net.minecraft.world.gen.placementmodifier.*;
 
 public class ModernBetaVegetationPlacedFeatures {
     public static final PlacementModifier SURFACE_WATER_DEPTH = SurfaceWaterDepthFilterPlacementModifier.of(0);
@@ -33,7 +32,15 @@ public class ModernBetaVegetationPlacedFeatures {
     public static final PlacementModifier HEIGHT_RANGE_128 = HeightRangePlacementModifier.uniform(YOffset.fixed(0), YOffset.fixed(127));
     public static final PlacementModifier WORLD_SURFACE_WG_HEIGHTMAP = PlacedFeatures.WORLD_SURFACE_WG_HEIGHTMAP;
     public static final PlacementModifier MOTION_BLOCKING_HEIGHTMAP = PlacedFeatures.MOTION_BLOCKING_HEIGHTMAP;
-    
+
+    private static final PlacementModifier INFDEV_325_TREE_PREDICATES = BlockFilterPlacementModifier.of(
+            BlockPredicate.not(
+                    BlockPredicate.anyOf(
+                            IntStream.range(0, 25 * 6)
+                                    .mapToObj(i -> new Vec3i((i % 5) - 2, i / 25, (i / 5 % 5) - 2))
+                                    .filter(v -> v.getX() % 2 != 0 || v.getZ() % 2 != 0)
+                                    .map(v -> BlockPredicate.matchingBlocks(v, Blocks.OAK_LEAVES, Blocks.OAK_LOG)).toList())));
+
     private static ImmutableList.Builder<PlacementModifier> withBaseTreeModifiers(PlacementModifier modifier) {
         return ImmutableList.<PlacementModifier>builder()
             .add(modifier)
@@ -127,10 +134,12 @@ public class ModernBetaVegetationPlacedFeatures {
 
     public static final RegistryKey<PlacedFeature> TREES_INDEV = ModernBetaPlacedFeatures.of(ModernBetaFeatureTags.TREES_INDEV);
     public static final RegistryKey<PlacedFeature> TREES_INDEV_WOODS = ModernBetaPlacedFeatures.of(ModernBetaFeatureTags.TREES_INDEV_WOODS);
-    
+    public static final RegistryKey<PlacedFeature> TREES_CLASSIC_14A_08 = ModernBetaPlacedFeatures.of(ModernBetaFeatureTags.TREES_CLASSIC_14A_08);
+
     public static final RegistryKey<PlacedFeature> TREES_INDEV_BEES = ModernBetaPlacedFeatures.of(ModernBetaFeatureTags.TREES_INDEV_BEES);
     public static final RegistryKey<PlacedFeature> TREES_INDEV_WOODS_BEES = ModernBetaPlacedFeatures.of(ModernBetaFeatureTags.TREES_INDEV_WOODS_BEES);
-    
+    public static final RegistryKey<PlacedFeature> TREES_CLASSIC_14A_08_BEES = ModernBetaPlacedFeatures.of(ModernBetaFeatureTags.TREES_CLASSIC_14A_08_BEES);
+
     public static void bootstrap(Registerable<PlacedFeature> featureRegisterable) {
         RegistryEntryLookup<ConfiguredFeature<?, ?>> registryConfigured = featureRegisterable.getRegistryLookup(RegistryKeys.CONFIGURED_FEATURE);
 
@@ -185,10 +194,12 @@ public class ModernBetaVegetationPlacedFeatures {
 
         RegistryEntry.Reference<ConfiguredFeature<?, ?>> treesIndev = registryConfigured.getOrThrow(ModernBetaVegetationConfiguredFeatures.TREES_INDEV);
         RegistryEntry.Reference<ConfiguredFeature<?, ?>> treesIndevWoods = registryConfigured.getOrThrow(ModernBetaVegetationConfiguredFeatures.TREES_INDEV_WOODS);
-        
+        RegistryEntry.Reference<ConfiguredFeature<?, ?>> treesClassic14a08 = registryConfigured.getOrThrow(ModernBetaVegetationConfiguredFeatures.TREES_CLASSIC_14A_08);
+
         RegistryEntry.Reference<ConfiguredFeature<?, ?>> treesIndevBees = registryConfigured.getOrThrow(ModernBetaVegetationConfiguredFeatures.TREES_INDEV_BEES);
         RegistryEntry.Reference<ConfiguredFeature<?, ?>> treesIndevWoodsBees = registryConfigured.getOrThrow(ModernBetaVegetationConfiguredFeatures.TREES_INDEV_WOODS_BEES);
-        
+        RegistryEntry.Reference<ConfiguredFeature<?, ?>> treesClassic14a08Bees = registryConfigured.getOrThrow(ModernBetaVegetationConfiguredFeatures.TREES_CLASSIC_14A_08_BEES);
+
         PlacedFeatures.register(featureRegisterable, PATCH_CACTUS_ALPHA, patchCactus, CountPlacementModifier.of(2), SquarePlacementModifier.of(), HEIGHTMAP_SPREAD_DOUBLE, BiomePlacementModifier.of());
         PlacedFeatures.register(featureRegisterable, PATCH_CACTUS_PE, patchCactus, CountPlacementModifier.of(5), SquarePlacementModifier.of(), HEIGHTMAP_SPREAD_DOUBLE, BiomePlacementModifier.of());
         PlacedFeatures.register(featureRegisterable, MUSHROOM_HELL, mushroomHell, CountPlacementModifier.of(1), SquarePlacementModifier.of(), MOTION_BLOCKING_HEIGHTMAP, BiomePlacementModifier.of());
@@ -210,14 +221,14 @@ public class ModernBetaVegetationPlacedFeatures {
         PlacedFeatures.register(featureRegisterable, TREES_INFDEV_611, treesInfdev611, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_INFDEV_611, NoiseBasedCountPlacementModifierInfdev611.of(0, 0.1f, 1)));
         PlacedFeatures.register(featureRegisterable, TREES_INFDEV_420, treesInfdev420, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_INFDEV_420, NoiseBasedCountPlacementModifierInfdev420.of(0, 0.01f, 1)));
         PlacedFeatures.register(featureRegisterable, TREES_INFDEV_415, treesInfdev415, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_INFDEV_415, NoiseBasedCountPlacementModifierInfdev415.of(0, 0, 0)));
-        PlacedFeatures.register(featureRegisterable, TREES_INFDEV_325, treesInfdev325, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_INFDEV_325, NoiseBasedCountPlacementModifierInfdev325.of(0, 0, 0)));
+        PlacedFeatures.register(featureRegisterable, TREES_INFDEV_325, treesInfdev325, withBaseTreeModifiers(NoiseBasedCountPlacementModifierInfdev325.of(0, 0, 0)).add(INFDEV_325_TREE_PREDICATES).build());
         PlacedFeatures.register(featureRegisterable, TREES_INFDEV_227, treesInfdev227, withCountExtraAndTreeModifier(0, 0.1f, 1));
 
         PlacedFeatures.register(featureRegisterable, TREES_ALPHA_BEES, treesAlphaBees, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_ALPHA_BEES, NoiseBasedCountPlacementModifierAlpha.of(0, 0.1f, 1)));
         PlacedFeatures.register(featureRegisterable, TREES_INFDEV_611_BEES, treesInfdev611Bees, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_INFDEV_611_BEES, NoiseBasedCountPlacementModifierInfdev611.of(0, 0.1f, 1)));
         PlacedFeatures.register(featureRegisterable, TREES_INFDEV_420_BEES, treesInfdev420Bees, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_INFDEV_420_BEES, NoiseBasedCountPlacementModifierInfdev420.of(0, 0.01f, 1)));
         PlacedFeatures.register(featureRegisterable, TREES_INFDEV_415_BEES, treesInfdev415Bees, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_INFDEV_415_BEES, NoiseBasedCountPlacementModifierInfdev415.of(0, 0, 0)));
-        PlacedFeatures.register(featureRegisterable, TREES_INFDEV_325_BEES, treesInfdev325Bees, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_INFDEV_325_BEES, NoiseBasedCountPlacementModifierInfdev325.of(0, 0, 0)));
+        PlacedFeatures.register(featureRegisterable, TREES_INFDEV_325_BEES, treesInfdev325Bees, withBaseTreeModifiers(NoiseBasedCountPlacementModifierInfdev325.of(0, 0, 0)).add(INFDEV_325_TREE_PREDICATES).build());
         PlacedFeatures.register(featureRegisterable, TREES_INFDEV_227_BEES, treesInfdev227Bees, withCountExtraAndTreeModifier(0, 0.1f, 1));
              
         PlacedFeatures.register(featureRegisterable, TREES_BETA_FOREST, treesBetaForest, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_BETA_FOREST, NoiseBasedCountPlacementModifierBeta.of(5, 0.1f, 1)));
@@ -246,8 +257,10 @@ public class ModernBetaVegetationPlacedFeatures {
         
         PlacedFeatures.register(featureRegisterable, TREES_INDEV, treesIndev, RarityFilterPlacementModifier.of(3), withCountExtraModifier(5, 0.1f, 1), SquarePlacementModifier.of(), SURFACE_WATER_DEPTH, PlacedFeatures.OCEAN_FLOOR_HEIGHTMAP, BiomePlacementModifier.of());
         PlacedFeatures.register(featureRegisterable, TREES_INDEV_WOODS, treesIndevWoods, withCountExtraModifier(30, 0.1f, 1), SquarePlacementModifier.of(), SURFACE_WATER_DEPTH, PlacedFeatures.OCEAN_FLOOR_HEIGHTMAP, BiomePlacementModifier.of());
-        
+        PlacedFeatures.register(featureRegisterable, TREES_CLASSIC_14A_08, treesClassic14a08, RarityFilterPlacementModifier.of(5), withCountExtraModifier(20, 0.1f, 1), SquarePlacementModifier.of(), SURFACE_WATER_DEPTH, PlacedFeatures.OCEAN_FLOOR_HEIGHTMAP, BiomePlacementModifier.of());
+
         PlacedFeatures.register(featureRegisterable, TREES_INDEV_BEES, treesIndevBees, RarityFilterPlacementModifier.of(3), withCountExtraModifier(5, 0.1f, 1), SquarePlacementModifier.of(), SURFACE_WATER_DEPTH, PlacedFeatures.OCEAN_FLOOR_HEIGHTMAP, BiomePlacementModifier.of());
         PlacedFeatures.register(featureRegisterable, TREES_INDEV_WOODS_BEES, treesIndevWoodsBees, withCountExtraModifier(30, 0.1f, 1), SquarePlacementModifier.of(), SURFACE_WATER_DEPTH, PlacedFeatures.OCEAN_FLOOR_HEIGHTMAP, BiomePlacementModifier.of());
+        PlacedFeatures.register(featureRegisterable, TREES_CLASSIC_14A_08_BEES, treesClassic14a08Bees, RarityFilterPlacementModifier.of(5), withCountExtraModifier(20, 0.1f, 1), SquarePlacementModifier.of(), SURFACE_WATER_DEPTH, PlacedFeatures.OCEAN_FLOOR_HEIGHTMAP, BiomePlacementModifier.of());
     }
 }

@@ -62,6 +62,23 @@ public class NbtTags {
     public static final String INDEV_LEVEL_HEIGHT = "indevLevelHeight";
     public static final String INDEV_CAVE_RADIUS = "indevCaveRadius";
     public static final String INDEV_USE_CAVES = "indevUseCaves";
+    public static final String INDEV_NOISE_SCALE = "indevNoiseScale";
+    public static final String INDEV_SELECTOR_SCALE = "indevSelectorScale";
+    public static final String INDEV_MIN_HEIGHT_DAMP = "indevMinHeightDamp";
+    public static final String INDEV_MIN_HEIGHT_BOOST = "indevMinHeightBoost";
+    public static final String INDEV_MAX_HEIGHT_DAMP = "indevMaxHeightDamp";
+    public static final String INDEV_MAX_HEIGHT_BOOST = "indevMaxHeightBoost";
+    public static final String INDEV_HEIGHT_UNDER_DAMP = "indevHeightUnderDamp";
+    public static final String INDEV_CAVE_RARITY = "indevCaveRarity";
+    public static final String INDEV_SAND_BEACH_THRESHOLD = "indevSandBeachThreshold";
+    public static final String INDEV_SAND_BEACH_UNDER_AIR = "indevSandBeachUnderAir";
+    public static final String INDEV_SAND_BEACH_UNDER_FLUID = "indevSandBeachUnderFluid";
+    public static final String INDEV_GRAVEL_BEACH_THRESHOLD = "indevGravelBeachThreshold";
+    public static final String INDEV_GRAVEL_BEACH_UNDER_AIR = "indevGravelBeachUnderAir";
+    public static final String INDEV_GRAVEL_BEACH_UNDER_FLUID = "indevGravelBeachUnderFluid";
+    public static final String INDEV_WATER_RARITY = "indevWaterRarity";
+    public static final String INDEV_LAVA_RARITY = "indevLavaRarity";
+    public static final String INDEV_SPAWN_HOUSE = "indevSpawnHouse";
 
     // Islands
     public static final String ISLES_USE_ISLANDS = "islesUseIslands";
@@ -74,7 +91,7 @@ public class NbtTags {
     public static final String ISLES_CENTER_OCEAN_FALLOFF_DIST = "islesCenterOceanFalloffDistance";
     public static final String ISLES_OUTER_ISLAND_NOISE_SCALE = "islesOuterIslandNoiseScale";
     public static final String ISLES_OUTER_ISLAND_NOISE_OFFSET = "islesOuterIslandNoiseOffset";
-    
+
     /* Biome Settings */
     
     public static final String BIOME_PROVIDER = "biomeProvider";

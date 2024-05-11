@@ -18,6 +18,7 @@ import mod.bespectacled.modernbeta.world.biome.ModernBetaBiomeSource;
 import mod.bespectacled.modernbeta.world.blocksource.BlockSourceDeepslate;
 import mod.bespectacled.modernbeta.world.chunk.ModernBetaChunkGenerator;
 import mod.bespectacled.modernbeta.world.chunk.ModernBetaGenerationStep;
+import mod.bespectacled.modernbeta.world.feature.placement.Infdev325CavePlacementModifier;
 import mod.bespectacled.modernbeta.world.feature.placement.NoiseBasedCountPlacementModifier;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.math.random.ChunkRandom;
@@ -221,6 +222,8 @@ public abstract class ChunkProvider {
                 
                 for (PlacementModifier modifier : modifiers) {
                     if (modifier instanceof NoiseBasedCountPlacementModifier noiseModifier) {
+                        noiseModifier.setOctaves(this.getForestOctaveNoise());
+                    } else if (modifier instanceof Infdev325CavePlacementModifier noiseModifier) {
                         noiseModifier.setOctaves(this.getForestOctaveNoise());
                     }
                 }

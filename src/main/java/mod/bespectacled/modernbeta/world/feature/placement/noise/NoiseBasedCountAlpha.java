@@ -8,7 +8,7 @@ public class NoiseBasedCountAlpha implements NoiseBasedCount {
     private final PerlinOctaveNoise noiseSampler;
     
     public NoiseBasedCountAlpha(Random random) {
-        this.noiseSampler = new PerlinOctaveNoise(new java.util.Random(random.nextInt()), 8, true);
+        this.noiseSampler = new PerlinOctaveNoise(new java.util.Random(random.nextLong()), 8, true);
     }
     
     public NoiseBasedCountAlpha(PerlinOctaveNoise noiseSampler) {

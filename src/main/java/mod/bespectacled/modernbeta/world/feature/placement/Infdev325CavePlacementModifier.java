@@ -1,6 +1,7 @@
 package mod.bespectacled.modernbeta.world.feature.placement;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bespectacled.modernbeta.util.noise.PerlinOctaveNoise;
 import net.minecraft.util.math.BlockPos;
@@ -16,7 +17,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class Infdev325CavePlacementModifier extends PlacementModifier {
-    public static final Codec<Infdev325CavePlacementModifier> MODIFIER_CODEC = RecordCodecBuilder.create(
+    public static final MapCodec<Infdev325CavePlacementModifier> MODIFIER_CODEC = RecordCodecBuilder.mapCodec(
         instance -> instance.group(
             Codec.INT.fieldOf("min_section").forGetter(i -> i.minSection),
             Codec.INT.fieldOf("max_section").forGetter(i -> i.maxSection)

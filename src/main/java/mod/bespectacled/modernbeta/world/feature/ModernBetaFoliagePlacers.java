@@ -1,6 +1,6 @@
 package mod.bespectacled.modernbeta.world.feature;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import mod.bespectacled.modernbeta.ModernBeta;
 import mod.bespectacled.modernbeta.world.feature.foliage.Oak14a08FoliagePlacer;
 import net.minecraft.registry.Registries;
@@ -13,7 +13,7 @@ public class ModernBetaFoliagePlacers {
 			ModernBetaFeatureTags.OAK_14A_08_FOLIAGE_PLACER, Oak14a08FoliagePlacer.CODEC
 	);
 
-	private static <P extends FoliagePlacer> FoliagePlacerType<P> register(String id, Codec<P> codec) {
+	private static <P extends FoliagePlacer> FoliagePlacerType<P> register(String id, MapCodec<P> codec) {
         return Registry.register(Registries.FOLIAGE_PLACER_TYPE, ModernBeta.createId(id), new FoliagePlacerType<>(codec));
     }
 

@@ -441,6 +441,7 @@ public class ModernBetaSettingsPresets {
         settingsChunk.indevLevelHeight = 128;
         settingsChunk.indevCaveRadius = 1.0f;
         settingsChunk.indevUseCaves = true;
+        settingsChunk.indevGravelBeachUnderAir = false;
         
         settingsBiome.biomeProvider = ModernBetaBuiltInTypes.Biome.SINGLE.id;
         settingsBiome.singleBiome = ModernBetaBiomes.INDEV_NORMAL.getValue().toString();

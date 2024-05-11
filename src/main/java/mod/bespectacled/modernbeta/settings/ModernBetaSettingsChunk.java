@@ -58,7 +58,7 @@ public class ModernBetaSettingsChunk implements ModernBetaSettings {
 
     public final boolean infdevUsePyramid;
     public final boolean infdevUseWall;
-    
+
     public final String indevLevelType;
     public final String indevLevelTheme;
     public final int indevLevelWidth;
@@ -66,6 +66,23 @@ public class ModernBetaSettingsChunk implements ModernBetaSettings {
     public final int indevLevelHeight;
     public final float indevCaveRadius;
     public final boolean indevUseCaves;
+    public final float indevNoiseScale;
+    public final float indevSelectorScale;
+    public final float indevMinHeightDamp;
+    public final float indevMinHeightBoost;
+    public final float indevMaxHeightDamp;
+    public final float indevMaxHeightBoost;
+    public final float indevHeightUnderDamp;
+    public final int indevCaveRarity;
+    public final float indevSandBeachThreshold;
+    public final boolean indevSandBeachUnderAir;
+    public final boolean indevSandBeachUnderFluid;
+    public final float indevGravelBeachThreshold;
+    public final boolean indevGravelBeachUnderAir;
+    public final boolean indevGravelBeachUnderFluid;
+    public final int indevWaterRarity;
+    public final int indevLavaRarity;
+    public final boolean indevSpawnHouse;
 
     public final boolean islesUseIslands;
     public final boolean islesUseOuterIslands;
@@ -134,6 +151,23 @@ public class ModernBetaSettingsChunk implements ModernBetaSettings {
         this.indevLevelHeight = builder.indevLevelHeight;
         this.indevCaveRadius = builder.indevCaveRadius;
         this.indevUseCaves = builder.indevUseCaves;
+        this.indevNoiseScale = builder.indevNoiseScale;
+        this.indevSelectorScale = builder.indevSelectorScale;
+        this.indevMinHeightDamp = builder.indevMinHeightDamp;
+        this.indevMinHeightBoost = builder.indevMinHeightBoost;
+        this.indevMaxHeightDamp = builder.indevMaxHeightDamp;
+        this.indevMaxHeightBoost = builder.indevMaxHeightBoost;
+        this.indevHeightUnderDamp = builder.indevHeightUnderDamp;
+        this.indevCaveRarity = builder.indevCaveRarity;
+        this.indevSandBeachThreshold = builder.indevSandBeachThreshold;
+        this.indevSandBeachUnderAir = builder.indevSandBeachUnderAir;
+        this.indevSandBeachUnderFluid = builder.indevSandBeachUnderFluid;
+        this.indevGravelBeachThreshold = builder.indevGravelBeachThreshold;
+        this.indevGravelBeachUnderAir = builder.indevGravelBeachUnderAir;
+        this.indevGravelBeachUnderFluid = builder.indevGravelBeachUnderFluid;
+        this.indevWaterRarity = builder.indevWaterRarity;
+        this.indevLavaRarity = builder.indevLavaRarity;
+        this.indevSpawnHouse = builder.indevSpawnHouse;
 
         this.islesUseIslands = builder.islesUseIslands;
         this.islesUseOuterIslands = builder.islesUseOuterIslands;
@@ -208,7 +242,24 @@ public class ModernBetaSettingsChunk implements ModernBetaSettings {
             .putInt(NbtTags.INDEV_LEVEL_HEIGHT, this.indevLevelHeight)
             .putFloat(NbtTags.INDEV_CAVE_RADIUS, this.indevCaveRadius)
             .putBoolean(NbtTags.INDEV_USE_CAVES, this.indevUseCaves)
-        
+            .putFloat(NbtTags.INDEV_NOISE_SCALE, this.indevNoiseScale)
+            .putFloat(NbtTags.INDEV_SELECTOR_SCALE, this.indevSelectorScale)
+            .putFloat(NbtTags.INDEV_MIN_HEIGHT_DAMP, this.indevMinHeightDamp)
+            .putFloat(NbtTags.INDEV_MIN_HEIGHT_BOOST, this.indevMinHeightBoost)
+            .putFloat(NbtTags.INDEV_MAX_HEIGHT_DAMP, this.indevMaxHeightDamp)
+            .putFloat(NbtTags.INDEV_MAX_HEIGHT_BOOST, this.indevMaxHeightBoost)
+            .putFloat(NbtTags.INDEV_HEIGHT_UNDER_DAMP, this.indevHeightUnderDamp)
+            .putInt(NbtTags.INDEV_CAVE_RARITY, this.indevCaveRarity)
+            .putFloat(NbtTags.INDEV_SAND_BEACH_THRESHOLD, this.indevSandBeachThreshold)
+            .putBoolean(NbtTags.INDEV_SAND_BEACH_UNDER_AIR, this.indevSandBeachUnderAir)
+            .putBoolean(NbtTags.INDEV_SAND_BEACH_UNDER_FLUID, this.indevSandBeachUnderFluid)
+            .putFloat(NbtTags.INDEV_GRAVEL_BEACH_THRESHOLD, this.indevGravelBeachThreshold)
+            .putBoolean(NbtTags.INDEV_GRAVEL_BEACH_UNDER_AIR, this.indevGravelBeachUnderAir)
+            .putBoolean(NbtTags.INDEV_GRAVEL_BEACH_UNDER_FLUID, this.indevGravelBeachUnderFluid)
+            .putInt(NbtTags.INDEV_WATER_RARITY, this.indevWaterRarity)
+            .putInt(NbtTags.INDEV_LAVA_RARITY, this.indevLavaRarity)
+            .putBoolean(NbtTags.INDEV_SPAWN_HOUSE, this.indevSpawnHouse)
+
             .putBoolean(NbtTags.ISLES_USE_ISLANDS, this.islesUseIslands)
             .putBoolean(NbtTags.ISLES_USE_OUTER_ISLANDS, this.islesUseOuterIslands)
             .putFloat(NbtTags.ISLES_OCEAN_SLIDE_TARGET, this.islesOceanSlideTarget)
@@ -275,6 +326,23 @@ public class ModernBetaSettingsChunk implements ModernBetaSettings {
         public int indevLevelHeight;
         public float indevCaveRadius;
         public boolean indevUseCaves;
+        public float indevNoiseScale;
+        public float indevSelectorScale;
+        public float indevMinHeightDamp;
+        public float indevMinHeightBoost;
+        public float indevMaxHeightDamp;
+        public float indevMaxHeightBoost;
+        public float indevHeightUnderDamp;
+        public int indevCaveRarity;
+        public float indevSandBeachThreshold;
+        public boolean indevSandBeachUnderAir;
+        public boolean indevSandBeachUnderFluid;
+        public float indevGravelBeachThreshold;
+        public boolean indevGravelBeachUnderAir;
+        public boolean indevGravelBeachUnderFluid;
+        public int indevWaterRarity;
+        public int indevLavaRarity;
+        public boolean indevSpawnHouse;
 
         public boolean islesUseIslands;
         public boolean islesUseOuterIslands;
@@ -342,17 +410,34 @@ public class ModernBetaSettingsChunk implements ModernBetaSettings {
             this.indevLevelHeight = 128;
             this.indevCaveRadius = 1.0f;
             this.indevUseCaves = true;
-            
+            this.indevNoiseScale = 1.3f;
+            this.indevSelectorScale = 1.0f;
+            this.indevMinHeightDamp = 6.0f;
+            this.indevMinHeightBoost = -4.0f;
+            this.indevMaxHeightDamp = 5.0f;
+            this.indevMaxHeightBoost = 6.0f;
+            this.indevHeightUnderDamp = 1.25f;
+            this.indevCaveRarity = 8192;
+            this.indevSandBeachThreshold = 8.0f;
+            this.indevSandBeachUnderAir = true;
+            this.indevSandBeachUnderFluid = false;
+            this.indevGravelBeachThreshold = 12.0f;
+            this.indevGravelBeachUnderAir = true;
+            this.indevGravelBeachUnderFluid = true;
+            this.indevWaterRarity = 8000;
+            this.indevLavaRarity = 20000;
+            this.indevSpawnHouse = true;
+
             this.islesUseIslands = false;
             this.islesUseOuterIslands = true;
-            this.islesOceanSlideTarget = -200.0F;
+            this.islesOceanSlideTarget = -200.0f;
             this.islesCenterIslandShape = IslandShape.CIRCLE.getId();
             this.islesCenterIslandRadius = 16;
             this.islesCenterIslandFalloffDistance = 8;
             this.islesCenterOceanRadius = 64;
             this.islesCenterOceanFalloffDistance = 16;
-            this.islesOuterIslandNoiseScale = 300F;
-            this.islesOuterIslandNoiseOffset = 0.25F;
+            this.islesOuterIslandNoiseScale = 300f;
+            this.islesOuterIslandNoiseOffset = 0.25f;
         }
         
         public Builder fromCompound(NbtCompound compound) {
@@ -408,6 +493,23 @@ public class ModernBetaSettingsChunk implements ModernBetaSettings {
             this.indevLevelHeight = reader.readInt(NbtTags.INDEV_LEVEL_HEIGHT, this.indevLevelHeight);
             this.indevCaveRadius = reader.readFloat(NbtTags.INDEV_CAVE_RADIUS, this.indevCaveRadius);
             this.indevUseCaves = reader.readBoolean(NbtTags.INDEV_USE_CAVES, this.indevUseCaves);
+            this.indevNoiseScale = reader.readFloat(NbtTags.INDEV_NOISE_SCALE, this.indevNoiseScale);
+            this.indevSelectorScale = reader.readFloat(NbtTags.INDEV_SELECTOR_SCALE, this.indevSelectorScale);
+            this.indevMinHeightDamp = reader.readFloat(NbtTags.INDEV_MIN_HEIGHT_DAMP, this.indevMinHeightDamp);
+            this.indevMinHeightBoost = reader.readFloat(NbtTags.INDEV_MIN_HEIGHT_BOOST, this.indevMinHeightBoost);
+            this.indevMaxHeightDamp = reader.readFloat(NbtTags.INDEV_MAX_HEIGHT_DAMP, this.indevMaxHeightDamp);
+            this.indevMaxHeightBoost = reader.readFloat(NbtTags.INDEV_MAX_HEIGHT_BOOST, this.indevMaxHeightBoost);
+            this.indevHeightUnderDamp = reader.readFloat(NbtTags.INDEV_HEIGHT_UNDER_DAMP, this.indevHeightUnderDamp);
+            this.indevCaveRarity = reader.readInt(NbtTags.INDEV_CAVE_RARITY, this.indevCaveRarity);
+            this.indevSandBeachThreshold = reader.readFloat(NbtTags.INDEV_SAND_BEACH_THRESHOLD, this.indevSandBeachThreshold);
+            this.indevSandBeachUnderAir = reader.readBoolean(NbtTags.INDEV_SAND_BEACH_UNDER_AIR, this.indevSandBeachUnderAir);
+            this.indevSandBeachUnderFluid = reader.readBoolean(NbtTags.INDEV_SAND_BEACH_UNDER_FLUID, this.indevSandBeachUnderFluid);
+            this.indevGravelBeachThreshold = reader.readFloat(NbtTags.INDEV_GRAVEL_BEACH_THRESHOLD, this.indevGravelBeachThreshold);
+            this.indevGravelBeachUnderAir = reader.readBoolean(NbtTags.INDEV_GRAVEL_BEACH_UNDER_AIR, this.indevGravelBeachUnderAir);
+            this.indevGravelBeachUnderFluid = reader.readBoolean(NbtTags.INDEV_GRAVEL_BEACH_UNDER_FLUID, this.indevGravelBeachUnderFluid);
+            this.indevWaterRarity = reader.readInt(NbtTags.INDEV_WATER_RARITY, this.indevWaterRarity);
+            this.indevLavaRarity = reader.readInt(NbtTags.INDEV_LAVA_RARITY, this.indevLavaRarity);
+            this.indevSpawnHouse = reader.readBoolean(NbtTags.INDEV_SPAWN_HOUSE, this.indevSpawnHouse);
 
             this.islesUseIslands = reader.readBoolean(NbtTags.ISLES_USE_ISLANDS, this.islesUseIslands);
             this.islesUseOuterIslands = reader.readBoolean(NbtTags.ISLES_USE_OUTER_ISLANDS, this.islesUseOuterIslands);
@@ -431,7 +533,7 @@ public class ModernBetaSettingsChunk implements ModernBetaSettings {
         
         private void loadDatafix(NbtReader reader) {
             String tag0 = "islesMaxOceanDepth";
-            
+
             ModernBetaSettings.datafix(tag0, reader, () -> this.islesOceanSlideTarget = -reader.readFloatOrThrow(tag0));
         }
     }

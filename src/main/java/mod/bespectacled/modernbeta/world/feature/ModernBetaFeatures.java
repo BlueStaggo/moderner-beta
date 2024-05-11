@@ -17,9 +17,13 @@ public class ModernBetaFeatures {
     public static final BetaFancyOakFeature OLD_FANCY_OAK = (BetaFancyOakFeature) register(
         ModernBetaFeatureTags.FANCY_OAK, new BetaFancyOakFeature(DefaultFeatureConfig.CODEC)
     );
-    
+
     public static final BetaOreClayFeature ORE_CLAY = (BetaOreClayFeature) register(
         ModernBetaFeatureTags.ORE_CLAY, new BetaOreClayFeature(OreFeatureConfig.CODEC)
+    );
+
+    public static final CaveInfdev325Feature CAVE_INFDEV_325 = (CaveInfdev325Feature) register(
+        ModernBetaFeatureTags.CAVE_INFDEV_325, new CaveInfdev325Feature(OreFeatureConfig.CODEC)
     );
     
     public static final Feature<LakeFeature.Config> LAKE_WATER = Feature.LAKE;

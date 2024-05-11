@@ -343,6 +343,7 @@ public class ChunkProviderClassic030 extends ChunkProviderFinite {
 
                 Block surfaceBlock = genSand ? Blocks.SAND
                         : genGravel ? Blocks.GRAVEL
+                        : blockUp == this.defaultFluid.getBlock() ? Blocks.DIRT
                         : Blocks.GRASS_BLOCK;
                 this.setLevelBlock(x, heightResult, z, surfaceBlock);
             }

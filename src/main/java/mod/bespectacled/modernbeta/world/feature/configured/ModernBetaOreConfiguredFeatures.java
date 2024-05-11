@@ -18,20 +18,28 @@ import net.minecraft.world.gen.feature.OreFeatureConfig;
 public class ModernBetaOreConfiguredFeatures {
     public static final RegistryKey<ConfiguredFeature<?, ?>> ORE_CLAY = ModernBetaConfiguredFeatures.of(ModernBetaFeatureTags.ORE_CLAY);
     public static final RegistryKey<ConfiguredFeature<?, ?>> ORE_EMERALD_Y95 = ModernBetaConfiguredFeatures.of(ModernBetaFeatureTags.ORE_EMERALD_Y95);
-    
+    public static final RegistryKey<ConfiguredFeature<?, ?>> CAVE_INFDEV_325 = ModernBetaConfiguredFeatures.of(ModernBetaFeatureTags.CAVE_INFDEV_325);
+
     @SuppressWarnings("unchecked")
     public static void bootstrap(Registerable<?> registerable) {
         Registerable<ConfiguredFeature<?, ?>> featureRegisterable = (Registerable<ConfiguredFeature<?, ?>>)registerable;
         
         TagMatchRuleTest ruleStone = new TagMatchRuleTest(BlockTags.STONE_ORE_REPLACEABLES);
         TagMatchRuleTest ruleDeepslate = new TagMatchRuleTest(BlockTags.DEEPSLATE_ORE_REPLACEABLES);
-        
-        List<OreFeatureConfig.Target> targets = List.of(
+        TagMatchRuleTest ruleDirt = new TagMatchRuleTest(BlockTags.DIRT);
+
+        List<OreFeatureConfig.Target> emeraldTargets = List.of(
             OreFeatureConfig.createTarget(ruleStone, Blocks.EMERALD_ORE.getDefaultState()),
             OreFeatureConfig.createTarget(ruleDeepslate, Blocks.DEEPSLATE_EMERALD_ORE.getDefaultState())
         );
+        List<OreFeatureConfig.Target> caveTargets = List.of(
+            OreFeatureConfig.createTarget(ruleStone, Blocks.AIR.getDefaultState()),
+            OreFeatureConfig.createTarget(ruleDeepslate, Blocks.AIR.getDefaultState()),
+            OreFeatureConfig.createTarget(ruleDirt, Blocks.AIR.getDefaultState())
+        );
         
         ConfiguredFeatures.register(featureRegisterable, ORE_CLAY, ModernBetaFeatures.ORE_CLAY, new OreFeatureConfig(new BlockMatchRuleTest(Blocks.SAND), Blocks.CLAY.getDefaultState(), 33));
-        ConfiguredFeatures.register(featureRegisterable, ORE_EMERALD_Y95, Feature.ORE, new OreFeatureConfig(targets, 8, 0.9f));
+        ConfiguredFeatures.register(featureRegisterable, ORE_EMERALD_Y95, Feature.ORE, new OreFeatureConfig(emeraldTargets, 8, 0.9f));
+        ConfiguredFeatures.register(featureRegisterable, CAVE_INFDEV_325, ModernBetaFeatures.CAVE_INFDEV_325, new OreFeatureConfig(caveTargets, 16, 0.0f));
     }
 }

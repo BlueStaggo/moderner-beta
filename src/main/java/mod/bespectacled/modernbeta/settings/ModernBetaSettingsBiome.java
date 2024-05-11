@@ -351,7 +351,7 @@ public class ModernBetaSettingsBiome implements ModernBetaSettings {
                 Map.entry("minecraft:dark_forest", "minecraft:plains"),
                 Map.entry("minecraft:old_growth_pine_taiga", "*minecraft:old_growth_pine_taiga"),
                 Map.entry("minecraft:old_growth_spruce_taiga", "*minecraft:old_growth_spruce_taiga"),
-                Map.entry("minecraft:savanna", "*minecraft:savanna"),
+                Map.entry("minecraft:savanna", "minecraft:savanna_plateau"),
                 Map.entry("*minecraft:badlands", "minecraft:badlands"),
                 Map.entry("*minecraft:wooded_badlands", "minecraft:badlands"),
                 Map.entry("minecraft:deep_ocean", "*minecraft:deep_ocean")
@@ -374,7 +374,7 @@ public class ModernBetaSettingsBiome implements ModernBetaSettings {
                 Map.entry("minecraft:sparse_jungle", "2*minecraft:sparse_jungle"),
                 Map.entry("minecraft:snowy_taiga", "2*minecraft:snowy_taiga"),
                 Map.entry("minecraft:savanna", "minecraft:windswept_savanna"),
-                Map.entry("*minecraft:savanna", "*minecraft:windswept_savanna"),
+                Map.entry("minecraft:savanna_plateau", "*minecraft:windswept_savanna"),
                 Map.entry("minecraft:badlands", "*minecraft:eroded_badlands"),
                 Map.entry("*minecraft:wooded_badlands", "2*minecraft:wooded_badlands"),
                 Map.entry("*minecraft:badlands", "2*minecraft:badlands"),

@@ -27,6 +27,7 @@ public class ModernBetaSettingsPresets {
     public static final ModernBetaSettingsPreset PRESET_INFDEV_227 = presetInfdev227();
     public static final ModernBetaSettingsPreset PRESET_INDEV = presetIndev();
     public static final ModernBetaSettingsPreset PRESET_CLASSIC = presetClassic();
+    public static final ModernBetaSettingsPreset PRESET_CLASSIC_14A_08 = presetClassic14a08();
     public static final ModernBetaSettingsPreset PRESET_PE = presetPE();
     public static final ModernBetaSettingsPreset PRESET_BETA_1_8_1 = presetBeta181();
     public static final ModernBetaSettingsPreset PRESET_BETA_1_9_PRE_3 = presetBeta19Pre3();
@@ -361,7 +362,7 @@ public class ModernBetaSettingsPresets {
 
         settingsChunk.chunkProvider = ModernBetaBuiltInTypes.Chunk.INFDEV_227.id;
         settingsChunk.useDeepslate = false;
-        settingsChunk.useCaves = true;
+        settingsChunk.useCaves = false;
         settingsChunk.infdevUsePyramid = true;
         settingsChunk.infdevUseWall = false;
 
@@ -448,6 +449,42 @@ public class ModernBetaSettingsPresets {
         
         settingsCaveBiome.biomeProvider = ModernBetaBuiltInTypes.CaveBiome.NONE.id;
         
+        return new ModernBetaSettingsPreset(
+            settingsChunk.build(),
+            settingsBiome.build(),
+            settingsCaveBiome.build()
+        );
+    }
+
+    private static ModernBetaSettingsPreset presetClassic14a08() {
+        ModernBetaSettingsChunk.Builder settingsChunk = new ModernBetaSettingsChunk.Builder();
+        ModernBetaSettingsBiome.Builder settingsBiome = new ModernBetaSettingsBiome.Builder();
+        ModernBetaSettingsCaveBiome.Builder settingsCaveBiome = new ModernBetaSettingsCaveBiome.Builder();
+
+        settingsChunk.chunkProvider = ModernBetaBuiltInTypes.Chunk.CLASSIC_0_30.id;
+        settingsChunk.useDeepslate = false;
+        settingsChunk.useCaves = false;
+        settingsChunk.indevLevelWidth = 256;
+        settingsChunk.indevLevelLength = 256;
+        settingsChunk.indevLevelHeight = 128;
+        settingsChunk.indevCaveRadius = 1.0f;
+        settingsChunk.indevUseCaves = true;
+        settingsChunk.indevMinHeightDamp = 8.0f;
+        settingsChunk.indevMinHeightBoost = -8.0f;
+        settingsChunk.indevMaxHeightDamp = 6.0f;
+        settingsChunk.indevMaxHeightBoost = 6.0f;
+        settingsChunk.indevHeightUnderDamp = 2.0f;
+        settingsChunk.indevCaveRarity = 16384;
+        settingsChunk.indevSandBeachUnderAir = true;
+        settingsChunk.indevSandBeachUnderFluid = false;
+        settingsChunk.indevGravelBeachUnderAir = true;
+        settingsChunk.indevGravelBeachUnderFluid = false;
+
+        settingsBiome.biomeProvider = ModernBetaBuiltInTypes.Biome.SINGLE.id;
+        settingsBiome.singleBiome = ModernBetaBiomes.CLASSIC_14A_08.getValue().toString();
+
+        settingsCaveBiome.biomeProvider = ModernBetaBuiltInTypes.CaveBiome.NONE.id;
+
         return new ModernBetaSettingsPreset(
             settingsChunk.build(),
             settingsBiome.build(),
@@ -1642,7 +1679,7 @@ public class ModernBetaSettingsPresets {
             Map.entry("*minecraft:old_growth_pine_taiga", "0.45;0.6"),
             Map.entry("minecraft:windswept_forest", "1.0;1.0"),
             Map.entry("minecraft:savanna", "0.125;0.1"),
-            Map.entry("*minecraft:savanna", "1.5;0.05"),
+            Map.entry("minecraft:savanna_plateau", "1.5;0.05"),
             Map.entry("minecraft:badlands", "0.1;0.4"),
             Map.entry("*minecraft:wooded_badlands", "1.5;0.05"),
             Map.entry("*minecraft:badlands", "1.5;0.05"),
@@ -1743,7 +1780,7 @@ public class ModernBetaSettingsPresets {
             Map.entry("*minecraft:old_growth_pine_taiga", "0.45;0.6"),
             Map.entry("minecraft:windswept_forest", "1.0;1.0"),
             Map.entry("minecraft:savanna", "0.125;0.1"),
-            Map.entry("*minecraft:savanna", "1.5;0.05"),
+            Map.entry("minecraft:savanna_plateau", "1.5;0.05"),
             Map.entry("minecraft:badlands", "0.1;0.4"),
             Map.entry("*minecraft:wooded_badlands", "1.5;0.05"),
             Map.entry("*minecraft:badlands", "1.5;0.05"),
@@ -1828,7 +1865,8 @@ public class ModernBetaSettingsPresets {
             Map.entry("*minecraft:old_growth_birch_forest", "0.3;0.7"),
             Map.entry("*minecraft:flower_forest", "0.3;0.7"),
             Map.entry("*minecraft:old_growth_spruce_taiga", "0.3;0.8"),
-            Map.entry("*minecraft:snowy_taiga", "0.3;0.8")
+            Map.entry("*minecraft:snowy_taiga", "0.3;0.8"),
+            Map.entry("*minecraft:jungle", "1.8;0.5")
         );
         settingsChunk.useSurfaceRules = true;
 
@@ -1862,7 +1900,7 @@ public class ModernBetaSettingsPresets {
             Map.entry("minecraft:taiga", "*minecraft:taiga"),
             Map.entry("minecraft:jungle", "*minecraft:jungle"),
             Map.entry("minecraft:snowy_taiga", "*minecraft:snowy_taiga"),
-            Map.entry("minecraft:savanna", "*minecraft:savanna"),
+            Map.entry("minecraft:savanna", "minecraft:savanna_plateau"),
             Map.entry("minecraft:dark_forest", "minecraft:plains"),
             Map.entry("minecraft:birch_forest", "*minecraft:birch_forest"),
             Map.entry("minecraft:old_growth_birch_forest", "*minecraft:old_growth_birch_forest"),
@@ -1887,12 +1925,18 @@ public class ModernBetaSettingsPresets {
                 "minecraft:windswept_savanna",
                 "minecraft:savanna",
                 "minecraft:savanna"
+            )),
+            Map.entry("*minecraft:badlands", List.of(
+                "minecraft:wooded_badlands",
+                "minecraft:badlands",
+                "minecraft:badlands"
             ))
         );
         settingsBiome.fractalPlains = "minecraft:plains";
         settingsBiome.fractalIcePlains = "minecraft:snowy_plains";
         settingsBiome.fractalSubVariantScale = 1;
         settingsBiome.fractalTerrainType = FractalSettings.TerrainType.EARLY_RELEASE.id;
+        settingsBiome.fractalOceanShrink = 1;
         settingsBiome.fractalAddSnow = true;
         settingsBiome.fractalAddMushroomIslands = true;
         settingsBiome.fractalAddBeaches = true;

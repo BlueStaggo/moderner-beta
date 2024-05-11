@@ -54,6 +54,7 @@ public class ModernBetaBiomeTags {
     public static final String INDEV_HELL = "indev_hell";
     public static final String INDEV_PARADISE = "indev_paradise";
     public static final String INDEV_WOODS = "indev_woods";
+    public static final String CLASSIC_14A_08 = "classic_14a_08";
 
     public static final String LATE_BETA_EXTREME_HILLS = "late_beta_extreme_hills";
     public static final String LATE_BETA_ICE_PLAINS = "late_beta_ice_plains";

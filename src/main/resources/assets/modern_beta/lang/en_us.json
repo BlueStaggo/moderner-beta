@@ -38,6 +38,7 @@
     "createWorld.customize.modern_beta.preset.name.infdev_227": "Infdev 227",
     "createWorld.customize.modern_beta.preset.name.indev": "Indev",
     "createWorld.customize.modern_beta.preset.name.classic_0_30": "Classic 0.30",
+    "createWorld.customize.modern_beta.preset.name.classic_0_0_14a_08": "Classic 0.0.14a_08",
     "createWorld.customize.modern_beta.preset.name.pe": "Pocket Edition",
     "createWorld.customize.modern_beta.preset.name.beta_1_8_1": "Beta 1.8.1",
     "createWorld.customize.modern_beta.preset.name.beta_1_9_pre_3": "Beta 1.9 Prerelease 3",
@@ -85,6 +86,7 @@
     "createWorld.customize.modern_beta.preset.desc.infdev_227": "Explore a world with the terrain generation of Minecraft Infdev 20100227.",
     "createWorld.customize.modern_beta.preset.desc.indev": "Explore a world with the terrain generation of Minecraft Indev 20100223",
     "createWorld.customize.modern_beta.preset.desc.classic_0_30": "Explore a world with the terrain generation of Minecraft Classic 0.30.",
+    "createWorld.customize.modern_beta.preset.desc.classic_0_0_14a_08": "Explore a world with the terrain generation of Minecraft Classic 0.0.14a_08.",
     "createWorld.customize.modern_beta.preset.desc.pe": "Explore a world with the terrain generation of Minecraft Pocket Edition v0.6.0 Alpha.",
     "createWorld.customize.modern_beta.preset.desc.beta_1_8_1": "Explore a world with the terrain generation of Minecraft Beta 1.8.1.",
     "createWorld.customize.modern_beta.preset.desc.beta_1_9_pre_3": "Explore a world with the terrain generation of Minecraft Beta 1.9 Prerelease 3.",
@@ -204,7 +206,8 @@
     "biome.modern_beta.indev_hell": "Indev Hell",
     "biome.modern_beta.indev_paradise": "Indev Paradise",
     "biome.modern_beta.indev_woods": "Indev Woods",
-    
+    "biome.modern_beta.classic_14a_08": "Classic 0.0.14a_08",
+
     "biome.modern_beta.pe_forest": "PE Forest",
     "biome.modern_beta.pe_shrubland": "PE Shrubland",
     "biome.modern_beta.pe_desert": "PE Desert",

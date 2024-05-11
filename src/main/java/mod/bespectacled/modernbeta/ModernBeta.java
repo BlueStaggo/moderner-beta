@@ -1,5 +1,6 @@
 package mod.bespectacled.modernbeta;
 
+import mod.bespectacled.modernbeta.world.feature.ModernBetaFoliagePlacers;
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.loader.api.ModContainer;
 import org.slf4j.Logger;
@@ -57,6 +58,7 @@ public class ModernBeta implements ModInitializer {
         
         // Register mod stuff
         registerDataPacks();
+        ModernBetaFoliagePlacers.register();
         ModernBetaPlacementTypes.register();
         ModernBetaFeatures.register();
         ModernBetaCarvers.register();

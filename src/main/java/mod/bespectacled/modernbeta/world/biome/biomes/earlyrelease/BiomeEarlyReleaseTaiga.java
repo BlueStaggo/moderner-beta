@@ -23,12 +23,11 @@ public class BiomeEarlyReleaseTaiga {
         DefaultBiomeFeatures.addMineables(genSettings);
         DefaultBiomeFeatures.addSprings(genSettings);
         DefaultBiomeFeatures.addFrozenTopLayer(genSettings);
-        DefaultBiomeFeatures.addLargeFerns(genSettings);
         DefaultBiomeFeatures.addDefaultOres(genSettings);
         DefaultBiomeFeatures.addDefaultDisks(genSettings);
         DefaultBiomeFeatures.addTaigaTrees(genSettings);
         DefaultBiomeFeatures.addDefaultFlowers(genSettings);
-        DefaultBiomeFeatures.addTaigaGrass(genSettings);
+        DefaultBiomeFeatures.addDefaultGrass(genSettings);
         DefaultBiomeFeatures.addDefaultVegetation(genSettings);
         DefaultBiomeFeatures.addSweetBerryBushesSnowy(genSettings);
 

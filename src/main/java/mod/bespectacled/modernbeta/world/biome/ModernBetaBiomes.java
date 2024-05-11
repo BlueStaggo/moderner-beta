@@ -7,14 +7,11 @@ import mod.bespectacled.modernbeta.world.biome.biomes.beta.*;
 import mod.bespectacled.modernbeta.world.biome.biomes.earlyrelease.BiomeEarlyReleaseIcePlains;
 import mod.bespectacled.modernbeta.world.biome.biomes.earlyrelease.BiomeEarlyReleaseSwampland;
 import mod.bespectacled.modernbeta.world.biome.biomes.earlyrelease.BiomeEarlyReleaseTaiga;
+import mod.bespectacled.modernbeta.world.biome.biomes.indev.*;
 import mod.bespectacled.modernbeta.world.biome.biomes.infdev.*;
 import mod.bespectacled.modernbeta.world.biome.biomes.latebeta.*;
 import mod.bespectacled.modernbeta.world.biome.biomes.alpha.BiomeAlpha;
 import mod.bespectacled.modernbeta.world.biome.biomes.alpha.BiomeAlphaWinter;
-import mod.bespectacled.modernbeta.world.biome.biomes.indev.BiomeIndevHell;
-import mod.bespectacled.modernbeta.world.biome.biomes.indev.BiomeIndevNormal;
-import mod.bespectacled.modernbeta.world.biome.biomes.indev.BiomeIndevParadise;
-import mod.bespectacled.modernbeta.world.biome.biomes.indev.BiomeIndevWoods;
 import mod.bespectacled.modernbeta.world.biome.biomes.pe.BiomePEColdOcean;
 import mod.bespectacled.modernbeta.world.biome.biomes.pe.BiomePEDesert;
 import mod.bespectacled.modernbeta.world.biome.biomes.pe.BiomePEForest;
@@ -94,6 +91,7 @@ public class ModernBetaBiomes {
     public static final RegistryKey<Biome> INDEV_HELL = keyOf(ModernBeta.createId(ModernBetaBiomeTags.INDEV_HELL));
     public static final RegistryKey<Biome> INDEV_PARADISE = keyOf(ModernBeta.createId(ModernBetaBiomeTags.INDEV_PARADISE));
     public static final RegistryKey<Biome> INDEV_WOODS = keyOf(ModernBeta.createId(ModernBetaBiomeTags.INDEV_WOODS));
+    public static final RegistryKey<Biome> CLASSIC_14A_08 = keyOf(ModernBeta.createId(ModernBetaBiomeTags.CLASSIC_14A_08));
 
     public static final RegistryKey<Biome> LATE_BETA_EXTREME_HILLS = keyOf(ModernBeta.createId(ModernBetaBiomeTags.LATE_BETA_EXTREME_HILLS));
     public static final RegistryKey<Biome> LATE_BETA_ICE_PLAINS = keyOf(ModernBeta.createId(ModernBetaBiomeTags.LATE_BETA_ICE_PLAINS));
@@ -160,6 +158,7 @@ public class ModernBetaBiomes {
         register(biomeRegisterable, INDEV_HELL, BiomeIndevHell::create);
         register(biomeRegisterable, INDEV_PARADISE, BiomeIndevParadise::create);
         register(biomeRegisterable, INDEV_WOODS, BiomeIndevWoods::create);
+        register(biomeRegisterable, CLASSIC_14A_08, BiomeClassic14a08::create);
 
         register(biomeRegisterable, LATE_BETA_EXTREME_HILLS, BiomeLateBetaExtremeHills::create);
         register(biomeRegisterable, LATE_BETA_ICE_PLAINS, BiomeLateBetaIcePlains::create);

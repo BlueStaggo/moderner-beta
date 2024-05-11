@@ -39,7 +39,7 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
     private final int worldTopY;
     private final int seaLevel;
     
-    private final int bedrockFloor;
+    private final int lavaLevel;
     
     private final BlockState defaultBlock;
     private final BlockState defaultFluid;
@@ -67,7 +67,7 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
         this.worldHeight = shapeConfig.height();
         this.worldTopY = this.worldHeight + this.worldMinY;
         this.seaLevel = generatorSettings.seaLevel();
-        this.bedrockFloor = 0;
+        this.lavaLevel = 0;
 
         this.defaultBlock = generatorSettings.defaultBlock();
         this.defaultFluid = generatorSettings.defaultFluid();
@@ -98,16 +98,10 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
     public void provideSurface(ChunkRegion region, StructureAccessor structureAccessor, Chunk chunk, ModernBetaBiomeSource biomeSource, NoiseConfig noiseConfig) {
         BlockPos.Mutable pos = new BlockPos.Mutable();
         
-        ChunkPos chunkPos = chunk.getPos();
-        int chunkX = chunkPos.x;
-        int chunkZ = chunkPos.z;
-        
         int startX = chunk.getPos().getStartX();
         int startZ = chunk.getPos().getStartZ();
         
-        int bedrockFloor = this.worldMinY + this.bedrockFloor;
-        
-        Random bedrockRand = this.createSurfaceRandom(chunkX, chunkZ);
+        int lavaLevel = this.worldMinY + this.lavaLevel;
         
         for (int localX = 0; localX < 16; ++localX) {
             for (int localZ = 0; localZ < 16; ++localZ) {
@@ -129,9 +123,9 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
                     pos.set(localX, y, localZ);
                     blockState = chunk.getBlockState(pos);
                     
-                    // Place bedrock
-                    if (y <= bedrockFloor + bedrockRand.nextInt(5)) {
-                        chunk.setBlockState(pos, BlockStates.BEDROCK, false);
+                    // Place lava
+                    if (y <= lavaLevel) {
+                        chunk.setBlockState(pos, BlockStates.LAVA, false);
                         continue;
                     }
 
@@ -259,7 +253,7 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
                     
                     blockHolder.setBlock(block);
                     BlockState blockState = blockSources.apply(x, y, z);
-                    
+
                     chunk.setBlockState(mutable.set(localX, y, localZ), blockState, false);
                     
                     heightmapOcean.trackUpdate(localX, y, localZ, blockState);

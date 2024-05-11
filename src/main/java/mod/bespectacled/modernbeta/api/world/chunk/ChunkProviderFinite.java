@@ -371,7 +371,7 @@ public abstract class ChunkProviderFinite extends ChunkProvider implements Chunk
     }
     
     protected void flood(int x, int y, int z, Block fillBlock) {
-        ArrayDeque<Vec3d> positions = new ArrayDeque<Vec3d>();
+        ArrayDeque<Vec3d> positions = new ArrayDeque<>();
         
         positions.add(new Vec3d(x, y, z));
         

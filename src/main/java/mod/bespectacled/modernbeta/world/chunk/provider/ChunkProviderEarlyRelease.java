@@ -194,12 +194,13 @@ public class ChunkProviderEarlyRelease extends ChunkProviderForcedHeight {
 
         for (int localZ = 0; localZ < 16; localZ++) {
             for (int localX = 0; localX < 16; localX++) {
+                pos.set(localX, 0, localZ);
                 int surfaceTopY = chunk.getHeightmap(Heightmap.Type.OCEAN_FLOOR_WG).get(localX, localZ) - 1;
                 int surfaceDepth = (int) (surfaceNoise[localZ + localX * 16] / 3D + 3D + rand.nextDouble() * 0.25D);
 
                 if (surfaceDepth <= 0) {
                     int y = surfaceTopY;
-                    pos.set(localX, y, localZ);
+                    pos.setY(y);
                     chunk.setBlockState(pos, y < this.seaLevel ? BlockStates.WATER : BlockStates.AIR, false);
                     pos.setY(--y);
 
@@ -207,6 +208,13 @@ public class ChunkProviderEarlyRelease extends ChunkProviderForcedHeight {
                     while (!(blockState = chunk.getBlockState(pos)).isAir() && !blockState.isOf(this.defaultBlock.getBlock())) {
                         chunk.setBlockState(pos, this.defaultBlock, false);
                         pos.setY(--y);
+                    }
+                }
+
+                for (int y = this.bedrockFloor; y < this.bedrockFloor + 5; y++) {
+                    if (y <= this.bedrockFloor + this.random.nextInt(5)) {
+                        pos.setY(y);
+                        chunk.setBlockState(pos, BlockStates.BEDROCK, false);
                     }
                 }
             }

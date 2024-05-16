@@ -190,6 +190,8 @@ public class ChunkProviderInfdev415 extends ChunkProviderNoise {
 
         for (int localZ = 0; localZ < 16; localZ++) {
             for (int localX = 0; localX < 16; localX++) {
+                pos.set(localX, 0, localZ);
+
                 int x = startX + localX;
                 int z = startZ + localZ;
                 int surfaceTopY = chunk.getHeightmap(Heightmap.Type.OCEAN_FLOOR_WG).get(localX, localZ) - 1;
@@ -217,7 +219,7 @@ public class ChunkProviderInfdev415 extends ChunkProviderNoise {
 
                 if (surfaceDepth <= 0) {
                     int y = surfaceTopY;
-                    pos.set(localX, y, localZ);
+                    pos.setY(y);
                     chunk.setBlockState(pos, y < this.seaLevel ? BlockStates.WATER : BlockStates.AIR, false);
                     pos.setY(--y);
 
@@ -230,7 +232,7 @@ public class ChunkProviderInfdev415 extends ChunkProviderNoise {
                     SurfaceBlocks beach = genSandBeach ? surfaceConfig.beachSand() : genGravelBeach ? surfaceConfig.beachGravel() : null;
                     if (beach != null) {
                         int y = surfaceTopY;
-                        pos.set(localX, y, localZ);
+                        pos.setY(y);
                         if (beach.topBlock().isAir() && y < this.seaLevel) {
                             chunk.setBlockState(pos, BlockStates.WATER, false);
                         } else {
@@ -243,6 +245,13 @@ public class ChunkProviderInfdev415 extends ChunkProviderNoise {
                             chunk.setBlockState(pos, beach.fillerBlock(), false);
                             pos.setY(--y);
                         }
+                    }
+                }
+
+                for (int y = this.bedrockFloor; y < this.bedrockFloor + 5; y++) {
+                    if (y <= this.bedrockFloor + this.random.nextInt(5)) {
+                        pos.setY(y);
+                        chunk.setBlockState(pos, BlockStates.BEDROCK, false);
                     }
                 }
             }

@@ -95,7 +95,7 @@ public abstract class ChunkProvider {
      * @param noiseConfig TODO
      * @return A completed chunk.
      */
-    public abstract CompletableFuture<Chunk> provideChunk(Executor executor, Blender blender, StructureAccessor structureAccessor, Chunk chunk, NoiseConfig noiseConfig);
+    public abstract CompletableFuture<Chunk> provideChunk(Blender blender, StructureAccessor structureAccessor, Chunk chunk, NoiseConfig noiseConfig);
     
     /**
      * Generates biome-specific surface for given chunk.

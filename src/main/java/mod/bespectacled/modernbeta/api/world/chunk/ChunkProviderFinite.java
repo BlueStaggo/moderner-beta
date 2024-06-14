@@ -107,7 +107,7 @@ public abstract class ChunkProviderFinite extends ChunkProvider implements Chunk
     }
 
     @Override
-    public CompletableFuture<Chunk> provideChunk(Executor executor, Blender blender, StructureAccessor structureAccessor, Chunk chunk, NoiseConfig noiseConfig) {
+    public CompletableFuture<Chunk> provideChunk(Blender blender, StructureAccessor structureAccessor, Chunk chunk, NoiseConfig noiseConfig) {
         ChunkPos pos = chunk.getPos();
 
         if (this.inWorldBounds(pos.getStartX(), pos.getStartZ())) {

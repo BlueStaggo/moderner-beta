@@ -52,7 +52,7 @@ public record BiomeInfo(RegistryEntry<Biome> biome, int type) {
 			id = id.substring(typeIndex + 1);
 		}
 
-		RegistryKey<Biome> key = RegistryKey.of(RegistryKeys.BIOME, new Identifier(id));
+		RegistryKey<Biome> key = RegistryKey.of(RegistryKeys.BIOME, Identifier.of(id));
 		RegistryEntry<Biome> biome = biomeRegistry.getOrThrow(key);
 		return new BiomeInfo(biome, type);
 	}

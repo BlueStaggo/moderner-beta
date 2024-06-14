@@ -17,7 +17,7 @@ public class CaveBiomeProviderSingle extends CaveBiomeProvider {
     public CaveBiomeProviderSingle(NbtCompound settings, RegistryEntryLookup<Biome> biomeRegistry, long seed) {
         super(settings, biomeRegistry, seed);
 
-        this.biome = RegistryKey.of(RegistryKeys.BIOME, new Identifier(this.settings.singleBiome));
+        this.biome = RegistryKey.of(RegistryKeys.BIOME, Identifier.of(this.settings.singleBiome));
     }
 
     @Override

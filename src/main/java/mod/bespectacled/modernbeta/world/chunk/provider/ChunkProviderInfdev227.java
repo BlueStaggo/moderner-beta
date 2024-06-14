@@ -87,7 +87,7 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
     }
 
     @Override
-    public CompletableFuture<Chunk> provideChunk(Executor executor, Blender blender, StructureAccessor structureAccessor, Chunk chunk, NoiseConfig noiseConfig) {
+    public CompletableFuture<Chunk> provideChunk(Blender blender, StructureAccessor structureAccessor, Chunk chunk, NoiseConfig noiseConfig) {
         this.generateTerrain(chunk, structureAccessor);  
         
         return CompletableFuture.<Chunk>supplyAsync(

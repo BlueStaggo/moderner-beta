@@ -136,7 +136,7 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 	}
 
 	private RegistryEntry<Biome> getBiomeEntry(String id) {
-		RegistryKey<Biome> key = RegistryKey.of(RegistryKeys.BIOME, new Identifier(id));
+		RegistryKey<Biome> key = RegistryKey.of(RegistryKeys.BIOME, Identifier.of(id));
 		return biomeRegistry.getOrThrow(key);
 	}
 

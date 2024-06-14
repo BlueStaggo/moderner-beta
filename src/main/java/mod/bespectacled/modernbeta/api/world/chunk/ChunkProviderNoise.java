@@ -127,7 +127,7 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
      * @return A completed chunk.
      */
     @Override
-    public CompletableFuture<Chunk> provideChunk(Executor executor, Blender blender, StructureAccessor structureAccessor, Chunk chunk, NoiseConfig noiseConfig) {
+    public CompletableFuture<Chunk> provideChunk(Blender blender, StructureAccessor structureAccessor, Chunk chunk, NoiseConfig noiseConfig) {
         GenerationShapeConfig shapeConfig = this.generatorSettings.value().generationShapeConfig();
         
         int minY = Math.max(shapeConfig.minimumY(), chunk.getBottomY());
@@ -159,7 +159,7 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
                 for (ChunkSection section : sections) {
                     section.unlock();
                 }
-            }, executor);
+            }, Util.getMainWorkerExecutor());
     }
     
     /**

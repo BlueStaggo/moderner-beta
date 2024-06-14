@@ -48,6 +48,6 @@ public record SurfaceConfig(SurfaceBlocks normal, SurfaceBlocks beachSand, Surfa
     }
     
     private static TagKey<Biome> keyOf(String id) {
-        return TagKey.of(RegistryKeys.BIOME, new Identifier(id));
+        return TagKey.of(RegistryKeys.BIOME, Identifier.of(id));
     }
 }

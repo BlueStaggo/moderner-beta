@@ -17,7 +17,7 @@ public class BiomeProviderSingle extends BiomeProvider {
     public BiomeProviderSingle(NbtCompound settings, RegistryEntryLookup<Biome> biomeRegistry, long seed) {
         super(settings, biomeRegistry, seed);
         
-        this.biomeKey = RegistryKey.of(RegistryKeys.BIOME, new Identifier(this.settings.singleBiome));
+        this.biomeKey = RegistryKey.of(RegistryKeys.BIOME, Identifier.of(this.settings.singleBiome));
     }
 
     @Override

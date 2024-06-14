@@ -65,6 +65,6 @@ public record ClimateMapping(String biome, String oceanBiome, String deepOceanBi
     }
     
     private static RegistryKey<Biome> keyOf(String id) {
-        return RegistryKey.of(RegistryKeys.BIOME, new Identifier(id));
+        return RegistryKey.of(RegistryKeys.BIOME, Identifier.of(id));
     }
 }

@@ -6,10 +6,10 @@ import mod.bespectacled.modernbeta.api.world.biome.climate.ClimateSampler;
 import mod.bespectacled.modernbeta.api.world.biome.climate.Clime;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.color.world.BiomeColors;
-import net.minecraft.client.color.world.FoliageColors;
-import net.minecraft.client.color.world.GrassColors;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockRenderView;
+import net.minecraft.world.biome.FoliageColors;
+import net.minecraft.world.biome.GrassColors;
 
 public final class BlockColorSampler {
     public static final BlockColorSampler INSTANCE = new BlockColorSampler();

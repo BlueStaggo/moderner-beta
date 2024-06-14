@@ -73,7 +73,7 @@ public class BiomeProviderVoronoi extends BiomeProvider implements BiomeResolver
         return biomes
             .stream()
             .distinct()
-            .map(key -> this.biomeRegistry.getOrThrow(RegistryKey.of(RegistryKeys.BIOME, new Identifier(key))))
+            .map(key -> this.biomeRegistry.getOrThrow(RegistryKey.of(RegistryKeys.BIOME, Identifier.of(key))))
             .collect(Collectors.toList());
     }
     

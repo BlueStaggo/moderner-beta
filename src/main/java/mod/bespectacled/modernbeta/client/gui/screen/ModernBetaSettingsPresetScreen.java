@@ -151,8 +151,8 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
         }
         
         private class PresetEntry extends AlwaysSelectedEntryListWidget.Entry<PresetEntry> {
-            private static final Identifier TEXTURE_JOIN = new Identifier("world_list/join");
-            private static final Identifier TEXTURE_JOIN_HIGHLIGHTED = new Identifier("world_list/join_highlighted");
+            private static final Identifier TEXTURE_JOIN = Identifier.ofVanilla("world_list/join");
+            private static final Identifier TEXTURE_JOIN_HIGHLIGHTED =  Identifier.ofVanilla("world_list/join_highlighted");
             
             private static final int TEXT_SPACING = 11;
             private static final int TEXT_LENGTH = 240;

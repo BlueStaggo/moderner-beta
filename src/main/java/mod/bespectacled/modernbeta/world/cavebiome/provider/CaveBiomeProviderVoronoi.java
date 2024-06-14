@@ -58,7 +58,7 @@ public class CaveBiomeProviderVoronoi extends CaveBiomeProvider implements CaveC
         VoronoiPointRules.Builder<RegistryKey<Biome>, CaveClime> builder = new VoronoiPointRules.Builder<>();
         
         for (VoronoiPointCaveBiome point : points) {
-            RegistryKey<Biome> biomeKey = point.biome().isBlank() ? null : RegistryKey.of(RegistryKeys.BIOME, new Identifier(point.biome()));
+            RegistryKey<Biome> biomeKey = point.biome().isBlank() ? null : RegistryKey.of(RegistryKeys.BIOME, Identifier.of(point.biome()));
             
             double temp = MathHelper.clamp(point.temp(), 0.0, 1.0);
             double rain = MathHelper.clamp(point.rain(), 0.0, 1.0);

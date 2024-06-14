@@ -42,6 +42,6 @@ public class BlockSourceDeepslate implements BlockSource {
     }
 
     private static RegistryKey<Block> keyOf(String block) {
-        return RegistryKey.of(RegistryKeys.BLOCK, new Identifier(block));
+        return RegistryKey.of(RegistryKeys.BLOCK, Identifier.of(block));
     }
 }

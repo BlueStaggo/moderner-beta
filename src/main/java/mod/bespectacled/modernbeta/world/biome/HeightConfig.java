@@ -52,7 +52,7 @@ public record HeightConfig(float depth, float scale, byte type) {
 	}
 
     private static TagKey<Biome> keyOf(String id) {
-        return TagKey.of(RegistryKeys.BIOME, new Identifier(id));
+        return TagKey.of(RegistryKeys.BIOME, Identifier.of(id));
     }
 
 	@Override

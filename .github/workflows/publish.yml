@@ -30,6 +30,7 @@ jobs:
           name: moderner-beta-${{github.ref_name}}
           path: |
             neoforge/build/libs
+            forge/build/libs
             fabric/build/libs
       - name: Create release
         uses: softprops/action-gh-release@v2
@@ -37,4 +38,5 @@ jobs:
           body_path: CHANGELOG.md
           files: |
             neoforge/build/libs/*-neoforge.jar
+            forge/build/libs/*-forge.jar
             fabric/build/libs/*-fabric.jar

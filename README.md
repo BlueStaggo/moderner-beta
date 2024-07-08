@@ -31,6 +31,6 @@ This project is licensed under LGPLv3, up to and including commit 55519d1.
 
 ## Credits
 
-Thanks to icanttellyou for porting the mod to 1.21 and NeoForge and Minecraft Forge.
+Thanks to icanttellyou for porting the mod to 1.21, NeoForge and Minecraft Forge.
 
 In addition see Modern Beta credits [here](https://github.com/b3spectacled/modern-beta-fabric/wiki/Credits).

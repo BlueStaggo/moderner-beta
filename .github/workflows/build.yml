@@ -35,4 +35,5 @@ jobs:
         name: moderner-beta-${{steps.get-branch.outputs.branch}}-${{steps.get-build-hash.outputs.id}}
         path: |
           neoforge/build/libs
+          forge/build/libs
           fabric/build/libs

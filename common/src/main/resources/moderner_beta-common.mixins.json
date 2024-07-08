@@ -1,0 +1,26 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "mod.bluestaggo.modernerbeta.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "AccessorChunkGenerator",
+    "AccessorChunkSection",
+    "AccessorPlacedFeature",
+    "MixinFreezeTopLayerFeature",
+    "MixinMinecraftServer",
+    "MixinSpawnLocating",
+    "MixinStructure"
+  ],
+  "client": [
+    "client.MixinBackgroundRenderer",
+    "client.MixinBiomeColors",
+    "client.MixinClientWorld",
+    "client.MixinDebugHud",
+    "client.MixinLevelLoadingScreen",
+    "client.MixinWorldCreator"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

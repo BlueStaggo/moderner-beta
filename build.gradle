@@ -1,116 +1,70 @@
 plugins {
-	id 'fabric-loom' version "${loom_version}"
+	id "architectury-plugin" version "3.4.+"
+	id 'dev.architectury.loom' version "${loom_version}" apply false
 	id 'maven-publish'
 }
 
-sourceCompatibility = JavaVersion.VERSION_21
-targetCompatibility = JavaVersion.VERSION_21
-
-archivesBaseName = project.archives_base_name
-version = project.mod_version + "+er" + project.moderner_version + "+" + project.minecraft_version
-group = project.maven_group
-
-repositories {
-	mavenCentral()
-	maven { url "https://maven.shedaniel.me/" }
-	maven { url "https://maven.terraformersmc.com/releases" }
-	maven { url 'https://jitpack.io' }
+architectury {
+	minecraft = rootProject.minecraft_version
 }
 
-loom {
-	accessWidenerPath = file("src/main/resources/modern_beta.accesswidener")
-	
-	runs {
-		datagen {
-			server()
-			name "Data Generation"
-			vmArg "-Dfabric-api.datagen"
-			vmArg "-Dfabric-api.datagen.output-dir=${file("src/main/generated")}"
-			vmArg "-Dfabric-api.datagen.modid=modern_beta"
-			runDir "build/datagen"
-		}
-	}
-}
 
-sourceSets {
-	main {
-        resources {
-            srcDirs += [
-                    'src/main/generated'
-            ]
-        }
-    }
-}
+subprojects {
+	apply plugin: "dev.architectury.loom"
 
-dependencies {
-	// To change the versions see the gradle.properties file
-	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-
-	// Fabric API. This is technically optional, but you probably want it anyway.
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-
-	// Configuration
-	modApi("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}") {
-		exclude(group: "net.fabricmc.fabric-api")
-	}
-	
-	modImplementation("com.terraformersmc:modmenu:${project.mod_menu_version}")
-}
-
-processResources {
-	inputs.property "version", project.version
-
-	filesMatching("fabric.mod.json") {
-		expand "version": project.version
-	}
-}
-
-tasks.withType(JavaCompile).configureEach {
-	// ensure that the encoding is set to UTF-8, no matter what the system default is
-	// this fixes some edge cases with special characters not displaying correctly
-	// see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
-	// If Javadoc is generated, this must be specified in that task too.
-	it.options.encoding = "UTF-8"
-
-	// Minecraft 1.18 (1.18-pre2) upwards uses Java 17.
-	// Minecraft 1.20.5 (24w14a) upwards uses Java 21.
-	it.options.release = 21
-}
-
-java {
-	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-	// if it is present.
-	// If you remove this line, sources will not be generated.
-	withSourcesJar()
-}
-
-jar {
-	from("LICENSE") {
-		rename { "${it}_${project.archivesBaseName}"}
-	}
-}
-
-// configure the maven publication
-publishing {
-	publications {
-		mavenJava(MavenPublication) {
-			// add all the jars that should be included when publishing to maven
-			artifact(remapJar) {
-				builtBy remapJar
-			}
-			artifact(sourcesJar) {
-				builtBy remapSourcesJar
+	dependencies {
+		// To change the versions see the gradle.properties file
+		minecraft "com.mojang:minecraft:${project.minecraft_version}"
+		mappings loom.layered() {
+			mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+			if (project.yarn_mappings_neoforge_patch != "N/A") {
+				mappings "dev.architectury:yarn-mappings-patch-neoforge:${project.yarn_mappings_neoforge_patch}"
 			}
 		}
 	}
+}
 
-	// See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
+allprojects {
+	apply plugin: "java"
+	apply plugin: "architectury-plugin"
+	apply plugin: "maven-publish"
+
+	sourceCompatibility = JavaVersion.VERSION_21
+	targetCompatibility = JavaVersion.VERSION_21
+
+	archivesBaseName = project.archives_base_name
+	version = project.mod_version + "+" + project.minecraft_version
+	group = project.maven_group
+
 	repositories {
-		// Add repositories to publish to here.
-		// Notice: This block does NOT have the same function as the block in the top level.
-		// The repositories here will be used for publishing your artifact, not for
-		// retrieving dependencies.
+		mavenCentral()
+		maven { url "https://maven.shedaniel.me/" }
+		maven { url "https://maven.terraformersmc.com/releases" }
+		maven { url 'https://jitpack.io' }
+	}
+
+	tasks.withType(JavaCompile).configureEach {
+		// ensure that the encoding is set to UTF-8, no matter what the system default is
+		// this fixes some edge cases with special characters not displaying correctly
+		// see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
+		// If Javadoc is generated, this must be specified in that task too.
+		it.options.encoding = "UTF-8"
+
+		// Minecraft 1.18 (1.18-pre2) upwards uses Java 17.
+		// Minecraft 1.20.5 (24w14a) upwards uses Java 21.
+		it.options.release = 21
+	}
+
+	java {
+		// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
+		// if it is present.
+		// If you remove this line, sources will not be generated.
+		withSourcesJar()
+	}
+
+	jar {
+		from("LICENSE") {
+			rename { "${it}_${project.archivesBaseName}" }
+		}
 	}
 }

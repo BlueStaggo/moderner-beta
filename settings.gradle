@@ -4,7 +4,18 @@ pluginManagement {
             name = 'Fabric'
             url = 'https://maven.fabricmc.net/'
         }
-        mavenCentral()
+        maven {
+            name = 'Architectury'
+            url = 'https://maven.architectury.dev/'
+        }
+        maven {
+            name = 'Forge'
+            url = 'https://maven.minecraftforge.net/'
+        }
         gradlePluginPortal()
     }
 }
+
+include("common")
+include("fabric")
+include("forge")

@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "id": "moderner_beta",
+  "version": "${version}",
+
+  "name": "Moderner Beta",
+  "description": "Old (and not so old) world generation for modern Minecraft!",
+  "authors": [
+    "BlueStaggo",
+    "bespectacled"
+  ],
+  "contributors": [
+    "SuperCoder7979",
+    "Arenovas",
+    "Amb0s",
+    "PaulEvs",
+    "comp500",
+    "ErzeKawek"
+  ],
+  "contact": {
+    "homepage": "https://github.com/BlueStaggo/",
+    "sources": "https://github.com/BlueStaggo/moderner-beta",
+    "issues": "https://github.com/BlueStaggo/moderner-beta/issues"
+  },
+
+  "license": "MIT",
+  "icon": "assets/moderner_beta/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "mod.bluestaggo.modernerbeta.fabric.ModernerBetaFabric"
+    ],
+    "modmenu": [
+      "mod.bluestaggo.modernerbeta.fabric.config.ModernBetaModMenu"
+    ],
+    "fabric-datagen": [
+      "mod.bluestaggo.modernerbeta.fabric.data.ModernBetaDataGeneratorEntrypoint"
+    ]
+  },
+  "mixins": [
+    "moderner_beta-common.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.15.0",
+    "fabric": "*",
+    "minecraft": ">=1.21",
+    "java": ">=21",
+    "cloth-config2": "*",
+    "architectury": "*"
+  }
+}

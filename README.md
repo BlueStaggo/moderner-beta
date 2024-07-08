@@ -11,7 +11,7 @@ Moderner Beta is a fork of [b3spectacled](https://github.com/b3spectacled)'s [Mo
 
 ## Features
 In addition to everything in Modern Beta...
-- Support for NeoForge in addition to Fabric
+- Support for NeoForge and Minecraft Forge in addition to Fabric
 - World generation from Beta 1.8 up to Release 1.6 with experimental support for 1.7 to 1.17 generation
 - Additional world generation from Infdev 20100325, Classic 0.0.14a_08 and Beta 1.1
 - Fixed surface rules for Beta Vanilla and 1.12.2 presets
@@ -31,6 +31,6 @@ This project is licensed under LGPLv3, up to and including commit 55519d1.
 
 ## Credits
 
-Thanks to icanttellyou for porting the mod to 1.21 and NeoForge.
+Thanks to icanttellyou for porting the mod to 1.21 and NeoForge and Minecraft Forge.
 
 In addition see Modern Beta credits [here](https://github.com/b3spectacled/modern-beta-fabric/wiki/Credits).

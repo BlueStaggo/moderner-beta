@@ -1,5 +1,5 @@
 ## Changes
-- Ported to NeoForge using Architectury
+- Ported to NeoForge and Minecraft Forge using Architectury
   - Due to this the mod now depends on [Architectury API](https://modrinth.com/mod/architectury-api).
 - Dropped "For Fabric" from logos and all assets.
   - The icon has been updated on Fabric to add the logo for the mod

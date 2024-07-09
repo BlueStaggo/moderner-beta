@@ -62,6 +62,7 @@ processResources {
 
     from(project(":common").file("src/main/generated")) {
         include "**/**"
+        exclude ".cache"
     }
 
     from(project(":common").file("src/main/resources")) {

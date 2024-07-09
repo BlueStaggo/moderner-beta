@@ -5,4 +5,6 @@
   - The icon has been updated on Fabric to add the logo for the mod
   - The banner and icon now feature a new screenshot
 - Dropped Fabric suffix from mod name.
-- Dropped 6.5+er version prefix. Mod ID is now `moderner_beta`
+- Dropped 6.5+er version prefix. 
+- Mod ID has been changed to `moderner_beta` to distinguish from the original Modern Beta mod.
+- Mentions of Modern Beta ingame have been replaced with Moderner Beta.

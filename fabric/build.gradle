@@ -113,6 +113,7 @@ components.java {
 }
 
 modrinth {
+    token = System.getenv("MODRINTH_TOKEN")
     projectId = rootProject.modrinth_project_id
     versionName = "Moderner Beta " + project.version
     versionNumber = project.version

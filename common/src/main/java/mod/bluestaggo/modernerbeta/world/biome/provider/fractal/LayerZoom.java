@@ -56,12 +56,12 @@ public class LayerZoom extends LayerZoomBase {
 		}
 	}
 
-	public static LayerZoom multi(long seed, Layer parent, int count) {
+	public static Layer multi(long seed, Layer parent, int count) {
 		for (int i = 0; i < count; i++) {
 			parent = new LayerZoom(seed, parent);
 			seed++;
 		}
 
-		return (LayerZoom) parent;
+		return parent;
 	}
 }

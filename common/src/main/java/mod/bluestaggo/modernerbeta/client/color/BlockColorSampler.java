@@ -40,7 +40,7 @@ public final class BlockColorSampler {
     
     public int getGrassColor(BlockState state, BlockRenderView view, BlockPos pos, int tintNdx) {
         if (view == null || pos == null) { // Appears to enter here when loading color for inventory block
-            return 8174955; // Default tint, from wiki
+            return 0x7CBD6B; // Default tint, from wiki
         }
         
         if (this.useBiomeColor()) {
@@ -57,7 +57,7 @@ public final class BlockColorSampler {
     
     public int getTallGrassColor(BlockState state, BlockRenderView view, BlockPos pos, int tintNdx) {
         if (view == null || pos == null) { // Appears to enter here when loading color for inventory block
-            return 8174955; // Default tint, from wiki
+            return 0x7CBD6B; // Default tint, from wiki
         }
         
         if (this.useBiomeColor()) {
@@ -81,7 +81,7 @@ public final class BlockColorSampler {
     
     public int getFoliageColor(BlockState state, BlockRenderView view, BlockPos pos, int tintNdx) {
         if (view == null || pos == null) { // Appears to enter here when loading color for inventory block
-            return 4764952; // Default tint, from wiki
+            return 0x48B518; // Default tint, from wiki
         }
         
         if (this.useBiomeColor()) {
@@ -97,6 +97,10 @@ public final class BlockColorSampler {
     }
     
     public int getWaterColor(BlockState state, BlockRenderView view, BlockPos pos, int tintNdx) {
+        if (view == null || pos == null) {
+            return 0xFFFFFFFF;
+        }
+
         if (this.useWaterColor()) {
             int x = pos.getX();
             int z = pos.getZ();
@@ -110,6 +114,10 @@ public final class BlockColorSampler {
     }
     
     public int getSugarCaneColor(BlockState state, BlockRenderView view, BlockPos pos, int tintNdx) {
+        if (view == null || pos == null) {
+            return 0xFFFFFFFF;
+        }
+
         if (this.useBiomeColor()) {
             return 0xFFFFFF;
         }

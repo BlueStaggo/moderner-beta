@@ -141,7 +141,7 @@ public abstract class ChunkProviderFinite extends ChunkProvider implements Chunk
                     climateSampler.useBiomeFeature()) {
                     isCold = climateSampler.sample(x, z).temp() < 0.5D;
                 } else {
-                    isCold = biome.value().isCold(pos);
+                    isCold = biome.value().isCold(pos, seaLevel);
                 }
                 
                 for (int y = worldTopY - 1; y >= this.worldMinY; --y) {

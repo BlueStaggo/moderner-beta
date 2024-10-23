@@ -23,7 +23,7 @@ public class BlockSourceDeepslate implements BlockSource {
         this.minY = chunkSettings.deepslateMinY;
         this.maxY = chunkSettings.deepslateMaxY;
         this.useDeepslate = chunkSettings.useDeepslate;
-        this.deepslateBlock = Registries.BLOCK.getOrThrow(keyOf(chunkSettings.deepslateBlock)).getDefaultState();
+        this.deepslateBlock = Registries.BLOCK.getOrThrow(keyOf(chunkSettings.deepslateBlock)).value().getDefaultState();
         this.randomSplitter = randomSplitter;
     }
     

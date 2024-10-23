@@ -107,7 +107,7 @@ public class BetaFreezeTopLayerFeature extends Feature<DefaultFeatureConfig> {
         }
         
         if (blockPos.getY() >= worldView.getBottomY() &&
-            blockPos.getY() < worldView.getTopY() &&
+            blockPos.getY() <= worldView.getTopYInclusive() &&
             worldView.getLightLevel(LightType.BLOCK, blockPos) < 10
         ) {
             BlockState blockState = worldView.getBlockState(blockPos);

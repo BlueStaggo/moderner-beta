@@ -154,7 +154,7 @@ public class ModernBetaBiomeSource extends BiomeSource {
         
         int searchRadius = Math.floorDiv(radius, horizontalBlockCheckInterval);
         int[] sections = MathHelper
-            .stream(origin.getY(), world.getBottomY() + 1, world.getTopY(), verticalBlockCheckInterval)
+            .stream(origin.getY(), world.getBottomY() + 1, world.getTopYInclusive() + 1, verticalBlockCheckInterval)
             .toArray();
         
         for (BlockPos.Mutable mutable : BlockPos.iterateInSquare(BlockPos.ORIGIN, searchRadius, Direction.EAST, Direction.SOUTH)) {

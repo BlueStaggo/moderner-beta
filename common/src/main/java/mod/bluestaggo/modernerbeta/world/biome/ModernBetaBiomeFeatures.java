@@ -303,7 +303,6 @@ public class ModernBetaBiomeFeatures {
         
         if (!pe) {
             builder.feature(Feature.VEGETAL_DECORATION, OceanPlacedFeatures.SEAGRASS_NORMAL);
-            builder.feature(Feature.VEGETAL_DECORATION, OceanPlacedFeatures.SEAGRASS_SIMPLE);
             builder.feature(Feature.VEGETAL_DECORATION, OceanPlacedFeatures.KELP_COLD);
         }
     }
@@ -323,7 +322,6 @@ public class ModernBetaBiomeFeatures {
         
         if (!pe) {
             builder.feature(Feature.VEGETAL_DECORATION, OceanPlacedFeatures.SEAGRASS_COLD);
-            builder.feature(Feature.VEGETAL_DECORATION, OceanPlacedFeatures.SEAGRASS_SIMPLE);
             builder.feature(Feature.VEGETAL_DECORATION, OceanPlacedFeatures.KELP_COLD);
         }
     }
@@ -532,15 +530,15 @@ public class ModernBetaBiomeFeatures {
 
     private static void addCarvers(GenerationSettings.LookupBackedBuilder builder, boolean addCanyons, boolean useBetaCarvers) {
         if (useBetaCarvers) {
-            builder.carver(GenerationStep.Carver.AIR, ModernBetaConfiguredCarvers.BETA_CAVE);
-            builder.carver(GenerationStep.Carver.AIR, ModernBetaConfiguredCarvers.BETA_CAVE_DEEP);
+            builder.carver(ModernBetaConfiguredCarvers.BETA_CAVE);
+            builder.carver(ModernBetaConfiguredCarvers.BETA_CAVE_DEEP);
         } else {
-            builder.carver(GenerationStep.Carver.AIR, ConfiguredCarvers.CAVE);
-            builder.carver(GenerationStep.Carver.AIR, ConfiguredCarvers.CAVE_EXTRA_UNDERGROUND);
+            builder.carver(ConfiguredCarvers.CAVE);
+            builder.carver(ConfiguredCarvers.CAVE_EXTRA_UNDERGROUND);
         }
 
         if (addCanyons) {
-            builder.carver(GenerationStep.Carver.AIR, ConfiguredCarvers.CANYON);
+            builder.carver(ConfiguredCarvers.CANYON);
         }
     }
     

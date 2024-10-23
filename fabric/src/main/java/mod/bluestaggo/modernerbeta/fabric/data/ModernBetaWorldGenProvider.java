@@ -24,14 +24,14 @@ public class ModernBetaWorldGenProvider extends FabricDynamicRegistryProvider {
 
     @Override
     protected void configure(RegistryWrapper.WrapperLookup registries, Entries entries) {
-        RegistryWrapper.Impl<Biome> registryBiome = registries.getWrapperOrThrow(RegistryKeys.BIOME);
-        RegistryWrapper.Impl<ConfiguredFeature<?, ?>> registryConfiguredFeature = registries.getWrapperOrThrow(RegistryKeys.CONFIGURED_FEATURE);
-        RegistryWrapper.Impl<PlacedFeature> registryPlacedFeature = registries.getWrapperOrThrow(RegistryKeys.PLACED_FEATURE);
-        RegistryWrapper.Impl<ConfiguredCarver<?>> registryConfiguredCarver = registries.getWrapperOrThrow(RegistryKeys.CONFIGURED_CARVER);
-        RegistryWrapper.Impl<ChunkGeneratorSettings> registrySettings = registries.getWrapperOrThrow(RegistryKeys.CHUNK_GENERATOR_SETTINGS);
-        RegistryWrapper.Impl<Structure> registryStructure = registries.getWrapperOrThrow(RegistryKeys.STRUCTURE);
-        RegistryWrapper.Impl<StructureSet> registryStructureSet = registries.getWrapperOrThrow(RegistryKeys.STRUCTURE_SET);
-        RegistryWrapper.Impl<WorldPreset> registryWorldPreset = registries.getWrapperOrThrow(RegistryKeys.WORLD_PRESET);
+        RegistryWrapper.Impl<Biome> registryBiome = registries.getOrThrow(RegistryKeys.BIOME);
+        RegistryWrapper.Impl<ConfiguredFeature<?, ?>> registryConfiguredFeature = registries.getOrThrow(RegistryKeys.CONFIGURED_FEATURE);
+        RegistryWrapper.Impl<PlacedFeature> registryPlacedFeature = registries.getOrThrow(RegistryKeys.PLACED_FEATURE);
+        RegistryWrapper.Impl<ConfiguredCarver<?>> registryConfiguredCarver = registries.getOrThrow(RegistryKeys.CONFIGURED_CARVER);
+        RegistryWrapper.Impl<ChunkGeneratorSettings> registrySettings = registries.getOrThrow(RegistryKeys.CHUNK_GENERATOR_SETTINGS);
+        RegistryWrapper.Impl<Structure> registryStructure = registries.getOrThrow(RegistryKeys.STRUCTURE);
+        RegistryWrapper.Impl<StructureSet> registryStructureSet = registries.getOrThrow(RegistryKeys.STRUCTURE_SET);
+        RegistryWrapper.Impl<WorldPreset> registryWorldPreset = registries.getOrThrow(RegistryKeys.WORLD_PRESET);
 
         entries.addAll(registryBiome);
         entries.addAll(registryConfiguredFeature);

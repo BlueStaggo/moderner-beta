@@ -61,10 +61,10 @@ public abstract class MixinClientWorld implements ModernBetaClientWorld {
         RegistryEntry<DimensionType> registryEntryDimensionType,
         int loadDistance,
         int simulationDistance,
-        Supplier<Profiler> profiler,
         WorldRenderer renderer,
         boolean debugWorld,
         long seed,
+        int seaLevel,
         CallbackInfo info
     ) {
         long worldSeed = SeedUtil.parseSeed(ModernerBeta.CONFIG.fixedSeed);
@@ -111,7 +111,7 @@ public abstract class MixinClientWorld implements ModernBetaClientWorld {
             value = "INVOKE_ASSIGN",  
             target = "Lnet/minecraft/util/CubicSampler;sampleColor(Lnet/minecraft/util/math/Vec3d;Lnet/minecraft/util/CubicSampler$RgbFetcher;)Lnet/minecraft/util/math/Vec3d;"
         ),
-        index = 6
+        index = 5
     )
     private Vec3d injectSkyColor(Vec3d skyColorVec) {
         if (this.modernBeta_climateSamplerSky != null && this.modernBeta_climateSamplerSky.useSkyColor()) {

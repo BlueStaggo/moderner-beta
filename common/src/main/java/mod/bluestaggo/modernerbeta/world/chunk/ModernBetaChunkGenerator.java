@@ -89,13 +89,13 @@ public class ModernBetaChunkGenerator extends NoiseChunkGenerator {
 
     @Override
     public CompletableFuture<Chunk> populateBiomes(NoiseConfig noiseConfig, Blender blender, StructureAccessor structureAccessor, Chunk chunk) {
-        return CompletableFuture.supplyAsync(Util.debugSupplier("init_biomes", () -> {
+        return CompletableFuture.supplyAsync(Util.debugSupplier(() -> {
             ChunkNoiseSampler noiseSampler = chunk.getOrCreateChunkNoiseSampler(c -> this.createChunkNoiseSampler(c, structureAccessor, blender, noiseConfig));
             chunk.populateBiomes(this.biomeSource, noiseSampler.createMultiNoiseSampler(noiseConfig.getNoiseRouter(), this.settings.value().spawnTarget()));
             
             return chunk;
             
-        }), Util.getMainWorkerExecutor());
+        }, () -> "init_biomes"), Util.getMainWorkerExecutor());
     }
     
     @Override
@@ -130,7 +130,7 @@ public class ModernBetaChunkGenerator extends NoiseChunkGenerator {
     }
     
     @Override
-    public void carve(ChunkRegion chunkRegion, long seed, NoiseConfig noiseConfig, BiomeAccess biomeAccess, StructureAccessor structureAccessor, Chunk chunk, GenerationStep.Carver carverStep) {
+    public void carve(ChunkRegion chunkRegion, long seed, NoiseConfig noiseConfig, BiomeAccess biomeAccess, StructureAccessor structureAccessor, Chunk chunk) {
         if (this.chunkProvider.skipChunk(chunk.getPos().x, chunk.getPos().z, ModernBetaGenerationStep.CARVERS)) return;
 
         BiomeAccess biomeAccessWithSource = biomeAccess.withSource((biomeX, biomeY, biomeZ) -> this.biomeSource.getBiome(biomeX, biomeY, biomeZ, noiseConfig.getMultiNoiseSampler()));
@@ -145,7 +145,7 @@ public class ModernBetaChunkGenerator extends NoiseChunkGenerator {
         ChunkNoiseSampler chunkNoiseSampler = chunk.getOrCreateChunkNoiseSampler(c -> this.createChunkNoiseSampler(c, structureAccessor, Blender.getBlender(chunkRegion), noiseConfig));
         
         CarverContext carverContext = new CarverContext(this, chunkRegion.getRegistryManager(), chunk.getHeightLimitView(), chunkNoiseSampler, noiseConfig, this.settings.value().surfaceRule());
-        CarvingMask carvingMask = ((ProtoChunk)chunk).getOrCreateCarvingMask(carverStep);
+        CarvingMask carvingMask = ((ProtoChunk)chunk).getOrCreateCarvingMask();
         
         LocalRandom random = new LocalRandom(seed);
         long l = (random.nextLong() / 2L) * 2L + 1L;
@@ -160,7 +160,7 @@ public class ModernBetaChunkGenerator extends NoiseChunkGenerator {
                 GenerationSettings genSettings = carverChunk.getOrCreateGenerationSettings(() -> this.getGenerationSettings(
                     this.biomeSource.getBiome(BiomeCoords.fromBlock(carverPos.getStartX()), 0, BiomeCoords.fromBlock(carverPos.getStartZ()), noiseConfig.getMultiNoiseSampler()))
                 );
-                Iterable<RegistryEntry<ConfiguredCarver<?>>> carverList = genSettings.getCarversForStep(carverStep);
+                Iterable<RegistryEntry<ConfiguredCarver<?>>> carverList = genSettings.getCarversForStep();
 
                 for(RegistryEntry<ConfiguredCarver<?>> carverEntry : carverList) {
                     ConfiguredCarver<?> configuredCarver = carverEntry.value();
@@ -171,9 +171,9 @@ public class ModernBetaChunkGenerator extends NoiseChunkGenerator {
                         if (carverKey != null) {
                             ConfiguredCarver<?> replacementCarver = null;
                             if (carverKey.equals(ConfiguredCarvers.CAVE)) {
-                                replacementCarver = chunkRegion.getRegistryManager().get(RegistryKeys.CONFIGURED_CARVER).get(ModernBetaConfiguredCarvers.BETA_CAVE);
+                                replacementCarver = chunkRegion.getRegistryManager().getOrThrow(RegistryKeys.CONFIGURED_CARVER).get(ModernBetaConfiguredCarvers.BETA_CAVE);
                             } else if (carverKey.equals(ConfiguredCarvers.CAVE_EXTRA_UNDERGROUND)) {
-                                replacementCarver = chunkRegion.getRegistryManager().get(RegistryKeys.CONFIGURED_CARVER).get(ModernBetaConfiguredCarvers.BETA_CAVE_DEEP);
+                                replacementCarver = chunkRegion.getRegistryManager().getOrThrow(RegistryKeys.CONFIGURED_CARVER).get(ModernBetaConfiguredCarvers.BETA_CAVE_DEEP);
                             }
 
                             if (replacementCarver != null) {

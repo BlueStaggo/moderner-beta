@@ -11,6 +11,7 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.sound.SoundEvents;
@@ -205,6 +206,7 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
                     
                     context.fill(x, y, x + ICON_SIZE, y + ICON_SIZE, -1601138544);
                     context.drawGuiTexture(
+                        RenderLayer::getGuiTextured,
                         texture,
                         x,
                         y,
@@ -253,7 +255,7 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
             
             private void draw(DrawContext context, int x, int y, Identifier textureId) {
                 RenderSystem.enableBlend();
-                context.drawTexture(textureId, x, y, 0.0f, 0.0f, ICON_SIZE, ICON_SIZE, ICON_SIZE, ICON_SIZE);
+                context.drawTexture(RenderLayer::getGuiTextured, textureId, x, y, 0.0f, 0.0f, ICON_SIZE, ICON_SIZE, ICON_SIZE, ICON_SIZE);
                 RenderSystem.disableBlend();
             }
             

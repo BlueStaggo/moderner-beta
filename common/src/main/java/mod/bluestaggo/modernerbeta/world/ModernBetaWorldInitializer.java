@@ -11,7 +11,7 @@ import net.minecraft.world.gen.chunk.ChunkGenerator;
 
 public class ModernBetaWorldInitializer {
     public static void init(MinecraftServer server) {
-        Registry<DimensionOptions> registryDimensionOptions = server.getCombinedDynamicRegistries().getCombinedRegistryManager().get(RegistryKeys.DIMENSION);
+        Registry<DimensionOptions> registryDimensionOptions = server.getCombinedDynamicRegistries().getCombinedRegistryManager().getOrThrow(RegistryKeys.DIMENSION);
         long seed = server.getSaveProperties().getGeneratorOptions().getSeed();
         
         registryDimensionOptions.getEntrySet().forEach(entry -> {

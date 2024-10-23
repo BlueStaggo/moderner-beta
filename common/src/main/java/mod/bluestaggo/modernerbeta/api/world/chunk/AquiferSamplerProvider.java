@@ -93,7 +93,7 @@ public class AquiferSamplerProvider {
         }
         
         int minY = Math.max(this.worldMinY, chunk.getBottomY());
-        int topY = Math.min(this.worldMinY + this.worldHeight, chunk.getTopY());
+        int topY = Math.min(this.worldMinY + this.worldHeight, chunk.getTopYInclusive() + 1);
         
         int noiseMinY = MathHelper.floorDiv(minY, this.noiseResolutionVertical);
         int noiseTopY = MathHelper.floorDiv(topY - minY, this.noiseResolutionVertical);

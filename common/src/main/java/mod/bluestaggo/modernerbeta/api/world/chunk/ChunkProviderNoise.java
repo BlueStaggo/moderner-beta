@@ -125,7 +125,7 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
         GenerationShapeConfig shapeConfig = this.generatorSettings.value().generationShapeConfig();
         
         int minY = Math.max(shapeConfig.minimumY(), chunk.getBottomY());
-        int topY = Math.min(shapeConfig.minimumY() + shapeConfig.height(), chunk.getTopY());
+        int topY = Math.min(shapeConfig.minimumY() + shapeConfig.height(), chunk.getTopYInclusive() + 1);
         
         @SuppressWarnings("unused")
         int noiseMinY = MathHelper.floorDiv(minY, this.noiseResolutionVertical);

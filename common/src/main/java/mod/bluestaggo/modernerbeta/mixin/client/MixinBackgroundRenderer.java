@@ -11,12 +11,16 @@ import net.minecraft.client.render.Camera;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.biome.Biome;
+import org.joml.Vector4f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Environment(EnvType.CLIENT)
 @Mixin(BackgroundRenderer.class)
@@ -26,15 +30,14 @@ public abstract class MixinBackgroundRenderer {
     @Unique private static float modernBeta_fogWeight = calculateFogWeight(16);
     @Unique private static boolean modernBeta_isModernBetaWorld = false;
     
-    @ModifyVariable(
-        method = "render",
+    @Redirect(
+        method = "getFogColor",
         at = @At(
-            value = "INVOKE_ASSIGN",  
+            value = "INVOKE",
             target = "Lnet/minecraft/world/biome/Biome;getWaterFogColor()I"
-        ),
-        ordinal = 1
+        )
     )
-    private static int modifyWaterFogColor(int waterFogColor) {
+    private static int modifyWaterFogColor(Biome instance) {
         if (BlockColorSampler.INSTANCE.useWaterColor()) {
             int x = (int)modernBeta_pos.getX();
             int z = (int)modernBeta_pos.getZ();
@@ -44,11 +47,11 @@ public abstract class MixinBackgroundRenderer {
             return BlockColorSampler.INSTANCE.colormapUnderwater.getColor(clime.temp(), clime.rain());
         }
         
-        return waterFogColor;
+        return instance.getWaterFogColor();
     }
     
-    @Inject(method = "render", at = @At("HEAD"))
-    private static void captureVars(Camera camera, float tickDelta, ClientWorld world, int renderDistance, float skyDarkness, CallbackInfo info) {
+    @Inject(method = "getFogColor", at = @At("HEAD"))
+    private static void captureVars(Camera camera, float tickDelta, ClientWorld world, int renderDistance, float skyDarkness, CallbackInfoReturnable<Vector4f> cir) {
         modernBeta_pos = camera.getPos();
 
         if (modernBeta_renderDistance != renderDistance) {
@@ -62,12 +65,12 @@ public abstract class MixinBackgroundRenderer {
     }
     
     @ModifyVariable(
-        method = "render",
+        method = "getFogColor",
         at = @At(
             value = "INVOKE", 
-            target = "Lnet/minecraft/client/world/ClientWorld;getSkyColor(Lnet/minecraft/util/math/Vec3d;F)Lnet/minecraft/util/math/Vec3d;"
+            target = "Lnet/minecraft/client/world/ClientWorld;getSkyColor(Lnet/minecraft/util/math/Vec3d;F)I"
         ),
-        index = 7
+        index = 10
     )
     private static float modifyFogWeighting(float weight) {
         return modernBeta_isModernBetaWorld && ModernerBeta.CONFIG.useOldFogColor ? modernBeta_fogWeight : weight;

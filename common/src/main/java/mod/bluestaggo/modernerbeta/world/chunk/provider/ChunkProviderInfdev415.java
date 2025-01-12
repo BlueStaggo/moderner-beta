@@ -114,7 +114,7 @@ public class ChunkProviderInfdev415 extends ChunkProviderNoise {
                     
                     // Place bedrock
                     if (y <= this.bedrockFloor + bedrockRand.nextInt(5)) {
-                        chunk.setBlockState(pos, BlockStates.BEDROCK, false);
+                        chunk.setBlockState(pos, BlockStates.BEDROCK);
                         continue;
                     }
                     
@@ -162,11 +162,11 @@ public class ChunkProviderInfdev415 extends ChunkProviderNoise {
                                 topBlock : 
                                 fillerBlock;
                             
-                            chunk.setBlockState(pos, blockState, false);
+                            chunk.setBlockState(pos, blockState);
                             
                         } else if (runDepth > 0) {
                             --runDepth;
-                            chunk.setBlockState(pos, fillerBlock, false);
+                            chunk.setBlockState(pos, fillerBlock);
                         }
                     }
                 }
@@ -220,12 +220,12 @@ public class ChunkProviderInfdev415 extends ChunkProviderNoise {
                 if (surfaceDepth <= 0) {
                     int y = surfaceTopY;
                     pos.setY(y);
-                    chunk.setBlockState(pos, y < this.seaLevel ? BlockStates.WATER : BlockStates.AIR, false);
+                    chunk.setBlockState(pos, y < this.seaLevel ? BlockStates.WATER : BlockStates.AIR);
                     pos.setY(--y);
 
                     BlockState blockState;
                     while (!(blockState = chunk.getBlockState(pos)).isAir() && !blockState.isOf(this.defaultBlock.getBlock())) {
-                        chunk.setBlockState(pos, this.defaultBlock, false);
+                        chunk.setBlockState(pos, this.defaultBlock);
                         pos.setY(--y);
                     }
                 } else if (surfaceTopY >= this.seaLevel - 4 && surfaceTopY < this.seaLevel + 1) {
@@ -234,15 +234,15 @@ public class ChunkProviderInfdev415 extends ChunkProviderNoise {
                         int y = surfaceTopY;
                         pos.setY(y);
                         if (beach.topBlock().isAir() && y < this.seaLevel) {
-                            chunk.setBlockState(pos, BlockStates.WATER, false);
+                            chunk.setBlockState(pos, BlockStates.WATER);
                         } else {
-                            chunk.setBlockState(pos, beach.topBlock(), false);
+                            chunk.setBlockState(pos, beach.topBlock());
                         }
                         pos.setY(--y);
 
                         BlockState blockState;
                         while (!(blockState = chunk.getBlockState(pos)).isAir() && !blockState.isOf(this.defaultBlock.getBlock())) {
-                            chunk.setBlockState(pos, beach.fillerBlock(), false);
+                            chunk.setBlockState(pos, beach.fillerBlock());
                             pos.setY(--y);
                         }
                     }
@@ -251,7 +251,7 @@ public class ChunkProviderInfdev415 extends ChunkProviderNoise {
                 for (int y = this.bedrockFloor; y < this.bedrockFloor + 5; y++) {
                     if (y <= this.bedrockFloor + this.random.nextInt(5)) {
                         pos.setY(y);
-                        chunk.setBlockState(pos, BlockStates.BEDROCK, false);
+                        chunk.setBlockState(pos, BlockStates.BEDROCK);
                     }
                 }
             }

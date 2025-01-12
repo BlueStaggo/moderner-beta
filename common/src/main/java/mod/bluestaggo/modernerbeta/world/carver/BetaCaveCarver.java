@@ -371,7 +371,7 @@ public class BetaCaveCarver extends Carver<BetaCaveCarverConfig> {
                         BlockState carverState = this.getBlockState(context, config, carverPos, aquiferSampler);
                         
                         if (carverState != null) {
-                            chunk.setBlockState(carverPos, carverState, false);
+                            chunk.setBlockState(carverPos, carverState);
                             
                             if (aquiferSampler.needsFluidTick() && !carverState.getFluidState().isEmpty()) {
                                 chunk.markBlockForPostProcessing(carverPos);
@@ -379,7 +379,7 @@ public class BetaCaveCarver extends Carver<BetaCaveCarverConfig> {
                             
                             // Replaces carved-out dirt with grass, if block that was removed was grass.
                             if (isGrassBlock && chunk.getBlockState(carverPos.down()).getBlock() == Blocks.DIRT) {
-                                chunk.setBlockState(carverPos.down(), BlockStates.GRASS_BLOCK, false);
+                                chunk.setBlockState(carverPos.down(), BlockStates.GRASS_BLOCK);
                             }
                         }
                     }

@@ -130,7 +130,7 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
                     
                     // Place bedrock
                     if (y <= bedrockFloor + bedrockRand.nextInt(5)) {
-                        chunk.setBlockState(pos, BlockStates.BEDROCK, false);
+                        chunk.setBlockState(pos, BlockStates.BEDROCK);
                         continue;
                     }
 
@@ -150,7 +150,7 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
                     
                     runDepth++;
 
-                    chunk.setBlockState(pos, blockState, false);
+                    chunk.setBlockState(pos, blockState);
                 }
             }
         }
@@ -259,7 +259,7 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
                     blockHolder.setBlock(block);
                     BlockState blockState = blockSources.apply(x, y, z);
 
-                    chunk.setBlockState(mutable.set(localX, y, localZ), blockState, false);
+                    chunk.setBlockState(mutable.set(localX, y, localZ), blockState);
                     
                     heightmapOcean.trackUpdate(localX, y, localZ, blockState);
                     heightmapSurface.trackUpdate(localX, y, localZ, blockState);

@@ -73,23 +73,23 @@ public class ChunkProviderMajorRelease extends ChunkProviderForcedHeight {
                 if (surfaceDepth <= 0) {
                     int y = surfaceTopY;
                     pos.setY(y);
-                    chunk.setBlockState(pos, y < this.seaLevel ? BlockStates.WATER : BlockStates.AIR, false);
+                    chunk.setBlockState(pos, y < this.seaLevel ? BlockStates.WATER : BlockStates.AIR);
                     pos.setY(--y);
 
                     BlockState blockState;
                     while (!(blockState = chunk.getBlockState(pos)).isAir() && !blockState.isOf(this.defaultBlock.getBlock())) {
-                        chunk.setBlockState(pos, this.defaultBlock, false);
+                        chunk.setBlockState(pos, this.defaultBlock);
                         pos.setY(--y);
                     }
                 } else if (surfaceTopY < this.seaLevel - 7 - surfaceDepth) {
                     int y = surfaceTopY;
                     pos.setY(y);
-                    chunk.setBlockState(pos, BlockStates.GRAVEL, false);
+                    chunk.setBlockState(pos, BlockStates.GRAVEL);
                     pos.setY(--y);
 
                     BlockState blockState;
                     while (!(blockState = chunk.getBlockState(pos)).isAir() && !blockState.isOf(this.defaultBlock.getBlock())) {
-                        chunk.setBlockState(pos, this.defaultBlock, false);
+                        chunk.setBlockState(pos, this.defaultBlock);
                         pos.setY(--y);
                     }
                 }
@@ -97,7 +97,7 @@ public class ChunkProviderMajorRelease extends ChunkProviderForcedHeight {
                 for (int y = this.bedrockFloor; y < this.bedrockFloor + 5; y++) {
                     if (y <= this.bedrockFloor + this.random.nextInt(5)) {
                         pos.setY(y);
-                        chunk.setBlockState(pos, BlockStates.BEDROCK, false);
+                        chunk.setBlockState(pos, BlockStates.BEDROCK);
                     }
                 }
             }

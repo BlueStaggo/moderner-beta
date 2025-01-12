@@ -146,11 +146,11 @@ public abstract class ChunkProviderFinite extends ChunkProvider implements Chunk
                     
                     BlockState blockState = this.postProcessSurfaceState(chunk.getBlockState(pos), surfaceConfig, pos, isCold);
                     
-                    chunk.setBlockState(pos, blockState, false);
+                    chunk.setBlockState(pos, blockState);
 
                     // Set snow on top of snowy blocks
                     if (blockState.contains(Properties.SNOWY) && blockState.get(Properties.SNOWY).booleanValue())
-                        chunk.setBlockState(pos.up(), BlockStates.SNOW, false);
+                        chunk.setBlockState(pos.up(), BlockStates.SNOW);
                         
                 }
             }
@@ -308,7 +308,7 @@ public abstract class ChunkProviderFinite extends ChunkProvider implements Chunk
                     
                     BlockState blockState = this.postProcessTerrainState(block, blockSources, terrainState, pos, topY);
                     
-                    chunk.setBlockState(pos.set(localX, y, localZ), blockState, false);
+                    chunk.setBlockState(pos.set(localX, y, localZ), blockState);
                      
                     this.generateBedrock(chunk, block, pos);
                     

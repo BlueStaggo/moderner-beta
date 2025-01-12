@@ -10,7 +10,7 @@ import net.minecraft.registry.RegistryEntryLookup;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.util.collection.DataPool;
+import net.minecraft.util.collection.Pool;
 import net.minecraft.world.gen.feature.*;
 import net.minecraft.world.gen.stateprovider.BlockStateProvider;
 import net.minecraft.world.gen.stateprovider.WeightedBlockStateProvider;
@@ -242,8 +242,8 @@ public class ModernBetaVegetationConfiguredFeatures {
             return new RandomPatchFeatureConfig(tries, XZ_SPREAD, Y_SPREAD, feature);
         }
         
-        private static DataPool.Builder<BlockState> pool() {
-            return DataPool.<BlockState>builder();
+        private static Pool.Builder<BlockState> pool() {
+            return Pool.<BlockState>builder();
         }
         
         static {

@@ -58,9 +58,9 @@ public class ChunkProviderClassic030 extends ChunkProviderFinite {
                     pos.set(x, y, z);
                     
                     if (y < this.waterLevel - 2) {
-                        chunk.setBlockState(pos, BlockStates.BEDROCK, false);
+                        chunk.setBlockState(pos, BlockStates.BEDROCK);
                     } else if (y < this.waterLevel) {
-                        chunk.setBlockState(pos, this.defaultFluid, false);
+                        chunk.setBlockState(pos, this.defaultFluid);
                     }
                 }
             }
@@ -106,7 +106,7 @@ public class ChunkProviderClassic030 extends ChunkProviderFinite {
         
         // Set bedrock at y0 to simulate bottom of world.
         if (y == 0)
-            chunk.setBlockState(pos, BlockStates.BEDROCK, false);
+            chunk.setBlockState(pos, BlockStates.BEDROCK);
     }
 
     @Override

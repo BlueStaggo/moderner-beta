@@ -657,6 +657,20 @@ public class ModernBetaTagProviderBiome extends FabricTagProvider<Biome> {
                     ModernBetaBiomes.PE_TAIGA,
                     ModernBetaBiomes.EARLY_RELEASE_TAIGA
             );
+
+        getOrCreateTagBuilder(BiomeTags.SPAWNS_COLD_VARIANT_FARM_ANIMALS)
+            .add(
+                    ModernBetaBiomes.BETA_TAIGA,
+                    ModernBetaBiomes.PE_TAIGA,
+                    ModernBetaBiomes.LATE_BETA_TAIGA,
+                    ModernBetaBiomes.EARLY_RELEASE_TAIGA,
+                    ModernBetaBiomes.LATE_BETA_EXTREME_HILLS,
+                    ModernBetaBiomes.EARLY_RELEASE_EXTREME_HILLS
+            );
+
+        getOrCreateTagBuilder(BiomeTags.SPAWNS_WARM_VARIANT_FARM_ANIMALS)
+            .add(ModernBetaBiomes.BETA_SAVANNA)
+            .addTag(IS_RAINFOREST);
     }
     
     /*

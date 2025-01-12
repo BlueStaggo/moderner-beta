@@ -201,9 +201,9 @@ public class ChunkProviderIndev extends ChunkProviderFinite {
             return;
         
         if (y == 1 + this.bedrockFloor && chunk.getBlockState(pos.up()).isAir()) {
-            chunk.setBlockState(pos, BlockStates.LAVA, false);
+            chunk.setBlockState(pos, BlockStates.LAVA);
         } else if (y <= 1 + this.bedrockFloor) {
-            chunk.setBlockState(pos, BlockStates.BEDROCK, false);
+            chunk.setBlockState(pos, BlockStates.BEDROCK);
         }
     }
 
@@ -536,9 +536,9 @@ public class ChunkProviderIndev extends ChunkProviderFinite {
                     pos.set(x, y, z);
                     
                     if (y < this.waterLevel) {
-                        chunk.setBlockState(pos, BlockStates.BEDROCK, false);
+                        chunk.setBlockState(pos, BlockStates.BEDROCK);
                     } else if (y == this.waterLevel) {
-                        chunk.setBlockState(pos, topBlock, false);
+                        chunk.setBlockState(pos, topBlock);
                     }
                 }
             }
@@ -554,11 +554,11 @@ public class ChunkProviderIndev extends ChunkProviderFinite {
                     pos.set(x, y, z);
                     
                     if (y < this.waterLevel - 10) {
-                        chunk.setBlockState(pos, BlockStates.BEDROCK, false);
+                        chunk.setBlockState(pos, BlockStates.BEDROCK);
                     } else if (y == this.waterLevel - 10) {
-                        chunk.setBlockState(pos, BlockStates.DIRT, false);
+                        chunk.setBlockState(pos, BlockStates.DIRT);
                     } else if (y < this.waterLevel) {
-                        chunk.setBlockState(pos, this.fluidBlock, false);
+                        chunk.setBlockState(pos, this.fluidBlock);
                     }
                 }
             }

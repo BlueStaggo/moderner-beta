@@ -104,7 +104,7 @@ public class ChunkProviderSky extends ChunkProviderNoise {
                             topBlock : 
                             fillerBlock;
                         
-                        chunk.setBlockState(pos, blockState, false);
+                        chunk.setBlockState(pos, blockState);
 
                         continue;
                     }
@@ -114,7 +114,7 @@ public class ChunkProviderSky extends ChunkProviderNoise {
                     }
 
                     runDepth--;
-                    chunk.setBlockState(pos, fillerBlock, false);
+                    chunk.setBlockState(pos, fillerBlock);
 
                     // Generates layer of sandstone starting at lowest block of sand, of height 1 to 4.
                     if (runDepth == 0 && fillerBlock.isOf(Blocks.SAND)) {

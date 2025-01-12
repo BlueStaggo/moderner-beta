@@ -14,7 +14,7 @@ public class BiomeLateBetaExtremeHills {
     public static Biome create(RegistryEntryLookup<PlacedFeature> featureLookup, RegistryEntryLookup<ConfiguredCarver<?>> carverLookup) {
         SpawnSettings.Builder spawnSettings = new SpawnSettings.Builder();
         ModernBetaBiomeMobs.addCommonMobs(spawnSettings);
-        spawnSettings.spawn(SpawnGroup.CREATURE, new SpawnSettings.SpawnEntry(EntityType.LLAMA, 5, 4, 6));
+        spawnSettings.spawn(SpawnGroup.CREATURE, 5, new SpawnSettings.SpawnEntry(EntityType.LLAMA, 4, 6));
 
         GenerationSettings.LookupBackedBuilder genSettings = new GenerationSettings.LookupBackedBuilder(featureLookup, carverLookup);
         ModernBetaBiomeFeatures.addExtremeHillsFeatures(genSettings);

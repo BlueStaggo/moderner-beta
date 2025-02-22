@@ -64,12 +64,12 @@ public class ModernerBeta {
             ReloadListenerRegistry.register(ResourceType.CLIENT_RESOURCES, new ModernBetaColormapResource(
                     "textures/colormap/water.png",
                     BlockColorSampler.INSTANCE.colormapWater::setColormap
-            ));
+            ), createId("water_colormap"));
 
             ReloadListenerRegistry.register(ResourceType.CLIENT_RESOURCES, new ModernBetaColormapResource(
                     "textures/colormap/underwater.png",
                     BlockColorSampler.INSTANCE.colormapUnderwater::setColormap
-            ));
+            ), createId("underwater_colormap"));
         }
 
         if (DEV_ENV) {

@@ -1,3 +1,9 @@
+# 2.1.5
+NOTE: This release is only for 1.21.4
+
+## Changes
+- Fixed incompatibility with Architectury API 15.0.2 and NeoForge 21.4.84-beta.
+
 # 2.1.4
 
 ## Changes

@@ -85,9 +85,9 @@ public abstract class ModernBetaGraphicalListSettingsScreen extends ModernBetaGr
         return new SimpleOption<>(
             "",
             SimpleOption.emptyTooltip(),
-            (optionText, value) -> Text.of(settings.getString(i)),
+            (optionText, value) -> Text.of(settings.getString(i).orElse("")),
             new BiomePickerCallbacks(this.client::setScreen, this, this.generatorOptionsHolder, allowNone),
-            settings.getString(i),
+            settings.getString(i).orElse(""),
             value -> {
                 settings.remove(i);
                 settings.add(i, NbtString.of(value));
@@ -100,11 +100,11 @@ public abstract class ModernBetaGraphicalListSettingsScreen extends ModernBetaGr
         return new SimpleOption<>(
             "",
             SimpleOption.emptyTooltip(),
-            (optionText, value) -> Text.of(settings.getCompound(i).getString(subKey)),
+            (optionText, value) -> Text.of(settings.getCompound(i).orElseThrow().method_68564(subKey, "")),
             new BiomePickerCallbacks(this.client::setScreen, this, this.generatorOptionsHolder, allowNone),
-            settings.getCompound(i).getString(subKey),
+            settings.getCompound(i).orElseThrow().method_68564(subKey, ""),
             value -> {
-                settings.getCompound(i).put(subKey, NbtString.of(value));
+                settings.getCompound(i).orElseThrow().put(subKey, NbtString.of(value));
                 this.clearAndInit();
             }
         );
@@ -116,8 +116,8 @@ public abstract class ModernBetaGraphicalListSettingsScreen extends ModernBetaGr
             SimpleOption.emptyTooltip(),
             (optionText, value) -> GameOptions.getGenericValueText(this.getText(subKey), Text.literal("%.3f".formatted(value))),
             new FloatSliderCallbacks(min, max),
-            settings.getCompound(i).getFloat(subKey),
-            value -> settings.getCompound(i).putFloat(subKey, value)
+            settings.getCompound(i).orElseThrow().getFloat(subKey).orElse(0.0F),
+            value -> settings.getCompound(i).orElseThrow().putFloat(subKey, value)
         );
     }
 
@@ -126,24 +126,24 @@ public abstract class ModernBetaGraphicalListSettingsScreen extends ModernBetaGr
             new SimpleOption<>(
                 "",
                 SimpleOption.emptyTooltip(),
-                (optionText, value) -> Text.of(settings.getString(i)),
+                (optionText, value) -> Text.of(settings.getString(i).orElseThrow()),
                 new IntegerFieldCallbacks(Text.translatable("createWorld.customize.modern_beta.settings.biomeInfo.type").getString() + ": "),
-                BiomeInfo.parse(settings.getString(i)).getRight(),
+                BiomeInfo.parse(settings.getString(i).orElseThrow()).getRight(),
                 value -> {
                     NbtElement removedElement = settings.remove(i);
-                    String removedBiome = BiomeInfo.parse(removedElement.asString()).getLeft();
+                    String removedBiome = BiomeInfo.parse(removedElement.method_68658().orElseThrow()).getLeft();
                     settings.add(i, NbtString.of(BiomeInfo.makeString(removedBiome, value)));
                 }
             ),
             new SimpleOption<>(
                 "",
                 SimpleOption.emptyTooltip(),
-                (optionText, value) -> Text.of(settings.getString(i)),
+                (optionText, value) -> Text.of(settings.getString(i).orElseThrow()),
                 new BiomePickerCallbacks(this.client::setScreen, this, this.generatorOptionsHolder, allowNone),
-                BiomeInfo.parse(settings.getString(i)).getLeft(),
+                BiomeInfo.parse(settings.getString(i).orElseThrow()).getLeft(),
                 value -> {
                     NbtElement removedElement = settings.remove(i);
-                    int removedType = BiomeInfo.parse(removedElement.asString()).getRight();
+                    int removedType = BiomeInfo.parse(removedElement.method_68658().orElseThrow()).getRight();
                     settings.add(i, NbtString.of(BiomeInfo.makeString(value, removedType)));
                     this.clearAndInit();
                 }

@@ -15,6 +15,7 @@ import net.minecraft.world.biome.Biome;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class FractalSettings {
     public final List<BiomeInfo> biomes;
@@ -79,7 +80,8 @@ public class FractalSettings {
 		if (reader.contains(tag)) {
 			return reader.readListOrThrow(tag)
 				.stream()
-				.map(NbtElement::asString)
+				.map(NbtElement::method_68658)
+				.map(Optional::orElseThrow)
 				.toList();
 		}
 
@@ -97,7 +99,7 @@ public class FractalSettings {
 		if (reader.contains(tag)) {
 			Map<String, String> map = new HashMap<>();
 			NbtCompound compound = reader.readCompoundOrThrow(tag);
-			compound.getKeys().forEach(key -> map.put(key, compound.getString(key)));
+			compound.getKeys().forEach(key -> map.put(key, compound.getString(key).orElse("")));
 			return map;
 		}
 
@@ -118,7 +120,8 @@ public class FractalSettings {
 			NbtReader compoundReader = new NbtReader(compound);
 			compound.getKeys().forEach(key -> map.put(key, compoundReader.readListOrThrow(key)
 					.stream()
-					.map(NbtElement::asString)
+					.map(NbtElement::method_68658)
+					.map(Optional::orElseThrow)
 					.toList()));
 			return map;
 		}

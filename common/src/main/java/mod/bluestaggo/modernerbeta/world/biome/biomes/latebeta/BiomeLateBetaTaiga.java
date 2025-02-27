@@ -28,7 +28,7 @@ public class BiomeLateBetaTaiga {
         DefaultBiomeFeatures.addTaigaTrees(genSettings);
         DefaultBiomeFeatures.addDefaultFlowers(genSettings);
         DefaultBiomeFeatures.addDefaultGrass(genSettings);
-        DefaultBiomeFeatures.addDefaultVegetation(genSettings);
+        DefaultBiomeFeatures.addDefaultVegetation(genSettings, true);
         DefaultBiomeFeatures.addSweetBerryBushes(genSettings);
 
         return (new Biome.Builder())

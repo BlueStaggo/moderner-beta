@@ -76,7 +76,7 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
                 value -> Arrays.stream(options).filter(value::equals).findFirst(),
                 Codec.STRING
             ),
-            settings.getString(subKey),
+            settings.getString(subKey).orElse(""),
             value -> {
                 settings.putString(subKey, value);
                 this.clearAndInit();
@@ -98,7 +98,7 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
                 value -> Arrays.stream(options).filter(value::equals).findFirst(),
                 Codec.STRING
             ),
-            settings.getString(subKey),
+            settings.getString(subKey).orElse(""),
             value -> settings.putString(subKey, value)
         );
     }
@@ -110,7 +110,7 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
 
         return SimpleOption.ofBoolean(
             this.getTextKey(key),
-            settings.getBoolean(subKey),
+            settings.getBoolean(subKey).orElse(false),
             value -> settings.putBoolean(subKey, value)
         );
     }
@@ -137,7 +137,7 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
             SimpleOption.emptyTooltip(),
             valueTextGetter,
             intSliderCallbacks,
-            settings.getInt(subKey),
+            settings.getInt(subKey).orElse(0),
             value -> settings.putInt(subKey, value)
         );
     }
@@ -158,9 +158,9 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
         return new SimpleOption<>(
             this.getTextKey(key),
             SimpleOption.emptyTooltip(),
-            (optionText, value) -> Text.of(Integer.toString(settings.getInt(subKey))),
+            (optionText, value) -> Text.of(Integer.toString(settings.getInt(subKey).orElse(0))),
             new IntegerFieldCallbacks(prefix + ": "),
-            settings.getInt(subKey),
+            settings.getInt(subKey).orElse(0),
             value -> settings.putInt(subKey, value)
         );
     }
@@ -176,14 +176,14 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
 
         int defaultValue = 0;
         try {
-            defaultValue = Integer.parseInt(settings.getString(subKey));
+            defaultValue = Integer.parseInt(settings.getString(subKey).orElse(""));
         } catch (NumberFormatException ignored) {
         }
 
         return new SimpleOption<>(
             this.getTextKey(key),
             SimpleOption.emptyTooltip(),
-            (optionText, value) -> Text.of(settings.getString(subKey)),
+            (optionText, value) -> Text.of(settings.getString(subKey).orElse("")),
             new IntegerFieldCallbacks(prefix + ": "),
             defaultValue,
             value -> settings.putString(subKey, Integer.toString(value))
@@ -200,7 +200,7 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
             SimpleOption.emptyTooltip(),
             (optionText, value) -> GameOptions.getGenericValueText(this.getText(key), Text.literal("%.3f".formatted(value))),
             new FloatSliderCallbacks(min, max),
-            settings.getFloat(subKey),
+            settings.getFloat(subKey).orElse(0.0F),
             value -> settings.putFloat(subKey, value)
         );
     }
@@ -217,9 +217,9 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
         return new SimpleOption<>(
             this.getTextKey(key),
             SimpleOption.emptyTooltip(),
-            (optionText, value) -> Text.of(settings.getString(subKey)),
+            (optionText, value) -> Text.of(settings.getString(subKey).orElse("")),
             callbacks,
-            settings.getString(subKey),
+            settings.getString(subKey).orElse(""),
             value -> settings.putString(subKey, value)
         );
     }
@@ -239,9 +239,9 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
         return new SimpleOption<>(
             this.getTextKey(key),
             SimpleOption.emptyTooltip(),
-            (optionText, value) -> Text.of(settings.getString(subKey)),
+            (optionText, value) -> Text.of(settings.getString(subKey).orElse("")),
             new BiomePickerCallbacks(this.client::setScreen, this, this.generatorOptionsHolder, allowNone),
-            settings.getString(subKey),
+            settings.getString(subKey).orElse(""),
             value -> {
                 settings.putString(subKey, value);
                 this.clearAndInit();
@@ -258,12 +258,12 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
             new SimpleOption<>(
                 "",
                 SimpleOption.emptyTooltip(),
-                (optionText, value) -> Text.of(settings.getString(subKey)),
+                (optionText, value) -> Text.of(settings.getString(subKey).orElse("")),
                 new IntegerFieldCallbacks(Text.translatable("createWorld.customize.modern_beta.settings.biomeInfo.type").getString() + ": "),
-                BiomeInfo.parse(settings.getString(subKey)).getRight(),
+                BiomeInfo.parse(settings.getString(subKey).orElseThrow()).getRight(),
                 value -> {
                     NbtElement replacedElement = settings.get(subKey);
-                    String replacedString = replacedElement != null ? replacedElement.asString() : "";
+                    String replacedString = replacedElement != null ? replacedElement.method_68658().orElseThrow() : "";
                     String replacedBiome = BiomeInfo.parse(replacedString).getLeft();
                     settings.putString(subKey, BiomeInfo.makeString(replacedBiome, value));
                 }
@@ -271,12 +271,12 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
             new SimpleOption<>(
                 "",
                 SimpleOption.emptyTooltip(),
-                (optionText, value) -> Text.of(settings.getString(subKey)),
+                (optionText, value) -> Text.of(settings.getString(subKey).orElse("")),
                 new BiomePickerCallbacks(this.client::setScreen, this, this.generatorOptionsHolder, allowNone),
-                BiomeInfo.parse(settings.getString(subKey)).getLeft(),
+                BiomeInfo.parse(settings.getString(subKey).orElseThrow()).getLeft(),
                 value -> {
                     NbtElement replacedElement = settings.get(subKey);
-                    String replacedString = replacedElement != null ? replacedElement.asString() : "";
+                    String replacedString = replacedElement != null ? replacedElement.method_68658().orElseThrow() : "";
                     int replacedType = BiomeInfo.parse(replacedString).getRight();
                     settings.putString(subKey, BiomeInfo.makeString(value, replacedType));
                     this.clearAndInit();
@@ -296,13 +296,13 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
                 SimpleOption.emptyTooltip(),
                 (optionText, value) -> GameOptions.getGenericValueText(
                     Text.translatable("createWorld.customize.modern_beta.settings.heightConfig.depth"),
-                    Text.literal(String.format("%.2f", HeightConfig.parse(settings.getString(subKey), HeightConfig.DEFAULT).depth()))
+                    Text.literal(String.format("%.2f", HeightConfig.parse(settings.getString(subKey).orElseThrow(), HeightConfig.DEFAULT).depth()))
                 ),
                 new FloatSliderCallbacks(-2.0F, 2.0F),
-                HeightConfig.parse(settings.getString(subKey), HeightConfig.DEFAULT).depth(),
+                HeightConfig.parse(settings.getString(subKey).orElseThrow(), HeightConfig.DEFAULT).depth(),
                 value -> {
                     NbtElement replacedElement = settings.get(subKey);
-                    String replacedString = replacedElement != null ? replacedElement.asString() : "";
+                    String replacedString = replacedElement != null ? replacedElement.method_68658().orElseThrow() : "";
                     float replacedScale = HeightConfig.parse(replacedString, HeightConfig.DEFAULT).scale();
                     settings.putString(subKey, HeightConfig.makeString(MathHelper.floor(value * 100.0F) / 100.0F, replacedScale));
                 }
@@ -312,13 +312,13 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
                 SimpleOption.emptyTooltip(),
                 (optionText, value) -> GameOptions.getGenericValueText(
                     Text.translatable("createWorld.customize.modern_beta.settings.heightConfig.scale"),
-                    Text.literal(String.format("%.2f", HeightConfig.parse(settings.getString(subKey), HeightConfig.DEFAULT).scale()))
+                    Text.literal(String.format("%.2f", HeightConfig.parse(settings.getString(subKey).orElseThrow(), HeightConfig.DEFAULT).scale()))
                 ),
                 new FloatSliderCallbacks(0.0F, 5.0F),
-                HeightConfig.parse(settings.getString(subKey), HeightConfig.DEFAULT).scale(),
+                HeightConfig.parse(settings.getString(subKey).orElseThrow(), HeightConfig.DEFAULT).scale(),
                 value -> {
                     NbtElement replacedElement = settings.get(subKey);
-                    String replacedString = replacedElement != null ? replacedElement.asString() : "";
+                    String replacedString = replacedElement != null ? replacedElement.method_68658().orElseThrow() : "";
                     float replacedDepth = HeightConfig.parse(replacedString, HeightConfig.DEFAULT).depth();
                     settings.putString(subKey, HeightConfig.makeString(replacedDepth, MathHelper.floor(value * 100.0F) / 100.0F));
                 }
@@ -340,7 +340,7 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
                 Text.translatable(STRING_PREFIX + "list.title", text.getString()).getString(),
                 this,
                 this.generatorOptionsHolder,
-                settings.getList(subKey, type).copy(),
+                settings.getList(subKey).orElseThrow().copy(),
                 list -> settings.put(subKey, list)
             ))
         );
@@ -360,7 +360,7 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
                 Text.translatable(STRING_PREFIX + "list.titleMap", text.getString()).getString(),
                 this,
                 this.generatorOptionsHolder,
-                settings.getCompound(subKey),
+                settings.getCompound(subKey).orElseThrow(),
                 compound -> settings.put(subKey, compound)
             ))
         );

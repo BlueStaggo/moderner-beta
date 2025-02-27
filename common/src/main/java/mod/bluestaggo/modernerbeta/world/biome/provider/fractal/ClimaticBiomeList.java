@@ -10,6 +10,7 @@ import net.minecraft.registry.RegistryEntryLookup;
 import net.minecraft.world.biome.Biome;
 
 import java.util.List;
+import java.util.Optional;
 
 public record ClimaticBiomeList<T>(List<T> normalBiomes, List<T> rareBiomes) {
     public static ClimaticBiomeList<String> EMPTY_STRING = new ClimaticBiomeList<>(List.of(), List.of());
@@ -30,9 +31,9 @@ public record ClimaticBiomeList<T>(List<T> normalBiomes, List<T> rareBiomes) {
         NbtReader reader = new NbtReader(compound);
 
         List<String> normalBiomes = reader.readList("normal", new NbtList()).stream()
-            .map(NbtElement::asString).toList();
+            .map(NbtElement::method_68658).map(Optional::orElseThrow).toList();
         List<String> rareBiomes = reader.readList("rare", new NbtList()).stream()
-            .map(NbtElement::asString).toList();
+            .map(NbtElement::method_68658).map(Optional::orElseThrow).toList();
         return new ClimaticBiomeList<>(normalBiomes, rareBiomes);
     }
 

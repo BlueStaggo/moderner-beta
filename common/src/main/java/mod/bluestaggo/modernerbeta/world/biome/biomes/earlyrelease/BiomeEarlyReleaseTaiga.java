@@ -28,7 +28,7 @@ public class BiomeEarlyReleaseTaiga {
         DefaultBiomeFeatures.addTaigaTrees(genSettings);
         DefaultBiomeFeatures.addDefaultFlowers(genSettings);
         DefaultBiomeFeatures.addDefaultGrass(genSettings);
-        DefaultBiomeFeatures.addDefaultVegetation(genSettings);
+        DefaultBiomeFeatures.addDefaultVegetation(genSettings, true);
         DefaultBiomeFeatures.addSweetBerryBushesSnowy(genSettings);
 
         return (new Biome.Builder())

@@ -1,5 +1,6 @@
 package mod.bluestaggo.modernerbeta.client.gui.screen;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.api.registry.ModernBetaRegistries;
@@ -261,9 +262,7 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
             }
 
             private void draw(DrawContext context, int x, int y, Identifier textureId) {
-                RenderSystem.enableBlend();
                 context.drawTexture(RenderLayer::getGuiTextured, textureId, x, y, 0.0f, 0.0f, ICON_SIZE, ICON_SIZE, ICON_SIZE, ICON_SIZE);
-                RenderSystem.disableBlend();
             }
             
             private List<OrderedText> splitText(TextRenderer textRenderer, Text text) {

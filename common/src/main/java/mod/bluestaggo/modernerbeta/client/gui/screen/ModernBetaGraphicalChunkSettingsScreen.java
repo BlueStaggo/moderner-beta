@@ -36,7 +36,7 @@ public class ModernBetaGraphicalChunkSettingsScreen extends ModernBetaGraphicalC
 
     @Override
     protected void addOptions(OptionListWidget list) {
-        String chunkProvider = this.settings.getString(NbtTags.CHUNK_PROVIDER);
+        String chunkProvider = this.settings.getString(NbtTags.CHUNK_PROVIDER).orElse("");
         boolean isNoiseProvider = ModernBetaBuiltInTypes.Chunk.CHUNK_PROVIDER_NOISE.contains(chunkProvider);
         boolean isForcedHeightProvider = ModernBetaBuiltInTypes.Chunk.CHUNK_PROVIDER_FORCED_HEIGHT.contains(chunkProvider);
         boolean isFiniteProvider = ModernBetaBuiltInTypes.Chunk.CHUNK_PROVIDER_FINITE.contains(chunkProvider);
@@ -44,7 +44,7 @@ public class ModernBetaGraphicalChunkSettingsScreen extends ModernBetaGraphicalC
 
         int minY = -64;
         int maxY = 320;
-        int seaLevel = switch (settings.getString(chunkProvider)) {
+        int seaLevel = switch (settings.getString(chunkProvider).orElse("")) {
             case "early_release", "major_release" -> 63;
             default -> 64;
         };

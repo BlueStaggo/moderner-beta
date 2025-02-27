@@ -99,7 +99,7 @@ public class FractalSettings {
 		if (reader.contains(tag)) {
 			Map<String, String> map = new HashMap<>();
 			NbtCompound compound = reader.readCompoundOrThrow(tag);
-			compound.getKeys().forEach(key -> map.put(key, compound.getString(key).orElse("")));
+			compound.getKeys().forEach(key -> map.put(key, compound.getString(key).orElseThrow()));
 			return map;
 		}
 

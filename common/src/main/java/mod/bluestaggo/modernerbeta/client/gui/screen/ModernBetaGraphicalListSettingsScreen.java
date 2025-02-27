@@ -85,9 +85,9 @@ public abstract class ModernBetaGraphicalListSettingsScreen extends ModernBetaGr
         return new SimpleOption<>(
             "",
             SimpleOption.emptyTooltip(),
-            (optionText, value) -> Text.of(settings.getString(i).orElse("")),
+            (optionText, value) -> Text.of(settings.getString(i).orElseThrow()),
             new BiomePickerCallbacks(this.client::setScreen, this, this.generatorOptionsHolder, allowNone),
-            settings.getString(i).orElse(""),
+            settings.getString(i).orElseThrow(),
             value -> {
                 settings.remove(i);
                 settings.add(i, NbtString.of(value));

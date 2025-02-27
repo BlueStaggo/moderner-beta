@@ -39,7 +39,7 @@ public class ModernBetaGraphicalBiomeSettingsScreen extends ModernBetaGraphicalC
 
     @Override
     protected void addOptions(OptionListWidget list) {
-        String biomeProvider = this.settings.getString(NbtTags.BIOME_PROVIDER).orElse("");
+        String biomeProvider = this.settings.getString(NbtTags.BIOME_PROVIDER).orElseThrow();
         boolean usesNoise = ModernBetaBuiltInTypes.Biome.BIOME_PROVIDER_USES_NOISE.contains(biomeProvider);
         boolean isVoronoiProvider = ModernBetaBuiltInTypes.Biome.VORONOI.id.equals(biomeProvider);
 

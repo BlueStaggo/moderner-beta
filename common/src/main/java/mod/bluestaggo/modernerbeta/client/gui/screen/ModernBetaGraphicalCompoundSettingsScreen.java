@@ -76,7 +76,7 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
                 value -> Arrays.stream(options).filter(value::equals).findFirst(),
                 Codec.STRING
             ),
-            settings.getString(subKey).orElse(""),
+            settings.getString(subKey).orElseThrow(),
             value -> {
                 settings.putString(subKey, value);
                 this.clearAndInit();
@@ -98,7 +98,7 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
                 value -> Arrays.stream(options).filter(value::equals).findFirst(),
                 Codec.STRING
             ),
-            settings.getString(subKey).orElse(""),
+            settings.getString(subKey).orElseThrow(),
             value -> settings.putString(subKey, value)
         );
     }
@@ -176,14 +176,14 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
 
         int defaultValue = 0;
         try {
-            defaultValue = Integer.parseInt(settings.getString(subKey).orElse(""));
+            defaultValue = Integer.parseInt(settings.getString(subKey).orElse("0"));
         } catch (NumberFormatException ignored) {
         }
 
         return new SimpleOption<>(
             this.getTextKey(key),
             SimpleOption.emptyTooltip(),
-            (optionText, value) -> Text.of(settings.getString(subKey).orElse("")),
+            (optionText, value) -> Text.of(settings.getString(subKey).orElse("0")),
             new IntegerFieldCallbacks(prefix + ": "),
             defaultValue,
             value -> settings.putString(subKey, Integer.toString(value))
@@ -217,9 +217,9 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
         return new SimpleOption<>(
             this.getTextKey(key),
             SimpleOption.emptyTooltip(),
-            (optionText, value) -> Text.of(settings.getString(subKey).orElse("")),
+            (optionText, value) -> Text.of(settings.getString(subKey).orElseThrow()),
             callbacks,
-            settings.getString(subKey).orElse(""),
+            settings.getString(subKey).orElseThrow(),
             value -> settings.putString(subKey, value)
         );
     }
@@ -239,9 +239,9 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
         return new SimpleOption<>(
             this.getTextKey(key),
             SimpleOption.emptyTooltip(),
-            (optionText, value) -> Text.of(settings.getString(subKey).orElse("")),
+            (optionText, value) -> Text.of(settings.getString(subKey).orElseThrow()),
             new BiomePickerCallbacks(this.client::setScreen, this, this.generatorOptionsHolder, allowNone),
-            settings.getString(subKey).orElse(""),
+            settings.getString(subKey).orElseThrow(),
             value -> {
                 settings.putString(subKey, value);
                 this.clearAndInit();
@@ -258,7 +258,7 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
             new SimpleOption<>(
                 "",
                 SimpleOption.emptyTooltip(),
-                (optionText, value) -> Text.of(settings.getString(subKey).orElse("")),
+                (optionText, value) -> Text.of(settings.getString(subKey).orElseThrow()),
                 new IntegerFieldCallbacks(Text.translatable("createWorld.customize.modern_beta.settings.biomeInfo.type").getString() + ": "),
                 BiomeInfo.parse(settings.getString(subKey).orElseThrow()).getRight(),
                 value -> {
@@ -271,7 +271,7 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
             new SimpleOption<>(
                 "",
                 SimpleOption.emptyTooltip(),
-                (optionText, value) -> Text.of(settings.getString(subKey).orElse("")),
+                (optionText, value) -> Text.of(settings.getString(subKey).orElseThrow()),
                 new BiomePickerCallbacks(this.client::setScreen, this, this.generatorOptionsHolder, allowNone),
                 BiomeInfo.parse(settings.getString(subKey).orElseThrow()).getLeft(),
                 value -> {

@@ -29,7 +29,7 @@ public class ModernBetaGraphicalCaveBiomeSettingsScreen extends ModernBetaGraphi
 
     @Override
     protected void addOptions(OptionListWidget list) {
-        String biomeProvider = this.settings.getString(NbtTags.BIOME_PROVIDER).orElse("");
+        String biomeProvider = this.settings.getString(NbtTags.BIOME_PROVIDER).orElseThrow();
 
         list.addSingleOptionEntry(this.primarySelectionOption(NbtTags.BIOME_PROVIDER,
             Arrays.stream(ModernBetaBuiltInTypes.CaveBiome.values())

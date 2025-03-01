@@ -80,7 +80,7 @@ public class FractalSettings {
 		if (reader.contains(tag)) {
 			return reader.readListOrThrow(tag)
 				.stream()
-				.map(NbtElement::method_68658)
+				.map(NbtElement::castToString)
 				.map(Optional::orElseThrow)
 				.toList();
 		}
@@ -120,7 +120,7 @@ public class FractalSettings {
 			NbtReader compoundReader = new NbtReader(compound);
 			compound.getKeys().forEach(key -> map.put(key, compoundReader.readListOrThrow(key)
 					.stream()
-					.map(NbtElement::method_68658)
+					.map(NbtElement::castToString)
 					.map(Optional::orElseThrow)
 					.toList()));
 			return map;

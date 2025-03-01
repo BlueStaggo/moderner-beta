@@ -100,9 +100,9 @@ public abstract class ModernBetaGraphicalListSettingsScreen extends ModernBetaGr
         return new SimpleOption<>(
             "",
             SimpleOption.emptyTooltip(),
-            (optionText, value) -> Text.of(settings.getCompound(i).orElseThrow().method_68564(subKey, "")),
+            (optionText, value) -> Text.of(settings.getCompound(i).orElseThrow().getString(subKey, "")),
             new BiomePickerCallbacks(this.client::setScreen, this, this.generatorOptionsHolder, allowNone),
-            settings.getCompound(i).orElseThrow().method_68564(subKey, ""),
+            settings.getCompound(i).orElseThrow().getString(subKey, ""),
             value -> {
                 settings.getCompound(i).orElseThrow().put(subKey, NbtString.of(value));
                 this.clearAndInit();
@@ -131,7 +131,7 @@ public abstract class ModernBetaGraphicalListSettingsScreen extends ModernBetaGr
                 BiomeInfo.parse(settings.getString(i).orElseThrow()).getRight(),
                 value -> {
                     NbtElement removedElement = settings.remove(i);
-                    String removedBiome = BiomeInfo.parse(removedElement.method_68658().orElseThrow()).getLeft();
+                    String removedBiome = BiomeInfo.parse(removedElement.castToString().orElseThrow()).getLeft();
                     settings.add(i, NbtString.of(BiomeInfo.makeString(removedBiome, value)));
                 }
             ),
@@ -143,7 +143,7 @@ public abstract class ModernBetaGraphicalListSettingsScreen extends ModernBetaGr
                 BiomeInfo.parse(settings.getString(i).orElseThrow()).getLeft(),
                 value -> {
                     NbtElement removedElement = settings.remove(i);
-                    int removedType = BiomeInfo.parse(removedElement.method_68658().orElseThrow()).getRight();
+                    int removedType = BiomeInfo.parse(removedElement.castToString().orElseThrow()).getRight();
                     settings.add(i, NbtString.of(BiomeInfo.makeString(value, removedType)));
                     this.clearAndInit();
                 }

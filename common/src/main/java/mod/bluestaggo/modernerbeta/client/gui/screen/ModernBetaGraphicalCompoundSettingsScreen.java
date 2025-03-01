@@ -262,8 +262,7 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
                 new IntegerFieldCallbacks(Text.translatable("createWorld.customize.modern_beta.settings.biomeInfo.type").getString() + ": "),
                 BiomeInfo.parse(settings.getString(subKey).orElseThrow()).getRight(),
                 value -> {
-                    NbtElement replacedElement = settings.get(subKey);
-                    String replacedString = replacedElement != null ? replacedElement.method_68658().orElseThrow() : "";
+                    String replacedString = settings.getString(subKey, "");
                     String replacedBiome = BiomeInfo.parse(replacedString).getLeft();
                     settings.putString(subKey, BiomeInfo.makeString(replacedBiome, value));
                 }
@@ -275,8 +274,7 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
                 new BiomePickerCallbacks(this.client::setScreen, this, this.generatorOptionsHolder, allowNone),
                 BiomeInfo.parse(settings.getString(subKey).orElseThrow()).getLeft(),
                 value -> {
-                    NbtElement replacedElement = settings.get(subKey);
-                    String replacedString = replacedElement != null ? replacedElement.method_68658().orElseThrow() : "";
+                    String replacedString = settings.getString(subKey, "");
                     int replacedType = BiomeInfo.parse(replacedString).getRight();
                     settings.putString(subKey, BiomeInfo.makeString(value, replacedType));
                     this.clearAndInit();
@@ -301,8 +299,7 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
                 new FloatSliderCallbacks(-2.0F, 2.0F),
                 HeightConfig.parse(settings.getString(subKey).orElseThrow(), HeightConfig.DEFAULT).depth(),
                 value -> {
-                    NbtElement replacedElement = settings.get(subKey);
-                    String replacedString = replacedElement != null ? replacedElement.method_68658().orElseThrow() : "";
+                    String replacedString = settings.getString(subKey, "");
                     float replacedScale = HeightConfig.parse(replacedString, HeightConfig.DEFAULT).scale();
                     settings.putString(subKey, HeightConfig.makeString(MathHelper.floor(value * 100.0F) / 100.0F, replacedScale));
                 }
@@ -317,8 +314,7 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
                 new FloatSliderCallbacks(0.0F, 5.0F),
                 HeightConfig.parse(settings.getString(subKey).orElseThrow(), HeightConfig.DEFAULT).scale(),
                 value -> {
-                    NbtElement replacedElement = settings.get(subKey);
-                    String replacedString = replacedElement != null ? replacedElement.method_68658().orElseThrow() : "";
+                    String replacedString = settings.getString(subKey, "");
                     float replacedDepth = HeightConfig.parse(replacedString, HeightConfig.DEFAULT).depth();
                     settings.putString(subKey, HeightConfig.makeString(replacedDepth, MathHelper.floor(value * 100.0F) / 100.0F));
                 }

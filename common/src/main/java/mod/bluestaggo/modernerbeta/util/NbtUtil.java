@@ -75,61 +75,61 @@ public class NbtUtil {
      */
     
     public static String toStringOrThrow(NbtElement element) {
-        return element.method_68658()
+        return element.castToString()
                 .orElseThrow(() -> new IllegalArgumentException("[Modern Beta] NBT element is not a string! Type:" + element.getType()));
     }
     
     public static String toString(NbtElement element, String alternate) {
-        return element.method_68658().orElse(alternate);
+        return element.castToString().orElse(alternate);
     }
     
     public static int toIntOrThrow(NbtElement element) {
-        return element.method_68602()
+        return element.castToInt()
                 .orElseThrow(() -> new IllegalArgumentException("[Modern Beta] NBT element is not an int! Type: " + element.getType()));
     }
     
     public static int toInt(NbtElement element, int alternate) {
-        return element.method_68602().orElse(alternate);
+        return element.castToInt().orElse(alternate);
     }
     
     public static float toFloatOrThrow(NbtElement element) {
-        return element.method_68604()
+        return element.castToFloat()
                 .orElseThrow(() -> new IllegalArgumentException("[Modern Beta] NBT element is not a float! Type: " + element.getType()));
     }
     
     public static float toFloat(NbtElement element, float alternate) {
-        return element.method_68604().orElse(alternate);
+        return element.castToFloat().orElse(alternate);
     }
     
     public static double toDoubleOrThrow(NbtElement element) {
-        return element.method_68605()
+        return element.castToDouble()
                 .orElseThrow(() -> new IllegalArgumentException("[Modern Beta] NBT element is not a double! Type: " + element.getType()));
     }
     
     public static double toDouble(NbtElement element, double alternate) {
-        return element.method_68605().orElse(alternate);
+        return element.castToDouble().orElse(alternate);
     }
     
     public static boolean toBooleanOrThrow(NbtElement element) {
-        return element.method_68606()
+        return element.castToBoolean()
                 .orElseThrow(() -> new IllegalArgumentException("[Modern Beta] NBT element is not a boolean! Type: " + element.getType()));
     }
     
     public static boolean toBoolean(NbtElement element, boolean alternate) {
-        return element.method_68606().orElse(alternate);
+        return element.castToBoolean().orElse(alternate);
     }
     
     public static NbtCompound toCompoundOrThrow(NbtElement element) {
-        return element.method_68571()
+        return element.castToNbtCompound()
                 .orElseThrow(() -> new IllegalArgumentException("[Modern Beta] NBT element is not a compound! Type: " + element.getType()));
     }
     
     public static NbtCompound toCompound(NbtElement element, NbtCompound alternate) {
-        return element.method_68571().orElse(alternate);
+        return element.castToNbtCompound().orElse(alternate);
     }
     
     public static NbtList toListOrThrow(NbtElement element) {
-        return element.method_68592()
+        return element.castToNbtList()
                 .orElseThrow(() -> new IllegalArgumentException("[Modern Beta] NBT element is not a list! Type: " + element.getType()));
     }
 }

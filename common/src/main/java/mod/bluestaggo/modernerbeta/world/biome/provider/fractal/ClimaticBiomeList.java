@@ -31,9 +31,9 @@ public record ClimaticBiomeList<T>(List<T> normalBiomes, List<T> rareBiomes) {
         NbtReader reader = new NbtReader(compound);
 
         List<String> normalBiomes = reader.readList("normal", new NbtList()).stream()
-            .map(NbtElement::method_68658).map(Optional::orElseThrow).toList();
+            .map(NbtElement::castToString).map(Optional::orElseThrow).toList();
         List<String> rareBiomes = reader.readList("rare", new NbtList()).stream()
-            .map(NbtElement::method_68658).map(Optional::orElseThrow).toList();
+            .map(NbtElement::castToString).map(Optional::orElseThrow).toList();
         return new ClimaticBiomeList<>(normalBiomes, rareBiomes);
     }
 

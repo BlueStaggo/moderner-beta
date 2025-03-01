@@ -1,7 +1,5 @@
 package mod.bluestaggo.modernerbeta.client.gui.screen;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.api.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;

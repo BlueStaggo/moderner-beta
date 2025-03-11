@@ -131,7 +131,7 @@ public abstract class ModernBetaGraphicalListSettingsScreen extends ModernBetaGr
                 BiomeInfo.parse(settings.getString(i).orElseThrow()).getRight(),
                 value -> {
                     NbtElement removedElement = settings.remove(i);
-                    String removedBiome = BiomeInfo.parse(removedElement.castToString().orElseThrow()).getLeft();
+                    String removedBiome = BiomeInfo.parse(removedElement.asString().orElseThrow()).getLeft();
                     settings.add(i, NbtString.of(BiomeInfo.makeString(removedBiome, value)));
                 }
             ),
@@ -143,7 +143,7 @@ public abstract class ModernBetaGraphicalListSettingsScreen extends ModernBetaGr
                 BiomeInfo.parse(settings.getString(i).orElseThrow()).getLeft(),
                 value -> {
                     NbtElement removedElement = settings.remove(i);
-                    int removedType = BiomeInfo.parse(removedElement.castToString().orElseThrow()).getRight();
+                    int removedType = BiomeInfo.parse(removedElement.asString().orElseThrow()).getRight();
                     settings.add(i, NbtString.of(BiomeInfo.makeString(value, removedType)));
                     this.clearAndInit();
                 }

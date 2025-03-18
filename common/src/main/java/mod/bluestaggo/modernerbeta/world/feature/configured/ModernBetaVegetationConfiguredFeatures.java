@@ -131,78 +131,102 @@ public class ModernBetaVegetationConfiguredFeatures {
     }
 
     private static RandomFeatureConfig createOakTreeConfig(RegistryEntryLookup<PlacedFeature> registryPlaced, boolean bees) {
+        RegistryEntry.Reference<PlacedFeature> fallenOak = registryPlaced.getOrThrow(TreePlacedFeatures.FALLEN_OAK_TREE);
         RegistryEntry.Reference<PlacedFeature> oak = registryPlaced.getOrThrow(TreePlacedFeatures.OAK_CHECKED);
         RegistryEntry.Reference<PlacedFeature> oakBees = registryPlaced.getOrThrow(TreePlacedFeatures.OAK_BEES_0002);
         
-        return new RandomFeatureConfig(List.of(), bees ? oakBees : oak);
+        return new RandomFeatureConfig(List.of(withChance(fallenOak, 1.0f / 80.0f)), bees ? oakBees : oak);
     }
     
     private static RandomFeatureConfig createDefaultRandomTreeConfig(RegistryEntryLookup<PlacedFeature> registryPlaced, boolean bees) {
         RegistryEntry.Reference<PlacedFeature> fancyOak = registryPlaced.getOrThrow(ModernBetaTreePlacedFeatures.FANCY_OAK);
+        RegistryEntry.Reference<PlacedFeature> fallenOak = registryPlaced.getOrThrow(TreePlacedFeatures.FALLEN_OAK_TREE);
         RegistryEntry.Reference<PlacedFeature> oak = registryPlaced.getOrThrow(TreePlacedFeatures.OAK_CHECKED);
         RegistryEntry.Reference<PlacedFeature> oakBees = registryPlaced.getOrThrow(TreePlacedFeatures.OAK_BEES_0002);
         
-        return new RandomFeatureConfig(List.of(withChance(fancyOak, 0.1f)), bees ? oakBees : oak);
+        return new RandomFeatureConfig(List.of(withChance(fancyOak, 0.1f), withChance(fallenOak, 1.0f / 80.0f)), bees ? oakBees : oak);
     }
     
     private static RandomFeatureConfig createInfdevRandomTreeConfig(RegistryEntryLookup<PlacedFeature> registryPlaced, boolean bees) {
         RegistryEntry.Reference<PlacedFeature> fancyOak = registryPlaced.getOrThrow(ModernBetaTreePlacedFeatures.FANCY_OAK);
+        RegistryEntry.Reference<PlacedFeature> fallenOak = registryPlaced.getOrThrow(TreePlacedFeatures.FALLEN_OAK_TREE);
         RegistryEntry.Reference<PlacedFeature> oak = registryPlaced.getOrThrow(TreePlacedFeatures.OAK_CHECKED);
         RegistryEntry.Reference<PlacedFeature> oakBees = registryPlaced.getOrThrow(TreePlacedFeatures.OAK_BEES_0002);
         
-        return new RandomFeatureConfig(List.of(withChance(bees ? oakBees : oak, 0.1f)), fancyOak);
+        return new RandomFeatureConfig(List.of(withChance(bees ? oakBees : oak, 0.1f), withChance(fallenOak, 1.0f / 80.0f)), fancyOak);
     }
 
     private static RandomFeatureConfig createOakForestRandomTreeConfig(RegistryEntryLookup<PlacedFeature> registryPlaced, boolean bees) {
         RegistryEntry.Reference<PlacedFeature> fancyOak = registryPlaced.getOrThrow(ModernBetaTreePlacedFeatures.FANCY_OAK);
+        RegistryEntry.Reference<PlacedFeature> fallenOak = registryPlaced.getOrThrow(TreePlacedFeatures.FALLEN_OAK_TREE);
         RegistryEntry.Reference<PlacedFeature> oak = registryPlaced.getOrThrow(TreePlacedFeatures.OAK_CHECKED);
         RegistryEntry.Reference<PlacedFeature> oakBees = registryPlaced.getOrThrow(TreePlacedFeatures.OAK_BEES_0002);
 
-        return new RandomFeatureConfig(List.of(withChance(fancyOak, 1.0f / 3.0f)), bees ? oakBees : oak);
+        return new RandomFeatureConfig(List.of(withChance(fancyOak, 1.0f / 3.0f), withChance(fallenOak, 1.0f / 80.0f)), bees ? oakBees : oak);
     }
     
     private static RandomFeatureConfig createForestRandomTreeConfig(RegistryEntryLookup<PlacedFeature> registryPlaced, boolean bees) {
         RegistryEntry.Reference<PlacedFeature> fancyOak = registryPlaced.getOrThrow(ModernBetaTreePlacedFeatures.FANCY_OAK);
+        RegistryEntry.Reference<PlacedFeature> fallenOak = registryPlaced.getOrThrow(TreePlacedFeatures.FALLEN_OAK_TREE);
         RegistryEntry.Reference<PlacedFeature> oak = registryPlaced.getOrThrow(TreePlacedFeatures.OAK_CHECKED);
         RegistryEntry.Reference<PlacedFeature> oakBees = registryPlaced.getOrThrow(TreePlacedFeatures.OAK_BEES_0002);
-        
+
+        RegistryEntry.Reference<PlacedFeature> fallenBirch = registryPlaced.getOrThrow(TreePlacedFeatures.FALLEN_BIRCH_TREE);
         RegistryEntry.Reference<PlacedFeature> birch = registryPlaced.getOrThrow(TreePlacedFeatures.BIRCH_CHECKED);
         RegistryEntry.Reference<PlacedFeature> birchBees = registryPlaced.getOrThrow(TreePlacedFeatures.BIRCH_BEES_0002);
         
-        return new RandomFeatureConfig(List.of(withChance(bees ? birchBees : birch, 0.2f), withChance(fancyOak, 1.0f / 3.0f)), bees ? oakBees : oak);
+        return new RandomFeatureConfig(
+                List.of(
+                        withChance(fallenBirch, 1.0f / 400.0f),
+                        withChance(bees ? birchBees : birch, 0.2f),
+                        withChance(fancyOak, 1.0f / 3.0f),
+                        withChance(fallenOak, 1.0f / 80.0f)
+                ), bees ? oakBees : oak
+        );
     }
     
     private static RandomFeatureConfig createRainforestRandomTreeConfig(RegistryEntryLookup<PlacedFeature> registryPlaced, boolean bees) {
         RegistryEntry.Reference<PlacedFeature> fancyOak = registryPlaced.getOrThrow(ModernBetaTreePlacedFeatures.FANCY_OAK);
+        RegistryEntry.Reference<PlacedFeature> fallenOak = registryPlaced.getOrThrow(TreePlacedFeatures.FALLEN_OAK_TREE);
         RegistryEntry.Reference<PlacedFeature> oak = registryPlaced.getOrThrow(TreePlacedFeatures.OAK_CHECKED);
         RegistryEntry.Reference<PlacedFeature> oakBees = registryPlaced.getOrThrow(TreePlacedFeatures.OAK_BEES_0002);
         
-        return new RandomFeatureConfig(List.of(withChance(fancyOak, 1.0f / 3.0f)), bees ? oakBees : oak);
+        return new RandomFeatureConfig(List.of(withChance(fancyOak, 1.0f / 3.0f), withChance(fallenOak, 1.0f / 80.0f)), bees ? oakBees : oak);
     }
     
     private static RandomFeatureConfig createSeasonalForestRandomTreeConfig(RegistryEntryLookup<PlacedFeature> registryPlaced, boolean bees) {
         RegistryEntry.Reference<PlacedFeature> fancyOak = registryPlaced.getOrThrow(ModernBetaTreePlacedFeatures.FANCY_OAK);
+        RegistryEntry.Reference<PlacedFeature> fallenOak = registryPlaced.getOrThrow(TreePlacedFeatures.FALLEN_OAK_TREE);
         RegistryEntry.Reference<PlacedFeature> oak = registryPlaced.getOrThrow(TreePlacedFeatures.OAK_CHECKED);
         RegistryEntry.Reference<PlacedFeature> oakBees = registryPlaced.getOrThrow(TreePlacedFeatures.OAK_BEES_0002);
         
-        return new RandomFeatureConfig(List.of(withChance(fancyOak, 0.1f)), bees ? oakBees : oak);
+        return new RandomFeatureConfig(List.of(withChance(fancyOak, 0.1f), withChance(fallenOak, 1.0f / 80.0f)), bees ? oakBees : oak);
     }
 
     private static RandomFeatureConfig createTaigaRandomTreeConfig(RegistryEntryLookup<PlacedFeature> registryPlaced) {
         RegistryEntry.Reference<PlacedFeature> pine = registryPlaced.getOrThrow(TreePlacedFeatures.PINE_CHECKED);
+        RegistryEntry.Reference<PlacedFeature> fallenSpruce = registryPlaced.getOrThrow(TreePlacedFeatures.FALLEN_SPRUCE_TREE);
         RegistryEntry.Reference<PlacedFeature> spruce = registryPlaced.getOrThrow(TreePlacedFeatures.SPRUCE_CHECKED);
         
-        return new RandomFeatureConfig(List.of(withChance(pine, 1.0f / 3.0f)), spruce);
+        return new RandomFeatureConfig(List.of(withChance(pine, 1.0f / 3.0f), withChance(fallenSpruce, 1.0f / 80.0f)), spruce);
     }
     
     private static RandomFeatureConfig createPEForestRandomTreeConfig(RegistryEntryLookup<PlacedFeature> registryPlaced, boolean bees) {
+        RegistryEntry.Reference<PlacedFeature> fallenOak = registryPlaced.getOrThrow(TreePlacedFeatures.FALLEN_OAK_TREE);
         RegistryEntry.Reference<PlacedFeature> oak = registryPlaced.getOrThrow(TreePlacedFeatures.OAK_CHECKED);
         RegistryEntry.Reference<PlacedFeature> oakBees = registryPlaced.getOrThrow(TreePlacedFeatures.OAK_BEES_0002);
-        
+
+        RegistryEntry.Reference<PlacedFeature> fallenBirch = registryPlaced.getOrThrow(TreePlacedFeatures.FALLEN_BIRCH_TREE);
         RegistryEntry.Reference<PlacedFeature> birch = registryPlaced.getOrThrow(TreePlacedFeatures.BIRCH_CHECKED);
         RegistryEntry.Reference<PlacedFeature> birchBees = registryPlaced.getOrThrow(TreePlacedFeatures.BIRCH_BEES_0002);
         
-        return new RandomFeatureConfig(List.of(withChance(bees ? birchBees : birch, 0.2f)), bees ? oak : oakBees);
+        return new RandomFeatureConfig(
+                List.of(
+                        withChance(fallenBirch, 1.0f / 400.0f),
+                        withChance(bees ? birchBees : birch, 0.2f),
+                        withChance(fallenOak, 1.0f / 80.0f)
+                ), bees ? oak : oakBees
+        );
     }
 
     private static RandomFeatureConfig createOak14a08TreeConfig(RegistryEntryLookup<PlacedFeature> registryPlaced, boolean bees) {

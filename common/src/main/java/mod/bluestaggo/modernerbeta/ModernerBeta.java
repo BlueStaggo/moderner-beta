@@ -17,7 +17,6 @@ import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
 import mod.bluestaggo.modernerbeta.world.feature.ModernBetaFeatures;
 import mod.bluestaggo.modernerbeta.world.feature.ModernBetaFoliagePlacers;
 import mod.bluestaggo.modernerbeta.world.feature.placement.ModernBetaPlacementTypes;
-import net.fabricmc.api.EnvType;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
@@ -28,7 +27,6 @@ public class ModernerBeta {
     public static final String MOD_ID = "moderner_beta";
     public static final String MOD_NAME = "Moderner Beta";
 
-    public static final boolean CLIENT_ENV = Platform.getEnv() == EnvType.CLIENT;
     public static final boolean DEV_ENV = Platform.isDevelopmentEnvironment();
 
     public static final ModernBetaConfig CONFIG = AutoConfig.register(ModernBetaConfig.class, GsonConfigSerializer::new).getConfig();
@@ -56,9 +54,17 @@ public class ModernerBeta {
         ModernBetaBuiltInProviders.registerSettingsPresets();
         ModernBetaBuiltInProviders.registerSettingsPresetCategories();
 
-        if (CLIENT_ENV) {
-            // Override default biome grass/foliage colors
-            BlockColors.register();
+        if (DEV_ENV) {
+            DebugProviderSettingsCommand.register();
+        }
+
+        // Initializes chunk and biome providers at server start-up.
+        LifecycleEvent.SERVER_BEFORE_START.register(ModernBetaWorldInitializer::init);
+    }
+
+    public static void clientInit() {
+        // Override default biome grass/foliage colors
+        BlockColors.register();
 
             // Load colormaps
             ReloadListenerRegistry.register(ResourceType.CLIENT_RESOURCES, new ModernBetaColormapResource(
@@ -71,14 +77,6 @@ public class ModernerBeta {
                     BlockColorSampler.INSTANCE.colormapUnderwater::setColormap
             ));
         }
-
-        if (DEV_ENV) {
-            DebugProviderSettingsCommand.register();
-        }
-
-        // Initializes chunk and biome providers at server start-up.
-        LifecycleEvent.SERVER_BEFORE_START.register(ModernBetaWorldInitializer::init);
-    }
 
     public static Identifier createId(String name) {
         return new Identifier(MOD_ID, name);

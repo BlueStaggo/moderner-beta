@@ -32,6 +32,9 @@
     "main": [
       "mod.bluestaggo.modernerbeta.fabric.ModernerBetaFabric"
     ],
+    "client": [
+      "mod.bluestaggo.modernerbeta.fabric.ModernerBetaFabricClient"
+    ],
     "modmenu": [
       "mod.bluestaggo.modernerbeta.fabric.config.ModernBetaModMenu"
     ],

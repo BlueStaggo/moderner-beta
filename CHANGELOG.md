@@ -1,2 +1,2 @@
 ## Changes
-- Fixed custom fractal edge variants not being used
+- Moved client-side initialisation code to be handled entirely by client-side code

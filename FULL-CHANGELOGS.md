@@ -1,3 +1,7 @@
+# 2.1.7
+## Changes
+- Moved client-side initialisation code to be handled entirely by client-side code
+
 # 2.1.5
 NOTE: This release is only for 1.21.4
 

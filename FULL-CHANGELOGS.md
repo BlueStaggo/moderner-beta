@@ -1,3 +1,8 @@
+# 2.1.8
+## Fixes
+- Fixed sea level not being set properly for chunk provider when entering chunk provider settings
+- Fixed crash when opening chunk provider settings.
+
 # 2.1.7
 ## Changes
 - Moved client-side initialisation code to be handled entirely by client-side code

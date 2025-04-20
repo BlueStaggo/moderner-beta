@@ -44,7 +44,7 @@ public class ModernBetaGraphicalChunkSettingsScreen extends ModernBetaGraphicalC
 
         int minY = -64;
         int maxY = 320;
-        int seaLevel = switch (settings.getString(chunkProvider).orElseThrow()) {
+        int seaLevel = switch (chunkProvider) {
             case "early_release", "major_release" -> 63;
             default -> 64;
         };

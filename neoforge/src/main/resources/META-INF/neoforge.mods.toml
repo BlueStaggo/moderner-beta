@@ -19,7 +19,7 @@ logoFile = "assets/moderner_beta/banner.png"
 
 [[dependencies.moderner_beta]]
 modId = "neoforge"
-versionRange = "[21.0-beta,)"
+versionRange = "[21.0.110-beta,)"
 ordering = "NONE"
 side = "BOTH"
 

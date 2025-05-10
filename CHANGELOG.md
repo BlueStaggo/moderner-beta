@@ -1,2 +1,2 @@
-## Fixes
-- Fixed sea level not being set properly for chunk provider when entering chunk provider settings
+## Changes
+- Bumped NeoForge to 21.0.110-beta to fix crashes when entering the mod config screen.

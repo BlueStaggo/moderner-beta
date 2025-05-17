@@ -2,12 +2,9 @@ package mod.bluestaggo.modernerbeta;
 
 import dev.architectury.event.events.common.LifecycleEvent;
 import dev.architectury.platform.Platform;
-import dev.architectury.registry.ReloadListenerRegistry;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
-import mod.bluestaggo.modernerbeta.client.color.BlockColorSampler;
 import mod.bluestaggo.modernerbeta.client.color.BlockColors;
-import mod.bluestaggo.modernerbeta.client.resource.ModernBetaColormapResource;
 import mod.bluestaggo.modernerbeta.command.DebugProviderSettingsCommand;
 import mod.bluestaggo.modernerbeta.config.ModernBetaConfig;
 import mod.bluestaggo.modernerbeta.world.ModernBetaWorldInitializer;
@@ -17,7 +14,6 @@ import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
 import mod.bluestaggo.modernerbeta.world.feature.ModernBetaFeatures;
 import mod.bluestaggo.modernerbeta.world.feature.ModernBetaFoliagePlacers;
 import mod.bluestaggo.modernerbeta.world.feature.placement.ModernBetaPlacementTypes;
-import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,17 +61,6 @@ public class ModernerBeta {
     public static void clientInit() {
         // Override default biome grass/foliage colors
         BlockColors.register();
-
-        // Load colormaps
-        ReloadListenerRegistry.register(ResourceType.CLIENT_RESOURCES, new ModernBetaColormapResource(
-                "textures/colormap/water.png",
-                BlockColorSampler.INSTANCE.colormapWater::setColormap
-        ), createId("water_colormap"));
-
-        ReloadListenerRegistry.register(ResourceType.CLIENT_RESOURCES, new ModernBetaColormapResource(
-                "textures/colormap/underwater.png",
-                BlockColorSampler.INSTANCE.colormapUnderwater::setColormap
-        ), createId("underwater_colormap"));
     }
 
     public static Identifier createId(String name) {

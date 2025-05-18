@@ -50,7 +50,6 @@
     "fabric": "*",
     "minecraft": ">=1.21",
     "java": ">=21",
-    "cloth-config2": "*",
-    "architectury": "*"
+    "cloth-config2": "*"
   }
 }

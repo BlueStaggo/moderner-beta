@@ -14,6 +14,6 @@ public class ModernBetaMiscConfiguredFeatures {
     public static void bootstrap(Registerable<?> registerable) {
         Registerable<ConfiguredFeature<?, ?>> featureRegisterable = (Registerable<ConfiguredFeature<?, ?>>)registerable;
         
-        ConfiguredFeatures.register(featureRegisterable, FREEZE_TOP_LAYER, ModernBetaFeatures.FREEZE_TOP_LAYER.get());
+        ConfiguredFeatures.register(featureRegisterable, FREEZE_TOP_LAYER, ModernBetaFeatures.FREEZE_TOP_LAYER);
     }
 }

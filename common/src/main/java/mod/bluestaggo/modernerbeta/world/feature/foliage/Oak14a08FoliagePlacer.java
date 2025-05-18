@@ -25,7 +25,7 @@ public class Oak14a08FoliagePlacer extends FoliagePlacer {
 
 	@Override
 	protected FoliagePlacerType<?> getType() {
-		return ModernBetaFoliagePlacers.OAK_14A_08_FOLIAGE_PLACER.get();
+		return ModernBetaFoliagePlacers.OAK_14A_08_FOLIAGE_PLACER;
 	}
 
 	@Override

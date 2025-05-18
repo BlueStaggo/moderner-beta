@@ -50,8 +50,8 @@ public class ModernBetaOreConfiguredFeatures {
             OreFeatureConfig.createTarget(new TagMatchRuleTest(BlockTags.LAPIS_ORES), Blocks.AIR.getDefaultState())
         );
         
-        ConfiguredFeatures.register(featureRegisterable, ORE_CLAY, ModernBetaFeatures.ORE_CLAY.get(), new OreFeatureConfig(new BlockMatchRuleTest(Blocks.SAND), Blocks.CLAY.getDefaultState(), 33));
+        ConfiguredFeatures.register(featureRegisterable, ORE_CLAY, ModernBetaFeatures.ORE_CLAY, new OreFeatureConfig(new BlockMatchRuleTest(Blocks.SAND), Blocks.CLAY.getDefaultState(), 33));
         ConfiguredFeatures.register(featureRegisterable, ORE_EMERALD_Y95, Feature.ORE, new OreFeatureConfig(emeraldTargets, 8, 0.9f));
-        ConfiguredFeatures.register(featureRegisterable, CAVE_INFDEV_325, ModernBetaFeatures.CAVE_INFDEV_325.get(), new OreFeatureConfig(caveTargets, 16, 0.0f));
+        ConfiguredFeatures.register(featureRegisterable, CAVE_INFDEV_325, ModernBetaFeatures.CAVE_INFDEV_325, new OreFeatureConfig(caveTargets, 16, 0.0f));
     }
 }

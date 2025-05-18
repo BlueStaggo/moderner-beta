@@ -41,7 +41,7 @@ public class Infdev325CavePlacementModifier extends PlacementModifier {
 
     @Override
     public PlacementModifierType<?> getType() {
-        return ModernBetaPlacementTypes.INFDEV_325_CAVES.get();
+        return ModernBetaPlacementTypes.INFDEV_325_CAVES;
     }
 
     @Override

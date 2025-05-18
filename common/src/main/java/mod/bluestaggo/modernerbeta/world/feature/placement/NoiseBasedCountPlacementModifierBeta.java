@@ -29,7 +29,7 @@ public class NoiseBasedCountPlacementModifierBeta extends NoiseBasedCountPlaceme
     
     @Override
     public PlacementModifierType<?> getType() {
-        return ModernBetaPlacementTypes.BETA_NOISE_BASED_COUNT.get();
+        return ModernBetaPlacementTypes.BETA_NOISE_BASED_COUNT;
     }
 
 }

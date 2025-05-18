@@ -83,7 +83,7 @@ public class ModernBetaConfiguredCarvers {
             )
         );
     
-        carverRegisterable.register(BETA_CAVE, ModernBetaCarvers.BETA_CAVE.get().configure(configCave));
+        carverRegisterable.register(BETA_CAVE, ModernBetaCarvers.BETA_CAVE.configure(configCave));
         carverRegisterable.register(BETA_CAVE_DEEP, Carver.CAVE.configure(configCaveDeep));
         carverRegisterable.register(BETA_CANYON, Carver.RAVINE.configure(configRavine));
     }

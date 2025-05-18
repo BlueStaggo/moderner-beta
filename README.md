@@ -5,7 +5,6 @@
     <p align="center">
         <img src="banner.png" alt="Moderner Beta Banner"/>
         <hr/>
-        <img src="https://raw.githubusercontent.com/intergrav/devins-badges/c7fd18efdadd1c3f12ae56b49afd834640d2d797/assets/cozy/requires/architectury-api_vector.svg" alt="Requires Architectury API"/>
     </p>
 </center>
 

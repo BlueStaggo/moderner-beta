@@ -1,11 +1,12 @@
 package mod.bluestaggo.modernerbeta.command;
 
-import dev.architectury.event.events.common.CommandRegistrationEvent;
+import com.mojang.brigadier.CommandDispatcher;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsBiome;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsCaveBiome;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsChunk;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
+import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
@@ -13,12 +14,10 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
 public class DebugProviderSettingsCommand {
-    public static void register() {
-        CommandRegistrationEvent.EVENT.register((dispatcher, registryAccess, environment) -> {
-            dispatcher.register(CommandManager.literal("printprovidersettings")
-                .requires(source -> source.hasPermissionLevel(2))
-                    .executes(ctx -> execute(ctx.getSource())));
-        });
+    public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess, CommandManager.RegistrationEnvironment environment) {
+        dispatcher.register(CommandManager.literal("printprovidersettings")
+            .requires(source -> source.hasPermissionLevel(2))
+                .executes(ctx -> execute(ctx.getSource())));
     }
     
     private static int execute(ServerCommandSource source) {

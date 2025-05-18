@@ -42,7 +42,7 @@ public class HeightmapSpreadDoublePlacementModifier extends PlacementModifier {
 
     @Override
     public PlacementModifierType<?> getType() {
-        return ModernBetaPlacementTypes.HEIGHTMAP_SPREAD_DOUBLE.get();
+        return ModernBetaPlacementTypes.HEIGHTMAP_SPREAD_DOUBLE;
     }
 
 }

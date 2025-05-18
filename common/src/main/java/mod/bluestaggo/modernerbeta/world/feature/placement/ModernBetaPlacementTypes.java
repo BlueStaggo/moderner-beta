@@ -1,32 +1,28 @@
 package mod.bluestaggo.modernerbeta.world.feature.placement;
 
 import com.mojang.serialization.Codec;
-import dev.architectury.registry.registries.DeferredRegister;
-import dev.architectury.registry.registries.RegistrySupplier;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
-import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.world.gen.placementmodifier.PlacementModifier;
 import net.minecraft.world.gen.placementmodifier.PlacementModifierType;
 
 public class ModernBetaPlacementTypes {
-    public static final DeferredRegister<PlacementModifierType<?>> PLACEMENT_MODIFIER_TYPE = DeferredRegister.create(ModernerBeta.MOD_ID, RegistryKeys.PLACEMENT_MODIFIER_TYPE);
-    public static final RegistrySupplier<PlacementModifierType<NoiseBasedCountPlacementModifierBeta>> BETA_NOISE_BASED_COUNT;
-    public static final RegistrySupplier<PlacementModifierType<NoiseBasedCountPlacementModifierAlpha>> ALPHA_NOISE_BASED_COUNT;
-    public static final RegistrySupplier<PlacementModifierType<NoiseBasedCountPlacementModifierInfdev325>> INFDEV_325_NOISE_BASED_COUNT;
-    public static final RegistrySupplier<PlacementModifierType<Infdev325CavePlacementModifier>> INFDEV_325_CAVES;
-    public static final RegistrySupplier<PlacementModifierType<NoiseBasedCountPlacementModifierInfdev415>> INFDEV_415_NOISE_BASED_COUNT;
-    public static final RegistrySupplier<PlacementModifierType<NoiseBasedCountPlacementModifierInfdev420>> INFDEV_420_NOISE_BASED_COUNT;
-    public static final RegistrySupplier<PlacementModifierType<NoiseBasedCountPlacementModifierInfdev611>> INFDEV_611_NOISE_BASED_COUNT;
+    public static final PlacementModifierType<NoiseBasedCountPlacementModifierBeta> BETA_NOISE_BASED_COUNT;
+    public static final PlacementModifierType<NoiseBasedCountPlacementModifierAlpha> ALPHA_NOISE_BASED_COUNT;
+    public static final PlacementModifierType<NoiseBasedCountPlacementModifierInfdev325> INFDEV_325_NOISE_BASED_COUNT;
+    public static final PlacementModifierType<Infdev325CavePlacementModifier> INFDEV_325_CAVES;
+    public static final PlacementModifierType<NoiseBasedCountPlacementModifierInfdev415> INFDEV_415_NOISE_BASED_COUNT;
+    public static final PlacementModifierType<NoiseBasedCountPlacementModifierInfdev420> INFDEV_420_NOISE_BASED_COUNT;
+    public static final PlacementModifierType<NoiseBasedCountPlacementModifierInfdev611> INFDEV_611_NOISE_BASED_COUNT;
     
-    public static final RegistrySupplier<PlacementModifierType<HeightmapSpreadDoublePlacementModifier>> HEIGHTMAP_SPREAD_DOUBLE;
+    public static final PlacementModifierType<HeightmapSpreadDoublePlacementModifier> HEIGHTMAP_SPREAD_DOUBLE;
     
-    private static <P extends PlacementModifier> RegistrySupplier<PlacementModifierType<P>> register(String id, Codec<P> codec) {
-        return PLACEMENT_MODIFIER_TYPE.register(ModernerBeta.createId(id), () -> () -> codec);
+    private static <P extends PlacementModifier> PlacementModifierType<P> register(String id, Codec<P> codec) {
+        return Registry.register(Registries.PLACEMENT_MODIFIER_TYPE, ModernerBeta.createId(id), () -> codec);
     }
     
-    public static void register() {
-        PLACEMENT_MODIFIER_TYPE.register();
-    }
+    public static void register() {}
     
     static {
         BETA_NOISE_BASED_COUNT = register("beta_noise_based_count", NoiseBasedCountPlacementModifierBeta.MODIFIER_CODEC);

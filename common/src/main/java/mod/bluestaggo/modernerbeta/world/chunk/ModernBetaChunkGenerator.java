@@ -2,7 +2,6 @@ package mod.bluestaggo.modernerbeta.world.chunk;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.architectury.registry.registries.DeferredRegister;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.api.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.api.world.chunk.ChunkProvider;
@@ -15,6 +14,7 @@ import mod.bluestaggo.modernerbeta.world.carver.BetaCaveCarverConfig;
 import mod.bluestaggo.modernerbeta.world.carver.configured.ModernBetaConfiguredCarvers;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
@@ -52,7 +52,6 @@ public class ModernBetaChunkGenerator extends NoiseChunkGenerator {
             ChunkGeneratorSettings.REGISTRY_CODEC.fieldOf("settings").forGetter(generator -> generator.settings),
             NbtCompound.CODEC.fieldOf("provider_settings").forGetter(generator -> generator.chunkSettings)
         ).apply(instance, instance.stable(ModernBetaChunkGenerator::new)));
-    public static final DeferredRegister<MapCodec<? extends ChunkGenerator>> CHUNK_GENERATOR = DeferredRegister.create(ModernerBeta.MOD_ID, RegistryKeys.CHUNK_GENERATOR);
 
     private final RegistryEntry<ChunkGeneratorSettings> settings;
     private final NbtCompound chunkSettings;
@@ -319,7 +318,6 @@ public class ModernBetaChunkGenerator extends NoiseChunkGenerator {
     }
 
     public static void register() {
-        CHUNK_GENERATOR.register(ModernerBeta.createId(ModernerBeta.MOD_ID), () -> CODEC);
-        CHUNK_GENERATOR.register();
+        Registry.register(Registries.CHUNK_GENERATOR, ModernerBeta.createId(ModernerBeta.MOD_ID), CODEC);
     }
 }

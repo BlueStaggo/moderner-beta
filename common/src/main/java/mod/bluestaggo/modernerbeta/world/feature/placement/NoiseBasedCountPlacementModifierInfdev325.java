@@ -30,7 +30,7 @@ public class NoiseBasedCountPlacementModifierInfdev325 extends NoiseBasedCountPl
     
     @Override
     public PlacementModifierType<?> getType() {
-        return ModernBetaPlacementTypes.INFDEV_325_NOISE_BASED_COUNT.get();
+        return ModernBetaPlacementTypes.INFDEV_325_NOISE_BASED_COUNT;
     }
 
 }

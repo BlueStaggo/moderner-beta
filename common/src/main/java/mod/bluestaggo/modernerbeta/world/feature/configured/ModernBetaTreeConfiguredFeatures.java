@@ -24,7 +24,7 @@ public class ModernBetaTreeConfiguredFeatures {
     public static void bootstrap(Registerable<?> registerable) {
         Registerable<ConfiguredFeature<?, ?>> featureRegisterable = (Registerable<ConfiguredFeature<?, ?>>)registerable;
         
-        ConfiguredFeatures.register(featureRegisterable, FANCY_OAK, ModernBetaFeatures.OLD_FANCY_OAK.get(), FeatureConfig.DEFAULT);
+        ConfiguredFeatures.register(featureRegisterable, FANCY_OAK, ModernBetaFeatures.OLD_FANCY_OAK, FeatureConfig.DEFAULT);
         ConfiguredFeatures.register(featureRegisterable, OAK_14A_08, Feature.TREE, getOak14a08Config(false));
         ConfiguredFeatures.register(featureRegisterable, OAK_14A_08_BEES_0002, Feature.TREE, getOak14a08Config(true));
     }

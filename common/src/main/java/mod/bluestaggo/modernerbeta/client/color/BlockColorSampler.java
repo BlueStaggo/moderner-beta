@@ -3,6 +3,8 @@ package mod.bluestaggo.modernerbeta.client.color;
 import mod.bluestaggo.modernerbeta.api.world.biome.climate.ClimateSampler;
 import mod.bluestaggo.modernerbeta.api.world.biome.climate.Clime;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.TallPlantBlock;
+import net.minecraft.block.enums.DoubleBlockHalf;
 import net.minecraft.client.color.world.BiomeColors;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockRenderView;
@@ -54,8 +56,19 @@ public final class BlockColorSampler {
         
         return BiomeColors.getGrassColor(view, pos);
     }
-    
+
+    public int getPetalColor(BlockState state, BlockRenderView view, BlockPos pos, int tintNdx) {
+        if (tintNdx == 0)
+            return 0xFFFFFFFF;
+
+        return getShortGrassColor(state, view, pos, tintNdx);
+    }
+
     public int getTallGrassColor(BlockState state, BlockRenderView view, BlockPos pos, int tintNdx) {
+        return getShortGrassColor(state, view, state.get(TallPlantBlock.HALF) == DoubleBlockHalf.UPPER ? pos.down() : pos, tintNdx);
+    }
+    
+    public int getShortGrassColor(BlockState state, BlockRenderView view, BlockPos pos, int tintNdx) {
         if (view == null || pos == null) { // Appears to enter here when loading color for inventory block
             return GrassColors.getDefaultColor();
         }

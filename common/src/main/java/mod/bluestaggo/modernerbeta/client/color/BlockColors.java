@@ -1,48 +1,34 @@
 package mod.bluestaggo.modernerbeta.client.color;
 
-import dev.architectury.registry.client.rendering.ColorHandlerRegistry;
+import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 
 public final class BlockColors {
-    public static void register() {
-        // Grass blocks
-        ColorHandlerRegistry.registerBlockColors(
-            BlockColorSampler.INSTANCE::getGrassColor,
-            Blocks.GRASS_BLOCK
-        );
-        
-        // Tall grass blocks
-        ColorHandlerRegistry.registerBlockColors(
-            BlockColorSampler.INSTANCE::getTallGrassColor,
+    public static final Block[] SHORT_GRASS_BLOCKS = new Block[] {
             Blocks.FERN,
             Blocks.SHORT_GRASS,
             Blocks.POTTED_FERN,
+            Blocks.BUSH
+    };
+    public static final Block[] TALL_GRASS_BLOCKS = new Block[] {
             Blocks.TALL_GRASS,
-            Blocks.LARGE_FERN
-        );
-        
-        // Foliage blocks
-        ColorHandlerRegistry.registerBlockColors(
-            BlockColorSampler.INSTANCE::getFoliageColor,
-            Blocks.OAK_LEAVES, 
-            Blocks.JUNGLE_LEAVES, 
-            Blocks.ACACIA_LEAVES, 
-            Blocks.DARK_OAK_LEAVES, 
+            Blocks.LARGE_FERN,
+    };
+    public static final Block[] PETAL_BLOCKS = new Block[] {
+            Blocks.PINK_PETALS,
+            Blocks.WILDFLOWERS
+    };
+    public static final Block[] FOLIAGE_BLOCKS = new Block[] {
+            Blocks.OAK_LEAVES,
+            Blocks.JUNGLE_LEAVES,
+            Blocks.ACACIA_LEAVES,
+            Blocks.DARK_OAK_LEAVES,
+            Blocks.MANGROVE_LEAVES,
             Blocks.VINE
-        );
-        
-        // Sugar cane
-        ColorHandlerRegistry.registerBlockColors(
-            BlockColorSampler.INSTANCE::getSugarCaneColor,
-            Blocks.SUGAR_CANE
-        );
-        
-        // Water blocks
-        ColorHandlerRegistry.registerBlockColors(
-            BlockColorSampler.INSTANCE::getWaterColor,
+    };
+    public static final Block[] WATER_BLOCKS = new Block[] {
             Blocks.WATER,
             Blocks.BUBBLE_COLUMN,
             Blocks.WATER_CAULDRON
-        );
-    }   
+    };
 }

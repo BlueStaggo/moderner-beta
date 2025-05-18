@@ -30,7 +30,7 @@ public class NoiseBasedCountPlacementModifierAlpha extends NoiseBasedCountPlacem
     
     @Override
     public PlacementModifierType<?> getType() {
-        return ModernBetaPlacementTypes.ALPHA_NOISE_BASED_COUNT.get();
+        return ModernBetaPlacementTypes.ALPHA_NOISE_BASED_COUNT;
     }
 
 }

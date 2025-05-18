@@ -1,7 +1,11 @@
 package mod.bluestaggo.modernerbeta.fabric;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;
+import mod.bluestaggo.modernerbeta.command.DebugProviderSettingsCommand;
+import mod.bluestaggo.modernerbeta.world.ModernBetaWorldInitializer;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.loader.api.FabricLoader;
@@ -14,6 +18,16 @@ public class ModernerBetaFabric implements ModInitializer {
         registerDataPacks();
 
         ModernerBeta.init();
+
+        for (Runnable r : ModernerBeta.REGISTRY_HANDLERS.values())
+            r.run();
+
+        if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
+            CommandRegistrationCallback.EVENT.register(DebugProviderSettingsCommand::register);
+            ModernerBeta.DEV_ENV = true;
+        }
+
+        ServerLifecycleEvents.SERVER_STARTING.register(ModernBetaWorldInitializer::init);
     }
 
     private static void registerDataPacks() {

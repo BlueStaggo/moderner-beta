@@ -4,7 +4,6 @@ import com.google.common.collect.Sets;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.architectury.registry.registries.DeferredRegister;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.api.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.api.world.biome.BiomeProvider;
@@ -18,9 +17,7 @@ import mod.bluestaggo.modernerbeta.world.biome.injector.BiomeInjector.BiomeInjec
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.BiomeInfo;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.RegistryEntryLookup;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.RegistryOps;
+import net.minecraft.registry.*;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -49,7 +46,6 @@ public class ModernBetaBiomeSource extends BiomeSource {
             NbtCompound.CODEC.fieldOf("provider_settings").forGetter(biomeSource -> biomeSource.biomeSettings),
             NbtCompound.CODEC.fieldOf("cave_provider_settings").forGetter(biomeSource -> biomeSource.caveBiomeSettings)
         ).apply(instance, (instance).stable(ModernBetaBiomeSource::new)));
-    public static final DeferredRegister<MapCodec<? extends BiomeSource>> BIOME_SOURCE = DeferredRegister.create(ModernerBeta.MOD_ID, RegistryKeys.BIOME_SOURCE);
     
     private final RegistryEntryLookup<Biome> biomeRegistry;
     private final NbtCompound biomeSettings;
@@ -241,8 +237,7 @@ public class ModernBetaBiomeSource extends BiomeSource {
     }
     
     public static void register() {
-        BIOME_SOURCE.register(ModernerBeta.createId(ModernerBeta.MOD_ID), () -> CODEC);
-        BIOME_SOURCE.register();
+        Registry.register(Registries.BIOME_SOURCE, ModernerBeta.createId(ModernerBeta.MOD_ID), CODEC);
     }
 
     @Override

@@ -34,9 +34,3 @@ modId = "cloth_config"
 versionRange = "[18,)"
 ordering = "NONE"
 side = "BOTH"
-
-[[dependencies.moderner_beta]]
-modId = "architectury"
-versionRange = "[16,)"
-ordering = "NONE"
-side = "BOTH"

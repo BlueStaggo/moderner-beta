@@ -11,6 +11,7 @@ import mod.bluestaggo.modernerbeta.api.world.biome.BiomeResolverBlock;
 import mod.bluestaggo.modernerbeta.api.world.biome.BiomeResolverInfo;
 import mod.bluestaggo.modernerbeta.api.world.biome.BiomeResolverOcean;
 import mod.bluestaggo.modernerbeta.api.world.cavebiome.CaveBiomeProvider;
+import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsBiome;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsCaveBiome;
 import mod.bluestaggo.modernerbeta.world.biome.injector.BiomeInjector.BiomeInjectionStep;
@@ -236,8 +237,10 @@ public class ModernBetaBiomeSource extends BiomeSource {
         return this.caveBiomeSettings;
     }
     
-    public static void register() {
-        Registry.register(Registries.BIOME_SOURCE, ModernerBeta.createId(ModernerBeta.MOD_ID), CODEC);
+    @SuppressWarnings("unchecked")
+    public static void register(IRegistryHandler<?> handler) {
+        IRegistryHandler<Codec<?>> registryHandler = (IRegistryHandler<Codec<?>>) handler;
+        registryHandler.register(ModernerBeta.createId(ModernerBeta.MOD_ID), CODEC);
     }
 
     @Override

@@ -2,6 +2,8 @@ package mod.bluestaggo.modernerbeta.fabric;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.command.DebugProviderSettingsCommand;
+import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
+import mod.bluestaggo.modernerbeta.registry.VanillaRegistryHandler;
 import mod.bluestaggo.modernerbeta.world.ModernBetaWorldInitializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
@@ -10,6 +12,10 @@ import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
+import net.minecraft.registry.Registry;
+
+import java.util.Map;
+import java.util.function.Consumer;
 
 public class ModernerBetaFabric implements ModInitializer {
     @Override
@@ -19,8 +25,12 @@ public class ModernerBetaFabric implements ModInitializer {
 
         ModernerBeta.init();
 
-        for (Runnable r : ModernerBeta.REGISTRY_HANDLERS.values())
-            r.run();
+        for (Map.Entry<Registry<?>, Consumer<IRegistryHandler<?>>> handler : ModernerBeta.REGISTRY_HANDLERS.entrySet()) {
+            Registry<?> registry = handler.getKey();
+            IRegistryHandler<?> registryHandler = new VanillaRegistryHandler<>(registry);
+
+            handler.getValue().accept(registryHandler);
+        }
 
         if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
             CommandRegistrationCallback.EVENT.register(DebugProviderSettingsCommand::register);

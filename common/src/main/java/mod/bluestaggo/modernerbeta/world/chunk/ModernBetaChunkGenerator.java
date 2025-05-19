@@ -320,7 +320,7 @@ public class ModernBetaChunkGenerator extends NoiseChunkGenerator {
 
     @SuppressWarnings("unchecked")
     public static void register(IRegistryHandler<?> handler) {
-        IRegistryHandler<Codec<?>> registryHandler = (IRegistryHandler<Codec<?>>) handler;
+        IRegistryHandler<MapCodec<?>> registryHandler = (IRegistryHandler<MapCodec<?>>) handler;
         registryHandler.register(ModernerBeta.createId(ModernerBeta.MOD_ID), CODEC);
     }
 }

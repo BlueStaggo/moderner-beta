@@ -2,6 +2,8 @@ package mod.bluestaggo.modernerbeta.neoforge;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.command.DebugProviderSettingsCommand;
+import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
+import mod.bluestaggo.modernerbeta.registry.VanillaRegistryHandler;
 import mod.bluestaggo.modernerbeta.world.ModernBetaWorldInitializer;
 import net.minecraft.resource.ResourcePackProfile;
 import net.minecraft.resource.ResourcePackSource;
@@ -17,6 +19,8 @@ import net.neoforged.neoforge.event.AddPackFindersEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.server.ServerAboutToStartEvent;
 import net.neoforged.neoforge.registries.RegisterEvent;
+
+import java.util.function.Consumer;
 
 @EventBusSubscriber(modid = ModernerBeta.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public class ModernerBetaNeoForge {
@@ -34,10 +38,11 @@ public class ModernerBetaNeoForge {
             ModernerBeta.DEV_ENV = true;
     }
 
-    private static final Runnable NONE = () -> {};
+    private static final Consumer<IRegistryHandler<?>> NONE = h -> {};
     @SubscribeEvent
     public static void registerToRegistries(RegisterEvent event) {
-        ModernerBeta.REGISTRY_HANDLERS.getOrDefault(event.getRegistry(), NONE).run();
+        VanillaRegistryHandler<?> registryHandler = new VanillaRegistryHandler<>(event.getRegistry());
+        ModernerBeta.REGISTRY_HANDLERS.getOrDefault(event.getRegistry(), NONE).accept(registryHandler);
     }
 
     public static void registerCommands(RegisterCommandsEvent event) {

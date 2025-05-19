@@ -3,6 +3,7 @@ package mod.bluestaggo.modernerbeta;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import mod.bluestaggo.modernerbeta.config.ModernBetaConfig;
+import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.world.carver.ModernBetaCarvers;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
@@ -17,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.event.Level;
 
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class ModernerBeta {
     public static final String MOD_ID = "moderner_beta";
@@ -27,7 +29,7 @@ public class ModernerBeta {
     public static final ModernBetaConfig CONFIG = AutoConfig.register(ModernBetaConfig.class, GsonConfigSerializer::new).getConfig();
     private static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
-    public static final Map<Registry<?>, Runnable> REGISTRY_HANDLERS = Map.of(
+    public static final Map<Registry<?>, Consumer<IRegistryHandler<?>>> REGISTRY_HANDLERS = Map.of(
         Registries.FOLIAGE_PLACER_TYPE, ModernBetaFoliagePlacers::register,
         Registries.PLACEMENT_MODIFIER_TYPE, ModernBetaPlacementTypes::register,
         Registries.FEATURE, ModernBetaFeatures::register,

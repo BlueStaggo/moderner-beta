@@ -1,32 +1,39 @@
 package mod.bluestaggo.modernerbeta.world.feature;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
+import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import net.minecraft.world.gen.feature.DefaultFeatureConfig;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.OreFeatureConfig;
 
 public class ModernBetaFeatures {
-    public static final BetaFreezeTopLayerFeature FREEZE_TOP_LAYER = register(
-        ModernBetaFeatureTags.FREEZE_TOP_LAYER, new BetaFreezeTopLayerFeature(DefaultFeatureConfig.CODEC)
-    );
+    private static IRegistryHandler<Feature<?>> registryHandler;
+    public static BetaFreezeTopLayerFeature FREEZE_TOP_LAYER;
+    public static BetaFancyOakFeature OLD_FANCY_OAK;
+    public static BetaOreClayFeature ORE_CLAY;
+    public static CaveInfdev325Feature CAVE_INFDEV_325;
 
-    public static final BetaFancyOakFeature OLD_FANCY_OAK = register(
-        ModernBetaFeatureTags.FANCY_OAK, new BetaFancyOakFeature(DefaultFeatureConfig.CODEC)
-    );
-
-    public static final BetaOreClayFeature ORE_CLAY = register(
-        ModernBetaFeatureTags.ORE_CLAY, new BetaOreClayFeature(OreFeatureConfig.CODEC)
-    );
-
-    public static final CaveInfdev325Feature CAVE_INFDEV_325 = register(
-        ModernBetaFeatureTags.CAVE_INFDEV_325, new CaveInfdev325Feature(OreFeatureConfig.CODEC)
-    );
-    
     private static <F extends Feature<?>> F register(String id, F feature) {
-        return Registry.register(Registries.FEATURE, ModernerBeta.createId(id), feature);
+        return registryHandler.register(ModernerBeta.createId(id), feature);
     }
     
-    public static void register() {}
+    @SuppressWarnings("unchecked")
+    public static void register(IRegistryHandler<?> handler) {
+        registryHandler = (IRegistryHandler<Feature<?>>) handler;
+        FREEZE_TOP_LAYER = register(
+                ModernBetaFeatureTags.FREEZE_TOP_LAYER, new BetaFreezeTopLayerFeature(DefaultFeatureConfig.CODEC)
+        );
+
+        OLD_FANCY_OAK = register(
+                ModernBetaFeatureTags.FANCY_OAK, new BetaFancyOakFeature(DefaultFeatureConfig.CODEC)
+        );
+
+        ORE_CLAY = register(
+                ModernBetaFeatureTags.ORE_CLAY, new BetaOreClayFeature(OreFeatureConfig.CODEC)
+        );
+
+        CAVE_INFDEV_325 = register(
+                ModernBetaFeatureTags.CAVE_INFDEV_325, new CaveInfdev325Feature(OreFeatureConfig.CODEC)
+        );
+    }
 }

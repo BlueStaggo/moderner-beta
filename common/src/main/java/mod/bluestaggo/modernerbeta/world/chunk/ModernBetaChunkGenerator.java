@@ -5,6 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.api.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.api.world.chunk.ChunkProvider;
+import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsChunk;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
@@ -316,7 +317,9 @@ public class ModernBetaChunkGenerator extends NoiseChunkGenerator {
         }
     }
 
-    public static void register() {
-        Registry.register(Registries.CHUNK_GENERATOR, ModernerBeta.createId(ModernerBeta.MOD_ID), CODEC);
+    @SuppressWarnings("unchecked")
+    public static void register(IRegistryHandler<?> handler) {
+        IRegistryHandler<Codec<?>> registryHandler = (IRegistryHandler<Codec<?>>) handler;
+        registryHandler.register(ModernerBeta.createId(ModernerBeta.MOD_ID), CODEC);
     }
 }

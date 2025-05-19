@@ -2,6 +2,8 @@ package mod.bluestaggo.modernerbeta.forge;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.command.DebugProviderSettingsCommand;
+import mod.bluestaggo.modernerbeta.forge.registry.ForgeRegistryHandler;
+import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import mod.bluestaggo.modernerbeta.world.ModernBetaWorldInitializer;
 import net.minecraft.resource.*;
 import net.minecraft.text.Text;
@@ -18,6 +20,7 @@ import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.registries.RegisterEvent;
 
 import java.nio.file.Path;
+import java.util.function.Consumer;
 
 @Mod(ModernerBeta.MOD_ID)
 @Mod.EventBusSubscriber(modid = ModernerBeta.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -36,10 +39,13 @@ public class ModernerBetaForge {
             ModernerBeta.DEV_ENV = true;
     }
 
-    private static final Runnable NONE = () -> {};
+    private static final Consumer<IRegistryHandler<?>> NONE = h -> {};
     @SubscribeEvent
     public static void registerToRegistries(RegisterEvent event) {
-        ModernerBeta.REGISTRY_HANDLERS.getOrDefault(event.getVanillaRegistry(), NONE).run();
+        if (event.getVanillaRegistry() == null) return;
+
+        ForgeRegistryHandler<?> registryHandler = new ForgeRegistryHandler<>(event);
+        ModernerBeta.REGISTRY_HANDLERS.getOrDefault(event.getVanillaRegistry(), NONE).accept(registryHandler);
     }
 
     public static void registerCommands(RegisterCommandsEvent event) {

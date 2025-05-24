@@ -56,10 +56,10 @@ public class BiomeInjector {
             context.getY() >= context.worldMinY && context.getY() + CAVE_START_DEPTH < context.minHeight;
 
         Predicate<BiomeInjectionContext> oceanPredicate = context -> 
-            this.atOceanDepth(context.topHeight, OCEAN_START_DEPTH);
+            modernBetaBiomeSource.hasOceanBiomes() && this.atOceanDepth(context.topHeight, OCEAN_START_DEPTH);
 
         Predicate<BiomeInjectionContext> deepOceanPredicate = context -> 
-            this.atOceanDepth(context.topHeight, OCEAN_DEEP_START_DEPTH);
+            modernBetaBiomeSource.hasOceanBiomes() && this.atOceanDepth(context.topHeight, OCEAN_DEEP_START_DEPTH);
         
         BiomeInjectionRules.Builder builderPre = new BiomeInjectionRules.Builder();
         BiomeInjectionRules.Builder builderPost = new BiomeInjectionRules.Builder();

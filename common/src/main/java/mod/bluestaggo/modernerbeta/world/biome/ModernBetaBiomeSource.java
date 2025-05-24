@@ -236,6 +236,10 @@ public class ModernBetaBiomeSource extends BiomeSource {
     public NbtCompound getCaveBiomeSettings() {
         return this.caveBiomeSettings;
     }
+
+    public boolean hasOceanBiomes() {
+        return this.biomeProvider instanceof BiomeResolverOcean;
+    }
     
     @SuppressWarnings("unchecked")
     public static void register(IRegistryHandler<?> handler) {

@@ -130,8 +130,8 @@ public class ModernBetaGraphicalChunkSettingsScreen extends ModernBetaGraphicalC
 
             if (isForcedHeightProvider) {
                 list.addSingleOptionEntry(this.mapEditButton(
-                    this.getText(NbtTags.RELEASE_HEIGHT_OVERRIDES),
-                    NbtTags.RELEASE_HEIGHT_OVERRIDES,
+                    this.getText(NbtTags.RELEASE_BIOME_HEIGHT_VALUES),
+                    NbtTags.RELEASE_BIOME_HEIGHT_VALUES,
                     BiomeInfoToHeightConfigMapScreen::new
                 ));
             }

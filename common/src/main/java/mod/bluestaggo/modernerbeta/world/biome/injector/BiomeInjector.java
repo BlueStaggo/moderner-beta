@@ -7,7 +7,7 @@ import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsBiome;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkHeightmap;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.world.biome.injector.BiomeInjectionRules.BiomeInjectionContext;
-import mod.bluestaggo.modernerbeta.world.biome.provider.BiomeProviderFractal;
+import mod.bluestaggo.modernerbeta.world.biome.provider.BiomeProviderFractalLegacy;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.BiomeInfo;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
 import net.minecraft.registry.RegistryKey;
@@ -134,8 +134,8 @@ public class BiomeInjector {
         int biomeY = y >> 2;
         int biomeZ = z >> 2;
 
-        if (this.modernBetaBiomeSource.getBiomeProvider() instanceof BiomeProviderFractal biomeProviderFractal) {
-            BiomeInfo biomeInfo = biomeProviderFractal.getBiomeInfo(biomeX, biomeY, biomeZ);
+        if (this.modernBetaBiomeSource.getBiomeProvider() instanceof BiomeProviderFractalLegacy biomeProviderFractalLegacy) {
+            BiomeInfo biomeInfo = biomeProviderFractalLegacy.getBiomeInfo(biomeX, biomeY, biomeZ);
             return biomeInfo.toString();
         }
 

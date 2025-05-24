@@ -1,5 +1,6 @@
 package mod.bluestaggo.modernerbeta.api.registry;
 
+import com.mojang.serialization.Codec;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
 import net.minecraft.text.Text;
@@ -15,7 +16,7 @@ public final class ModernBetaRegistry<T> {
     
     protected ModernBetaRegistry(String name) {
         this.name = name;
-        this.map = new LinkedHashMap<String, T>();
+        this.map = new LinkedHashMap<>();
     }
     
     protected ModernBetaRegistry() {
@@ -108,7 +109,11 @@ public final class ModernBetaRegistry<T> {
             .get()
             .getKey();
     }
-    
+
+    public Codec<T> getCodec() {
+        return Codec.STRING.xmap(this::get, this::getKey);
+    }
+
     public Text getTranslatableText(T entry) {
         return Text.translatable(this.getKey(entry));
     }

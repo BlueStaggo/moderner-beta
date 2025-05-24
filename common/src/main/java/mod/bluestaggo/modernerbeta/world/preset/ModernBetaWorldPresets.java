@@ -2,7 +2,7 @@ package mod.bluestaggo.modernerbeta.world.preset;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
-import mod.bluestaggo.modernerbeta.api.registry.ModernBetaRegistries;
+import mod.bluestaggo.modernerbeta.api.registry.ModernBetaBuiltInRegistries;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
@@ -54,7 +54,7 @@ public class ModernBetaWorldPresets {
         RegistryEntry.Reference<DimensionType> dimensionType = registryDimensionType.getOrThrow(DimensionTypes.OVERWORLD);
         RegistryEntry.Reference<ChunkGeneratorSettings> settings = registrySettings.getOrThrow(ModernBetaChunkGeneratorSettings.BETA);
         
-        ModernBetaSettingsPreset defaultPreset = ModernBetaRegistries.SETTINGS_PRESET.get(ModernBetaBuiltInTypes.Chunk.BETA.id);
+        ModernBetaSettingsPreset defaultPreset = ModernBetaBuiltInRegistries.SETTINGS_PRESET.get(ModernBetaBuiltInTypes.Chunk.BETA.id);
         
         return new DimensionOptions(
             dimensionType,

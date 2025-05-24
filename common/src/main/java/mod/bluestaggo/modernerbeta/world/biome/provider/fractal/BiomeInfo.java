@@ -1,5 +1,7 @@
 package mod.bluestaggo.modernerbeta.world.biome.provider.fractal;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.registry.RegistryEntryLookup;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
@@ -10,6 +12,17 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeKeys;
 
 public record BiomeInfo(RegistryEntry<Biome> biome, int type) {
+	public static final Codec<BiomeInfo> CODEC = Codec.withAlternative(
+		RecordCodecBuilder.create(instance -> instance.group(
+			Biome.REGISTRY_CODEC.fieldOf("biome").forGetter(BiomeInfo::biome),
+			Codec.INT.fieldOf("type").orElse(0).forGetter(BiomeInfo::type)
+		).apply(instance, BiomeInfo::new)),
+		Biome.REGISTRY_CODEC.xmap(
+			biome -> new BiomeInfo(biome, 0),
+			BiomeInfo::biome
+		)
+	);
+
 	public static BiomeInfo of(RegistryEntry<Biome> biome) {
 		return new BiomeInfo(biome, 0);
 	}

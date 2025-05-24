@@ -3,7 +3,7 @@ package mod.bluestaggo.modernerbeta.world.chunk;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
-import mod.bluestaggo.modernerbeta.api.registry.ModernBetaRegistries;
+import mod.bluestaggo.modernerbeta.api.registry.ModernBetaBuiltInRegistries;
 import mod.bluestaggo.modernerbeta.api.world.chunk.ChunkProvider;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsChunk;
@@ -15,7 +15,6 @@ import mod.bluestaggo.modernerbeta.world.carver.BetaCaveCarverConfig;
 import mod.bluestaggo.modernerbeta.world.carver.configured.ModernBetaConfiguredCarvers;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
@@ -35,7 +34,6 @@ import net.minecraft.world.biome.source.util.MultiNoiseUtil.MultiNoiseSampler;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ProtoChunk;
 import net.minecraft.world.gen.StructureAccessor;
-import net.minecraft.world.gen.StructureWeightSampler;
 import net.minecraft.world.gen.carver.CarverContext;
 import net.minecraft.world.gen.carver.CarvingMask;
 import net.minecraft.world.gen.carver.ConfiguredCarver;
@@ -80,7 +78,7 @@ public class ModernBetaChunkGenerator extends NoiseChunkGenerator {
     public void initProvider(long seed) {
         ModernBetaSettingsChunk chunkSettings = ModernBetaSettingsChunk.fromCompound(this.chunkSettings);
 
-        this.chunkProvider = ModernBetaRegistries.CHUNK
+        this.chunkProvider = ModernBetaBuiltInRegistries.CHUNK
             .get(chunkSettings.chunkProvider)
             .apply(this, seed);
         

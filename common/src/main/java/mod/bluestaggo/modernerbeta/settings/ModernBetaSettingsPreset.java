@@ -1,7 +1,7 @@
 package mod.bluestaggo.modernerbeta.settings;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;
-import mod.bluestaggo.modernerbeta.api.registry.ModernBetaRegistries;
+import mod.bluestaggo.modernerbeta.api.registry.ModernBetaBuiltInRegistries;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Pair;
 import org.slf4j.event.Level;
@@ -42,9 +42,9 @@ public record ModernBetaSettingsPreset(ModernBetaSettingsChunk settingsChunk, Mo
                 this.settingsCaveBiome;
             
             // Test providers
-            ModernBetaRegistries.CHUNK.get(settingsChunk.chunkProvider);
-            ModernBetaRegistries.BIOME.get(settingsBiome.biomeProvider);
-            ModernBetaRegistries.CAVE_BIOME.get(settingsCaveBiome.biomeProvider);
+            ModernBetaBuiltInRegistries.CHUNK.get(settingsChunk.chunkProvider);
+            ModernBetaBuiltInRegistries.BIOME.get(settingsBiome.biomeProvider);
+            ModernBetaBuiltInRegistries.CAVE_BIOME.get(settingsCaveBiome.biomeProvider);
         } catch (Exception e) {
             ModernerBeta.log(Level.ERROR, "Unable to read settings JSON! Reverting to previous settings..");
             ModernerBeta.log(Level.ERROR, String.format("Reason: %s", e.getMessage()));
@@ -80,9 +80,9 @@ public record ModernBetaSettingsPreset(ModernBetaSettingsChunk settingsChunk, Mo
                 this.settingsCaveBiome;
 
             // Test providers
-            ModernBetaRegistries.CHUNK.get(settingsChunk.chunkProvider);
-            ModernBetaRegistries.BIOME.get(settingsBiome.biomeProvider);
-            ModernBetaRegistries.CAVE_BIOME.get(settingsCaveBiome.biomeProvider);
+            ModernBetaBuiltInRegistries.CHUNK.get(settingsChunk.chunkProvider);
+            ModernBetaBuiltInRegistries.BIOME.get(settingsBiome.biomeProvider);
+            ModernBetaBuiltInRegistries.CAVE_BIOME.get(settingsCaveBiome.biomeProvider);
         } catch (Exception e) {
             ModernerBeta.log(Level.ERROR, "Unable to read settings NBT! Reverting to previous settings..");
             ModernerBeta.log(Level.ERROR, String.format("Reason: %s", e.getMessage()));

@@ -3,7 +3,7 @@ package mod.bluestaggo.modernerbeta.settings;
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomes;
 import mod.bluestaggo.modernerbeta.world.biome.provider.climate.ClimateMapping;
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.FractalSettings;
+import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.legacy.FractalSettings;
 import mod.bluestaggo.modernerbeta.world.biome.voronoi.VoronoiPointBiome;
 import mod.bluestaggo.modernerbeta.world.biome.voronoi.VoronoiPointCaveBiome;
 import mod.bluestaggo.modernerbeta.world.chunk.provider.indev.IndevTheme;
@@ -1405,7 +1405,7 @@ public class ModernBetaSettingsPresets {
 
         settingsChunk.chunkProvider = ModernBetaBuiltInTypes.Chunk.EARLY_RELEASE.id;
         settingsChunk.useFixedCaves = true;
-        settingsChunk.releaseHeightOverrides = Map.ofEntries(
+        settingsChunk.releaseBiomeHeightValues = Map.ofEntries(
             Map.entry("minecraft:ocean", "-1.0;0.5")
         );
 
@@ -1589,7 +1589,7 @@ public class ModernBetaSettingsPresets {
 
         settingsChunk.chunkProvider = ModernBetaBuiltInTypes.Chunk.EARLY_RELEASE.id;
         settingsChunk.useFixedCaves = true;
-        settingsChunk.releaseHeightOverrides = Map.ofEntries(
+        settingsChunk.releaseBiomeHeightValues = Map.ofEntries(
             Map.entry("*minecraft:desert", "0.3;0.8"),
             Map.entry("*minecraft:forest", "0.3;0.7"),
             Map.entry("moderner_beta:early_release_extreme_hills", "0.3;1.5"),
@@ -1651,7 +1651,7 @@ public class ModernBetaSettingsPresets {
         ModernBetaSettingsCaveBiome.Builder settingsCaveBiome = new ModernBetaSettingsCaveBiome.Builder();
 
         settingsChunk.chunkProvider = ModernBetaBuiltInTypes.Chunk.MAJOR_RELEASE.id;
-        settingsChunk.releaseHeightOverrides = Map.ofEntries(
+        settingsChunk.releaseBiomeHeightValues = Map.ofEntries(
             Map.entry("minecraft:ocean", "-1.0;0.2"),
             Map.entry("minecraft:warm_ocean", "-1.0;0.2"),
             Map.entry("minecraft:lukewarm_ocean", "-1.0;0.2"),
@@ -1757,7 +1757,7 @@ public class ModernBetaSettingsPresets {
         ModernBetaSettingsCaveBiome.Builder settingsCaveBiome = new ModernBetaSettingsCaveBiome.Builder();
 
         settingsChunk.chunkProvider = ModernBetaBuiltInTypes.Chunk.MAJOR_RELEASE.id;
-        settingsChunk.releaseHeightOverrides = Map.ofEntries(
+        settingsChunk.releaseBiomeHeightValues = Map.ofEntries(
             Map.entry("minecraft:ocean", "-1.0;0.2"),
             Map.entry("minecraft:warm_ocean", "-1.0;0.2"),
             Map.entry("minecraft:lukewarm_ocean", "-1.0;0.2"),
@@ -1882,7 +1882,7 @@ public class ModernBetaSettingsPresets {
 
         settingsChunk.chunkProvider = ModernBetaBuiltInTypes.Chunk.EARLY_RELEASE.id;
         settingsChunk.useFixedCaves = true;
-        settingsChunk.releaseHeightOverrides = Map.ofEntries(
+        settingsChunk.releaseBiomeHeightValues = Map.ofEntries(
             Map.entry("*minecraft:desert", "0.3;0.8"),
             Map.entry("*minecraft:forest", "0.3;0.7"),
             Map.entry("*minecraft:taiga", "0.3;0.8"),

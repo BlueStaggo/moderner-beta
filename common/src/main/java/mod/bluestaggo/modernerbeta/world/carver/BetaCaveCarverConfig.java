@@ -76,7 +76,7 @@ public class BetaCaveCarverConfig extends CaveCarverConfig {
         );
     }
 
-    private static <P extends CaveCarverConfig> Products.P4<RecordCodecBuilder.Mu<P>, CarverConfig, FloatProvider, FloatProvider, FloatProvider> fillConfigFields(RecordCodecBuilder.Instance<P> instance) {
+private static <P extends CaveCarverConfig> Products.P4<RecordCodecBuilder.Mu<P>, CarverConfig, FloatProvider, FloatProvider, FloatProvider> fillConfigFields(RecordCodecBuilder.Instance<P> instance) {
         return instance.group(
             CarverConfig.CONFIG_CODEC.forGetter(config -> config),
             FloatProvider.VALUE_CODEC.fieldOf("horizontal_radius_multiplier").forGetter(config -> config.horizontalRadiusMultiplier),

@@ -13,6 +13,7 @@ import mod.bluestaggo.modernerbeta.world.biome.HeightConfig;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.world.biome.injector.BiomeInjector.BiomeInjectionStep;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.BiomeInfo;
+import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -59,11 +60,11 @@ public abstract class MixinDebugHud {
             if (chunkGenerator instanceof ModernBetaChunkGenerator modernBetaChunkGenerator) {
                 ChunkProvider chunkProvider = modernBetaChunkGenerator.getChunkProvider();
                 if (chunkProvider instanceof ChunkProviderForcedHeight chunkProviderForcedHeight) {
-                    BiomeInfo biomeInfo = chunkProviderForcedHeight.getBiomeInfo(x >> 2, z >> 2);
+                    ExtendedBiomeId biomeInfo = chunkProviderForcedHeight.getExtendedBiomeId(x >> 2, z >> 2);
                     info.getReturnValue().add(
                         String.format(
                             "[Modern Beta] Biome variant: %s",
-                            biomeInfo.getId()
+                            biomeInfo
                         )
                     );
                 }

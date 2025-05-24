@@ -5,6 +5,9 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
+import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ConfiguredLayer;
+import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ConfiguredLayers;
+import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import net.minecraft.client.gui.EditBox;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.*;
@@ -32,7 +35,15 @@ public class ModernBetaSettingsScreen extends ModernBetaScreen {
         super(Text.translatable(title), parent);
 
         this.onDone = onDone;
-        this.gson = new GsonBuilder().setPrettyPrinting().create();
+        this.gson = new GsonBuilder()
+            .setPrettyPrinting()
+            .registerTypeAdapter(ConfiguredLayers.class, ConfiguredLayers.JsonSerializer.INSTANCE)
+            .registerTypeAdapter(ConfiguredLayers.class, ConfiguredLayers.JsonDeserializer.INSTANCE)
+            .registerTypeAdapter(ConfiguredLayer.class, ConfiguredLayer.JsonSerializer.INSTANCE)
+            .registerTypeAdapter(ConfiguredLayer.class, ConfiguredLayer.JsonDeserializer.INSTANCE)
+            .registerTypeAdapter(ExtendedBiomeId.class, ExtendedBiomeId.JsonSerializer.INSTANCE)
+            .registerTypeAdapter(ExtendedBiomeId.class, ExtendedBiomeId.JsonDeserializer.INSTANCE)
+            .create();
         this.settingsString = this.gson.toJson(settings);
     }
     

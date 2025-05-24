@@ -1,10 +1,13 @@
 package mod.bluestaggo.modernerbeta;
 
+import com.mojang.serialization.Codec;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import mod.bluestaggo.modernerbeta.config.ModernBetaConfig;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
+import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistryKeys;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
+import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ConfiguredLayers;
 import mod.bluestaggo.modernerbeta.world.carver.ModernBetaCarvers;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
 import mod.bluestaggo.modernerbeta.world.feature.ModernBetaFeatures;
@@ -12,11 +15,14 @@ import mod.bluestaggo.modernerbeta.world.feature.ModernBetaFoliagePlacers;
 import mod.bluestaggo.modernerbeta.world.feature.placement.ModernBetaPlacementTypes;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.event.Level;
 
+import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -36,6 +42,10 @@ public class ModernerBeta {
         Registries.CARVER, ModernBetaCarvers::register,
         Registries.BIOME_SOURCE, ModernBetaBiomeSource::register,
         Registries.CHUNK_GENERATOR, ModernBetaChunkGenerator::register
+    );
+
+    public static final List<Pair<RegistryKey<?>, Codec<?>>> DYNAMIC_REGISTRIES = List.of(
+        new Pair<>(ModernBetaRegistryKeys.CONFIGURED_LAYERS_KEY, ConfiguredLayers.CODEC)
     );
 
     public static void init() {

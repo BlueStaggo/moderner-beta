@@ -1,8 +1,7 @@
 package mod.bluestaggo.modernerbeta.client.gui.screen;
 
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
-import mod.bluestaggo.modernerbeta.api.registry.ModernBetaRegistries;
-import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsChunk;
+import mod.bluestaggo.modernerbeta.api.registry.ModernBetaBuiltInRegistries;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
@@ -116,7 +115,7 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
             presetText,
             button -> this.client.setScreen(new ModernBetaSettingsPresetScreen(
                 this,
-                ModernBetaRegistries.SETTINGS_PRESET_CATEGORY.getKeySet().stream().toList(),
+                ModernBetaBuiltInRegistries.SETTINGS_PRESET_CATEGORY.getKeySet().stream().toList(),
                 this.preset,
                 true
             ))
@@ -244,17 +243,17 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
     }
     
     private void resetPreset() {
-        this.preset = ModernBetaRegistries.SETTINGS_PRESET.get(ModernBetaBuiltInTypes.Preset.BETA_1_7_3.id);
+        this.preset = ModernBetaBuiltInRegistries.SETTINGS_PRESET.get(ModernBetaBuiltInTypes.Preset.BETA_1_7_3.id);
         this.onPresetChange();
     }
     
     private boolean isPresetCustom() {
-        return !ModernBetaRegistries.SETTINGS_PRESET.contains(this.preset);
+        return !ModernBetaBuiltInRegistries.SETTINGS_PRESET.contains(this.preset);
     }
     
     private String getPresetKey() {
-        if (ModernBetaRegistries.SETTINGS_PRESET.contains(this.preset))
-            return ModernBetaRegistries.SETTINGS_PRESET.getKey(this.preset);
+        if (ModernBetaBuiltInRegistries.SETTINGS_PRESET.contains(this.preset))
+            return ModernBetaBuiltInRegistries.SETTINGS_PRESET.getKey(this.preset);
 
         return null;
     }

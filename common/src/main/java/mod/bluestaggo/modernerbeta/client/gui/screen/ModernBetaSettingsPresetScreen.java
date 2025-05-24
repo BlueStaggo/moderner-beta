@@ -1,7 +1,7 @@
 package mod.bluestaggo.modernerbeta.client.gui.screen;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;
-import mod.bluestaggo.modernerbeta.api.registry.ModernBetaRegistries;
+import mod.bluestaggo.modernerbeta.api.registry.ModernBetaBuiltInRegistries;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPresetCategory;
 import net.fabricmc.api.EnvType;
@@ -127,14 +127,14 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
                 presets.forEach(key -> {
                     this.addEntry(new PresetCategoryEntry(
                         key,
-                        ModernBetaRegistries.SETTINGS_PRESET_CATEGORY.get(key)
+                        ModernBetaBuiltInRegistries.SETTINGS_PRESET_CATEGORY.get(key)
                     ));
                 });
             } else {
                 presets.forEach(key -> {
                     this.addEntry(new PresetEntry(
                         key,
-                        ModernBetaRegistries.SETTINGS_PRESET.get(key)
+                        ModernBetaBuiltInRegistries.SETTINGS_PRESET.get(key)
                     ));
                 });
             }
@@ -309,7 +309,7 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
 
             @Override
             protected Identifier getPresetTexture(String presetName) {
-                presetName = ModernBetaRegistries.SETTINGS_PRESET_CATEGORY.get(presetName).defaultIcon();
+                presetName = ModernBetaBuiltInRegistries.SETTINGS_PRESET_CATEGORY.get(presetName).defaultIcon();
                 return super.getPresetTexture(presetName);
             }
 

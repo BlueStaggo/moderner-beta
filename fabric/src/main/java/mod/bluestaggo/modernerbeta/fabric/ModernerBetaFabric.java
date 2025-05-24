@@ -1,5 +1,6 @@
 package mod.bluestaggo.modernerbeta.fabric;
 
+import com.mojang.serialization.Codec;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.command.DebugProviderSettingsCommand;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
@@ -8,17 +9,21 @@ import mod.bluestaggo.modernerbeta.world.ModernBetaWorldInitializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.event.registry.DynamicRegistries;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.util.Pair;
 
 import java.util.Map;
 import java.util.function.Consumer;
 
 public class ModernerBetaFabric implements ModInitializer {
     @Override
+    @SuppressWarnings("unchecked")
     public void onInitialize() {
         // Register mod stuff
         registerDataPacks();
@@ -30,6 +35,10 @@ public class ModernerBetaFabric implements ModInitializer {
             IRegistryHandler<?> registryHandler = new VanillaRegistryHandler<>(registry);
 
             handler.getValue().accept(registryHandler);
+        }
+
+        for (Pair<RegistryKey<?>, Codec<?>> dynamicRegistry : ModernerBeta.DYNAMIC_REGISTRIES) {
+            DynamicRegistries.register((RegistryKey<Registry<Object>>)dynamicRegistry.getLeft(), (Codec<Object>)dynamicRegistry.getRight());
         }
 
         if (FabricLoader.getInstance().isDevelopmentEnvironment()) {

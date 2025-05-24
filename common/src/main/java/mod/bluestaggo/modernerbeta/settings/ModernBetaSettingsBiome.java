@@ -1,7 +1,6 @@
 package mod.bluestaggo.modernerbeta.settings;
 
 import com.google.gson.Gson;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMaps;
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
 import mod.bluestaggo.modernerbeta.util.NbtCompoundBuilder;
 import mod.bluestaggo.modernerbeta.util.NbtReader;
@@ -9,7 +8,12 @@ import mod.bluestaggo.modernerbeta.util.NbtTags;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomes;
 import mod.bluestaggo.modernerbeta.world.biome.provider.climate.ClimateMapping;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ClimaticBiomeList;
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.FractalSettings;
+import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ConfiguredLayer;
+import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ConfiguredLayers;
+import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
+import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.DirtyZoomLayer;
+import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.RandomBiomeLayer;
+import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.legacy.FractalSettings;
 import mod.bluestaggo.modernerbeta.world.biome.voronoi.VoronoiPointBiome;
 import net.minecraft.nbt.NbtCompound;
 
@@ -28,6 +32,8 @@ public class ModernBetaSettingsBiome implements ModernBetaSettings {
     public final Map<String, ClimateMapping> climateMappings;
 
     public final List<VoronoiPointBiome> voronoiPoints;
+
+    public final ConfiguredLayers fractalLayers;
 
     public final List<String> fractalBiomes;
     public final List<ClimaticBiomeList<String>> fractalClimaticBiomes;
@@ -74,6 +80,8 @@ public class ModernBetaSettingsBiome implements ModernBetaSettings {
 
         this.voronoiPoints = builder.voronoiPoints;
 
+        this.fractalLayers = builder.fractalLayers;
+
         this.fractalBiomes = builder.fractalBiomes;
         this.fractalClimaticBiomes = builder.fractalClimaticBiomes;
         this.fractalHillVariants = builder.fractalHillVariants;
@@ -114,7 +122,7 @@ public class ModernBetaSettingsBiome implements ModernBetaSettings {
     }
     
     public NbtCompound toCompound() {
-        return new NbtCompoundBuilder()
+        NbtCompound compound = new NbtCompoundBuilder()
             .putString(NbtTags.BIOME_PROVIDER, this.biomeProvider)
             .putString(NbtTags.SINGLE_BIOME, this.singleBiome)
             .putBoolean(NbtTags.USE_OCEAN_BIOMES, this.useOceanBiomes)
@@ -152,6 +160,8 @@ public class ModernBetaSettingsBiome implements ModernBetaSettings {
             .putBoolean(NbtTags.FRACTAL_ADD_CLIMATIC_OCEANS, this.fractalAddClimaticOceans)
             .putBoolean(NbtTags.FRACTAL_USE_CLIMATIC_BIOMES, this.fractalUseClimaticBiomes)
             .build();
+        compound.put(NbtTags.FRACTAL_LAYERS, ConfiguredLayers.CODEC, this.fractalLayers);
+        return compound;
     }
     
     public static class Builder {
@@ -166,6 +176,8 @@ public class ModernBetaSettingsBiome implements ModernBetaSettings {
         public Map<String, ClimateMapping> climateMappings;
         
         public List<VoronoiPointBiome> voronoiPoints;
+
+        public ConfiguredLayers fractalLayers;
 
         public List<String> fractalBiomes;
         public List<ClimaticBiomeList<String>> fractalClimaticBiomes;
@@ -259,6 +271,15 @@ public class ModernBetaSettingsBiome implements ModernBetaSettings {
                     ModernBetaBiomes.BETA_OCEAN.getValue().toString(),
                     0.5, 0.5, 0.5
                 ));
+
+            this.fractalLayers = new ConfiguredLayers(List.of(
+                new ConfiguredLayer("land", new RandomBiomeLayer(1234, ExtendedBiomeId.listOf(
+                    "minecraft:plains",
+                    "minecraft:forest",
+                    "minecraft:forest*hills"
+                ))),
+                new ConfiguredLayer("land", new DirtyZoomLayer(0, 2), "land")
+            ));
 
             this.fractalBiomes = List.of(
                 "minecraft:desert",
@@ -428,6 +449,9 @@ public class ModernBetaSettingsBiome implements ModernBetaSettings {
             this.climateMappings = ClimateMapping.mapFromReader(reader, this.climateMappings);
 
             this.voronoiPoints = VoronoiPointBiome.listFromReader(reader, this.voronoiPoints);
+
+            compound.get(NbtTags.FRACTAL_LAYERS, ConfiguredLayers.CODEC)
+                .ifPresent(fractalLayers -> this.fractalLayers = fractalLayers);
 
             this.fractalBiomes = FractalSettings.listFromReader(NbtTags.FRACTAL_BIOMES, reader, this.fractalBiomes);
             this.fractalClimaticBiomes = ClimaticBiomeList.fromReader(NbtTags.FRACTAL_CLIMATIC_BIOMES, reader, this.fractalClimaticBiomes);

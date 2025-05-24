@@ -14,7 +14,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-class DummyBiome implements RegistryEntry<Biome> {
+public class DummyBiome implements RegistryEntry<Biome> {
 	public static final DummyBiome
 		OCEAN = makeDummy("ocean"),
 		PLAINS = makeDummy("plains"),

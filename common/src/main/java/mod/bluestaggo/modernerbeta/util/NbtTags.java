@@ -45,7 +45,7 @@ public class NbtTags {
     public static final String NOISE_BOTTOM_SLIDE_OFFSET = "noiseBottomSlideOffset";
 
     // Release
-    public static final String RELEASE_HEIGHT_OVERRIDES = "releaseHeightOverrides";
+    public static final String RELEASE_BIOME_HEIGHT_VALUES = "releaseBiomeHeightValues";
     public static final String RELEASE_BIOME_DEPTH_OFFSET = "releaseBiomeDepthOffset";
     public static final String RELEASE_BIOME_DEPTH_WEIGHT = "releaseBiomeDepthWeight";
     public static final String RELEASE_BIOME_SCALE_OFFSET = "releaseBiomeScaleOffset";
@@ -122,6 +122,7 @@ public class NbtTags {
     public static final String VORONOI_DEPTH_MAX_Y = "voronoiDepthMaxY";
     public static final String VORONOI_POINTS = "voronoiPoints";
 
+    public static final String FRACTAL_LAYERS = "fractalLayers";
     public static final String FRACTAL_BIOMES = "fractalBiomes";
     public static final String FRACTAL_CLIMATIC_BIOMES = "fractalClimaticBiomes";
     public static final String FRACTAL_HILL_VARIANTS = "fractalHillVariants";

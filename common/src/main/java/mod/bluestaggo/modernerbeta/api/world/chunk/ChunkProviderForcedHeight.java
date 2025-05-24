@@ -2,17 +2,17 @@ package mod.bluestaggo.modernerbeta.api.world.chunk;
 
 import mod.bluestaggo.modernerbeta.world.biome.HeightConfig;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.BiomeInfo;
+import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
 import net.minecraft.util.math.MathHelper;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public abstract class ChunkProviderForcedHeight extends ChunkProviderNoise {
     private static final float[] BIOME_HEIGHT_WEIGHTS = new float[25];
 
-    private final Map<BiomeInfo, HeightConfig> heightOverrideCache = new HashMap<>();
+    private final Map<ExtendedBiomeId, HeightConfig> biomeHeightValues;
 
     static {
         for (int x = -2; x <= 2; x++) {
@@ -25,30 +25,25 @@ public abstract class ChunkProviderForcedHeight extends ChunkProviderNoise {
 
     public ChunkProviderForcedHeight(ModernBetaChunkGenerator chunkGenerator, long seed) {
         super(chunkGenerator, seed);
+        this.biomeHeightValues = this.chunkSettings.releaseBiomeHeightValues.entrySet().stream()
+            .map(entry -> Map.entry(ExtendedBiomeId.of(entry.getKey()), HeightConfig.parse(entry.getValue(), HeightConfig.DEFAULT)))
+            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
-    public BiomeInfo getBiomeInfo(int biomeX, int biomeZ) {
-        if (chunkGenerator.getBiomeSource() instanceof ModernBetaBiomeSource modernBetaBiomeSource) {
+    public ExtendedBiomeId getExtendedBiomeId(int biomeX, int biomeZ) {
+        if (this.chunkGenerator.getBiomeSource() instanceof ModernBetaBiomeSource modernBetaBiomeSource) {
             return modernBetaBiomeSource.getBiomeForHeightGen(biomeX, 16, biomeZ);
         } else {
-            return BiomeInfo.of(this.getBiome(biomeX, 16, biomeZ, null));
+            return ExtendedBiomeId.of(this.getBiome(biomeX, 16, biomeZ, null).getKey().orElseThrow().getValue());
         }
     }
 
-    public HeightConfig getHeightConfig(BiomeInfo biomeInfo) {
-        HeightConfig config = HeightConfig.getHeightConfig(biomeInfo);
-        String id = biomeInfo.getId();
-        if (this.chunkSettings.releaseHeightOverrides.containsKey(id)) {
-            HeightConfig fallbackConfig = config;
-            config = this.heightOverrideCache.computeIfAbsent(biomeInfo, k ->
-                HeightConfig.parse(this.chunkSettings.releaseHeightOverrides.get(id), fallbackConfig));
-        }
-
-        return config;
+    public HeightConfig getHeightConfigOfBiome(ExtendedBiomeId extendedBiomeId) {
+        return this.biomeHeightValues.getOrDefault(extendedBiomeId, HeightConfig.DEFAULT);
     }
 
     public HeightConfig getRawHeightConfigAt(int x, int z) {
-        return this.getHeightConfig(this.getBiomeInfo(x, z));
+        return this.getHeightConfigOfBiome(this.getExtendedBiomeId(x, z));
     }
 
     public HeightConfig getHeightConfigAt(int noiseX, int noiseZ) {
@@ -56,13 +51,13 @@ public abstract class ChunkProviderForcedHeight extends ChunkProviderNoise {
         float depth = 0.0F;
         float totalWeight = 0.0F;
 
-        BiomeInfo biome = this.getBiomeInfo(noiseX, noiseZ);
-        double minSurfaceHeight = this.getHeightConfig(biome).depth();
+        ExtendedBiomeId biome = this.getExtendedBiomeId(noiseX, noiseZ);
+        double minSurfaceHeight = this.getHeightConfigOfBiome(biome).depth();
 
         for (int biomeX = -2; biomeX <= 2; biomeX++) {
             for (int biomeZ = -2; biomeZ <= 2; biomeZ++) {
-                biome = this.getBiomeInfo(noiseX + biomeX, noiseZ + biomeZ);
-                HeightConfig heightConfig = this.getHeightConfig(biome);
+                biome = this.getExtendedBiomeId(noiseX + biomeX, noiseZ + biomeZ);
+                HeightConfig heightConfig = this.getHeightConfigOfBiome(biome);
 
                 float thisScale = this.chunkSettings.releaseBiomeScaleOffset + heightConfig.scale() * this.chunkSettings.releaseBiomeScaleWeight;
                 float thisDepth = this.chunkSettings.releaseBiomeDepthOffset + heightConfig.depth() * this.chunkSettings.releaseBiomeDepthWeight;

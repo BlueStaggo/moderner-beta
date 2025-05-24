@@ -5,17 +5,15 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
-import mod.bluestaggo.modernerbeta.api.registry.ModernBetaRegistries;
-import mod.bluestaggo.modernerbeta.api.world.biome.BiomeProvider;
-import mod.bluestaggo.modernerbeta.api.world.biome.BiomeResolverBlock;
-import mod.bluestaggo.modernerbeta.api.world.biome.BiomeResolverInfo;
-import mod.bluestaggo.modernerbeta.api.world.biome.BiomeResolverOcean;
+import mod.bluestaggo.modernerbeta.api.registry.ModernBetaBuiltInRegistries;
+import mod.bluestaggo.modernerbeta.api.world.biome.*;
 import mod.bluestaggo.modernerbeta.api.world.cavebiome.CaveBiomeProvider;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsBiome;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsCaveBiome;
 import mod.bluestaggo.modernerbeta.world.biome.injector.BiomeInjector.BiomeInjectionStep;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.BiomeInfo;
+import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.*;
@@ -73,11 +71,11 @@ public class ModernBetaBiomeSource extends BiomeSource {
         ModernBetaSettingsBiome biomeSettings = ModernBetaSettingsBiome.fromCompound(this.biomeSettings);
         ModernBetaSettingsCaveBiome caveBiomeSettings = ModernBetaSettingsCaveBiome.fromCompound(this.caveBiomeSettings);
         
-        this.biomeProvider = ModernBetaRegistries.BIOME
+        this.biomeProvider = ModernBetaBuiltInRegistries.BIOME
             .get(biomeSettings.biomeProvider)
             .apply(this.biomeSettings, this.biomeRegistry, seed);
         
-        this.caveBiomeProvider = ModernBetaRegistries.CAVE_BIOME
+        this.caveBiomeProvider = ModernBetaBuiltInRegistries.CAVE_BIOME
             .get(caveBiomeSettings.biomeProvider)
             .apply(this.caveBiomeSettings, this.biomeRegistry, seed);
     }
@@ -210,11 +208,11 @@ public class ModernBetaBiomeSource extends BiomeSource {
         return region.getBiome(pos);
     }
 
-    public BiomeInfo getBiomeForHeightGen(int biomeX, int biomeY, int biomeZ) {
-        if (this.biomeProvider instanceof BiomeResolverInfo biomeResolver)
-            return biomeResolver.getBiomeInfo(biomeX, biomeY, biomeZ);
+    public ExtendedBiomeId getBiomeForHeightGen(int biomeX, int biomeY, int biomeZ) {
+        if (this.biomeProvider instanceof BiomeResolverExtendedId biomeResolver)
+            return biomeResolver.getExtendedBiomeId(biomeX, biomeY, biomeZ);
 
-        return BiomeInfo.of(this.biomeProvider.getBiome(biomeX, biomeY, biomeZ));
+        return ExtendedBiomeId.of(this.biomeProvider.getBiome(biomeX, biomeY, biomeZ).getKey().orElseThrow().getValue());
     }
     
     public void setChunkGenerator(ModernBetaChunkGenerator chunkGenerator) {
@@ -257,11 +255,11 @@ public class ModernBetaBiomeSource extends BiomeSource {
         ModernBetaSettingsBiome modernBetaBiomeSettings = ModernBetaSettingsBiome.fromCompound(this.biomeSettings);
         ModernBetaSettingsCaveBiome modernBetaCaveBiomeSettings = ModernBetaSettingsCaveBiome.fromCompound(this.caveBiomeSettings);
         
-        BiomeProvider biomeProvider  = ModernBetaRegistries.BIOME
+        BiomeProvider biomeProvider  = ModernBetaBuiltInRegistries.BIOME
             .get(modernBetaBiomeSettings.biomeProvider)
             .apply(biomeSettings, biomeRegistry, 0L);
         
-        CaveBiomeProvider caveBiomeProvider = ModernBetaRegistries.CAVE_BIOME
+        CaveBiomeProvider caveBiomeProvider = ModernBetaBuiltInRegistries.CAVE_BIOME
             .get(modernBetaCaveBiomeSettings.biomeProvider)
             .apply(caveBiomeSettings, biomeRegistry, 0L);
 

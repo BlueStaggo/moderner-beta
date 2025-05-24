@@ -12,37 +12,31 @@ public class LayerZoom extends LayerZoomBase {
 
 	@Override
 	protected BiomeInfo interpolate(BiomeInfo a, BiomeInfo b, BiomeInfo c, BiomeInfo d) {
-		if(b.equals(c) && c.equals(d)) {
+		boolean ab = a.equals(b);
+		boolean ac = a.equals(c);
+		boolean ad = a.equals(d);
+		boolean bc = b.equals(c);
+		boolean bd = b.equals(d);
+		boolean cd = c.equals(d);
+		if(bc && cd) {
 			return b;
-		} else if(a.equals(b) && a.equals(c)) {
+		} else if(ab && ac) {
 			return a;
-		} else if(a.equals(b) && a.equals(d)) {
+		} else if(ab && ad) {
 			return a;
-		} else if(a.equals(c) && a.equals(d)) {
+		} else if(ac && ad) {
 			return a;
-		} else if(a.equals(b) && !c.equals(d)) {
+		} else if(ab && !cd) {
 			return a;
-		} else if(a.equals(c) && !b.equals(d)) {
+		} else if(ac && !bd) {
 			return a;
-		} else if(a.equals(d) && !b.equals(c)) {
+		} else if(ad && !bc) {
 			return a;
-		} else if(b.equals(a) && !c.equals(d)) {
+		} else if(bc && !ad) {
 			return b;
-		} else if(b.equals(c) && !a.equals(d)) {
+		} else if(bd && !ac) {
 			return b;
-		} else if(b.equals(d) && !a.equals(c)) {
-			return b;
-		} else if(c.equals(a) && !b.equals(d)) {
-			return c;
-		} else if(c.equals(b) && !a.equals(d)) {
-			return c;
-		} else if(c.equals(d) && !a.equals(b)) {
-			return c;
-		} else if(d.equals(a) && !b.equals(c)) {
-			return c;
-		} else if(d.equals(b) && !a.equals(c)) {
-			return c;
-		} else if(d.equals(c) && !a.equals(b)) {
+		} else if(cd && !ab) {
 			return c;
 		} else {
 			int choice = this.nextInt(4);

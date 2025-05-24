@@ -117,10 +117,7 @@ public abstract class Layer {
 
 		Layer biomes = new LayerAddBiomes(200, land, settings.biomes, replacementBiomes, settings.climaticBiomes);
 		for (int i = 0; i < settings.hillScale; i++) {
-			var subVariants = settings.subVariants.get(i);
-			if (subVariants != null) {
-				biomes = new LayerSubVariants(settings.subVariantSeed + i, biomes, subVariants);
-			}
+			biomes = applySubvariants(biomes, settings, i);
 
 			if (settings.beachShrink == i - 2 - settings.hillScale && settings.addBeaches) {
 				biomes = new LayerAddEdge(1000, biomes, beach, stonyShore, ocean, mushroomIsland,
@@ -130,10 +127,7 @@ public abstract class Layer {
 			biomes = new LayerZoom(1000 + i, biomes);
 		}
 
-		var subVariants = settings.subVariants.get(settings.hillScale);
-		if (subVariants != null) {
-			biomes = new LayerSubVariants(settings.subVariantSeed + settings.hillScale, biomes, subVariants);
-		}
+		biomes = applySubvariants(biomes, settings, settings.hillScale);
 
 		if (settings.useClimaticBiomes) biomes = new LayerAddEdge(1000, biomes, settings.edgeVariants, biomeLookup);
 		if (settings.addHills) {
@@ -151,6 +145,7 @@ public abstract class Layer {
 
 		for (int i = 0; i < settings.biomeScale; i++) {
 			biomes = new LayerZoom(1000 + i, biomes);
+			biomes = applySubvariants(biomes, settings, settings.hillScale + 1 + i);
 			if (i == 0) {
 				if (settings.oceans) biomes = settings.terrainType == FractalSettings.TerrainType.BETA
 					? new LayerAddLandB18(3, biomes, ocean, plains, frozenOcean, icePlains)
@@ -202,6 +197,14 @@ public abstract class Layer {
 			layer = new LayerRareClimate(3, layer);
 		}
 		return layer;
+	}
+
+	private static Layer applySubvariants(Layer layer, FractalSettings settings, int index) {
+		var subVariants = settings.subVariants.get(index);
+		if (subVariants == null) {
+			return layer;
+		}
+		return new LayerSubVariants(settings.subVariantSeed + index, layer, subVariants);
 	}
 
 	public Layer(long seed) {

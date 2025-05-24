@@ -11,5 +11,5 @@ import java.util.function.Supplier;
 @Mixin(ChunkGenerator.class)
 public interface AccessorChunkGenerator {
     @Accessor
-    public Supplier<List<PlacedFeatureIndexer.IndexedFeatures>> getIndexedFeaturesListSupplier();
+    Supplier<List<PlacedFeatureIndexer.IndexedFeatures>> getIndexedFeaturesListSupplier();
 }

@@ -94,7 +94,6 @@ public class ModernBetaChunkGenerator extends NoiseChunkGenerator {
             chunk.populateBiomes(this.biomeSource, noiseSampler.createMultiNoiseSampler(noiseConfig.getNoiseRouter(), this.settings.value().spawnTarget()));
             
             return chunk;
-            
         }, () -> "init_biomes"), Util.getMainWorkerExecutor());
     }
     
@@ -280,13 +279,20 @@ public class ModernBetaChunkGenerator extends NoiseChunkGenerator {
     }
     
     public ChunkNoiseSampler createChunkNoiseSampler(Chunk chunk, StructureAccessor world, Blender blender, NoiseConfig noiseConfig) {
-        return ChunkNoiseSampler.create(
+//        return ChunkNoiseSampler.create(
+//            chunk,
+//            noiseConfig,
+//            StructureWeightSampler.createStructureWeightSampler(world, chunk.getPos()),
+//            this.settings.value(),
+//            this.chunkProvider.getFluidLevelSampler(),
+//            blender
+//        );
+        return ModernBetaChunkNoiseSampler.create(
             chunk,
             noiseConfig,
-            StructureWeightSampler.createStructureWeightSampler(world, chunk.getPos()),
             this.settings.value(),
             this.chunkProvider.getFluidLevelSampler(),
-            blender
+            this.chunkProvider
         );
     }
 

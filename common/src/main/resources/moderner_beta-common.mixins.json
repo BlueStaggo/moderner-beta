@@ -6,11 +6,14 @@
   "mixins": [
     "AccessorChunkGenerator",
     "AccessorChunkSection",
+    "AccessorMaterialRuleContext",
     "AccessorPlacedFeature",
+    "MixinAboveYMaterialCondition",
     "MixinFreezeTopLayerFeature",
     "MixinMinecraftServer",
     "MixinSpawnLocating",
-    "MixinStructure"
+    "MixinStructure",
+    "MixinWaterMaterialCondition"
   ],
   "client": [
     "client.AccessorTextWidget",

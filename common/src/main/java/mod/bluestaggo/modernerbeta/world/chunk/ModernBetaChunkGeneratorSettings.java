@@ -16,6 +16,7 @@ import net.minecraft.world.gen.densityfunction.DensityFunction;
 import net.minecraft.world.gen.densityfunction.DensityFunctionTypes;
 import net.minecraft.world.gen.noise.NoiseParametersKeys;
 import net.minecraft.world.gen.noise.NoiseRouter;
+import net.minecraft.world.gen.surfacebuilder.MaterialRules;
 import net.minecraft.world.gen.surfacebuilder.VanillaSurfaceRules;
 
 import java.util.List;
@@ -94,13 +95,15 @@ public class ModernBetaChunkGeneratorSettings {
     ) {
         RegistryEntryLookup<DensityFunction> densityFunctionLookup = settingsRegisterable.getRegistryLookup(RegistryKeys.DENSITY_FUNCTION);
         RegistryEntryLookup<DoublePerlinNoiseSampler.NoiseParameters> noiseParametersLookup = settingsRegisterable.getRegistryLookup(RegistryKeys.NOISE_PARAMETERS);
-        
+
+        MaterialRules.MaterialRule materialRule = VanillaSurfaceRules.createDefaultRule(false, false, true);
+
         return new ChunkGeneratorSettings(
             shapeConfig,
             BlockStates.STONE,
             BlockStates.WATER,
             createDensityFunctions(densityFunctionLookup, noiseParametersLookup),
-            VanillaSurfaceRules.createDefaultRule(false, false, true),
+            materialRule,
             List.of(),
             seaLevel,
             false,

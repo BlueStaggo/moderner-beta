@@ -85,9 +85,9 @@ public class ModernBetaChunkNoiseSampler extends ChunkNoiseSampler {
         int height = (this.chunkProvider instanceof ChunkProviderNoise noiseChunkProvider) ?
             noiseChunkProvider.getHeight(x, z, ChunkHeightmap.Type.SURFACE_FLOOR) :
             this.chunkProvider.getHeight(x, z, Heightmap.Type.OCEAN_FLOOR_WG);
-        
+
         int seaLevel = this.chunkProvider.getSeaLevel();
-        
+
         // Fudge deeper oceans when at a body of water
         return (height < seaLevel) ? height + OCEAN_HEIGHT_OFFSET : height;
     }

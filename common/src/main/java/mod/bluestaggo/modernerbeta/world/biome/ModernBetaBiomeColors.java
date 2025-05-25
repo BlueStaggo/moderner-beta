@@ -17,7 +17,7 @@ public final class ModernBetaBiomeColors {
     public static final int VANILLA_FROZEN_WATER_COLOR = USE_OLD_WATER_COLORS ? OLD_WATER_COLOR : 4159204;
     public static final int VANILLA_LUKEWARM_WATER_COLOR = USE_OLD_WATER_COLORS ? OLD_WATER_COLOR : 4159204;
     public static final int VANILLA_WARM_WATER_COLOR = USE_OLD_WATER_COLORS ? OLD_WATER_COLOR : 4159204;
-    public static final int VANILLA_SWAMP_WATER_COLOR = USE_OLD_WATER_COLORS ? 4020848 : 3634788;
+    public static final int VANILLA_SWAMP_WATER_COLOR = USE_OLD_WATER_COLORS ? 4020848 : 3634844;
 
     public static final int VANILLA_WATER_FOG_COLOR = USE_OLD_WATER_COLORS ? OLD_WATER_FOG_COLOR : 329011;
     public static final int VANILLA_COLD_WATER_FOG_COLOR = USE_OLD_WATER_COLORS ? OLD_WATER_FOG_COLOR : 329011;
@@ -70,8 +70,4 @@ public final class ModernBetaBiomeColors {
     
     public static final int INDEV_WOODS_SKY_COLOR = 7699847;
     public static final int INDEV_WOODS_FOG_COLOR = 5069403;
-    
-    // Not an original biome, use Indev Normal colors
-    public static final int INDEV_SNOWY_SKY_COLOR = INDEV_NORMAL_SKY_COLOR;
-    public static final int INDEV_SNOWY_FOG_COLOR = INDEV_NORMAL_FOG_COLOR;
 }

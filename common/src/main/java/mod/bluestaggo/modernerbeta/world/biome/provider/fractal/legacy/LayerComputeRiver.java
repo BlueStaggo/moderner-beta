@@ -1,7 +1,5 @@
 package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.legacy;
 
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.DummyBiome;
-
 public class LayerComputeRiver extends Layer {
 	private final boolean convertOceans;
 

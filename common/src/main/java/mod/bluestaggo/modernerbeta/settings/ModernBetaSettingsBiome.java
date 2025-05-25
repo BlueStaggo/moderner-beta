@@ -11,12 +11,13 @@ import mod.bluestaggo.modernerbeta.world.biome.provider.climate.ClimateMapping;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ClimaticBiomeList;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ConfiguredLayers;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.DirtyZoomLayer;
+import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.PointZoomLayer;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.RandomBiomeLayer;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.legacy.FractalSettings;
 import mod.bluestaggo.modernerbeta.world.biome.voronoi.VoronoiPointBiome;
 import net.minecraft.nbt.NbtCompound;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -269,15 +270,11 @@ public class ModernBetaSettingsBiome implements ModernBetaSettings {
                     ModernBetaBiomes.BETA_OCEAN.getValue().toString(),
                     ModernBetaBiomes.BETA_OCEAN.getValue().toString(),
                     0.5, 0.5, 0.5
-                ));
+                )
+            );
 
-            this.fractalLayers = new ConfiguredLayers(List.of(
-                new RandomBiomeLayer("land", 1234, ExtendedBiomeId.listOf(
-                    "minecraft:plains",
-                    "minecraft:forest",
-                    "minecraft:forest*hills"
-                )),
-                new DirtyZoomLayer("land", 0, "land", 2)
+            this.fractalLayers = new ConfiguredLayers(Collections.singletonList(
+                new RandomBiomeLayer("land", 1234, ExtendedBiomeId.listOf("minecraft:plains"))
             ));
 
             this.fractalBiomes = List.of(

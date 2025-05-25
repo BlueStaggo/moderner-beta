@@ -45,9 +45,9 @@ public abstract class Layer {
 
     protected abstract LayerType<?> getType();
 
-    protected abstract ExtendedBiomeId generateBiome(int x, int z);
+    protected abstract ExtendedBiomeId generate(int x, int z);
 
-    void configure(Function<String, Layer> layerMap) {
+    public void configure(Function<String, Layer> layerMap) {
     }
 
     protected void addPossibleBiomes(Set<ExtendedBiomeId> biomes) {
@@ -77,19 +77,19 @@ public abstract class Layer {
         this.random = new LayerRandom(this.saltedSeed);
     }
 
-    protected LayerRandom getRandom(long x, long z) {
+    protected final LayerRandom getRandom(long x, long z) {
         this.random.init(x, z);
         return this.random;
     }
 
-    public synchronized ExtendedBiomeId getBiome(int x, int z) {
+    public synchronized ExtendedBiomeId sample(int x, int z) {
         long pos = ColumnPos.pack(x, z);
         ExtendedBiomeId biome = this.cache.get(pos);
         if (biome != null) {
             return biome;
         }
 
-        biome = this.generateBiome(x, z);
+        biome = this.generate(x, z);
         while (this.cache.size() >= CACHE_CAPACITY) {
             this.cache.removeFirst();
         }
@@ -97,10 +97,36 @@ public abstract class Layer {
         return biome;
     }
 
-    public void addPossibleBiomesRecursive(Set<ExtendedBiomeId> biomes) {
-        this.addPossibleBiomes(biomes);
+    public final ExtendedBiomeId[] sampleNeighbors(int x, int z) {
+        return new ExtendedBiomeId[] {
+            this.sample(x - 1, z),
+            this.sample(x + 1, z),
+            this.sample(x, z - 1),
+            this.sample(x, z + 1),
+        };
+    }
+
+    public final ExtendedBiomeId[] sampleDiagonalNeighbors(int x, int z) {
+        return new ExtendedBiomeId[] {
+            this.sample(x - 1, z - 1),
+            this.sample(x + 1, z - 1),
+            this.sample(x - 1, z + 1),
+            this.sample(x + 1, z + 1),
+        };
+    }
+
+    protected static boolean allNeighborsEqual(ExtendedBiomeId[] neighbors, ExtendedBiomeId i) {
+        return neighbors[0].equals(i) && neighbors[1].equals(i) && neighbors[2].equals(i) && neighbors[3].equals(i);
+    }
+
+    protected static boolean neighborsContain(ExtendedBiomeId[] neighbors, ExtendedBiomeId i) {
+        return neighbors[0].equals(i) || neighbors[1].equals(i) || neighbors[2].equals(i) || neighbors[3].equals(i);
+    }
+
+    public final void addPossibleBiomesRecursive(Set<ExtendedBiomeId> biomes) {
         for (Layer parent : this.getParents()) {
             parent.addPossibleBiomesRecursive(biomes);
         }
+        this.addPossibleBiomes(biomes);
     }
 }

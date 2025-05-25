@@ -53,7 +53,7 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 
 	@Override
 	public ExtendedBiomeId getExtendedBiomeId(int biomeX, int biomeY, int biomeZ) {
-		return this.layer.getBiome(biomeX, biomeZ);
+		return this.layer.sample(biomeX, biomeZ);
 	}
 
 	@Override

@@ -1,7 +1,5 @@
 package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.legacy;
 
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.DummyBiome;
-
 public class LayerInitLand extends Layer {
 	public LayerInitLand(long seed) {
 		super(seed);

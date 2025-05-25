@@ -45,7 +45,7 @@ public class NbtTags {
     public static final String NOISE_BOTTOM_SLIDE_OFFSET = "noiseBottomSlideOffset";
 
     // Release
-    public static final String RELEASE_BIOME_HEIGHT_VALUES = "releaseBiomeHeightValues";
+    public static final String RELEASE_BIOME_HEIGHT_CONFIGS = "releaseBiomeHeightConfigs";
     public static final String RELEASE_BIOME_DEPTH_OFFSET = "releaseBiomeDepthOffset";
     public static final String RELEASE_BIOME_DEPTH_WEIGHT = "releaseBiomeDepthWeight";
     public static final String RELEASE_BIOME_SCALE_OFFSET = "releaseBiomeScaleOffset";

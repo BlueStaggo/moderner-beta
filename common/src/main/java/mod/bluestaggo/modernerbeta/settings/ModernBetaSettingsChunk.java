@@ -137,7 +137,7 @@ public class ModernBetaSettingsChunk implements ModernBetaSettings {
         this.noiseBottomSlideSize = builder.noiseBottomSlideSize;
         this.noiseBottomSlideOffset = builder.noiseBottomSlideOffset;
 
-        this.releaseBiomeHeightValues = builder.releaseBiomeHeightValues;
+        this.releaseBiomeHeightValues = builder.releaseBiomeHeightConfigs;
         this.releaseBiomeDepthWeight = builder.releaseBiomeDepthWeight;
         this.releaseBiomeDepthOffset = builder.releaseBiomeDepthOffset;
         this.releaseBiomeScaleWeight = builder.releaseBiomeScaleWeight;
@@ -228,7 +228,7 @@ public class ModernBetaSettingsChunk implements ModernBetaSettings {
             .putInt(NbtTags.NOISE_BOTTOM_SLIDE_SIZE, this.noiseBottomSlideSize)
             .putInt(NbtTags.NOISE_BOTTOM_SLIDE_OFFSET, this.noiseBottomSlideOffset)
 
-            .putCompound(NbtTags.RELEASE_BIOME_HEIGHT_VALUES, FractalSettings.mapToNbt(this.releaseBiomeHeightValues))
+            .putCompound(NbtTags.RELEASE_BIOME_HEIGHT_CONFIGS, FractalSettings.mapToNbt(this.releaseBiomeHeightValues))
             .putFloat(NbtTags.RELEASE_BIOME_DEPTH_OFFSET, this.releaseBiomeDepthOffset)
             .putFloat(NbtTags.RELEASE_BIOME_DEPTH_WEIGHT, this.releaseBiomeDepthWeight)
             .putFloat(NbtTags.RELEASE_BIOME_SCALE_OFFSET, this.releaseBiomeScaleOffset)
@@ -313,7 +313,7 @@ public class ModernBetaSettingsChunk implements ModernBetaSettings {
         public int noiseBottomSlideSize;
         public int noiseBottomSlideOffset;
 
-        public Map<String, String> releaseBiomeHeightValues;
+        public Map<String, String> releaseBiomeHeightConfigs;
         public float releaseBiomeDepthWeight;
         public float releaseBiomeDepthOffset;
         public float releaseBiomeScaleWeight;
@@ -394,9 +394,10 @@ public class ModernBetaSettingsChunk implements ModernBetaSettings {
             this.noiseBottomSlideSize = 3;
             this.noiseBottomSlideOffset = 0;
 
-            this.releaseBiomeHeightValues = Map.of(
-                "minecraft:forest", "0.1;0.5",
-                "minecraft:forest*hills", "1.2;0.5"
+            this.releaseBiomeHeightConfigs = Map.of(
+                "example:example", "0.1;0.5",
+                "example:example*hills", "0.2;0.8",
+                "example:example*plateau", "1.2;0.2"
             );
             this.releaseBiomeDepthWeight = 1.0f;
             this.releaseBiomeDepthOffset = 0.0f;
@@ -481,7 +482,7 @@ public class ModernBetaSettingsChunk implements ModernBetaSettings {
             this.noiseBottomSlideSize = reader.readInt(NbtTags.NOISE_BOTTOM_SLIDE_SIZE, this.noiseBottomSlideSize);
             this.noiseBottomSlideOffset = reader.readInt(NbtTags.NOISE_BOTTOM_SLIDE_OFFSET, this.noiseBottomSlideOffset);
 
-            this.releaseBiomeHeightValues = FractalSettings.mapFromReader(NbtTags.RELEASE_BIOME_HEIGHT_VALUES, reader, this.releaseBiomeHeightValues);
+            this.releaseBiomeHeightConfigs = FractalSettings.mapFromReader(NbtTags.RELEASE_BIOME_HEIGHT_CONFIGS, reader, this.releaseBiomeHeightConfigs);
             this.releaseBiomeDepthOffset = reader.readFloat(NbtTags.RELEASE_BIOME_DEPTH_OFFSET, this.releaseBiomeDepthOffset);
             this.releaseBiomeDepthWeight = reader.readFloat(NbtTags.RELEASE_BIOME_DEPTH_WEIGHT, this.releaseBiomeDepthWeight);
             this.releaseBiomeScaleOffset = reader.readFloat(NbtTags.RELEASE_BIOME_SCALE_OFFSET, this.releaseBiomeScaleOffset);

@@ -1,6 +1,5 @@
 package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.legacy;
 
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.DummyBiome;
 import net.minecraft.registry.RegistryEntryLookup;
 import net.minecraft.registry.tag.BiomeTags;
 import net.minecraft.world.biome.Biome;

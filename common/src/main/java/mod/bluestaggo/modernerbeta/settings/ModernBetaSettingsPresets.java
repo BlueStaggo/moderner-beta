@@ -3,6 +3,9 @@ package mod.bluestaggo.modernerbeta.settings;
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomes;
 import mod.bluestaggo.modernerbeta.world.biome.provider.climate.ClimateMapping;
+import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ConfiguredLayers;
+import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
+import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.*;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.legacy.FractalSettings;
 import mod.bluestaggo.modernerbeta.world.biome.voronoi.VoronoiPointBiome;
 import mod.bluestaggo.modernerbeta.world.biome.voronoi.VoronoiPointCaveBiome;
@@ -12,6 +15,7 @@ import mod.bluestaggo.modernerbeta.world.chunk.provider.island.IslandShape;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.biome.BiomeKeys;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -1405,26 +1409,43 @@ public class ModernBetaSettingsPresets {
 
         settingsChunk.chunkProvider = ModernBetaBuiltInTypes.Chunk.EARLY_RELEASE.id;
         settingsChunk.useFixedCaves = true;
-        settingsChunk.releaseBiomeHeightValues = Map.ofEntries(
+        settingsChunk.releaseBiomeHeightConfigs = Map.ofEntries(
             Map.entry("minecraft:ocean", "-1.0;0.5")
         );
 
         settingsBiome.biomeProvider = ModernBetaBuiltInTypes.Biome.FRACTAL.id;
-        settingsBiome.fractalBiomes = List.of(
-            "minecraft:desert",
-            "minecraft:forest",
-            "moderner_beta:late_beta_extreme_hills",
-            "moderner_beta:late_beta_swampland",
-            "moderner_beta:late_beta_plains",
-            "moderner_beta:late_beta_taiga"
-        );
-        settingsBiome.fractalHillVariants = Map.ofEntries(
-            Map.entry("minecraft:desert", "*minecraft:desert"),
-            Map.entry("minecraft:forest", "*minecraft:forest"),
-            Map.entry("moderner_beta:late_beta_plains", "minecraft:forest"),
-            Map.entry("moderner_beta:late_beta_taiga", "*moderner_beta:late_beta_taiga")
-        );
-        settingsBiome.fractalIcePlains = "moderner_beta:late_beta_ice_plains";
+        settingsBiome.fractalLayers = new ConfiguredLayers(Arrays.asList(
+            new InitLandLayer("land", 1),
+            new FuzzyZoomLayer("land", 2000, "land"),
+            AddBetaLandLayer.forIslandScale("land", 1, "land"),
+            new ModalZoomLayer("land", 2001, "land"),
+            AddBetaLandLayer.forIslandScale("land", 2, "land"),
+            new ModalZoomLayer("land", 2002, "land"),
+            AddBetaLandLayer.forIslandScale("land", 3, "land"),
+            new ModalZoomLayer("land", 2003, "land"),
+            AddBetaLandLayer.forIslandScale("land", 3, "land"),
+            new ModalZoomLayer("land", 2004, "land"),
+            AddBetaLandLayer.forIslandScale("land", 3, "land"),
+            new RandomBiomeLayer("biome_pool", 200, ExtendedBiomeId.listOf(
+                "minecraft:desert",
+                "minecraft:forest",
+                "moderner_beta:late_beta_extreme_hills",
+                "moderner_beta:late_beta_swampland",
+                "moderner_beta:late_beta_plains",
+                "moderner_beta:late_beta_taiga"
+            )),
+            new MaskLayer("land", 0, "land", Map.of(ExtendedBiomeId.PLAINS, "biome_pool")),
+            new StackedZoomLayer("land", 1000, "land", 2, StackedZoomLayer.Type.MODAL),
+            new ModalZoomLayer("land", 1000, "land"),
+            AddBetaLandLayer.forLateBeta("land", 3, "land"),
+            new StackedZoomLayer("land", 1001, "land", 3, StackedZoomLayer.Type.MODAL),
+            new SmoothLayer("land", 1000, "land"),
+            new InitRiverLayer("river", 100, "land", false),
+            new StackedZoomLayer("river", 1000, "river", 6, StackedZoomLayer.Type.MODAL),
+            new ComputeRiverLayer("river", 0, "river", false),
+            new SmoothLayer("river", 1000, "river"),
+            MixRiverLayer.forEarlyRelease("land", 0, "land", "river")
+        ));
 
         return new ModernBetaSettingsPreset(
             settingsChunk.build(),
@@ -1589,7 +1610,7 @@ public class ModernBetaSettingsPresets {
 
         settingsChunk.chunkProvider = ModernBetaBuiltInTypes.Chunk.EARLY_RELEASE.id;
         settingsChunk.useFixedCaves = true;
-        settingsChunk.releaseBiomeHeightValues = Map.ofEntries(
+        settingsChunk.releaseBiomeHeightConfigs = Map.ofEntries(
             Map.entry("*minecraft:desert", "0.3;0.8"),
             Map.entry("*minecraft:forest", "0.3;0.7"),
             Map.entry("moderner_beta:early_release_extreme_hills", "0.3;1.5"),
@@ -1651,7 +1672,7 @@ public class ModernBetaSettingsPresets {
         ModernBetaSettingsCaveBiome.Builder settingsCaveBiome = new ModernBetaSettingsCaveBiome.Builder();
 
         settingsChunk.chunkProvider = ModernBetaBuiltInTypes.Chunk.MAJOR_RELEASE.id;
-        settingsChunk.releaseBiomeHeightValues = Map.ofEntries(
+        settingsChunk.releaseBiomeHeightConfigs = Map.ofEntries(
             Map.entry("minecraft:ocean", "-1.0;0.2"),
             Map.entry("minecraft:warm_ocean", "-1.0;0.2"),
             Map.entry("minecraft:lukewarm_ocean", "-1.0;0.2"),
@@ -1757,7 +1778,7 @@ public class ModernBetaSettingsPresets {
         ModernBetaSettingsCaveBiome.Builder settingsCaveBiome = new ModernBetaSettingsCaveBiome.Builder();
 
         settingsChunk.chunkProvider = ModernBetaBuiltInTypes.Chunk.MAJOR_RELEASE.id;
-        settingsChunk.releaseBiomeHeightValues = Map.ofEntries(
+        settingsChunk.releaseBiomeHeightConfigs = Map.ofEntries(
             Map.entry("minecraft:ocean", "-1.0;0.2"),
             Map.entry("minecraft:warm_ocean", "-1.0;0.2"),
             Map.entry("minecraft:lukewarm_ocean", "-1.0;0.2"),
@@ -1882,7 +1903,7 @@ public class ModernBetaSettingsPresets {
 
         settingsChunk.chunkProvider = ModernBetaBuiltInTypes.Chunk.EARLY_RELEASE.id;
         settingsChunk.useFixedCaves = true;
-        settingsChunk.releaseBiomeHeightValues = Map.ofEntries(
+        settingsChunk.releaseBiomeHeightConfigs = Map.ofEntries(
             Map.entry("*minecraft:desert", "0.3;0.8"),
             Map.entry("*minecraft:forest", "0.3;0.7"),
             Map.entry("*minecraft:taiga", "0.3;0.8"),

@@ -4,24 +4,22 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.Layer;
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.LayerRandom;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.LayerType;
 
-import java.util.List;
 import java.util.Set;
 
-public class RandomBiomeLayer extends Layer {
-    public static final MapCodec<RandomBiomeLayer> CODEC = RecordCodecBuilder.mapCodec(
+public class ConstantBiomeLayer extends Layer {
+    public static final MapCodec<ConstantBiomeLayer> CODEC = RecordCodecBuilder.mapCodec(
         instance -> fillLayerFields(instance)
-            .and(ExtendedBiomeId.CODEC.listOf().fieldOf("biomes").forGetter(layer -> layer.biomes))
-            .apply(instance, RandomBiomeLayer::new)
+            .and(ExtendedBiomeId.CODEC.fieldOf("biome").forGetter(layer -> layer.biome))
+            .apply(instance, ConstantBiomeLayer::new)
     );
 
-    private final List<ExtendedBiomeId> biomes;
+    private final ExtendedBiomeId biome;
 
-    public RandomBiomeLayer(String id, long seed, List<ExtendedBiomeId> biomes) {
+    public ConstantBiomeLayer(String id, long seed, ExtendedBiomeId biome) {
         super(id, seed);
-        this.biomes = biomes;
+        this.biome = biome;
     }
 
     @Override
@@ -31,12 +29,11 @@ public class RandomBiomeLayer extends Layer {
 
     @Override
     protected ExtendedBiomeId generate(int x, int z) {
-        LayerRandom random = this.getRandom(x, z);
-        return random.nextItem(this.biomes);
+        return this.biome;
     }
 
     @Override
     protected void addPossibleBiomes(Set<ExtendedBiomeId> biomes) {
-        biomes.addAll(this.biomes);
+        biomes.add(this.biome);
     }
 }

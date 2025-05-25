@@ -1,6 +1,5 @@
 package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.legacy;
 
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.BiomeInfo;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.DummyBiome;
 
 public class LayerHeatIceEdge extends Layer {

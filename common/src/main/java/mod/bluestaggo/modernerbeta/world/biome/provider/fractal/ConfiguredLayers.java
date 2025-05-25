@@ -1,116 +1,41 @@
 package mod.bluestaggo.modernerbeta.world.biome.provider.fractal;
 
 import com.google.gson.*;
-import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.DataResult;
-import com.mojang.serialization.DynamicOps;
-import com.mojang.serialization.ListBuilder;
+import mod.bluestaggo.modernerbeta.api.registry.ModernBetaBuiltInRegistries;
 
 import java.lang.reflect.Type;
-import java.security.InvalidKeyException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 
 public class ConfiguredLayers {
-    public static final Codec<ConfiguredLayers> CODEC = Codec.of(ConfiguredLayers::encode, ConfiguredLayers::decode, "ConfiguredLayersCodec");
+    public static final Codec<ConfiguredLayers> CODEC = Layer.TYPE_CODEC.listOf().xmap(ConfiguredLayers::new, configuredLayers -> configuredLayers.layers);
 
-    private final List<ConfiguredLayer> configuredLayers;
+    private final List<Layer> layers;
     private final Layer finalLayer;
 
-    private static <T> DataResult<T> encode(ConfiguredLayers layers, DynamicOps<T> ops, T prefix) {
-        ListBuilder<T> listBuilder = ops.listBuilder();
-        for (ConfiguredLayer layer : layers.configuredLayers) {
-            listBuilder.add(layer, ConfiguredLayers::encodeConfiguredLayer);
-        }
-        return listBuilder.build(prefix);
-    }
-
-    private static <T> DataResult<T> encodeConfiguredLayer(ConfiguredLayer clayer, DynamicOps<T> clops, T clprefix) {
-        return Layer.TYPE_CODEC.encode(clayer.layer(), clops, clprefix).flatMap(layer -> {
-            var clayerBuilder = clops.mapBuilder()
-                .add("id", clops.createString(clayer.id()));
-            if (!clayer.parent().isEmpty()) {
-                clayerBuilder.add("parent", clops.createString(clayer.parent()));
-            }
-            return clayerBuilder.build(layer);
-        });
-    }
-
-    private static <T> DataResult<Pair<ConfiguredLayers, T>> decode(DynamicOps<T> ops, T input) {
-        var listResult = ops.getList(input);
-        if (listResult.isError()) {
-            return DataResult.error(() -> "No layers provided");
-        }
-
-        DataResult<List<ConfiguredLayer>> layersResult = listResult.flatMap(stream -> {
-            AtomicBoolean abandonDecode = new AtomicBoolean(false);
-            AtomicReference<String> errorMessage = new AtomicReference<>();
-            Map<String, Layer> layerMap = new HashMap<>();
-            List<ConfiguredLayer> layers = new ArrayList<>();
-
-            stream.accept(dynamicLayer -> {
-                if (abandonDecode.get()) {
-                    return;
-                }
-
-                var layerResult = Layer.TYPE_CODEC.decode(ops, dynamicLayer);
-                var layerError = layerResult.error();
-                if (layerError.isPresent()) {
-                    abandonDecode.set(true);
-                    errorMessage.set(layerError.get().message());
-                    return;
-                }
-
-                Layer layer = layerResult.result().orElseThrow().getFirst();
-
-                var parentResult = ops.get(dynamicLayer, "parent").flatMap(ops::getStringValue);
-
-                var idResult = ops.get(dynamicLayer, "id").flatMap(ops::getStringValue);
-                var idError = idResult.error();
-                if (idError.isPresent()) {
-                    abandonDecode.set(true);
-                    errorMessage.set(idError.get().message());
-                    return;
-                }
-
-                String id = idResult.result().orElseThrow();
-                layerMap.put(id, layer);
-                layers.add(new ConfiguredLayer(id, layer, parentResult.result().orElse("")));
-            });
-
-            if (abandonDecode.get()) {
-                return DataResult.error(errorMessage::get);
-            }
-            return DataResult.success(layers);
-        });
-
-        return layersResult.flatMap(layers -> {
-            if (layers.isEmpty()) {
-                return DataResult.error(() -> "No layers provided");
-            }
-            return DataResult.success(new Pair<>(new ConfiguredLayers(layers), input));
-        });
-    }
-
-    public ConfiguredLayers(List<ConfiguredLayer> configuredLayers) {
-        this.configuredLayers = configuredLayers;
-        this.finalLayer = configuredLayers.getLast().layer();
+    public ConfiguredLayers(List<Layer> layers) {
+        this.layers = layers;
+        this.finalLayer = layers.get(layers.size() - 1);
 
         Map<String, Layer> layerMap = new HashMap<>();
-        for (ConfiguredLayer configuredLayer : configuredLayers) {
-            if (!configuredLayer.parent().isEmpty()) {
-                Layer parent = layerMap.get(configuredLayer.parent());
-                if (parent == null) {
-                    throw new IllegalArgumentException("Layer of id \"" + configuredLayer.parent() + "\" not yet initialised");
-                }
-                configuredLayer.layer().parent = parent;
+        AtomicInteger index = new AtomicInteger();
+        Function<String, Layer> layerMapAccessor = id -> {
+            Layer layer = layerMap.get(id);
+            if (layer != null) {
+                return layer;
             }
-            layerMap.put(configuredLayer.id(), configuredLayer.layer());
+            throw new IllegalArgumentException("Layer of id \"" + id + "\" not present at layer at index \"" + index.get() + "\"");
+        };
+
+        for (Layer layer : layers) {
+            layer.configure(layerMapAccessor);
+            layerMap.put(layer.id, layer);
+            index.getAndIncrement();
         }
     }
 
@@ -123,11 +48,13 @@ public class ConfiguredLayers {
 
         @Override
         public JsonElement serialize(ConfiguredLayers configuredLayers, Type type, JsonSerializationContext jsonSerializationContext) {
-            JsonArray array = new JsonArray();
-            for (ConfiguredLayer layer : configuredLayers.configuredLayers) {
-                array.add(jsonSerializationContext.serialize(layer));
+            JsonArray jsonArray = new JsonArray();
+            for (Layer layer : configuredLayers.layers) {
+                JsonObject jsonLayer = jsonSerializationContext.serialize(layer).getAsJsonObject();
+                jsonLayer.addProperty("type", ModernBetaBuiltInRegistries.FRACTAL_LAYER.getKey(layer.getType()));
+                jsonArray.add(jsonLayer);
             }
-            return array;
+            return jsonArray;
         }
     }
 
@@ -136,9 +63,13 @@ public class ConfiguredLayers {
 
         @Override
         public ConfiguredLayers deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
-            List<ConfiguredLayer> layers = new ArrayList<>();
+            List<Layer> layers = new ArrayList<>();
             for (JsonElement subElement : jsonElement.getAsJsonArray()) {
-                layers.add(jsonDeserializationContext.deserialize(subElement, ConfiguredLayer.class));
+                JsonObject object = subElement.getAsJsonObject();
+                String layerTypeId = object.get("type").getAsString();
+                LayerType<?> layerType = ModernBetaBuiltInRegistries.FRACTAL_LAYER.get(layerTypeId);
+                Layer layer = jsonDeserializationContext.deserialize(object, layerType.layerClass());
+                layers.add(layer);
             }
             return new ConfiguredLayers(layers);
         }

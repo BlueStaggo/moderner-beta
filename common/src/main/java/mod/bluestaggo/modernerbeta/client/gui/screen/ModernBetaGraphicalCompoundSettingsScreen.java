@@ -3,7 +3,7 @@ package mod.bluestaggo.modernerbeta.client.gui.screen;
 import com.mojang.serialization.Codec;
 import mod.bluestaggo.modernerbeta.client.gui.optioncallbacks.*;
 import mod.bluestaggo.modernerbeta.world.biome.HeightConfig;
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.BiomeInfo;
+import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.legacy.BiomeInfo;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.option.GameOptions;
 import net.minecraft.client.option.SimpleOption;
@@ -17,7 +17,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
 import net.minecraft.util.math.MathHelper;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;

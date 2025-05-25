@@ -4,7 +4,7 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import mod.bluestaggo.modernerbeta.api.world.biome.BiomeProvider;
 import mod.bluestaggo.modernerbeta.api.world.biome.BiomeResolverBlock;
 import mod.bluestaggo.modernerbeta.api.world.biome.BiomeResolverExtendedId;
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.BiomeInfo;
+import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.legacy.BiomeInfo;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.Layer;
 import net.minecraft.nbt.NbtCompound;

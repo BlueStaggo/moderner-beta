@@ -1,4 +1,4 @@
-package mod.bluestaggo.modernerbeta.world.biome.provider.fractal;
+package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.legacy;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

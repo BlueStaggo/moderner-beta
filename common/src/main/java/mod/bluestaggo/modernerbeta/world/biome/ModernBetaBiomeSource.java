@@ -12,7 +12,6 @@ import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsBiome;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsCaveBiome;
 import mod.bluestaggo.modernerbeta.world.biome.injector.BiomeInjector.BiomeInjectionStep;
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.BiomeInfo;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
 import net.minecraft.nbt.NbtCompound;

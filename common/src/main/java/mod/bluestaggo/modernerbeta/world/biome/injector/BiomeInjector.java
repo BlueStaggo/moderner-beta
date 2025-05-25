@@ -7,8 +7,6 @@ import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsBiome;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkHeightmap;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.world.biome.injector.BiomeInjectionRules.BiomeInjectionContext;
-import mod.bluestaggo.modernerbeta.world.biome.provider.BiomeProviderFractalLegacy;
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.BiomeInfo;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.entry.RegistryEntry;
@@ -134,11 +132,6 @@ public class BiomeInjector {
         int biomeY = y >> 2;
         int biomeZ = z >> 2;
 
-        if (this.modernBetaBiomeSource.getBiomeProvider() instanceof BiomeProviderFractalLegacy biomeProviderFractalLegacy) {
-            BiomeInfo biomeInfo = biomeProviderFractalLegacy.getBiomeInfo(biomeX, biomeY, biomeZ);
-            return biomeInfo.toString();
-        }
-
         RegistryKey<Biome> key = this.getBiome(biomeX, biomeY, biomeZ, noiseSampler, step).getKey().orElse(null);
         if (key == null) return "???";
         return key.getValue().toString();
@@ -174,10 +167,8 @@ public class BiomeInjector {
         int worldMinY = this.modernBetaChunkGenerator.getMinimumY();
         int topHeight = this.sampleTopHeight(biomeX, biomeZ);
         int minHeight = this.sampleMinHeight(biomeX, biomeZ);
-        
-        BiomeInjectionContext context = new BiomeInjectionContext(worldMinY, topHeight, minHeight).setY(y);
-        
-        return context;
+
+        return new BiomeInjectionContext(worldMinY, topHeight, minHeight).setY(y);
     }
     
     private int sampleTopHeight(int biomeX, int biomeZ) {

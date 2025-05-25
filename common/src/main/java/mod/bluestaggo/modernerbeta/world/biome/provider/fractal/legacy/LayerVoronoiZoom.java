@@ -1,7 +1,5 @@
 package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.legacy;
 
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.BiomeInfo;
-
 public class LayerVoronoiZoom extends Layer {
 	public LayerVoronoiZoom(long seed, Layer parent) {
 		super(seed);

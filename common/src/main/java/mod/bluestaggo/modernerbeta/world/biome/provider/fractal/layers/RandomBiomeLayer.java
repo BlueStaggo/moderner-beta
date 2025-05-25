@@ -19,8 +19,8 @@ public class RandomBiomeLayer extends Layer {
 
     private final List<ExtendedBiomeId> biomes;
 
-    public RandomBiomeLayer(long seed, List<ExtendedBiomeId> biomes) {
-        super(seed);
+    public RandomBiomeLayer(String id, long seed, List<ExtendedBiomeId> biomes) {
+        super(id, seed);
         this.biomes = biomes;
     }
 

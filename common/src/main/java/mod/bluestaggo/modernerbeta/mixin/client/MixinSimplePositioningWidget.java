@@ -2,7 +2,6 @@ package mod.bluestaggo.modernerbeta.mixin.client;
 
 import mod.bluestaggo.modernerbeta.imixin.ModernBetaClearableWidget;
 import net.minecraft.client.gui.widget.SimplePositioningWidget;
-import net.minecraft.client.gui.widget.ThreePartsLayoutWidget;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

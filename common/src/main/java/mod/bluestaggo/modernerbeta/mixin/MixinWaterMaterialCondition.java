@@ -1,7 +1,6 @@
 package mod.bluestaggo.modernerbeta.mixin;
 
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkNoiseSampler;
-import net.minecraft.world.gen.YOffset;
 import net.minecraft.world.gen.surfacebuilder.MaterialRules;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;

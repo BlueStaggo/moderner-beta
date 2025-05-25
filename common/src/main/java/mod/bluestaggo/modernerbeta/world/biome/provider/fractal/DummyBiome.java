@@ -2,6 +2,7 @@ package mod.bluestaggo.modernerbeta.world.biome.provider.fractal;
 
 import com.mojang.datafixers.util.Either;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
+import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.legacy.BiomeInfo;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.entry.RegistryEntryOwner;

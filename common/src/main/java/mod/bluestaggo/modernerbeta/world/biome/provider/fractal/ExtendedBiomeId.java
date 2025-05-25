@@ -21,10 +21,13 @@ public record ExtendedBiomeId(Identifier baseId, String ext) {
     }
 
     public static ExtendedBiomeId of(Identifier baseId) {
-        return new ExtendedBiomeId(baseId, null);
+        return new ExtendedBiomeId(baseId, "");
     }
 
     public static ExtendedBiomeId of(Identifier baseId, String ext) {
+        if (ext == null) {
+            ext = "";
+        }
         return new ExtendedBiomeId(baseId, ext);
     }
 

@@ -1,6 +1,6 @@
 package mod.bluestaggo.modernerbeta.api.world.biome;
 
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.BiomeInfo;
+import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.legacy.BiomeInfo;
 
 public interface BiomeResolverInfo {
      /**

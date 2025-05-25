@@ -2,7 +2,6 @@ package mod.bluestaggo.modernerbeta.client.gui.screen;
 
 import mod.bluestaggo.modernerbeta.client.gui.optioncallbacks.*;
 import mod.bluestaggo.modernerbeta.imixin.ModernBetaClearableWidget;
-import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.option.GameOptionsScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;

@@ -1,7 +1,6 @@
 package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.legacy;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.BiomeInfo;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ClimaticBiomeList;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.DummyBiome;
 import org.slf4j.event.Level;

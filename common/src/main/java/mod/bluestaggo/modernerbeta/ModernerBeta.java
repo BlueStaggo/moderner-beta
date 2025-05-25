@@ -1,5 +1,6 @@
 package mod.bluestaggo.modernerbeta;
 
+import com.google.gson.GsonBuilder;
 import com.mojang.serialization.Codec;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
@@ -8,6 +9,7 @@ import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistryKeys;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ConfiguredLayers;
+import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import mod.bluestaggo.modernerbeta.world.carver.ModernBetaCarvers;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
 import mod.bluestaggo.modernerbeta.world.feature.ModernBetaFeatures;
@@ -73,5 +75,13 @@ public class ModernerBeta {
 
     public static void log(String message) {
         log(Level.INFO, message);
+    }
+
+    public static GsonBuilder getSettingsGson() {
+        return new GsonBuilder()
+            .registerTypeAdapter(ConfiguredLayers.class, ConfiguredLayers.JsonSerializer.INSTANCE)
+            .registerTypeAdapter(ConfiguredLayers.class, ConfiguredLayers.JsonDeserializer.INSTANCE)
+            .registerTypeAdapter(ExtendedBiomeId.class, ExtendedBiomeId.JsonSerializer.INSTANCE)
+            .registerTypeAdapter(ExtendedBiomeId.class, ExtendedBiomeId.JsonDeserializer.INSTANCE);
     }
 }

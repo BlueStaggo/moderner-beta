@@ -5,7 +5,6 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMaps;
 import mod.bluestaggo.modernerbeta.util.NbtCompoundBuilder;
 import mod.bluestaggo.modernerbeta.util.NbtListBuilder;
 import mod.bluestaggo.modernerbeta.util.NbtReader;
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.BiomeInfo;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ClimaticBiomeList;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;

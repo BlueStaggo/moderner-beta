@@ -1,7 +1,5 @@
 package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.legacy;
 
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.BiomeInfo;
-
 import java.util.Map;
 
 public class LayerAddRareBiomes extends Layer {

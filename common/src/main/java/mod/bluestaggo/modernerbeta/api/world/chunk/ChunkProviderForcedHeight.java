@@ -1,13 +1,19 @@
 package mod.bluestaggo.modernerbeta.api.world.chunk;
 
+import mod.bluestaggo.modernerbeta.api.registry.ModernBetaBuiltInRegistries;
 import mod.bluestaggo.modernerbeta.world.biome.HeightConfig;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.TagKey;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.biome.Biome;
 
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public abstract class ChunkProviderForcedHeight extends ChunkProviderNoise {
     private static final float[] BIOME_HEIGHT_WEIGHTS = new float[25];
@@ -25,9 +31,20 @@ public abstract class ChunkProviderForcedHeight extends ChunkProviderNoise {
 
     public ChunkProviderForcedHeight(ModernBetaChunkGenerator chunkGenerator, long seed) {
         super(chunkGenerator, seed);
-        this.biomeHeightValues = this.chunkSettings.releaseBiomeHeightValues.entrySet().stream()
-            .map(entry -> Map.entry(ExtendedBiomeId.of(entry.getKey()), HeightConfig.parse(entry.getValue(), HeightConfig.DEFAULT)))
-            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        this.biomeHeightValues = Stream.concat(
+            this.chunkSettings.releaseBiomeHeightValues.entrySet().stream()
+                .map(entry -> Map.entry(ExtendedBiomeId.of(entry.getKey()), HeightConfig.parse(entry.getValue(), HeightConfig.DEFAULT))),
+            ModernBetaBuiltInRegistries.HEIGHT_CONFIG.getEntrySet().stream()
+                .flatMap(entry -> {
+                    TagKey<Biome> heightConfigTag = TagKey.of(RegistryKeys.BIOME, Identifier.of(entry.getKey()));
+                    HeightConfig heightConfig = entry.getValue();
+                    return chunkGenerator.getBiomeSource().getBiomes().stream()
+                        .filter(biome -> biome.isIn(heightConfigTag))
+                        .map(biome -> ExtendedBiomeId.of(biome.getKey().orElseThrow().getValue(), heightConfig.type()))
+                        .filter(extId -> !this.chunkSettings.releaseBiomeHeightValues.containsKey(extId.toString()))
+                        .map(extId -> Map.entry(extId, heightConfig));
+                })
+        ).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (base, duplicate) -> base));
     }
 
     public ExtendedBiomeId getExtendedBiomeId(int biomeX, int biomeZ) {

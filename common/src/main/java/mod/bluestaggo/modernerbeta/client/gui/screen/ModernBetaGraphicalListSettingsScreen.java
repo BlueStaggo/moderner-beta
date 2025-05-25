@@ -4,18 +4,16 @@ import mod.bluestaggo.modernerbeta.client.gui.optioncallbacks.FloatSliderCallbac
 import mod.bluestaggo.modernerbeta.client.gui.optioncallbacks.IntegerFieldCallbacks;
 import mod.bluestaggo.modernerbeta.client.gui.optioncallbacks.BiomePickerCallbacks;
 import mod.bluestaggo.modernerbeta.util.NbtTags;
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.BiomeInfo;
+import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.legacy.BiomeInfo;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.OptionListWidget;
 import net.minecraft.client.option.GameOptions;
 import net.minecraft.client.option.SimpleOption;
 import net.minecraft.client.world.GeneratorOptionsHolder;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtString;
 import net.minecraft.text.Text;
-import net.minecraft.util.Pair;
 
 import java.util.ArrayList;
 import java.util.List;

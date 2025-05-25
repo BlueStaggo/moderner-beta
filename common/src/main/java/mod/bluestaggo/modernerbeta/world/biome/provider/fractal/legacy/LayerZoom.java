@@ -1,7 +1,5 @@
 package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.legacy;
 
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.BiomeInfo;
-
 public class LayerZoom extends LayerZoomBase {
 	public LayerZoom(long seed, Layer parent) {
 		super(seed, parent);

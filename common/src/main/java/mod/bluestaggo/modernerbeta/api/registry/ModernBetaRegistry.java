@@ -89,7 +89,7 @@ public final class ModernBetaRegistry<T> {
         return this.map.entrySet()
             .stream()
             .filter(e -> !e.getKey().equals(ModernBetaBuiltInTypes.DEFAULT_ID))
-            .map(e -> e.getValue())
+            .map(Entry::getValue)
             .collect(Collectors.toList());
     }
     

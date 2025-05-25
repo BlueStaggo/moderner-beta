@@ -2,13 +2,13 @@ package mod.bluestaggo.modernerbeta.settings;
 
 import com.google.gson.Gson;
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
+import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.util.NbtCompoundBuilder;
 import mod.bluestaggo.modernerbeta.util.NbtReader;
 import mod.bluestaggo.modernerbeta.util.NbtTags;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomes;
 import mod.bluestaggo.modernerbeta.world.biome.provider.climate.ClimateMapping;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ClimaticBiomeList;
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ConfiguredLayer;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ConfiguredLayers;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.DirtyZoomLayer;
@@ -112,8 +112,7 @@ public class ModernBetaSettingsBiome implements ModernBetaSettings {
     }
     
     public static ModernBetaSettingsBiome fromString(String string) {
-        Gson gson = new Gson();
-        
+        Gson gson = ModernerBeta.getSettingsGson().create();
         return gson.fromJson(string, ModernBetaSettingsBiome.class);
     }
     
@@ -273,12 +272,12 @@ public class ModernBetaSettingsBiome implements ModernBetaSettings {
                 ));
 
             this.fractalLayers = new ConfiguredLayers(List.of(
-                new ConfiguredLayer("land", new RandomBiomeLayer(1234, ExtendedBiomeId.listOf(
+                new RandomBiomeLayer("land", 1234, ExtendedBiomeId.listOf(
                     "minecraft:plains",
                     "minecraft:forest",
                     "minecraft:forest*hills"
-                ))),
-                new ConfiguredLayer("land", new DirtyZoomLayer(0, 2), "land")
+                )),
+                new DirtyZoomLayer("land", 0, "land", 2)
             ));
 
             this.fractalBiomes = List.of(

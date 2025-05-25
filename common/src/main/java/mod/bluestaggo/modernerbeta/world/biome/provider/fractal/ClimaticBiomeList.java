@@ -3,6 +3,7 @@ package mod.bluestaggo.modernerbeta.world.biome.provider.fractal;
 import mod.bluestaggo.modernerbeta.util.NbtCompoundBuilder;
 import mod.bluestaggo.modernerbeta.util.NbtListBuilder;
 import mod.bluestaggo.modernerbeta.util.NbtReader;
+import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.legacy.BiomeInfo;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.legacy.FractalSettings;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;

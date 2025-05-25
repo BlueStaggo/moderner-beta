@@ -11,24 +11,29 @@ import net.minecraft.world.biome.source.SeedMixer;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
 
 public abstract class Layer {
     private final static int CACHE_CAPACITY = 25;
     public static final Codec<Layer> TYPE_CODEC = ModernBetaBuiltInRegistries.FRACTAL_LAYER.getCodec().dispatch(Layer::getType, LayerType::codec);
 
+    public final String id;
     public final long seed;
-    protected transient Layer parent;
 
     private transient long saltedSeed;
     private transient LayerRandom random;
 
     private transient final Long2ObjectLinkedOpenHashMap<ExtendedBiomeId> cache = new Long2ObjectLinkedOpenHashMap<>(CACHE_CAPACITY);
 
-    protected static <L extends Layer> Products.P1<RecordCodecBuilder.Mu<L>, Long> fillLayerFields(RecordCodecBuilder.Instance<L> instance) {
-        return instance.group(Codec.LONG.fieldOf("seed").orElse(0L).forGetter(layer -> layer.seed));
+    protected static <L extends Layer> Products.P2<RecordCodecBuilder.Mu<L>, String, Long> fillLayerFields(RecordCodecBuilder.Instance<L> instance) {
+        return instance.group(
+            Codec.STRING.fieldOf("id").forGetter(layer -> layer.id),
+            Codec.LONG.fieldOf("seed").orElse(0L).forGetter(layer -> layer.seed)
+        );
     }
 
-    public Layer(long seed) {
+    public Layer(String id, long seed) {
+        this.id = id;
         this.seed = seed;
 
         long saltedSeed = seed;
@@ -42,17 +47,19 @@ public abstract class Layer {
 
     protected abstract ExtendedBiomeId generateBiome(int x, int z);
 
-    protected abstract void addPossibleBiomes(Set<ExtendedBiomeId> biomes);
+    void configure(Function<String, Layer> layerMap) {
+    }
+
+    protected void addPossibleBiomes(Set<ExtendedBiomeId> biomes) {
+    }
 
     protected List<Layer> getParents() {
-        return Collections.singletonList(this.parent);
+        return Collections.emptyList();
     }
 
     public void init(long worldSeed) {
         for (Layer parent : this.getParents()) {
-            if (parent != null) {
-                parent.init(worldSeed);
-            }
+            parent.init(worldSeed);
         }
         this.cache.clear();
 
@@ -93,9 +100,7 @@ public abstract class Layer {
     public void addPossibleBiomesRecursive(Set<ExtendedBiomeId> biomes) {
         this.addPossibleBiomes(biomes);
         for (Layer parent : this.getParents()) {
-            if (parent != null) {
-                parent.addPossibleBiomesRecursive(biomes);
-            }
+            parent.addPossibleBiomesRecursive(biomes);
         }
     }
 }

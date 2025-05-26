@@ -56,7 +56,7 @@ public class ModernerBetaNeoForge {
     public static void registerDatapackRegistries(DataPackRegistryEvent.NewRegistry event) {
         for (Pair<RegistryKey<?>, Codec<?>> dynamicRegistry : ModernerBeta.DYNAMIC_REGISTRIES) {
             RegistryKey<Registry<Object>> registryKey = (RegistryKey<Registry<Object>>)dynamicRegistry.getLeft();
-            Codec<Object> codec = (Codec<Object>)dynamicRegistry.getLeft();
+            Codec<Object> codec = (Codec<Object>)dynamicRegistry.getRight();
             event.dataPackRegistry(registryKey, codec, codec);
         }
     }

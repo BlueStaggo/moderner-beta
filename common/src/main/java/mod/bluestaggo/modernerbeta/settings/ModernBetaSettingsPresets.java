@@ -1426,6 +1426,10 @@ public class ModernBetaSettingsPresets {
             AddBetaLandLayer.forIslandScale("land", 3, "land"),
             new ModalZoomLayer("land", 2004, "land"),
             AddBetaLandLayer.forIslandScale("land", 3, "land"),
+            new InitRiverLayer("river", 100, "land", false),
+            new StackedZoomLayer("river", 1000, "river", 6, StackedZoomLayer.Type.MODAL),
+            new ComputeRiverLayer("river", 0, "river", false),
+            new SmoothLayer("river", 1000, "river"),
             new RandomBiomeLayer("biome_pool", 200, ExtendedBiomeId.listOf(
                 "minecraft:desert",
                 "minecraft:forest",
@@ -1440,10 +1444,6 @@ public class ModernBetaSettingsPresets {
             AddBetaLandLayer.forLateBeta("land", 3, "land"),
             new StackedZoomLayer("land", 1001, "land", 3, StackedZoomLayer.Type.MODAL),
             new SmoothLayer("land", 1000, "land"),
-            new InitRiverLayer("river", 100, "land", false),
-            new StackedZoomLayer("river", 1000, "river", 6, StackedZoomLayer.Type.MODAL),
-            new ComputeRiverLayer("river", 0, "river", false),
-            new SmoothLayer("river", 1000, "river"),
             MixRiverLayer.forEarlyRelease("land", 0, "land", "river")
         ));
 

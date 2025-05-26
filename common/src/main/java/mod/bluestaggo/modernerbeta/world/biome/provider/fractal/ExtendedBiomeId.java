@@ -15,6 +15,8 @@ import java.util.List;
 public record ExtendedBiomeId(Identifier baseId, String ext) {
     public static final Codec<ExtendedBiomeId> CODEC = Codec.STRING.comapFlatMap(ExtendedBiomeId::validate, ExtendedBiomeId::toString);
 
+    public static final String TRANSLATION_KEY = "createWorld.customize.modern_beta.settings.preview.extended_biome_id";
+
     public static final ExtendedBiomeId
         NULL = of(Identifier.of("", "")),
         OCEAN = of(BiomeKeys.OCEAN),

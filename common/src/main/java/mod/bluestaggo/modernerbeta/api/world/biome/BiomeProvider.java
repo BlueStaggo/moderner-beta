@@ -4,6 +4,7 @@ import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsBiome;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.RegistryEntryLookup;
 import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.text.Text;
 import net.minecraft.world.biome.Biome;
 
 import java.util.List;
@@ -45,5 +46,21 @@ public abstract class BiomeProvider {
      */
     public List<RegistryEntry<Biome>> getBiomes() {
         return List.of();
+    }
+
+    /**
+     * Gets the name of a biome at the given biome coordinates.
+     * Used for the biome preview in the graphical settings menu.
+     *
+     * @param biomeX x-coordinate in biome coordinates.
+     * @param biomeY y-coordinate in biome coordinates.
+     * @param biomeZ z-coordinate in biome coordinates.
+     *
+     * @return The name of the biome at given biome coordinates.
+     */
+    public Text getBiomeName(int biomeX, int biomeY, int biomeZ) {
+        return this.getBiome(biomeX, biomeY, biomeZ).getKey()
+            .map(key -> Text.translatable(key.getValue().toTranslationKey("biome")))
+            .orElse(Text.literal("[unregistered]"));
     }
 }

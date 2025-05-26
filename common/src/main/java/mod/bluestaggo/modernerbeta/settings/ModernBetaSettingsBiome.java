@@ -11,7 +11,6 @@ import mod.bluestaggo.modernerbeta.world.biome.provider.climate.ClimateMapping;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ClimaticBiomeList;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ConfiguredLayers;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.PointZoomLayer;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.RandomBiomeLayer;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.legacy.FractalSettings;
 import mod.bluestaggo.modernerbeta.world.biome.voronoi.VoronoiPointBiome;

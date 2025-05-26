@@ -40,6 +40,7 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
     private static final String TEXT_SETTINGS_JSON = "createWorld.customize.modern_beta.settings.json";
     private static final String TEXT_SETTINGS_RESET = "createWorld.customize.modern_beta.settings.reset";
     private static final String TEXT_SETTINGS_RESET_MESSAGE = "createWorld.customize.modern_beta.settings.reset.message";
+    private static final String TEXT_SETTINGS_PREVIEW = "createWorld.customize.modern_beta.settings.preview";
     //private static final String TEXT_INVALID_SETTINGS = "createWorld.customize.modern_beta.invalid_settings";
     
     private static final String[] TEXT_HINTS = new String[] {
@@ -211,22 +212,37 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
                 Text.translatable(TEXT_SETTINGS_RESET)
             ))
         ).build();
+
+        ButtonWidget buttonPreview = ButtonWidget.builder(
+            Text.translatable(TEXT_SETTINGS_PREVIEW),
+            button -> this.client.setScreen(new ModernBetaBiomePreviewScreen(
+                Text.translatable(TEXT_SETTINGS_PREVIEW),
+                this,
+                this.generatorOptionsHolder,
+                this.preset.settingsBiome()
+            ))
+        ).build();
         
         GridWidget gridWidgetMain = this.createGridWidget();
         GridWidget gridWidgetSettings = this.createGridWidget();
+        GridWidget gridWidgetActions = this.createGridWidget();
         
         GridWidget.Adder gridAdderMain = gridWidgetMain.createAdder(1);
         GridWidget.Adder gridAdderSettings = gridWidgetSettings.createAdder(3);
+        GridWidget.Adder gridAdderActions = gridWidgetActions.createAdder(2);
         gridAdderSettings.getMainPositioner().alignVerticalCenter();
-        
+
         gridAdderMain.add(this.buttonPreset);
         gridAdderMain.add(gridWidgetSettings);
-        gridAdderMain.add(buttonReset);
+        gridAdderMain.add(gridWidgetActions);
         
         this.addGridTextButtonTriplet(gridAdderSettings, TEXT_CHUNK, buttonChunk, buttonChunkAdvanced);
         this.addGridTextButtonTriplet(gridAdderSettings, TEXT_BIOME, buttonBiome, buttonBiomeAdvanced);
         this.addGridTextButtonTriplet(gridAdderSettings, TEXT_CAVE_BIOME, buttonCaveBiome, buttonCaveBiomeAdvanced);
-        
+
+        gridAdderActions.add(buttonReset);
+        gridAdderActions.add(buttonPreview);
+
         gridWidgetMain.refreshPositions();
         SimplePositioningWidget.setPos(gridWidgetMain, 0, this.overlayTop + 8, this.width, this.height, 0.5f, 0.0f);
         gridWidgetMain.forEachChild(this::addDrawableChild);

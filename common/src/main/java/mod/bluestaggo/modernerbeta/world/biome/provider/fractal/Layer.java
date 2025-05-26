@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public abstract class Layer {
     private final static int CACHE_CAPACITY = 25;
@@ -128,5 +129,15 @@ public abstract class Layer {
             parent.addPossibleBiomesRecursive(biomes);
         }
         this.addPossibleBiomes(biomes);
+    }
+
+    @Override
+    public String toString() {
+        String string = this.id + ": " + ModernBetaBuiltInRegistries.FRACTAL_LAYER.getKey(this.getType()) + " " + this.seed;
+        List<Layer> parents = this.getParents();
+        if (!parents.isEmpty()) {
+            string += " <- " + parents.stream().map(parent -> parent.id).collect(Collectors.joining(", "));
+        }
+        return string;
     }
 }

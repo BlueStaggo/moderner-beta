@@ -5,10 +5,7 @@ import com.mojang.serialization.Codec;
 import mod.bluestaggo.modernerbeta.api.registry.ModernBetaBuiltInRegistries;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
@@ -19,7 +16,7 @@ public class ConfiguredLayers {
     private final Layer finalLayer;
 
     public ConfiguredLayers(List<Layer> layers) {
-        this.layers = layers;
+        this.layers = Collections.unmodifiableList(layers);
         this.finalLayer = layers.get(layers.size() - 1);
 
         Map<String, Layer> layerMap = new HashMap<>();
@@ -37,6 +34,10 @@ public class ConfiguredLayers {
             layerMap.put(layer.id, layer);
             index.getAndIncrement();
         }
+    }
+
+    public List<Layer> getAllLayers() {
+        return this.layers;
     }
 
     public Layer getFinalLayer() {

@@ -109,7 +109,6 @@ modrinth {
     uploadFile = renameJarForPublication
     dependencies {
         required.project "cloth-config"
-        required.project "architectury-api"
     }
 }
 

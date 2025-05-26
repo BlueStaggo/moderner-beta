@@ -16,7 +16,7 @@ import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 
 @EventBusSubscriber(modid = ModernerBeta.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
-public class ModernerBetaNeoForgeClient {
+public class ModEventsClient {
     @SubscribeEvent
     public static void clientInit(FMLClientSetupEvent event) {
         ModLoadingContext.get().registerExtensionPoint(

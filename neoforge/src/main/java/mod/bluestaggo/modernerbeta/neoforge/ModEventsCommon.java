@@ -1,10 +1,8 @@
 package mod.bluestaggo.modernerbeta.neoforge;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;
-import mod.bluestaggo.modernerbeta.command.DebugProviderSettingsCommand;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import mod.bluestaggo.modernerbeta.registry.VanillaRegistryHandler;
-import mod.bluestaggo.modernerbeta.world.ModernBetaWorldInitializer;
 import net.minecraft.resource.ResourcePackProfile;
 import net.minecraft.resource.ResourcePackSource;
 import net.minecraft.resource.ResourceType;
@@ -14,22 +12,13 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLConstructModEvent;
 import net.neoforged.fml.loading.FMLLoader;
-import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
-import net.neoforged.neoforge.event.RegisterCommandsEvent;
-import net.neoforged.neoforge.event.server.ServerAboutToStartEvent;
 import net.neoforged.neoforge.registries.RegisterEvent;
 
 import java.util.function.Consumer;
 
 @EventBusSubscriber(modid = ModernerBeta.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
-public class ModernerBetaNeoForge {
-    //TODO: maybe move these to another class?
-    static {
-        NeoForge.EVENT_BUS.addListener(ModernerBetaNeoForge::registerCommands);
-        NeoForge.EVENT_BUS.addListener(ModernerBetaNeoForge::serverStarting);
-    }
-
+public class ModEventsCommon {
     @SubscribeEvent
     public static void commonInit(FMLConstructModEvent event) {
         ModernerBeta.init();
@@ -43,16 +32,6 @@ public class ModernerBetaNeoForge {
     public static void registerToRegistries(RegisterEvent event) {
         VanillaRegistryHandler<?> registryHandler = new VanillaRegistryHandler<>(event.getRegistry());
         ModernerBeta.REGISTRY_HANDLERS.getOrDefault(event.getRegistry(), NONE).accept(registryHandler);
-    }
-
-    public static void registerCommands(RegisterCommandsEvent event) {
-        if (FMLLoader.isProduction()) return;
-
-        DebugProviderSettingsCommand.register(event.getDispatcher(), event.getBuildContext(), event.getCommandSelection());
-    }
-
-    public static void serverStarting(ServerAboutToStartEvent event) {
-        ModernBetaWorldInitializer.init(event.getServer());
     }
 
     @SubscribeEvent

@@ -542,7 +542,7 @@ public class ModernBetaTagProviderBiome extends FabricTagProvider<Biome> {
         /* Vanilla Biome Structure Tags */
         
         getOrCreateTagBuilder(BiomeTags.BURIED_TREASURE_HAS_STRUCTURE)
-            .addTag(IS_OCEAN);
+            .addTag(BiomeTags.IS_OCEAN);
         
         getOrCreateTagBuilder(BiomeTags.DESERT_PYRAMID_HAS_STRUCTURE)
             .addTag(IS_DESERT);

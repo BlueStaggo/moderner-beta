@@ -24,11 +24,16 @@ public class ConstantBiomeLayer extends Layer {
 
     @Override
     protected LayerType<?> getType() {
-        return LayerType.RANDOM_BIOME;
+        return LayerType.CONSTANT_BIOME;
     }
 
     @Override
     protected ExtendedBiomeId generate(int x, int z) {
+        return this.biome;
+    }
+
+    @Override
+    public synchronized ExtendedBiomeId sample(int x, int z) {
         return this.biome;
     }
 

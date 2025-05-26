@@ -13,11 +13,11 @@ import mod.bluestaggo.modernerbeta.world.chunk.provider.indev.IndevTheme;
 import mod.bluestaggo.modernerbeta.world.chunk.provider.indev.IndevType;
 import mod.bluestaggo.modernerbeta.world.chunk.provider.island.IslandShape;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.util.collection.Pool;
+import net.minecraft.util.collection.Weighted;
 import net.minecraft.world.biome.BiomeKeys;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ModernBetaSettingsPresets {
     public static final ModernBetaSettingsPreset PRESET_BETA_1_7_3 = presetBeta(false);
@@ -33,9 +33,9 @@ public class ModernBetaSettingsPresets {
     public static final ModernBetaSettingsPreset PRESET_CLASSIC = presetClassic();
     public static final ModernBetaSettingsPreset PRESET_CLASSIC_14A_08 = presetClassic14a08();
     public static final ModernBetaSettingsPreset PRESET_PE = presetPE();
-    public static final ModernBetaSettingsPreset PRESET_BETA_1_8_1 = presetBeta181();
-    public static final ModernBetaSettingsPreset PRESET_BETA_1_9_PRE_3 = presetBeta19Pre3();
-    public static final ModernBetaSettingsPreset PRESET_RELEASE_1_0_0 = preset100();
+    public static final ModernBetaSettingsPreset PRESET_BETA_1_8_1 = presetBeta181(0);
+    public static final ModernBetaSettingsPreset PRESET_BETA_1_9_PRE_3 = presetBeta19Pre3(0);
+    public static final ModernBetaSettingsPreset PRESET_RELEASE_1_0_0 = preset100(0);
     public static final ModernBetaSettingsPreset PRESET_RELEASE_1_1 = preset11();
     public static final ModernBetaSettingsPreset PRESET_RELEASE_1_2_5 = preset125();
     public static final ModernBetaSettingsPreset PRESET_RELEASE_1_6_4 = preset164();
@@ -64,9 +64,9 @@ public class ModernBetaSettingsPresets {
     public static final ModernBetaSettingsPreset PRESET_MOUNTAIN_MADNESS = presetMountainMadness(PRESET_RELEASE_1_12_2);
     public static final ModernBetaSettingsPreset PRESET_DROUGHT = presetDrought(PRESET_RELEASE_1_12_2);
     public static final ModernBetaSettingsPreset PRESET_CAVE_CHAOS = presetCaveChaos(PRESET_RELEASE_1_12_2);
-    public static final ModernBetaSettingsPreset PRESET_BETA_1_8_1_LARGE_BIOMES = presetLargeBiomes(PRESET_BETA_1_8_1);
-    public static final ModernBetaSettingsPreset PRESET_BETA_1_9_PRE_3_LARGE_BIOMES = presetLargeBiomes(PRESET_BETA_1_9_PRE_3);
-    public static final ModernBetaSettingsPreset PRESET_RELEASE_1_0_0_LARGE_BIOMES = presetLargeBiomes(PRESET_RELEASE_1_0_0);
+    public static final ModernBetaSettingsPreset PRESET_BETA_1_8_1_LARGE_BIOMES = presetBeta181(2);
+    public static final ModernBetaSettingsPreset PRESET_BETA_1_9_PRE_3_LARGE_BIOMES = presetBeta19Pre3(2);
+    public static final ModernBetaSettingsPreset PRESET_RELEASE_1_0_0_LARGE_BIOMES = preset100(2);
     public static final ModernBetaSettingsPreset PRESET_RELEASE_1_1_LARGE_BIOMES = presetLargeBiomes(PRESET_RELEASE_1_1);
     public static final ModernBetaSettingsPreset PRESET_RELEASE_1_2_5_LARGE_BIOMES = presetLargeBiomes(PRESET_RELEASE_1_2_5);
     public static final ModernBetaSettingsPreset PRESET_RELEASE_1_6_4_LARGE_BIOMES = presetLargeBiomes(PRESET_RELEASE_1_6_4);
@@ -1402,7 +1402,7 @@ public class ModernBetaSettingsPresets {
         );
     }
 
-    private static ModernBetaSettingsPreset presetBeta181() {
+    private static ModernBetaSettingsPreset presetBeta181(int biomeScale) {
         ModernBetaSettingsChunk.Builder settingsChunk = new ModernBetaSettingsChunk.Builder();
         ModernBetaSettingsBiome.Builder settingsBiome = new ModernBetaSettingsBiome.Builder();
         ModernBetaSettingsCaveBiome.Builder settingsCaveBiome = new ModernBetaSettingsCaveBiome.Builder();
@@ -1417,17 +1417,17 @@ public class ModernBetaSettingsPresets {
         settingsBiome.fractalLayers = new ConfiguredLayers(Arrays.asList(
             new InitLandLayer("land", 1),
             new FuzzyZoomLayer("land", 2000, "land"),
-            AddBetaLandLayer.forIslandScale("land", 1, "land"),
+            AddLandLayer.forIslandScaleBeta("land", 1, "land"),
             new ModalZoomLayer("land", 2001, "land"),
-            AddBetaLandLayer.forIslandScale("land", 2, "land"),
+            AddLandLayer.forIslandScaleBeta("land", 2, "land"),
             new ModalZoomLayer("land", 2002, "land"),
-            AddBetaLandLayer.forIslandScale("land", 3, "land"),
+            AddLandLayer.forIslandScaleBeta("land", 3, "land"),
             new ModalZoomLayer("land", 2003, "land"),
-            AddBetaLandLayer.forIslandScale("land", 3, "land"),
+            AddLandLayer.forIslandScaleBeta("land", 3, "land"),
             new ModalZoomLayer("land", 2004, "land"),
-            AddBetaLandLayer.forIslandScale("land", 3, "land"),
+            AddLandLayer.forIslandScaleBeta("land", 3, "land"),
             new InitRiverLayer("river", 100, "land", false),
-            new StackedZoomLayer("river", 1000, "river", 6, StackedZoomLayer.Type.MODAL),
+            new StackedZoomLayer("river", 1000, "river", 6 + biomeScale, StackedZoomLayer.Type.MODAL),
             new ComputeRiverLayer("river", 0, "river", true),
             new SmoothLayer("river", 1000, "river"),
             new RandomBiomeLayer("biome_pool", 200, ExtendedBiomeId.listOf(
@@ -1441,8 +1441,8 @@ public class ModernBetaSettingsPresets {
             new MaskLayer("land", 0, "land", Map.of(ExtendedBiomeId.PLAINS, "biome_pool")),
             new StackedZoomLayer("land", 1000, "land", 2, StackedZoomLayer.Type.MODAL),
             new ModalZoomLayer("land", 1000, "land"),
-            AddBetaLandLayer.forLateBeta("land", 3, "land"),
-            new StackedZoomLayer("land", 1001, "land", 3, StackedZoomLayer.Type.MODAL),
+            AddLandLayer.forBeta("land", 3, "land"),
+            new StackedZoomLayer("land", 1001, "land", 3 + biomeScale, StackedZoomLayer.Type.MODAL),
             new SmoothLayer("land", 1000, "land"),
             MixRiverLayer.forEarlyRelease("land", 0, "land", "river")
         ));
@@ -1454,7 +1454,56 @@ public class ModernBetaSettingsPresets {
         );
     }
 
-    private static ModernBetaSettingsPreset presetBeta19Pre3() {
+    private static ConfiguredLayers configuredLayers100Era(int biomeScale, ExtendedBiomeId icePlains) {
+        return new ConfiguredLayers(Arrays.asList(
+            new InitLandLayer("land", 1),
+            new FuzzyZoomLayer("land", 2000, "land"),
+            AddLandLayer.forIslandScale("land", 1, "land"),
+            new ModalZoomLayer("land", 2001, "land"),
+            AddLandLayer.forIslandScale("land", 2, "land"),
+            new WeightedBiomeLayer("snow", 2, Pool.of(
+                new Weighted<>(ExtendedBiomeId.SNOWY_PLAINS, 1),
+                new Weighted<>(ExtendedBiomeId.NULL, 4)
+            )),
+            new MaskLayer("land", 0, "land", Map.of(ExtendedBiomeId.PLAINS, "snow")),
+            new ModalZoomLayer("land", 2002, "land"),
+            AddLandLayer.forIslandScale("land", 3, "land"),
+            new ModalZoomLayer("land", 2003, "land"),
+            AddLandLayer.forIslandScale("land", 4, "land"),
+            new WeightedBiomeLayer("mushroom_islands", 5, Pool.of(
+                new Weighted<>(ExtendedBiomeId.MUSHROOM_ISLAND, 1),
+                new Weighted<>(ExtendedBiomeId.NULL, 99)
+            )),
+            new DiagonalInnerMaskLayer("land", 0, "land", Map.of(ExtendedBiomeId.OCEAN, "mushroom_islands")),
+            new InitRiverLayer("river", 100, "land", false),
+            new StackedZoomLayer("river", 1000, "river", 6 + biomeScale, StackedZoomLayer.Type.MODAL),
+            new ComputeRiverLayer("river", 0, "river", true),
+            new SmoothLayer("river", 1000, "river"),
+            new RandomBiomeLayer("biome_pool", 200, ExtendedBiomeId.listOf(
+                "minecraft:desert",
+                "minecraft:forest",
+                "moderner_beta:late_beta_extreme_hills",
+                "moderner_beta:early_release_swampland",
+                "moderner_beta:late_beta_plains",
+                "moderner_beta:late_beta_taiga"
+            )),
+            new ConstantBiomeLayer("ice_plains", 0, icePlains),
+            new MaskLayer("land", 0, "land", Map.of(
+                ExtendedBiomeId.PLAINS, "biome_pool",
+                ExtendedBiomeId.FROZEN_OCEAN, "ice_plains",
+                ExtendedBiomeId.SNOWY_PLAINS, "ice_plains"
+            )),
+            new StackedZoomLayer("land", 1000, "land", 2, StackedZoomLayer.Type.MODAL),
+            new ModalZoomLayer("land", 1000, "land"),
+            AddLandLayer.forEarlyRelease("land", 3, "land", icePlains),
+            new BorderLayer("land", 0, "land", List.of(BorderLayer.Case.MUSHROOM_SHORE)),
+            new StackedZoomLayer("land", 1001, "land", 3 + biomeScale, StackedZoomLayer.Type.MODAL),
+            new SmoothLayer("land", 1000, "land"),
+            MixRiverLayer.forEarlyRelease("land", 0, "land", "river")
+        ));
+    }
+
+    private static ModernBetaSettingsPreset presetBeta19Pre3(int biomeScale) {
         ModernBetaSettingsChunk.Builder settingsChunk = new ModernBetaSettingsChunk.Builder();
         ModernBetaSettingsBiome.Builder settingsBiome = new ModernBetaSettingsBiome.Builder();
         ModernBetaSettingsCaveBiome.Builder settingsCaveBiome = new ModernBetaSettingsCaveBiome.Builder();
@@ -1463,25 +1512,7 @@ public class ModernBetaSettingsPresets {
         settingsChunk.useFixedCaves = true;
 
         settingsBiome.biomeProvider = ModernBetaBuiltInTypes.Biome.FRACTAL.id;
-        settingsBiome.fractalBiomes = List.of(
-            "minecraft:desert",
-            "minecraft:forest",
-            "moderner_beta:late_beta_extreme_hills",
-            "moderner_beta:early_release_swampland",
-            "moderner_beta:late_beta_plains",
-            "moderner_beta:late_beta_taiga"
-        );
-        settingsBiome.fractalHillVariants = Map.ofEntries(
-            Map.entry("minecraft:desert", "*minecraft:desert"),
-            Map.entry("minecraft:forest", "*minecraft:forest"),
-            Map.entry("moderner_beta:late_beta_plains", "minecraft:forest"),
-            Map.entry("moderner_beta:late_beta_taiga", "*moderner_beta:late_beta_taiga"),
-            Map.entry("moderner_beta:late_beta_ice_plains", "*moderner_beta:late_beta_ice_plains")
-        );
-        settingsBiome.fractalIcePlains = "moderner_beta:late_beta_ice_plains";
-        settingsBiome.fractalTerrainType = FractalSettings.TerrainType.EARLY_RELEASE.id;
-        settingsBiome.fractalAddSnow = true;
-        settingsBiome.fractalAddMushroomIslands = true;
+        settingsBiome.fractalLayers = configuredLayers100Era(biomeScale, ExtendedBiomeId.of(ModernBetaBiomes.LATE_BETA_ICE_PLAINS));
 
         return new ModernBetaSettingsPreset(
             settingsChunk.build(),
@@ -1490,7 +1521,7 @@ public class ModernBetaSettingsPresets {
         );
     }
 
-    private static ModernBetaSettingsPreset preset100() {
+    private static ModernBetaSettingsPreset preset100(int biomeScale) {
         ModernBetaSettingsChunk.Builder settingsChunk = new ModernBetaSettingsChunk.Builder();
         ModernBetaSettingsBiome.Builder settingsBiome = new ModernBetaSettingsBiome.Builder();
         ModernBetaSettingsCaveBiome.Builder settingsCaveBiome = new ModernBetaSettingsCaveBiome.Builder();
@@ -1499,24 +1530,7 @@ public class ModernBetaSettingsPresets {
         settingsChunk.useFixedCaves = true;
 
         settingsBiome.biomeProvider = ModernBetaBuiltInTypes.Biome.FRACTAL.id;
-        settingsBiome.fractalBiomes = List.of(
-            "minecraft:desert",
-            "minecraft:forest",
-            "moderner_beta:late_beta_extreme_hills",
-            "moderner_beta:early_release_swampland",
-            "moderner_beta:late_beta_plains",
-            "moderner_beta:late_beta_taiga"
-        );
-        settingsBiome.fractalHillVariants = Map.ofEntries(
-            Map.entry("minecraft:desert", "*minecraft:desert"),
-            Map.entry("minecraft:forest", "*minecraft:forest"),
-            Map.entry("moderner_beta:late_beta_plains", "minecraft:forest"),
-            Map.entry("moderner_beta:late_beta_taiga", "*moderner_beta:late_beta_taiga"),
-            Map.entry("moderner_beta:early_release_ice_plains", "*moderner_beta:early_release_ice_plains")
-        );
-        settingsBiome.fractalTerrainType = FractalSettings.TerrainType.EARLY_RELEASE.id;
-        settingsBiome.fractalAddSnow = true;
-        settingsBiome.fractalAddMushroomIslands = true;
+        settingsBiome.fractalLayers = configuredLayers100Era(biomeScale, ExtendedBiomeId.of(ModernBetaBiomes.EARLY_RELEASE_ICE_PLAINS));
 
         return new ModernBetaSettingsPreset(
             settingsChunk.build(),
@@ -1672,79 +1686,78 @@ public class ModernBetaSettingsPresets {
         ModernBetaSettingsCaveBiome.Builder settingsCaveBiome = new ModernBetaSettingsCaveBiome.Builder();
 
         settingsChunk.chunkProvider = ModernBetaBuiltInTypes.Chunk.MAJOR_RELEASE.id;
-        settingsChunk.releaseBiomeHeightConfigs = Map.ofEntries(
-            Map.entry("minecraft:ocean", "-1.0;0.2"),
-            Map.entry("minecraft:warm_ocean", "-1.0;0.2"),
-            Map.entry("minecraft:lukewarm_ocean", "-1.0;0.2"),
-            Map.entry("minecraft:cold_ocean", "-1.0;0.2"),
-            Map.entry("minecraft:plains", "0.125;0.1"),
-            Map.entry("minecraft:desert", "0.125;0.1"),
-            Map.entry("minecraft:windswept_hills", "1.0;1.0"),
-            Map.entry("minecraft:forest", "0.1;0.4"),
-            Map.entry("minecraft:taiga", "0.2;0.4"),
-            Map.entry("minecraft:swamp", "-0.2;0.2"),
-            Map.entry("minecraft:river", "-0.5;0"),
-            Map.entry("minecraft:frozen_ocean", "-1.0;0.2"),
-            Map.entry("minecraft:frozen_river", "-0.5;0"),
-            Map.entry("minecraft:snowy_plains", "0.125;0.1"),
-            Map.entry("*minecraft:snowy_plains", "0.45;0.6"),
-            Map.entry("minecraft:mushroom_fields", "0.2;0.6"),
-            Map.entry("*minecraft:mushroom_fields", "0.0;0.05"),
-            Map.entry("minecraft:beach", "0.0;0.05"),
-            Map.entry("*minecraft:desert", "0.45;0.6"),
-            Map.entry("*minecraft:forest", "0.45;0.6"),
-            Map.entry("*minecraft:taiga", "0.45;0.6"),
-            Map.entry("*minecraft:windswept_hills", "0.8;0.6"),
-            Map.entry("minecraft:jungle", "0.1;0.4"),
-            Map.entry("*minecraft:jungle", "0.45;0.6"),
-            Map.entry("minecraft:bamboo_jungle", "0.1;0.4"),
-            Map.entry("*minecraft:bamboo_jungle", "0.45;0.6"),
-            Map.entry("minecraft:sparse_jungle", "0.1;0.4"),
-            Map.entry("minecraft:deep_ocean", "-1.8;0.2"),
-            Map.entry("*minecraft:deep_ocean", "-1.8;0.2"),
-            Map.entry("minecraft:deep_lukewarm_ocean", "-1.8;0.2"),
-            Map.entry("*minecraft:deep_lukewarm_ocean", "-1.8;0.2"),
-            Map.entry("minecraft:deep_cold_ocean", "-1.8;0.2"),
-            Map.entry("*minecraft:deep_cold_ocean", "-1.8;0.2"),
-            Map.entry("minecraft:deep_frozen_ocean", "-1.8;0.2"),
-            Map.entry("*minecraft:deep_frozen_ocean", "-1.8;0.2"),
-            Map.entry("minecraft:stony_shore", "0.1;1.6"),
-            Map.entry("minecraft:snowy_beach", "0.0;0.05"),
-            Map.entry("minecraft:birch_forest", "0.1;0.4"),
-            Map.entry("*minecraft:birch_forest", "0.45;0.6"),
-            Map.entry("minecraft:dark_forest", "0.1;0.4"),
-            Map.entry("minecraft:snowy_taiga", "0.2;0.4"),
-            Map.entry("*minecraft:snowy_taiga", "0.45;0.6"),
-            Map.entry("minecraft:old_growth_pine_taiga", "0.2;0.4"),
-            Map.entry("*minecraft:old_growth_pine_taiga", "0.45;0.6"),
-            Map.entry("minecraft:windswept_forest", "1.0;1.0"),
-            Map.entry("minecraft:savanna", "0.125;0.1"),
-            Map.entry("minecraft:savanna_plateau", "1.5;0.05"),
-            Map.entry("minecraft:badlands", "0.1;0.4"),
-            Map.entry("*minecraft:wooded_badlands", "1.5;0.05"),
-            Map.entry("*minecraft:badlands", "1.5;0.05"),
-            Map.entry("minecraft:sunflower_plains", "0.125;0.1"),
-            Map.entry("2*minecraft:desert", "0.225;0.5"),
-            Map.entry("minecraft:windswept_gravelly_hills", "1.0;1.0"),
-            Map.entry("2*minecraft:windswept_gravelly_hills", "1.0;1.0"),
-            Map.entry("minecraft:flower_forest", "0.1;0.8"),
-            Map.entry("2*minecraft:taiga", "0.3;0.8"),
-            Map.entry("*minecraft:swamp", "-0.1;0.6"),
-            Map.entry("minecraft:ice_spikes", "0.425;0.9"),
-            Map.entry("2*minecraft:jungle", "0.2;0.8"),
-            Map.entry("2*minecraft:sparse_jungle", "0.2;0.8"),
-            Map.entry("minecraft:old_growth_birch_forest", "0.2;0.8"),
-            Map.entry("*minecraft:old_growth_birch_forest", "0.55;1.0"),
-            Map.entry("*minecraft:dark_forest", "0.2;0.8"),
-            Map.entry("2*minecraft:snowy_taiga", "0.3;0.8"),
-            Map.entry("minecraft:old_growth_spruce_taiga", "0.2;0.4"),
-            Map.entry("*minecraft:old_growth_spruce_taiga", "0.2;0.4"),
-            Map.entry("minecraft:windswept_savanna", "0.3625;2.45"),
-            Map.entry("*minecraft:windswept_savanna", "1.05;2.425"),
-            Map.entry("minecraft:eroded_badlands", "0.1;0.4"),
-            Map.entry("2*minecraft:wooded_badlands", "0.45;0.6"),
-            Map.entry("2*minecraft:badlands", "0.45;0.6")
-        );
+        settingsChunk.releaseBiomeHeightConfigs = new HashMap<>();
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:ocean", "-1.0;0.2");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:warm_ocean", "-1.0;0.2");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:lukewarm_ocean", "-1.0;0.2");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:cold_ocean", "-1.0;0.2");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:plains", "0.125;0.1");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:desert", "0.125;0.1");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:windswept_hills", "1.0;1.0");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:forest", "0.1;0.4");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:taiga", "0.2;0.4");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:swamp", "-0.2;0.2");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:river", "-0.5;0");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:frozen_ocean", "-1.0;0.2");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:frozen_river", "-0.5;0");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:snowy_plains", "0.125;0.1");
+        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:snowy_plains", "0.45;0.6");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:mushroom_fields", "0.2;0.6");
+        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:mushroom_fields", "0.0;0.05");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:beach", "0.0;0.05");
+        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:desert", "0.45;0.6");
+        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:forest", "0.45;0.6");
+        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:taiga", "0.45;0.6");
+        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:windswept_hills", "0.8;0.6");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:jungle", "0.1;0.4");
+        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:jungle", "0.45;0.6");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:bamboo_jungle", "0.1;0.4");
+        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:bamboo_jungle", "0.45;0.6");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:sparse_jungle", "0.1;0.4");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:deep_ocean", "-1.8;0.2");
+        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:deep_ocean", "-1.8;0.2");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:deep_lukewarm_ocean", "-1.8;0.2");
+        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:deep_lukewarm_ocean", "-1.8;0.2");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:deep_cold_ocean", "-1.8;0.2");
+        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:deep_cold_ocean", "-1.8;0.2");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:deep_frozen_ocean", "-1.8;0.2");
+        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:deep_frozen_ocean", "-1.8;0.2");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:stony_shore", "0.1;1.6");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:snowy_beach", "0.0;0.05");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:birch_forest", "0.1;0.4");
+        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:birch_forest", "0.45;0.6");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:dark_forest", "0.1;0.4");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:snowy_taiga", "0.2;0.4");
+        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:snowy_taiga", "0.45;0.6");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:old_growth_pine_taiga", "0.2;0.4");
+        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:old_growth_pine_taiga", "0.45;0.6");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:windswept_forest", "1.0;1.0");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:savanna", "0.125;0.1");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:savanna_plateau", "1.5;0.05");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:badlands", "0.1;0.4");
+        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:wooded_badlands", "1.5;0.05");
+        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:badlands", "1.5;0.05");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:sunflower_plains", "0.125;0.1");
+        settingsChunk.releaseBiomeHeightConfigs.put("2*minecraft:desert", "0.225;0.5");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:windswept_gravelly_hills", "1.0;1.0");
+        settingsChunk.releaseBiomeHeightConfigs.put("2*minecraft:windswept_gravelly_hills", "1.0;1.0");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:flower_forest", "0.1;0.8");
+        settingsChunk.releaseBiomeHeightConfigs.put("2*minecraft:taiga", "0.3;0.8");
+        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:swamp", "-0.1;0.6");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:ice_spikes", "0.425;0.9");
+        settingsChunk.releaseBiomeHeightConfigs.put("2*minecraft:jungle", "0.2;0.8");
+        settingsChunk.releaseBiomeHeightConfigs.put("2*minecraft:sparse_jungle", "0.2;0.8");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:old_growth_birch_forest", "0.2;0.8");
+        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:old_growth_birch_forest", "0.55;1.0");
+        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:dark_forest", "0.2;0.8");
+        settingsChunk.releaseBiomeHeightConfigs.put("2*minecraft:snowy_taiga", "0.3;0.8");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:old_growth_spruce_taiga", "0.2;0.4");
+        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:old_growth_spruce_taiga", "0.2;0.4");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:windswept_savanna", "0.3625;2.45");
+        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:windswept_savanna", "1.05;2.425");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:eroded_badlands", "0.1;0.4");
+        settingsChunk.releaseBiomeHeightConfigs.put("2*minecraft:wooded_badlands", "0.45;0.6");
+        settingsChunk.releaseBiomeHeightConfigs.put("2*minecraft:badlands", "0.45;0.6");
         settingsChunk.useSurfaceRules = true;
         settingsChunk.useFixedCaves = true;
         settingsChunk.forceBetaCaves = false;
@@ -1778,79 +1791,78 @@ public class ModernBetaSettingsPresets {
         ModernBetaSettingsCaveBiome.Builder settingsCaveBiome = new ModernBetaSettingsCaveBiome.Builder();
 
         settingsChunk.chunkProvider = ModernBetaBuiltInTypes.Chunk.MAJOR_RELEASE.id;
-        settingsChunk.releaseBiomeHeightConfigs = Map.ofEntries(
-            Map.entry("minecraft:ocean", "-1.0;0.2"),
-            Map.entry("minecraft:warm_ocean", "-1.0;0.2"),
-            Map.entry("minecraft:lukewarm_ocean", "-1.0;0.2"),
-            Map.entry("minecraft:cold_ocean", "-1.0;0.2"),
-            Map.entry("minecraft:plains", "0.125;0.1"),
-            Map.entry("minecraft:desert", "0.125;0.1"),
-            Map.entry("minecraft:windswept_hills", "1.0;1.0"),
-            Map.entry("minecraft:forest", "0.1;0.4"),
-            Map.entry("minecraft:taiga", "0.2;0.4"),
-            Map.entry("minecraft:swamp", "-0.2;0.2"),
-            Map.entry("minecraft:river", "-0.5;0"),
-            Map.entry("minecraft:frozen_ocean", "-1.0;0.2"),
-            Map.entry("minecraft:frozen_river", "-0.5;0"),
-            Map.entry("minecraft:snowy_plains", "0.125;0.1"),
-            Map.entry("*minecraft:snowy_plains", "0.45;0.6"),
-            Map.entry("minecraft:mushroom_fields", "0.2;0.6"),
-            Map.entry("*minecraft:mushroom_fields", "0.0;0.05"),
-            Map.entry("minecraft:beach", "0.0;0.05"),
-            Map.entry("*minecraft:desert", "0.45;0.6"),
-            Map.entry("*minecraft:forest", "0.45;0.6"),
-            Map.entry("*minecraft:taiga", "0.45;0.6"),
-            Map.entry("*minecraft:windswept_hills", "0.8;0.6"),
-            Map.entry("minecraft:jungle", "0.1;0.4"),
-            Map.entry("*minecraft:jungle", "0.45;0.6"),
-            Map.entry("minecraft:bamboo_jungle", "0.1;0.4"),
-            Map.entry("*minecraft:bamboo_jungle", "0.45;0.6"),
-            Map.entry("minecraft:sparse_jungle", "0.1;0.4"),
-            Map.entry("minecraft:deep_ocean", "-1.8;0.2"),
-            Map.entry("*minecraft:deep_ocean", "-1.8;0.2"),
-            Map.entry("minecraft:deep_lukewarm_ocean", "-1.8;0.2"),
-            Map.entry("*minecraft:deep_lukewarm_ocean", "-1.8;0.2"),
-            Map.entry("minecraft:deep_cold_ocean", "-1.8;0.2"),
-            Map.entry("*minecraft:deep_cold_ocean", "-1.8;0.2"),
-            Map.entry("minecraft:deep_frozen_ocean", "-1.8;0.2"),
-            Map.entry("*minecraft:deep_frozen_ocean", "-1.8;0.2"),
-            Map.entry("minecraft:stony_shore", "0.1;1.6"),
-            Map.entry("minecraft:snowy_beach", "0.0;0.05"),
-            Map.entry("minecraft:birch_forest", "0.1;0.4"),
-            Map.entry("*minecraft:birch_forest", "0.45;0.6"),
-            Map.entry("minecraft:dark_forest", "0.1;0.4"),
-            Map.entry("minecraft:snowy_taiga", "0.2;0.4"),
-            Map.entry("*minecraft:snowy_taiga", "0.45;0.6"),
-            Map.entry("minecraft:old_growth_pine_taiga", "0.2;0.4"),
-            Map.entry("*minecraft:old_growth_pine_taiga", "0.45;0.6"),
-            Map.entry("minecraft:windswept_forest", "1.0;1.0"),
-            Map.entry("minecraft:savanna", "0.125;0.1"),
-            Map.entry("minecraft:savanna_plateau", "1.5;0.05"),
-            Map.entry("minecraft:badlands", "0.1;0.4"),
-            Map.entry("*minecraft:wooded_badlands", "1.5;0.05"),
-            Map.entry("*minecraft:badlands", "1.5;0.05"),
-            Map.entry("minecraft:sunflower_plains", "0.125;0.1"),
-            Map.entry("2*minecraft:desert", "0.225;0.5"),
-            Map.entry("minecraft:windswept_gravelly_hills", "1.0;1.0"),
-            Map.entry("2*minecraft:windswept_gravelly_hills", "1.0;1.0"),
-            Map.entry("minecraft:flower_forest", "0.1;0.8"),
-            Map.entry("2*minecraft:taiga", "0.3;0.8"),
-            Map.entry("*minecraft:swamp", "-0.1;0.6"),
-            Map.entry("minecraft:ice_spikes", "0.425;0.9"),
-            Map.entry("2*minecraft:jungle", "0.2;0.8"),
-            Map.entry("2*minecraft:sparse_jungle", "0.2;0.8"),
-            Map.entry("minecraft:old_growth_birch_forest", "0.2;0.8"),
-            Map.entry("*minecraft:old_growth_birch_forest", "0.55;1.0"),
-            Map.entry("*minecraft:dark_forest", "0.2;0.8"),
-            Map.entry("2*minecraft:snowy_taiga", "0.3;0.8"),
-            Map.entry("minecraft:old_growth_spruce_taiga", "0.2;0.4"),
-            Map.entry("*minecraft:old_growth_spruce_taiga", "0.2;0.4"),
-            Map.entry("minecraft:windswept_savanna", "0.3625;2.45"),
-            Map.entry("*minecraft:windswept_savanna", "1.05;2.425"),
-            Map.entry("minecraft:eroded_badlands", "0.1;0.4"),
-            Map.entry("2*minecraft:wooded_badlands", "0.45;0.6"),
-            Map.entry("2*minecraft:badlands", "0.45;0.6")
-        );
+        settingsChunk.releaseBiomeHeightConfigs = new HashMap<>();
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:ocean", "-1.0;0.2");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:warm_ocean", "-1.0;0.2");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:lukewarm_ocean", "-1.0;0.2");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:cold_ocean", "-1.0;0.2");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:plains", "0.125;0.1");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:desert", "0.125;0.1");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:windswept_hills", "1.0;1.0");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:forest", "0.1;0.4");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:taiga", "0.2;0.4");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:swamp", "-0.2;0.2");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:river", "-0.5;0");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:frozen_ocean", "-1.0;0.2");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:frozen_river", "-0.5;0");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:snowy_plains", "0.125;0.1");
+        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:snowy_plains", "0.45;0.6");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:mushroom_fields", "0.2;0.6");
+        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:mushroom_fields", "0.0;0.05");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:beach", "0.0;0.05");
+        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:desert", "0.45;0.6");
+        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:forest", "0.45;0.6");
+        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:taiga", "0.45;0.6");
+        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:windswept_hills", "0.8;0.6");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:jungle", "0.1;0.4");
+        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:jungle", "0.45;0.6");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:bamboo_jungle", "0.1;0.4");
+        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:bamboo_jungle", "0.45;0.6");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:sparse_jungle", "0.1;0.4");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:deep_ocean", "-1.8;0.2");
+        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:deep_ocean", "-1.8;0.2");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:deep_lukewarm_ocean", "-1.8;0.2");
+        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:deep_lukewarm_ocean", "-1.8;0.2");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:deep_cold_ocean", "-1.8;0.2");
+        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:deep_cold_ocean", "-1.8;0.2");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:deep_frozen_ocean", "-1.8;0.2");
+        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:deep_frozen_ocean", "-1.8;0.2");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:stony_shore", "0.1;1.6");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:snowy_beach", "0.0;0.05");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:birch_forest", "0.1;0.4");
+        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:birch_forest", "0.45;0.6");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:dark_forest", "0.1;0.4");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:snowy_taiga", "0.2;0.4");
+        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:snowy_taiga", "0.45;0.6");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:old_growth_pine_taiga", "0.2;0.4");
+        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:old_growth_pine_taiga", "0.45;0.6");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:windswept_forest", "1.0;1.0");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:savanna", "0.125;0.1");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:savanna_plateau", "1.5;0.05");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:badlands", "0.1;0.4");
+        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:wooded_badlands", "1.5;0.05");
+        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:badlands", "1.5;0.05");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:sunflower_plains", "0.125;0.1");
+        settingsChunk.releaseBiomeHeightConfigs.put("2*minecraft:desert", "0.225;0.5");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:windswept_gravelly_hills", "1.0;1.0");
+        settingsChunk.releaseBiomeHeightConfigs.put("2*minecraft:windswept_gravelly_hills", "1.0;1.0");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:flower_forest", "0.1;0.8");
+        settingsChunk.releaseBiomeHeightConfigs.put("2*minecraft:taiga", "0.3;0.8");
+        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:swamp", "-0.1;0.6");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:ice_spikes", "0.425;0.9");
+        settingsChunk.releaseBiomeHeightConfigs.put("2*minecraft:jungle", "0.2;0.8");
+        settingsChunk.releaseBiomeHeightConfigs.put("2*minecraft:sparse_jungle", "0.2;0.8");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:old_growth_birch_forest", "0.2;0.8");
+        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:old_growth_birch_forest", "0.55;1.0");
+        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:dark_forest", "0.2;0.8");
+        settingsChunk.releaseBiomeHeightConfigs.put("2*minecraft:snowy_taiga", "0.3;0.8");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:old_growth_spruce_taiga", "0.2;0.4");
+        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:old_growth_spruce_taiga", "0.2;0.4");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:windswept_savanna", "0.3625;2.45");
+        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:windswept_savanna", "1.05;2.425");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:eroded_badlands", "0.1;0.4");
+        settingsChunk.releaseBiomeHeightConfigs.put("2*minecraft:wooded_badlands", "0.45;0.6");
+        settingsChunk.releaseBiomeHeightConfigs.put("2*minecraft:badlands", "0.45;0.6");
         settingsChunk.useSurfaceRules = true;
         settingsChunk.useFixedCaves = true;
         settingsChunk.forceBetaCaves = false;

@@ -18,7 +18,7 @@ public record ExtendedBiomeId(Identifier baseId, String ext) {
     public static final String TRANSLATION_KEY = "createWorld.customize.modern_beta.settings.preview.extended_biome_id";
 
     public static final ExtendedBiomeId
-        NULL = of(Identifier.of("", "")),
+        NULL = of(BiomeKeys.THE_VOID, "null"),
         OCEAN = of(BiomeKeys.OCEAN),
         DEEP_OCEAN = of(BiomeKeys.DEEP_OCEAN),
         PLAINS = of(BiomeKeys.PLAINS),

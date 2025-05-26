@@ -13,8 +13,13 @@ public abstract class SingleParentLayer extends Layer {
     protected final String parent;
     protected transient Layer parentLayer;
 
-    protected static <L extends SingleParentLayer> Products.P3<RecordCodecBuilder.Mu<L>, String, Long, String> fillSingleParentLayerFields(RecordCodecBuilder.Instance<L> instance) {
-        return Layer.fillLayerFields(instance)
+    protected static <L extends SingleParentLayer> Products.P3<
+        RecordCodecBuilder.Mu<L>,
+        String,
+        Long,
+        String
+    > fillSingleParentLayerFields(RecordCodecBuilder.Instance<L> instance) {
+        return fillLayerFields(instance)
             .and(Codec.STRING.fieldOf("parent").forGetter(layer -> layer.parent));
     }
 

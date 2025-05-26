@@ -8,6 +8,7 @@ import mod.bluestaggo.modernerbeta.api.registry.ModernBetaBuiltInRegistries;
 import net.minecraft.util.math.ColumnPos;
 import net.minecraft.world.biome.source.SeedMixer;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -26,7 +27,11 @@ public abstract class Layer {
 
     private transient final Long2ObjectLinkedOpenHashMap<ExtendedBiomeId> cache = new Long2ObjectLinkedOpenHashMap<>(CACHE_CAPACITY);
 
-    protected static <L extends Layer> Products.P2<RecordCodecBuilder.Mu<L>, String, Long> fillLayerFields(RecordCodecBuilder.Instance<L> instance) {
+    protected static <L extends Layer> Products.P2<
+        RecordCodecBuilder.Mu<L>,
+        String,
+        Long
+    > fillLayerFields(RecordCodecBuilder.Instance<L> instance) {
         return instance.group(
             Codec.STRING.fieldOf("id").forGetter(layer -> layer.id),
             Codec.LONG.fieldOf("seed").orElse(0L).forGetter(layer -> layer.seed)
@@ -120,8 +125,16 @@ public abstract class Layer {
         return neighbors[0].equals(i) && neighbors[1].equals(i) && neighbors[2].equals(i) && neighbors[3].equals(i);
     }
 
+    protected static boolean allNeighborsInSet(ExtendedBiomeId[] neighbors, Collection<ExtendedBiomeId> set) {
+        return set.contains(neighbors[0]) && set.contains(neighbors[1]) && set.contains(neighbors[2]) && set.contains(neighbors[3]);
+    }
+
     protected static boolean neighborsContain(ExtendedBiomeId[] neighbors, ExtendedBiomeId i) {
         return neighbors[0].equals(i) || neighbors[1].equals(i) || neighbors[2].equals(i) || neighbors[3].equals(i);
+    }
+
+    protected static boolean anyNeighborsInSet(ExtendedBiomeId[] neighbors, Collection<ExtendedBiomeId> set) {
+        return set.contains(neighbors[0]) || set.contains(neighbors[1]) || set.contains(neighbors[2]) || set.contains(neighbors[3]);
     }
 
     public final void addPossibleBiomesRecursive(Set<ExtendedBiomeId> biomes) {
@@ -136,7 +149,10 @@ public abstract class Layer {
         String string = this.id + ": " + ModernBetaBuiltInRegistries.FRACTAL_LAYER.getKey(this.getType()) + " " + this.seed;
         List<Layer> parents = this.getParents();
         if (!parents.isEmpty()) {
-            string += " <- " + parents.stream().map(parent -> parent.id).collect(Collectors.joining(", "));
+            string += " <- " + parents.stream()
+                .map(parent -> parent.id)
+                .distinct()
+                .collect(Collectors.joining(", "));
         }
         return string;
     }

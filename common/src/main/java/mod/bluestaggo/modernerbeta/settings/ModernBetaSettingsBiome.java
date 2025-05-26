@@ -11,7 +11,7 @@ import mod.bluestaggo.modernerbeta.world.biome.provider.climate.ClimateMapping;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ClimaticBiomeList;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ConfiguredLayers;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.RandomBiomeLayer;
+import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.ConstantBiomeLayer;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.legacy.FractalSettings;
 import mod.bluestaggo.modernerbeta.world.biome.voronoi.VoronoiPointBiome;
 import net.minecraft.nbt.NbtCompound;
@@ -273,7 +273,7 @@ public class ModernBetaSettingsBiome implements ModernBetaSettings {
             );
 
             this.fractalLayers = new ConfiguredLayers(Collections.singletonList(
-                new RandomBiomeLayer("land", 1234, ExtendedBiomeId.listOf("minecraft:plains"))
+                new ConstantBiomeLayer("land", 1234, ExtendedBiomeId.of("minecraft:plains"))
             ));
 
             this.fractalBiomes = List.of(

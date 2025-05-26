@@ -3,6 +3,7 @@ package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import mod.bluestaggo.modernerbeta.util.CodecUtil;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomes;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.Layer;
@@ -16,7 +17,7 @@ public class MixRiverLayer extends SingleParentLayer {
         instance -> fillSingleParentLayerFields(instance)
             .and(instance.group(
                 Codec.STRING.fieldOf("riverSource").forGetter(layer -> layer.riverSource),
-                ExtendedBiomeId.CODEC.listOf().<Set<ExtendedBiomeId>>xmap(HashSet::new, ArrayList::new).fieldOf("ignoredBiomes").forGetter(layer -> layer.ignoredBiomes),
+                CodecUtil.set(ExtendedBiomeId.CODEC).fieldOf("ignoredBiomes").forGetter(layer -> layer.ignoredBiomes),
                 Codec.unboundedMap(ExtendedBiomeId.CODEC, ExtendedBiomeId.CODEC).fieldOf("biomeSpecificRivers").forGetter(layer -> layer.biomeSpecificRivers)
             ))
             .apply(instance, MixRiverLayer::new)
@@ -32,7 +33,8 @@ public class MixRiverLayer extends SingleParentLayer {
         return new MixRiverLayer(id, seed, parent, riverSource, Set.of(ExtendedBiomeId.OCEAN), Map.of(
             ExtendedBiomeId.of(ModernBetaBiomes.LATE_BETA_ICE_PLAINS), ExtendedBiomeId.FROZEN_RIVER,
             ExtendedBiomeId.of(ModernBetaBiomes.EARLY_RELEASE_ICE_PLAINS), ExtendedBiomeId.FROZEN_RIVER,
-            ExtendedBiomeId.MUSHROOM_ISLAND, ExtendedBiomeId.MUSHROOM_SHORE
+            ExtendedBiomeId.MUSHROOM_ISLAND, ExtendedBiomeId.MUSHROOM_SHORE,
+            ExtendedBiomeId.MUSHROOM_SHORE, ExtendedBiomeId.MUSHROOM_SHORE
         ));
     }
 

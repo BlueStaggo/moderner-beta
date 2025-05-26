@@ -76,6 +76,7 @@ public class MixRiverLayer extends SingleParentLayer {
 
     @Override
     protected void addPossibleBiomes(Set<ExtendedBiomeId> biomes) {
+        biomes.add(ExtendedBiomeId.RIVER);
         for (Map.Entry<ExtendedBiomeId, ExtendedBiomeId> entry : this.biomeSpecificRivers.entrySet()) {
             if (biomes.contains(entry.getKey())) {
                 biomes.add(entry.getValue());

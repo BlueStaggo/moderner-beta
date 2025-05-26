@@ -398,6 +398,7 @@ public class ModernBetaTagProviderBiome extends FabricTagProvider<Biome> {
             );
 
         getOrCreateTagBuilder(HEIGHT_CONFIG_RIVER)
+            .forceAddTag(BiomeTags.IS_RIVER)
             .add(
                 BiomeKeys.RIVER,
                 BiomeKeys.FROZEN_RIVER

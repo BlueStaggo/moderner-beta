@@ -15,24 +15,27 @@ public abstract class BaseZoomLayer extends SingleParentLayer {
 
         int halfX = x >> 1;
         int halfZ = z >> 1;
+
         ExtendedBiomeId biome00 = this.parentLayer.sample(halfX, halfZ);
         if (xHalf == 0 && zHalf == 0) {
             return biome00;
         }
 
         LayerRandom random = this.getRandom(halfX << 1, halfZ << 1);
-        if (xHalf == 1 && zHalf == 0) {
-            ExtendedBiomeId biome10 = this.parentLayer.sample(halfX + 1, halfZ);
-            return this.interpolate(random, biome00, biome10);
-        } else if (xHalf == 0) {
-            ExtendedBiomeId biome01 = this.parentLayer.sample(halfX, halfZ + 1);
-            return this.interpolate(random, biome00, biome01);
+        ExtendedBiomeId biome01 = this.parentLayer.sample(halfX, halfZ + 1);
+        ExtendedBiomeId interpolationResult = this.interpolate(random, biome00, biome01);
+        if (xHalf == 0) {
+            return interpolationResult;
         }
 
-        ExtendedBiomeId biome01 = this.parentLayer.sample(halfX, halfZ + 1);
         ExtendedBiomeId biome10 = this.parentLayer.sample(halfX + 1, halfZ);
+        interpolationResult = this.interpolate(random, biome00, biome10);
+        if (zHalf == 0) {
+            return interpolationResult;
+        }
+
         ExtendedBiomeId biome11 = this.parentLayer.sample(halfX + 1, halfZ + 1);
-        return this.interpolate(random, biome00, biome01, biome10, biome11);
+        return this.interpolate(random, biome00, biome10, biome01, biome11);
     }
 
     protected abstract ExtendedBiomeId interpolate(LayerRandom random, ExtendedBiomeId a, ExtendedBiomeId b);

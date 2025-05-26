@@ -58,12 +58,13 @@ public class AddBetaLandLayer extends SingleParentLayer {
         ExtendedBiomeId[] neighbors = this.parentLayer.sampleDiagonalNeighbors(x, z);
 
         boolean addLand;
-        if (base.equals(this.ocean) && !allNeighborsEqual(neighbors, this.ocean)) {
-            addLand = this.getRandom(x, z).nextInt(3) / 2 > 0;
-        } else if (!base.equals(this.ocean) && neighborsContain(neighbors, this.ocean)) {
+        if (!base.equals(this.ocean) || allNeighborsEqual(neighbors, this.ocean)) {
+            if (!base.equals(this.land) || allNeighborsEqual(neighbors, this.land)) {
+                return base;
+            }
             addLand = 1 - this.getRandom(x, z).nextInt(5) / 4 > 0;
         } else {
-            return base;
+            addLand = this.getRandom(x, z).nextInt(3) / 2 > 0;
         }
 
         if (addLand) {

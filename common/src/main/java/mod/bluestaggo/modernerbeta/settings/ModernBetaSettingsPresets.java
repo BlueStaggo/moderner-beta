@@ -1428,7 +1428,7 @@ public class ModernBetaSettingsPresets {
             AddBetaLandLayer.forIslandScale("land", 3, "land"),
             new InitRiverLayer("river", 100, "land", false),
             new StackedZoomLayer("river", 1000, "river", 6, StackedZoomLayer.Type.MODAL),
-            new ComputeRiverLayer("river", 0, "river", false),
+            new ComputeRiverLayer("river", 0, "river", true),
             new SmoothLayer("river", 1000, "river"),
             new RandomBiomeLayer("biome_pool", 200, ExtendedBiomeId.listOf(
                 "minecraft:desert",

@@ -1,9 +1,6 @@
 package mod.bluestaggo.modernerbeta.world.biome.provider;
 
-import mod.bluestaggo.modernerbeta.api.world.biome.BiomeProvider;
-import mod.bluestaggo.modernerbeta.api.world.biome.BiomeResolverBlock;
-import mod.bluestaggo.modernerbeta.api.world.biome.BiomeResolverExtendedId;
-import mod.bluestaggo.modernerbeta.api.world.biome.BiomeResolverStepped;
+import mod.bluestaggo.modernerbeta.api.world.biome.*;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.Layer;
 import net.minecraft.nbt.NbtCompound;
@@ -22,7 +19,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-public class BiomeProviderFractal extends BiomeProvider implements BiomeResolverBlock, BiomeResolverExtendedId, BiomeResolverStepped, BiomeAccess.Storage {
+public class BiomeProviderFractal extends BiomeProvider implements BiomeResolverBlock, BiomeResolverExtendedIdStepped, BiomeAccess.Storage {
 	private final BiomeAccess biomeAccess;
 	private final List<RegistryEntry<Biome>> allBiomes;
 	private final List<Layer> allLayers;
@@ -82,6 +79,7 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 		return this.getBiomeEntry(this.getExtendedBiomeIdForStep(biomeX, biomeY, biomeZ, step).baseId()).orElseThrow();
 	}
 
+	@Override
 	public ExtendedBiomeId getExtendedBiomeIdForStep(int biomeX, int biomeY, int biomeZ, int step) {
 		return this.allLayers.get(step).sample(biomeX, biomeZ);
 	}

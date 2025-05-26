@@ -3,9 +3,12 @@ package mod.bluestaggo.modernerbeta.client.gui.screen;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.api.registry.ModernBetaBuiltInRegistries;
 import mod.bluestaggo.modernerbeta.api.world.biome.BiomeProvider;
+import mod.bluestaggo.modernerbeta.api.world.biome.BiomeResolverExtendedId;
+import mod.bluestaggo.modernerbeta.api.world.biome.BiomeResolverExtendedIdStepped;
 import mod.bluestaggo.modernerbeta.api.world.biome.BiomeResolverStepped;
 import mod.bluestaggo.modernerbeta.api.world.chunk.surface.SurfaceConfig;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsBiome;
+import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.gui.DrawContext;
@@ -16,6 +19,7 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.client.texture.TextureManager;
+import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.world.GeneratorOptionsHolder;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
@@ -28,6 +32,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.biome.Biome;
 
 import java.awt.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
     private final BiomeProvider biomeProvider;
@@ -82,16 +87,18 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
             this.biomeDisplay.step = stepCount - 1;
 
             ButtonWidget buttonPrevStep = ButtonWidget.builder(Text.of("◀"), button -> {
-                this.biomeDisplay.step--;
-                if (this.biomeDisplay.step < 0) {
-                    this.biomeDisplay.step = stepCount - 1;
+                int step = this.biomeDisplay.step - 1;
+                if (step < 0) {
+                    step = stepCount - 1;
                 }
+                this.biomeDisplay.step = step;
             }).dimensions(0, 0, 20, 20).build();
             ButtonWidget buttonNextStep = ButtonWidget.builder(Text.of("▶"), button -> {
-                this.biomeDisplay.step++;
-                if (this.biomeDisplay.step >= stepCount) {
-                    this.biomeDisplay.step = 0;
+                int step = this.biomeDisplay.step + 1;
+                if (step >= stepCount) {
+                    step = 0;
                 }
+                this.biomeDisplay.step = step;
             }).dimensions(0, 0, 20, 20).build();
 
             gridAdderButtons.add(buttonPrevStep);
@@ -120,8 +127,12 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
         final NativeImage image;
         final NativeImageBackedTexture texture;
         final BiomeRenderThread renderThread;
-        int zoom = 1;
-        int step = 0;
+        volatile int zoom = 1;
+        volatile int step = 0;
+
+        int prevMouseX, prevMouseY;
+        final AtomicInteger offsetX = new AtomicInteger();
+        final AtomicInteger offsetY = new AtomicInteger();
 
         BiomeDisplayWidget(int x, int y, int width, int height) {
             super(x, y, width, height, Text.empty());
@@ -167,13 +178,22 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
             int offsetMouseX = mouseX - this.getX();
             int offsetMouseY = mouseY - this.getY();
             if (offsetMouseX >= 0 && offsetMouseY >= 0 && offsetMouseX < this.width && offsetMouseY < this.height) {
-                int sampleX = (offsetMouseX - this.width / 2) * this.zoom;
-                int sampleY = (offsetMouseY - this.height / 2) * this.zoom;
+                int sampleX = (offsetMouseX + offsetX.get() - this.width / 2) * this.zoom;
+                int sampleY = (offsetMouseY + offsetY.get() - this.height / 2) * this.zoom;
                 Text biomeName = biomeProvider instanceof BiomeResolverStepped resolverStepped
                     ? resolverStepped.getBiomeNameForStep(sampleX, 64, sampleY, step)
                     : biomeProvider.getBiomeName(sampleX, 64, sampleY);
                 context.drawTooltip(textRenderer, biomeName, mouseX, mouseY);
             }
+
+            this.prevMouseX = mouseX;
+            this.prevMouseY = mouseY;
+        }
+
+        @Override
+        protected void onDrag(double mouseX, double mouseY, double deltaX, double deltaY) {
+            this.offsetX.getAndAdd((int)Math.round(-deltaX));
+            this.offsetY.getAndAdd((int)Math.round(-deltaY));
         }
 
         @Override
@@ -217,13 +237,18 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                     }
 
                     int scale = BiomeDisplayWidget.this.zoom;
-                    int sampleX = (this.genX - width / 2) * scale;
-                    int sampleY = (this.genY - height / 2) * scale;
+                    int sampleX = (this.genX + offsetX.get() - width / 2) * scale;
+                    int sampleY = (this.genY + offsetY.get() - height / 2) * scale;
 
                     RegistryEntry<Biome> biome = biomeProvider instanceof BiomeResolverStepped resolverStepped
-                        ? resolverStepped.getBiomeForStep(sampleX, 64, sampleY, BiomeDisplayWidget.this.step)
+                        ? resolverStepped.getBiomeForStep(sampleX, 64, sampleY, step)
                         : biomeProvider.getBiome(sampleX, 64, sampleY);
-                    int color = 0xFF000000 | getBiomeColor(biome, sampleX, sampleY);
+                    ExtendedBiomeId extendedBiome = biomeProvider instanceof BiomeResolverExtendedId resolverExtendedId
+                        ? resolverExtendedId instanceof BiomeResolverExtendedIdStepped resolverExtendedIdStepped
+                            ? resolverExtendedIdStepped.getExtendedBiomeIdForStep(sampleX, 64, sampleY, step)
+                            : resolverExtendedId.getExtendedBiomeId(sampleX, 64, sampleY)
+                        : ExtendedBiomeId.NULL;
+                    int color = 0xFF000000 | getBiomeColor(biome, extendedBiome.ext(), sampleX, sampleY);
 
                     synchronized (image) {
                         image.setColorArgb(this.genX, this.genY, color);
@@ -232,10 +257,24 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                 }
             }
 
-            private static int getBiomeColor(RegistryEntry<Biome> biomeEntry, int x, int y) {
+            private static int getBiomeColor(RegistryEntry<Biome> biomeEntry, String ext, int x, int y) {
+                String id = biomeEntry.getIdAsString();
+                if (ext != null && !ext.isEmpty()) {
+                    String extId = id + "*" + ext;
+                    Integer registeredExtColor = ModernerBeta.CONFIG.biomePreviewColors.get(extId);
+                    if (registeredExtColor != null) {
+                        return registeredExtColor;
+                    }
+                }
+
+                Integer registeredColor = ModernerBeta.CONFIG.biomePreviewColors.get(id);
+                if (registeredColor != null) {
+                    return registeredColor;
+                }
+
                 Biome biome = biomeEntry.value();
                 boolean watery = biomeEntry.isIn(BiomeTags.IS_OCEAN) || biomeEntry.isIn(BiomeTags.IS_RIVER);
-                int color;
+                int color = -1;
                 if (watery) {
                     color = biome.getWaterColor();
                     if (biomeEntry.isIn(BiomeTags.IS_OCEAN)) {

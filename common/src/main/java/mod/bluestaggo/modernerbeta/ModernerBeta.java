@@ -7,9 +7,12 @@ import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import mod.bluestaggo.modernerbeta.config.ModernBetaConfig;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
+import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistryKeys;
 import mod.bluestaggo.modernerbeta.util.CodecUtil;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ConfiguredLayers;
+import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.LayerType;
+import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.predicates.BiomePredicateType;
 import mod.bluestaggo.modernerbeta.world.carver.ModernBetaCarvers;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
 import mod.bluestaggo.modernerbeta.world.feature.ModernBetaFeatures;
@@ -48,25 +51,25 @@ public class ModernerBeta {
 
     public static Map<Registry<?>, Consumer<IRegistryHandler<?>>> CUSTOM_REGISTRY_HANDLERS;
 
-    public static final List<Pair<RegistryKey<?>, Codec<?>>> DYNAMIC_REGISTRIES = List.of(
-        new Pair<>(ModernBetaRegistryKeys.CONFIGURED_LAYERS_KEY, ConfiguredLayers.CODEC)
-    );
+    public static final List<Pair<RegistryKey<?>, Codec<?>>> DYNAMIC_REGISTRIES = List.of();
 
     public static void init() {
         ModernerBeta.log(Level.INFO, "Initializing Moderner Beta...");
     }
 
     public static void setupCustomRegistryHandlers() {
-        CUSTOM_REGISTRY_HANDLERS = Map.of(
-            ModernBetaRegistries.CHUNK, ModernBetaBuiltInProviders::registerChunkProviders,
-            ModernBetaRegistries.BIOME, ModernBetaBuiltInProviders::registerBiomeProviders,
-            ModernBetaRegistries.CAVE_BIOME, ModernBetaBuiltInProviders::registerCaveBiomeProviders,
-            ModernBetaRegistries.SURFACE_CONFIG, ModernBetaBuiltInProviders::registerSurfaceConfigs,
-            ModernBetaRegistries.HEIGHT_CONFIG, ModernBetaBuiltInProviders::registerHeightConfigs,
-            ModernBetaRegistries.NOISE_POST_PROCESSOR, ModernBetaBuiltInProviders::registerNoisePostProcessors,
-            ModernBetaRegistries.BLOCKSOURCE, ModernBetaBuiltInProviders::registerBlockSources,
-            ModernBetaRegistries.SETTINGS_PRESET, ModernBetaBuiltInProviders::registerSettingsPresets,
-            ModernBetaRegistries.SETTINGS_PRESET_CATEGORY, ModernBetaBuiltInProviders::registerSettingsPresetCategories
+        CUSTOM_REGISTRY_HANDLERS = Map.ofEntries(
+            Map.entry(ModernBetaRegistries.CHUNK, ModernBetaBuiltInProviders::registerChunkProviders),
+            Map.entry(ModernBetaRegistries.BIOME, ModernBetaBuiltInProviders::registerBiomeProviders),
+            Map.entry(ModernBetaRegistries.CAVE_BIOME, ModernBetaBuiltInProviders::registerCaveBiomeProviders),
+            Map.entry(ModernBetaRegistries.SURFACE_CONFIG, ModernBetaBuiltInProviders::registerSurfaceConfigs),
+            Map.entry(ModernBetaRegistries.HEIGHT_CONFIG, ModernBetaBuiltInProviders::registerHeightConfigs),
+            Map.entry(ModernBetaRegistries.NOISE_POST_PROCESSOR, ModernBetaBuiltInProviders::registerNoisePostProcessors),
+            Map.entry(ModernBetaRegistries.BLOCKSOURCE, ModernBetaBuiltInProviders::registerBlockSources),
+            Map.entry(ModernBetaRegistries.SETTINGS_PRESET, ModernBetaBuiltInProviders::registerSettingsPresets),
+            Map.entry(ModernBetaRegistries.SETTINGS_PRESET_CATEGORY, ModernBetaBuiltInProviders::registerSettingsPresetCategories),
+            Map.entry(ModernBetaRegistries.FRACTAL_LAYER, handler -> LayerType.init()),
+            Map.entry(ModernBetaRegistries.BIOME_PREDICATE, handler -> BiomePredicateType.init())
         );
     }
 

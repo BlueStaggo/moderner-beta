@@ -5,7 +5,7 @@ import mod.bluestaggo.modernerbeta.api.world.provider.BiomeProviderCreator;
 import mod.bluestaggo.modernerbeta.api.world.provider.CaveBiomeProviderCreator;
 import mod.bluestaggo.modernerbeta.api.world.provider.ChunkProviderCreator;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
-import mod.bluestaggo.modernerbeta.registry.ModernBetaBuiltInRegistries;
+import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.api.world.blocksource.BlockSource;
 import mod.bluestaggo.modernerbeta.api.world.chunk.noise.NoisePostProcessor;
 import mod.bluestaggo.modernerbeta.api.world.chunk.surface.SurfaceConfig;

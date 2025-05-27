@@ -5,7 +5,7 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
-import mod.bluestaggo.modernerbeta.registry.ModernBetaBuiltInRegistries;
+import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.api.world.biome.*;
 import mod.bluestaggo.modernerbeta.api.world.cavebiome.CaveBiomeProvider;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
@@ -70,11 +70,11 @@ public class ModernBetaBiomeSource extends BiomeSource {
         ModernBetaSettingsBiome biomeSettings = ModernBetaSettingsBiome.fromCompound(this.biomeSettings);
         ModernBetaSettingsCaveBiome caveBiomeSettings = ModernBetaSettingsCaveBiome.fromCompound(this.caveBiomeSettings);
         
-        this.biomeProvider = ModernBetaBuiltInRegistries.BIOME
+        this.biomeProvider = ModernBetaRegistries.BIOME
             .get(biomeSettings.biomeProvider)
             .apply(this.biomeSettings, this.biomeRegistry, seed);
         
-        this.caveBiomeProvider = ModernBetaBuiltInRegistries.CAVE_BIOME
+        this.caveBiomeProvider = ModernBetaRegistries.CAVE_BIOME
             .get(caveBiomeSettings.biomeProvider)
             .apply(this.caveBiomeSettings, this.biomeRegistry, seed);
     }
@@ -254,11 +254,11 @@ public class ModernBetaBiomeSource extends BiomeSource {
         ModernBetaSettingsBiome modernBetaBiomeSettings = ModernBetaSettingsBiome.fromCompound(this.biomeSettings);
         ModernBetaSettingsCaveBiome modernBetaCaveBiomeSettings = ModernBetaSettingsCaveBiome.fromCompound(this.caveBiomeSettings);
         
-        BiomeProvider biomeProvider  = ModernBetaBuiltInRegistries.BIOME
+        BiomeProvider biomeProvider  = ModernBetaRegistries.BIOME
             .get(modernBetaBiomeSettings.biomeProvider)
             .apply(biomeSettings, biomeRegistry, 0L);
         
-        CaveBiomeProvider caveBiomeProvider = ModernBetaBuiltInRegistries.CAVE_BIOME
+        CaveBiomeProvider caveBiomeProvider = ModernBetaRegistries.CAVE_BIOME
             .get(modernBetaCaveBiomeSettings.biomeProvider)
             .apply(caveBiomeSettings, biomeRegistry, 0L);
 

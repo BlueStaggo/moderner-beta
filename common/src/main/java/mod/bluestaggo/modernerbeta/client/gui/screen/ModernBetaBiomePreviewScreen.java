@@ -2,7 +2,7 @@ package mod.bluestaggo.modernerbeta.client.gui.screen;
 
 import com.google.common.util.concurrent.AtomicDouble;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
-import mod.bluestaggo.modernerbeta.api.registry.ModernBetaBuiltInRegistries;
+import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.api.world.biome.BiomeProvider;
 import mod.bluestaggo.modernerbeta.api.world.biome.BiomeResolverExtendedId;
 import mod.bluestaggo.modernerbeta.api.world.biome.BiomeResolverExtendedIdStepped;
@@ -41,7 +41,7 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
 
     public ModernBetaBiomePreviewScreen(Text title, Screen parent, GeneratorOptionsHolder generationOptions, ModernBetaSettingsBiome biomeSettings) {
         super(title, parent);
-        this.biomeProvider = ModernBetaBuiltInRegistries.BIOME.get(biomeSettings.biomeProvider)
+        this.biomeProvider = ModernBetaRegistries.BIOME.get(biomeSettings.biomeProvider)
             .apply(
                 biomeSettings.toCompound(),
                 generationOptions.getCombinedRegistryManager().getOrThrow(RegistryKeys.BIOME),

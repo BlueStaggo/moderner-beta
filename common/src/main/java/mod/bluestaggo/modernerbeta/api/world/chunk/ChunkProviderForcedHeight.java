@@ -1,17 +1,20 @@
 package mod.bluestaggo.modernerbeta.api.world.chunk;
 
-import mod.bluestaggo.modernerbeta.api.registry.ModernBetaBuiltInRegistries;
+import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.world.biome.HeightConfig;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.biome.Biome;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -34,10 +37,11 @@ public abstract class ChunkProviderForcedHeight extends ChunkProviderNoise {
         this.biomeHeightValues = Stream.concat(
             this.chunkSettings.releaseBiomeHeightValues.entrySet().stream()
                 .map(entry -> Map.entry(ExtendedBiomeId.of(entry.getKey()), HeightConfig.parse(entry.getValue(), HeightConfig.DEFAULT))),
-            ModernBetaBuiltInRegistries.HEIGHT_CONFIG.getEntrySet().stream()
+            ModernBetaRegistries.HEIGHT_CONFIG.streamEntries()
+                .filter(RegistryEntry::hasKeyAndValue)
                 .flatMap(entry -> {
-                    TagKey<Biome> heightConfigTag = TagKey.of(RegistryKeys.BIOME, Identifier.of(entry.getKey()));
-                    HeightConfig heightConfig = entry.getValue();
+                    TagKey<Biome> heightConfigTag = TagKey.of(RegistryKeys.BIOME, entry.getKey().orElseThrow().getValue());
+                    HeightConfig heightConfig = entry.value();
                     return chunkGenerator.getBiomeSource().getBiomes().stream()
                         .filter(biome -> biome.isIn(heightConfigTag))
                         .map(biome -> ExtendedBiomeId.of(biome.getKey().orElseThrow().getValue(), heightConfig.type()))

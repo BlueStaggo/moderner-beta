@@ -1,7 +1,9 @@
 package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers;
 
 import com.mojang.serialization.MapCodec;
-import mod.bluestaggo.modernerbeta.api.registry.ModernBetaBuiltInRegistries;
+import mod.bluestaggo.modernerbeta.ModernerBeta;
+import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
+import net.minecraft.registry.Registry;
 
 public record LayerType<L extends Layer>(MapCodec<L> codec) {
     public static final LayerType<AddLandLayer> ADD_LAND = register("add_land", AddLandLayer.CODEC);
@@ -24,7 +26,10 @@ public record LayerType<L extends Layer>(MapCodec<L> codec) {
 
     private static <L extends Layer> LayerType<L> register(String id, MapCodec<L> codec) {
         LayerType<L> layerType = new LayerType<>(codec);
-        ModernBetaBuiltInRegistries.FRACTAL_LAYER.register(id, layerType);
+        Registry.register(ModernBetaRegistries.FRACTAL_LAYER, ModernerBeta.createId(id), layerType);
         return layerType;
+    }
+
+    public static void init() {
     }
 }

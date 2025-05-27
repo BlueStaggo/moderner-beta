@@ -11,6 +11,8 @@ import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPresetCategory;
 import mod.bluestaggo.modernerbeta.world.biome.HeightConfig;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ConfiguredLayers;
+import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.LayerType;
+import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.predicates.BiomePredicateType;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 
@@ -24,5 +26,6 @@ public final class ModernBetaRegistryKeys {
     public static final RegistryKey<Registry<BlockSourceCreator>> BLOCKSOURCE = RegistryKey.ofRegistry(ModernerBeta.createId("blocksource"));
     public static final RegistryKey<Registry<ModernBetaSettingsPreset>> SETTINGS_PRESET = RegistryKey.ofRegistry(ModernerBeta.createId("settings_preset"));
     public static final RegistryKey<Registry<ModernBetaSettingsPresetCategory>> SETTINGS_PRESET_CATEGORY = RegistryKey.ofRegistry(ModernerBeta.createId("settings_preset_category"));
-    public static final RegistryKey<Registry<ConfiguredLayers>> CONFIGURED_LAYERS_KEY = RegistryKey.ofRegistry(ModernerBeta.createId("configured_layers"));
+    public static final RegistryKey<Registry<LayerType<?>>> FRACTAL_LAYER = RegistryKey.ofRegistry(ModernerBeta.createId("fractal_layer"));
+    public static final RegistryKey<Registry<BiomePredicateType<?>>> BIOME_PREDICATE = RegistryKey.ofRegistry(ModernerBeta.createId("biome_predicate_type"));
 }

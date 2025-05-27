@@ -1,7 +1,9 @@
 package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.predicates;
 
 import com.mojang.serialization.MapCodec;
-import mod.bluestaggo.modernerbeta.api.registry.ModernBetaBuiltInRegistries;
+import mod.bluestaggo.modernerbeta.ModernerBeta;
+import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
+import net.minecraft.registry.Registry;
 
 public record BiomePredicateType<F extends BiomePredicate>(MapCodec<F> codec) {
     public static final BiomePredicateType<AllOfBiomePredicate> ALL_OF = register("all_of", AllOfBiomePredicate.CODEC);
@@ -15,7 +17,10 @@ public record BiomePredicateType<F extends BiomePredicate>(MapCodec<F> codec) {
 
     private static <F extends BiomePredicate> BiomePredicateType<F> register(String id, MapCodec<F> codec) {
         BiomePredicateType<F> filterType = new BiomePredicateType<>(codec);
-        ModernBetaBuiltInRegistries.BIOME_PREDICATE.register(id, filterType);
+        Registry.register(ModernBetaRegistries.BIOME_PREDICATE, ModernerBeta.createId(id), filterType);
         return filterType;
+    }
+
+    public static void init() {
     }
 }

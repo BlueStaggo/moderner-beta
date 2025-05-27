@@ -1,7 +1,7 @@
 package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.predicates;
 
 import com.mojang.serialization.Codec;
-import mod.bluestaggo.modernerbeta.api.registry.ModernBetaBuiltInRegistries;
+import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.Layer;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.LayerRandom;
@@ -11,7 +11,7 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 public abstract class BiomePredicate {
-    public static final Codec<BiomePredicate> BASE_CODEC = ModernBetaBuiltInRegistries.BIOME_PREDICATE.getCodec()
+    public static final Codec<BiomePredicate> BASE_CODEC = ModernBetaRegistries.BIOME_PREDICATE.getCodec()
         .dispatch("condition", BiomePredicate::getType, BiomePredicateType::codec);
 
     public static BiomePredicate allDiagonalNeighborsMatch(BiomePredicate predicate) {

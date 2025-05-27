@@ -4,7 +4,7 @@ import com.mojang.serialization.Codec;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.neoforge.registry.RegistryHelperImpl;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
-import mod.bluestaggo.modernerbeta.registry.RegistryHelper;
+import mod.bluestaggo.modernerbeta.registry.IRegistryHelper;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.registry.VanillaRegistryHandler;
 import mod.bluestaggo.modernerbeta.world.ModernBetaWorldInitializer;
@@ -50,7 +50,7 @@ public class ModEventsCommon {
 
     @SubscribeEvent
     public static void registerRegistries(NewRegistryEvent event) {
-        RegistryHelper registryHelper = new RegistryHelperImpl(event);
+        IRegistryHelper registryHelper = new RegistryHelperImpl(event);
         ModernBetaRegistries.makeRegistries(registryHelper);
         ModernerBeta.setupCustomRegistryHandlers();
     }

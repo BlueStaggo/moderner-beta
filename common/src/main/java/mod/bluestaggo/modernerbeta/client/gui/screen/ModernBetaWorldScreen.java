@@ -107,9 +107,10 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
         ));
 
         MutableText presetText = Text.translatable(TEXT_PRESET).append(": ");
-        presetText.append(this.isPresetCustom() ?
-            Text.translatable(TEXT_PRESET_CUSTOM) :
-            Text.translatable(TEXT_PRESET_NAME + "." + this.getPresetKey().getPath()).formatted(Formatting.YELLOW)
+        Identifier presetKey = this.getPresetKey();
+        presetText.append(presetKey == null ?
+            Text.translatable(TEXT_PRESET_CUSTOM).formatted(Formatting.AQUA) :
+            Text.translatable(TEXT_PRESET_NAME + "." + presetKey.getPath()).formatted(Formatting.YELLOW)
         );
             
         this.buttonPreset = ButtonWidget.builder(
@@ -231,31 +232,17 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
         gridWidgetMain.refreshPositions();
         SimplePositioningWidget.setPos(gridWidgetMain, 0, this.overlayTop + 8, this.width, this.height, 0.5f, 0.0f);
         gridWidgetMain.forEachChild(this::addDrawableChild);
-        
-        this.onPresetChange();
     }
-    
-    private void onPresetChange() {
-        if (this.isPresetCustom()) {
-            this.buttonPreset.active = false;
-        } else {
-            this.buttonPreset.active = true;
-        }
-    }
-    
+
     private void resetPreset() {
         this.preset = ModernBetaRegistries.SETTINGS_PRESET.get(ModernBetaBuiltInTypes.Preset.BETA_1_7_3.id);
-        this.onPresetChange();
     }
-    
-    private boolean isPresetCustom() {
-        return false;
-    }
-    
-    private Identifier getPresetKey() {
-        if (true/*ModernBetaRegistries.SETTINGS_PRESET.contains(this.preset)*/)
-            return ModernBetaRegistries.SETTINGS_PRESET.getId(this.preset);
 
-        return null;
+    private Identifier getPresetKey() {
+        return ModernBetaRegistries.SETTINGS_PRESET.streamEntries()
+            .filter(entry -> entry.value().equals(this.preset))
+            .map(entry -> entry.registryKey().getValue())
+            .findFirst()
+            .orElse(null);
     }
 }

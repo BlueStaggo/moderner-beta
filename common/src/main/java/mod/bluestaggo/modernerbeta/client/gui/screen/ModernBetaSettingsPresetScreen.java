@@ -203,8 +203,6 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
 
             @Override
             public void render(DrawContext context,int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-                TextRenderer textRenderer = ModernBetaSettingsPresetScreen.this.textRenderer;
-                
                 MutableText presetNameText = this.presetName.formatted(this.getTextFormatting());
                 
                 List<OrderedText> presetDescTexts = this.splitText(textRenderer, this.presetDesc);
@@ -222,7 +220,7 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
 
                 this.draw(context, x, y, this.presetTexture);
 
-                if (ModernBetaSettingsPresetScreen.this.client.options.getTouchscreen().getValue() || hovered) {
+                if (client != null && client.options.getTouchscreen().getValue() || hovered) {
                     boolean isMouseHovering = (mouseX - x) < ICON_SIZE;
                     Identifier texture = isMouseHovering ? TEXTURE_JOIN_HIGHLIGHTED : TEXTURE_JOIN;
                     
@@ -335,16 +333,16 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
 
             @Override
             protected void selectPreset() {
-                ModernBetaSettingsPresetScreen presetScreen = ModernBetaSettingsPresetScreen.this;
+                assert client != null;
 
-                presetScreen.client.getSoundManager().play(
+                client.getSoundManager().play(
                     PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0f)
                 );
 
-                presetScreen.client.setScreen(new ModernBetaSettingsPresetScreen(
-                    presetScreen,
+                client.setScreen(new ModernBetaSettingsPresetScreen(
+                    ModernBetaSettingsPresetScreen.this,
                     presetCategory.presets(),
-                    presetScreen.preset,
+                    preset,
                     false
                 ));
             }

@@ -1548,7 +1548,7 @@ public class ModernBetaSettingsPresets {
         );
     }
 
-    private static ConfiguredLayers configuredLayers11Era(int biomeScale, boolean addJungles) {
+    private static ConfiguredLayers configuredLayers11Era(int biomeScale, boolean addJungles, boolean taigasInIcePlains) {
         ExtendedBiomeId icePlains = ExtendedBiomeId.of(ModernBetaBiomes.EARLY_RELEASE_ICE_PLAINS);
 
         List<ExtendedBiomeId> biomePool = ExtendedBiomeId.listOf(
@@ -1599,6 +1599,12 @@ public class ModernBetaSettingsPresets {
             );
         }
 
+        Layer icePlainsLayer = taigasInIcePlains
+            ? new RandomBiomeLayer("ice_plains", 200, biomePool.stream()
+                .map(biome -> biome.isOf(ModernBetaBiomes.EARLY_RELEASE_TAIGA) ? biome : icePlains)
+                .toList())
+            : new ConstantBiomeLayer("ice_plains", 0, icePlains);
+
         List<Layer> layers = Arrays.asList(
             new InitLandLayer("land", 1),
             new FuzzyZoomLayer("land", 2000, "land"),
@@ -1630,7 +1636,7 @@ public class ModernBetaSettingsPresets {
             new ComputeRiverLayer("river", 0, "river", true),
             new SmoothLayer("river", 1000, "river"),
             new RandomBiomeLayer("biome_pool", 200, biomePool),
-            new ConstantBiomeLayer("ice_plains", 0, icePlains),
+            icePlainsLayer,
             new BiomeToLayerOverlayLayer("land", 0, "land", Map.of(
                 ExtendedBiomeId.PLAINS, "biome_pool",
                 ExtendedBiomeId.FROZEN_OCEAN, "ice_plains",
@@ -1688,7 +1694,7 @@ public class ModernBetaSettingsPresets {
         settingsChunk.useFixedCaves = true;
 
         settingsBiome.biomeProvider = ModernBetaBuiltInTypes.Biome.FRACTAL.id;
-        settingsBiome.fractalLayers = configuredLayers11Era(biomeScale, false);
+        settingsBiome.fractalLayers = configuredLayers11Era(biomeScale, false, false);
 
         return new ModernBetaSettingsPreset(
             settingsChunk.build(),
@@ -1706,7 +1712,7 @@ public class ModernBetaSettingsPresets {
         settingsChunk.useFixedCaves = true;
 
         settingsBiome.biomeProvider = ModernBetaBuiltInTypes.Biome.FRACTAL.id;
-        settingsBiome.fractalLayers = configuredLayers11Era(biomeScale, true);
+        settingsBiome.fractalLayers = configuredLayers11Era(biomeScale, true, false);
 
         return new ModernBetaSettingsPreset(
             settingsChunk.build(),
@@ -1732,7 +1738,7 @@ public class ModernBetaSettingsPresets {
         );
 
         settingsBiome.biomeProvider = ModernBetaBuiltInTypes.Biome.FRACTAL.id;
-        settingsBiome.fractalLayers = configuredLayers11Era(biomeScale, true);
+        settingsBiome.fractalLayers = configuredLayers11Era(biomeScale, true, true);
 
         return new ModernBetaSettingsPreset(
             settingsChunk.build(),

@@ -1,23 +1,22 @@
 package mod.bluestaggo.modernerbeta.neoforge.registry;
 
-import mod.bluestaggo.modernerbeta.registry.IRegistryBuilder;
-import mod.bluestaggo.modernerbeta.registry.IRegistryHelper;
+import mod.bluestaggo.modernerbeta.registry.RegistryBuilder;
+import mod.bluestaggo.modernerbeta.registry.RegistryHelper;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.util.Identifier;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
-import net.neoforged.neoforge.registries.RegistryBuilder;
 
-public record RegistryHelperImpl(NewRegistryEvent event) implements IRegistryHelper {
+public record RegistryHelperImpl(NewRegistryEvent event) implements RegistryHelper {
     @Override
-    public <T> IRegistryBuilder<T> createSimple(RegistryKey<Registry<T>> key) {
-        RegistryBuilder<T> registryBuilder = new RegistryBuilder<>(key);
+    public <T> RegistryBuilder<T> createSimple(RegistryKey<Registry<T>> key) {
+        net.neoforged.neoforge.registries.RegistryBuilder<T> registryBuilder = new net.neoforged.neoforge.registries.RegistryBuilder<>(key);
         return new RegistryBuilderImpl<>(event, registryBuilder);
     }
 
     @Override
-    public <T> IRegistryBuilder<T> createDefaulted(RegistryKey<Registry<T>> key, Identifier defaultKey) {
-        RegistryBuilder<T> registryBuilder = new RegistryBuilder<>(key).defaultKey(defaultKey);
+    public <T> RegistryBuilder<T> createDefaulted(RegistryKey<Registry<T>> key, Identifier defaultKey) {
+        net.neoforged.neoforge.registries.RegistryBuilder<T> registryBuilder = new net.neoforged.neoforge.registries.RegistryBuilder<>(key).defaultKey(defaultKey);
         return new RegistryBuilderImpl<>(event, registryBuilder);
     }
 }

@@ -116,7 +116,7 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
             presetText,
             button -> this.client.setScreen(new ModernBetaSettingsPresetScreen(
                 this,
-                ModernBetaRegistries.SETTINGS_PRESET_CATEGORY.getIds().stream().toList(),
+                ModernBetaRegistries.SETTINGS_PRESET_CATEGORY.getIds().stream().sorted().toList(),
                 this.preset,
                 true
             ))

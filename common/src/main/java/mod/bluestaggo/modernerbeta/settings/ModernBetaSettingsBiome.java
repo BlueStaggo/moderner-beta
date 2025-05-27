@@ -2,6 +2,7 @@ package mod.bluestaggo.modernerbeta.settings;
 
 import com.google.gson.Gson;
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
+import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.util.NbtCompoundBuilder;
 import mod.bluestaggo.modernerbeta.util.NbtReader;
 import mod.bluestaggo.modernerbeta.util.NbtTags;
@@ -104,8 +105,7 @@ public class ModernBetaSettingsBiome implements ModernBetaSettings {
     }
     
     public static ModernBetaSettingsBiome fromString(String string) {
-        Gson gson = new Gson();
-        
+        Gson gson = ModernerBeta.getSettingsGson().create();
         return gson.fromJson(string, ModernBetaSettingsBiome.class);
     }
     

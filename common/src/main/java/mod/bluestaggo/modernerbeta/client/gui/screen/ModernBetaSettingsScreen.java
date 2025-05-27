@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
+import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import net.minecraft.client.gui.EditBox;
 import net.minecraft.client.gui.screen.Screen;
@@ -32,7 +33,7 @@ public class ModernBetaSettingsScreen extends ModernBetaScreen {
         super(Text.translatable(title), parent);
 
         this.onDone = onDone;
-        this.gson = new GsonBuilder().setPrettyPrinting().create();
+        this.gson = ModernerBeta.getSettingsGson().setPrettyPrinting().create();
         this.settingsString = this.gson.toJson(settings);
     }
     

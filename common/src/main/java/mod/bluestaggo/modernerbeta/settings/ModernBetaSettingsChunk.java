@@ -2,6 +2,7 @@ package mod.bluestaggo.modernerbeta.settings;
 
 import com.google.gson.Gson;
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
+import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.util.NbtCompoundBuilder;
 import mod.bluestaggo.modernerbeta.util.NbtReader;
 import mod.bluestaggo.modernerbeta.util.NbtTags;
@@ -184,8 +185,7 @@ public class ModernBetaSettingsChunk implements ModernBetaSettings {
     }
     
     public static ModernBetaSettingsChunk fromString(String string) {
-        Gson gson = new Gson();
-        
+        Gson gson = ModernerBeta.getSettingsGson().create();
         return gson.fromJson(string, ModernBetaSettingsChunk.class);
     }
     

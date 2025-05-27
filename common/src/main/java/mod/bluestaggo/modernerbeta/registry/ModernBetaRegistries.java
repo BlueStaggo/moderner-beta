@@ -15,7 +15,7 @@ import net.minecraft.registry.RegistryKey;
 import net.minecraft.util.Identifier;
 
 public final class ModernBetaRegistries {
-    private static IRegistryHelper registryHelper;
+    private static RegistryHelper registryHelper;
     public static Registry<ChunkProviderCreator> CHUNK;
     public static Registry<BiomeProviderCreator> BIOME;
     public static Registry<CaveBiomeProviderCreator> CAVE_BIOME;
@@ -34,7 +34,7 @@ public final class ModernBetaRegistries {
         return registryHelper.createDefaulted(key, defaultKey).build();
     }
 
-    public static void makeRegistries(IRegistryHelper helper) {
+    public static void makeRegistries(RegistryHelper helper) {
         registryHelper = helper;
 
         CHUNK = registerDefaulted(ModernBetaRegistryKeys.CHUNK, ModernBetaBuiltInTypes.Chunk.BETA.id);

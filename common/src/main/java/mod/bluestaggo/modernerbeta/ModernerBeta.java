@@ -1,10 +1,12 @@
 package mod.bluestaggo.modernerbeta;
 
+import com.google.gson.GsonBuilder;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import mod.bluestaggo.modernerbeta.config.ModernBetaConfig;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
+import mod.bluestaggo.modernerbeta.util.CodecUtil;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.world.carver.ModernBetaCarvers;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
@@ -69,5 +71,11 @@ public class ModernerBeta {
 
     public static void log(String message) {
         log(Level.INFO, message);
+    }
+
+    public static GsonBuilder getSettingsGson() {
+        GsonBuilder gson = new GsonBuilder();
+        CodecUtil.registerTypeAdapter(gson, Identifier.class, Identifier.CODEC);
+        return gson;
     }
 }

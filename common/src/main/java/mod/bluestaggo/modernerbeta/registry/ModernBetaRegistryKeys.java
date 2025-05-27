@@ -23,6 +23,4 @@ public final class ModernBetaRegistryKeys {
     public static final RegistryKey<Registry<BlockSourceCreator>> BLOCKSOURCE = RegistryKey.ofRegistry(ModernerBeta.createId("blocksource"));
     public static final RegistryKey<Registry<ModernBetaSettingsPreset>> SETTINGS_PRESET = RegistryKey.ofRegistry(ModernerBeta.createId("settings_preset"));
     public static final RegistryKey<Registry<ModernBetaSettingsPresetCategory>> SETTINGS_PRESET_CATEGORY = RegistryKey.ofRegistry(ModernerBeta.createId("settings_preset_category"));
-
-    public static void init() {}
 }

@@ -213,7 +213,6 @@ public final class ModernBetaBuiltInTypes {
         EARLY_RELEASE("early_release"),
         EARLY_RELEASE_LARGE_BIOMES("early_release_large_biomes"),
         MAJOR_RELEASE("major_release"),
-        MAJOR_RELEASE_LARGE_BIOMES("major_release_large_biomes"),
         BETA_CUSTOM("beta_custom"),
         RELEASE_CUSTOM("release_custom"),
         ;

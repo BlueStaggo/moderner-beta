@@ -1,10 +1,11 @@
-package mod.bluestaggo.modernerbeta.world.biome.provider.fractal;
+package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers;
 
 import com.mojang.datafixers.Products;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.longs.Long2ObjectLinkedOpenHashMap;
 import mod.bluestaggo.modernerbeta.api.registry.ModernBetaBuiltInRegistries;
+import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import net.minecraft.util.math.ColumnPos;
 import net.minecraft.world.biome.source.SeedMixer;
 
@@ -17,7 +18,8 @@ import java.util.stream.Collectors;
 
 public abstract class Layer {
     private final static int CACHE_CAPACITY = 25;
-    public static final Codec<Layer> TYPE_CODEC = ModernBetaBuiltInRegistries.FRACTAL_LAYER.getCodec().dispatch(Layer::getType, LayerType::codec);
+    public static final Codec<Layer> TYPE_CODEC = ModernBetaBuiltInRegistries.FRACTAL_LAYER.getCodec()
+        .dispatch(Layer::getType, LayerType::codec);
 
     public final String id;
     public final long seed;
@@ -49,7 +51,7 @@ public abstract class Layer {
         this.saltedSeed = saltedSeed;
     }
 
-    protected abstract LayerType<?> getType();
+    public abstract LayerType<?> getType();
 
     protected abstract ExtendedBiomeId generate(int x, int z);
 
@@ -121,19 +123,19 @@ public abstract class Layer {
         };
     }
 
-    protected static boolean allNeighborsEqual(ExtendedBiomeId[] neighbors, ExtendedBiomeId i) {
+    public static boolean allNeighborsEqual(ExtendedBiomeId[] neighbors, ExtendedBiomeId i) {
         return neighbors[0].equals(i) && neighbors[1].equals(i) && neighbors[2].equals(i) && neighbors[3].equals(i);
     }
 
-    protected static boolean allNeighborsInSet(ExtendedBiomeId[] neighbors, Collection<ExtendedBiomeId> set) {
+    public static boolean allNeighborsInSet(ExtendedBiomeId[] neighbors, Collection<ExtendedBiomeId> set) {
         return set.contains(neighbors[0]) && set.contains(neighbors[1]) && set.contains(neighbors[2]) && set.contains(neighbors[3]);
     }
 
-    protected static boolean neighborsContain(ExtendedBiomeId[] neighbors, ExtendedBiomeId i) {
+    public static boolean neighborsContain(ExtendedBiomeId[] neighbors, ExtendedBiomeId i) {
         return neighbors[0].equals(i) || neighbors[1].equals(i) || neighbors[2].equals(i) || neighbors[3].equals(i);
     }
 
-    protected static boolean anyNeighborsInSet(ExtendedBiomeId[] neighbors, Collection<ExtendedBiomeId> set) {
+    public static boolean anyNeighborsInSet(ExtendedBiomeId[] neighbors, Collection<ExtendedBiomeId> set) {
         return set.contains(neighbors[0]) || set.contains(neighbors[1]) || set.contains(neighbors[2]) || set.contains(neighbors[3]);
     }
 
@@ -144,9 +146,13 @@ public abstract class Layer {
         this.addPossibleBiomes(biomes);
     }
 
+    protected String getName() {
+        return ModernBetaBuiltInRegistries.FRACTAL_LAYER.getKey(this.getType());
+    }
+
     @Override
     public String toString() {
-        String string = this.id + ": " + ModernBetaBuiltInRegistries.FRACTAL_LAYER.getKey(this.getType()) + " " + this.seed;
+        String string = this.id + ": " + this.getName() + " " + this.seed;
         List<Layer> parents = this.getParents();
         if (!parents.isEmpty()) {
             string += " <- " + parents.stream()

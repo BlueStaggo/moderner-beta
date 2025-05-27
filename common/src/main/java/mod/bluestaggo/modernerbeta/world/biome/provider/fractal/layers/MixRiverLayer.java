@@ -6,8 +6,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.util.CodecUtil;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomes;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.Layer;
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.LayerType;
 
 import java.util.*;
 import java.util.function.Function;
@@ -52,7 +50,7 @@ public class MixRiverLayer extends SingleParentLayer {
     }
 
     @Override
-    protected LayerType<?> getType() {
+    public LayerType<?> getType() {
         return LayerType.MIX_RIVER;
     }
 

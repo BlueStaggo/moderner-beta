@@ -1,7 +1,6 @@
 package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers;
 
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.LayerRandom;
 
 public abstract class BaseZoomLayer extends SingleParentLayer {
     public BaseZoomLayer(String id, long seed, String parent) {

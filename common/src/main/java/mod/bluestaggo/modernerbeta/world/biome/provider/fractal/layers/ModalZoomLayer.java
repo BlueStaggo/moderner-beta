@@ -3,8 +3,6 @@ package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.LayerRandom;
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.LayerType;
 
 public class ModalZoomLayer extends FuzzyZoomLayer {
     public static final MapCodec<ModalZoomLayer> CODEC = RecordCodecBuilder.mapCodec(
@@ -17,7 +15,7 @@ public class ModalZoomLayer extends FuzzyZoomLayer {
     }
 
     @Override
-    protected LayerType<?> getType() {
+    public LayerType<?> getType() {
         return LayerType.MODAL_ZOOM;
     }
 

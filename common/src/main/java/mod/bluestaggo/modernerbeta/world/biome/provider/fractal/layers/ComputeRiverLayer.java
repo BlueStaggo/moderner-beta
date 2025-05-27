@@ -4,7 +4,6 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.LayerType;
 import net.minecraft.world.biome.BiomeKeys;
 
 import static mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId.*;
@@ -24,7 +23,7 @@ public class ComputeRiverLayer extends SingleParentLayer {
     }
 
     @Override
-    protected LayerType<?> getType() {
+    public LayerType<?> getType() {
         return LayerType.COMPUTE_RIVER;
     }
 

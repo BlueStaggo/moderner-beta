@@ -1,4 +1,4 @@
-package mod.bluestaggo.modernerbeta.world.biome.provider.fractal;
+package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers;
 
 import net.minecraft.util.math.random.GaussianGenerator;
 import net.minecraft.util.math.random.Random;

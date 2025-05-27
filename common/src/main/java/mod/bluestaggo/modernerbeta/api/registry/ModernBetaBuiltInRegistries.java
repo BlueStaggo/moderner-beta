@@ -10,7 +10,8 @@ import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsChunk;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPresetCategory;
 import mod.bluestaggo.modernerbeta.world.biome.HeightConfig;
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.LayerType;
+import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.LayerType;
+import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.predicates.BiomePredicateType;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.RegistryEntryLookup;
@@ -28,6 +29,7 @@ public final class ModernBetaBuiltInRegistries {
     public static final ModernBetaRegistry<ModernBetaSettingsPreset> SETTINGS_PRESET;
     public static final ModernBetaRegistry<ModernBetaSettingsPresetCategory> SETTINGS_PRESET_CATEGORY;
     public static final ModernBetaRegistry<LayerType<?>> FRACTAL_LAYER;
+    public static final ModernBetaRegistry<BiomePredicateType<?>> BIOME_PREDICATE;
 
     static {
         CHUNK = new ModernBetaRegistry<>("CHUNK");
@@ -40,6 +42,7 @@ public final class ModernBetaBuiltInRegistries {
         SETTINGS_PRESET = new ModernBetaRegistry<>("SETTINGS_PRESET");
         SETTINGS_PRESET_CATEGORY = new ModernBetaRegistry<>("SETTINGS_PRESET_CATEGORIES");
         FRACTAL_LAYER = new ModernBetaRegistry<>("FRACTAL_LAYER");
+        BIOME_PREDICATE = new ModernBetaRegistry<>("BIOME_FILTER");
     }
     
     @FunctionalInterface

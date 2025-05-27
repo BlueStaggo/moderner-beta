@@ -1,12 +1,9 @@
 package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers;
 
-import com.google.gson.annotations.SerializedName;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.Layer;
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.LayerType;
 import net.minecraft.util.StringIdentifiable;
 
 import java.util.List;
@@ -18,7 +15,7 @@ public class StackedZoomLayer extends SingleParentLayer {
         instance -> fillSingleParentLayerFields(instance)
             .and(instance.group(
                 Codec.INT.fieldOf("level").orElse(1).forGetter(layer -> layer.level),
-                StringIdentifiable.createCodec(Type::values).fieldOf("fuzzy").orElse(Type.MODAL).forGetter(layer -> layer.zoomType)
+                StringIdentifiable.createCodec(Type::values).fieldOf("zoomType").orElse(Type.MODAL).forGetter(layer -> layer.zoomType)
             ))
             .apply(instance, StackedZoomLayer::new)
     );
@@ -47,7 +44,7 @@ public class StackedZoomLayer extends SingleParentLayer {
     }
 
     @Override
-    protected LayerType<?> getType() {
+    public LayerType<?> getType() {
         return LayerType.STACKED_ZOOM;
     }
 
@@ -66,10 +63,13 @@ public class StackedZoomLayer extends SingleParentLayer {
         return List.of(this.parentLayer, this.stackedLayer);
     }
 
+    @Override
+    protected String getName() {
+        return super.getName() + "(" + this.zoomType.id + ")";
+    }
+
     public enum Type implements StringIdentifiable {
-        @SerializedName("modal")
         MODAL("modal", seed -> new ModalZoomLayer("", seed, "")),
-        @SerializedName("fuzzy")
         FUZZY("fuzzy", seed -> new FuzzyZoomLayer("", seed, ""));
 
         public final String id;

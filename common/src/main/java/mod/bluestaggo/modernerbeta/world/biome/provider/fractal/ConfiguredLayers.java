@@ -1,10 +1,8 @@
 package mod.bluestaggo.modernerbeta.world.biome.provider.fractal;
 
-import com.google.gson.*;
 import com.mojang.serialization.Codec;
-import mod.bluestaggo.modernerbeta.api.registry.ModernBetaBuiltInRegistries;
+import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.Layer;
 
-import java.lang.reflect.Type;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
@@ -42,37 +40,5 @@ public class ConfiguredLayers {
 
     public Layer getFinalLayer() {
         return this.finalLayer;
-    }
-
-    public enum JsonSerializer implements com.google.gson.JsonSerializer<ConfiguredLayers> {
-        INSTANCE;
-
-        @Override
-        public JsonElement serialize(ConfiguredLayers configuredLayers, Type type, JsonSerializationContext jsonSerializationContext) {
-            JsonArray jsonArray = new JsonArray();
-            for (Layer layer : configuredLayers.layers) {
-                JsonObject jsonLayer = jsonSerializationContext.serialize(layer).getAsJsonObject();
-                jsonLayer.addProperty("type", ModernBetaBuiltInRegistries.FRACTAL_LAYER.getKey(layer.getType()));
-                jsonArray.add(jsonLayer);
-            }
-            return jsonArray;
-        }
-    }
-
-    public enum JsonDeserializer implements com.google.gson.JsonDeserializer<ConfiguredLayers> {
-        INSTANCE;
-
-        @Override
-        public ConfiguredLayers deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
-            List<Layer> layers = new ArrayList<>();
-            for (JsonElement subElement : jsonElement.getAsJsonArray()) {
-                JsonObject object = subElement.getAsJsonObject();
-                String layerTypeId = object.get("type").getAsString();
-                LayerType<?> layerType = ModernBetaBuiltInRegistries.FRACTAL_LAYER.get(layerTypeId);
-                Layer layer = jsonDeserializationContext.deserialize(object, layerType.layerClass());
-                layers.add(layer);
-            }
-            return new ConfiguredLayers(layers);
-        }
     }
 }

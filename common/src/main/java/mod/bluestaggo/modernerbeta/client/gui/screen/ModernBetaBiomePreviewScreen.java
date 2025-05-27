@@ -191,7 +191,7 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
             );
 
             if (biomeProvider instanceof BiomeResolverStepped resolverStepped) {
-                MutableText stepName = Text.literal((step + 1) + "/" + resolverStepped.getStepCount() + ": ");
+                MutableText stepName = Text.literal((step + 1) + "/" + resolverStepped.getStepCount() + " - ");
                 stepName.append(resolverStepped.getStepName(step));
                 context.fill(this.getX(), this.getY(), this.getX() + textRenderer.getWidth(stepName) + 8, this.getY() + 16, 0xAA000000);
                 context.drawText(textRenderer, stepName, this.getX() + 4, this.getY() + 4, 0xFFFFFF, false);

@@ -7,6 +7,7 @@ import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ConfiguredLayers
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.*;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.legacy.FractalSettings;
+import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.predicates.BiomePredicate;
 import mod.bluestaggo.modernerbeta.world.biome.voronoi.VoronoiPointBiome;
 import mod.bluestaggo.modernerbeta.world.biome.voronoi.VoronoiPointCaveBiome;
 import mod.bluestaggo.modernerbeta.world.chunk.provider.indev.IndevTheme;
@@ -1438,7 +1439,7 @@ public class ModernBetaSettingsPresets {
                 "moderner_beta:late_beta_plains",
                 "moderner_beta:late_beta_taiga"
             )),
-            new MaskLayer("land", 0, "land", Map.of(ExtendedBiomeId.PLAINS, "biome_pool")),
+            new BiomeToLayerOverlayLayer("land", 0, "land", Map.of(ExtendedBiomeId.PLAINS, "biome_pool")),
             new StackedZoomLayer("land", 1000, "land", 2, StackedZoomLayer.Type.MODAL),
             new ModalZoomLayer("land", 1000, "land"),
             AddLandLayer.forBeta("land", 3, "land"),
@@ -1465,7 +1466,7 @@ public class ModernBetaSettingsPresets {
                 new Weighted<>(ExtendedBiomeId.SNOWY_PLAINS, 1),
                 new Weighted<>(ExtendedBiomeId.NULL, 4)
             )),
-            new MaskLayer("land", 0, "land", Map.of(ExtendedBiomeId.PLAINS, "snow")),
+            new BiomeToLayerOverlayLayer("land", 0, "land", Map.of(ExtendedBiomeId.PLAINS, "snow")),
             new ModalZoomLayer("land", 2002, "land"),
             AddLandLayer.forIslandScale("land", 3, "land"),
             new ModalZoomLayer("land", 2003, "land"),
@@ -1474,7 +1475,13 @@ public class ModernBetaSettingsPresets {
                 new Weighted<>(ExtendedBiomeId.MUSHROOM_ISLAND, 1),
                 new Weighted<>(ExtendedBiomeId.NULL, 99)
             )),
-            new DiagonalInnerMaskLayer("land", 0, "land", Map.of(ExtendedBiomeId.OCEAN, "mushroom_islands")),
+            new PredicateOverlayLayer("land", 0, "land", List.of(
+                PredicateOverlayLayer.Target.layer(
+                    BiomePredicate.of(ExtendedBiomeId.OCEAN)
+                        .and(BiomePredicate.diagonalInterior()),
+                    "mushroom_islands"
+                )
+            )),
             new InitRiverLayer("river", 100, "land", false),
             new StackedZoomLayer("river", 1000, "river", 6 + biomeScale, StackedZoomLayer.Type.MODAL),
             new ComputeRiverLayer("river", 0, "river", true),
@@ -1488,7 +1495,7 @@ public class ModernBetaSettingsPresets {
                 "moderner_beta:late_beta_taiga"
             )),
             new ConstantBiomeLayer("ice_plains", 0, icePlains),
-            new MaskLayer("land", 0, "land", Map.of(
+            new BiomeToLayerOverlayLayer("land", 0, "land", Map.of(
                 ExtendedBiomeId.PLAINS, "biome_pool",
                 ExtendedBiomeId.FROZEN_OCEAN, "ice_plains",
                 ExtendedBiomeId.SNOWY_PLAINS, "ice_plains"
@@ -1496,7 +1503,13 @@ public class ModernBetaSettingsPresets {
             new StackedZoomLayer("land", 1000, "land", 2, StackedZoomLayer.Type.MODAL),
             new ModalZoomLayer("land", 1000, "land"),
             AddLandLayer.forEarlyRelease("land", 3, "land", icePlains),
-            new BorderLayer("land", 0, "land", List.of(BorderLayer.Case.MUSHROOM_SHORE)),
+            new PredicateOverlayLayer("land", 0, "land", List.of(
+                PredicateOverlayLayer.Target.biome(
+                    BiomePredicate.of(ExtendedBiomeId.MUSHROOM_ISLAND)
+                        .and(BiomePredicate.border()),
+                    ExtendedBiomeId.MUSHROOM_SHORE
+                )
+            )),
             new StackedZoomLayer("land", 1001, "land", 3 + biomeScale, StackedZoomLayer.Type.MODAL),
             new SmoothLayer("land", 1000, "land"),
             MixRiverLayer.forEarlyRelease("land", 0, "land", "river")

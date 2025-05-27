@@ -4,8 +4,6 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.LayerRandom;
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.LayerType;
 
 import static mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId.*;
 
@@ -24,7 +22,7 @@ public class InitRiverLayer extends SingleParentLayer {
     }
 
     @Override
-    protected LayerType<?> getType() {
+    public LayerType<?> getType() {
         return LayerType.INIT_RIVER;
     }
 

@@ -1,6 +1,5 @@
 package mod.bluestaggo.modernerbeta.world.biome.provider.fractal;
 
-import com.google.gson.*;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import net.minecraft.registry.RegistryKey;
@@ -8,7 +7,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeKeys;
 
-import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.List;
 
@@ -99,23 +97,5 @@ public record ExtendedBiomeId(Identifier baseId, String ext) {
         }
 
         return Identifier.validate(string).flatMap(id -> DataResult.success(new ExtendedBiomeId(id, ext)));
-    }
-
-    public enum JsonSerializer implements com.google.gson.JsonSerializer<ExtendedBiomeId> {
-        INSTANCE;
-
-        @Override
-        public JsonElement serialize(ExtendedBiomeId extendedBiomeId, Type type, JsonSerializationContext jsonSerializationContext) {
-            return new JsonPrimitive(extendedBiomeId.toString());
-        }
-    }
-
-    public enum JsonDeserializer implements com.google.gson.JsonDeserializer<ExtendedBiomeId> {
-        INSTANCE;
-
-        @Override
-        public ExtendedBiomeId deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
-            return ExtendedBiomeId.of(jsonElement.getAsString());
-        }
     }
 }

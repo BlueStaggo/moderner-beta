@@ -3,9 +3,6 @@ package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.Layer;
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.LayerRandom;
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.LayerType;
 
 import java.util.List;
 import java.util.Set;
@@ -25,7 +22,7 @@ public class RandomBiomeLayer extends Layer {
     }
 
     @Override
-    protected LayerType<?> getType() {
+    public LayerType<?> getType() {
         return LayerType.RANDOM_BIOME;
     }
 

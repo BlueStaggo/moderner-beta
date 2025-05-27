@@ -1,8 +1,10 @@
 package mod.bluestaggo.modernerbeta.world.biome.provider;
 
+import com.google.common.base.Supplier;
+import com.google.common.base.Suppliers;
 import mod.bluestaggo.modernerbeta.api.world.biome.*;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.Layer;
+import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.Layer;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.RegistryEntryLookup;
 import net.minecraft.registry.RegistryKey;
@@ -20,6 +22,7 @@ import java.util.Optional;
 import java.util.Set;
 
 public class BiomeProviderFractal extends BiomeProvider implements BiomeResolverBlock, BiomeResolverExtendedIdStepped, BiomeAccess.Storage {
+	private final Supplier<RegistryEntry<Biome>> baseBiome;
 	private final BiomeAccess biomeAccess;
 	private final List<RegistryEntry<Biome>> allBiomes;
 	private final List<Layer> allLayers;
@@ -28,6 +31,7 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 	public BiomeProviderFractal(NbtCompound settings, RegistryEntryLookup<Biome> biomeRegistry, long seed) {
 		super(settings, biomeRegistry, seed);
 
+		this.baseBiome = Suppliers.memoize(() -> this.getBiomeEntry(Identifier.of(this.settings.singleBiome)).orElseThrow());
 		this.biomeAccess = new BiomeAccess(this, seed);
 		this.allLayers = this.settings.fractalLayers.getAllLayers();
 		this.layer = this.settings.fractalLayers.getFinalLayer();
@@ -51,7 +55,7 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 
 	@Override
 	public RegistryEntry<Biome> getBiome(int biomeX, int biomeY, int biomeZ) {
-		return this.getBiomeEntry(this.getExtendedBiomeId(biomeX, biomeY, biomeZ).baseId()).orElseThrow();
+		return this.getBiomeEntry(this.getExtendedBiomeId(biomeX, biomeY, biomeZ).baseId()).orElse(this.baseBiome.get());
 	}
 
 	@Override

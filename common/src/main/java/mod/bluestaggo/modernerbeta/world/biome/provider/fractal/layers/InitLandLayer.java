@@ -4,8 +4,6 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.Layer;
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.LayerType;
 
 import java.util.Set;
 
@@ -31,7 +29,7 @@ public class InitLandLayer extends Layer {
     }
 
     @Override
-    protected LayerType<?> getType() {
+    public LayerType<?> getType() {
         return LayerType.INIT_LAND;
     }
 

@@ -50,8 +50,8 @@ public class ModernBetaSettingsScreen extends ModernBetaScreen {
             this.client.setScreen(this.parent)
         ).dimensions(this.width / 2 + 4, this.height - 26, BUTTON_LENGTH, BUTTON_HEIGHT).build());
         
-        int editBoxWidth = (int)(this.width * 0.8);
-        int editBoxHeight = (int)(this.height * 0.575);
+        int editBoxWidth = this.width - 16;
+        int editBoxHeight = this.height - 96;
         
         this.widgetSettings = new EditBoxWidget(this.textRenderer, 0, 0, editBoxWidth, editBoxHeight, Text.of(""), Text.translatable(TEXT_SETTINGS));
         this.widgetSettings.setText(this.settingsString);

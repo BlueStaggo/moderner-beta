@@ -3,7 +3,6 @@ package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.LayerType;
 
 public class SmoothLayer extends SingleParentLayer {
     public static final MapCodec<SmoothLayer> CODEC = RecordCodecBuilder.mapCodec(
@@ -16,7 +15,7 @@ public class SmoothLayer extends SingleParentLayer {
     }
 
     @Override
-    protected LayerType<?> getType() {
+    public LayerType<?> getType() {
         return LayerType.SMOOTH;
     }
 

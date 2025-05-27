@@ -3,7 +3,6 @@ package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers;
 import com.mojang.datafixers.Products;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.Layer;
 
 import java.util.Collections;
 import java.util.List;

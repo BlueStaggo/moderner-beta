@@ -1,12 +1,10 @@
 package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers;
 
-import com.google.gson.annotations.SerializedName;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.util.CodecUtil;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.LayerType;
 import net.minecraft.util.StringIdentifiable;
 
 import java.util.*;
@@ -26,7 +24,7 @@ public class BorderLayer extends SingleParentLayer {
     }
 
     @Override
-    protected LayerType<?> getType() {
+    public LayerType<?> getType() {
         return LayerType.BORDER;
     }
 
@@ -76,28 +74,24 @@ public class BorderLayer extends SingleParentLayer {
     }
 
     public enum FilterType implements StringIdentifiable {
-        @SerializedName("all_match")
         ALL_MATCH("all_match") {
             @Override
             public boolean isSatisfied(ExtendedBiomeId[] neighbors, Set<ExtendedBiomeId> filter) {
                 return allNeighborsInSet(neighbors, filter);
             }
         },
-        @SerializedName("none_match")
         NONE_MATCH("none_match") {
             @Override
             public boolean isSatisfied(ExtendedBiomeId[] neighbors, Set<ExtendedBiomeId> filter) {
                 return !anyNeighborsInSet(neighbors, filter);
             }
         },
-        @SerializedName("any_match")
         ANY_MATCH("any_match") {
             @Override
             public boolean isSatisfied(ExtendedBiomeId[] neighbors, Set<ExtendedBiomeId> filter) {
                 return anyNeighborsInSet(neighbors, filter);
             }
         },
-        @SerializedName("not_all_match")
         NOT_ALL_MATCH("not_all_match") {
             @Override
             public boolean isSatisfied(ExtendedBiomeId[] neighbors, Set<ExtendedBiomeId> filter) {

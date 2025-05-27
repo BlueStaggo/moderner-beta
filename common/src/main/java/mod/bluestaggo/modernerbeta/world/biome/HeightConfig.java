@@ -1,7 +1,7 @@
 package mod.bluestaggo.modernerbeta.world.biome;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;
-import mod.bluestaggo.modernerbeta.api.registry.ModernBetaRegistries;
+import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.BiomeInfo;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
@@ -42,9 +42,9 @@ public record HeightConfig(float depth, float scale, byte type) {
 	}
 
 	public static HeightConfig getHeightConfig(BiomeInfo biomeInfo) {
-        List<HeightConfig> configs = ModernBetaRegistries.HEIGHT_CONFIG.getKeySet()
+        List<HeightConfig> configs = ModernBetaRegistries.HEIGHT_CONFIG.getIds()
             .stream()
-            .filter(id -> biomeInfo.biome().isIn(TagKey.of(RegistryKeys.BIOME, Identifier.of(id))))
+            .filter(id -> biomeInfo.biome().isIn(TagKey.of(RegistryKeys.BIOME, id)))
 	        .map(ModernBetaRegistries.HEIGHT_CONFIG::get)
 	        .toList();
 		return configs.stream().filter(config -> biomeInfo.type() == config.type).findAny()

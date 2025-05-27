@@ -15,6 +15,7 @@ import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Identifier;
 
 import java.util.function.Consumer;
 
@@ -105,7 +106,7 @@ public abstract class ModernBetaGraphicalSettingsScreen<T extends NbtElement> ex
     }
 
     protected String getTextKey(String key) {
-        return getTextKey(key, null);
+        return getTextKey(key, (String) null);
     }
 
     protected String getTextKey(String key, String subKey) {
@@ -116,11 +117,19 @@ public abstract class ModernBetaGraphicalSettingsScreen<T extends NbtElement> ex
         return text;
     }
 
+    protected String getTextKey(String key, Identifier subKey) {
+        return getTextKey(key, subKey != null ? subKey.getPath() : null);
+    }
+
     protected MutableText getText(String key) {
-        return this.getText(key, null);
+        return this.getText(key, (String) null);
     }
 
     protected MutableText getText(String key, String subKey) {
+        return Text.translatable(getTextKey(key, subKey));
+    }
+
+    protected MutableText getText(String key, Identifier subKey) {
         return Text.translatable(getTextKey(key, subKey));
     }
 

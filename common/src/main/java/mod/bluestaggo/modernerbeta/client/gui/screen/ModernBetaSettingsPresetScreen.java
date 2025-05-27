@@ -1,7 +1,7 @@
 package mod.bluestaggo.modernerbeta.client.gui.screen;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;
-import mod.bluestaggo.modernerbeta.api.registry.ModernBetaRegistries;
+import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPresetCategory;
 import net.fabricmc.api.EnvType;
@@ -38,7 +38,7 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
     private static final Identifier TEXTURE_PRESET_CUSTOM = createTextureId("custom");
     
     private final ModernBetaWorldScreen worldScreen;
-    private final List<String> presets;
+    private final List<Identifier> presets;
     private final boolean displayCategories;
 
     private ModernBetaSettingsPreset preset;
@@ -47,7 +47,7 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
 
     public ModernBetaSettingsPresetScreen(
         ModernBetaScreen parent,
-        List<String> presets,
+        List<Identifier> presets,
         ModernBetaSettingsPreset preset,
         boolean displayCategories
     ) {
@@ -114,7 +114,7 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
         private static final int ITEM_HEIGHT = 60;
         private static final int ICON_SIZE = 56;
 
-        public PresetsListWidget(List<String> presets) {
+        public PresetsListWidget(List<Identifier> presets) {
             super(
                 ModernBetaSettingsPresetScreen.this.client,
                 ModernBetaSettingsPresetScreen.this.width,
@@ -170,18 +170,19 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
 
             private long time;
             
-            public AbstractPresetEntry(String presetName) {
+            public AbstractPresetEntry(Identifier presetName) {
+                String path = presetName.getPath();
                 this.presetTexture = this.getPresetTexture(presetName);
-                this.presetName = this.getPresetName(presetName);
-                this.presetDesc = this.getPresetDesc(presetName);
+                this.presetName = this.getPresetName(path);
+                this.presetDesc = this.getPresetDesc(path);
             }
 
             protected abstract void setPreset();
 
             protected abstract void selectPreset();
 
-            protected Identifier getPresetTexture(String presetName) {
-                return createPresetTextureId(presetName);
+            protected Identifier getPresetTexture(Identifier presetName) {
+                return createPresetTextureId(presetName.getPath());
             }
 
             protected MutableText getPresetName(String presetName) {
@@ -271,7 +272,7 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
         private class PresetEntry extends AbstractPresetEntry {
             private final ModernBetaSettingsPreset preset;
 
-            public PresetEntry(String presetName, ModernBetaSettingsPreset preset) {
+            public PresetEntry(Identifier presetName, ModernBetaSettingsPreset preset) {
                 super(presetName);
                 this.preset = preset;
             }
@@ -302,13 +303,13 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
         private class PresetCategoryEntry extends AbstractPresetEntry {
             private final ModernBetaSettingsPresetCategory presetCategory;
 
-            public PresetCategoryEntry(String presetName, ModernBetaSettingsPresetCategory presetCategory) {
+            public PresetCategoryEntry(Identifier presetName, ModernBetaSettingsPresetCategory presetCategory) {
                 super(presetName);
                 this.presetCategory = presetCategory;
             }
 
             @Override
-            protected Identifier getPresetTexture(String presetName) {
+            protected Identifier getPresetTexture(Identifier presetName) {
                 presetName = ModernBetaRegistries.SETTINGS_PRESET_CATEGORY.get(presetName).defaultIcon();
                 return super.getPresetTexture(presetName);
             }

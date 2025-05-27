@@ -2,6 +2,7 @@ package mod.bluestaggo.modernerbeta.util;
 
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.util.Identifier;
 
 public class NbtReader {
     private final NbtCompound compound;
@@ -52,6 +53,14 @@ public class NbtReader {
     
     public String readString(String key, String alternate) {
         return NbtUtil.readString(key, this.compound, alternate);
+    }
+
+    public Identifier readIdentifierOrThrow(String key) {
+        return NbtUtil.readIdentifierOrThrow(key, this.compound);
+    }
+
+    public Identifier readIdentifier(String key, Identifier alternate) {
+        return NbtUtil.readIdentifier(key, this.compound, alternate);
     }
     
     public NbtCompound readCompoundOrThrow(String key) {

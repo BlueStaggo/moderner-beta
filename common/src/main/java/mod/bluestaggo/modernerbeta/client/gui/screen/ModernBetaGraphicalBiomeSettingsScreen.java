@@ -14,6 +14,7 @@ import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtString;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Identifier;
 import net.minecraft.world.biome.BiomeKeys;
 
 import java.util.ArrayList;
@@ -39,14 +40,14 @@ public class ModernBetaGraphicalBiomeSettingsScreen extends ModernBetaGraphicalC
 
     @Override
     protected void addOptions(OptionListWidget list) {
-        String biomeProvider = this.settings.getString(NbtTags.BIOME_PROVIDER).orElseThrow();
+        Identifier biomeProvider = Identifier.of(this.settings.getString(NbtTags.BIOME_PROVIDER).orElseThrow());
         boolean usesNoise = ModernBetaBuiltInTypes.Biome.BIOME_PROVIDER_USES_NOISE.contains(biomeProvider);
         boolean isVoronoiProvider = ModernBetaBuiltInTypes.Biome.VORONOI.id.equals(biomeProvider);
 
         list.addSingleOptionEntry(this.primarySelectionOption(NbtTags.BIOME_PROVIDER,
             Arrays.stream(ModernBetaBuiltInTypes.Biome.values())
                 .map(chunk -> chunk.id)
-                .toArray(String[]::new)));
+                .toArray(Identifier[]::new)));
 
         if (ModernBetaBuiltInTypes.Biome.SINGLE.id.equals(biomeProvider)) {
             list.addAll(

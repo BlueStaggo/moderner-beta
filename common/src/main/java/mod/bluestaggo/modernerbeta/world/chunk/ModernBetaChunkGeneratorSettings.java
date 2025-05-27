@@ -115,17 +115,17 @@ public class ModernBetaChunkGeneratorSettings {
 
     static {
         MODERN_BETA = RegistryKey.of(RegistryKeys.CHUNK_GENERATOR_SETTINGS, ModernerBeta.createId(ModernerBeta.MOD_ID));
-        BETA = RegistryKey.of(RegistryKeys.CHUNK_GENERATOR_SETTINGS, ModernerBeta.createId(ModernBetaBuiltInTypes.Chunk.BETA.id));
-        ALPHA = RegistryKey.of(RegistryKeys.CHUNK_GENERATOR_SETTINGS, ModernerBeta.createId(ModernBetaBuiltInTypes.Chunk.ALPHA.id));
-        SKYLANDS = RegistryKey.of(RegistryKeys.CHUNK_GENERATOR_SETTINGS, ModernerBeta.createId(ModernBetaBuiltInTypes.Chunk.SKYLANDS.id));
-        INFDEV_611 = RegistryKey.of(RegistryKeys.CHUNK_GENERATOR_SETTINGS, ModernerBeta.createId(ModernBetaBuiltInTypes.Chunk.INFDEV_611.id));
-        INFDEV_420 = RegistryKey.of(RegistryKeys.CHUNK_GENERATOR_SETTINGS, ModernerBeta.createId(ModernBetaBuiltInTypes.Chunk.INFDEV_420.id));
-        INFDEV_415 = RegistryKey.of(RegistryKeys.CHUNK_GENERATOR_SETTINGS, ModernerBeta.createId(ModernBetaBuiltInTypes.Chunk.INFDEV_415.id));
-        INFDEV_227 = RegistryKey.of(RegistryKeys.CHUNK_GENERATOR_SETTINGS, ModernerBeta.createId(ModernBetaBuiltInTypes.Chunk.INFDEV_227.id));
-        INDEV = RegistryKey.of(RegistryKeys.CHUNK_GENERATOR_SETTINGS, ModernerBeta.createId(ModernBetaBuiltInTypes.Chunk.INDEV.id));
-        CLASSIC_0_30 = RegistryKey.of(RegistryKeys.CHUNK_GENERATOR_SETTINGS, ModernerBeta.createId(ModernBetaBuiltInTypes.Chunk.CLASSIC_0_30.id));
-        PE = RegistryKey.of(RegistryKeys.CHUNK_GENERATOR_SETTINGS, ModernerBeta.createId(ModernBetaBuiltInTypes.Chunk.PE.id));
-        EARLY_RELEASE = RegistryKey.of(RegistryKeys.CHUNK_GENERATOR_SETTINGS, ModernerBeta.createId(ModernBetaBuiltInTypes.Chunk.EARLY_RELEASE.id));
-        MAJOR_RELEASE = RegistryKey.of(RegistryKeys.CHUNK_GENERATOR_SETTINGS, ModernerBeta.createId(ModernBetaBuiltInTypes.Chunk.MAJOR_RELEASE.id));
+        BETA = RegistryKey.of(RegistryKeys.CHUNK_GENERATOR_SETTINGS, ModernBetaBuiltInTypes.Chunk.BETA.id);
+        ALPHA = RegistryKey.of(RegistryKeys.CHUNK_GENERATOR_SETTINGS, ModernBetaBuiltInTypes.Chunk.ALPHA.id);
+        SKYLANDS = RegistryKey.of(RegistryKeys.CHUNK_GENERATOR_SETTINGS, ModernBetaBuiltInTypes.Chunk.SKYLANDS.id);
+        INFDEV_611 = RegistryKey.of(RegistryKeys.CHUNK_GENERATOR_SETTINGS, ModernBetaBuiltInTypes.Chunk.INFDEV_611.id);
+        INFDEV_420 = RegistryKey.of(RegistryKeys.CHUNK_GENERATOR_SETTINGS, ModernBetaBuiltInTypes.Chunk.INFDEV_420.id);
+        INFDEV_415 = RegistryKey.of(RegistryKeys.CHUNK_GENERATOR_SETTINGS, ModernBetaBuiltInTypes.Chunk.INFDEV_415.id);
+        INFDEV_227 = RegistryKey.of(RegistryKeys.CHUNK_GENERATOR_SETTINGS, ModernBetaBuiltInTypes.Chunk.INFDEV_227.id);
+        INDEV = RegistryKey.of(RegistryKeys.CHUNK_GENERATOR_SETTINGS, ModernBetaBuiltInTypes.Chunk.INDEV.id);
+        CLASSIC_0_30 = RegistryKey.of(RegistryKeys.CHUNK_GENERATOR_SETTINGS, ModernBetaBuiltInTypes.Chunk.CLASSIC_0_30.id);
+        PE = RegistryKey.of(RegistryKeys.CHUNK_GENERATOR_SETTINGS, ModernBetaBuiltInTypes.Chunk.PE.id);
+        EARLY_RELEASE = RegistryKey.of(RegistryKeys.CHUNK_GENERATOR_SETTINGS, ModernBetaBuiltInTypes.Chunk.EARLY_RELEASE.id);
+        MAJOR_RELEASE = RegistryKey.of(RegistryKeys.CHUNK_GENERATOR_SETTINGS, ModernBetaBuiltInTypes.Chunk.MAJOR_RELEASE.id);
     }
 }

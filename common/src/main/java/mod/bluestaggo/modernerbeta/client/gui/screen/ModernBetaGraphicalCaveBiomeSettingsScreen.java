@@ -10,6 +10,7 @@ import net.minecraft.client.world.GeneratorOptionsHolder;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.util.Identifier;
 import net.minecraft.world.biome.BiomeKeys;
 
 import java.util.Arrays;
@@ -29,12 +30,12 @@ public class ModernBetaGraphicalCaveBiomeSettingsScreen extends ModernBetaGraphi
 
     @Override
     protected void addOptions(OptionListWidget list) {
-        String biomeProvider = this.settings.getString(NbtTags.BIOME_PROVIDER).orElseThrow();
+        Identifier biomeProvider = Identifier.of(this.settings.getString(NbtTags.BIOME_PROVIDER).orElseThrow());
 
         list.addSingleOptionEntry(this.primarySelectionOption(NbtTags.BIOME_PROVIDER,
             Arrays.stream(ModernBetaBuiltInTypes.CaveBiome.values())
                 .map(caveBiome -> caveBiome.id)
-                .toArray(String[]::new)));
+                .toArray(Identifier[]::new)));
 
         if (ModernBetaBuiltInTypes.CaveBiome.SINGLE.id.equals(biomeProvider)) {
             list.addAll(this.headerOption(this.getText(NbtTags.SINGLE_BIOME)), this.biomeOption(NbtTags.SINGLE_BIOME, false));

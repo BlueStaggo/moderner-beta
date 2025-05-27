@@ -62,7 +62,7 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
         return defaultPair;
     }
 
-    protected SimpleOption<String> primarySelectionOption(String key, String... options) {
+    protected SimpleOption<Identifier> primarySelectionOption(String key, Identifier... options) {
         Pair<NbtCompound, String> resolvedSettings = this.resolveSettings(key);
         NbtCompound settings = resolvedSettings.getLeft();
         String subKey = resolvedSettings.getRight();
@@ -74,11 +74,11 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
             new SimpleOption.LazyCyclingCallbacks<>(
                 () -> Arrays.stream(options).toList(),
                 value -> Arrays.stream(options).filter(value::equals).findFirst(),
-                Codec.STRING
+                Identifier.CODEC
             ),
-            settings.getString(subKey).orElseThrow(),
+            Identifier.of(settings.getString(subKey).orElseThrow()),
             value -> {
-                settings.putString(subKey, value);
+                settings.putString(subKey, value.toString());
                 this.clearAndInit();
             }
         );

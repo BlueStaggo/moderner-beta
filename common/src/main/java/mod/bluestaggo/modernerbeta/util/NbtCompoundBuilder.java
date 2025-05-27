@@ -2,6 +2,7 @@ package mod.bluestaggo.modernerbeta.util;
 
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.util.Identifier;
 
 public class NbtCompoundBuilder {
     private final NbtCompound compound;
@@ -12,6 +13,12 @@ public class NbtCompoundBuilder {
     
     public NbtCompoundBuilder(NbtCompound initial) {
         this.compound = initial.copy();
+    }
+
+    public NbtCompoundBuilder putIdentifier(String key, Identifier value) {
+        this.compound.putString(key, value.toString());
+
+        return this;
     }
     
     public NbtCompoundBuilder putString(String key, String value) {

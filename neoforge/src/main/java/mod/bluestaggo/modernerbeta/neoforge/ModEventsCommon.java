@@ -1,8 +1,12 @@
 package mod.bluestaggo.modernerbeta.neoforge;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;
+import mod.bluestaggo.modernerbeta.neoforge.registry.RegistryHelperImpl;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
+import mod.bluestaggo.modernerbeta.registry.IRegistryHelper;
+import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.registry.VanillaRegistryHandler;
+import net.minecraft.registry.Registry;
 import net.minecraft.resource.ResourcePackProfile;
 import net.minecraft.resource.ResourcePackSource;
 import net.minecraft.resource.ResourceType;
@@ -13,6 +17,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLConstructModEvent;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
+import net.neoforged.neoforge.registries.NewRegistryEvent;
 import net.neoforged.neoforge.registries.RegisterEvent;
 
 import java.util.function.Consumer;
@@ -30,8 +35,18 @@ public class ModEventsCommon {
     private static final Consumer<IRegistryHandler<?>> NONE = h -> {};
     @SubscribeEvent
     public static void registerToRegistries(RegisterEvent event) {
-        VanillaRegistryHandler<?> registryHandler = new VanillaRegistryHandler<>(event.getRegistry());
-        ModernerBeta.REGISTRY_HANDLERS.getOrDefault(event.getRegistry(), NONE).accept(registryHandler);
+        Registry<?> registry = event.getRegistry();
+
+        VanillaRegistryHandler<?> registryHandler = new VanillaRegistryHandler<>(registry);
+        ModernerBeta.REGISTRY_HANDLERS.getOrDefault(registry, NONE).accept(registryHandler);
+        ModernerBeta.CUSTOM_REGISTRY_HANDLERS.getOrDefault(registry, NONE).accept(registryHandler);
+    }
+
+    @SubscribeEvent
+    public static void registerRegistries(NewRegistryEvent event) {
+        IRegistryHelper registryHelper = new RegistryHelperImpl(event);
+        ModernBetaRegistries.makeRegistries(registryHelper);
+        ModernerBeta.setupCustomRegistryHandlers();
     }
 
     @SubscribeEvent

@@ -2,7 +2,9 @@ package mod.bluestaggo.modernerbeta.fabric;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.command.DebugProviderSettingsCommand;
+import mod.bluestaggo.modernerbeta.fabric.registry.RegistryHelperImpl;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
+import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.registry.VanillaRegistryHandler;
 import mod.bluestaggo.modernerbeta.world.ModernBetaWorldInitializer;
 import net.fabricmc.api.ModInitializer;
@@ -21,16 +23,14 @@ public class ModernerBetaFabric implements ModInitializer {
     @Override
     public void onInitialize() {
         // Register mod stuff
-        registerDataPacks();
+        ModernBetaRegistries.makeRegistries(new RegistryHelperImpl());
+        ModernerBeta.setupCustomRegistryHandlers();
 
+        registerDataPacks();
         ModernerBeta.init();
 
-        for (Map.Entry<Registry<?>, Consumer<IRegistryHandler<?>>> handler : ModernerBeta.REGISTRY_HANDLERS.entrySet()) {
-            Registry<?> registry = handler.getKey();
-            IRegistryHandler<?> registryHandler = new VanillaRegistryHandler<>(registry);
-
-            handler.getValue().accept(registryHandler);
-        }
+        setupRegistryHandlers(ModernerBeta.REGISTRY_HANDLERS);
+        setupRegistryHandlers(ModernerBeta.CUSTOM_REGISTRY_HANDLERS);
 
         if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
             CommandRegistrationCallback.EVENT.register(DebugProviderSettingsCommand::register);
@@ -43,5 +43,14 @@ public class ModernerBetaFabric implements ModInitializer {
     private static void registerDataPacks() {
         ModContainer modContainer = FabricLoader.getInstance().getModContainer(ModernerBeta.MOD_ID).orElseThrow();
         ResourceManagerHelper.registerBuiltinResourcePack(ModernerBeta.createId("reduced_height"), modContainer, ResourcePackActivationType.NORMAL);
+    }
+
+    private static void setupRegistryHandlers(Map<Registry<?>, Consumer<IRegistryHandler<?>>> map) {
+        for (Map.Entry<Registry<?>, Consumer<IRegistryHandler<?>>> handler : map.entrySet()) {
+            Registry<?> registry = handler.getKey();
+            IRegistryHandler<?> registryHandler = new VanillaRegistryHandler<>(registry);
+
+            handler.getValue().accept(registryHandler);
+        }
     }
 }

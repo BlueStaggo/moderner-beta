@@ -11,6 +11,7 @@ import net.minecraft.registry.RegistryEntryLookup;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.util.Identifier;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.chunk.ChunkGeneratorSettings;
 
@@ -42,7 +43,7 @@ public class ModernBetaWorldScreenProvider {
         };
     }
     
-    private static RegistryKey<ChunkGeneratorSettings> keyOfSettings(String id) {
-        return RegistryKey.of(RegistryKeys.CHUNK_GENERATOR_SETTINGS, ModernerBeta.createId(id));
+    private static RegistryKey<ChunkGeneratorSettings> keyOfSettings(Identifier id) {
+        return RegistryKey.of(RegistryKeys.CHUNK_GENERATOR_SETTINGS, id);
     }
 }

@@ -1,8 +1,7 @@
 package mod.bluestaggo.modernerbeta.client.gui.screen;
 
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
-import mod.bluestaggo.modernerbeta.api.registry.ModernBetaRegistries;
-import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsChunk;
+import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
@@ -17,6 +16,7 @@ import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import org.apache.logging.log4j.util.TriConsumer;
@@ -109,14 +109,14 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
         MutableText presetText = Text.translatable(TEXT_PRESET).append(": ");
         presetText.append(this.isPresetCustom() ?
             Text.translatable(TEXT_PRESET_CUSTOM) :
-            Text.translatable(TEXT_PRESET_NAME + "." + this.getPresetKey()).formatted(Formatting.YELLOW)
+            Text.translatable(TEXT_PRESET_NAME + "." + this.getPresetKey().getPath()).formatted(Formatting.YELLOW)
         );
             
         this.buttonPreset = ButtonWidget.builder(
             presetText,
             button -> this.client.setScreen(new ModernBetaSettingsPresetScreen(
                 this,
-                ModernBetaRegistries.SETTINGS_PRESET_CATEGORY.getKeySet().stream().toList(),
+                ModernBetaRegistries.SETTINGS_PRESET_CATEGORY.getIds().stream().toList(),
                 this.preset,
                 true
             ))
@@ -249,12 +249,12 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
     }
     
     private boolean isPresetCustom() {
-        return !ModernBetaRegistries.SETTINGS_PRESET.contains(this.preset);
+        return false;
     }
     
-    private String getPresetKey() {
-        if (ModernBetaRegistries.SETTINGS_PRESET.contains(this.preset))
-            return ModernBetaRegistries.SETTINGS_PRESET.getKey(this.preset);
+    private Identifier getPresetKey() {
+        if (true/*ModernBetaRegistries.SETTINGS_PRESET.contains(this.preset)*/)
+            return ModernBetaRegistries.SETTINGS_PRESET.getId(this.preset);
 
         return null;
     }

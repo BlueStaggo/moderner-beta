@@ -4,6 +4,7 @@ import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import mod.bluestaggo.modernerbeta.config.ModernBetaConfig;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
+import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.world.carver.ModernBetaCarvers;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
@@ -38,19 +39,24 @@ public class ModernerBeta {
         Registries.CHUNK_GENERATOR, ModernBetaChunkGenerator::register
     );
 
+    public static Map<Registry<?>, Consumer<IRegistryHandler<?>>> CUSTOM_REGISTRY_HANDLERS;
+
     public static void init() {
         ModernerBeta.log(Level.INFO, "Initializing Moderner Beta...");
+    }
 
-        // Register default providers
-        ModernBetaBuiltInProviders.registerChunkProviders();
-        ModernBetaBuiltInProviders.registerBiomeProviders();
-        ModernBetaBuiltInProviders.registerCaveBiomeProviders();
-        ModernBetaBuiltInProviders.registerSurfaceConfigs();
-        ModernBetaBuiltInProviders.registerHeightConfigs();
-        ModernBetaBuiltInProviders.registerNoisePostProcessors();
-        ModernBetaBuiltInProviders.registerBlockSources();
-        ModernBetaBuiltInProviders.registerSettingsPresets();
-        ModernBetaBuiltInProviders.registerSettingsPresetCategories();
+    public static void setupCustomRegistryHandlers() {
+        CUSTOM_REGISTRY_HANDLERS = Map.of(
+            ModernBetaRegistries.CHUNK, ModernBetaBuiltInProviders::registerChunkProviders,
+            ModernBetaRegistries.BIOME, ModernBetaBuiltInProviders::registerBiomeProviders,
+            ModernBetaRegistries.CAVE_BIOME, ModernBetaBuiltInProviders::registerCaveBiomeProviders,
+            ModernBetaRegistries.SURFACE_CONFIG, ModernBetaBuiltInProviders::registerSurfaceConfigs,
+            ModernBetaRegistries.HEIGHT_CONFIG, ModernBetaBuiltInProviders::registerHeightConfigs,
+            ModernBetaRegistries.NOISE_POST_PROCESSOR, ModernBetaBuiltInProviders::registerNoisePostProcessors,
+            ModernBetaRegistries.BLOCKSOURCE, ModernBetaBuiltInProviders::registerBlockSources,
+            ModernBetaRegistries.SETTINGS_PRESET, ModernBetaBuiltInProviders::registerSettingsPresets,
+            ModernBetaRegistries.SETTINGS_PRESET_CATEGORY, ModernBetaBuiltInProviders::registerSettingsPresetCategories
+        );
     }
 
     public static Identifier createId(String name) {

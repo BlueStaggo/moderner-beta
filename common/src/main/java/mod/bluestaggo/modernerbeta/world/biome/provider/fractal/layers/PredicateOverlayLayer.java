@@ -8,7 +8,9 @@ import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.predicates.BiomePredicate;
 import net.minecraft.util.StringIdentifiable;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -49,7 +51,7 @@ public class PredicateOverlayLayer extends SingleParentLayer {
         ExtendedBiomeId baseBiome = this.parentLayer.sample(x, z);
         for (ConfiguredTarget target : this.targetLayers) {
             Supplier<LayerRandom> randomSupplier = Suppliers.memoize(() -> this.getRandom(x, z));
-            if (target.predicate().satisfies(baseBiome, this.parentLayer, randomSupplier, x, z)) {
+            if (target.predicate().matches(baseBiome, this.parentLayer, randomSupplier, x, z)) {
                 ExtendedBiomeId result = target.sample(x, z);
                 if (ExtendedBiomeId.NULL.equals(result)) {
                     return baseBiome;
@@ -77,12 +79,45 @@ public class PredicateOverlayLayer extends SingleParentLayer {
             ).apply(instance, Target::new)
         );
 
+        public static final Target MUSHROOM_SHORE = biome(
+            BiomePredicate.of(ExtendedBiomeId.MUSHROOM_ISLAND)
+                .and(BiomePredicate.border()),
+            ExtendedBiomeId.MUSHROOM_SHORE
+        );
+
         public static Target layer(BiomePredicate predicate, String layer) {
             return new Target(predicate, layer, Type.LAYER);
         }
 
         public static Target biome(BiomePredicate predicate, ExtendedBiomeId biome) {
             return new Target(predicate, biome.toString(), Type.BIOME);
+        }
+
+        public static Target inclusiveBeach(Set<ExtendedBiomeId> exceptions, ExtendedBiomeId beach) {
+            exceptions = new HashSet<>(exceptions);
+            exceptions.add(ExtendedBiomeId.OCEAN);
+            return biome(
+                BiomePredicate.noneInSet(exceptions)
+                    .and(BiomePredicate.anyNeighborMatches(ExtendedBiomeId.OCEAN)),
+                beach
+            );
+        }
+
+        public static Target exclusiveBeach(Set<ExtendedBiomeId> biomes, ExtendedBiomeId beach) {
+            return biome(
+                BiomePredicate.inSet(biomes)
+                    .and(BiomePredicate.anyNeighborMatches(ExtendedBiomeId.OCEAN)),
+                beach
+            );
+        }
+
+        public static Target simpleHills(Set<ExtendedBiomeId> affectedBiomes, String layer) {
+            return layer(
+                BiomePredicate.inSet(affectedBiomes)
+                    .and(BiomePredicate.interior())
+                    .and(BiomePredicate.oneIn(3)),
+                layer
+            );
         }
 
         private ConfiguredTarget configure(Function<String, Layer> layerMap) {

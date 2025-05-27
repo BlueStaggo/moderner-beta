@@ -9,9 +9,9 @@ public record BiomePredicateType<F extends BiomePredicate>(MapCodec<F> codec) {
     public static final BiomePredicateType<InSetBiomePredicate> IN_SET = register("in_set", InSetBiomePredicate.CODEC);
     public static final BiomePredicateType<InteriorBiomePredicate> INTERIOR = register("interior", InteriorBiomePredicate.CODEC);
     public static final BiomePredicateType<InvertedBiomePredicate> INVERTED = register("inverted", InvertedBiomePredicate.CODEC);
+    public static final BiomePredicateType<NeighborMatchBiomePredicate> NEIGHBOR_MATCH = register("neighbor_match", NeighborMatchBiomePredicate.CODEC);
     public static final BiomePredicateType<RandomChanceBiomePredicate> RANDOM_CHANCE = register("random_chance", RandomChanceBiomePredicate.CODEC);
     public static final BiomePredicateType<SingleMatchBiomePredicate> SINGLE_MATCH = register("single_match", SingleMatchBiomePredicate.CODEC);
-    public static final BiomePredicateType<SpecificCaseBiomePredicate> SPECIFIC_CASE = register("specific_case", SpecificCaseBiomePredicate.CODEC);
 
     private static <F extends BiomePredicate> BiomePredicateType<F> register(String id, MapCodec<F> codec) {
         BiomePredicateType<F> filterType = new BiomePredicateType<>(codec);

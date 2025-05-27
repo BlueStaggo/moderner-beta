@@ -33,7 +33,7 @@ public class RandomChanceBiomePredicate extends BiomePredicate {
     }
 
     @Override
-    public boolean satisfies(ExtendedBiomeId biome, Layer layer, Supplier<LayerRandom> randomSupplier, int x, int z) {
+    public boolean matches(ExtendedBiomeId biome, Layer layer, Supplier<LayerRandom> randomSupplier, int x, int z) {
         return randomSupplier.get().nextInt(this.denominator) < this.numerator;
     }
 }

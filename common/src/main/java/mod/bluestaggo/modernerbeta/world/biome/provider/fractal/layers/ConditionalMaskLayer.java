@@ -16,29 +16,29 @@ public class ConditionalMaskLayer extends SingleParentLayer {
         instance -> fillSingleParentLayerFields(instance)
             .and(instance.group(
                 CodecUtil.set(ExtendedBiomeId.CODEC).fieldOf("filter").forGetter(layer -> layer.filter),
-                Codec.STRING.fieldOf("ifSatisfied").forGetter(layer -> layer.ifSatisfied),
+                Codec.STRING.fieldOf("onMatch").forGetter(layer -> layer.onMatch),
                 Codec.STRING.fieldOf("otherwise").forGetter(layer -> layer.otherwise)
             ))
             .apply(instance, ConditionalMaskLayer::new)
     );
 
     private final Set<ExtendedBiomeId> filter;
-    private final String ifSatisfied;
+    private final String onMatch;
     private final String otherwise;
-    private transient Layer ifSatisfiedLayer;
+    private transient Layer onMatchLayer;
     private transient Layer otherwiseLayer;
 
-    public ConditionalMaskLayer(String id, long seed, String parent, Set<ExtendedBiomeId> filter, String ifSatisfied, String otherwise) {
+    public ConditionalMaskLayer(String id, long seed, String parent, Set<ExtendedBiomeId> filter, String onMatch, String otherwise) {
         super(id, seed, parent);
         this.filter = filter;
-        this.ifSatisfied = ifSatisfied;
+        this.onMatch = onMatch;
         this.otherwise = otherwise;
     }
 
     @Override
     public void configure(Function<String, Layer> layerMap) {
         super.configure(layerMap);
-        this.ifSatisfiedLayer = !this.ifSatisfied.isEmpty() ? layerMap.apply(this.ifSatisfied) : null;
+        this.onMatchLayer = !this.onMatch.isEmpty() ? layerMap.apply(this.onMatch) : null;
         this.otherwiseLayer = !this.otherwise.isEmpty() ? layerMap.apply(this.otherwise) : null;
     }
 
@@ -51,8 +51,8 @@ public class ConditionalMaskLayer extends SingleParentLayer {
     protected List<Layer> getParents() {
         List<Layer> parents = new ArrayList<>();
         parents.add(this.parentLayer);
-        if (this.ifSatisfiedLayer != null) {
-            parents.add(this.ifSatisfiedLayer);
+        if (this.onMatchLayer != null) {
+            parents.add(this.onMatchLayer);
         }
         if (this.otherwiseLayer != null) {
             parents.add(this.otherwiseLayer);
@@ -63,7 +63,7 @@ public class ConditionalMaskLayer extends SingleParentLayer {
     @Override
     protected ExtendedBiomeId generate(int x, int z) {
         ExtendedBiomeId biome = this.parentLayer.sample(x, z);
-        Layer layer = this.filter.contains(biome) ? this.ifSatisfiedLayer : this.otherwiseLayer;
+        Layer layer = this.filter.contains(biome) ? this.onMatchLayer : this.otherwiseLayer;
         if (layer == null) {
             return biome;
         }

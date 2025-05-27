@@ -6,7 +6,6 @@ import mod.bluestaggo.modernerbeta.api.registry.ModernBetaBuiltInRegistries;
 public record LayerType<L extends Layer>(MapCodec<L> codec) {
     public static final LayerType<AddLandLayer> ADD_LAND = register("add_land", AddLandLayer.CODEC);
     public static final LayerType<BiomeToLayerOverlayLayer> BIOME_TO_LAYER_OVERLAY = register("biome_to_layer_overlay", BiomeToLayerOverlayLayer.CODEC);
-    public static final LayerType<BorderLayer> BORDER = register("border", BorderLayer.CODEC);
     public static final LayerType<ComputeRiverLayer> COMPUTE_RIVER = register("compute_river", ComputeRiverLayer.CODEC);
     public static final LayerType<ConditionalMaskLayer> CONDITIONAL_MASK = register("conditional_mask", ConditionalMaskLayer.CODEC);
     public static final LayerType<ConstantBiomeLayer> CONSTANT_BIOME = register("constant_biome", ConstantBiomeLayer.CODEC);

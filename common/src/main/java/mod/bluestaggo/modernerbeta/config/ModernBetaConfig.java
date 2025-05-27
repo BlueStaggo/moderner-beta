@@ -63,11 +63,11 @@ public class ModernBetaConfig implements ConfigData {
         biomePreviewColors.put("minecraft:forest", 0x056621);
         biomePreviewColors.put("minecraft:taiga", 0x0b6a5f);
         biomePreviewColors.put("moderner_beta:late_beta_taiga", 0x0b6a5f);
+        biomePreviewColors.put("moderner_beta:early_release_taiga", 0x0b6a5f);
         biomePreviewColors.put("minecraft:swamp", 0x07f9b2);
         biomePreviewColors.put("moderner_beta:late_beta_swampland", 0x07f9b2);
         biomePreviewColors.put("moderner_beta:early_release_swampland", 0x07f9b2);
         biomePreviewColors.put("minecraft:river", 0x0000ff);
-        biomePreviewColors.put("minecraft:river*null", 0x1f001f);
         biomePreviewColors.put("minecraft:river*region_a", 0x7f00ff);
         biomePreviewColors.put("minecraft:river*region_b", 0x007fff);
         biomePreviewColors.put("minecraft:nether_wastes", 0x572526);
@@ -84,9 +84,10 @@ public class ModernBetaConfig implements ConfigData {
         biomePreviewColors.put("minecraft:mushroom_fields*shore", 0xa000ff);
         biomePreviewColors.put("minecraft:beach", 0xfade55);
         biomePreviewColors.put("minecraft:desert*hills", 0xd25f12);
-        biomePreviewColors.put("minecraft:wooded*hills", 0x22551c);
+        biomePreviewColors.put("minecraft:forest*hills", 0x22551c);
         biomePreviewColors.put("minecraft:taiga*hills", 0x163933);
         biomePreviewColors.put("moderner_beta:late_beta_taiga*hills", 0x163933);
+        biomePreviewColors.put("moderner_beta:early_release_taiga*hills", 0x163933);
         biomePreviewColors.put("minecraft:windswept_hills*edge", 0x72789a);
         biomePreviewColors.put("moderner_beta:late_beta_extreme_hills*edge", 0x72789a);
         biomePreviewColors.put("moderner_beta:early_release_extreme_hills*edge", 0x72789a);
@@ -100,9 +101,7 @@ public class ModernBetaConfig implements ConfigData {
         biomePreviewColors.put("minecraft:birch_forest*hills", 0x1f5f32);
         biomePreviewColors.put("minecraft:dark_forest", 0x40511a);
         biomePreviewColors.put("minecraft:snowy_taiga", 0x31554a);
-        biomePreviewColors.put("moderner_beta:early_release_taiga", 0x31554a);
         biomePreviewColors.put("minecraft:snowy_taiga*hills", 0x243f36);
-        biomePreviewColors.put("moderner_beta:early_release_taiga*hills", 0x243f36);
         biomePreviewColors.put("minecraft:old_growth_pine_taiga", 0x596651);
         biomePreviewColors.put("minecraft:old_growth_pine_taiga*hills", 0x454f3e);
         biomePreviewColors.put("minecraft:windswept_forest", 0x5b7352);

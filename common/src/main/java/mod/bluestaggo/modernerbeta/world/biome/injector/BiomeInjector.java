@@ -7,6 +7,7 @@ import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsBiome;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkHeightmap;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.world.biome.injector.BiomeInjectionRules.BiomeInjectionContext;
+import mod.bluestaggo.modernerbeta.world.cavebiome.provider.CaveBiomeProviderNone;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.entry.RegistryEntry;
@@ -40,7 +41,7 @@ public class BiomeInjector {
     private final BiomeInjectionRules rulesPre;
     private final BiomeInjectionRules rulesPost;
     private final BiomeInjectionRules rulesAll;
-    
+
     public BiomeInjector(ModernBetaChunkGenerator modernBetaChunkGenerator, ModernBetaBiomeSource modernBetaBiomeSource) {
         this.modernBetaChunkGenerator = modernBetaChunkGenerator;
         this.modernBetaBiomeSource = modernBetaBiomeSource;
@@ -62,9 +63,11 @@ public class BiomeInjector {
         BiomeInjectionRules.Builder builderPre = new BiomeInjectionRules.Builder();
         BiomeInjectionRules.Builder builderPost = new BiomeInjectionRules.Builder();
         BiomeInjectionRules.Builder builderAll = new BiomeInjectionRules.Builder();
-        
-        builderPost.add(cavePredicate, this.modernBetaBiomeSource::getCaveBiome);
-        
+
+        if (!(this.modernBetaBiomeSource.getCaveBiomeProvider() instanceof CaveBiomeProviderNone)) {
+            builderPost.add(cavePredicate, this.modernBetaBiomeSource::getCaveBiome);
+        }
+
         if (useOceanBiomes) {
             builderPost.add(deepOceanPredicate, this.modernBetaBiomeSource::getDeepOceanBiome);
             builderPost.add(oceanPredicate, this.modernBetaBiomeSource::getOceanBiome);
@@ -78,6 +81,10 @@ public class BiomeInjector {
     }
     
     public void injectBiomes(Chunk chunk, MultiNoiseSampler noiseSampler, BiomeInjectionStep step) {
+        if (this.rulesAll.isEmpty()) {
+            return;
+        }
+
         ChunkPos chunkPos = chunk.getPos();
         
         int startBiomeX = chunkPos.getStartX() >> 2;

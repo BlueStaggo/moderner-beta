@@ -29,7 +29,7 @@ public class InvertedBiomePredicate extends BiomePredicate {
     }
 
     @Override
-    public boolean satisfies(ExtendedBiomeId biome, Layer layer, Supplier<LayerRandom> randomSupplier, int x, int z) {
-        return !this.term.satisfies(biome, layer, randomSupplier, x, z);
+    public boolean matches(ExtendedBiomeId biome, Layer layer, Supplier<LayerRandom> randomSupplier, int x, int z) {
+        return !this.term.matches(biome, layer, randomSupplier, x, z);
     }
 }

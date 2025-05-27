@@ -36,7 +36,7 @@ public class ComputeRiverLayer extends SingleParentLayer {
             ? neighborsRiverBorder(neighbors, base)
             : ((base.isOf(BiomeKeys.OCEAN) || neighborsContain(neighbors, OCEAN))
                 || !allNeighborsEqual(neighbors, base)))
-            ? RIVER : RIVER_NULL;
+            ? RIVER : NULL;
     }
 
     private static boolean neighborsRiverBorder(ExtendedBiomeId[] neighbors, ExtendedBiomeId match) {

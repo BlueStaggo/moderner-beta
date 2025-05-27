@@ -25,6 +25,10 @@ public class BiomeInjectionRules {
         return null;
     }
 
+    public boolean isEmpty() {
+        return this.rules.isEmpty();
+    }
+
     public static class Builder {
         private final List<BiomeInjectionRule> rules;
         
@@ -34,13 +38,11 @@ public class BiomeInjectionRules {
         
         public Builder add(Predicate<BiomeInjectionContext> rule, BiomeInjectionResolver resolver) {
             this.rules.add(new BiomeInjectionRule(rule, resolver));
-            
             return this;
         }
         
         public Builder add(Builder other) {
-            other.rules.forEach(rule -> this.rules.add(rule));
-            
+            this.rules.addAll(other.rules);
             return this;
         }
         
@@ -48,20 +50,12 @@ public class BiomeInjectionRules {
             return new BiomeInjectionRules(this.rules);
         }
     }
-    
-    private static class BiomeInjectionRule {
-        private final Predicate<BiomeInjectionContext> rule;
-        private final BiomeInjectionResolver resolver;
-        
-        public BiomeInjectionRule(Predicate<BiomeInjectionContext> rule, BiomeInjectionResolver resolver) {
-            this.rule = rule;
-            this.resolver = resolver;
-        }
-        
+
+    private record BiomeInjectionRule(Predicate<BiomeInjectionContext> rule, BiomeInjectionResolver resolver) {
         public BiomeInjectionResolver test(BiomeInjectionContext context) {
             if (this.rule.test(context))
                 return this.resolver;
-            
+
             return BiomeInjectionResolver.DEFAULT;
         }
     }

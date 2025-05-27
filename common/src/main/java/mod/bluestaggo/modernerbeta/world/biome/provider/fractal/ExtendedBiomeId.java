@@ -7,10 +7,10 @@ import net.minecraft.util.Identifier;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeKeys;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
-public record ExtendedBiomeId(Identifier baseId, String ext) {
+public record ExtendedBiomeId(Identifier baseId, String ext, boolean weak) {
     public static final Codec<ExtendedBiomeId> CODEC = Codec.STRING.comapFlatMap(ExtendedBiomeId::validate, ExtendedBiomeId::toString);
 
     public static final String TRANSLATION_KEY = "createWorld.customize.modern_beta.settings.preview.extended_biome_id";
@@ -30,45 +30,73 @@ public record ExtendedBiomeId(Identifier baseId, String ext) {
         MUSHROOM_ISLAND = of(BiomeKeys.MUSHROOM_FIELDS),
         MUSHROOM_SHORE = of(BiomeKeys.MUSHROOM_FIELDS, "shore"),
         RIVER_REGION_A = ExtendedBiomeId.RIVER.withExt("region_a"),
-        RIVER_REGION_B = ExtendedBiomeId.RIVER.withExt("region_b"),
-        RIVER_NULL = ExtendedBiomeId.RIVER.withExt("null");
+        RIVER_REGION_B = ExtendedBiomeId.RIVER.withExt("region_b");
 
     public static ExtendedBiomeId of(String id) {
         return validate(id).getOrThrow();
     }
 
     public static ExtendedBiomeId of(String baseId, String ext) {
-        return new ExtendedBiomeId(Identifier.of(baseId), ext);
+        boolean weak = false;
+        if (baseId.startsWith("~")) {
+            weak = true;
+            ext = "";
+            baseId = baseId.substring(1);
+        }
+        return new ExtendedBiomeId(Identifier.of(baseId), ext, weak);
     }
 
     public static ExtendedBiomeId of(Identifier baseId) {
-        return new ExtendedBiomeId(baseId, "");
+        return new ExtendedBiomeId(baseId, "", false);
     }
 
     public static ExtendedBiomeId of(Identifier baseId, String ext) {
         if (ext == null) {
             ext = "";
         }
-        return new ExtendedBiomeId(baseId, ext);
+        return new ExtendedBiomeId(baseId, ext, false);
+    }
+
+    public static ExtendedBiomeId ofWeak(Identifier baseId) {
+        return new ExtendedBiomeId(baseId, "", true);
     }
 
     public static ExtendedBiomeId of(RegistryKey<Biome> baseId) {
-        return new ExtendedBiomeId(baseId.getValue(), "");
+        return new ExtendedBiomeId(baseId.getValue(), "", false);
     }
 
     public static ExtendedBiomeId of(RegistryKey<Biome> baseId, String ext) {
         if (ext == null) {
             ext = "";
         }
-        return new ExtendedBiomeId(baseId.getValue(), ext);
+        return new ExtendedBiomeId(baseId.getValue(), ext, false);
+    }
+
+    public static ExtendedBiomeId ofWeak(RegistryKey<Biome> baseId) {
+        return new ExtendedBiomeId(baseId.getValue(), "", true);
     }
 
     public static List<ExtendedBiomeId> listOf(String... ids) {
         return Arrays.stream(ids).map(ExtendedBiomeId::of).toList();
     }
 
+    public static Set<ExtendedBiomeId> setOf(String... ids) {
+        return Arrays.stream(ids).map(ExtendedBiomeId::of).collect(Collectors.toSet());
+    }
+
     public ExtendedBiomeId withExt(String ext) {
-        return ExtendedBiomeId.of(this.baseId, ext);
+        if (ext == null) {
+            ext = "";
+        }
+        return new ExtendedBiomeId(this.baseId, ext, false);
+    }
+
+    public ExtendedBiomeId setWeak() {
+        return new ExtendedBiomeId(this.baseId, "", true);
+    }
+
+    public ExtendedBiomeId setStrong() {
+        return new ExtendedBiomeId(this.baseId, this.ext, false);
     }
 
     public boolean isOf(RegistryKey<Biome> biome) {
@@ -79,23 +107,54 @@ public record ExtendedBiomeId(Identifier baseId, String ext) {
         return this.baseId.equals(biome);
     }
 
+    public Map.Entry<ExtendedBiomeId, ExtendedBiomeId> mapTo(String id) {
+        ExtendedBiomeId next;
+        if (!id.isEmpty() && id.charAt(0) == '*') {
+            next = this.withExt(id.substring(1));
+        } else {
+            next = ExtendedBiomeId.of(id);
+        }
+
+        return Map.entry(this, next);
+    }
+
     @Override
     public String toString() {
-        if (this.ext == null || this.ext.isEmpty()) {
-            return this.baseId.toString();
-        } else {
-            return this.baseId.toString() + "*" + this.ext;
+        String name = this.baseId.toString();
+        if (this.ext != null && !this.ext.isEmpty()) {
+            name += "*" + this.ext;
         }
+        if (this.weak) {
+            name = "~" + name;
+        }
+        return name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        ExtendedBiomeId that = (ExtendedBiomeId) o;
+        return Objects.equals(this.baseId, that.baseId)
+            && (Objects.equals(this.ext, that.ext) || this.weak || that.weak);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.baseId, this.ext, this.weak);
     }
 
     public static DataResult<ExtendedBiomeId> validate(String string) {
+        boolean weak = !string.isEmpty() && string.charAt(0) == '~';
+        if (weak) {
+            string = string.substring(1);
+        }
+
         int asterisk = string.indexOf('*');
         String ext = asterisk == -1 ? "" : string.substring(asterisk + 1);
-
         if (asterisk != -1) {
             string = string.substring(0, asterisk);
         }
 
-        return Identifier.validate(string).flatMap(id -> DataResult.success(new ExtendedBiomeId(id, ext)));
+        return Identifier.validate(string).flatMap(id -> DataResult.success(new ExtendedBiomeId(id, ext, weak)));
     }
 }

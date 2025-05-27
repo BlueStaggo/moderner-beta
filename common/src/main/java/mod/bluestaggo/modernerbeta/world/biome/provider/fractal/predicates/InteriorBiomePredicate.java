@@ -30,47 +30,30 @@ public class InteriorBiomePredicate extends BiomePredicate {
     }
 
     @Override
-    public boolean satisfies(ExtendedBiomeId biome, Layer layer, Supplier<LayerRandom> randomSupplier, int x, int z) {
-        return this.type.satisfies(biome, layer, x, z);
+    public boolean matches(ExtendedBiomeId biome, Layer layer, Supplier<LayerRandom> randomSupplier, int x, int z) {
+        return this.type.matches(biome, layer, x, z);
     }
 
     public enum Type implements StringIdentifiable {
-        INTERIOR("interior") {
-            @Override
-            public boolean satisfies(ExtendedBiomeId biome, Layer layer, int x, int z) {
-                ExtendedBiomeId[] neighbors = layer.sampleNeighbors(x, z);
-                return Layer.allNeighborsEqual(neighbors, biome);
-            }
-        },
-        DIAGONAL_INTERIOR("diagonal_interior") {
-            @Override
-            public boolean satisfies(ExtendedBiomeId biome, Layer layer, int x, int z) {
-                ExtendedBiomeId[] neighbors = layer.sampleDiagonalNeighbors(x, z);
-                return Layer.allNeighborsEqual(neighbors, biome);
-            }
-        },
-        BORDER("border") {
-            @Override
-            public boolean satisfies(ExtendedBiomeId biome, Layer layer, int x, int z) {
-                ExtendedBiomeId[] neighbors = layer.sampleNeighbors(x, z);
-                return !Layer.allNeighborsEqual(neighbors, biome);
-            }
-        },
-        DIAGONAL_BORDER("diagonal_border") {
-            @Override
-            public boolean satisfies(ExtendedBiomeId biome, Layer layer, int x, int z) {
-                ExtendedBiomeId[] neighbors = layer.sampleDiagonalNeighbors(x, z);
-                return !Layer.allNeighborsEqual(neighbors, biome);
-            }
-        };
+        INTERIOR("interior", false, false),
+        DIAGONAL_INTERIOR("diagonal_interior", false, true),
+        BORDER("border", true, false),
+        DIAGONAL_BORDER("diagonal_border", true, true);
 
         public final String id;
+        private final boolean border;
+        private final boolean diagonal;
 
-        Type(String id) {
+        Type(String id, boolean border, boolean diagonal) {
             this.id = id;
+            this.border = border;
+            this.diagonal = diagonal;
         }
 
-        public abstract boolean satisfies(ExtendedBiomeId biome, Layer layer, int x, int z);
+        public boolean matches(ExtendedBiomeId biome, Layer layer, int x, int z) {
+            ExtendedBiomeId[] neighbors = this.diagonal ? layer.sampleDiagonalNeighbors(x, z) : layer.sampleNeighbors(x, z);
+            return this.border != Layer.allNeighborsEqual(neighbors, biome);
+        }
 
         @Override
         public String asString() {

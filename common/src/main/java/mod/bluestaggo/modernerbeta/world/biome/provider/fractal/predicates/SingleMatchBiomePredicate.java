@@ -30,7 +30,7 @@ public class SingleMatchBiomePredicate extends BiomePredicate {
     }
 
     @Override
-    public boolean satisfies(ExtendedBiomeId biome, Layer layer, Supplier<LayerRandom> randomSupplier, int x, int z) {
+    public boolean matches(ExtendedBiomeId biome, Layer layer, Supplier<LayerRandom> randomSupplier, int x, int z) {
         return this.biome.equals(biome);
     }
 }

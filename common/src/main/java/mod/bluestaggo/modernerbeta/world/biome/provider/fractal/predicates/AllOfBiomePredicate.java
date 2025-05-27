@@ -37,9 +37,9 @@ public class AllOfBiomePredicate extends BiomePredicate {
     }
 
     @Override
-    public boolean satisfies(ExtendedBiomeId biome, Layer layer, Supplier<LayerRandom> randomSupplier, int x, int z) {
+    public boolean matches(ExtendedBiomeId biome, Layer layer, Supplier<LayerRandom> randomSupplier, int x, int z) {
         for (BiomePredicate term : this.terms) {
-            if (!term.satisfies(biome, layer, randomSupplier, x, z)) {
+            if (!term.matches(biome, layer, randomSupplier, x, z)) {
                 return false;
             }
         }

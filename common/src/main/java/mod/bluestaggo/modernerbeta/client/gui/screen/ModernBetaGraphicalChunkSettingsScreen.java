@@ -45,11 +45,7 @@ public class ModernBetaGraphicalChunkSettingsScreen extends ModernBetaGraphicalC
 
         int minY = -64;
         int maxY = 320;
-        //FIXME
-        int seaLevel = switch (chunkProvider.getPath()) {
-            case "early_release", "major_release" -> 63;
-            default -> 64;
-        };
+        int seaLevel = ModernBetaBuiltInTypes.Chunk.CHUNK_PROVIDER_SEA_LEVEL_63.contains(chunkProvider) ? 63 : 64;
 
         list.addSingleOptionEntry(this.primarySelectionOption(NbtTags.CHUNK_PROVIDER,
             Arrays.stream(ModernBetaBuiltInTypes.Chunk.values())

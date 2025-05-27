@@ -27,6 +27,7 @@ public final class ModernBetaBuiltInTypes {
             BETA.id, SKYLANDS.id, ALPHA.id, INFDEV_611.id, INFDEV_420.id, INFDEV_415.id, PE.id, EARLY_RELEASE.id, MAJOR_RELEASE.id);
         public static final Set<Identifier> CHUNK_PROVIDER_FORCED_HEIGHT = Set.of(EARLY_RELEASE.id, MAJOR_RELEASE.id);
         public static final Set<Identifier> CHUNK_PROVIDER_FINITE = Set.of(INDEV.id, CLASSIC_0_30.id);
+        public static final Set<Identifier> CHUNK_PROVIDER_SEA_LEVEL_63 = Set.of(EARLY_RELEASE.id, MAJOR_RELEASE.id);
 
         public final Identifier id;
         

@@ -8,12 +8,13 @@ import mod.bluestaggo.modernerbeta.util.NbtReader;
 import mod.bluestaggo.modernerbeta.util.NbtTags;
 import mod.bluestaggo.modernerbeta.world.biome.voronoi.VoronoiPointCaveBiome;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.util.Identifier;
 import net.minecraft.world.biome.BiomeKeys;
 
 import java.util.List;
 
 public class ModernBetaSettingsCaveBiome implements ModernBetaSettings {
-    public final String biomeProvider;
+    public final Identifier biomeProvider;
     public final String singleBiome;
     
     public final float voronoiHorizontalNoiseScale;
@@ -49,7 +50,7 @@ public class ModernBetaSettingsCaveBiome implements ModernBetaSettings {
     
     public NbtCompound toCompound() {
         return new NbtCompoundBuilder()
-            .putString(NbtTags.BIOME_PROVIDER, this.biomeProvider)
+            .putIdentifier(NbtTags.BIOME_PROVIDER, this.biomeProvider)
             .putString(NbtTags.SINGLE_BIOME, this.singleBiome)
             
             .putFloat(NbtTags.VORONOI_HORIZONTAL_NOISE_SCALE, this.voronoiHorizontalNoiseScale)
@@ -62,7 +63,7 @@ public class ModernBetaSettingsCaveBiome implements ModernBetaSettings {
     }
     
     public static class Builder {
-        public String biomeProvider;
+        public Identifier biomeProvider;
         public String singleBiome;
         
         public float voronoiHorizontalNoiseScale;
@@ -103,7 +104,7 @@ public class ModernBetaSettingsCaveBiome implements ModernBetaSettings {
         public Builder fromCompound(NbtCompound compound) {
             NbtReader reader = new NbtReader(compound);
             
-            this.biomeProvider = reader.readString(NbtTags.BIOME_PROVIDER, this.biomeProvider);
+            this.biomeProvider = reader.readIdentifier(NbtTags.BIOME_PROVIDER, this.biomeProvider);
             this.singleBiome = reader.readString(NbtTags.SINGLE_BIOME, this.singleBiome);
             
             this.voronoiHorizontalNoiseScale = reader.readFloat(NbtTags.VORONOI_HORIZONTAL_NOISE_SCALE, this.voronoiHorizontalNoiseScale);

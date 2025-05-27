@@ -1,6 +1,6 @@
 package mod.bluestaggo.modernerbeta.api.world.chunk.surface;
 
-import mod.bluestaggo.modernerbeta.api.registry.ModernBetaBuiltInRegistries;
+import mod.bluestaggo.modernerbeta.registry.ModernBetaBuiltInRegistries;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.TagKey;
@@ -35,9 +35,9 @@ public record SurfaceConfig(SurfaceBlocks normal, SurfaceBlocks beachSand, Surfa
     public static final SurfaceConfig SNOW_STONE = new SurfaceConfig(SurfaceBlocks.SNOW_STONE);
     
     public static SurfaceConfig getSurfaceConfig(RegistryEntry<Biome> biome) {
-        Optional<String> optionalKey = ModernBetaBuiltInRegistries.SURFACE_CONFIG.getKeySet()
+        Optional<Identifier> optionalKey = ModernBetaBuiltInRegistries.SURFACE_CONFIG.getIds()
             .stream()
-            .filter(id -> biome.isIn(keyOf(id)))
+            .filter(id -> biome.isIn(keyOf(id.getPath())))
             .findFirst();
         
         if (optionalKey.isPresent()) {

@@ -1,7 +1,7 @@
 package mod.bluestaggo.modernerbeta.client.gui.screen;
 
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
-import mod.bluestaggo.modernerbeta.api.registry.ModernBetaBuiltInRegistries;
+import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
@@ -16,6 +16,7 @@ import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import org.apache.logging.log4j.util.TriConsumer;
@@ -107,16 +108,17 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
         ));
 
         MutableText presetText = Text.translatable(TEXT_PRESET).append(": ");
-        presetText.append(this.isPresetCustom() ?
-            Text.translatable(TEXT_PRESET_CUSTOM) :
-            Text.translatable(TEXT_PRESET_NAME + "." + this.getPresetKey()).formatted(Formatting.YELLOW)
+        Identifier presetKey = this.getPresetKey();
+        presetText.append(presetKey == null ?
+            Text.translatable(TEXT_PRESET_CUSTOM).formatted(Formatting.AQUA) :
+            Text.translatable(TEXT_PRESET_NAME + "." + presetKey.getPath()).formatted(Formatting.YELLOW)
         );
             
         this.buttonPreset = ButtonWidget.builder(
             presetText,
             button -> this.client.setScreen(new ModernBetaSettingsPresetScreen(
                 this,
-                ModernBetaBuiltInRegistries.SETTINGS_PRESET_CATEGORY.getKeySet().stream().toList(),
+                ModernBetaBuiltInRegistries.SETTINGS_PRESET_CATEGORY.getIds().stream().sorted().toList(),
                 this.preset,
                 true
             ))
@@ -222,11 +224,11 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
                 this.preset.settingsBiome()
             ))
         ).build();
-        
+
         GridWidget gridWidgetMain = this.createGridWidget();
         GridWidget gridWidgetSettings = this.createGridWidget();
         GridWidget gridWidgetActions = this.createGridWidget();
-        
+
         GridWidget.Adder gridAdderMain = gridWidgetMain.createAdder(1);
         GridWidget.Adder gridAdderSettings = gridWidgetSettings.createAdder(3);
         GridWidget.Adder gridAdderActions = gridWidgetActions.createAdder(2);
@@ -246,31 +248,17 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
         gridWidgetMain.refreshPositions();
         SimplePositioningWidget.setPos(gridWidgetMain, 0, this.overlayTop + 8, this.width, this.height, 0.5f, 0.0f);
         gridWidgetMain.forEachChild(this::addDrawableChild);
-        
-        this.onPresetChange();
     }
-    
-    private void onPresetChange() {
-        if (this.isPresetCustom()) {
-            this.buttonPreset.active = false;
-        } else {
-            this.buttonPreset.active = true;
-        }
-    }
-    
-    private void resetPreset() {
-        this.preset = ModernBetaBuiltInRegistries.SETTINGS_PRESET.get(ModernBetaBuiltInTypes.Preset.BETA_1_7_3.id);
-        this.onPresetChange();
-    }
-    
-    private boolean isPresetCustom() {
-        return !ModernBetaBuiltInRegistries.SETTINGS_PRESET.contains(this.preset);
-    }
-    
-    private String getPresetKey() {
-        if (ModernBetaBuiltInRegistries.SETTINGS_PRESET.contains(this.preset))
-            return ModernBetaBuiltInRegistries.SETTINGS_PRESET.getKey(this.preset);
 
-        return null;
+    private void resetPreset() {
+        this.preset = ModernBetaRegistries.SETTINGS_PRESET.get(ModernBetaBuiltInTypes.Preset.BETA_1_7_3.id);
+    }
+
+    private Identifier getPresetKey() {
+        return ModernBetaRegistries.SETTINGS_PRESET.streamEntries()
+            .filter(entry -> entry.value().equals(this.preset))
+            .map(entry -> entry.registryKey().getValue())
+            .findFirst()
+            .orElse(null);
     }
 }

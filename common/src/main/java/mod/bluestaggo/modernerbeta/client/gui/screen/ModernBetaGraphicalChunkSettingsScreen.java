@@ -16,6 +16,7 @@ import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtString;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Identifier;
 import net.minecraft.world.biome.BiomeKeys;
 
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ public class ModernBetaGraphicalChunkSettingsScreen extends ModernBetaGraphicalC
 
     @Override
     protected void addOptions(OptionListWidget list) {
-        String chunkProvider = this.settings.getString(NbtTags.CHUNK_PROVIDER).orElseThrow();
+        Identifier chunkProvider = Identifier.of(this.settings.getString(NbtTags.CHUNK_PROVIDER).orElseThrow());
         boolean isNoiseProvider = ModernBetaBuiltInTypes.Chunk.CHUNK_PROVIDER_NOISE.contains(chunkProvider);
         boolean isForcedHeightProvider = ModernBetaBuiltInTypes.Chunk.CHUNK_PROVIDER_FORCED_HEIGHT.contains(chunkProvider);
         boolean isFiniteProvider = ModernBetaBuiltInTypes.Chunk.CHUNK_PROVIDER_FINITE.contains(chunkProvider);
@@ -44,15 +45,12 @@ public class ModernBetaGraphicalChunkSettingsScreen extends ModernBetaGraphicalC
 
         int minY = -64;
         int maxY = 320;
-        int seaLevel = switch (chunkProvider) {
-            case "early_release", "major_release" -> 63;
-            default -> 64;
-        };
+        int seaLevel = ModernBetaBuiltInTypes.Chunk.CHUNK_PROVIDER_SEA_LEVEL_63.contains(chunkProvider) ? 63 : 64;
 
         list.addSingleOptionEntry(this.primarySelectionOption(NbtTags.CHUNK_PROVIDER,
             Arrays.stream(ModernBetaBuiltInTypes.Chunk.values())
                 .map(chunk -> chunk.id)
-                .toArray(String[]::new)));
+                .toArray(Identifier[]::new)));
 
         if (isFiniteProvider) {
             list.addSingleOptionEntry(this.headerOption(this.getText("header.level").formatted(Formatting.BOLD)));

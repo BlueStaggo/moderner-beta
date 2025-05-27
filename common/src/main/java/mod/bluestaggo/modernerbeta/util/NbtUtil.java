@@ -1,17 +1,31 @@
 package mod.bluestaggo.modernerbeta.util;
 
 import net.minecraft.nbt.*;
+import net.minecraft.util.Identifier;
+
+import java.util.Optional;
 
 public class NbtUtil {
     /*
      * Helper methods for reading primitive values from NbtCompound objects
      */
     
+    public static Identifier readIdentifierOrThrow(String key, NbtCompound tag) {
+        String str = tag.getString(key)
+                .orElseThrow(() -> new IllegalArgumentException("[Modern Beta] NBT compound does not contain field " + key));
+
+        return Identifier.of(str);
+    }
+    
+    public static Identifier readIdentifier(String key, NbtCompound tag, Identifier alternate) {
+        return tag.getString(key).map(Identifier::of).orElse(alternate);
+    }
+
     public static String readStringOrThrow(String key, NbtCompound tag) {
         return tag.getString(key)
                 .orElseThrow(() -> new IllegalArgumentException("[Modern Beta] NBT compound does not contain field " + key));
     }
-    
+
     public static String readString(String key, NbtCompound tag, String alternate) {
         return tag.getString(key).orElse(alternate);
     }

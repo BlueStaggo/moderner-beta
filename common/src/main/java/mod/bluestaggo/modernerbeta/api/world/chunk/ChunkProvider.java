@@ -1,6 +1,6 @@
 package mod.bluestaggo.modernerbeta.api.world.chunk;
 
-import mod.bluestaggo.modernerbeta.api.registry.ModernBetaBuiltInRegistries;
+import mod.bluestaggo.modernerbeta.registry.ModernBetaBuiltInRegistries;
 import mod.bluestaggo.modernerbeta.api.world.blocksource.BlockSource;
 import mod.bluestaggo.modernerbeta.api.world.chunk.surface.SurfaceBuilder;
 import mod.bluestaggo.modernerbeta.api.world.spawn.SpawnLocator;
@@ -73,9 +73,8 @@ public abstract class ChunkProvider {
         this.randomSplitter = this.randomProvider.create(this.seed).nextSplitter();
         
         this.blockSources = ModernBetaBuiltInRegistries.BLOCKSOURCE
-            .getEntries()
-            .stream()
-            .map(func -> func.apply(this.chunkSettings, this.randomSplitter))
+            .streamEntries()
+            .map(func -> func.value().apply(this.chunkSettings, this.randomSplitter))
             .toList();
         
         this.surfaceBuilder = new SurfaceBuilder(this.chunkGenerator.getBiomeSource());

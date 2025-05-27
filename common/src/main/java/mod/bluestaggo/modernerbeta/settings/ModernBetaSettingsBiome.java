@@ -15,13 +15,14 @@ import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.ConstantB
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.legacy.FractalSettings;
 import mod.bluestaggo.modernerbeta.world.biome.voronoi.VoronoiPointBiome;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.util.Identifier;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 public class ModernBetaSettingsBiome implements ModernBetaSettings {
-    public final String biomeProvider;
+    public final Identifier biomeProvider;
     public final String singleBiome;
     public final boolean useOceanBiomes;
     
@@ -122,7 +123,7 @@ public class ModernBetaSettingsBiome implements ModernBetaSettings {
     
     public NbtCompound toCompound() {
         NbtCompound compound = new NbtCompoundBuilder()
-            .putString(NbtTags.BIOME_PROVIDER, this.biomeProvider)
+            .putIdentifier(NbtTags.BIOME_PROVIDER, this.biomeProvider)
             .putString(NbtTags.SINGLE_BIOME, this.singleBiome)
             .putBoolean(NbtTags.USE_OCEAN_BIOMES, this.useOceanBiomes)
             .putFloat(NbtTags.CLIMATE_TEMP_NOISE_SCALE, this.climateTempNoiseScale)
@@ -164,7 +165,7 @@ public class ModernBetaSettingsBiome implements ModernBetaSettings {
     }
     
     public static class Builder {
-        public String biomeProvider;
+        public Identifier biomeProvider;
         public String singleBiome;
         public boolean useOceanBiomes;
         
@@ -433,7 +434,7 @@ public class ModernBetaSettingsBiome implements ModernBetaSettings {
         public Builder fromCompound(NbtCompound compound) {
             NbtReader reader = new NbtReader(compound);
             
-            this.biomeProvider = reader.readString(NbtTags.BIOME_PROVIDER, this.biomeProvider);
+            this.biomeProvider = reader.readIdentifier(NbtTags.BIOME_PROVIDER, this.biomeProvider);
             this.singleBiome = reader.readString(NbtTags.SINGLE_BIOME, this.singleBiome);
             this.useOceanBiomes = reader.readBoolean(NbtTags.USE_OCEAN_BIOMES, this.useOceanBiomes);
             

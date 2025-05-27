@@ -1,10 +1,11 @@
 package mod.bluestaggo.modernerbeta.settings;
 
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
+import net.minecraft.util.Identifier;
 
 import java.util.List;
 
-public record ModernBetaSettingsPresetCategory(String defaultIcon, List<String> presets) {
+public record ModernBetaSettingsPresetCategory(Identifier defaultIcon, List<Identifier> presets) {
     public static ModernBetaSettingsPresetCategory BETA = new ModernBetaSettingsPresetCategory(
             ModernBetaBuiltInTypes.Preset.BETA_1_7_3.id,
             List.of(

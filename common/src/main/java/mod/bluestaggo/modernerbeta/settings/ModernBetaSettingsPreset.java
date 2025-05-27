@@ -1,7 +1,7 @@
 package mod.bluestaggo.modernerbeta.settings;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;
-import mod.bluestaggo.modernerbeta.api.registry.ModernBetaBuiltInRegistries;
+import mod.bluestaggo.modernerbeta.registry.ModernBetaBuiltInRegistries;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Pair;
 import org.slf4j.event.Level;

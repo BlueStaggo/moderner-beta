@@ -11,11 +11,12 @@ import mod.bluestaggo.modernerbeta.world.chunk.provider.indev.IndevTheme;
 import mod.bluestaggo.modernerbeta.world.chunk.provider.indev.IndevType;
 import mod.bluestaggo.modernerbeta.world.chunk.provider.island.IslandShape;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.util.Identifier;
 
 import java.util.Map;
 
 public class ModernBetaSettingsChunk implements ModernBetaSettings {
-    public final String chunkProvider;
+    public final Identifier chunkProvider;
     
     public final boolean useDeepslate;
     public final int deepslateMinY;
@@ -194,7 +195,7 @@ public class ModernBetaSettingsChunk implements ModernBetaSettings {
     
     public NbtCompound toCompound() {
         return new NbtCompoundBuilder()
-            .putString(NbtTags.CHUNK_PROVIDER, this.chunkProvider)
+            .putIdentifier(NbtTags.CHUNK_PROVIDER, this.chunkProvider)
             .putBoolean(NbtTags.USE_DEEPSLATE, this.useDeepslate)
             .putInt(NbtTags.DEEPSLATE_MIN_Y, this.deepslateMinY)
             .putInt(NbtTags.DEEPSLATE_MAX_Y, this.deepslateMaxY)
@@ -277,7 +278,7 @@ public class ModernBetaSettingsChunk implements ModernBetaSettings {
     }
 
     public static class Builder {
-        public String chunkProvider;
+        public Identifier chunkProvider;
         
         public boolean useDeepslate;
         public int deepslateMinY;
@@ -447,7 +448,7 @@ public class ModernBetaSettingsChunk implements ModernBetaSettings {
         public Builder fromCompound(NbtCompound compound) {
             NbtReader reader = new NbtReader(compound);
             
-            this.chunkProvider = reader.readString(NbtTags.CHUNK_PROVIDER, this.chunkProvider);
+            this.chunkProvider = reader.readIdentifier(NbtTags.CHUNK_PROVIDER, this.chunkProvider);
             
             this.useDeepslate = reader.readBoolean(NbtTags.USE_DEEPSLATE, this.useDeepslate);
             this.deepslateMinY = reader.readInt(NbtTags.DEEPSLATE_MIN_Y, this.deepslateMinY);

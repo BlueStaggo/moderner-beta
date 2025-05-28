@@ -2,7 +2,9 @@ package mod.bluestaggo.modernerbeta.fabric;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.command.DebugProviderSettingsCommand;
+import mod.bluestaggo.modernerbeta.fabric.network.NetworkHelperImpl;
 import mod.bluestaggo.modernerbeta.fabric.registry.RegistryHelperImpl;
+import mod.bluestaggo.modernerbeta.network.BiomeProviderInfoPayload;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.registry.VanillaRegistryHandler;
@@ -10,6 +12,7 @@ import mod.bluestaggo.modernerbeta.world.ModernBetaWorldInitializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.loader.api.FabricLoader;
@@ -38,6 +41,9 @@ public class ModernerBetaFabric implements ModInitializer {
         }
 
         ServerLifecycleEvents.SERVER_STARTING.register(ModernBetaWorldInitializer::init);
+
+        ModernerBeta.networkHelper = new NetworkHelperImpl();
+        PayloadTypeRegistry.playS2C().register(BiomeProviderInfoPayload.ID, BiomeProviderInfoPayload.CODEC);
     }
 
     private static void registerDataPacks() {

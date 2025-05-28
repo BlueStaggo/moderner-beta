@@ -4,6 +4,7 @@ import com.google.gson.GsonBuilder;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import mod.bluestaggo.modernerbeta.config.ModernBetaConfig;
+import mod.bluestaggo.modernerbeta.network.INetworkHelper;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.util.CodecUtil;
@@ -42,6 +43,7 @@ public class ModernerBeta {
     );
 
     public static Map<Registry<?>, Consumer<IRegistryHandler<?>>> CUSTOM_REGISTRY_HANDLERS;
+    public static INetworkHelper networkHelper;
 
     public static void init() {
         ModernerBeta.log(Level.INFO, "Initializing Moderner Beta...");

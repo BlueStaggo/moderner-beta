@@ -5,8 +5,6 @@ import mod.bluestaggo.modernerbeta.api.world.provider.BiomeProviderCreator;
 import mod.bluestaggo.modernerbeta.api.world.provider.CaveBiomeProviderCreator;
 import mod.bluestaggo.modernerbeta.api.world.provider.ChunkProviderCreator;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
-import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
-import mod.bluestaggo.modernerbeta.api.world.blocksource.BlockSource;
 import mod.bluestaggo.modernerbeta.api.world.chunk.noise.NoisePostProcessor;
 import mod.bluestaggo.modernerbeta.api.world.chunk.surface.SurfaceConfig;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
@@ -19,9 +17,6 @@ import mod.bluestaggo.modernerbeta.world.cavebiome.provider.CaveBiomeProviderNon
 import mod.bluestaggo.modernerbeta.world.cavebiome.provider.CaveBiomeProviderSingle;
 import mod.bluestaggo.modernerbeta.world.cavebiome.provider.CaveBiomeProviderVoronoi;
 import mod.bluestaggo.modernerbeta.world.chunk.provider.*;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.world.gen.placementmodifier.PlacementModifierType;
 
 /*
  * Registration of built-in providers for various things.
@@ -50,13 +45,13 @@ public class ModernBetaBuiltInProviders {
     
     // Register default biome providers
     public static void registerBiomeProviders(IRegistryHandler<?> handler) {
-        IRegistryHandler<BiomeProviderCreator> registryHandler = (IRegistryHandler<BiomeProviderCreator>) handler;
+        IRegistryHandler<BiomeProviderCreator<?>> registryHandler = (IRegistryHandler<BiomeProviderCreator<?>>) handler;
 
-        registryHandler.register(ModernBetaBuiltInTypes.Biome.BETA.id, BiomeProviderBeta::new);
-        registryHandler.register(ModernBetaBuiltInTypes.Biome.SINGLE.id, BiomeProviderSingle::new);
-        registryHandler.register(ModernBetaBuiltInTypes.Biome.PE.id, BiomeProviderPE::new);
-        registryHandler.register(ModernBetaBuiltInTypes.Biome.VORONOI.id, BiomeProviderVoronoi::new);
-        registryHandler.register(ModernBetaBuiltInTypes.Biome.FRACTAL.id, BiomeProviderFractal::new);
+        registryHandler.register(ModernBetaBuiltInTypes.Biome.BETA.id, new BiomeProviderCreator<>(BiomeProviderBeta::new, BiomeProviderBeta.class));
+        registryHandler.register(ModernBetaBuiltInTypes.Biome.SINGLE.id, new BiomeProviderCreator<>(BiomeProviderSingle::new, BiomeProviderSingle.class));
+        registryHandler.register(ModernBetaBuiltInTypes.Biome.PE.id, new BiomeProviderCreator<>(BiomeProviderPE::new, BiomeProviderPE.class));
+        registryHandler.register(ModernBetaBuiltInTypes.Biome.VORONOI.id, new BiomeProviderCreator<>(BiomeProviderVoronoi::new, BiomeProviderVoronoi.class));
+        registryHandler.register(ModernBetaBuiltInTypes.Biome.FRACTAL.id, new BiomeProviderCreator<>(BiomeProviderFractal::new, BiomeProviderFractal.class));
     }
     
     // Register default cave biome providers

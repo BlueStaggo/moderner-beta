@@ -46,4 +46,13 @@ public abstract class BiomeProvider {
     public List<RegistryEntry<Biome>> getBiomes() {
         return List.of();
     }
+
+    /**
+     * Gets the biome provider settings.
+     *
+     * @return The biome provider settings.
+     */
+    public ModernBetaSettingsBiome getSettings() {
+        return this.settings;
+    }
 }

@@ -7,14 +7,6 @@ import mod.bluestaggo.modernerbeta.ModernerBeta;
 
 @Config(name = ModernerBeta.MOD_ID)
 public class ModernBetaConfig implements ConfigData {
-    @ConfigEntry.Category(value = "fixedSeed")
-    @ConfigEntry.Gui.Tooltip(count = 4)
-    public String fixedSeed = "";
-
-    @ConfigEntry.Category(value = "fixedSeed")
-    @ConfigEntry.Gui.Tooltip(count = 3)
-    public boolean useFixedSeed = false;
-    
     @ConfigEntry.Category(value = "betaBiomeColor")
     @ConfigEntry.Gui.Tooltip(count = 2)
     public boolean useBetaSkyColor = true;

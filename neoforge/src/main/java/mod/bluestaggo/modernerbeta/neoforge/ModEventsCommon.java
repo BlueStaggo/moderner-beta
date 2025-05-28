@@ -1,11 +1,15 @@
 package mod.bluestaggo.modernerbeta.neoforge;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;
+import mod.bluestaggo.modernerbeta.neoforge.network.NetworkHelperImpl;
 import mod.bluestaggo.modernerbeta.neoforge.registry.RegistryHelperImpl;
+import mod.bluestaggo.modernerbeta.network.BiomeProviderInfoPayload;
+import mod.bluestaggo.modernerbeta.network.S2CPacketHandlers;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHelper;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.registry.VanillaRegistryHandler;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.registry.Registry;
 import net.minecraft.resource.ResourcePackProfile;
 import net.minecraft.resource.ResourcePackSource;
@@ -17,6 +21,8 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLConstructModEvent;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 import net.neoforged.neoforge.registries.RegisterEvent;
 
@@ -47,6 +53,20 @@ public class ModEventsCommon {
         IRegistryHelper registryHelper = new RegistryHelperImpl(event);
         ModernBetaRegistries.makeRegistries(registryHelper);
         ModernerBeta.setupCustomRegistryHandlers();
+    }
+
+    @SubscribeEvent
+    public static void registerPayloadHandlers(RegisterPayloadHandlersEvent event) {
+        ModernerBeta.networkHelper = new NetworkHelperImpl();
+
+        PayloadRegistrar registrar = event.registrar("1");
+        registrar.playToClient(
+                BiomeProviderInfoPayload.ID,
+                BiomeProviderInfoPayload.CODEC,
+                (payload, context) -> {
+                    S2CPacketHandlers.onBiomeProviderInfo(context.player().getWorld(), payload);
+                }
+        );
     }
 
     @SubscribeEvent

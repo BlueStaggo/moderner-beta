@@ -2052,7 +2052,7 @@ public class ModernBetaSettingsPresets {
             new PredicateOverlayLayer("land", 0, "land", List.of(
                 // Mountain edge has been omitted because it ends up just not generating at all
                 PredicateOverlayLayer.Target.borderTransition(
-                    ExtendedBiomeId.of("minecraft:wooded_badlands*plateau"),
+                    ExtendedBiomeId.of("minecraft:wooded_badlands"),
                     biomeCategories.get("badlands_all"),
                     ExtendedBiomeId.of("minecraft:badlands")
                 ),

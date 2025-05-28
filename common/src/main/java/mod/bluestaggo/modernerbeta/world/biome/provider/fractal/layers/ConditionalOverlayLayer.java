@@ -1,36 +1,37 @@
 package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers;
 
+import com.google.common.base.Suppliers;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.util.CodecUtil;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
+import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.predicates.BiomePredicate;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.function.Function;
 
-public class ConditionalMaskLayer extends SingleParentLayer {
-    public static final MapCodec<ConditionalMaskLayer> CODEC = RecordCodecBuilder.mapCodec(
+public class ConditionalOverlayLayer extends SingleParentLayer {
+    public static final MapCodec<ConditionalOverlayLayer> CODEC = RecordCodecBuilder.mapCodec(
         instance -> fillSingleParentLayerFields(instance)
             .and(instance.group(
-                CodecUtil.set(ExtendedBiomeId.CODEC).fieldOf("filter").forGetter(layer -> layer.filter),
+                BiomePredicate.BASE_CODEC.fieldOf("predicate").forGetter(layer -> layer.predicate),
                 Codec.STRING.fieldOf("onMatch").forGetter(layer -> layer.onMatch),
                 Codec.STRING.fieldOf("otherwise").forGetter(layer -> layer.otherwise)
             ))
-            .apply(instance, ConditionalMaskLayer::new)
+            .apply(instance, ConditionalOverlayLayer::new)
     );
 
-    private final Set<ExtendedBiomeId> filter;
+    private final BiomePredicate predicate;
     private final String onMatch;
     private final String otherwise;
     private transient Layer onMatchLayer;
     private transient Layer otherwiseLayer;
 
-    public ConditionalMaskLayer(String id, long seed, String parent, Set<ExtendedBiomeId> filter, String onMatch, String otherwise) {
+    public ConditionalOverlayLayer(String id, long seed, String parent, BiomePredicate predicate, String onMatch, String otherwise) {
         super(id, seed, parent);
-        this.filter = filter;
+        this.predicate = predicate;
         this.onMatch = onMatch;
         this.otherwise = otherwise;
     }
@@ -63,7 +64,8 @@ public class ConditionalMaskLayer extends SingleParentLayer {
     @Override
     protected ExtendedBiomeId generate(int x, int z) {
         ExtendedBiomeId biome = this.parentLayer.sample(x, z);
-        Layer layer = this.filter.contains(biome) ? this.onMatchLayer : this.otherwiseLayer;
+        Layer layer = this.predicate.matches(biome, this, Suppliers.memoize(() -> this.getRandom(x, z)), x, z)
+            ? this.onMatchLayer : this.otherwiseLayer;
         if (layer == null) {
             return biome;
         }

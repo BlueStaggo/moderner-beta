@@ -8,27 +8,23 @@ import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.LayerRand
 
 import java.util.function.Supplier;
 
-public class NeighborMatchBiomePredicate extends NeighborComparisonPredicate {
-    public static final MapCodec<NeighborMatchBiomePredicate> CODEC = RecordCodecBuilder.mapCodec(
+public class UniqueNeighborBiomePredicate extends NeighborComparisonPredicate {
+    public static final MapCodec<UniqueNeighborBiomePredicate> CODEC = RecordCodecBuilder.mapCodec(
         instance -> fillNeighborComparisonFields(instance)
-            .and(BiomePredicate.BASE_CODEC.fieldOf("neighborPredicate").forGetter(predicate -> predicate.neighborPredicate))
-            .apply(instance, NeighborMatchBiomePredicate::new)
+            .apply(instance, UniqueNeighborBiomePredicate::new)
     );
 
-    private final BiomePredicate neighborPredicate;
-
-    public NeighborMatchBiomePredicate(int requiredCount, boolean diagonal, BiomePredicate neighborPredicate) {
+    public UniqueNeighborBiomePredicate(int requiredCount, boolean diagonal) {
         super(requiredCount, diagonal);
-        this.neighborPredicate = neighborPredicate;
     }
 
     @Override
     public BiomePredicateType<?> getType() {
-        return BiomePredicateType.NEIGHBOR_MATCH;
+        return BiomePredicateType.UNIQUE_NEIGHBOR;
     }
 
     @Override
     protected boolean neighborMatches(ExtendedBiomeId centre, ExtendedBiomeId neighbor, Layer layer, Supplier<LayerRandom> randomSupplier, int x, int z, int nx, int nz) {
-        return this.neighborPredicate.matches(neighbor, layer, randomSupplier, nx, nz);
+        return !neighbor.equals(centre);
     }
 }

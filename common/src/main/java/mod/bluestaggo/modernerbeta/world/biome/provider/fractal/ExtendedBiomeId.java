@@ -16,21 +16,28 @@ public record ExtendedBiomeId(Identifier baseId, String ext, boolean weak) {
     public static final String TRANSLATION_KEY = "createWorld.customize.modern_beta.settings.preview.extended_biome_id";
 
     public static final ExtendedBiomeId
-        NULL = of(BiomeKeys.THE_VOID, "null"),
         OCEAN = of(BiomeKeys.OCEAN),
         DEEP_OCEAN = of(BiomeKeys.DEEP_OCEAN),
         PLAINS = of(BiomeKeys.PLAINS),
         RIVER = of(BiomeKeys.RIVER),
         FROZEN_OCEAN = of(BiomeKeys.FROZEN_OCEAN),
-        DEEP_FROZEN_OCEAN = of(BiomeKeys.DEEP_FROZEN_OCEAN),
         SNOWY_PLAINS = of(BiomeKeys.SNOWY_PLAINS),
         FROZEN_RIVER = of(BiomeKeys.FROZEN_RIVER),
         BEACH = of(BiomeKeys.BEACH),
-        STONY_SHORE = of(BiomeKeys.STONY_SHORE),
         MUSHROOM_ISLAND = of(BiomeKeys.MUSHROOM_FIELDS),
         MUSHROOM_SHORE = of(BiomeKeys.MUSHROOM_FIELDS, "shore"),
+        CLIMATE_WARM = of(BiomeKeys.PLAINS, "climate_warm"),
+        CLIMATE_WARM_RARE = of(BiomeKeys.PLAINS, "climate_warm_rare"),
+        CLIMATE_TEMPERATE = of(BiomeKeys.PLAINS, "climate_temperate"),
+        CLIMATE_TEMPERATE_RARE = of(BiomeKeys.PLAINS, "climate_temperate_rare"),
+        CLIMATE_COOL = of(BiomeKeys.PLAINS, "climate_cool"),
+        CLIMATE_COOL_RARE = of(BiomeKeys.PLAINS, "climate_cool_rare"),
+        CLIMATE_SNOWY = of(BiomeKeys.PLAINS, "climate_snowy"),
+        CLIMATE_SNOWY_RARE = of(BiomeKeys.PLAINS, "climate_snowy_rare"),
         RIVER_REGION_A = ExtendedBiomeId.RIVER.withExt("region_a"),
-        RIVER_REGION_B = ExtendedBiomeId.RIVER.withExt("region_b");
+        RIVER_REGION_B = ExtendedBiomeId.RIVER.withExt("region_b"),
+        MUTATION = of(BiomeKeys.THE_VOID, "mutation"),
+        NULL = of(BiomeKeys.THE_VOID, "null");
 
     public static ExtendedBiomeId of(String id) {
         return validate(id).getOrThrow();
@@ -130,17 +137,19 @@ public record ExtendedBiomeId(Identifier baseId, String ext, boolean weak) {
         return name;
     }
 
+    // I know this looks cursed, but this is all to get weak IDs working
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         ExtendedBiomeId that = (ExtendedBiomeId) o;
         return Objects.equals(this.baseId, that.baseId)
-            && (Objects.equals(this.ext, that.ext) || this.weak || that.weak);
+            && (this.weak || that.weak || Objects.equals(this.ext, that.ext));
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.baseId, this.ext, this.weak);
+        return this.baseId.hashCode();
     }
 
     public static DataResult<ExtendedBiomeId> validate(String string) {

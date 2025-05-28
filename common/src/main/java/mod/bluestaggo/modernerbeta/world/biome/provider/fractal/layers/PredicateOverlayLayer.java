@@ -88,7 +88,7 @@ public class PredicateOverlayLayer extends SingleParentLayer {
 
         public static final Target MUSHROOM_SHORE = biome(
             BiomePredicate.of(ExtendedBiomeId.MUSHROOM_ISLAND)
-                .and(BiomePredicate.border()),
+                .and(BiomePredicate.neighborsMatch(ExtendedBiomeId.OCEAN, 1)),
             ExtendedBiomeId.MUSHROOM_SHORE
         );
 
@@ -101,19 +101,25 @@ public class PredicateOverlayLayer extends SingleParentLayer {
         }
 
         public static Target inclusiveBeach(Set<ExtendedBiomeId> exceptions, ExtendedBiomeId beach) {
-            exceptions = new HashSet<>(exceptions);
-            exceptions.add(ExtendedBiomeId.OCEAN);
+            return inclusiveBeach(exceptions, BiomePredicate.of(ExtendedBiomeId.OCEAN), beach);
+        }
+
+        public static Target inclusiveBeach(Set<ExtendedBiomeId> exceptions, BiomePredicate ocean, ExtendedBiomeId beach) {
             return biome(
                 BiomePredicate.noneInSet(exceptions)
-                    .and(BiomePredicate.anyNeighborMatches(ExtendedBiomeId.OCEAN)),
+                    .and(BiomePredicate.neighborsMatch(ocean, 1)),
                 beach
             );
         }
 
         public static Target exclusiveBeach(Set<ExtendedBiomeId> biomes, ExtendedBiomeId beach) {
+            return inclusiveBeach(biomes, BiomePredicate.of(ExtendedBiomeId.OCEAN), beach);
+        }
+
+        public static Target exclusiveBeach(Set<ExtendedBiomeId> biomes, BiomePredicate ocean, ExtendedBiomeId beach) {
             return biome(
                 BiomePredicate.inSet(biomes)
-                    .and(BiomePredicate.anyNeighborMatches(ExtendedBiomeId.OCEAN)),
+                    .and(BiomePredicate.neighborsMatch(ocean, 1)),
                 beach
             );
         }
@@ -124,6 +130,16 @@ public class PredicateOverlayLayer extends SingleParentLayer {
                     .and(BiomePredicate.interior())
                     .and(BiomePredicate.oneIn(3)),
                 layer
+            );
+        }
+
+        public static Target borderTransition(ExtendedBiomeId from, Set<ExtendedBiomeId> similarBiomes, ExtendedBiomeId to) {
+            return biome(
+                BiomePredicate.of(from)
+                    .and(BiomePredicate.neighborsMatch(
+                        BiomePredicate.inSet(similarBiomes), 4)
+                        .invert()),
+                to
             );
         }
 

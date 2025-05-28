@@ -86,11 +86,6 @@ public abstract class Layer {
         this.random = new LayerRandom(this.saltedSeed);
     }
 
-    protected final LayerRandom getRandom(long x, long z) {
-        this.random.init(x, z);
-        return this.random;
-    }
-
     public synchronized ExtendedBiomeId sample(int x, int z) {
         long pos = ColumnPos.pack(x, z);
         ExtendedBiomeId biome = this.cache.get(pos);
@@ -104,6 +99,18 @@ public abstract class Layer {
         }
         this.cache.put(pos, biome);
         return biome;
+    }
+
+    protected final LayerRandom getRandom(long x, long z) {
+        this.random.init(x, z);
+        return this.random;
+    }
+
+    public final void addPossibleBiomesRecursive(Set<ExtendedBiomeId> biomes) {
+        for (Layer parent : this.getParents()) {
+            parent.addPossibleBiomesRecursive(biomes);
+        }
+        this.addPossibleBiomes(biomes);
     }
 
     public final ExtendedBiomeId[] sampleNeighbors(int x, int z) {
@@ -124,19 +131,8 @@ public abstract class Layer {
         };
     }
 
-    public static boolean allNeighborsEqual(ExtendedBiomeId[] neighbors, ExtendedBiomeId i) {
-        return neighbors[0].equals(i) && neighbors[1].equals(i) && neighbors[2].equals(i) && neighbors[3].equals(i);
-    }
-
-    public static boolean neighborsContain(ExtendedBiomeId[] neighbors, ExtendedBiomeId i) {
-        return neighbors[0].equals(i) || neighbors[1].equals(i) || neighbors[2].equals(i) || neighbors[3].equals(i);
-    }
-
-    public final void addPossibleBiomesRecursive(Set<ExtendedBiomeId> biomes) {
-        for (Layer parent : this.getParents()) {
-            parent.addPossibleBiomesRecursive(biomes);
-        }
-        this.addPossibleBiomes(biomes);
+    public final Layer skipRandom(int amount) {
+        return new PreSkipRandomLayer(this.id, 0, this, amount);
     }
 
     protected String getName() {
@@ -166,5 +162,13 @@ public abstract class Layer {
                 .collect(Collectors.joining(", "));
         }
         return string;
+    }
+
+    public static boolean allNeighborsEqual(ExtendedBiomeId[] neighbors, ExtendedBiomeId i) {
+        return neighbors[0].equals(i) && neighbors[1].equals(i) && neighbors[2].equals(i) && neighbors[3].equals(i);
+    }
+
+    public static boolean neighborsContain(ExtendedBiomeId[] neighbors, ExtendedBiomeId i) {
+        return neighbors[0].equals(i) || neighbors[1].equals(i) || neighbors[2].equals(i) || neighbors[3].equals(i);
     }
 }

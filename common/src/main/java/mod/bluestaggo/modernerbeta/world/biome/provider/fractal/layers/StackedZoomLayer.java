@@ -68,6 +68,14 @@ public class StackedZoomLayer extends SingleParentLayer {
         return super.getName() + "(" + this.zoomType.id + ")";
     }
 
+    public static StackedZoomLayer modal(String id, long seed, String parent, int level) {
+        return new StackedZoomLayer(id, seed, parent, level, Type.MODAL);
+    }
+
+    public static StackedZoomLayer fuzzy(String id, long seed, String parent, int level) {
+        return new StackedZoomLayer(id, seed, parent, level, Type.FUZZY);
+    }
+
     public enum Type implements StringIdentifiable {
         MODAL("modal", seed -> new ModalZoomLayer("", seed, "")),
         FUZZY("fuzzy", seed -> new FuzzyZoomLayer("", seed, ""));

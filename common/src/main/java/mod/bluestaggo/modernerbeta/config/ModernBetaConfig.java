@@ -55,7 +55,15 @@ public class ModernBetaConfig implements ConfigData {
         // Colors sourced from Cubiomes (https://github.com/Cubitect/cubiomes/blob/e61f90580cbdd883214a8054670dacae655e59c0/util.c#L316)
         biomePreviewColors.put("minecraft:ocean", 0x000070);
         biomePreviewColors.put("minecraft:plains", 0x8db360);
-        biomePreviewColors.put("moderner_beta:late_beta_plains", 0x8db360);
+        biomePreviewColors.put("minecraft:plains*climate_warm", 0xbdb25f);
+        biomePreviewColors.put("minecraft:plains*climate_warm_rare", 0xd94515);
+        biomePreviewColors.put("minecraft:plains*climate_temperate", 0x8db360);
+        biomePreviewColors.put("minecraft:plains*climate_temperate_rare", 0x507b0a);
+        biomePreviewColors.put("minecraft:plains*climate_cool", 0x0b6a5f);
+        biomePreviewColors.put("minecraft:plains*climate_cool_rare", 0x818e79);
+        biomePreviewColors.put("minecraft:plains*climate_snowy", 0xffffff);
+        biomePreviewColors.put("minecraft:plains*climate_snowy_rare", 0xb4dcdc);
+        biomePreviewColors.put("moderner_beta:late_beta_plains", 0xb4dcdc);
         biomePreviewColors.put("minecraft:desert", 0xfa9418);
         biomePreviewColors.put("minecraft:windswept_hills", 0x606060);
         biomePreviewColors.put("moderner_beta:late_beta_extreme_hills", 0x606060);
@@ -111,7 +119,7 @@ public class ModernBetaConfig implements ConfigData {
         biomePreviewColors.put("minecraft:wooded_badlands", 0xb09765);
         biomePreviewColors.put("minecraft:badlands*plateau", 0xca8c65);
         biomePreviewColors.put("minecraft:small_end_islands", 0x4b4bab);
-        biomePreviewColors.put("minecraft:end_midlands", 0xc9c959);
+        biomePreviewColors.put("minecraft:end_marmidlands", 0xc9c959);
         biomePreviewColors.put("minecraft:end_highlands", 0xb5b536);
         biomePreviewColors.put("minecraft:end_barrens", 0x7070cc);
         biomePreviewColors.put("minecraft:warm_ocean", 0x0000ac);
@@ -121,6 +129,7 @@ public class ModernBetaConfig implements ConfigData {
         biomePreviewColors.put("minecraft:deep_cold_ocean", 0x202038);
         biomePreviewColors.put("minecraft:deep_frozen_ocean", 0x404090);
         biomePreviewColors.put("minecraft:the_void", 0x000000);
+        biomePreviewColors.put("minecraft:the_void*mutation", 0xff00ff);
         biomePreviewColors.put("minecraft:sunflower_plains", 0xb5db88);
         biomePreviewColors.put("minecraft:desert*lakes", 0xffbc40);
         biomePreviewColors.put("minecraft:windswept_gravelly_hills", 0x888888);
@@ -141,7 +150,7 @@ public class ModernBetaConfig implements ConfigData {
         biomePreviewColors.put("minecraft:windswept_savanna*plateau", 0xcfc58c);
         biomePreviewColors.put("minecraft:eroded_badlands", 0xff6d3d);
         biomePreviewColors.put("minecraft:wooded_badlands*modified", 0xd8bf8d);
-        biomePreviewColors.put("minecraft:badlands*plateau_modified", 0xf2b48d);
+        biomePreviewColors.put("minecraft:badlands*modified_plateau", 0xf2b48d);
         biomePreviewColors.put("minecraft:bamboo_jungle", 0x849500);
         biomePreviewColors.put("minecraft:bamboo_jungle*hills", 0x5c6c04);
         biomePreviewColors.put("minecraft:soul_sand_valley", 0x4d3a2e);

@@ -19,6 +19,7 @@ import net.minecraft.util.collection.Weighted;
 import net.minecraft.world.biome.BiomeKeys;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 public class ModernBetaSettingsPresets {
     public static final ModernBetaSettingsPreset PRESET_BETA_1_7_3 = presetBeta(false);
@@ -40,7 +41,7 @@ public class ModernBetaSettingsPresets {
     public static final ModernBetaSettingsPreset PRESET_RELEASE_1_1 = preset11(0);
     public static final ModernBetaSettingsPreset PRESET_RELEASE_1_2_5 = preset125(0);
     public static final ModernBetaSettingsPreset PRESET_RELEASE_1_6_4 = preset164(0);
-    public static final ModernBetaSettingsPreset PRESET_RELEASE_1_12_2 = preset1122();
+    public static final ModernBetaSettingsPreset PRESET_RELEASE_1_12_2 = preset1122(0);
     public static final ModernBetaSettingsPreset PRESET_RELEASE_1_17_1 = preset1171();
     public static final ModernBetaSettingsPreset PRESET_BETA_SKYLANDS = presetBetaSkylands();
     public static final ModernBetaSettingsPreset PRESET_BETA_ISLES = presetIsles(PRESET_BETA_1_7_3);
@@ -71,7 +72,7 @@ public class ModernBetaSettingsPresets {
     public static final ModernBetaSettingsPreset PRESET_RELEASE_1_1_LARGE_BIOMES = preset11(2);
     public static final ModernBetaSettingsPreset PRESET_RELEASE_1_2_5_LARGE_BIOMES = preset125(2);
     public static final ModernBetaSettingsPreset PRESET_RELEASE_1_6_4_LARGE_BIOMES = preset164(2);
-    public static final ModernBetaSettingsPreset PRESET_RELEASE_1_12_2_LARGE_BIOMES = presetLargeBiomes(PRESET_RELEASE_1_12_2);
+    public static final ModernBetaSettingsPreset PRESET_RELEASE_1_12_2_LARGE_BIOMES = preset1122(2);
     public static final ModernBetaSettingsPreset PRESET_RELEASE_1_17_1_LARGE_BIOMES = presetLargeBiomes(PRESET_RELEASE_1_17_1);
 
     private static ModernBetaSettingsPreset presetBeta() {
@@ -1428,7 +1429,7 @@ public class ModernBetaSettingsPresets {
             new ModalZoomLayer("land", 2004, "land"),
             AddLandLayer.forIslandScaleBeta("land", 3, "land"),
             new InitRiverLayer("river", 100, "land", false),
-            new StackedZoomLayer("river", 1000, "river", 6 + biomeScale, StackedZoomLayer.Type.MODAL),
+            StackedZoomLayer.modal("river", 1000, "river", 6 + biomeScale),
             new ComputeRiverLayer("river", 0, "river", true),
             new SmoothLayer("river", 1000, "river"),
             new RandomBiomeLayer("biome_pool", 200, ExtendedBiomeId.listOf(
@@ -1440,10 +1441,10 @@ public class ModernBetaSettingsPresets {
                 "moderner_beta:late_beta_taiga"
             )),
             new BiomeToLayerOverlayLayer("land", 0, "land", Map.of(ExtendedBiomeId.PLAINS, "biome_pool")),
-            new StackedZoomLayer("land", 1000, "land", 2, StackedZoomLayer.Type.MODAL),
+            StackedZoomLayer.modal("land", 1000, "land", 2),
             new ModalZoomLayer("land", 1000, "land"),
             AddLandLayer.forBeta("land", 3, "land"),
-            new StackedZoomLayer("land", 1001, "land", 3 + biomeScale, StackedZoomLayer.Type.MODAL),
+            StackedZoomLayer.modal("land", 1001, "land", 3 + biomeScale),
             new SmoothLayer("land", 1000, "land"),
             MixRiverLayer.forEarlyRelease("land", 0, "land", "river")
         ));
@@ -1471,19 +1472,16 @@ public class ModernBetaSettingsPresets {
             AddLandLayer.forIslandScale("land", 3, "land"),
             new ModalZoomLayer("land", 2003, "land"),
             AddLandLayer.forIslandScale("land", 4, "land"),
-            new WeightedBiomeLayer("mushroom_islands", 5, Pool.of(
-                new Weighted<>(ExtendedBiomeId.MUSHROOM_ISLAND, 1),
-                new Weighted<>(ExtendedBiomeId.NULL, 99)
-            )),
-            new PredicateOverlayLayer("land", 0, "land", List.of(
-                PredicateOverlayLayer.Target.layer(
+            new PredicateOverlayLayer("land", 5, "land", List.of(
+                PredicateOverlayLayer.Target.biome(
                     BiomePredicate.of(ExtendedBiomeId.OCEAN)
-                        .and(BiomePredicate.diagonalInterior()),
-                    "mushroom_islands"
+                        .and(BiomePredicate.diagonalInterior())
+                        .and(BiomePredicate.oneIn(100)),
+                    ExtendedBiomeId.MUSHROOM_ISLAND
                 )
             )),
             new InitRiverLayer("river", 100, "land", false),
-            new StackedZoomLayer("river", 1000, "river", 6 + biomeScale, StackedZoomLayer.Type.MODAL),
+            StackedZoomLayer.modal("river", 1000, "river", 6 + biomeScale),
             new ComputeRiverLayer("river", 0, "river", true),
             new SmoothLayer("river", 1000, "river"),
             new RandomBiomeLayer("biome_pool", 200, ExtendedBiomeId.listOf(
@@ -1500,13 +1498,13 @@ public class ModernBetaSettingsPresets {
                 ExtendedBiomeId.FROZEN_OCEAN, "ice_plains",
                 ExtendedBiomeId.SNOWY_PLAINS, "ice_plains"
             )),
-            new StackedZoomLayer("land", 1000, "land", 2, StackedZoomLayer.Type.MODAL),
+            StackedZoomLayer.modal("land", 1000, "land", 2),
             new ModalZoomLayer("land", 1000, "land"),
             AddLandLayer.forEarlyRelease("land", 3, "land", icePlains),
             new PredicateOverlayLayer("land", 0, "land", List.of(
                 PredicateOverlayLayer.Target.MUSHROOM_SHORE
             )),
-            new StackedZoomLayer("land", 1001, "land", 3 + biomeScale, StackedZoomLayer.Type.MODAL),
+            StackedZoomLayer.modal("land", 1001, "land", 3 + biomeScale),
             new SmoothLayer("land", 1000, "land"),
             MixRiverLayer.forEarlyRelease("land", 0, "land", "river")
         ));
@@ -1620,19 +1618,16 @@ public class ModernBetaSettingsPresets {
             AddLandLayer.forIslandScale("land", 3, "land"),
             new ModalZoomLayer("land", 2003, "land"),
             AddLandLayer.forIslandScale("land", 4, "land"),
-            new WeightedBiomeLayer("mushroom_islands", 5, Pool.of(
-                new Weighted<>(ExtendedBiomeId.MUSHROOM_ISLAND, 1),
-                new Weighted<>(ExtendedBiomeId.NULL, 99)
-            )),
-            new PredicateOverlayLayer("land", 0, "land", List.of(
-                PredicateOverlayLayer.Target.layer(
+            new PredicateOverlayLayer("land", 5, "land", List.of(
+                PredicateOverlayLayer.Target.biome(
                     BiomePredicate.of(ExtendedBiomeId.OCEAN)
-                        .and(BiomePredicate.diagonalInterior()),
-                    "mushroom_islands"
+                        .and(BiomePredicate.diagonalInterior())
+                        .and(BiomePredicate.oneIn(100)),
+                    ExtendedBiomeId.MUSHROOM_ISLAND
                 )
             )),
             new InitRiverLayer("river", 100, "land", false),
-            new StackedZoomLayer("river", 1000, "river", 6 + biomeScale, StackedZoomLayer.Type.MODAL),
+            StackedZoomLayer.modal("river", 1000, "river", 6 + biomeScale),
             new ComputeRiverLayer("river", 0, "river", true),
             new SmoothLayer("river", 1000, "river"),
             new RandomBiomeLayer("biome_pool", 200, biomePool),
@@ -1642,7 +1637,7 @@ public class ModernBetaSettingsPresets {
                 ExtendedBiomeId.FROZEN_OCEAN, "ice_plains",
                 ExtendedBiomeId.SNOWY_PLAINS, "ice_plains"
             )),
-            new StackedZoomLayer("land", 1000, "land", 2, StackedZoomLayer.Type.MODAL),
+            StackedZoomLayer.modal("land", 1000, "land", 2),
             new SimpleBiomeReplacementLayer("hills", 0, "land", hillsVariants),
             new PredicateOverlayLayer("land", 1000, "land", List.of(
                 PredicateOverlayLayer.Target.simpleHills(hillsVariants.keySet(), "hills")
@@ -1654,6 +1649,7 @@ public class ModernBetaSettingsPresets {
                 PredicateOverlayLayer.Target.MUSHROOM_SHORE,
                 PredicateOverlayLayer.Target.inclusiveBeach(
                     ExtendedBiomeId.setOf(
+                        "minecraft:ocean",
                         "minecraft:river",
                         "moderner_beta:early_release_extreme_hills",
                         "moderner_beta:early_release_swampland"
@@ -1668,7 +1664,7 @@ public class ModernBetaSettingsPresets {
             )),
             swampLakesLayer,
             new PredicateOverlayLayer("land", 1000, "land", lakeOverlays),
-            new StackedZoomLayer("land", 1002, "land", 2 + biomeScale, StackedZoomLayer.Type.MODAL),
+            StackedZoomLayer.modal("land", 1002, "land", 2 + biomeScale),
             new SmoothLayer("land", 1000, "land"),
             MixRiverLayer.forEarlyRelease("land", 0, "land", "river")
         );
@@ -1747,7 +1743,426 @@ public class ModernBetaSettingsPresets {
         );
     }
 
-    private static ModernBetaSettingsPreset preset1122() {
+    private static ConfiguredLayers configuredLayers1710Era(int biomeScale) {
+        Set<ExtendedBiomeId> oceans = ExtendedBiomeId.setOf("minecraft:ocean", "minecraft:deep_ocean");
+        BiomePredicate oceansPredicate = BiomePredicate.inSet(oceans);
+
+        var hillVariants = Map.ofEntries(
+            ExtendedBiomeId.of("minecraft:desert").mapTo("*hills"),
+            ExtendedBiomeId.of("minecraft:forest").mapTo("*hills"),
+            ExtendedBiomeId.of("minecraft:birch_forest").mapTo("*hills"),
+            ExtendedBiomeId.of("minecraft:taiga").mapTo("*hills"),
+            ExtendedBiomeId.of("minecraft:snowy_taiga").mapTo("*hills"),
+            ExtendedBiomeId.of("minecraft:snowy_plains").mapTo("*hills"),
+            ExtendedBiomeId.of("minecraft:jungle").mapTo("*hills"),
+            ExtendedBiomeId.of("minecraft:bamboo_jungle").mapTo("*hills"),
+            ExtendedBiomeId.of("minecraft:ocean").mapTo("minecraft:deep_ocean"),
+            ExtendedBiomeId.of("minecraft:windswept_hills").mapTo("minecraft:windswept_forest"),
+            ExtendedBiomeId.of("minecraft:dark_forest").mapTo("minecraft:plains"),
+            ExtendedBiomeId.of("minecraft:old_growth_pine_taiga").mapTo("*hills"),
+            ExtendedBiomeId.of("minecraft:old_growth_spruce_taiga").mapTo("*hills"),
+            ExtendedBiomeId.of("minecraft:savanna").mapTo("minecraft:savanna_plateau"),
+            ExtendedBiomeId.of("minecraft:badlands*plateau").mapTo("minecraft:badlands"),
+            ExtendedBiomeId.of("minecraft:wooded_badlands").mapTo("minecraft:badlands")
+        );
+        var mutatedVariants = Map.ofEntries(
+            ExtendedBiomeId.of("minecraft:plains").mapTo("minecraft:sunflower_plains"),
+            ExtendedBiomeId.of("minecraft:desert").mapTo("*lakes"),
+            ExtendedBiomeId.of("minecraft:forest").mapTo("minecraft:flower_forest"),
+            ExtendedBiomeId.of("minecraft:taiga").mapTo("*mountains"),
+            ExtendedBiomeId.of("minecraft:swamp").mapTo("*hills"),
+            ExtendedBiomeId.of("minecraft:jungle").mapTo("*modified"),
+            ExtendedBiomeId.of("minecraft:sparse_jungle").mapTo("*modified"),
+            ExtendedBiomeId.of("minecraft:snowy_taiga").mapTo("*mountains"),
+            ExtendedBiomeId.of("minecraft:snowy_plains").mapTo("minecraft:ice_spikes"),
+            ExtendedBiomeId.of("minecraft:savanna").mapTo("minecraft:windswept_savanna"),
+            ExtendedBiomeId.of("minecraft:savanna_plateau").mapTo("minecraft:windswept_savanna*plateau"),
+            ExtendedBiomeId.of("minecraft:badlands").mapTo("*minecraft:eroded_badlands"),
+            ExtendedBiomeId.of("minecraft:wooded_badlands").mapTo("*modified"),
+            ExtendedBiomeId.of("minecraft:badlands*plateau").mapTo("*modified_plateau"),
+            ExtendedBiomeId.of("minecraft:birch_forest").mapTo("minecraft:old_growth_birch_forest"),
+            ExtendedBiomeId.of("minecraft:birch_forest*hills").mapTo("minecraft:old_growth_birch_forest*hills"),
+            ExtendedBiomeId.of("minecraft:dark_forest").mapTo("*hills"),
+            ExtendedBiomeId.of("minecraft:old_growth_pine_taiga").mapTo("minecraft:old_growth_spruce_taiga"),
+            ExtendedBiomeId.of("minecraft:windswept_hills").mapTo("minecraft:windswept_gravelly_hills"),
+            ExtendedBiomeId.of("minecraft:windswept_forest").mapTo("minecraft:windswept_gravelly_hills")
+        );
+
+        Map<String, Set<ExtendedBiomeId>> biomeCategories = Map.ofEntries(
+            Map.entry("beach", ExtendedBiomeId.setOf(
+                "~minecraft:beach",
+                "~minecraft:snowy_beach"
+            )),
+            Map.entry("desert", ExtendedBiomeId.setOf(
+                "~minecraft:desert"
+            )),
+            Map.entry("windswept_hills", ExtendedBiomeId.setOf(
+                "~minecraft:windswept_gravelly_hills",
+                "~minecraft:windswept_hills",
+                "~minecraft:windswept_forest"
+            )),
+            Map.entry("forest", ExtendedBiomeId.setOf(
+                "~minecraft:birch_forest",
+                "~minecraft:dark_forest",
+                "~minecraft:flower_forest",
+                "~minecraft:forest",
+                "~minecraft:old_growth_birch_forest"
+            )),
+            Map.entry("snowy_plains", ExtendedBiomeId.setOf(
+                "~minecraft:ice_spikes",
+                "~minecraft:snowy_plains"
+            )),
+            Map.entry("jungle", ExtendedBiomeId.setOf(
+                "~minecraft:bamboo_jungle",
+                "~minecraft:jungle",
+                "~minecraft:sparse_jungle"
+            )),
+            Map.entry("badlands", ExtendedBiomeId.setOf(
+                "minecraft:badlands",
+                "minecraft:eroded_badlands",
+                "minecraft:badlands*modified_plateau",
+                "minecraft:wooded_badlands*modified"
+            )),
+            Map.entry("badlands_plateau", ExtendedBiomeId.setOf(
+                "minecraft:badlands*plateau",
+                "minecraft:wooded_badlands"
+            )),
+            Map.entry("badlands_all", ExtendedBiomeId.setOf(
+                "~minecraft:badlands",
+                "~minecraft:eroded_badlands",
+                "~minecraft:wooded_badlands"
+            )),
+            Map.entry("mushroom_fields", ExtendedBiomeId.setOf(
+                "~minecraft:mushroom_fields"
+            )),
+            Map.entry("ocean", oceans),
+            Map.entry("plains", ExtendedBiomeId.setOf(
+                "~minecraft:plains",
+                "~minecraft:sunflower_plains"
+            )),
+            Map.entry("river", ExtendedBiomeId.setOf(
+                "~minecraft:frozen_river",
+                "~minecraft:river"
+            )),
+            Map.entry("savanna", ExtendedBiomeId.setOf(
+                "~minecraft:savanna",
+                "~minecraft:savanna_plateau",
+                "~minecraft:windswept_savanna"
+            )),
+            Map.entry("swamp", ExtendedBiomeId.setOf(
+                "~minecraft:swamp"
+            )),
+            Map.entry("taiga", ExtendedBiomeId.setOf(
+                "~minecraft:old_growth_spurce_taiga",
+                "~minecraft:old_growth_pine_taiga",
+                "~minecraft:snowy_taiga",
+                "~minecraft:taiga"
+            )),
+            Map.entry("jungle_like", ExtendedBiomeId.setOf(
+                "~minecraft:bamboo_jungle",
+                "~minecraft:jungle",
+                "~minecraft:sparse_jungle",
+                "minecraft:forest",
+                "minecraft:taiga",
+                "minecraft:ocean",
+                "minecraft:deep_ocean"
+            )),
+            Map.entry("snowy", ExtendedBiomeId.setOf(
+                "~minecraft:ice_spikes",
+                "~minecraft:snowy_plains",
+                "~minecraft:snowy_taiga"
+            ))
+        );
+        List<String> hillyCategories = List.of(
+            "ocean",
+            "forest",
+            "taiga",
+            "plains",
+            "snowy_plains",
+            "savanna",
+            "desert",
+            "windswept_hills",
+            "jungle",
+            "badlands_plateau"
+        );
+
+        List<PredicateOverlayLayer.Target> hillTargets = new ArrayList<>();
+        hillTargets.add(PredicateOverlayLayer.Target.layer(
+            BiomePredicate.identicalNeighbors(3, false),
+            "hills"
+        ));
+        for (String hillyCategory : hillyCategories) {
+            Set<ExtendedBiomeId> category = biomeCategories.get(hillyCategory);
+            Set<ExtendedBiomeId> neighborCategory = new HashSet<>(category);
+            neighborCategory.add(ExtendedBiomeId.of("minecraft:badlands*plateau"));
+            neighborCategory.add(ExtendedBiomeId.of("minecraft:wooded_badlands"));
+
+            hillTargets.add(PredicateOverlayLayer.Target.layer(
+                BiomePredicate.inSet(category)
+                    .and(BiomePredicate.neighborsMatch(
+                        BiomePredicate.inSet(neighborCategory), 3)),
+                "hills"
+            ));
+        }
+
+        return new ConfiguredLayers(Arrays.asList(
+            new InitLandLayer("land", 1),
+            new FuzzyZoomLayer("land", 2000, "land"),
+            AddLandLayer.forIslandScaleMajor("land", 1, "land"),
+            new ModalZoomLayer("land", 2001, "land"),
+            AddLandLayer.forIslandScaleMajor("land", 2, "land"),
+            AddLandLayer.forIslandScaleMajor("land", 50, "land"),
+            AddLandLayer.forIslandScaleMajor("land", 70, "land"),
+            // region AddSnowLayer
+            new PredicateOverlayLayer("land", 0, "land", List.of(
+                PredicateOverlayLayer.Target.biome(
+                    BiomePredicate.of(ExtendedBiomeId.OCEAN)
+                        .and(BiomePredicate.interior())
+                        .and(BiomePredicate.oneIn(2)),
+                    ExtendedBiomeId.PLAINS
+                )
+            )),
+            new WeightedBiomeLayer("climate", 2, Pool.of(
+                new Weighted<>(ExtendedBiomeId.CLIMATE_SNOWY, 1),
+                new Weighted<>(ExtendedBiomeId.CLIMATE_COOL, 1),
+                new Weighted<>(ExtendedBiomeId.CLIMATE_WARM, 4)
+            )),
+            new BiomeToLayerOverlayLayer("land", 0, "land", Map.of(ExtendedBiomeId.PLAINS, "climate")),
+            // endregion AddSnowLayer
+            AddLandLayer.forIslandScaleMajor("land", 3, "land"),
+            // AddEdgeLayer.CoolWarm
+            new PredicateOverlayLayer("land", 0, "land", List.of(
+                PredicateOverlayLayer.Target.biome(
+                    BiomePredicate.of(ExtendedBiomeId.CLIMATE_WARM)
+                        .and(BiomePredicate.neighborsMatch(
+                            BiomePredicate.inSet(
+                                ExtendedBiomeId.CLIMATE_COOL,
+                                ExtendedBiomeId.CLIMATE_SNOWY
+                            ), 1
+                        )),
+                    ExtendedBiomeId.CLIMATE_TEMPERATE
+                )
+            )),
+            // AddEdgeLayer.HeatIce
+            new PredicateOverlayLayer("land", 0, "land", List.of(
+                PredicateOverlayLayer.Target.biome(
+                    BiomePredicate.of(ExtendedBiomeId.CLIMATE_SNOWY)
+                        .and(BiomePredicate.neighborsMatch(
+                            BiomePredicate.inSet(
+                                ExtendedBiomeId.CLIMATE_TEMPERATE,
+                                ExtendedBiomeId.CLIMATE_WARM
+                            ), 1
+                        )),
+                    ExtendedBiomeId.CLIMATE_COOL
+                )
+            )),
+            // region AddEdgeLayer.Special
+            new SimpleBiomeReplacementLayer("rare_climates", 0, "land", Map.ofEntries(
+                Map.entry(ExtendedBiomeId.CLIMATE_WARM, ExtendedBiomeId.CLIMATE_WARM_RARE),
+                Map.entry(ExtendedBiomeId.CLIMATE_TEMPERATE, ExtendedBiomeId.CLIMATE_TEMPERATE_RARE),
+                Map.entry(ExtendedBiomeId.CLIMATE_COOL, ExtendedBiomeId.CLIMATE_COOL_RARE),
+                Map.entry(ExtendedBiomeId.CLIMATE_SNOWY, ExtendedBiomeId.CLIMATE_SNOWY_RARE)
+            )),
+            new PredicateOverlayLayer("land", 0, "land", List.of(
+                PredicateOverlayLayer.Target.layer(
+                    BiomePredicate.oneIn(13),
+                    "rare_climates"
+                )
+            )),
+            // endregion
+            new ModalZoomLayer("land", 2002, "land"),
+            new ModalZoomLayer("land", 2003, "land"),
+            AddLandLayer.forIslandScaleMajor("land", 4, "land"),
+            new PredicateOverlayLayer("land", 5, "land", List.of(
+                PredicateOverlayLayer.Target.biome(
+                    BiomePredicate.of(ExtendedBiomeId.OCEAN)
+                        .and(BiomePredicate.diagonalInterior())
+                        .and(BiomePredicate.oneIn(100)),
+                    ExtendedBiomeId.MUSHROOM_ISLAND
+                )
+            )),
+            new PredicateOverlayLayer("land", 0, "land", List.of(
+                PredicateOverlayLayer.Target.biome(
+                    BiomePredicate.of(ExtendedBiomeId.OCEAN)
+                        .and(BiomePredicate.interior()),
+                    ExtendedBiomeId.DEEP_OCEAN
+                )
+            )),
+            new InitRiverLayer("river", 100, "land", true),
+            StackedZoomLayer.modal("river", 1000, "river", 2),
+            StackedZoomLayer.modal("river", 1000, "river", 4 + biomeScale),
+            new ComputeRiverLayer("river", 0, "river", false),
+            new SmoothLayer("river", 1000, "river"),
+            new InitMutationLayer("mutation", 100, "land", true),
+            StackedZoomLayer.modal("mutation", 1000, "mutation", 2),
+            // region BiomeInitLayer
+            new RandomBiomeLayer("biome_pool_warm", 200, ExtendedBiomeId.listOf(
+                "minecraft:desert",
+                "minecraft:desert",
+                "minecraft:desert",
+                "minecraft:savanna",
+                "minecraft:savanna",
+                "minecraft:plains"
+            )),
+            new RandomBiomeLayer("biome_pool_warm_rare", 200, ExtendedBiomeId.listOf(
+                "minecraft:badlands*plateau",
+                "minecraft:wooded_badlands*plateau",
+                "minecraft:wooded_badlands*plateau"
+            )),
+            new RandomBiomeLayer("biome_pool_temperate", 200, ExtendedBiomeId.listOf(
+                "minecraft:forest",
+                "minecraft:dark_forest",
+                "minecraft:windswept_hills",
+                "minecraft:plains",
+                "minecraft:birch_forest",
+                "minecraft:swamp"
+            )),
+            new ConstantBiomeLayer("biome_pool_temperate_rare", 200, ExtendedBiomeId.of("minecraft:jungle")),
+            new RandomBiomeLayer("biome_pool_cool", 200, ExtendedBiomeId.listOf(
+                "minecraft:forest",
+                "minecraft:windswept_hills",
+                "minecraft:taiga",
+                "minecraft:plains"
+            )),
+            new ConstantBiomeLayer("biome_pool_cool_rare", 200, ExtendedBiomeId.of("minecraft:old_growth_pine_taiga")),
+            new RandomBiomeLayer("biome_pool_snowy", 200, ExtendedBiomeId.listOf(
+                "minecraft:snowy_plains",
+                "minecraft:snowy_plains",
+                "minecraft:snowy_plains",
+                "minecraft:snowy_taiga"
+            )),
+            new BiomeToLayerOverlayLayer("land", 0, "land", Map.of(
+                ExtendedBiomeId.CLIMATE_WARM, "biome_pool_warm",
+                ExtendedBiomeId.CLIMATE_WARM_RARE, "biome_pool_warm_rare",
+                ExtendedBiomeId.CLIMATE_TEMPERATE, "biome_pool_temperate",
+                ExtendedBiomeId.CLIMATE_TEMPERATE_RARE, "biome_pool_temperate_rare",
+                ExtendedBiomeId.CLIMATE_COOL, "biome_pool_cool",
+                ExtendedBiomeId.CLIMATE_COOL_RARE, "biome_pool_cool_rare",
+                ExtendedBiomeId.CLIMATE_SNOWY, "biome_pool_snowy",
+                ExtendedBiomeId.CLIMATE_SNOWY_RARE, "biome_pool_snowy"
+            )),
+            // endregion BiomeInitLayer
+            StackedZoomLayer.modal("land", 1000, "land", 2),
+            // BiomeTransitionLayer
+            new PredicateOverlayLayer("land", 0, "land", List.of(
+                // Mountain edge has been omitted because it ends up just not generating at all
+                PredicateOverlayLayer.Target.borderTransition(
+                    ExtendedBiomeId.of("minecraft:wooded_badlands*plateau"),
+                    biomeCategories.get("badlands_plateau"),
+                    ExtendedBiomeId.of("minecraft:badlands")
+                ),
+                PredicateOverlayLayer.Target.borderTransition(
+                    ExtendedBiomeId.of("minecraft:badlands*plateau"),
+                    biomeCategories.get("badlands_plateau"),
+                    ExtendedBiomeId.of("minecraft:badlands")
+                ),
+                PredicateOverlayLayer.Target.borderTransition(
+                    ExtendedBiomeId.of("minecraft:old_growth_pine_taiga"),
+                    biomeCategories.get("taiga"),
+                    ExtendedBiomeId.of("minecraft:taiga")
+                ),
+                PredicateOverlayLayer.Target.biome(
+                    BiomePredicate.of(ExtendedBiomeId.of("minecraft:desert"))
+                        .and(BiomePredicate.neighborsMatch(ExtendedBiomeId.of("minecraft:snowy_plains"), 1)),
+                    ExtendedBiomeId.of("minecraft:windswept_forest")
+                ),
+                PredicateOverlayLayer.Target.biome(
+                    BiomePredicate.of(ExtendedBiomeId.of("minecraft:swamp"))
+                        .and(BiomePredicate.neighborsMatch(ExtendedBiomeId.of("minecraft:jungle"), 1)),
+                    ExtendedBiomeId.of("minecraft:sparse_jungle")
+                ),
+                PredicateOverlayLayer.Target.biome(
+                    BiomePredicate.of(ExtendedBiomeId.of("minecraft:swamp"))
+                        .and(BiomePredicate.neighborsMatch(ExtendedBiomeId.of("minecraft:jungle"), 1)),
+                    ExtendedBiomeId.of("minecraft:sparse_jungle")
+                )
+            )),
+            // region RegionHillsLayer
+            new SimpleBiomeReplacementLayer("hills", 0, "land", hillVariants),
+            new RandomBiomeLayer("deep_ocean_islands", 1000, ExtendedBiomeId.listOf(
+                "minecraft:plains",
+                "minecraft:forest"
+            )).skipRandom(2),
+            new PredicateOverlayLayer("hills", 1000, "hills", List.of(
+                PredicateOverlayLayer.Target.biome(
+                    BiomePredicate.of(ExtendedBiomeId.of("minecraft:forest"))
+                        .and(BiomePredicate.oneIn(1))
+                        .and(BiomePredicate.oneIn(3)),
+                    ExtendedBiomeId.of("minecraft:forest*hills")
+                ),
+                PredicateOverlayLayer.Target.layer(
+                    BiomePredicate.of(ExtendedBiomeId.of("minecraft:deep_ocean"))
+                        .and(BiomePredicate.oneIn(1))
+                        .and(BiomePredicate.oneIn(3)),
+                    "deep_ocean_islands"
+                )
+            )),
+            new ConditionalOverlayLayer("hills", 1000, "hills", BiomePredicate.oneIn(3), "hills", "land"),
+            new PredicateOverlayLayer("land", 1000, "land", hillTargets),
+            // endregion RegionHillsLayer
+            new SimpleBiomeReplacementLayer("mutated_land", 0, "land", mutatedVariants),
+            new ConditionalOverlayLayer("land", 0, "mutation", BiomePredicate.of(ExtendedBiomeId.MUTATION), "mutated_land", "land"),
+            new ConstantBiomeLayer("sunflower_plains", 0, ExtendedBiomeId.of("minecraft:sunflower_plains")),
+            new ConditionalOverlayLayer("land", 1001, "land",
+                BiomePredicate.of(ExtendedBiomeId.PLAINS)
+                    .and(BiomePredicate.oneIn(57)),
+                "sunflower_plains", "land"),
+            new ModalZoomLayer("land", 1000, "land"),
+            AddLandLayer.forEarlyRelease("land", 3, "land", ExtendedBiomeId.of("moderner_beta:early_release_ice_plains")),
+            new ModalZoomLayer("land", 1001, "land"),
+            // ShoreLayer
+            new PredicateOverlayLayer("land", 0, "land", List.of(
+                PredicateOverlayLayer.Target.MUSHROOM_SHORE,
+                PredicateOverlayLayer.Target.biome(
+                    BiomePredicate.inSet(biomeCategories.get("jungle"))
+                        .and(BiomePredicate.neighborsMatch(
+                            BiomePredicate.inSet(biomeCategories.get("jungle_like")).invert(), 1)),
+                    ExtendedBiomeId.of("minecraft:sparse_jungle")
+                ),
+                PredicateOverlayLayer.Target.exclusiveBeach(
+                    biomeCategories.get("windswept_hills"),
+                    oceansPredicate,
+                    ExtendedBiomeId.of("minecraft:stony_shore")
+                ),
+                PredicateOverlayLayer.Target.exclusiveBeach(
+                    biomeCategories.get("snowy"),
+                    oceansPredicate,
+                    ExtendedBiomeId.of("minecraft:snowy_beach")
+                ),
+                PredicateOverlayLayer.Target.biome(
+                    BiomePredicate.inSet(ExtendedBiomeId.setOf(
+                        "minecraft:badlands",
+                        "minecraft:wooded_badlands"
+                    ))
+                        .and(BiomePredicate.neighborsMatch(
+                            BiomePredicate.of(ExtendedBiomeId.OCEAN), 1).invert())
+                        .and(BiomePredicate.neighborsMatch(
+                            BiomePredicate.inSet(biomeCategories.get("badlands_all")).invert(), 1)),
+                    ExtendedBiomeId.of("minecraft:desert")
+                ),
+                PredicateOverlayLayer.Target.inclusiveBeach(
+                    ExtendedBiomeId.setOf(
+                        "minecraft:ocean",
+                        "minecraft:deep_ocean",
+                        "minecraft:river",
+                        "minecraft:swamp"
+                    ),
+                    oceansPredicate,
+                    ExtendedBiomeId.BEACH
+                ),
+                PredicateOverlayLayer.Target.biome(
+                    BiomePredicate.of(ExtendedBiomeId.of("moderner_beta:early_release_extreme_hills"))
+                        .and(BiomePredicate.border()),
+                    ExtendedBiomeId.of("moderner_beta:early_release_extreme_hills*edge")
+                )
+            )),
+            StackedZoomLayer.modal("land", 1002, "land", 2 + biomeScale),
+            new SmoothLayer("land", 1000, "land"),
+            MixRiverLayer.forMajorRelease("land", 0, "land", "river")
+        ));
+    }
+
+    private static ModernBetaSettingsPreset preset1122(int biomeScale) {
         ModernBetaSettingsChunk.Builder settingsChunk = new ModernBetaSettingsChunk.Builder();
         ModernBetaSettingsBiome.Builder settingsBiome = new ModernBetaSettingsBiome.Builder();
         ModernBetaSettingsCaveBiome.Builder settingsCaveBiome = new ModernBetaSettingsCaveBiome.Builder();
@@ -1768,82 +2183,65 @@ public class ModernBetaSettingsPresets {
         settingsChunk.releaseBiomeHeightConfigs.put("minecraft:frozen_ocean", "-1.0;0.2");
         settingsChunk.releaseBiomeHeightConfigs.put("minecraft:frozen_river", "-0.5;0");
         settingsChunk.releaseBiomeHeightConfigs.put("minecraft:snowy_plains", "0.125;0.1");
-        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:snowy_plains", "0.45;0.6");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:snowy_plains*hills", "0.45;0.6");
         settingsChunk.releaseBiomeHeightConfigs.put("minecraft:mushroom_fields", "0.2;0.6");
-        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:mushroom_fields", "0.0;0.05");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:mushroom_fields*shore", "0.0;0.05");
         settingsChunk.releaseBiomeHeightConfigs.put("minecraft:beach", "0.0;0.05");
-        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:desert", "0.45;0.6");
-        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:forest", "0.45;0.6");
-        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:taiga", "0.45;0.6");
-        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:windswept_hills", "0.8;0.6");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:desert*hills", "0.45;0.6");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:forest*hills", "0.45;0.6");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:taiga*hills", "0.45;0.6");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:windswept_hills*edge", "0.8;0.6");
         settingsChunk.releaseBiomeHeightConfigs.put("minecraft:jungle", "0.1;0.4");
-        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:jungle", "0.45;0.6");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:jungle*hills", "0.45;0.6");
         settingsChunk.releaseBiomeHeightConfigs.put("minecraft:bamboo_jungle", "0.1;0.4");
-        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:bamboo_jungle", "0.45;0.6");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:bamboo_jungle*hills", "0.45;0.6");
         settingsChunk.releaseBiomeHeightConfigs.put("minecraft:sparse_jungle", "0.1;0.4");
         settingsChunk.releaseBiomeHeightConfigs.put("minecraft:deep_ocean", "-1.8;0.2");
-        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:deep_ocean", "-1.8;0.2");
         settingsChunk.releaseBiomeHeightConfigs.put("minecraft:deep_lukewarm_ocean", "-1.8;0.2");
-        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:deep_lukewarm_ocean", "-1.8;0.2");
         settingsChunk.releaseBiomeHeightConfigs.put("minecraft:deep_cold_ocean", "-1.8;0.2");
-        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:deep_cold_ocean", "-1.8;0.2");
         settingsChunk.releaseBiomeHeightConfigs.put("minecraft:deep_frozen_ocean", "-1.8;0.2");
-        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:deep_frozen_ocean", "-1.8;0.2");
         settingsChunk.releaseBiomeHeightConfigs.put("minecraft:stony_shore", "0.1;1.6");
         settingsChunk.releaseBiomeHeightConfigs.put("minecraft:snowy_beach", "0.0;0.05");
         settingsChunk.releaseBiomeHeightConfigs.put("minecraft:birch_forest", "0.1;0.4");
-        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:birch_forest", "0.45;0.6");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:birch_forest*hills", "0.45;0.6");
         settingsChunk.releaseBiomeHeightConfigs.put("minecraft:dark_forest", "0.1;0.4");
         settingsChunk.releaseBiomeHeightConfigs.put("minecraft:snowy_taiga", "0.2;0.4");
-        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:snowy_taiga", "0.45;0.6");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:snowy_taiga*hills", "0.45;0.6");
         settingsChunk.releaseBiomeHeightConfigs.put("minecraft:old_growth_pine_taiga", "0.2;0.4");
-        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:old_growth_pine_taiga", "0.45;0.6");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:old_growth_pine_taiga*hills", "0.45;0.6");
         settingsChunk.releaseBiomeHeightConfigs.put("minecraft:windswept_forest", "1.0;1.0");
         settingsChunk.releaseBiomeHeightConfigs.put("minecraft:savanna", "0.125;0.1");
         settingsChunk.releaseBiomeHeightConfigs.put("minecraft:savanna_plateau", "1.5;0.05");
         settingsChunk.releaseBiomeHeightConfigs.put("minecraft:badlands", "0.1;0.4");
-        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:wooded_badlands", "1.5;0.05");
-        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:badlands", "1.5;0.05");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:wooded_badlands", "1.5;0.05");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:badlands*plateau", "1.5;0.05");
         settingsChunk.releaseBiomeHeightConfigs.put("minecraft:sunflower_plains", "0.125;0.1");
-        settingsChunk.releaseBiomeHeightConfigs.put("2*minecraft:desert", "0.225;0.5");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:desert*lakes", "0.225;0.5");
         settingsChunk.releaseBiomeHeightConfigs.put("minecraft:windswept_gravelly_hills", "1.0;1.0");
-        settingsChunk.releaseBiomeHeightConfigs.put("2*minecraft:windswept_gravelly_hills", "1.0;1.0");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:windswept_gravelly_hills*modified", "1.0;1.0");
         settingsChunk.releaseBiomeHeightConfigs.put("minecraft:flower_forest", "0.1;0.8");
-        settingsChunk.releaseBiomeHeightConfigs.put("2*minecraft:taiga", "0.3;0.8");
-        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:swamp", "-0.1;0.6");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:taiga*mountains", "0.3;0.8");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:swamp*hills", "-0.1;0.6");
         settingsChunk.releaseBiomeHeightConfigs.put("minecraft:ice_spikes", "0.425;0.9");
-        settingsChunk.releaseBiomeHeightConfigs.put("2*minecraft:jungle", "0.2;0.8");
-        settingsChunk.releaseBiomeHeightConfigs.put("2*minecraft:sparse_jungle", "0.2;0.8");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:jungle*modified", "0.2;0.8");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:sparse_jungle*modified", "0.2;0.8");
         settingsChunk.releaseBiomeHeightConfigs.put("minecraft:old_growth_birch_forest", "0.2;0.8");
-        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:old_growth_birch_forest", "0.55;1.0");
-        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:dark_forest", "0.2;0.8");
-        settingsChunk.releaseBiomeHeightConfigs.put("2*minecraft:snowy_taiga", "0.3;0.8");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:old_growth_birch_forest*hills", "0.55;1.0");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:dark_forest*hills", "0.2;0.8");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:snowy_taiga*mountains", "0.3;0.8");
         settingsChunk.releaseBiomeHeightConfigs.put("minecraft:old_growth_spruce_taiga", "0.2;0.4");
-        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:old_growth_spruce_taiga", "0.2;0.4");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:old_growth_spruce_taiga*hills", "0.2;0.4");
         settingsChunk.releaseBiomeHeightConfigs.put("minecraft:windswept_savanna", "0.3625;2.45");
-        settingsChunk.releaseBiomeHeightConfigs.put("*minecraft:windswept_savanna", "1.05;2.425");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:windswept_savanna*plateau", "1.05;2.425");
         settingsChunk.releaseBiomeHeightConfigs.put("minecraft:eroded_badlands", "0.1;0.4");
-        settingsChunk.releaseBiomeHeightConfigs.put("2*minecraft:wooded_badlands", "0.45;0.6");
-        settingsChunk.releaseBiomeHeightConfigs.put("2*minecraft:badlands", "0.45;0.6");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:wooded_badlands*modified", "0.45;0.6");
+        settingsChunk.releaseBiomeHeightConfigs.put("minecraft:badlands*modified_plateau", "0.45;0.6");
         settingsChunk.useSurfaceRules = true;
         settingsChunk.useFixedCaves = true;
         settingsChunk.forceBetaCaves = false;
 
         settingsBiome.biomeProvider = ModernBetaBuiltInTypes.Biome.FRACTAL.id;
-        settingsBiome.fractalTerrainType = FractalSettings.TerrainType.MAJOR_RELEASE.id;
-        settingsBiome.fractalVeryRareVariants = Map.ofEntries(
-            Map.entry("minecraft:plains", "minecraft:sunflower_plains")
-        );
-        settingsBiome.fractalPlains = "minecraft:plains";
-        settingsBiome.fractalIcePlains = "minecraft:snowy_plains";
-        settingsBiome.fractalAddSnow = true;
-        settingsBiome.fractalAddMushroomIslands = true;
-        settingsBiome.fractalAddBeaches = true;
-        settingsBiome.fractalAddStonyShores = true;
-        settingsBiome.fractalAddHills = true;
-        settingsBiome.fractalAddDeepOceans = true;
-        settingsBiome.fractalAddMutations = true;
-        settingsBiome.fractalUseClimaticBiomes = true;
+        settingsBiome.fractalLayers = configuredLayers1710Era(biomeScale);
 
         return new ModernBetaSettingsPreset(
             settingsChunk.build(),

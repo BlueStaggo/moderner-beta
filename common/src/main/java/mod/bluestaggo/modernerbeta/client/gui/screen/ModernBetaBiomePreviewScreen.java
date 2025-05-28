@@ -26,6 +26,7 @@ import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.BiomeTags;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.MutableText;
+import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -33,6 +34,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.biome.Biome;
 
 import java.awt.*;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
@@ -205,7 +207,10 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                 Text biomeName = biomeProvider instanceof BiomeResolverStepped resolverStepped
                     ? resolverStepped.getBiomeNameForStep(sampleX, 64, sampleY, step)
                     : biomeProvider.getBiomeName(sampleX, 64, sampleY);
-                context.drawTooltip(textRenderer, biomeName, mouseX, mouseY);
+                context.drawTooltip(textRenderer, List.of(
+                    Text.literal((sampleX * 4) + ", " + (sampleY * 4)),
+                    biomeName
+                ), mouseX, mouseY, null);
             }
 
             this.prevMouseX = mouseX;
@@ -310,8 +315,12 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                     this.full = false;
 
                     int scale = zoom.get();
-                    int sampleX = (this.genX + (int)Math.round(offsetX.get()) - width / 2) * scale;
-                    int sampleY = (this.genY + (int)Math.round(offsetY.get()) - height / 2) * scale;
+                    @SuppressWarnings("IntegerDivisionInFloatingPointContext")
+                    int gridScale = (int)Math.pow(2, ((int)(Math.log(scale) / Math.log(2)) + 2) / 4 * 4);
+                    int intOffX = (int)Math.round(offsetX.get());
+                    int intOffY = (int)Math.round(offsetY.get());
+                    int sampleX = (this.genX + intOffX - width / 2) * scale;
+                    int sampleY = (this.genY + intOffY - height / 2) * scale;
 
                     int step = BiomeDisplayWidget.this.step.get();
                     RegistryEntry<Biome> biome = biomeProvider instanceof BiomeResolverStepped resolverStepped
@@ -322,7 +331,26 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                             ? resolverExtendedIdStepped.getExtendedBiomeIdForStep(sampleX, 64, sampleY, step)
                             : resolverExtendedId.getExtendedBiomeId(sampleX, 64, sampleY)
                         : ExtendedBiomeId.NULL;
-                    int color = 0xFF000000 | getBiomeColor(biome, extendedBiome.ext(), sampleX, sampleY);
+                    int color = getBiomeColor(biome, extendedBiome.ext(), sampleX, sampleY);
+                    if (sampleX % (64 * gridScale) == 0 || sampleY % (64 * gridScale) == 0) {
+                        int r = (color >> 16) & 0xFF;
+                        int g = (color >> 8) & 0xFF;
+                        int b = color & 0xFF;
+                        r = MathHelper.lerp(0.5f, r, 0xFF);
+                        g = MathHelper.lerp(0.5f, g, 0xFF);
+                        b = MathHelper.lerp(0.5f, b, 0xFF);
+                        color = r << 16 | g << 8 | b;
+                    } else if (sampleX % (4 * gridScale) == 0 || sampleY % (4 * gridScale) == 0) {
+                        int r = (color >> 16) & 0xFF;
+                        int g = (color >> 8) & 0xFF;
+                        int b = color & 0xFF;
+                        r = MathHelper.lerp(0.1f, r, 0xFF);
+                        g = MathHelper.lerp(0.1f, g, 0xFF);
+                        b = MathHelper.lerp(0.1f, b, 0xFF);
+                        color = r << 16 | g << 8 | b;
+                    }
+
+                    color |= 0xFF000000;
 
                     synchronized (image) {
                         image.setColorArgb(this.genX, this.genY, color);

@@ -46,6 +46,13 @@ public class AddLandLayer extends SingleParentLayer {
         ));
     }
 
+    public static AddLandLayer forIslandScaleMajor(String id, long seed, String parent) {
+        return new AddLandLayer(id, seed, parent, false, OCEAN, PLAINS, Map.of(
+            CLIMATE_SNOWY, CLIMATE_SNOWY,
+            CLIMATE_SNOWY_RARE, CLIMATE_SNOWY_RARE
+        ));
+    }
+
     public static AddLandLayer forBeta(String id, long seed, String parent) {
         return new AddLandLayer(id, seed, parent, true, OCEAN, ExtendedBiomeId.of(ModernBetaBiomes.LATE_BETA_PLAINS), Map.of());
     }

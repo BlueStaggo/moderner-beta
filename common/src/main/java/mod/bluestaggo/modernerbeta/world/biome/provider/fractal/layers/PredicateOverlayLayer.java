@@ -137,8 +137,7 @@ public class PredicateOverlayLayer extends SingleParentLayer {
             return biome(
                 BiomePredicate.of(from)
                     .and(BiomePredicate.neighborsMatch(
-                        BiomePredicate.inSet(similarBiomes), 4)
-                        .invert()),
+                        BiomePredicate.inSet(similarBiomes), 4).invert()),
                 to
             );
         }

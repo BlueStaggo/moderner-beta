@@ -55,7 +55,7 @@ public class ModernBetaConfig implements ConfigData {
         // Colors sourced from Cubiomes (https://github.com/Cubitect/cubiomes/blob/e61f90580cbdd883214a8054670dacae655e59c0/util.c#L316)
         biomePreviewColors.put("minecraft:ocean", 0x000070);
         biomePreviewColors.put("minecraft:plains", 0x8db360);
-        biomePreviewColors.put("minecraft:plains*climate_warm", 0xbdb25f);
+        biomePreviewColors.put("minecraft:plains*climate_warm", 0xfa9418);
         biomePreviewColors.put("minecraft:plains*climate_warm_rare", 0xd94515);
         biomePreviewColors.put("minecraft:plains*climate_temperate", 0x8db360);
         biomePreviewColors.put("minecraft:plains*climate_temperate_rare", 0x507b0a);
@@ -63,7 +63,7 @@ public class ModernBetaConfig implements ConfigData {
         biomePreviewColors.put("minecraft:plains*climate_cool_rare", 0x818e79);
         biomePreviewColors.put("minecraft:plains*climate_snowy", 0xffffff);
         biomePreviewColors.put("minecraft:plains*climate_snowy_rare", 0xb4dcdc);
-        biomePreviewColors.put("moderner_beta:late_beta_plains", 0xb4dcdc);
+        biomePreviewColors.put("moderner_beta:late_beta_plains", 0x8db360);
         biomePreviewColors.put("minecraft:desert", 0xfa9418);
         biomePreviewColors.put("minecraft:windswept_hills", 0x606060);
         biomePreviewColors.put("moderner_beta:late_beta_extreme_hills", 0x606060);
@@ -119,7 +119,7 @@ public class ModernBetaConfig implements ConfigData {
         biomePreviewColors.put("minecraft:wooded_badlands", 0xb09765);
         biomePreviewColors.put("minecraft:badlands*plateau", 0xca8c65);
         biomePreviewColors.put("minecraft:small_end_islands", 0x4b4bab);
-        biomePreviewColors.put("minecraft:end_marmidlands", 0xc9c959);
+        biomePreviewColors.put("minecraft:end_midlands", 0xc9c959);
         biomePreviewColors.put("minecraft:end_highlands", 0xb5b536);
         biomePreviewColors.put("minecraft:end_barrens", 0x7070cc);
         biomePreviewColors.put("minecraft:warm_ocean", 0x0000ac);
@@ -173,9 +173,11 @@ public class ModernBetaConfig implements ConfigData {
         biomePreviewColors.put("moderner_beta:beta_swampland", 0x07f9b2);
         biomePreviewColors.put("moderner_beta:beta_seasonal_forest", 0x9be023);
         biomePreviewColors.put("moderner_beta:beta_forest", 0x056621);
+        biomePreviewColors.put("moderner_beta:beta_oak_forest", 0x056621);
         biomePreviewColors.put("moderner_beta:beta_savanna", 0xd9e023);
         biomePreviewColors.put("moderner_beta:beta_shrubland", 0xa1ad20);
         biomePreviewColors.put("moderner_beta:beta_taiga", 0x2eb153);
+        biomePreviewColors.put("moderner_beta:beta_oak_taiga", 0x2eb153);
         biomePreviewColors.put("moderner_beta:beta_desert", 0xfa9418);
         biomePreviewColors.put("moderner_beta:beta_plains", 0xffd910);
         biomePreviewColors.put("moderner_beta:beta_ice_desert", 0xffed93);

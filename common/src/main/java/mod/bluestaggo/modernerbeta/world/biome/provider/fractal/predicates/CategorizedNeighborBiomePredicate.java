@@ -1,0 +1,57 @@
+package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.predicates;
+
+import com.google.common.collect.Sets;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import mod.bluestaggo.modernerbeta.util.CodecUtil;
+import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
+import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.Layer;
+import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.LayerRandom;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+public class CategorizedNeighborBiomePredicate extends NeighborComparisonPredicate {
+    public static final MapCodec<CategorizedNeighborBiomePredicate> CODEC = RecordCodecBuilder.mapCodec(
+        instance -> fillNeighborComparisonFields(instance)
+            .and(CodecUtil.set(ExtendedBiomeId.CODEC).listOf().fieldOf("categories").forGetter(predicate -> predicate.categories))
+            .apply(instance, CategorizedNeighborBiomePredicate::new)
+    );
+
+    private final List<Set<ExtendedBiomeId>> categories;
+    private transient final Map<ExtendedBiomeId, Set<ExtendedBiomeId>> mapToCategories;
+    private Set<ExtendedBiomeId> currentCategory;
+
+    protected CategorizedNeighborBiomePredicate(int requiredCount, boolean diagonal, List<Set<ExtendedBiomeId>> categories) {
+        super(requiredCount, diagonal);
+        this.categories = categories;
+        this.mapToCategories = new HashMap<>();
+        for (Set<ExtendedBiomeId> category : categories) {
+            for (ExtendedBiomeId biome : category) {
+                this.mapToCategories.compute(biome, (k, v) -> v == null
+                    ? category
+                    : Stream.concat(v.stream(), category.stream()).collect(Collectors.toSet()));
+            }
+        }
+    }
+
+    @Override
+    public BiomePredicateType<?> getType() {
+        return BiomePredicateType.CATEGORIZED_NEIGHBOR;
+    }
+
+    @Override
+    protected void prepareMatch(ExtendedBiomeId biome, Layer layer, Supplier<LayerRandom> randomSupplier, int x, int z) {
+        this.currentCategory = this.mapToCategories.get(biome);
+    }
+
+    @Override
+    protected boolean neighborMatches(ExtendedBiomeId centre, ExtendedBiomeId neighbor, Layer layer, Supplier<LayerRandom> randomSupplier, int x, int z, int nx, int nz) {
+        return this.currentCategory.contains(neighbor);
+    }
+}

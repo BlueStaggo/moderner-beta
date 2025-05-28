@@ -46,6 +46,10 @@ public abstract class BiomePredicate {
         return diagonalNeighborsMatch(of(biome), neighborCount);
     }
 
+    public static BiomePredicate diagonalNeighborsMatch(List<Set<ExtendedBiomeId>> categories, int neighborCount) {
+        return new CategorizedNeighborBiomePredicate(neighborCount, true, categories);
+    }
+
     public static BiomePredicate identicalNeighbors(int count, boolean diagonal) {
         return new IdenticalNeighborBiomePredicate(count, diagonal);
     }
@@ -80,6 +84,10 @@ public abstract class BiomePredicate {
 
     public static BiomePredicate neighborsMatch(ExtendedBiomeId biome, int neighborCount) {
         return neighborsMatch(of(biome), neighborCount);
+    }
+
+    public static BiomePredicate neighborsMatch(List<Set<ExtendedBiomeId>> categories, int neighborCount) {
+        return new CategorizedNeighborBiomePredicate(neighborCount, false, categories);
     }
 
     public static BiomePredicate noneOf(BiomePredicate... predicates) {

@@ -8,6 +8,7 @@ import net.minecraft.registry.Registry;
 public record BiomePredicateType<F extends BiomePredicate>(MapCodec<F> codec) {
     public static final BiomePredicateType<AllOfBiomePredicate> ALL_OF = register("all_of", AllOfBiomePredicate.CODEC);
     public static final BiomePredicateType<AnyOfBiomePredicate> ANY_OF = register("any_of", AnyOfBiomePredicate.CODEC);
+    public static final BiomePredicateType<CategorizedNeighborBiomePredicate> CATEGORIZED_NEIGHBOR = register("categorized_neighbor", CategorizedNeighborBiomePredicate.CODEC);
     public static final BiomePredicateType<IdenticalNeighborBiomePredicate> IDENTICAL_NEIGHBOR = register("identical_neighbor", IdenticalNeighborBiomePredicate.CODEC);
     public static final BiomePredicateType<InSetBiomePredicate> IN_SET = register("in_set", InSetBiomePredicate.CODEC);
     public static final BiomePredicateType<InteriorBiomePredicate> INTERIOR = register("interior", InteriorBiomePredicate.CODEC);

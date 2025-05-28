@@ -19,6 +19,7 @@ import net.minecraft.util.collection.Weighted;
 import net.minecraft.world.biome.BiomeKeys;
 
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class ModernBetaSettingsPresets {
@@ -1756,6 +1757,7 @@ public class ModernBetaSettingsPresets {
             ExtendedBiomeId.of("minecraft:snowy_plains").mapTo("*hills"),
             ExtendedBiomeId.of("minecraft:jungle").mapTo("*hills"),
             ExtendedBiomeId.of("minecraft:bamboo_jungle").mapTo("*hills"),
+            ExtendedBiomeId.of("minecraft:plains").mapTo("minecraft:forest"),
             ExtendedBiomeId.of("minecraft:ocean").mapTo("minecraft:deep_ocean"),
             ExtendedBiomeId.of("minecraft:windswept_hills").mapTo("minecraft:windswept_forest"),
             ExtendedBiomeId.of("minecraft:dark_forest").mapTo("minecraft:plains"),
@@ -1873,37 +1875,40 @@ public class ModernBetaSettingsPresets {
                 "~minecraft:snowy_taiga"
             ))
         );
-        List<String> hillyCategories = List.of(
-            "ocean",
-            "forest",
-            "taiga",
-            "plains",
-            "snowy_plains",
-            "savanna",
-            "desert",
-            "windswept_hills",
-            "jungle",
-            "badlands_plateau"
+        List<Set<ExtendedBiomeId>> hillyCategories = List.of(
+            biomeCategories.get("ocean"),
+            biomeCategories.get("forest"),
+            biomeCategories.get("taiga"),
+            biomeCategories.get("plains"),
+            biomeCategories.get("snowy_plains"),
+            biomeCategories.get("savanna"),
+            biomeCategories.get("desert"),
+            biomeCategories.get("windswept_hills"),
+            biomeCategories.get("jungle")
         );
 
         List<PredicateOverlayLayer.Target> hillTargets = new ArrayList<>();
         hillTargets.add(PredicateOverlayLayer.Target.layer(
-            BiomePredicate.identicalNeighbors(3, false),
+            BiomePredicate.inSet(biomeCategories.get("badlands_plateau"))
+                .and(BiomePredicate.neighborsMatch(
+                    BiomePredicate.inSet(biomeCategories.get("badlands_plateau")), 3)),
             "hills"
         ));
-        for (String hillyCategory : hillyCategories) {
-            Set<ExtendedBiomeId> category = biomeCategories.get(hillyCategory);
-            Set<ExtendedBiomeId> neighborCategory = new HashSet<>(category);
-            neighborCategory.add(ExtendedBiomeId.of("minecraft:badlands*plateau"));
-            neighborCategory.add(ExtendedBiomeId.of("minecraft:wooded_badlands"));
 
-            hillTargets.add(PredicateOverlayLayer.Target.layer(
-                BiomePredicate.inSet(category)
-                    .and(BiomePredicate.neighborsMatch(
-                        BiomePredicate.inSet(neighborCategory), 3)),
-                "hills"
-            ));
-        }
+        Set<ExtendedBiomeId> hillTargetBiomeSet = hillyCategories.stream()
+            .flatMap(Set::stream)
+            .collect(Collectors.toSet());
+        List<Set<ExtendedBiomeId>> additionalHillyCategories = hillyCategories.stream()
+            .map(set -> Stream.concat(
+                    set.stream(),
+                    biomeCategories.get("badlands_plateau").stream()
+                ).collect(Collectors.toSet()))
+            .toList();
+        hillTargets.add(PredicateOverlayLayer.Target.layer(
+            BiomePredicate.inSet(hillTargetBiomeSet)
+                .and(BiomePredicate.neighborsMatch(additionalHillyCategories, 3)),
+            "hills"
+        ));
 
         return new ConfiguredLayers(Arrays.asList(
             new InitLandLayer("land", 1),
@@ -1914,7 +1919,7 @@ public class ModernBetaSettingsPresets {
             AddLandLayer.forIslandScaleMajor("land", 50, "land"),
             AddLandLayer.forIslandScaleMajor("land", 70, "land"),
             // region AddSnowLayer
-            new PredicateOverlayLayer("land", 0, "land", List.of(
+            new PredicateOverlayLayer("land", 2, "land", List.of(
                 PredicateOverlayLayer.Target.biome(
                     BiomePredicate.of(ExtendedBiomeId.OCEAN)
                         .and(BiomePredicate.interior())
@@ -1963,7 +1968,7 @@ public class ModernBetaSettingsPresets {
                 Map.entry(ExtendedBiomeId.CLIMATE_COOL, ExtendedBiomeId.CLIMATE_COOL_RARE),
                 Map.entry(ExtendedBiomeId.CLIMATE_SNOWY, ExtendedBiomeId.CLIMATE_SNOWY_RARE)
             )),
-            new PredicateOverlayLayer("land", 0, "land", List.of(
+            new PredicateOverlayLayer("land", 3, "land", List.of(
                 PredicateOverlayLayer.Target.layer(
                     BiomePredicate.oneIn(13),
                     "rare_climates"
@@ -2006,8 +2011,8 @@ public class ModernBetaSettingsPresets {
             )),
             new RandomBiomeLayer("biome_pool_warm_rare", 200, ExtendedBiomeId.listOf(
                 "minecraft:badlands*plateau",
-                "minecraft:wooded_badlands*plateau",
-                "minecraft:wooded_badlands*plateau"
+                "minecraft:wooded_badlands",
+                "minecraft:wooded_badlands"
             )),
             new RandomBiomeLayer("biome_pool_temperate", 200, ExtendedBiomeId.listOf(
                 "minecraft:forest",
@@ -2048,12 +2053,12 @@ public class ModernBetaSettingsPresets {
                 // Mountain edge has been omitted because it ends up just not generating at all
                 PredicateOverlayLayer.Target.borderTransition(
                     ExtendedBiomeId.of("minecraft:wooded_badlands*plateau"),
-                    biomeCategories.get("badlands_plateau"),
+                    biomeCategories.get("badlands_all"),
                     ExtendedBiomeId.of("minecraft:badlands")
                 ),
                 PredicateOverlayLayer.Target.borderTransition(
                     ExtendedBiomeId.of("minecraft:badlands*plateau"),
-                    biomeCategories.get("badlands_plateau"),
+                    biomeCategories.get("badlands_all"),
                     ExtendedBiomeId.of("minecraft:badlands")
                 ),
                 PredicateOverlayLayer.Target.borderTransition(
@@ -2145,7 +2150,11 @@ public class ModernBetaSettingsPresets {
                         "minecraft:ocean",
                         "minecraft:deep_ocean",
                         "minecraft:river",
-                        "minecraft:swamp"
+                        "minecraft:swamp",
+                        "minecraft:mushroom_fields",
+                        "~minecraft:badlands",
+                        "~minecraft:wooded_badlands",
+                        "~minecraft:eroded_badlands"
                     ),
                     oceansPredicate,
                     ExtendedBiomeId.BEACH

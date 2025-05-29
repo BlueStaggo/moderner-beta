@@ -3,7 +3,7 @@ package mod.bluestaggo.modernerbeta.client.gui.screen;
 import com.mojang.serialization.Codec;
 import mod.bluestaggo.modernerbeta.client.gui.optioncallbacks.*;
 import mod.bluestaggo.modernerbeta.world.biome.HeightConfig;
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.legacy.BiomeInfo;
+import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.option.GameOptions;
 import net.minecraft.client.option.SimpleOption;
@@ -248,7 +248,7 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
         );
     }
 
-    protected List<SimpleOption<?>> biomeInfoOption(String key, boolean allowNone) {
+    protected List<SimpleOption<?>> extendedBiomeIdOption(String key, boolean allowNone) {
         Pair<NbtCompound, String> resolvedSettings = this.resolveSettings(key);
         NbtCompound settings = resolvedSettings.getLeft();
         String subKey = resolvedSettings.getRight();
@@ -258,24 +258,10 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
                 "",
                 SimpleOption.emptyTooltip(),
                 (optionText, value) -> Text.of(settings.getString(subKey).orElseThrow()),
-                new IntegerFieldCallbacks(Text.translatable("createWorld.customize.modern_beta.settings.biomeInfo.type").getString() + ": "),
-                BiomeInfo.parse(settings.getString(subKey).orElseThrow()).getRight(),
-                value -> {
-                    String replacedString = settings.getString(subKey, "");
-                    String replacedBiome = BiomeInfo.parse(replacedString).getLeft();
-                    settings.putString(subKey, BiomeInfo.makeString(replacedBiome, value));
-                }
-            ),
-            new SimpleOption<>(
-                "",
-                SimpleOption.emptyTooltip(),
-                (optionText, value) -> Text.of(settings.getString(subKey).orElseThrow()),
                 new BiomePickerCallbacks(this.client::setScreen, this, this.generatorOptionsHolder, allowNone),
-                BiomeInfo.parse(settings.getString(subKey).orElseThrow()).getLeft(),
+                ExtendedBiomeId.of(settings.getString(subKey).orElseThrow()).toString(),
                 value -> {
-                    String replacedString = settings.getString(subKey, "");
-                    int replacedType = BiomeInfo.parse(replacedString).getRight();
-                    settings.putString(subKey, BiomeInfo.makeString(value, replacedType));
+                    settings.putString(subKey, value);
                     this.clearAndInit();
                 }
             )

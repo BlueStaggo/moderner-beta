@@ -1,6 +1,5 @@
 package mod.bluestaggo.modernerbeta.settings;
 
-import com.mojang.datafixers.util.Pair;
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
 import mod.bluestaggo.modernerbeta.world.biome.HeightConfig;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomes;
@@ -8,7 +7,6 @@ import mod.bluestaggo.modernerbeta.world.biome.provider.climate.ClimateMapping;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ConfiguredLayers;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.*;
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.legacy.FractalSettings;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.predicates.BiomePredicate;
 import mod.bluestaggo.modernerbeta.world.biome.voronoi.VoronoiPointBiome;
 import mod.bluestaggo.modernerbeta.world.biome.voronoi.VoronoiPointCaveBiome;

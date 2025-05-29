@@ -3,7 +3,6 @@ package mod.bluestaggo.modernerbeta.client.gui.screen;
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
 import mod.bluestaggo.modernerbeta.util.NbtCompoundBuilder;
 import mod.bluestaggo.modernerbeta.util.NbtTags;
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.legacy.FractalSettings;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.OptionListWidget;
 import net.minecraft.client.option.SimpleOption;
@@ -91,127 +90,7 @@ public class ModernBetaGraphicalBiomeSettingsScreen extends ModernBetaGraphicalC
             }
         } else if (ModernBetaBuiltInTypes.Biome.FRACTAL.id.equals(biomeProvider)) {
             list.addSingleOptionEntry(this.headerOption(this.getText("header.scale").formatted(Formatting.BOLD)));
-            list.addAll(
-                this.intRangeOption(NbtTags.FRACTAL_BIOME_SCALE, 1, 10),
-                this.intRangeOption(NbtTags.FRACTAL_HILL_SCALE, 1, 10),
-                this.intRangeOption(NbtTags.FRACTAL_BEACH_SHRINK, -5, 5),
-                this.intRangeOption(NbtTags.FRACTAL_OCEAN_SHRINK, -5, 5),
-                this.selectionOption(NbtTags.FRACTAL_TERRAIN_TYPE,
-                    Arrays.stream(FractalSettings.TerrainType.values())
-                        .map(FractalSettings.TerrainType::getId)
-                        .toArray(String[]::new))
-            );
-
-            list.addSingleOptionEntry(this.headerOption(this.getText("header.features").formatted(Formatting.BOLD)));
-            list.addAll(
-                this.booleanOption(NbtTags.FRACTAL_OCEANS),
-                this.booleanOption(NbtTags.FRACTAL_ADD_RIVERS),
-                this.booleanOption(NbtTags.FRACTAL_ADD_BEACHES),
-                this.booleanOption(NbtTags.FRACTAL_ADD_STONY_SHORES),
-                this.booleanOption(NbtTags.FRACTAL_ADD_MUSHROOM_ISLANDS),
-                this.booleanOption(NbtTags.FRACTAL_ADD_SWAMP_RIVERS),
-                this.booleanOption(NbtTags.FRACTAL_ADD_DEEP_OCEANS),
-                this.booleanOption(NbtTags.FRACTAL_ADD_SNOW),
-                this.booleanOption(NbtTags.FRACTAL_ADD_HILLS),
-                this.booleanOption(NbtTags.FRACTAL_ADD_MUTATIONS)
-            );
-
-            list.addSingleOptionEntry(this.headerOption(this.getText("header.biomeLists").formatted(Formatting.BOLD)));
-            list.addAll(
-                this.listEditButton(
-                    this.getText(NbtTags.FRACTAL_BIOMES),
-                    NbtTags.FRACTAL_BIOMES,
-                    NbtElement.STRING_TYPE,
-                    BiomeInfoListScreen::new
-                ),
-                this.mapEditButton(
-                    this.getText(NbtTags.FRACTAL_HILL_VARIANTS),
-                    NbtTags.FRACTAL_HILL_VARIANTS,
-                    BiomeInfoToBiomeInfoMapScreen::new
-                ),
-                this.mapEditButton(
-                    this.getText(NbtTags.FRACTAL_EDGE_VARIANTS),
-                    NbtTags.FRACTAL_EDGE_VARIANTS,
-                    BiomeInfoToBiomeInfoMapScreen::new
-                ),
-                this.mapEditButton(
-                    this.getText(NbtTags.FRACTAL_MUTATED_VARIANTS),
-                    NbtTags.FRACTAL_MUTATED_VARIANTS,
-                    BiomeInfoToBiomeInfoMapScreen::new
-                ),
-                this.mapEditButton(
-                    this.getText(NbtTags.FRACTAL_VERY_RARE_VARIANTS),
-                    NbtTags.FRACTAL_VERY_RARE_VARIANTS,
-                    BiomeInfoToBiomeInfoMapScreen::new
-                ),
-                this.mapEditButton(
-                    this.getText(NbtTags.FRACTAL_SUB_VARIANTS),
-                    NbtTags.FRACTAL_SUB_VARIANTS,
-                    IntegerToMapMapScreen::new
-                )
-            );
-
-            list.addSingleOptionEntry(this.headerOption(this.getText("header.climaticBiomes").formatted(Formatting.BOLD)));
-            list.addAll(
-                this.booleanOption(NbtTags.FRACTAL_USE_CLIMATIC_BIOMES),
-                this.booleanOption(NbtTags.FRACTAL_ADD_CLIMATIC_OCEANS),
-                this.listEditButton(
-                    this.getText(NbtTags.FRACTAL_CLIMATIC_BIOMES + ".hot"),
-                    NbtTags.FRACTAL_CLIMATIC_BIOMES + ".0.normal",
-                    NbtElement.STRING_TYPE,
-                    BiomeInfoListScreen::new
-                ),
-                this.listEditButton(
-                    this.getText(NbtTags.FRACTAL_CLIMATIC_BIOMES + ".hot.rare"),
-                    NbtTags.FRACTAL_CLIMATIC_BIOMES + ".0.rare",
-                    NbtElement.STRING_TYPE,
-                    BiomeInfoListScreen::new
-                ),
-                this.listEditButton(
-                    this.getText(NbtTags.FRACTAL_CLIMATIC_BIOMES + ".temperate"),
-                    NbtTags.FRACTAL_CLIMATIC_BIOMES + ".1.normal",
-                    NbtElement.STRING_TYPE,
-                    BiomeInfoListScreen::new
-                ),
-                this.listEditButton(
-                    this.getText(NbtTags.FRACTAL_CLIMATIC_BIOMES + ".temperate.rare"),
-                    NbtTags.FRACTAL_CLIMATIC_BIOMES + ".1.rare",
-                    NbtElement.STRING_TYPE,
-                    BiomeInfoListScreen::new
-                ),
-                this.listEditButton(
-                    this.getText(NbtTags.FRACTAL_CLIMATIC_BIOMES + ".cool"),
-                    NbtTags.FRACTAL_CLIMATIC_BIOMES + ".2.normal",
-                    NbtElement.STRING_TYPE,
-                    BiomeInfoListScreen::new
-                ),
-                this.listEditButton(
-                    this.getText(NbtTags.FRACTAL_CLIMATIC_BIOMES + ".cool.rare"),
-                    NbtTags.FRACTAL_CLIMATIC_BIOMES + ".2.rare",
-                    NbtElement.STRING_TYPE,
-                    BiomeInfoListScreen::new
-                ),
-                this.listEditButton(
-                    this.getText(NbtTags.FRACTAL_CLIMATIC_BIOMES + ".snowy"),
-                    NbtTags.FRACTAL_CLIMATIC_BIOMES + ".3.normal",
-                    NbtElement.STRING_TYPE,
-                    BiomeInfoListScreen::new
-                ),
-                this.listEditButton(
-                    this.getText(NbtTags.FRACTAL_CLIMATIC_BIOMES + ".snowy.rare"),
-                    NbtTags.FRACTAL_CLIMATIC_BIOMES + ".3.rare",
-                    NbtElement.STRING_TYPE,
-                    BiomeInfoListScreen::new
-                )
-            );
-
-            list.addSingleOptionEntry(this.headerOption(this.getText("header.individualBiomes").formatted(Formatting.BOLD)));
-            list.addAll(
-                this.headerOption(this.getText(NbtTags.FRACTAL_PLAINS)),
-                this.biomeOption(NbtTags.FRACTAL_PLAINS, false),
-                this.headerOption(this.getText(NbtTags.FRACTAL_ICE_PLAINS)),
-                this.biomeOption(NbtTags.FRACTAL_ICE_PLAINS, false)
-            );
+            list.addSingleOptionEntry(this.headerOption(Text.literal("Work in progress!").formatted(Formatting.ITALIC)));
         }
     }
 
@@ -222,7 +101,7 @@ public class ModernBetaGraphicalBiomeSettingsScreen extends ModernBetaGraphicalC
 
         @Override
         protected List<SimpleOption<?>> getOptions(int i) {
-            return this.biomeInfoOption(i, false);
+            return this.extendedBiomeIdOption(i, false);
         }
 
         @Override
@@ -241,8 +120,8 @@ public class ModernBetaGraphicalBiomeSettingsScreen extends ModernBetaGraphicalC
             ArrayList<SimpleOption<?>> options = new ArrayList<>();
             options.add(this.headerOption(Text.translatable(this.getTextKey("item"), i).formatted(Formatting.BOLD)));
             options.add(null);
-            options.addAll(this.biomeInfoOption(KEY + i, false));
-            options.addAll(this.biomeInfoOption(VALUE + i, false));
+            options.addAll(this.extendedBiomeIdOption(KEY + i, false));
+            options.addAll(this.extendedBiomeIdOption(VALUE + i, false));
             return options;
         }
 
@@ -297,7 +176,7 @@ public class ModernBetaGraphicalBiomeSettingsScreen extends ModernBetaGraphicalC
             ArrayList<SimpleOption<?>> options = new ArrayList<>();
             options.add(this.headerOption(Text.translatable(this.getTextKey("item"), i).formatted(Formatting.BOLD)));
             options.add(null);
-            options.addAll(this.biomeInfoOption(KEY + i, false));
+            options.addAll(this.extendedBiomeIdOption(KEY + i, false));
             options.add(this.listEditButton(
                 this.getText("biomeReplacements"),
                 VALUE + i,

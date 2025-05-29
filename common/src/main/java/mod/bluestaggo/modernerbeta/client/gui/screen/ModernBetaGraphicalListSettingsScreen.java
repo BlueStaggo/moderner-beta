@@ -1,10 +1,9 @@
 package mod.bluestaggo.modernerbeta.client.gui.screen;
 
 import mod.bluestaggo.modernerbeta.client.gui.optioncallbacks.FloatSliderCallbacks;
-import mod.bluestaggo.modernerbeta.client.gui.optioncallbacks.IntegerFieldCallbacks;
 import mod.bluestaggo.modernerbeta.client.gui.optioncallbacks.BiomePickerCallbacks;
 import mod.bluestaggo.modernerbeta.util.NbtTags;
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.legacy.BiomeInfo;
+import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.OptionListWidget;
 import net.minecraft.client.option.GameOptions;
@@ -119,30 +118,16 @@ public abstract class ModernBetaGraphicalListSettingsScreen extends ModernBetaGr
         );
     }
 
-    protected List<SimpleOption<?>> biomeInfoOption(int i, boolean allowNone) {
+    protected List<SimpleOption<?>> extendedBiomeIdOption(int i, boolean allowNone) {
         return List.of(
             new SimpleOption<>(
                 "",
                 SimpleOption.emptyTooltip(),
                 (optionText, value) -> Text.of(settings.getString(i).orElseThrow()),
-                new IntegerFieldCallbacks(Text.translatable("createWorld.customize.modern_beta.settings.biomeInfo.type").getString() + ": "),
-                BiomeInfo.parse(settings.getString(i).orElseThrow()).getRight(),
-                value -> {
-                    NbtElement removedElement = settings.remove(i);
-                    String removedBiome = BiomeInfo.parse(removedElement.asString().orElseThrow()).getLeft();
-                    settings.add(i, NbtString.of(BiomeInfo.makeString(removedBiome, value)));
-                }
-            ),
-            new SimpleOption<>(
-                "",
-                SimpleOption.emptyTooltip(),
-                (optionText, value) -> Text.of(settings.getString(i).orElseThrow()),
                 new BiomePickerCallbacks(this.client::setScreen, this, this.generatorOptionsHolder, allowNone),
-                BiomeInfo.parse(settings.getString(i).orElseThrow()).getLeft(),
+                ExtendedBiomeId.of(settings.getString(i).orElseThrow()).toString(),
                 value -> {
-                    NbtElement removedElement = settings.remove(i);
-                    int removedType = BiomeInfo.parse(removedElement.asString().orElseThrow()).getRight();
-                    settings.add(i, NbtString.of(BiomeInfo.makeString(value, removedType)));
+                    settings.add(i, NbtString.of(value));
                     this.clearAndInit();
                 }
             )

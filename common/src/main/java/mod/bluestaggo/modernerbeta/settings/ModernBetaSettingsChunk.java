@@ -6,13 +6,13 @@ import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.util.NbtCompoundBuilder;
 import mod.bluestaggo.modernerbeta.util.NbtReader;
 import mod.bluestaggo.modernerbeta.util.NbtTags;
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.legacy.FractalSettings;
 import mod.bluestaggo.modernerbeta.world.chunk.provider.indev.IndevTheme;
 import mod.bluestaggo.modernerbeta.world.chunk.provider.indev.IndevType;
 import mod.bluestaggo.modernerbeta.world.chunk.provider.island.IslandShape;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class ModernBetaSettingsChunk implements ModernBetaSettings {
@@ -194,7 +194,7 @@ public class ModernBetaSettingsChunk implements ModernBetaSettings {
     }
     
     public NbtCompound toCompound() {
-        return new NbtCompoundBuilder()
+        NbtCompound compound = new NbtCompoundBuilder()
             .putIdentifier(NbtTags.CHUNK_PROVIDER, this.chunkProvider)
             .putBoolean(NbtTags.USE_DEEPSLATE, this.useDeepslate)
             .putInt(NbtTags.DEEPSLATE_MIN_Y, this.deepslateMinY)
@@ -229,7 +229,6 @@ public class ModernBetaSettingsChunk implements ModernBetaSettings {
             .putInt(NbtTags.NOISE_BOTTOM_SLIDE_SIZE, this.noiseBottomSlideSize)
             .putInt(NbtTags.NOISE_BOTTOM_SLIDE_OFFSET, this.noiseBottomSlideOffset)
 
-            .putCompound(NbtTags.RELEASE_BIOME_HEIGHT_CONFIGS, FractalSettings.mapToNbt(this.releaseBiomeHeightValues))
             .putFloat(NbtTags.RELEASE_BIOME_DEPTH_OFFSET, this.releaseBiomeDepthOffset)
             .putFloat(NbtTags.RELEASE_BIOME_DEPTH_WEIGHT, this.releaseBiomeDepthWeight)
             .putFloat(NbtTags.RELEASE_BIOME_SCALE_OFFSET, this.releaseBiomeScaleOffset)
@@ -275,6 +274,12 @@ public class ModernBetaSettingsChunk implements ModernBetaSettings {
             .putFloat(NbtTags.ISLES_OUTER_ISLAND_NOISE_OFFSET, this.islesOuterIslandNoiseOffset)
             
             .build();
+
+        NbtCompoundBuilder releaseBiomeHeightConfigs = new NbtCompoundBuilder();
+        this.releaseBiomeHeightValues.forEach(releaseBiomeHeightConfigs::putString);
+        compound.put(NbtTags.RELEASE_BIOME_HEIGHT_CONFIGS, releaseBiomeHeightConfigs.build());
+
+        return compound;
     }
 
     public static class Builder {
@@ -483,7 +488,13 @@ public class ModernBetaSettingsChunk implements ModernBetaSettings {
             this.noiseBottomSlideSize = reader.readInt(NbtTags.NOISE_BOTTOM_SLIDE_SIZE, this.noiseBottomSlideSize);
             this.noiseBottomSlideOffset = reader.readInt(NbtTags.NOISE_BOTTOM_SLIDE_OFFSET, this.noiseBottomSlideOffset);
 
-            this.releaseBiomeHeightConfigs = FractalSettings.mapFromReader(NbtTags.RELEASE_BIOME_HEIGHT_CONFIGS, reader, this.releaseBiomeHeightConfigs);
+            if (reader.contains(NbtTags.RELEASE_BIOME_HEIGHT_CONFIGS)) {
+                Map<String, String> map = new HashMap<>();
+                NbtCompound subCompound = reader.readCompoundOrThrow(NbtTags.RELEASE_BIOME_HEIGHT_CONFIGS);
+                subCompound.getKeys().forEach(key -> map.put(key, subCompound.getString(key).orElseThrow()));
+                this.releaseBiomeHeightConfigs = map;
+            }
+
             this.releaseBiomeDepthOffset = reader.readFloat(NbtTags.RELEASE_BIOME_DEPTH_OFFSET, this.releaseBiomeDepthOffset);
             this.releaseBiomeDepthWeight = reader.readFloat(NbtTags.RELEASE_BIOME_DEPTH_WEIGHT, this.releaseBiomeDepthWeight);
             this.releaseBiomeScaleOffset = reader.readFloat(NbtTags.RELEASE_BIOME_SCALE_OFFSET, this.releaseBiomeScaleOffset);

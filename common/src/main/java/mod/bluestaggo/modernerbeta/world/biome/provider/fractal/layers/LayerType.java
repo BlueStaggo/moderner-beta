@@ -9,7 +9,8 @@ public record LayerType<L extends Layer>(MapCodec<L> codec) {
     public static final LayerType<AddLandLayer> ADD_LAND = register("add_land", AddLandLayer.CODEC);
     public static final LayerType<BiomeToLayerOverlayLayer> BIOME_TO_LAYER_OVERLAY = register("biome_to_layer_overlay", BiomeToLayerOverlayLayer.CODEC);
     public static final LayerType<ComputeRiverLayer> COMPUTE_RIVER = register("compute_river", ComputeRiverLayer.CODEC);
-    public static final LayerType<ConditionalOverlayLayer> CONDITIONAL_OVERLAY = register("conditional_overlay", ConditionalOverlayLayer.CODEC);
+    public static final LayerType<ConditionalBiomeOverlayLayer> CONDITIONAL_BIOME_OVERLAY = register("conditional_biome_overlay", ConditionalBiomeOverlayLayer.CODEC);
+    public static final LayerType<ConditionalLayerOverlayLayer> CONDITIONAL_LAYER_OVERLAY = register("conditional_layer_overlay", ConditionalLayerOverlayLayer.CODEC);
     public static final LayerType<ConstantBiomeLayer> CONSTANT_BIOME = register("constant_biome", ConstantBiomeLayer.CODEC);
     public static final LayerType<FuzzyZoomLayer> FUZZY_ZOOM = register("fuzzy_zoom", FuzzyZoomLayer.CODEC);
     public static final LayerType<InitLandLayer> INIT_LAND = register("init_land", InitLandLayer.CODEC);

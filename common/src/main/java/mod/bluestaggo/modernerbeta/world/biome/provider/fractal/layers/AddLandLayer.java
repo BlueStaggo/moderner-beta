@@ -5,6 +5,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomes;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
+import net.minecraft.world.biome.BiomeKeys;
 
 import java.util.Map;
 import java.util.Set;
@@ -58,6 +59,10 @@ public class AddLandLayer extends SingleParentLayer {
 
     public static AddLandLayer forEarlyRelease(String id, long seed, String parent, ExtendedBiomeId icePlains) {
         return new AddLandLayer(id, seed, parent, false, OCEAN, ExtendedBiomeId.of(ModernBetaBiomes.LATE_BETA_PLAINS), Map.of(icePlains, FROZEN_OCEAN));
+    }
+
+    public static AddLandLayer forMajorRelease(String id, long seed, String parent) {
+        return new AddLandLayer(id, seed, parent, false, OCEAN, PLAINS, Map.of(ExtendedBiomeId.of(BiomeKeys.FOREST), ExtendedBiomeId.of(BiomeKeys.FOREST)));
     }
 
     @Override

@@ -11,15 +11,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
-public class ConditionalOverlayLayer extends SingleParentLayer {
-    public static final MapCodec<ConditionalOverlayLayer> CODEC = RecordCodecBuilder.mapCodec(
+public class ConditionalLayerOverlayLayer extends SingleParentLayer {
+    public static final MapCodec<ConditionalLayerOverlayLayer> CODEC = RecordCodecBuilder.mapCodec(
         instance -> fillSingleParentLayerFields(instance)
             .and(instance.group(
                 BiomePredicate.BASE_CODEC.fieldOf("predicate").forGetter(layer -> layer.predicate),
                 Codec.STRING.fieldOf("onMatch").forGetter(layer -> layer.onMatch),
                 Codec.STRING.fieldOf("otherwise").forGetter(layer -> layer.otherwise)
             ))
-            .apply(instance, ConditionalOverlayLayer::new)
+            .apply(instance, ConditionalLayerOverlayLayer::new)
     );
 
     private final BiomePredicate predicate;
@@ -28,7 +28,7 @@ public class ConditionalOverlayLayer extends SingleParentLayer {
     private transient Layer onMatchLayer;
     private transient Layer otherwiseLayer;
 
-    public ConditionalOverlayLayer(String id, long seed, String parent, BiomePredicate predicate, String onMatch, String otherwise) {
+    public ConditionalLayerOverlayLayer(String id, long seed, String parent, BiomePredicate predicate, String onMatch, String otherwise) {
         super(id, seed, parent);
         this.predicate = predicate;
         this.onMatch = onMatch;
@@ -50,7 +50,7 @@ public class ConditionalOverlayLayer extends SingleParentLayer {
 
     @Override
     public LayerType<?> getType() {
-        return LayerType.CONDITIONAL_OVERLAY;
+        return LayerType.CONDITIONAL_LAYER_OVERLAY;
     }
 
     @Override

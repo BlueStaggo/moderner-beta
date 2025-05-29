@@ -110,6 +110,12 @@ public abstract class BiomePredicate {
         return new RandomChanceBiomePredicate(numerator, denominator);
     }
 
+    public static BiomePredicate simpleHills(Set<ExtendedBiomeId> affectedBiomes) {
+        return BiomePredicate.inSet(affectedBiomes)
+            .and(BiomePredicate.interior())
+            .and(BiomePredicate.oneIn(3));
+    }
+
     public static BiomePredicate uniqueNeighbors(int count, boolean diagonal) {
         return new UniqueNeighborBiomePredicate(count, diagonal);
     }

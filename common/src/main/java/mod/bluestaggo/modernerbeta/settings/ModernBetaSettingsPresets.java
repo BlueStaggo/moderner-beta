@@ -7,7 +7,6 @@ import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ConfiguredLayers
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.*;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.legacy.FractalSettings;
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.predicates.AnyOfBiomePredicate;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.predicates.BiomePredicate;
 import mod.bluestaggo.modernerbeta.world.biome.voronoi.VoronoiPointBiome;
 import mod.bluestaggo.modernerbeta.world.biome.voronoi.VoronoiPointCaveBiome;
@@ -21,7 +20,6 @@ import net.minecraft.world.biome.BiomeKeys;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class ModernBetaSettingsPresets {
     public static final ModernBetaSettingsPreset PRESET_BETA_1_7_3 = presetBeta(false);
@@ -1474,14 +1472,12 @@ public class ModernBetaSettingsPresets {
             AddLandLayer.forIslandScale("land", 3, "land"),
             new ModalZoomLayer("land", 2003, "land"),
             AddLandLayer.forIslandScale("land", 4, "land"),
-            new PredicateOverlayLayer("land", 5, "land", List.of(
-                PredicateOverlayLayer.Target.biome(
-                    BiomePredicate.of(ExtendedBiomeId.OCEAN)
-                        .and(BiomePredicate.diagonalInterior())
-                        .and(BiomePredicate.oneIn(100)),
-                    ExtendedBiomeId.MUSHROOM_ISLAND
-                )
-            )),
+            new ConditionalBiomeOverlayLayer("land", 5, "land",
+                BiomePredicate.of(ExtendedBiomeId.OCEAN)
+                    .and(BiomePredicate.diagonalInterior())
+                    .and(BiomePredicate.oneIn(100)),
+                ExtendedBiomeId.MUSHROOM_ISLAND, ExtendedBiomeId.NULL
+            ),
             new InitRiverLayer("river", 100, "land"),
             StackedZoomLayer.modal("river", 1000, "river", 6 + biomeScale),
             new ComputeRiverLayer("river", 0, "river", true),
@@ -1503,9 +1499,9 @@ public class ModernBetaSettingsPresets {
             StackedZoomLayer.modal("land", 1000, "land", 2),
             new ModalZoomLayer("land", 1000, "land"),
             AddLandLayer.forEarlyRelease("land", 3, "land", icePlains),
-            new PredicateOverlayLayer("land", 0, "land", List.of(
-                PredicateOverlayLayer.Target.MUSHROOM_SHORE
-            )),
+            new ConditionalBiomeOverlayLayer("land", 0, "land",
+                PredicateOverlayLayer.Target.MUSHROOM_SHORE.predicate(),
+                ExtendedBiomeId.MUSHROOM_SHORE, ExtendedBiomeId.NULL),
             StackedZoomLayer.modal("land", 1001, "land", 3 + biomeScale),
             new SmoothLayer("land", 1000, "land"),
             MixRiverLayer.forEarlyRelease("land", 0, "land", "river")
@@ -1620,14 +1616,12 @@ public class ModernBetaSettingsPresets {
             AddLandLayer.forIslandScale("land", 3, "land"),
             new ModalZoomLayer("land", 2003, "land"),
             AddLandLayer.forIslandScale("land", 4, "land"),
-            new PredicateOverlayLayer("land", 5, "land", List.of(
-                PredicateOverlayLayer.Target.biome(
-                    BiomePredicate.of(ExtendedBiomeId.OCEAN)
-                        .and(BiomePredicate.diagonalInterior())
-                        .and(BiomePredicate.oneIn(100)),
-                    ExtendedBiomeId.MUSHROOM_ISLAND
-                )
-            )),
+            new ConditionalBiomeOverlayLayer("land", 5, "land",
+                BiomePredicate.of(ExtendedBiomeId.OCEAN)
+                    .and(BiomePredicate.diagonalInterior())
+                    .and(BiomePredicate.oneIn(100)),
+                ExtendedBiomeId.MUSHROOM_ISLAND, ExtendedBiomeId.NULL
+            ),
             new InitRiverLayer("river", 100, "land"),
             StackedZoomLayer.modal("river", 1000, "river", 6 + biomeScale),
             new ComputeRiverLayer("river", 0, "river", true),
@@ -1641,9 +1635,8 @@ public class ModernBetaSettingsPresets {
             )),
             StackedZoomLayer.modal("land", 1000, "land", 2),
             new SimpleBiomeReplacementLayer("hills", 0, "land", hillsVariants),
-            new PredicateOverlayLayer("land", 1000, "land", List.of(
-                PredicateOverlayLayer.Target.simpleHills(hillsVariants.keySet(), "hills")
-            )),
+            new ConditionalLayerOverlayLayer("land", 1000, "land",
+                BiomePredicate.simpleHills(hillsVariants.keySet()), "hills", "land"),
             new ModalZoomLayer("land", 1000, "land"),
             AddLandLayer.forEarlyRelease("land", 3, "land", icePlains),
             new ModalZoomLayer("land", 1001, "land"),
@@ -1907,15 +1900,14 @@ public class ModernBetaSettingsPresets {
             AddLandLayer.forIslandScaleMajor("land", 2, "land"),
             AddLandLayer.forIslandScaleMajor("land", 50, "land"),
             AddLandLayer.forIslandScaleMajor("land", 70, "land"),
+            // RemoveTooMuchOcean
+            new ConditionalBiomeOverlayLayer("land", 2, "land",
+                BiomePredicate.of(ExtendedBiomeId.OCEAN)
+                    .and(BiomePredicate.interior())
+                    .and(BiomePredicate.oneIn(2)),
+                ExtendedBiomeId.PLAINS, ExtendedBiomeId.NULL
+            ),
             // region AddSnowLayer
-            new PredicateOverlayLayer("land", 2, "land", List.of(
-                PredicateOverlayLayer.Target.biome(
-                    BiomePredicate.of(ExtendedBiomeId.OCEAN)
-                        .and(BiomePredicate.interior())
-                        .and(BiomePredicate.oneIn(2)),
-                    ExtendedBiomeId.PLAINS
-                )
-            )),
             new WeightedBiomeLayer("climate", 2, Pool.of(
                 new Weighted<>(ExtendedBiomeId.CLIMATE_SNOWY, 1),
                 new Weighted<>(ExtendedBiomeId.CLIMATE_COOL, 1),
@@ -1925,31 +1917,27 @@ public class ModernBetaSettingsPresets {
             // endregion AddSnowLayer
             AddLandLayer.forIslandScaleMajor("land", 3, "land"),
             // AddEdgeLayer.CoolWarm
-            new PredicateOverlayLayer("land", 0, "land", List.of(
-                PredicateOverlayLayer.Target.biome(
-                    BiomePredicate.of(ExtendedBiomeId.CLIMATE_WARM)
-                        .and(BiomePredicate.neighborsMatch(
-                            BiomePredicate.inSet(
-                                ExtendedBiomeId.CLIMATE_COOL,
-                                ExtendedBiomeId.CLIMATE_SNOWY
-                            ), 1
-                        )),
-                    ExtendedBiomeId.CLIMATE_TEMPERATE
-                )
-            )),
+            new ConditionalBiomeOverlayLayer("land", 0, "land",
+                BiomePredicate.of(ExtendedBiomeId.CLIMATE_WARM)
+                    .and(BiomePredicate.neighborsMatch(
+                        BiomePredicate.inSet(
+                            ExtendedBiomeId.CLIMATE_COOL,
+                            ExtendedBiomeId.CLIMATE_SNOWY
+                        ), 1
+                    )),
+                ExtendedBiomeId.CLIMATE_TEMPERATE, ExtendedBiomeId.NULL
+            ),
             // AddEdgeLayer.HeatIce
-            new PredicateOverlayLayer("land", 0, "land", List.of(
-                PredicateOverlayLayer.Target.biome(
-                    BiomePredicate.of(ExtendedBiomeId.CLIMATE_SNOWY)
-                        .and(BiomePredicate.neighborsMatch(
-                            BiomePredicate.inSet(
-                                ExtendedBiomeId.CLIMATE_TEMPERATE,
-                                ExtendedBiomeId.CLIMATE_WARM
-                            ), 1
-                        )),
-                    ExtendedBiomeId.CLIMATE_COOL
-                )
-            )),
+            new ConditionalBiomeOverlayLayer("land", 0, "land",
+                BiomePredicate.of(ExtendedBiomeId.CLIMATE_SNOWY)
+                    .and(BiomePredicate.neighborsMatch(
+                        BiomePredicate.inSet(
+                            ExtendedBiomeId.CLIMATE_TEMPERATE,
+                            ExtendedBiomeId.CLIMATE_WARM
+                        ), 1
+                    )),
+                ExtendedBiomeId.CLIMATE_COOL, ExtendedBiomeId.NULL
+            ),
             // region AddEdgeLayer.Special
             new RandomBiomeLayer("climate_warm_rare", 3, ExtendedBiomeId.CLIMATE_WARM_RARE).skipRandom(1),
             new RandomBiomeLayer("climate_temperate_rare", 3, ExtendedBiomeId.CLIMATE_TEMPERATE_RARE).skipRandom(1),
@@ -1971,27 +1959,22 @@ public class ModernBetaSettingsPresets {
             new ModalZoomLayer("land", 2002, "land"),
             new ModalZoomLayer("land", 2003, "land"),
             AddLandLayer.forIslandScaleMajor("land", 4, "land"),
-            new PredicateOverlayLayer("land", 5, "land", List.of(
-                PredicateOverlayLayer.Target.biome(
-                    BiomePredicate.of(ExtendedBiomeId.OCEAN)
-                        .and(BiomePredicate.diagonalInterior())
-                        .and(BiomePredicate.oneIn(100)),
-                    ExtendedBiomeId.MUSHROOM_ISLAND
-                )
-            )),
-            new PredicateOverlayLayer("land", 0, "land", List.of(
-                PredicateOverlayLayer.Target.biome(
-                    BiomePredicate.of(ExtendedBiomeId.OCEAN)
-                        .and(BiomePredicate.interior()),
-                    ExtendedBiomeId.DEEP_OCEAN
-                )
-            )),
+            new ConditionalBiomeOverlayLayer("land", 5, "land",
+                BiomePredicate.of(ExtendedBiomeId.OCEAN)
+                    .and(BiomePredicate.diagonalInterior())
+                    .and(BiomePredicate.oneIn(100)),
+                ExtendedBiomeId.MUSHROOM_ISLAND, ExtendedBiomeId.NULL
+            ),
+            new ConditionalBiomeOverlayLayer("land", 0, "land",
+                BiomePredicate.of(ExtendedBiomeId.OCEAN)
+                    .and(BiomePredicate.interior()),
+                ExtendedBiomeId.DEEP_OCEAN, ExtendedBiomeId.NULL
+            ),
             new SupplyRandomLayer("mutation", 100, 299999),
-            new ConditionalOverlayLayer("mutation", 0, "land", BiomePredicate.of(ExtendedBiomeId.OCEAN), "land", "mutation"),
+            new ConditionalLayerOverlayLayer("mutation", 0, "land", BiomePredicate.of(ExtendedBiomeId.OCEAN), "land", "mutation"),
             StackedZoomLayer.modal("river", 1000, "mutation", 2),
             StackedZoomLayer.modal("river", 1000, "river", 4 + biomeScale),
             StackedZoomLayer.modal("mutation", 1000, "mutation", 2).unsalted(),
-//            StackedZoomLayer.modal("mutation", 1000, "mutation", 2).unsalted(),
             new ComputeRiverLayer("river", 0, "river", false),
             new SmoothLayer("river", 1000, "river"),
             // region BiomeInitLayer
@@ -2100,21 +2083,20 @@ public class ModernBetaSettingsPresets {
                     ExtendedBiomeId.of("minecraft:deep_ocean")
                 )
             )),
-            new ConditionalOverlayLayer("hills", 1000, "mutation", BiomePredicate.oneIn(3).or(BiomePredicate.wrappedIntMatch(29, 0)), "hills", "land"),
+            new ConditionalLayerOverlayLayer("hills", 1000, "mutation", BiomePredicate.oneIn(3).or(BiomePredicate.wrappedIntMatch(29, 0)), "hills", "land"),
             new SimpleBiomeReplacementLayer("mutated_hills", 0, "hills", mutatedVariants),
-            new ConditionalOverlayLayer("hills", 0, "mutation", BiomePredicate.wrappedIntMatch(29, 0), "mutated_hills", "hills"),
-            new ConditionalOverlayLayer("land_with_hills", 0, "land", hillPredicate, "hills", "land"),
+            new ConditionalLayerOverlayLayer("hills", 0, "mutation", BiomePredicate.wrappedIntMatch(29, 0), "mutated_hills", "hills"),
+            new ConditionalLayerOverlayLayer("land_with_hills", 0, "land", hillPredicate, "hills", "land"),
             new SimpleBiomeReplacementLayer("mutated_land", 0, "land", mutatedVariants),
-            new ConditionalOverlayLayer("mutated_land", 0, "mutation", BiomePredicate.wrappedIntMatch(29, 1), "mutated_land", "land_with_hills"),
-            new ConditionalOverlayLayer("land", 0, "land", BiomePredicate.of(ExtendedBiomeId.OCEAN).invert(), "mutated_land", "land_with_hills"),
+            new ConditionalLayerOverlayLayer("mutated_land", 0, "mutation", BiomePredicate.wrappedIntMatch(29, 1), "mutated_land", "land_with_hills"),
+            new ConditionalLayerOverlayLayer("land", 0, "land", BiomePredicate.of(ExtendedBiomeId.OCEAN).invert(), "mutated_land", "land_with_hills"),
             // endregion RegionHillsLayer
-            new ConstantBiomeLayer("sunflower_plains", 0, ExtendedBiomeId.of("minecraft:sunflower_plains")),
-            new ConditionalOverlayLayer("land", 1001, "land",
+            new ConditionalBiomeOverlayLayer("land", 1001, "land",
                 BiomePredicate.of(ExtendedBiomeId.PLAINS)
                     .and(BiomePredicate.oneIn(57)),
-                "sunflower_plains", "land"),
+                ExtendedBiomeId.of("sunflower_plains"), ExtendedBiomeId.NULL),
             new ModalZoomLayer("land", 1000, "land"),
-            AddLandLayer.forEarlyRelease("land", 3, "land", ExtendedBiomeId.of("moderner_beta:early_release_ice_plains")),
+            AddLandLayer.forMajorRelease("land", 3, "land"),
             new ModalZoomLayer("land", 1001, "land"),
             // ShoreLayer
             new PredicateOverlayLayer("land", 0, "land", List.of(

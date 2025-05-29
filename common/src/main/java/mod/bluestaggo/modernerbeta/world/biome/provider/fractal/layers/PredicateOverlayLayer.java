@@ -113,7 +113,7 @@ public class PredicateOverlayLayer extends SingleParentLayer {
         }
 
         public static Target exclusiveBeach(Set<ExtendedBiomeId> biomes, ExtendedBiomeId beach) {
-            return inclusiveBeach(biomes, BiomePredicate.of(ExtendedBiomeId.OCEAN), beach);
+            return exclusiveBeach(biomes, BiomePredicate.of(ExtendedBiomeId.OCEAN), beach);
         }
 
         public static Target exclusiveBeach(Set<ExtendedBiomeId> biomes, BiomePredicate ocean, ExtendedBiomeId beach) {

@@ -180,6 +180,7 @@ public final class ModernBetaBuiltInTypes {
         BETA_SURVIVAL_ISLAND("beta_survival_island"),
         BETA_VANILLA("beta_vanilla"),
         RELEASE_HYBRID("release_hybrid"),
+        SNOW_AINT_SNOWIER("snow_aint_snowier"),
         ALPHA_WINTER("alpha_winter"),
         INDEV_PARADISE("indev_paradise"),
         INDEV_WOODS("indev_woods"),
@@ -198,6 +199,8 @@ public final class ModernBetaBuiltInTypes {
         RELEASE_1_6_4_LARGE_BIOMES("release_1_6_4_large_biomes"),
         RELEASE_1_12_2_LARGE_BIOMES("release_1_12_2_large_biomes"),
         RELEASE_1_17_1_LARGE_BIOMES("release_1_17_1_large_biomes"),
+        RELEASE_HYBRID_LARGE_BIOMES("release_hybrid_large_biomes"),
+        SNOW_AINT_SNOWIER_LARGE_BIOMES("snow_aint_snowier_large_biomes"),
         ;
         
         public final Identifier id;

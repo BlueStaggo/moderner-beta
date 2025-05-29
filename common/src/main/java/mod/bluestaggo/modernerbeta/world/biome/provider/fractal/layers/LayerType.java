@@ -7,6 +7,7 @@ import net.minecraft.registry.Registry;
 
 public record LayerType<L extends Layer>(MapCodec<L> codec) {
     public static final LayerType<AddLandLayer> ADD_LAND = register("add_land", AddLandLayer.CODEC);
+    public static final LayerType<ApplyOceanClimateLayer> APPLY_OCEAN_CLIMATE = register("apply_ocean_climate", ApplyOceanClimateLayer.CODEC);
     public static final LayerType<BiomeToLayerOverlayLayer> BIOME_TO_LAYER_OVERLAY = register("biome_to_layer_overlay", BiomeToLayerOverlayLayer.CODEC);
     public static final LayerType<ComputeRiverLayer> COMPUTE_RIVER = register("compute_river", ComputeRiverLayer.CODEC);
     public static final LayerType<ConditionalBiomeOverlayLayer> CONDITIONAL_BIOME_OVERLAY = register("conditional_biome_overlay", ConditionalBiomeOverlayLayer.CODEC);
@@ -15,6 +16,7 @@ public record LayerType<L extends Layer>(MapCodec<L> codec) {
     public static final LayerType<FuzzyZoomLayer> FUZZY_ZOOM = register("fuzzy_zoom", FuzzyZoomLayer.CODEC);
     public static final LayerType<InitLandLayer> INIT_LAND = register("init_land", InitLandLayer.CODEC);
     public static final LayerType<InitRiverLayer> INIT_RIVER = register("init_river", InitRiverLayer.CODEC);
+    public static final LayerType<MappedNoiseLayer> MAPPED_NOISE = register("mapped_noise", MappedNoiseLayer.CODEC);
     public static final LayerType<MixRiverLayer> MIX_RIVER = register("mix_river", MixRiverLayer.CODEC);
     public static final LayerType<ModalZoomLayer> MODAL_ZOOM = register("modal_zoom", ModalZoomLayer.CODEC);
     public static final LayerType<PointZoomLayer> POINT_ZOOM = register("point_zoom", PointZoomLayer.CODEC);

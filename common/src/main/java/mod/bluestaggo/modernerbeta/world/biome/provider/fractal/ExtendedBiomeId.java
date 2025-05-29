@@ -34,6 +34,12 @@ public record ExtendedBiomeId(Identifier baseId, String ext, boolean weak) {
         RIVER_REGION_A = ExtendedBiomeId.RIVER.withExt("region_a"),
         RIVER_REGION_B = ExtendedBiomeId.RIVER.withExt("region_b"),
         RANDOM = of(BiomeKeys.THE_VOID, "mutation"),
+        WARM_OCEAN = of(BiomeKeys.WARM_OCEAN),
+        LUKEWARM_OCEAN = of(BiomeKeys.LUKEWARM_OCEAN),
+        COLD_OCEAN = of(BiomeKeys.COLD_OCEAN),
+        DEEP_LUKEWARM_OCEAN = of(BiomeKeys.DEEP_LUKEWARM_OCEAN),
+        DEEP_COLD_OCEAN = of(BiomeKeys.DEEP_COLD_OCEAN),
+        DEEP_FROZEN_OCEAN = of(BiomeKeys.DEEP_FROZEN_OCEAN),
         NULL = of(BiomeKeys.THE_VOID, "null");
     public static final List<ExtendedBiomeId>
         CLIMATE_WARM_RARE = rareClimate(BiomeKeys.BADLANDS),

@@ -89,7 +89,10 @@ public record ModernBetaSettingsPresetCategory(Identifier defaultIcon, List<Iden
     public static ModernBetaSettingsPresetCategory RELEASE_CUSTOM = new ModernBetaSettingsPresetCategory(
             ModernBetaBuiltInTypes.Preset.ISLE_LAND.id,
             List.of(
+                ModernBetaBuiltInTypes.Preset.SNOW_AINT_SNOWIER.id,
+                ModernBetaBuiltInTypes.Preset.SNOW_AINT_SNOWIER_LARGE_BIOMES.id,
                 ModernBetaBuiltInTypes.Preset.RELEASE_HYBRID.id,
+                ModernBetaBuiltInTypes.Preset.RELEASE_HYBRID_LARGE_BIOMES.id,
                 ModernBetaBuiltInTypes.Preset.WATER_WORLD.id,
                 ModernBetaBuiltInTypes.Preset.ISLE_LAND.id,
                 ModernBetaBuiltInTypes.Preset.CAVE_DELIGHT.id,

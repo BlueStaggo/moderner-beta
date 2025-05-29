@@ -164,6 +164,7 @@ public class ModernBetaBuiltInProviders {
         registryHandler.register(ModernBetaBuiltInTypes.Preset.BETA_SURVIVAL_ISLAND.id, ModernBetaSettingsPresets.PRESET_BETA_SURVIVAL_ISLAND);
         registryHandler.register(ModernBetaBuiltInTypes.Preset.BETA_VANILLA.id, ModernBetaSettingsPresets.PRESET_BETA_VANILLA);
         registryHandler.register(ModernBetaBuiltInTypes.Preset.RELEASE_HYBRID.id, ModernBetaSettingsPresets.PRESET_RELEASE_HYBRID);
+        registryHandler.register(ModernBetaBuiltInTypes.Preset.SNOW_AINT_SNOWIER.id, ModernBetaSettingsPresets.PRESET_SNOW_AINT_SNOWIER);
         registryHandler.register(ModernBetaBuiltInTypes.Preset.ALPHA_WINTER.id, ModernBetaSettingsPresets.PRESET_ALPHA_WINTER);
         registryHandler.register(ModernBetaBuiltInTypes.Preset.INDEV_PARADISE.id, ModernBetaSettingsPresets.PRESET_INDEV_PARADISE);
         registryHandler.register(ModernBetaBuiltInTypes.Preset.INDEV_WOODS.id, ModernBetaSettingsPresets.PRESET_INDEV_WOODS);
@@ -182,6 +183,8 @@ public class ModernBetaBuiltInProviders {
         registryHandler.register(ModernBetaBuiltInTypes.Preset.RELEASE_1_6_4_LARGE_BIOMES.id, ModernBetaSettingsPresets.PRESET_RELEASE_1_6_4_LARGE_BIOMES);
         registryHandler.register(ModernBetaBuiltInTypes.Preset.RELEASE_1_12_2_LARGE_BIOMES.id, ModernBetaSettingsPresets.PRESET_RELEASE_1_12_2_LARGE_BIOMES);
         registryHandler.register(ModernBetaBuiltInTypes.Preset.RELEASE_1_17_1_LARGE_BIOMES.id, ModernBetaSettingsPresets.PRESET_RELEASE_1_17_1_LARGE_BIOMES);
+        registryHandler.register(ModernBetaBuiltInTypes.Preset.RELEASE_HYBRID_LARGE_BIOMES.id, ModernBetaSettingsPresets.PRESET_RELEASE_HYBRID_LARGE_BIOMES);
+        registryHandler.register(ModernBetaBuiltInTypes.Preset.SNOW_AINT_SNOWIER_LARGE_BIOMES.id, ModernBetaSettingsPresets.PRESET_SNOW_AINT_SNOWIER_LARGE_BIOMES);
     }
 
     public static void registerSettingsPresetCategories(IRegistryHandler<?> handler) {

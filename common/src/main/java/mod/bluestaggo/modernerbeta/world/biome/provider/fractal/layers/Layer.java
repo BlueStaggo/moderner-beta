@@ -115,6 +115,10 @@ public abstract class Layer {
         return this.random;
     }
 
+    protected final long getSaltedSeed() {
+        return this.saltedSeed;
+    }
+
     public final void addPossibleBiomesRecursive(Set<ExtendedBiomeId> biomes) {
         for (Layer parent : this.getParents()) {
             parent.addPossibleBiomesRecursive(biomes);

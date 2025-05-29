@@ -18,7 +18,7 @@ import net.minecraft.registry.RegistryKey;
 
 public final class ModernBetaRegistryKeys {
     public static final RegistryKey<Registry<ChunkProviderCreator>> CHUNK = RegistryKey.ofRegistry(ModernerBeta.createId("chunk_provider"));
-    public static final RegistryKey<Registry<BiomeProviderCreator>> BIOME = RegistryKey.ofRegistry(ModernerBeta.createId("biome_provider"));
+    public static final RegistryKey<Registry<BiomeProviderCreator<?>>> BIOME = RegistryKey.ofRegistry(ModernerBeta.createId("biome_provider"));
     public static final RegistryKey<Registry<CaveBiomeProviderCreator>> CAVE_BIOME = RegistryKey.ofRegistry(ModernerBeta.createId("cave_biome_provider"));
     public static final RegistryKey<Registry<NoisePostProcessor>> NOISE_POST_PROCESSOR = RegistryKey.ofRegistry(ModernerBeta.createId("noise_post_processor"));
     public static final RegistryKey<Registry<SurfaceConfig>> SURFACE_CONFIG = RegistryKey.ofRegistry(ModernerBeta.createId("surface_config"));

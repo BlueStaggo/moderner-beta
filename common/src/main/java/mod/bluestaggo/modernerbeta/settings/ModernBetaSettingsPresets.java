@@ -491,6 +491,8 @@ public class ModernBetaSettingsPresets {
         settingsChunk.indevMaxHeightBoost = 6.0f;
         settingsChunk.indevHeightUnderDamp = 2.0f;
         settingsChunk.indevCaveRarity = 16384;
+        settingsChunk.indevWaterRarity = 200;
+        settingsChunk.indevLavaRarity = 10000;
         settingsChunk.indevSandBeachUnderAir = true;
         settingsChunk.indevSandBeachUnderFluid = false;
         settingsChunk.indevGravelBeachUnderAir = true;

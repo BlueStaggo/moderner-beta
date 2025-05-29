@@ -5,6 +5,7 @@ import com.mojang.serialization.Codec;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import mod.bluestaggo.modernerbeta.config.ModernBetaConfig;
+import mod.bluestaggo.modernerbeta.network.INetworkHelper;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistryKeys;
@@ -50,6 +51,7 @@ public class ModernerBeta {
     );
 
     public static Map<Registry<?>, Consumer<IRegistryHandler<?>>> CUSTOM_REGISTRY_HANDLERS;
+    public static INetworkHelper networkHelper;
 
     public static final List<Pair<RegistryKey<?>, Codec<?>>> DYNAMIC_REGISTRIES = List.of();
 

@@ -19,7 +19,7 @@ import net.minecraft.util.Identifier;
 public final class ModernBetaRegistries {
     private static IRegistryHelper registryHelper;
     public static Registry<ChunkProviderCreator> CHUNK;
-    public static Registry<BiomeProviderCreator> BIOME;
+    public static Registry<BiomeProviderCreator<?>> BIOME;
     public static Registry<CaveBiomeProviderCreator> CAVE_BIOME;
     public static Registry<NoisePostProcessor> NOISE_POST_PROCESSOR;
     public static Registry<SurfaceConfig> SURFACE_CONFIG;

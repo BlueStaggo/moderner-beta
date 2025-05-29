@@ -49,6 +49,15 @@ public abstract class BiomeProvider {
     }
 
     /**
+     * Gets the biome provider settings.
+     *
+     * @return The biome provider settings.
+     */
+    public ModernBetaSettingsBiome getSettings() {
+        return this.settings;
+    }
+
+    /**
      * Gets the name of a biome at the given biome coordinates.
      * Used for the biome preview in the graphical settings menu.
      *

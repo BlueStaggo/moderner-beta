@@ -366,21 +366,9 @@
 
     "text.autoconfig.moderner_beta.title": "Moderner Beta Configuration",
 
-    "text.autoconfig.moderner_beta.category.fixedSeed": "Fixed Seed Options",
     "text.autoconfig.moderner_beta.category.betaBiomeColor": "Beta Biome Color Options",
     "text.autoconfig.moderner_beta.category.peBiomeColor": "PE Biome Color Options",
     "text.autoconfig.moderner_beta.category.other": "Other Options",
-    
-    "text.autoconfig.moderner_beta.option.fixedSeed": "Fixed Seed",
-    "text.autoconfig.moderner_beta.option.fixedSeed.@Tooltip[0]": "For use on servers with Moderner Beta.",
-    "text.autoconfig.moderner_beta.option.fixedSeed.@Tooltip[1]": "Change to server seed to render",
-    "text.autoconfig.moderner_beta.option.fixedSeed.@Tooltip[2]": "correct biome colors.",
-    "text.autoconfig.moderner_beta.option.fixedSeed.@Tooltip[3]": "(Requires world reload)",
-    
-    "text.autoconfig.moderner_beta.option.useFixedSeed": "Use Fixed Seed",
-    "text.autoconfig.moderner_beta.option.useFixedSeed.@Tooltip[0]": "For use on servers with Moderner Beta.",
-    "text.autoconfig.moderner_beta.option.useFixedSeed.@Tooltip[1]": "Enable to use fixed seed.",
-    "text.autoconfig.moderner_beta.option.useFixedSeed.@Tooltip[2]": "(Requires world reload)",
     
     "text.autoconfig.moderner_beta.option.useBetaSkyColor": "Use Beta Sky Colors",
     "text.autoconfig.moderner_beta.option.useBetaSkyColor.@Tooltip[0]": "Use client-side temperature",

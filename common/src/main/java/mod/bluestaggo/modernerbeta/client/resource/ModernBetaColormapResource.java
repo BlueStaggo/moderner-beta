@@ -1,7 +1,7 @@
 package mod.bluestaggo.modernerbeta.client.resource;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;
-import net.minecraft.client.util.RawTextureDataLoader;
+import net.minecraft.client.texture.TextureContents;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.SynchronousResourceReloader;
 import net.minecraft.util.Identifier;
@@ -11,19 +11,19 @@ import java.util.function.Consumer;
 
 public class ModernBetaColormapResource implements SynchronousResourceReloader {
     private final Identifier id;
-    private final Consumer<int[]> consumer;
+    private final Consumer<TextureContents> consumer;
     
-    public ModernBetaColormapResource(String path, Consumer<int[]> consumer) {
+    public ModernBetaColormapResource(String path, Consumer<TextureContents> consumer) {
         this.id = ModernerBeta.createId(path);
         this.consumer = consumer;
     }
 
     @Override
     public void reload(ResourceManager resourceManager) {
-        int[] map;
+        TextureContents map;
 
         try {
-            map = RawTextureDataLoader.loadRawTextureData(resourceManager, this.id);
+            map = TextureContents.load(resourceManager, this.id);
         } catch (IOException exception) {
             throw new IllegalStateException("[Modern Beta] Failed to load colormap texture!", exception);
         }

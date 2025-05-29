@@ -230,7 +230,7 @@
     "createWorld.customize.modern_beta.settings.chunk.noiseBottomSlideTarget": "Bottom Slide Target",
     "createWorld.customize.modern_beta.settings.chunk.noiseBottomSlideSize": "Bottom Slide Size",
     "createWorld.customize.modern_beta.settings.chunk.noiseBottomSlideOffset": "Bottom Slide Offset",
-    "createWorld.customize.modern_beta.settings.chunk.releaseHeightOverrides": "Biome Height Overrides",
+    "createWorld.customize.modern_beta.settings.chunk.releaseBiomeHeightConfigs": "Biome Height Overrides",
     "createWorld.customize.modern_beta.settings.chunk.releaseBiomeDepthWeight": "Biome Depth Weight",
     "createWorld.customize.modern_beta.settings.chunk.releaseBiomeDepthOffset": "Biome Depth Offset",
     "createWorld.customize.modern_beta.settings.chunk.releaseBiomeScaleWeight": "Biome Scale Weight",

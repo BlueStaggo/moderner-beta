@@ -25,7 +25,7 @@ public class CategorizedNeighborBiomePredicate extends NeighborComparisonPredica
 
     private final List<Set<ExtendedBiomeId>> categories;
     private transient final Map<ExtendedBiomeId, Set<ExtendedBiomeId>> mapToCategories;
-    private Set<ExtendedBiomeId> currentCategory;
+    private transient Set<ExtendedBiomeId> currentCategory;
 
     protected CategorizedNeighborBiomePredicate(int requiredCount, boolean diagonal, List<Set<ExtendedBiomeId>> categories) {
         super(requiredCount, diagonal);
@@ -47,7 +47,7 @@ public class CategorizedNeighborBiomePredicate extends NeighborComparisonPredica
 
     @Override
     protected void prepareMatch(ExtendedBiomeId biome, Layer layer, Supplier<LayerRandom> randomSupplier, int x, int z) {
-        this.currentCategory = this.mapToCategories.get(biome);
+        this.currentCategory = this.mapToCategories.computeIfAbsent(biome, Set::of);
     }
 
     @Override

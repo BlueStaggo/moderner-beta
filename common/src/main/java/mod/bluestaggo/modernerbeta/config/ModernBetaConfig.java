@@ -55,14 +55,6 @@ public class ModernBetaConfig implements ConfigData {
         // Colors sourced from Cubiomes (https://github.com/Cubitect/cubiomes/blob/e61f90580cbdd883214a8054670dacae655e59c0/util.c#L316)
         biomePreviewColors.put("minecraft:ocean", 0x000070);
         biomePreviewColors.put("minecraft:plains", 0x8db360);
-        biomePreviewColors.put("minecraft:plains*climate_warm", 0xfa9418);
-        biomePreviewColors.put("minecraft:plains*climate_warm_rare", 0xd94515);
-        biomePreviewColors.put("minecraft:plains*climate_temperate", 0x8db360);
-        biomePreviewColors.put("minecraft:plains*climate_temperate_rare", 0x507b0a);
-        biomePreviewColors.put("minecraft:plains*climate_cool", 0x0b6a5f);
-        biomePreviewColors.put("minecraft:plains*climate_cool_rare", 0x818e79);
-        biomePreviewColors.put("minecraft:plains*climate_snowy", 0xffffff);
-        biomePreviewColors.put("minecraft:plains*climate_snowy_rare", 0xb4dcdc);
         biomePreviewColors.put("moderner_beta:late_beta_plains", 0x8db360);
         biomePreviewColors.put("minecraft:desert", 0xfa9418);
         biomePreviewColors.put("minecraft:windswept_hills", 0x606060);

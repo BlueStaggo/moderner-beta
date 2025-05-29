@@ -35,7 +35,7 @@ public abstract class BiomePredicate {
     }
 
     public static BiomePredicate diagonalInterior() {
-        return new IdenticalNeighborBiomePredicate(4, false);
+        return new IdenticalNeighborBiomePredicate(4, true);
     }
 
     public static BiomePredicate diagonalNeighborsMatch(BiomePredicate predicate, int neighborCount) {
@@ -66,18 +66,6 @@ public abstract class BiomePredicate {
         return new IdenticalNeighborBiomePredicate(4, false);
     }
 
-    public static BiomePredicate of(ExtendedBiomeId biome) {
-        return new SingleMatchBiomePredicate(biome);
-    }
-
-    public static BiomePredicate ofTrue() {
-        return TrueBiomePredicate.INSTANCE;
-    }
-
-    public static BiomePredicate oneIn(int chance) {
-        return new RandomChanceBiomePredicate(1, chance);
-    }
-
     public static BiomePredicate neighborsMatch(BiomePredicate predicate, int neighborCount) {
         return new NeighborMatchBiomePredicate(neighborCount, false, predicate);
     }
@@ -106,12 +94,28 @@ public abstract class BiomePredicate {
         return inSet(biomes).invert();
     }
 
+    public static BiomePredicate of(ExtendedBiomeId biome) {
+        return new SingleMatchBiomePredicate(biome);
+    }
+
+    public static BiomePredicate ofTrue() {
+        return TrueBiomePredicate.INSTANCE;
+    }
+
+    public static BiomePredicate oneIn(int chance) {
+        return new RandomChanceBiomePredicate(1, chance);
+    }
+
     public static BiomePredicate randomChance(int numerator, int denominator) {
         return new RandomChanceBiomePredicate(numerator, denominator);
     }
 
     public static BiomePredicate uniqueNeighbors(int count, boolean diagonal) {
         return new UniqueNeighborBiomePredicate(count, diagonal);
+    }
+
+    public static BiomePredicate wrappedIntMatch(int range, int match) {
+        return new WrappedIntMatchBiomePredicate(range, match);
     }
 
     public BiomePredicate and(BiomePredicate other) {

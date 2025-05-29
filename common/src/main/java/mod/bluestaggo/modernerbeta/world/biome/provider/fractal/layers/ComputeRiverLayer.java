@@ -52,6 +52,7 @@ public class ComputeRiverLayer extends SingleParentLayer {
     private static byte getRiverType(ExtendedBiomeId biome) {
         return RIVER_REGION_A.equals(biome) ? (byte)1
             : RIVER_REGION_B.equals(biome) ? (byte)2
+            : biome.isOf(ExtendedBiomeId.RANDOM.baseId()) ? (byte)(1 + (biome.ext().charAt(biome.ext().length() - 1) & 1))
             : (byte)0;
     }
 }

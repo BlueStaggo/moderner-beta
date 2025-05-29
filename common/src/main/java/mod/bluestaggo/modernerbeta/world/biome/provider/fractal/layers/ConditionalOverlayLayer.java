@@ -4,7 +4,6 @@ import com.google.common.base.Suppliers;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import mod.bluestaggo.modernerbeta.util.CodecUtil;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.predicates.BiomePredicate;
 
@@ -41,11 +40,17 @@ public class ConditionalOverlayLayer extends SingleParentLayer {
         super.configure(layerMap);
         this.onMatchLayer = !this.onMatch.isEmpty() ? layerMap.apply(this.onMatch) : null;
         this.otherwiseLayer = !this.otherwise.isEmpty() ? layerMap.apply(this.otherwise) : null;
+        if (this.onMatchLayer == this.parentLayer) {
+            this.onMatchLayer = null;
+        }
+        if (this.otherwiseLayer == this.parentLayer) {
+            this.otherwiseLayer = null;
+        }
     }
 
     @Override
     public LayerType<?> getType() {
-        return LayerType.CONDITIONAL_MASK;
+        return LayerType.CONDITIONAL_OVERLAY;
     }
 
     @Override
@@ -64,7 +69,7 @@ public class ConditionalOverlayLayer extends SingleParentLayer {
     @Override
     protected ExtendedBiomeId generate(int x, int z) {
         ExtendedBiomeId biome = this.parentLayer.sample(x, z);
-        Layer layer = this.predicate.matches(biome, this, Suppliers.memoize(() -> this.getRandom(x, z)), x, z)
+        Layer layer = this.predicate.matches(biome, this.parentLayer, Suppliers.memoize(() -> this.getRandom(x, z)), x, z)
             ? this.onMatchLayer : this.otherwiseLayer;
         if (layer == null) {
             return biome;

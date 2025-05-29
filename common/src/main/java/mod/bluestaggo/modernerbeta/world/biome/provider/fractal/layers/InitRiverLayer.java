@@ -10,15 +10,11 @@ import static mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedB
 public class InitRiverLayer extends SingleParentLayer {
     public static final MapCodec<InitRiverLayer> CODEC = RecordCodecBuilder.mapCodec(
         instance -> fillSingleParentLayerFields(instance)
-            .and(Codec.BOOL.fieldOf("wideRandom").orElse(false).forGetter(layer -> layer.wideRandom))
             .apply(instance, InitRiverLayer::new)
     );
 
-    private final boolean wideRandom;
-
-    public InitRiverLayer(String id, long seed, String parent, boolean wideRandom) {
+    public InitRiverLayer(String id, long seed, String parent) {
         super(id, seed, parent);
-        this.wideRandom = wideRandom;
     }
 
     @Override
@@ -34,9 +30,6 @@ public class InitRiverLayer extends SingleParentLayer {
         }
 
         LayerRandom random = this.getRandom(x, z);
-        boolean useRegionB = this.wideRandom
-            ? random.nextInt(299999) % 2 == 0
-            : random.nextInt(2) == 0;
-        return useRegionB ? RIVER_REGION_B : RIVER_REGION_A;
+        return random.nextInt(2) == 0 ? RIVER_REGION_B : RIVER_REGION_A;
     }
 }

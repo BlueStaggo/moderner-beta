@@ -86,6 +86,15 @@ public abstract class Layer {
         this.random = new LayerRandom(this.saltedSeed);
     }
 
+    public void initUnsalted() {
+        for (Layer parent : this.getParents()) {
+            parent.initUnsalted();
+        }
+        this.cache.clear();
+        this.saltedSeed = 0;
+        this.random = new LayerRandom(0);
+    }
+
     public synchronized ExtendedBiomeId sample(int x, int z) {
         long pos = ColumnPos.pack(x, z);
         ExtendedBiomeId biome = this.cache.get(pos);
@@ -133,6 +142,10 @@ public abstract class Layer {
 
     public final Layer skipRandom(int amount) {
         return new PreSkipRandomLayer(this.id, 0, this, amount);
+    }
+
+    public final Layer unsalted() {
+        return new UnsaltedLayer(this.id, 0, this);
     }
 
     protected String getName() {

@@ -9,6 +9,7 @@ import net.minecraft.world.biome.BiomeKeys;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public record ExtendedBiomeId(Identifier baseId, String ext, boolean weak) {
     public static final Codec<ExtendedBiomeId> CODEC = Codec.STRING.comapFlatMap(ExtendedBiomeId::validate, ExtendedBiomeId::toString);
@@ -26,18 +27,19 @@ public record ExtendedBiomeId(Identifier baseId, String ext, boolean weak) {
         BEACH = of(BiomeKeys.BEACH),
         MUSHROOM_ISLAND = of(BiomeKeys.MUSHROOM_FIELDS),
         MUSHROOM_SHORE = of(BiomeKeys.MUSHROOM_FIELDS, "shore"),
-        CLIMATE_WARM = of(BiomeKeys.PLAINS, "climate_warm"),
-        CLIMATE_WARM_RARE = of(BiomeKeys.PLAINS, "climate_warm_rare"),
-        CLIMATE_TEMPERATE = of(BiomeKeys.PLAINS, "climate_temperate"),
-        CLIMATE_TEMPERATE_RARE = of(BiomeKeys.PLAINS, "climate_temperate_rare"),
-        CLIMATE_COOL = of(BiomeKeys.PLAINS, "climate_cool"),
-        CLIMATE_COOL_RARE = of(BiomeKeys.PLAINS, "climate_cool_rare"),
-        CLIMATE_SNOWY = of(BiomeKeys.PLAINS, "climate_snowy"),
-        CLIMATE_SNOWY_RARE = of(BiomeKeys.PLAINS, "climate_snowy_rare"),
+        CLIMATE_WARM = of(BiomeKeys.DESERT, "climate"),
+        CLIMATE_TEMPERATE = of(BiomeKeys.PLAINS, "climate"),
+        CLIMATE_COOL = of(BiomeKeys.TAIGA, "climate"),
+        CLIMATE_SNOWY = of(BiomeKeys.SNOWY_PLAINS, "climate"),
         RIVER_REGION_A = ExtendedBiomeId.RIVER.withExt("region_a"),
         RIVER_REGION_B = ExtendedBiomeId.RIVER.withExt("region_b"),
-        MUTATION = of(BiomeKeys.THE_VOID, "mutation"),
+        RANDOM = of(BiomeKeys.THE_VOID, "mutation"),
         NULL = of(BiomeKeys.THE_VOID, "null");
+    public static final List<ExtendedBiomeId>
+        CLIMATE_WARM_RARE = rareClimate(BiomeKeys.BADLANDS),
+        CLIMATE_TEMPERATE_RARE = rareClimate(BiomeKeys.JUNGLE),
+        CLIMATE_COOL_RARE = rareClimate(BiomeKeys.OLD_GROWTH_PINE_TAIGA),
+        CLIMATE_SNOWY_RARE = rareClimate(BiomeKeys.ICE_SPIKES);
 
     public static ExtendedBiomeId of(String id) {
         return validate(id).getOrThrow();
@@ -91,6 +93,12 @@ public record ExtendedBiomeId(Identifier baseId, String ext, boolean weak) {
         return Arrays.stream(ids).map(ExtendedBiomeId::of).collect(Collectors.toSet());
     }
 
+    private static List<ExtendedBiomeId> rareClimate(RegistryKey<Biome> baseId) {
+        return IntStream.range(0, 15)
+            .mapToObj(i -> ExtendedBiomeId.of(baseId, "climate_" + i))
+            .toList();
+    }
+
     public ExtendedBiomeId withExt(String ext) {
         if (ext == null) {
             ext = "";
@@ -98,11 +106,11 @@ public record ExtendedBiomeId(Identifier baseId, String ext, boolean weak) {
         return new ExtendedBiomeId(this.baseId, ext, false);
     }
 
-    public ExtendedBiomeId setWeak() {
+    public ExtendedBiomeId asWeak() {
         return new ExtendedBiomeId(this.baseId, "", true);
     }
 
-    public ExtendedBiomeId setStrong() {
+    public ExtendedBiomeId asStrong() {
         return new ExtendedBiomeId(this.baseId, this.ext, false);
     }
 

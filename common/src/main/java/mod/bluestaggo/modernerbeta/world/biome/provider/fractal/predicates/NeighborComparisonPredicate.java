@@ -39,7 +39,7 @@ public abstract class NeighborComparisonPredicate extends BiomePredicate {
         int[] xCoords = this.diagonal ? DIAGONAL_NEIGHBOR_X_COORDS : NEIGHBOR_X_COORDS;
         int[] zCoords = this.diagonal ? DIAGONAL_NEIGHBOR_Z_COORDS : NEIGHBOR_Z_COORDS;
 
-    this.prepareMatch(biome, layer, randomSupplier, x, z);
+        this.prepareMatch(biome, layer, randomSupplier, x, z);
 
         int matches = 0;
         for (int i = 0; i < 4; i++) {

@@ -1,6 +1,8 @@
 package mod.bluestaggo.modernerbeta.client.gui.screen;
 
 import com.google.common.util.concurrent.AtomicDouble;
+import it.unimi.dsi.fastutil.ints.Int2IntAVLTreeMap;
+import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.api.world.biome.BiomeProvider;
@@ -35,7 +37,10 @@ import net.minecraft.world.biome.Biome;
 
 import java.awt.*;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
     private final BiomeProvider biomeProvider;
@@ -273,12 +278,17 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
         }
 
         class BiomeRenderThread extends Thread {
+            static final Pattern EXT_INT = Pattern.compile("(\\d)+$");
+
             volatile boolean stop;
             volatile boolean uploadRequested;
 
             int genX = -1;
             int genY;
             boolean full;
+
+            Int2IntMap randColors = new Int2IntAVLTreeMap();
+            Random random = new Random();
 
             @Override
             public void run() {
@@ -331,22 +341,22 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                             ? resolverExtendedIdStepped.getExtendedBiomeIdForStep(sampleX, 64, sampleY, step)
                             : resolverExtendedId.getExtendedBiomeId(sampleX, 64, sampleY)
                         : ExtendedBiomeId.NULL;
-                    int color = getBiomeColor(biome, extendedBiome.ext(), sampleX, sampleY);
+                    int color = this.getBiomeColor(biome, extendedBiome.ext(), sampleX, sampleY);
                     if (sampleX % (64 * gridScale) == 0 || sampleY % (64 * gridScale) == 0) {
                         int r = (color >> 16) & 0xFF;
                         int g = (color >> 8) & 0xFF;
                         int b = color & 0xFF;
-                        r = MathHelper.lerp(0.5f, r, 0xFF);
-                        g = MathHelper.lerp(0.5f, g, 0xFF);
-                        b = MathHelper.lerp(0.5f, b, 0xFF);
+                        r = MathHelper.lerp(0.5F, r, 0xFF);
+                        g = MathHelper.lerp(0.5F, g, 0xFF);
+                        b = MathHelper.lerp(0.5F, b, 0xFF);
                         color = r << 16 | g << 8 | b;
                     } else if (sampleX % (4 * gridScale) == 0 || sampleY % (4 * gridScale) == 0) {
                         int r = (color >> 16) & 0xFF;
                         int g = (color >> 8) & 0xFF;
                         int b = color & 0xFF;
-                        r = MathHelper.lerp(0.1f, r, 0xFF);
-                        g = MathHelper.lerp(0.1f, g, 0xFF);
-                        b = MathHelper.lerp(0.1f, b, 0xFF);
+                        r = MathHelper.lerp(0.1F, r, 0xFF);
+                        g = MathHelper.lerp(0.1F, g, 0xFF);
+                        b = MathHelper.lerp(0.1F, b, 0xFF);
                         color = r << 16 | g << 8 | b;
                     }
 
@@ -359,13 +369,25 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                 }
             }
 
-            private static int getBiomeColor(RegistryEntry<Biome> biomeEntry, String ext, int x, int y) {
+            private int getBiomeColor(RegistryEntry<Biome> biomeEntry, String ext, int x, int y) {
                 String id = biomeEntry.getIdAsString();
                 if (ext != null && !ext.isEmpty()) {
                     String extId = id + "*" + ext;
                     Integer registeredExtColor = ModernerBeta.CONFIG.biomePreviewColors.get(extId);
                     if (registeredExtColor != null) {
                         return registeredExtColor;
+                    }
+
+                    Matcher extIntMatcher = EXT_INT.matcher(ext);
+                    if (extIntMatcher.find()) {
+                        try {
+                            int extInt = Integer.parseInt(extIntMatcher.group());
+                            return extInt >= 256 ? extInt : this.randColors.computeIfAbsent(
+                                Integer.parseInt(extIntMatcher.group()),
+                                i -> this.random.nextInt(0xFFFFFF)
+                            );
+                        } catch (Exception ignored) {
+                        }
                     }
                 }
 

@@ -110,17 +110,20 @@ public class ModernBetaGraphicalChunkSettingsScreen extends ModernBetaGraphicalC
 
         list.addSingleOptionEntry(this.headerOption(this.getText("header.cave").formatted(Formatting.BOLD)));
         list.addAll(
-            isFiniteProvider ? new SimpleOption[] {
-                this.booleanOption(NbtTags.INDEV_USE_CAVES),
-                this.intRangeOption(NbtTags.INDEV_CAVE_RARITY, 1024, 40960, 1024),
-                this.floatRangeOption(NbtTags.INDEV_CAVE_RADIUS, 0.01F, 5.0F),
-            }
-            : new SimpleOption[] {
-                this.booleanOption(NbtTags.USE_CAVES),
-                this.booleanOption(NbtTags.USE_FIXED_CAVES),
-                this.booleanOption(NbtTags.FORCE_BETA_CAVES),
-                this.booleanOption(NbtTags.FORCE_BETA_RAVINES),
-            }
+            isFiniteProvider
+                ? new SimpleOption[] {
+                    this.booleanOption(NbtTags.INDEV_USE_CAVES),
+                    this.booleanOption(NbtTags.INDEV_USE_14A_CAVES),
+                    this.intRangeOption(NbtTags.INDEV_CAVE_RARITY, 1024, 40960, 1024),
+                    this.floatRangeOption(NbtTags.INDEV_CAVE_RADIUS, 0.01F, 5.0F),
+                    this.floatRangeOption(NbtTags.INDEV_CAVE_LENGTH, 0.0F, 500.0F),
+                }
+                : new SimpleOption[] {
+                    this.booleanOption(NbtTags.USE_CAVES),
+                    this.booleanOption(NbtTags.USE_FIXED_CAVES),
+                    this.booleanOption(NbtTags.FORCE_BETA_CAVES),
+                    this.booleanOption(NbtTags.FORCE_BETA_RAVINES),
+                }
         );
 
         if (isNoiseProvider) {
@@ -175,6 +178,8 @@ public class ModernBetaGraphicalChunkSettingsScreen extends ModernBetaGraphicalC
                 this.floatRangeOption(NbtTags.INDEV_GRAVEL_BEACH_THRESHOLD, -32.0F, 32.0F),
                 this.booleanOption(NbtTags.INDEV_GRAVEL_BEACH_UNDER_AIR),
                 this.booleanOption(NbtTags.INDEV_GRAVEL_BEACH_UNDER_FLUID),
+                this.booleanOption(NbtTags.INDEV_PRIORITIZE_GRAVEL_BEACHES),
+                this.booleanOption(NbtTags.INDEV_UNIFORM_LAVA_HEIGHTS),
                 this.intRangeOption(NbtTags.INDEV_WATER_RARITY, 1000, 50000, 1000),
                 this.intRangeOption(NbtTags.INDEV_LAVA_RARITY, 1000, 50000, 1000)
             );

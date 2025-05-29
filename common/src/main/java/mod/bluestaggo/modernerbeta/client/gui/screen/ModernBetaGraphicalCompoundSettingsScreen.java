@@ -258,7 +258,7 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
                 "",
                 SimpleOption.emptyTooltip(),
                 (optionText, value) -> Text.of(settings.getString(subKey).orElseThrow()),
-                new BiomePickerCallbacks(this.client::setScreen, this, this.generatorOptionsHolder, allowNone),
+                new TextFieldCallbacks(string -> ExtendedBiomeId.validate(string).isSuccess()),
                 ExtendedBiomeId.of(settings.getString(subKey).orElseThrow()).toString(),
                 value -> {
                     settings.putString(subKey, value);

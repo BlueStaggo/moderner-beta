@@ -2,6 +2,7 @@ package mod.bluestaggo.modernerbeta.client.gui.screen;
 
 import mod.bluestaggo.modernerbeta.client.gui.optioncallbacks.FloatSliderCallbacks;
 import mod.bluestaggo.modernerbeta.client.gui.optioncallbacks.BiomePickerCallbacks;
+import mod.bluestaggo.modernerbeta.client.gui.optioncallbacks.TextFieldCallbacks;
 import mod.bluestaggo.modernerbeta.util.NbtTags;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import net.minecraft.client.gui.screen.Screen;
@@ -124,7 +125,7 @@ public abstract class ModernBetaGraphicalListSettingsScreen extends ModernBetaGr
                 "",
                 SimpleOption.emptyTooltip(),
                 (optionText, value) -> Text.of(settings.getString(i).orElseThrow()),
-                new BiomePickerCallbacks(this.client::setScreen, this, this.generatorOptionsHolder, allowNone),
+                new TextFieldCallbacks(string -> ExtendedBiomeId.validate(string).isSuccess()),
                 ExtendedBiomeId.of(settings.getString(i).orElseThrow()).toString(),
                 value -> {
                     settings.add(i, NbtString.of(value));

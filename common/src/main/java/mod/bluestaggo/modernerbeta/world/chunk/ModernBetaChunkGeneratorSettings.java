@@ -22,8 +22,6 @@ import net.minecraft.world.gen.surfacebuilder.VanillaSurfaceRules;
 import java.util.List;
 
 public class ModernBetaChunkGeneratorSettings {
-    @Deprecated
-    public static final RegistryKey<ChunkGeneratorSettings> MODERN_BETA;
     public static final RegistryKey<ChunkGeneratorSettings> BETA;
     public static final RegistryKey<ChunkGeneratorSettings> ALPHA;
     public static final RegistryKey<ChunkGeneratorSettings> SKYLANDS;
@@ -37,9 +35,7 @@ public class ModernBetaChunkGeneratorSettings {
     public static final RegistryKey<ChunkGeneratorSettings> EARLY_RELEASE;
     public static final RegistryKey<ChunkGeneratorSettings> MAJOR_RELEASE;
 
-    @SuppressWarnings("deprecation")
     public static void bootstrap(Registerable<ChunkGeneratorSettings> settingsRegisterable) {
-        settingsRegisterable.register(MODERN_BETA, createGeneratorSettings(settingsRegisterable, ModernBetaShapeConfigs.MODERN_BETA, 64, true));
         settingsRegisterable.register(BETA, createGeneratorSettings(settingsRegisterable, ModernBetaShapeConfigs.BETA, 64, true));
         settingsRegisterable.register(ALPHA, createGeneratorSettings(settingsRegisterable, ModernBetaShapeConfigs.ALPHA, 64, true));
         settingsRegisterable.register(SKYLANDS, createGeneratorSettings(settingsRegisterable, ModernBetaShapeConfigs.SKYLANDS, 0, false));
@@ -114,7 +110,6 @@ public class ModernBetaChunkGeneratorSettings {
     }
 
     static {
-        MODERN_BETA = RegistryKey.of(RegistryKeys.CHUNK_GENERATOR_SETTINGS, ModernerBeta.createId(ModernerBeta.MOD_ID));
         BETA = RegistryKey.of(RegistryKeys.CHUNK_GENERATOR_SETTINGS, ModernBetaBuiltInTypes.Chunk.BETA.id);
         ALPHA = RegistryKey.of(RegistryKeys.CHUNK_GENERATOR_SETTINGS, ModernBetaBuiltInTypes.Chunk.ALPHA.id);
         SKYLANDS = RegistryKey.of(RegistryKeys.CHUNK_GENERATOR_SETTINGS, ModernBetaBuiltInTypes.Chunk.SKYLANDS.id);

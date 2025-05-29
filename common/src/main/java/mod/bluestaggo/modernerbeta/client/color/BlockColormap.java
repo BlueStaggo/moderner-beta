@@ -1,28 +1,28 @@
 package mod.bluestaggo.modernerbeta.client.color;
 
-public class BlockColormap {
-    private final int[] colormap;
-    
-    public BlockColormap() {
-        this.colormap = new int[65536];
-    }
-    
-    public void setColormap(int[] map) {
-        if (map.length != 65536)
-            throw new IllegalArgumentException("[Modern Beta] Color map is an invalid size!");
+import net.minecraft.client.texture.NativeImage;
+import net.minecraft.client.texture.TextureContents;
 
-        System.arraycopy(map, 0, this.colormap, 0, colormap.length);
+public class BlockColormap {
+    private TextureContents colormap;
+    
+    public void setColormap(TextureContents map) {
+        this.colormap = map;
     }
     
     public int getColor(double temp, double rain) {
-        int rainNdx = (int)((1.0 - (rain * temp)) * 255.0);
-        int tempNdx = (int)((1.0 - temp) * 255.0);
-        int ndx = rainNdx << 8 | tempNdx;
+        NativeImage image = this.colormap.image();
+
+        final int width = image.getWidth();
+        final int height = image.getHeight();
+
+        int x = (int)((1.0 - temp) * (width - 1));
+        int z = (int)((1.0 - (rain * temp)) * (height - 1));
         
-        if (ndx >= this.colormap.length) {
+        if (x < 0 || x >= width || z < 0 || z >= height) {
             return 0xFFFF00FF;
         }
         
-        return this.colormap[ndx];
+        return image.getColorArgb(x, z);
     }
 }

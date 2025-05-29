@@ -3,8 +3,6 @@ package mod.bluestaggo.modernerbeta.world.chunk;
 import net.minecraft.world.gen.chunk.GenerationShapeConfig;
 
 public class ModernBetaShapeConfigs {
-    @Deprecated
-    public static final GenerationShapeConfig MODERN_BETA;
     public static final GenerationShapeConfig BETA;
     public static final GenerationShapeConfig ALPHA;
     public static final GenerationShapeConfig SKYLANDS;
@@ -19,7 +17,6 @@ public class ModernBetaShapeConfigs {
     public static final GenerationShapeConfig MAJOR_RELEASE;
 
     static {
-        MODERN_BETA = GenerationShapeConfig.create(-64, 192, 1, 2);
         BETA = GenerationShapeConfig.create(-64, 192, 1, 2);
         ALPHA = GenerationShapeConfig.create(-64, 192, 1, 2);
         SKYLANDS = GenerationShapeConfig.create(0, 128, 2, 1);

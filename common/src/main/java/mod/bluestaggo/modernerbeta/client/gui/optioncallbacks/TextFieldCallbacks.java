@@ -1,6 +1,8 @@
 package mod.bluestaggo.modernerbeta.client.gui.optioncallbacks;
 
 import com.mojang.serialization.Codec;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -14,6 +16,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+@Environment(EnvType.CLIENT)
 public record TextFieldCallbacks(Predicate<String> validationFunction, Predicate<String> inputValidationFunction) implements SimpleOption.Callbacks<String> {
     public static final TextFieldCallbacks NO_VALIDATION = new TextFieldCallbacks(Objects::nonNull, Objects::nonNull);
 

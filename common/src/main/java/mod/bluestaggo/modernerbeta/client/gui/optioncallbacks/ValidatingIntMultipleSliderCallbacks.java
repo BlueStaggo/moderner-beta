@@ -1,11 +1,14 @@
 package mod.bluestaggo.modernerbeta.client.gui.optioncallbacks;
 
 import com.mojang.serialization.Codec;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.option.SimpleOption;
 import net.minecraft.util.math.MathHelper;
 
 import java.util.Optional;
 
+@Environment(EnvType.CLIENT)
 public record ValidatingIntMultipleSliderCallbacks(int minInclusive, int maxInclusive, int multiple) implements SimpleOption.IntSliderCallbacks {
     public Optional<Integer> validate(Integer integer) {
         return integer.compareTo(this.minInclusive()) >= 0 && integer.compareTo(this.maxInclusive()) <= 0 ? Optional.of(integer) : Optional.empty();

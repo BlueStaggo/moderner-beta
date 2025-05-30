@@ -1,9 +1,10 @@
 package mod.bluestaggo.modernerbeta.client.gui.screen;
 
-import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsChunk;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.world.GeneratorOptionsHolder;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.Registry;
@@ -15,6 +16,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.chunk.ChunkGeneratorSettings;
 
+@Environment(EnvType.CLIENT)
 public class ModernBetaWorldScreenProvider {
     public static GeneratorOptionsHolder.RegistryAwareModifier createModifier(
         NbtCompound chunkSettings,

@@ -1,5 +1,7 @@
 package mod.bluestaggo.modernerbeta.client.gui.screen;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.GridWidget;
@@ -8,6 +10,7 @@ import net.minecraft.client.gui.widget.TextWidget;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 
+@Environment(EnvType.CLIENT)
 public class ModernBetaSettingsConfirmScreen extends ModernBetaScreen {
     private final Runnable runnable;
     private final Text messageText;

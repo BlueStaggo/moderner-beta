@@ -2,6 +2,8 @@ package mod.bluestaggo.modernerbeta.client.gui.optioncallbacks;
 
 import com.mojang.serialization.Codec;
 import mod.bluestaggo.modernerbeta.mixin.client.AccessorTextWidget;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.TextWidget;
@@ -13,6 +15,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+@Environment(EnvType.CLIENT)
 public record TextLabelCallbacks(Text text, float alignment) implements SimpleOption.Callbacks<Void> {
     public TextLabelCallbacks(Text text) {
         this(text, 0.5F);

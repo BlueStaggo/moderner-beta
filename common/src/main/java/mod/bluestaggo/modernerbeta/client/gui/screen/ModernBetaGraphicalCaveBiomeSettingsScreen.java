@@ -3,6 +3,8 @@ package mod.bluestaggo.modernerbeta.client.gui.screen;
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
 import mod.bluestaggo.modernerbeta.util.NbtCompoundBuilder;
 import mod.bluestaggo.modernerbeta.util.NbtTags;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.OptionListWidget;
 import net.minecraft.client.option.SimpleOption;
@@ -17,6 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
+@Environment(EnvType.CLIENT)
 public class ModernBetaGraphicalCaveBiomeSettingsScreen extends ModernBetaGraphicalCompoundSettingsScreen {
     public ModernBetaGraphicalCaveBiomeSettingsScreen(
         String title,

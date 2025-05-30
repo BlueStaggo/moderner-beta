@@ -17,7 +17,7 @@ A major number change means a big update. For this update, significant parts of 
   - Currently, the new layer system has no graphical configuration screen.
 - Improved accuracy of the 0.0.14a_08 preset.
 - Removed dependency on Architectury API.
-- Made biome injectors not be used if the biome provider already generates oceans.
+- Made ocean biome injectors not be used if the biome provider already generates oceans.
 
 ## Removals
 - Removed Fixed Seed options, as it has been made redundant by the addition of the networking code for biome provider settings and world seed.

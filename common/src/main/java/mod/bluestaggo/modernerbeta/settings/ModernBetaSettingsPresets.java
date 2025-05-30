@@ -216,7 +216,7 @@ public class ModernBetaSettingsPresets {
         settingsChunk.noiseBottomSlideOffset = 0;
         
         settingsBiome.biomeProvider = ModernBetaBuiltInTypes.Biome.SINGLE.id;
-        settingsBiome.singleBiome = ModernBetaBiomes.ALPHA.getValue().toString();
+        settingsBiome.singleBiome = ModernBetaBiomes.ALPHA.getValue();
         
         settingsCaveBiome.biomeProvider = ModernBetaBuiltInTypes.CaveBiome.NONE.id;
         
@@ -253,7 +253,7 @@ public class ModernBetaSettingsPresets {
         settingsChunk.noiseBottomSlideOffset = 1;
         
         settingsBiome.biomeProvider = ModernBetaBuiltInTypes.Biome.SINGLE.id;
-        settingsBiome.singleBiome = ModernBetaBiomes.BETA_SKY.getValue().toString();
+        settingsBiome.singleBiome = ModernBetaBiomes.BETA_SKY.getValue();
         settingsBiome.useOceanBiomes = false;
         
         settingsCaveBiome.biomeProvider = ModernBetaBuiltInTypes.CaveBiome.NONE.id;
@@ -288,7 +288,7 @@ public class ModernBetaSettingsPresets {
         settingsChunk.noiseBottomSlideOffset = 0;
         
         settingsBiome.biomeProvider = ModernBetaBuiltInTypes.Biome.SINGLE.id;
-        settingsBiome.singleBiome = ModernBetaBiomes.INFDEV_415.getValue().toString();
+        settingsBiome.singleBiome = ModernBetaBiomes.INFDEV_415.getValue();
         
         settingsCaveBiome.biomeProvider = ModernBetaBuiltInTypes.CaveBiome.NONE.id;
         
@@ -323,7 +323,7 @@ public class ModernBetaSettingsPresets {
         settingsChunk.noiseBottomSlideOffset = 0;
         
         settingsBiome.biomeProvider = ModernBetaBuiltInTypes.Biome.SINGLE.id;
-        settingsBiome.singleBiome = ModernBetaBiomes.INFDEV_420.getValue().toString();
+        settingsBiome.singleBiome = ModernBetaBiomes.INFDEV_420.getValue();
         
         settingsCaveBiome.biomeProvider = ModernBetaBuiltInTypes.CaveBiome.NONE.id;
         
@@ -360,7 +360,7 @@ public class ModernBetaSettingsPresets {
         settingsChunk.noiseBottomSlideOffset = 0;
         
         settingsBiome.biomeProvider = ModernBetaBuiltInTypes.Biome.SINGLE.id;
-        settingsBiome.singleBiome = ModernBetaBiomes.INFDEV_611.getValue().toString();
+        settingsBiome.singleBiome = ModernBetaBiomes.INFDEV_611.getValue();
         
         settingsCaveBiome.biomeProvider = ModernBetaBuiltInTypes.CaveBiome.NONE.id;
         
@@ -383,7 +383,7 @@ public class ModernBetaSettingsPresets {
         settingsChunk.infdevUseWall = false;
 
         settingsBiome.biomeProvider = ModernBetaBuiltInTypes.Biome.SINGLE.id;
-        settingsBiome.singleBiome = ModernBetaBiomes.INFDEV_325.getValue().toString();
+        settingsBiome.singleBiome = ModernBetaBiomes.INFDEV_325.getValue();
 
         settingsCaveBiome.biomeProvider = ModernBetaBuiltInTypes.CaveBiome.NONE.id;
 
@@ -406,7 +406,7 @@ public class ModernBetaSettingsPresets {
         settingsChunk.infdevUseWall = true;
         
         settingsBiome.biomeProvider = ModernBetaBuiltInTypes.Biome.SINGLE.id;
-        settingsBiome.singleBiome = ModernBetaBiomes.INFDEV_227.getValue().toString();
+        settingsBiome.singleBiome = ModernBetaBiomes.INFDEV_227.getValue();
         
         settingsCaveBiome.biomeProvider = ModernBetaBuiltInTypes.CaveBiome.NONE.id;
         
@@ -434,7 +434,7 @@ public class ModernBetaSettingsPresets {
         settingsChunk.indevUseCaves = true;
         
         settingsBiome.biomeProvider = ModernBetaBuiltInTypes.Biome.SINGLE.id;
-        settingsBiome.singleBiome = ModernBetaBiomes.INDEV_NORMAL.getValue().toString();
+        settingsBiome.singleBiome = ModernBetaBiomes.INDEV_NORMAL.getValue();
         
         settingsCaveBiome.biomeProvider = ModernBetaBuiltInTypes.CaveBiome.NONE.id;
         
@@ -461,7 +461,7 @@ public class ModernBetaSettingsPresets {
         settingsChunk.indevGravelBeachUnderAir = false;
         
         settingsBiome.biomeProvider = ModernBetaBuiltInTypes.Biome.SINGLE.id;
-        settingsBiome.singleBiome = ModernBetaBiomes.INDEV_NORMAL.getValue().toString();
+        settingsBiome.singleBiome = ModernBetaBiomes.INDEV_NORMAL.getValue();
         
         settingsCaveBiome.biomeProvider = ModernBetaBuiltInTypes.CaveBiome.NONE.id;
         
@@ -504,7 +504,7 @@ public class ModernBetaSettingsPresets {
         settingsChunk.indevGravelBeachUnderFluid = false;
 
         settingsBiome.biomeProvider = ModernBetaBuiltInTypes.Biome.SINGLE.id;
-        settingsBiome.singleBiome = ModernBetaBiomes.CLASSIC_14A_08.getValue().toString();
+        settingsBiome.singleBiome = ModernBetaBiomes.CLASSIC_14A_08.getValue();
 
         settingsCaveBiome.biomeProvider = ModernBetaBuiltInTypes.CaveBiome.NONE.id;
 
@@ -1340,7 +1340,7 @@ public class ModernBetaSettingsPresets {
         ModernBetaSettingsBiome.Builder settingsBiome = new ModernBetaSettingsBiome.Builder().fromCompound(compoundBiome);
         ModernBetaSettingsCaveBiome.Builder settingsCaveBiome = new ModernBetaSettingsCaveBiome.Builder().fromCompound(compoundCaveBiome);
         
-        settingsBiome.singleBiome = ModernBetaBiomes.ALPHA_WINTER.getValue().toString();
+        settingsBiome.singleBiome = ModernBetaBiomes.ALPHA_WINTER.getValue();
         
         return new ModernBetaSettingsPreset(
             settingsChunk.build(),
@@ -1362,7 +1362,7 @@ public class ModernBetaSettingsPresets {
         
         settingsChunk.indevLevelTheme = IndevTheme.PARADISE.getId();
         
-        settingsBiome.singleBiome = ModernBetaBiomes.INDEV_PARADISE.getValue().toString();
+        settingsBiome.singleBiome = ModernBetaBiomes.INDEV_PARADISE.getValue();
         
         return new ModernBetaSettingsPreset(
             settingsChunk.build(),
@@ -1384,7 +1384,7 @@ public class ModernBetaSettingsPresets {
         
         settingsChunk.indevLevelTheme = IndevTheme.WOODS.getId();
         
-        settingsBiome.singleBiome = ModernBetaBiomes.INDEV_WOODS.getValue().toString();
+        settingsBiome.singleBiome = ModernBetaBiomes.INDEV_WOODS.getValue();
         
         return new ModernBetaSettingsPreset(
             settingsChunk.build(),
@@ -1406,7 +1406,7 @@ public class ModernBetaSettingsPresets {
         
         settingsChunk.indevLevelTheme = IndevTheme.HELL.getId();
         
-        settingsBiome.singleBiome = ModernBetaBiomes.INDEV_HELL.getValue().toString();
+        settingsBiome.singleBiome = ModernBetaBiomes.INDEV_HELL.getValue();
         
         return new ModernBetaSettingsPreset(
             settingsChunk.build(),

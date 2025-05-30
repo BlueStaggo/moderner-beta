@@ -21,7 +21,7 @@ import java.util.Map;
 
 public class ModernBetaSettingsBiome implements ModernBetaSettings {
     public final Identifier biomeProvider;
-    public final String singleBiome;
+    public final Identifier singleBiome;
     public final boolean useOceanBiomes;
     
     public final float climateTempNoiseScale;
@@ -66,7 +66,7 @@ public class ModernBetaSettingsBiome implements ModernBetaSettings {
     public NbtCompound toCompound() {
         NbtCompound compound = new NbtCompoundBuilder()
             .putIdentifier(NbtTags.BIOME_PROVIDER, this.biomeProvider)
-            .putString(NbtTags.SINGLE_BIOME, this.singleBiome)
+            .putIdentifier(NbtTags.SINGLE_BIOME, this.singleBiome)
             .putBoolean(NbtTags.USE_OCEAN_BIOMES, this.useOceanBiomes)
             .putFloat(NbtTags.CLIMATE_TEMP_NOISE_SCALE, this.climateTempNoiseScale)
             .putFloat(NbtTags.CLIMATE_RAIN_NOISE_SCALE, this.climateRainNoiseScale)
@@ -81,7 +81,7 @@ public class ModernBetaSettingsBiome implements ModernBetaSettings {
     
     public static class Builder {
         public Identifier biomeProvider;
-        public String singleBiome;
+        public Identifier singleBiome;
         public boolean useOceanBiomes;
         
         public float climateTempNoiseScale;
@@ -96,7 +96,7 @@ public class ModernBetaSettingsBiome implements ModernBetaSettings {
 
         public Builder() {
             this.biomeProvider = ModernBetaBuiltInTypes.Biome.BETA.id;
-            this.singleBiome = ModernBetaBiomes.BETA_PLAINS.getValue().toString();
+            this.singleBiome = ModernBetaBiomes.BETA_PLAINS.getValue();
             this.useOceanBiomes = true;
             
             this.climateTempNoiseScale = 0.025f;
@@ -168,7 +168,7 @@ public class ModernBetaSettingsBiome implements ModernBetaSettings {
             NbtReader reader = new NbtReader(compound);
             
             this.biomeProvider = reader.readIdentifier(NbtTags.BIOME_PROVIDER, this.biomeProvider);
-            this.singleBiome = reader.readString(NbtTags.SINGLE_BIOME, this.singleBiome);
+            this.singleBiome = reader.readIdentifier(NbtTags.SINGLE_BIOME, this.singleBiome);
             this.useOceanBiomes = reader.readBoolean(NbtTags.USE_OCEAN_BIOMES, this.useOceanBiomes);
             
             this.climateTempNoiseScale = reader.readFloat(NbtTags.CLIMATE_TEMP_NOISE_SCALE, this.climateTempNoiseScale);

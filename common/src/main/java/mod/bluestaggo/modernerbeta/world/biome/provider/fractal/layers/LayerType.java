@@ -37,6 +37,7 @@ public record LayerType<L extends Layer>(MapCodec<L> codec) {
         return registryHandler.register(ModernerBeta.createId(id), layerType);
     }
 
+    @SuppressWarnings("unchecked")
     public static void init(IRegistryHandler<?> handler) {
         registryHandler = (IRegistryHandler<LayerType<?>>) handler;
 

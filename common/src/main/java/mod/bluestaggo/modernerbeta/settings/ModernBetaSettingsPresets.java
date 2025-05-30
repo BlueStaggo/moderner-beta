@@ -28,7 +28,7 @@ public class ModernBetaSettingsPresets {
     public static final ModernBetaSettingsPreset PRESET_BETA_1_7_3 = presetBeta(false);
     public static final ModernBetaSettingsPreset PRESET_BETA_1_1_02 = presetBeta(true);
     public static final ModernBetaSettingsPreset PRESET_ALPHA = presetAlpha();
-    public static final ModernBetaSettingsPreset PRESET_SKYLANDS = presetSkylands(false);
+    public static final ModernBetaSettingsPreset PRESET_SKYLANDS = presetSkylands();
     public static final ModernBetaSettingsPreset PRESET_INFDEV_415 = presetInfdev415();
     public static final ModernBetaSettingsPreset PRESET_INFDEV_420 = presetInfdev420();
     public static final ModernBetaSettingsPreset PRESET_INFDEV_611 = presetInfdev611();
@@ -46,7 +46,7 @@ public class ModernBetaSettingsPresets {
     public static final ModernBetaSettingsPreset PRESET_RELEASE_1_6_4 = preset164(0);
     public static final ModernBetaSettingsPreset PRESET_RELEASE_1_12_2 = preset1122(0);
     public static final ModernBetaSettingsPreset PRESET_RELEASE_1_17_1 = preset1171(0);
-    public static final ModernBetaSettingsPreset PRESET_BETA_SKYLANDS = presetSkylands(true);
+    public static final ModernBetaSettingsPreset PRESET_BETA_SKYLANDS = presetBetaSkylands();
     public static final ModernBetaSettingsPreset PRESET_BETA_ISLES = presetIsles(PRESET_BETA_1_7_3);
     public static final ModernBetaSettingsPreset PRESET_BETA_WATER_WORLD = presetWaterWorld(PRESET_BETA_1_7_3);
     public static final ModernBetaSettingsPreset PRESET_BETA_ISLE_LAND = presetIsleLand(PRESET_BETA_1_7_3);

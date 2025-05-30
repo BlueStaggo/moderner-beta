@@ -48,7 +48,7 @@ public abstract class MixinPlayerManager {
                     .findFirst().orElseThrow().getKey().getValue();
 
             payload = new BiomeProviderInfoPayload(
-                    isModernBeta,
+                    true,
                     true,
                     Optional.of(world.getSeed()),
                     Optional.of(id),

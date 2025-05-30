@@ -1,12 +1,12 @@
 package mod.bluestaggo.modernerbeta.world.biome.provider;
 
 import mod.bluestaggo.modernerbeta.api.world.biome.BiomeProvider;
-import net.minecraft.nbt.NbtCompound;
+import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
+import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import net.minecraft.registry.RegistryEntryLookup;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.util.Identifier;
 import net.minecraft.world.biome.Biome;
 
 import java.util.List;
@@ -14,10 +14,10 @@ import java.util.List;
 public class BiomeProviderSingle extends BiomeProvider {
     private final RegistryKey<Biome> biomeKey;
     
-    public BiomeProviderSingle(NbtCompound settings, RegistryEntryLookup<Biome> biomeRegistry, long seed) {
+    public BiomeProviderSingle(ModernBetaSettings settings, RegistryEntryLookup<Biome> biomeRegistry, long seed) {
         super(settings, biomeRegistry, seed);
-        
-        this.biomeKey = RegistryKey.of(RegistryKeys.BIOME, Identifier.of(this.settings.singleBiome));
+
+        this.biomeKey = RegistryKey.of(RegistryKeys.BIOME, this.settings.getOrThrow(SettingsComponentTypes.SINGLE_BIOME));
     }
 
     @Override

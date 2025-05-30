@@ -3,6 +3,8 @@ package mod.bluestaggo.modernerbeta.world.chunk.provider;
 import mod.bluestaggo.modernerbeta.api.world.chunk.ChunkProvider;
 import mod.bluestaggo.modernerbeta.api.world.chunk.ChunkProviderNoiseImitable;
 import mod.bluestaggo.modernerbeta.api.world.chunk.surface.SurfaceConfig;
+import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
+import mod.bluestaggo.modernerbeta.settings.component.Infdev227Structures;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkCache;
 import mod.bluestaggo.modernerbeta.util.noise.PerlinOctaveNoise;
@@ -71,8 +73,9 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
         this.defaultBlock = generatorSettings.defaultBlock();
         this.defaultFluid = generatorSettings.defaultFluid();
 
-        this.infdevUsePyramid = this.chunkSettings.infdevUsePyramid;
-        this.infdevUseWall = this.chunkSettings.infdevUseWall;
+        Infdev227Structures structures = this.chunkSettings.getOrElse(SettingsComponentTypes.INFDEV_227_STRUCTURES, Infdev227Structures.DISABLED);
+        this.infdevUsePyramid = structures.pyramids();
+        this.infdevUseWall = structures.obsidianWalls();
         
         this.octaveNoiseA = new PerlinOctaveNoise(this.random, 16, true); 
         this.octaveNoiseB = new PerlinOctaveNoise(this.random, 16, true);

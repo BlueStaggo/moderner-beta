@@ -4,7 +4,6 @@ However, they can be simply upgraded by replacing the "WorldGenSettings" compoun
 A major number change means a big update. For this update, significant parts of the codebase have been refactored to ease development for not just people working on this mod but also for people working *with* Moderner Beta. Some changes have been made to make the mod more modular and to be more customizable, including entirely reworking the fractal layer system. Old worlds from 2.x releases are incompatible.
 
 ## Additions
-- Ported to 1.21.6
 - Added "Snow ain't Snowier" preset for 1.17 biome generation with some modern biomes.
 - Added large biome variants for the "Release Hybrid" and "Snow ain't Snowier" presets.
 
@@ -22,5 +21,6 @@ A major number change means a big update. For this update, significant parts of 
 - Fixed Mangrove Leaves not having Beta leaf colouring.
 - Fixed Bush, Pink Petal and Wildflower blocks not having Beta grass colouring.
 - Fixed Tall Grass and Large Fern blocks not having consistent colouring between the two halves.
+- Main noise scale now affects Indev worlds
 - Terracotta stripes no longer generate in underground badlands.
   - This was done by disabling "addStoneDepth" for surface rules in Moderner Beta worlds; this may have unintended side effects with modded surface rules.

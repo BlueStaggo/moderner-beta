@@ -1,6 +1,5 @@
 package mod.bluestaggo.modernerbeta.world.chunk;
 
-import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
 import net.minecraft.registry.Registerable;

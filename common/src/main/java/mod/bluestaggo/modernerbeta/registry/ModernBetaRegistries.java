@@ -9,6 +9,7 @@ import mod.bluestaggo.modernerbeta.api.world.provider.CaveBiomeProviderCreator;
 import mod.bluestaggo.modernerbeta.api.world.provider.ChunkProviderCreator;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPresetCategory;
+import mod.bluestaggo.modernerbeta.settings.SettingsComponentType;
 import mod.bluestaggo.modernerbeta.world.biome.HeightConfig;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.LayerType;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.predicates.BiomePredicateType;
@@ -18,6 +19,8 @@ import net.minecraft.util.Identifier;
 
 public final class ModernBetaRegistries {
     private static IRegistryHelper registryHelper;
+
+    public static Registry<SettingsComponentType<?>> SETTINGS_COMPONENT_TYPE;
     public static Registry<ChunkProviderCreator> CHUNK;
     public static Registry<BiomeProviderCreator<?>> BIOME;
     public static Registry<CaveBiomeProviderCreator> CAVE_BIOME;
@@ -41,6 +44,7 @@ public final class ModernBetaRegistries {
     public static void makeRegistries(IRegistryHelper helper) {
         registryHelper = helper;
 
+        SETTINGS_COMPONENT_TYPE = register(ModernBetaRegistryKeys.SETTINGS_COMPONENT_TYPE);
         CHUNK = registerDefaulted(ModernBetaRegistryKeys.CHUNK, ModernBetaBuiltInTypes.Chunk.BETA.id);
         BIOME = registerDefaulted(ModernBetaRegistryKeys.BIOME, ModernBetaBuiltInTypes.Biome.BETA.id);
         CAVE_BIOME = registerDefaulted(ModernBetaRegistryKeys.CAVE_BIOME, ModernBetaBuiltInTypes.CaveBiome.NONE.id);

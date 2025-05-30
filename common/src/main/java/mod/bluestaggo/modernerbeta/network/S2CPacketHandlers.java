@@ -8,6 +8,7 @@ import mod.bluestaggo.modernerbeta.client.color.BlockColorSampler;
 import mod.bluestaggo.modernerbeta.client.color.SkyColorSampler;
 import mod.bluestaggo.modernerbeta.client.world.ModernBetaClientWorld;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
+import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import net.minecraft.world.World;
 
 public class S2CPacketHandlers {
@@ -24,7 +25,7 @@ public class S2CPacketHandlers {
                 return;
 
             BiomeProviderCreator<?> providerCreator = ModernBetaRegistries.BIOME.get(payload.providerId().orElseThrow());
-            BiomeProvider provider = providerCreator.apply(payload.settings().orElseThrow(), null, payload.seed().orElseThrow());
+            BiomeProvider provider = providerCreator.apply(ModernBetaSettings.fromCompound(payload.settings().orElseThrow()), null, payload.seed().orElseThrow());
 
             if (provider instanceof ClimateSampler climateSampler) {
                 BlockColorSampler.INSTANCE.setClimateSampler(climateSampler);

@@ -260,20 +260,20 @@ public class ChunkProviderInfdev420 extends ChunkProviderNoise {
         int noiseZ = startNoiseZ + localNoiseZ;
         
         double islandOffset = this.getIslandOffset(noiseX, noiseZ);
-        
-        double coordinateScale = this.chunkSettings.noiseCoordinateScale;
-        double heightScale = this.chunkSettings.noiseHeightScale;
-        
-        double mainNoiseScaleX = this.chunkSettings.noiseMainNoiseScaleX;
-        double mainNoiseScaleY = this.chunkSettings.noiseMainNoiseScaleY;
-        double mainNoiseScaleZ = this.chunkSettings.noiseMainNoiseScaleZ;
 
-        double lowerLimitScale = this.chunkSettings.noiseLowerLimitScale;
-        double upperLimitScale = this.chunkSettings.noiseUpperLimitScale;
-        
-        double baseSize = this.chunkSettings.noiseBaseSize;
-        double heightStretch = this.chunkSettings.noiseStretchY;
-        
+        double coordinateScale = this.noiseScale.coordinate();
+        double heightScale = this.noiseScale.height();
+
+        double mainNoiseScaleX = this.noiseScale.mainNoiseX();
+        double mainNoiseScaleY = this.noiseScale.mainNoiseY();
+        double mainNoiseScaleZ = this.noiseScale.mainNoiseZ();
+
+        double lowerLimitScale = this.noiseScale.lowerLimit();
+        double upperLimitScale = this.noiseScale.upperLimit();
+
+        double baseSize = this.noiseScale.baseSize();
+        double heightStretch = this.noiseScale.stretchY();
+
         for (int y = 0; y < primaryBuffer.length; ++y) {
             int noiseY = y + this.noiseMinY;
             

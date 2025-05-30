@@ -3,8 +3,6 @@ package mod.bluestaggo.modernerbeta.util;
 import net.minecraft.nbt.*;
 import net.minecraft.util.Identifier;
 
-import java.util.Optional;
-
 public class NbtUtil {
     /*
      * Helper methods for reading primitive values from NbtCompound objects

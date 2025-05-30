@@ -1,13 +1,13 @@
 package mod.bluestaggo.modernerbeta.world.cavebiome.provider;
 
 import mod.bluestaggo.modernerbeta.api.world.cavebiome.CaveBiomeProvider;
-import net.minecraft.nbt.NbtCompound;
+import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import net.minecraft.registry.RegistryEntryLookup;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.world.biome.Biome;
 
 public class CaveBiomeProviderNone extends CaveBiomeProvider {
-    public CaveBiomeProviderNone(NbtCompound settings, RegistryEntryLookup<Biome> biomeRegistry, long seed) {
+    public CaveBiomeProviderNone(ModernBetaSettings settings, RegistryEntryLookup<Biome> biomeRegistry, long seed) {
         super(settings, biomeRegistry, seed);
     }
 

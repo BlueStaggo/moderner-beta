@@ -4,7 +4,6 @@ import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.TagKey;
-import net.minecraft.util.Identifier;
 import net.minecraft.world.biome.Biome;
 
 import java.util.Optional;

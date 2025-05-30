@@ -279,21 +279,21 @@ public class ChunkProviderAlpha extends ChunkProviderNoise {
         
         double islandOffset = this.getIslandOffset(noiseX, noiseZ);
 
-        double depthNoiseScaleX = this.chunkSettings.noiseDepthNoiseScaleX;
-        double depthNoiseScaleZ = this.chunkSettings.noiseDepthNoiseScaleZ;
+        double depthNoiseScaleX = this.noiseScale.depthNoiseX();
+        double depthNoiseScaleZ = this.noiseScale.depthNoiseZ();
         
-        double coordinateScale = this.chunkSettings.noiseCoordinateScale;
-        double heightScale = this.chunkSettings.noiseHeightScale;
+        double coordinateScale = this.noiseScale.coordinate();
+        double heightScale = this.noiseScale.height();
         
-        double mainNoiseScaleX = this.chunkSettings.noiseMainNoiseScaleX;
-        double mainNoiseScaleY = this.chunkSettings.noiseMainNoiseScaleY;
-        double mainNoiseScaleZ = this.chunkSettings.noiseMainNoiseScaleZ;
+        double mainNoiseScaleX = this.noiseScale.mainNoiseX();
+        double mainNoiseScaleY = this.noiseScale.mainNoiseY();
+        double mainNoiseScaleZ = this.noiseScale.mainNoiseZ();
 
-        double lowerLimitScale = this.chunkSettings.noiseLowerLimitScale;
-        double upperLimitScale = this.chunkSettings.noiseUpperLimitScale;
+        double lowerLimitScale = this.noiseScale.lowerLimit();
+        double upperLimitScale = this.noiseScale.upperLimit();
         
-        double baseSize = this.chunkSettings.noiseBaseSize;
-        double heightStretch = this.chunkSettings.noiseStretchY;
+        double baseSize = this.noiseScale.baseSize();
+        double heightStretch = this.noiseScale.stretchY();
 
         double scale = this.scaleOctaveNoise.sample(noiseX, 0, noiseZ, 1.0, 0.0, 1.0);
         double depth = this.depthOctaveNoise.sample(noiseX, 0, noiseZ, depthNoiseScaleX, 0.0, depthNoiseScaleZ);

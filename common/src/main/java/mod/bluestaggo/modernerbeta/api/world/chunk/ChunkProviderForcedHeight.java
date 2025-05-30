@@ -1,20 +1,19 @@
 package mod.bluestaggo.modernerbeta.api.world.chunk;
 
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
+import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
+import mod.bluestaggo.modernerbeta.settings.component.ForcedBiomeHeight;
 import mod.bluestaggo.modernerbeta.world.biome.HeightConfig;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
-import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.TagKey;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.biome.Biome;
 
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -22,6 +21,7 @@ public abstract class ChunkProviderForcedHeight extends ChunkProviderNoise {
     private static final float[] BIOME_HEIGHT_WEIGHTS = new float[25];
 
     private final Map<ExtendedBiomeId, HeightConfig> biomeHeightValues;
+    private final ForcedBiomeHeight forcedBiomeHeight;
 
     static {
         for (int x = -2; x <= 2; x++) {
@@ -34,9 +34,11 @@ public abstract class ChunkProviderForcedHeight extends ChunkProviderNoise {
 
     public ChunkProviderForcedHeight(ModernBetaChunkGenerator chunkGenerator, long seed) {
         super(chunkGenerator, seed);
+
+        this.forcedBiomeHeight = this.getChunkSettings().getOrDefault(SettingsComponentTypes.FORCED_BIOME_HEIGHT);
+
         this.biomeHeightValues = Stream.concat(
-            this.chunkSettings.releaseBiomeHeightValues.entrySet().stream()
-                .map(entry -> Map.entry(ExtendedBiomeId.of(entry.getKey()), HeightConfig.parse(entry.getValue(), HeightConfig.DEFAULT))),
+            forcedBiomeHeight.heightOverrides().entrySet().stream(),
             ModernBetaRegistries.HEIGHT_CONFIG.streamEntries()
                 .filter(RegistryEntry::hasKeyAndValue)
                 .flatMap(entry -> {
@@ -45,7 +47,7 @@ public abstract class ChunkProviderForcedHeight extends ChunkProviderNoise {
                     return chunkGenerator.getBiomeSource().getBiomes().stream()
                         .filter(biome -> biome.isIn(heightConfigTag))
                         .map(biome -> ExtendedBiomeId.of(biome.getKey().orElseThrow().getValue(), heightConfig.type()))
-                        .filter(extId -> !this.chunkSettings.releaseBiomeHeightValues.containsKey(extId.toString()))
+                        .filter(extId -> !this.forcedBiomeHeight.heightOverrides().containsKey(extId))
                         .map(extId -> Map.entry(extId, heightConfig));
                 })
         ).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (base, duplicate) -> base));
@@ -80,8 +82,8 @@ public abstract class ChunkProviderForcedHeight extends ChunkProviderNoise {
                 biome = this.getExtendedBiomeId(noiseX + biomeX, noiseZ + biomeZ);
                 HeightConfig heightConfig = this.getHeightConfigOfBiome(biome);
 
-                float thisScale = this.chunkSettings.releaseBiomeScaleOffset + heightConfig.scale() * this.chunkSettings.releaseBiomeScaleWeight;
-                float thisDepth = this.chunkSettings.releaseBiomeDepthOffset + heightConfig.depth() * this.chunkSettings.releaseBiomeDepthWeight;
+                float thisScale = this.forcedBiomeHeight.scaleOffset() + heightConfig.scale() * this.forcedBiomeHeight.scaleWeight();
+                float thisDepth = this.forcedBiomeHeight.depthOffset() + heightConfig.depth() * this.forcedBiomeHeight.depthWeight();
 
                 float weight = BIOME_HEIGHT_WEIGHTS[biomeX + 2 + (biomeZ + 2) * 5] / Math.max(thisDepth + 2.0F, 0.01F);
                 if (heightConfig.depth() > minSurfaceHeight) {

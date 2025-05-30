@@ -7,19 +7,23 @@ import mod.bluestaggo.modernerbeta.api.world.biome.BiomeResolverOcean;
 import mod.bluestaggo.modernerbeta.api.world.biome.climate.ClimateSampler;
 import mod.bluestaggo.modernerbeta.api.world.biome.climate.ClimateSamplerSky;
 import mod.bluestaggo.modernerbeta.api.world.biome.climate.Clime;
+import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
+import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
+import mod.bluestaggo.modernerbeta.settings.component.ClimateScale;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkCache;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkClimate;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkClimateSky;
 import mod.bluestaggo.modernerbeta.util.noise.SimplexOctaveNoise;
 import mod.bluestaggo.modernerbeta.world.biome.provider.climate.ClimateMap;
+import mod.bluestaggo.modernerbeta.world.biome.provider.climate.ClimateMapping;
 import mod.bluestaggo.modernerbeta.world.biome.provider.climate.ClimateType;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.RegistryEntryLookup;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.biome.Biome;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -28,19 +32,22 @@ public class BiomeProviderBeta extends BiomeProvider implements ClimateSampler, 
     private final BetaClimateSampler climateSampler;
     private final BetaClimateSamplerSky climateSamplerSky;
     
-    public BiomeProviderBeta(NbtCompound settings, RegistryEntryLookup<Biome> biomeRegistry, long seed) {
+    public BiomeProviderBeta(ModernBetaSettings settings, RegistryEntryLookup<Biome> biomeRegistry, long seed) {
         super(settings, biomeRegistry, seed);
 
-        this.climateMap = new ClimateMap(this.settings);
+        ClimateScale climateScale = this.settings.getOrDefault(SettingsComponentTypes.CLIMATE_SCALE);
+        Map<String, ClimateMapping> climateMappings = this.settings.getOrDefault(SettingsComponentTypes.CLIMATE_MAPPINGS);
+
+        this.climateMap = new ClimateMap(climateMappings);
         this.climateSampler = new BetaClimateSampler(
             this.seed,
-            this.settings.climateTempNoiseScale,
-            this.settings.climateRainNoiseScale,
-            this.settings.climateDetailNoiseScale
+            climateScale.temp(),
+            climateScale.rain(),
+            climateScale.detail()
         );
         this.climateSamplerSky = new BetaClimateSamplerSky(
             this.seed,
-            this.settings.climateTempNoiseScale
+            climateScale.temp()
         );
     }
 
@@ -94,7 +101,7 @@ public class BiomeProviderBeta extends BiomeProvider implements ClimateSampler, 
         return this.climateMap
             .getBiomeKeys()
             .stream()
-            .map(key -> this.biomeRegistry.getOrThrow(key))
+            .map(this.biomeRegistry::getOrThrow)
             .collect(Collectors.toList());
     }
 

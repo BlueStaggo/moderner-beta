@@ -3,10 +3,8 @@ package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.predicates;
 import com.mojang.serialization.MapCodec;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
-import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
-import net.minecraft.registry.Registry;
 
-public record BiomePredicateType<F extends BiomePredicate>(MapCodec<F> codec) {
+public record BiomePredicateType<P extends BiomePredicate>(MapCodec<P> codec) {
     private static IRegistryHandler<BiomePredicateType<?>> registryHandler;
 
     public static BiomePredicateType<AllOfBiomePredicate> ALL_OF;
@@ -24,11 +22,11 @@ public record BiomePredicateType<F extends BiomePredicate>(MapCodec<F> codec) {
     public static BiomePredicateType<TrueBiomePredicate> TRUE;
     public static BiomePredicateType<WrappedIntMatchBiomePredicate> WRAPPED_INT_MATCH;
 
-    private static <F extends BiomePredicate> BiomePredicateType<F> register(String id, MapCodec<F> codec) {
-        BiomePredicateType<F> filterType = new BiomePredicateType<>(codec);
-        return registryHandler.register(ModernerBeta.createId(id), filterType);
+    private static <P extends BiomePredicate> BiomePredicateType<P> register(String id, MapCodec<P> codec) {
+        return registryHandler.register(ModernerBeta.createId(id), new BiomePredicateType<>(codec));
     }
 
+    @SuppressWarnings("unchecked")
     public static void init(IRegistryHandler<?> handler) {
         registryHandler = (IRegistryHandler<BiomePredicateType<?>>) handler;
 

@@ -6,7 +6,7 @@ import mod.bluestaggo.modernerbeta.api.world.chunk.ChunkProviderNoise;
 import mod.bluestaggo.modernerbeta.api.world.chunk.surface.SurfaceBlocks;
 import mod.bluestaggo.modernerbeta.api.world.chunk.surface.SurfaceConfig;
 import mod.bluestaggo.modernerbeta.api.world.spawn.SpawnLocator;
-import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsBiome;
+import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkHeightmap;
 import mod.bluestaggo.modernerbeta.util.noise.PerlinOctaveNoise;
@@ -57,7 +57,7 @@ public class ChunkProviderBeta extends ChunkProviderNoise {
         this.climateSampler = (
             this.chunkGenerator.getBiomeSource() instanceof ModernBetaBiomeSource biomeSource &&
             biomeSource.getBiomeProvider() instanceof BiomeProviderBeta biomeProviderBeta
-        ) ? biomeProviderBeta : new BiomeProviderBeta(new ModernBetaSettingsBiome().toCompound(), null, seed);
+        ) ? biomeProviderBeta : new BiomeProviderBeta(ModernBetaSettings.empty(), null, seed);
     }
     
     @Override
@@ -306,23 +306,23 @@ public class ChunkProviderBeta extends ChunkProviderNoise {
         int noiseZ = startNoiseZ + localNoiseZ;
         
         double islandOffset = this.getIslandOffset(noiseX, noiseZ);
-        
-        double depthNoiseScaleX = this.chunkSettings.noiseDepthNoiseScaleX;
-        double depthNoiseScaleZ = this.chunkSettings.noiseDepthNoiseScaleZ;
-        
-        double coordinateScale = this.chunkSettings.noiseCoordinateScale;
-        double heightScale = this.chunkSettings.noiseHeightScale;
-        
-        double mainNoiseScaleX = this.chunkSettings.noiseMainNoiseScaleX;
-        double mainNoiseScaleY = this.chunkSettings.noiseMainNoiseScaleY;
-        double mainNoiseScaleZ = this.chunkSettings.noiseMainNoiseScaleZ;
 
-        double lowerLimitScale = this.chunkSettings.noiseLowerLimitScale;
-        double upperLimitScale = this.chunkSettings.noiseUpperLimitScale;
-        
-        double baseSize = this.chunkSettings.noiseBaseSize;
-        double heightStretch = this.chunkSettings.noiseStretchY;
-        
+        double depthNoiseScaleX = this.noiseScale.depthNoiseX();
+        double depthNoiseScaleZ = this.noiseScale.depthNoiseZ();
+
+        double coordinateScale = this.noiseScale.coordinate();
+        double heightScale = this.noiseScale.height();
+
+        double mainNoiseScaleX = this.noiseScale.mainNoiseX();
+        double mainNoiseScaleY = this.noiseScale.mainNoiseY();
+        double mainNoiseScaleZ = this.noiseScale.mainNoiseZ();
+
+        double lowerLimitScale = this.noiseScale.lowerLimit();
+        double upperLimitScale = this.noiseScale.upperLimit();
+
+        double baseSize = this.noiseScale.baseSize();
+        double heightStretch = this.noiseScale.stretchY();
+
         double scale = this.scaleOctaveNoise.sampleXZ(noiseX, noiseZ, 1.121D, 1.121D);
         double depth = this.depthOctaveNoise.sampleXZ(noiseX, noiseZ, depthNoiseScaleX, depthNoiseScaleZ);
 

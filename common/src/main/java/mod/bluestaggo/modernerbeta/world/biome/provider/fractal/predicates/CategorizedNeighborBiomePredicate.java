@@ -1,6 +1,5 @@
 package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.predicates;
 
-import com.google.common.collect.Sets;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.util.CodecUtil;

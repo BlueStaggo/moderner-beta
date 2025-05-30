@@ -3,7 +3,8 @@ package mod.bluestaggo.modernerbeta.world.biome.injector;
 import mod.bluestaggo.modernerbeta.api.world.chunk.ChunkProvider;
 import mod.bluestaggo.modernerbeta.api.world.chunk.ChunkProviderNoise;
 import mod.bluestaggo.modernerbeta.mixin.AccessorChunkSection;
-import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsBiome;
+import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
+import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkHeightmap;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.world.biome.injector.BiomeInjectionRules.BiomeInjectionContext;
@@ -46,10 +47,10 @@ public class BiomeInjector {
         this.modernBetaChunkGenerator = modernBetaChunkGenerator;
         this.modernBetaBiomeSource = modernBetaBiomeSource;
         
-        ModernBetaSettingsBiome settingsBiome;
-        settingsBiome = ModernBetaSettingsBiome.fromCompound(this.modernBetaBiomeSource.getBiomeSettings());
+        ModernBetaSettings settingsBiome;
+        settingsBiome = ModernBetaSettings.fromCompound(this.modernBetaBiomeSource.getBiomeSettings());
 
-        boolean useOceanBiomes = settingsBiome.useOceanBiomes;
+        boolean useOceanBiomes = settingsBiome.getOrDefault(SettingsComponentTypes.USE_OCEAN_BIOMES);
         
         Predicate<BiomeInjectionContext> cavePredicate = context -> 
             context.getY() >= context.worldMinY && context.getY() + CAVE_START_DEPTH < context.minHeight;

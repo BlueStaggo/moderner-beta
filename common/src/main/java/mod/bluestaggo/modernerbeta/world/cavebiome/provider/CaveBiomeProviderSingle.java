@@ -1,12 +1,12 @@
 package mod.bluestaggo.modernerbeta.world.cavebiome.provider;
 
 import mod.bluestaggo.modernerbeta.api.world.cavebiome.CaveBiomeProvider;
-import net.minecraft.nbt.NbtCompound;
+import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
+import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import net.minecraft.registry.RegistryEntryLookup;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.util.Identifier;
 import net.minecraft.world.biome.Biome;
 
 import java.util.List;
@@ -14,10 +14,10 @@ import java.util.List;
 public class CaveBiomeProviderSingle extends CaveBiomeProvider {
     private final RegistryKey<Biome> biome;
     
-    public CaveBiomeProviderSingle(NbtCompound settings, RegistryEntryLookup<Biome> biomeRegistry, long seed) {
+    public CaveBiomeProviderSingle(ModernBetaSettings settings, RegistryEntryLookup<Biome> biomeRegistry, long seed) {
         super(settings, biomeRegistry, seed);
 
-        this.biome = RegistryKey.of(RegistryKeys.BIOME, Identifier.of(this.settings.singleBiome));
+        this.biome = RegistryKey.of(RegistryKeys.BIOME, this.settings.getOrThrow(SettingsComponentTypes.SINGLE_BIOME));
     }
 
     @Override

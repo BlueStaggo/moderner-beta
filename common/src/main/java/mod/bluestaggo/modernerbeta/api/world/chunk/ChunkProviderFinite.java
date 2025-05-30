@@ -5,6 +5,8 @@ import mod.bluestaggo.modernerbeta.api.world.biome.climate.ClimateSampler;
 import mod.bluestaggo.modernerbeta.api.world.blocksource.BlockSource;
 import mod.bluestaggo.modernerbeta.api.world.chunk.surface.SurfaceConfig;
 import mod.bluestaggo.modernerbeta.api.world.spawn.SpawnLocator;
+import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
+import mod.bluestaggo.modernerbeta.settings.component.FiniteLevelProperties;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
 import mod.bluestaggo.modernerbeta.util.noise.SimpleNoisePos;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
@@ -55,7 +57,8 @@ public abstract class ChunkProviderFinite extends ChunkProvider implements Chunk
     
     protected final BlockState defaultBlock;
     protected final BlockState defaultFluid;
-    
+
+    protected final FiniteLevelProperties levelProperties;
     protected final int levelWidth;
     protected final int levelLength;
     protected final int levelHeight;
@@ -73,21 +76,23 @@ public abstract class ChunkProviderFinite extends ChunkProvider implements Chunk
 
         ChunkGeneratorSettings generatorSettings = chunkGenerator.getGeneratorSettings().value();
         GenerationShapeConfig shapeConfig = generatorSettings.generationShapeConfig();
+
+        this.levelProperties = this.getChunkSettings().getOrDefault(SettingsComponentTypes.FINITE_LEVEL_PROPERTIES);
         
         this.worldMinY = shapeConfig.minimumY();
         this.worldHeight = shapeConfig.height();
         this.worldTopY = this.worldHeight + this.worldMinY;
-        this.seaLevel = generatorSettings.seaLevel() + this.getChunkSettings().seaLevelOffset;
+        this.seaLevel = generatorSettings.seaLevel() + this.getChunkSettings().getOrDefault(SettingsComponentTypes.SEA_LEVEL_OFFSET);
         this.bedrockFloor = 0;
         this.bedrockCeiling = Integer.MIN_VALUE;
 
         this.defaultBlock = generatorSettings.defaultBlock();
         this.defaultFluid = generatorSettings.defaultFluid();
-        
-        this.levelWidth = this.chunkSettings.indevLevelWidth;
-        this.levelLength = this.chunkSettings.indevLevelLength;
-        this.levelHeight = MathHelper.clamp(this.chunkSettings.indevLevelHeight, 0, this.worldTopY);
-        this.caveRadius = this.chunkSettings.indevCaveRadius;
+
+        this.levelWidth = this.levelProperties.width();
+        this.levelLength = this.levelProperties.length();
+        this.levelHeight = MathHelper.clamp(this.levelProperties.height(), 0, this.worldTopY);
+        this.caveRadius = this.getChunkSettings().getOrDefault(SettingsComponentTypes.FINITE_CAVE_GENERATION).radius();
         
         this.heightmap = new int[this.levelWidth * this.levelLength];
         this.blockArr = new Block[this.levelWidth][this.levelHeight][this.levelLength];
@@ -182,7 +187,7 @@ public abstract class ChunkProviderFinite extends ChunkProvider implements Chunk
         } else if (step == ModernBetaGenerationStep.STRUCTURE_STARTS) {
             return outOfBounds;
         }  else if (step == ModernBetaGenerationStep.CARVERS) {
-            return outOfBounds|| !this.chunkSettings.useCaves;
+            return outOfBounds || this.skipCarvers;
         } else if (step == ModernBetaGenerationStep.SURFACE) { 
             return false;
         } else if (step == ModernBetaGenerationStep.ENTITY_SPAWN) {

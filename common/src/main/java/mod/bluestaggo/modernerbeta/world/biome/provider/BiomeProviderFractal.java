@@ -3,9 +3,11 @@ package mod.bluestaggo.modernerbeta.world.biome.provider;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import mod.bluestaggo.modernerbeta.api.world.biome.*;
+import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
+import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
+import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ConfiguredLayers;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.Layer;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.RegistryEntryLookup;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
@@ -28,13 +30,15 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 	private final List<Layer> allLayers;
 	private final Layer layer;
 
-	public BiomeProviderFractal(NbtCompound settings, RegistryEntryLookup<Biome> biomeRegistry, long seed) {
+	public BiomeProviderFractal(ModernBetaSettings settings, RegistryEntryLookup<Biome> biomeRegistry, long seed) {
 		super(settings, biomeRegistry, seed);
 
-		this.baseBiome = Suppliers.memoize(() -> this.getBiomeEntry(Identifier.of(this.settings.singleBiome)).orElseThrow());
+		this.baseBiome = Suppliers.memoize(() -> this.getBiomeEntry(this.settings.getOrDefault(SettingsComponentTypes.SINGLE_BIOME)).orElseThrow());
 		this.biomeAccess = new BiomeAccess(this, seed);
-		this.allLayers = this.settings.fractalLayers.getAllLayers();
-		this.layer = this.settings.fractalLayers.getFinalLayer();
+
+		ConfiguredLayers fractalLayers = this.settings.getOrThrow(SettingsComponentTypes.FRACTAL_LAYERS);
+		this.allLayers = fractalLayers.getAllLayers();
+		this.layer = fractalLayers.getFinalLayer();
 		this.layer.init(seed);
 
 		Set<ExtendedBiomeId> allExtendedBiomes = new HashSet<>();
@@ -50,12 +54,12 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 	@SuppressWarnings("unchecked")
     private Optional<RegistryEntry<Biome>> getBiomeEntry(Identifier id) {
 		RegistryKey<Biome> key = RegistryKey.of(RegistryKeys.BIOME, id);
-		return (Optional<RegistryEntry<Biome>>)(Object)biomeRegistry.getOptional(key);
+		return (Optional<RegistryEntry<Biome>>)(Object)this.biomeRegistry.getOptional(key);
 	}
 
 	@Override
 	public RegistryEntry<Biome> getBiome(int biomeX, int biomeY, int biomeZ) {
-		return this.getBiomeEntry(this.getExtendedBiomeId(biomeX, biomeY, biomeZ).baseId()).orElse(this.baseBiome.get());
+		return this.getBiomeEntry(this.getExtendedBiomeId(biomeX, biomeY, biomeZ).baseId()).orElseGet(this.baseBiome);
 	}
 
 	@Override

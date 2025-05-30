@@ -55,17 +55,18 @@ public class ModernBetaWorldPresets {
         RegistryEntry.Reference<ChunkGeneratorSettings> settings = registrySettings.getOrThrow(ModernBetaChunkGeneratorSettings.BETA);
         
         ModernBetaSettingsPreset defaultPreset = ModernBetaRegistries.SETTINGS_PRESET.get(ModernBetaBuiltInTypes.Chunk.BETA.id);
-        
+
+        assert defaultPreset != null;
         return new DimensionOptions(
             dimensionType,
             new ModernBetaChunkGenerator(
                 new ModernBetaBiomeSource(
                     registryBiome,
-                    defaultPreset.settingsBiome().toCompound(),
-                    defaultPreset.settingsCaveBiome().toCompound()
+                    defaultPreset.biomeSettings().toCompound(),
+                    defaultPreset.caveBiomeSettings().toCompound()
                 ),
                 settings,
-                defaultPreset.settingsChunk().toCompound()
+                defaultPreset.chunkSettings().toCompound()
             )
         );
     }

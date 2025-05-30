@@ -1,13 +1,10 @@
 package mod.bluestaggo.modernerbeta.command;
 
 import com.mojang.brigadier.CommandDispatcher;
-import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsBiome;
-import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsCaveBiome;
-import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsChunk;
+import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
 import net.minecraft.command.CommandRegistryAccess;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
@@ -26,39 +23,21 @@ public class DebugProviderSettingsCommand {
         if (source.getWorld().getChunkManager().getChunkGenerator() instanceof ModernBetaChunkGenerator modernBetaChunkGenerator) {
             validWorld = true;
             
-            StringBuilder builder = new StringBuilder();
-            NbtCompound chunkSettings = ModernBetaSettingsChunk.fromCompound(modernBetaChunkGenerator.getChunkSettings()).toCompound();
-            
-            chunkSettings.getKeys().forEach(key -> {
-                builder.append(String.format("* %s: %s\n", key, chunkSettings.get(key).toString()));
-            });
-
+            ModernBetaSettings chunkSettings = ModernBetaSettings.fromCompound(modernBetaChunkGenerator.getChunkSettings());
             source.sendFeedback(() -> Text.literal("Chunk Provider Settings:").formatted(Formatting.YELLOW), false);
-            source.sendFeedback(() -> Text.literal(builder.toString()), false);
+            source.sendFeedback(() -> Text.literal(chunkSettings.toString()), false);
         }
         
         if (source.getWorld().getChunkManager().getChunkGenerator().getBiomeSource() instanceof ModernBetaBiomeSource modernBetaBiomeSource) {
             validWorld = true;
-            
-            StringBuilder builder0 = new StringBuilder();
-            NbtCompound biomeSettings = ModernBetaSettingsBiome.fromCompound(modernBetaBiomeSource.getBiomeSettings()).toCompound();
-            
-            biomeSettings.getKeys().forEach(key -> {
-                builder0.append(String.format("* %s: %s\n", key, biomeSettings.get(key).toString()));
-            });
-            
+
+            ModernBetaSettings biomeSettings = ModernBetaSettings.fromCompound(modernBetaBiomeSource.getBiomeSettings());
             source.sendFeedback(() -> Text.literal("Biome Provider Settings:").formatted(Formatting.YELLOW), false);
-            source.sendFeedback(() -> Text.literal(builder0.toString()), false);
+            source.sendFeedback(() -> Text.literal(biomeSettings.toString()), false);
             
-            StringBuilder builder1 = new StringBuilder();
-            NbtCompound caveBiomeSettings = ModernBetaSettingsCaveBiome.fromCompound(modernBetaBiomeSource.getCaveBiomeSettings()).toCompound();
-            
-            caveBiomeSettings.getKeys().forEach(key -> {
-                builder1.append(String.format("* %s: %s\n", key, caveBiomeSettings.get(key).toString()));
-            });
-            
+            ModernBetaSettings caveBiomeSettings = ModernBetaSettings.fromCompound(modernBetaBiomeSource.getCaveBiomeSettings());
             source.sendFeedback(() -> Text.literal("Cave Biome Provider Settings:").formatted(Formatting.YELLOW), false);
-            source.sendFeedback(() -> Text.literal(builder1.toString()), false);
+            source.sendFeedback(() -> Text.literal(caveBiomeSettings.toString()), false);
         }
 
         if (validWorld) {

@@ -10,7 +10,7 @@ import mod.bluestaggo.modernerbeta.api.world.biome.BiomeResolverExtendedId;
 import mod.bluestaggo.modernerbeta.api.world.biome.BiomeResolverExtendedIdStepped;
 import mod.bluestaggo.modernerbeta.api.world.biome.BiomeResolverStepped;
 import mod.bluestaggo.modernerbeta.api.world.chunk.surface.SurfaceConfig;
-import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsBiome;
+import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -28,7 +28,6 @@ import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.BiomeTags;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.MutableText;
-import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -46,11 +45,11 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
     private final BiomeProvider biomeProvider;
     private BiomeDisplayWidget biomeDisplay;
 
-    public ModernBetaBiomePreviewScreen(Text title, Screen parent, GeneratorOptionsHolder generationOptions, ModernBetaSettingsBiome biomeSettings) {
+    public ModernBetaBiomePreviewScreen(Text title, Screen parent, GeneratorOptionsHolder generationOptions, ModernBetaSettings biomeSettings) {
         super(title, parent);
-        this.biomeProvider = ModernBetaRegistries.BIOME.get(biomeSettings.biomeProvider)
+        this.biomeProvider = ModernBetaRegistries.BIOME.get(biomeSettings.getProvider())
             .apply(
-                biomeSettings.toCompound(),
+                biomeSettings,
                 generationOptions.getCombinedRegistryManager().getOrThrow(RegistryKeys.BIOME),
                 generationOptions.generatorOptions().getSeed()
             );

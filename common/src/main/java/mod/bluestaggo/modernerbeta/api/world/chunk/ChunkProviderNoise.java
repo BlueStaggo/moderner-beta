@@ -5,6 +5,10 @@ import mod.bluestaggo.modernerbeta.api.world.blocksource.BlockSource;
 import mod.bluestaggo.modernerbeta.api.world.chunk.noise.NoisePostProcessor;
 import mod.bluestaggo.modernerbeta.api.world.chunk.noise.NoiseProvider;
 import mod.bluestaggo.modernerbeta.api.world.chunk.noise.NoiseProviderBase;
+import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
+import mod.bluestaggo.modernerbeta.settings.component.IslesProperties;
+import mod.bluestaggo.modernerbeta.settings.component.NoiseScale;
+import mod.bluestaggo.modernerbeta.settings.component.NoiseSlide;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkCache;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkHeightmap;
@@ -43,11 +47,10 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
     
     protected final int bedrockFloor;
     protected final int bedrockCeiling;
-
     
     protected final BlockState defaultBlock;
     protected final BlockState defaultFluid;
-    
+
     protected final int noiseResolutionVertical;   // Number of blocks in a vertical subchunk
     protected final int noiseResolutionHorizontal; // Number of blocks in a horizontal subchunk 
     
@@ -62,17 +65,25 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
     
     private final NoisePostProcessor noisePostProcessor;
     private final SimplexNoise islandNoise;
-    
+
+    private final IslesProperties islesProperties;
+    protected final NoiseScale noiseScale;
+    private final NoiseSlide noiseSlide;
+
     public ChunkProviderNoise(ModernBetaChunkGenerator chunkGenerator, long seed) {
         super(chunkGenerator, seed);
         
         ChunkGeneratorSettings generatorSettings = chunkGenerator.getGeneratorSettings().value();
         GenerationShapeConfig shapeConfig = generatorSettings.generationShapeConfig();
 
+        this.islesProperties = this.getChunkSettings().getOrDefault(SettingsComponentTypes.ISLES_PROPERTIES);
+        this.noiseScale = this.getChunkSettings().getOrDefault(SettingsComponentTypes.NOISE_SCALE);
+        this.noiseSlide = this.getChunkSettings().getOrElse(SettingsComponentTypes.NOISE_SLIDE, NoiseSlide.DISABLED);
+
         this.worldMinY = shapeConfig.minimumY();
         this.worldHeight = shapeConfig.height();
         this.worldTopY = this.worldHeight + this.worldMinY;
-        this.seaLevel = generatorSettings.seaLevel() + this.getChunkSettings().seaLevelOffset;
+        this.seaLevel = generatorSettings.seaLevel() + this.getChunkSettings().getOrDefault(SettingsComponentTypes.SEA_LEVEL_OFFSET);
         
         this.bedrockFloor = this.worldMinY;
         this.bedrockCeiling = this.worldTopY;
@@ -112,9 +123,10 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
 
     /**
      * Generates base terrain for given chunk and returns it.
+     * @param blender
      * @param structureAccessor
      * @param chunk
-     * @param biomeSource
+     * @param noiseConfig
      * @return A completed chunk.
      */
     @Override
@@ -257,9 +269,7 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
      * @param noiseX x-coordinate in absolute noise coordinates.
      * @param noiseY y-coordinate in absolute noise coordinates.
      * @param noiseZ z-coordinate in absolute noise coordinates.
-     * @param generatorSettings Vanilla chunk generator settings.
-     * @param chunkSettings Modern Beta chunk generator settings.
-     * 
+     *
      * @return Modified noise density.
      */
     protected double sampleNoisePostProcessor(double noise, int noiseX, int noiseY, int noiseZ) {
@@ -275,29 +285,29 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
      * @return A noise addition.
      */
     protected double getIslandOffset(int noiseX, int noiseZ) {
-        if (!this.chunkSettings.islesUseIslands) {
+        if (!this.islesProperties.useIslands()) {
             return 0.0;
         }
         
         Function<Integer, Integer> toNoiseCoord = chunkCoord -> chunkCoord * this.noiseSizeX;
-        IslandShape islandShape = IslandShape.fromId(this.chunkSettings.islesCenterIslandShape);
+        IslandShape islandShape = this.islesProperties.centerIslandShape();
         
         double distance = islandShape.getDistance(noiseX, noiseZ);
-        double oceanSlideTarget = this.chunkSettings.islesOceanSlideTarget;
+        double oceanSlideTarget = this.islesProperties.oceanSlideTarget();
 
-        int centerIslandRadius = toNoiseCoord.apply(this.chunkSettings.islesCenterIslandRadius);
-        int centerIslandFalloffDistance = toNoiseCoord.apply(this.chunkSettings.islesCenterIslandFalloffDistance);
+        int centerIslandRadius = toNoiseCoord.apply(this.islesProperties.centerIslandRadius());
+        int centerIslandFalloffDistance = toNoiseCoord.apply(this.islesProperties.centerIslandFalloffDistance());
 
-        int centerOceanRadius = toNoiseCoord.apply(this.chunkSettings.islesCenterOceanRadius);
-        int centerOceanFalloffDistance = toNoiseCoord.apply(this.chunkSettings.islesCenterOceanFalloffDistance);
+        int centerOceanRadius = toNoiseCoord.apply(this.islesProperties.centerOceanRadius());
+        int centerOceanFalloffDistance = toNoiseCoord.apply(this.islesProperties.centerOceanFalloffDistance());
         
-        double outerIslandNoiseScale = this.chunkSettings.islesOuterIslandNoiseScale;
-        double outerIslandNoiseOffset = this.chunkSettings.islesOuterIslandNoiseOffset;
+        double outerIslandNoiseScale = this.islesProperties.outerIslandNoiseScale();
+        double outerIslandNoiseOffset = this.islesProperties.outerIslandNoiseOffset();
         
         double islandDelta = (distance - centerIslandRadius) / centerIslandFalloffDistance;
         double islandOffset = MathHelper.clampedLerp(0.0, oceanSlideTarget, islandDelta);
             
-        if (this.chunkSettings.islesUseOuterIslands && distance > centerOceanRadius) {
+        if (this.islesProperties.useOuterIslands() && distance > centerOceanRadius) {
             double islandAddition = (float)this.islandNoise.sample(
                 noiseX / outerIslandNoiseScale,
                 noiseZ / outerIslandNoiseScale,
@@ -311,7 +321,7 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
             
             // Interpolate noise addition so there isn't a sharp cutoff at start of ocean ring edge.
             double oceanDelta = (distance - centerOceanRadius) / centerOceanFalloffDistance;
-            islandAddition = (double)MathHelper.clampedLerp(0.0F, islandAddition, oceanDelta);
+            islandAddition = MathHelper.clampedLerp(0.0F, islandAddition, oceanDelta);
             
             islandOffset += islandAddition * -oceanSlideTarget;
             islandOffset = MathHelper.clamp(islandOffset, oceanSlideTarget, 0.0F);
@@ -329,14 +339,14 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
      * @return Modified noise density.
      */
     protected double applySlides(double density, int noiseY) {
-        if (this.chunkSettings.noiseTopSlideSize > 0.0) {
-            double delta = ((double)(this.noiseSizeY - noiseY) - this.chunkSettings.noiseTopSlideOffset) / this.chunkSettings.noiseTopSlideSize;
-            density = MathHelper.clampedLerp(this.chunkSettings.noiseTopSlideTarget, density, delta);
+        if (this.noiseSlide.topSize() > 0.0) {
+            double delta = ((double)(this.noiseSizeY - noiseY) - this.noiseSlide.topOffset()) / this.noiseSlide.topSize();
+            density = MathHelper.clampedLerp(this.noiseSlide.topTarget(), density, delta);
         }
         
-        if (this.chunkSettings.noiseBottomSlideSize > 0.0) {
-            double delta = ((double)noiseY - this.chunkSettings.noiseBottomSlideOffset) / this.chunkSettings.noiseBottomSlideSize;
-            density = MathHelper.clampedLerp(this.chunkSettings.noiseBottomSlideTarget, density, delta);
+        if (this.noiseSlide.bottomSize() > 0.0) {
+            double delta = ((double)noiseY - this.noiseSlide.bottomOffset()) / this.noiseSlide.bottomSize();
+            density = MathHelper.clampedLerp(this.noiseSlide.bottomTarget(), density, delta);
         }
         
         return density;
@@ -564,9 +574,8 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
      * @param baseNoiseProvider Primary noise provider to sample density noise.
      * @param weightSampler Sampler used to add/subtract density if a structure start is at coordinate.
      * @param aquiferSampler Sampler used to adjust local water levels for noise caves.
-     * @param blockSource Default block source
-     * @param noodleCaveSampler Noodle cave density sampler.
-     * 
+     * @param noisePos Coordinates that the noise is sampled from
+     *
      * @return BlockSource to sample blockstate at x/y/z block coordinates.
      */
     private BlockSource getBaseBlockSource(

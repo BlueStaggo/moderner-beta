@@ -1,17 +1,20 @@
 package mod.bluestaggo.modernerbeta.world.chunk.provider.indev;
 
-public enum IndevType {
+import net.minecraft.util.StringIdentifiable;
+
+public enum IndevType implements StringIdentifiable {
     ISLAND("island"),
     FLOATING("floating"),
     INLAND("inland");
     
     private final String id;
     
-    private IndevType(String id) {
+    IndevType(String id) {
         this.id = id;
     }
-    
-    public String getId() {
+
+    @Override
+    public String asString() {
         return this.id;
     }
     

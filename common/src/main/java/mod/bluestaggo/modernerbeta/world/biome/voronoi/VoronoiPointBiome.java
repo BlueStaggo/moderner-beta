@@ -1,64 +1,30 @@
 package mod.bluestaggo.modernerbeta.world.biome.voronoi;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.util.*;
+import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomes;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.util.Identifier;
 
 import java.util.List;
 
-public record VoronoiPointBiome(String biome, String oceanBiome, String deepOceanBiome, double temp, double rain, double weird) {
-    public static final VoronoiPointBiome DEFAULT = new VoronoiPointBiome("moderner_beta:beta_forest", "moderner_beta:beta_ocean", 0.5, 0.5);
-    
-    public VoronoiPointBiome(String biome, String oceanBiome, double temp, double rain) {
-        this(biome, oceanBiome, oceanBiome, temp, rain, 0.5);
-    }
+public record VoronoiPointBiome(Identifier biome, Identifier oceanBiome, Identifier deepOceanBiome, double temp, double rain, double weird) {
+    public static final Codec<VoronoiPointBiome> CODEC = RecordCodecBuilder.create(
+        instance -> instance.group(
+            Identifier.CODEC.fieldOf("biome").forGetter(VoronoiPointBiome::biome),
+            Identifier.CODEC.fieldOf("oceanBiome").forGetter(VoronoiPointBiome::oceanBiome),
+            Identifier.CODEC.fieldOf("deepOceanBiome").forGetter(VoronoiPointBiome::deepOceanBiome),
+            Codec.DOUBLE.fieldOf("temp").forGetter(VoronoiPointBiome::temp),
+            Codec.DOUBLE.fieldOf("rain").forGetter(VoronoiPointBiome::rain),
+            Codec.DOUBLE.fieldOf("weird").forGetter(VoronoiPointBiome::weird)
+        ).apply(instance, VoronoiPointBiome::new)
+    );
 
-    public static List<VoronoiPointBiome> listFromReader(NbtReader reader, List<VoronoiPointBiome> alternate) {
-        if (reader.contains(NbtTags.VORONOI_POINTS)) {
-            return reader.readListOrThrow(NbtTags.VORONOI_POINTS)
-                .stream()
-                .map(e -> {
-                    NbtCompound point = NbtUtil.toCompoundOrThrow(e);
-                    NbtReader pointReader = new NbtReader(point);
-                    
-                    String biome = pointReader.readStringOrThrow(NbtTags.BIOME);
-                    String oceanBiome = pointReader.readStringOrThrow(NbtTags.OCEAN_BIOME);
-                    String deepOceanBiome = pointReader.readStringOrThrow(NbtTags.DEEP_OCEAN_BIOME);
-                    
-                    double temp = pointReader.readDoubleOrThrow(NbtTags.TEMP);
-                    double rain = pointReader.readDoubleOrThrow(NbtTags.RAIN);
-                    double weird = pointReader.readDouble(NbtTags.WEIRD, 0.5);
-                    
-                    return new VoronoiPointBiome(
-                        biome,
-                        oceanBiome,
-                        deepOceanBiome,
-                        temp,
-                        rain,
-                        weird
-                    );
-                })
-                .toList();
-        }
-        
-        return List.copyOf(alternate);
-    }
+    public static final VoronoiPointBiome DEFAULT = new VoronoiPointBiome(ModernBetaBiomes.BETA_FOREST.getValue(), ModernBetaBiomes.BETA_OCEAN.getValue(), 0.5, 0.5);
     
-    public static NbtList listToNbt(List<VoronoiPointBiome> points) {
-        NbtListBuilder builder = new NbtListBuilder();
-        points.forEach(p -> builder.add(p.toCompound()));
-        
-        return builder.build();
-    }
-    
-    public NbtCompound toCompound() {
-        return new NbtCompoundBuilder()
-            .putString(NbtTags.BIOME, this.biome)
-            .putString(NbtTags.OCEAN_BIOME, this.oceanBiome)
-            .putString(NbtTags.DEEP_OCEAN_BIOME, this.deepOceanBiome)
-            .putDouble(NbtTags.TEMP, this.temp)
-            .putDouble(NbtTags.RAIN, this.rain)
-            .putDouble(NbtTags.WEIRD, this.weird)
-            .build();
+    public VoronoiPointBiome(Identifier biome, Identifier oceanBiome, double temp, double rain) {
+        this(biome, oceanBiome, oceanBiome, temp, rain, 0.5);
     }
 }

@@ -1,8 +1,10 @@
 package mod.bluestaggo.modernerbeta.client.gui.screen;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
+import com.mojang.serialization.JsonOps;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import net.minecraft.client.gui.EditBox;
@@ -33,7 +35,7 @@ public class ModernBetaSettingsScreen extends ModernBetaScreen {
 
         this.onDone = onDone;
         this.gson = ModernerBeta.getSettingsGson().setPrettyPrinting().create();
-        this.settingsString = this.gson.toJson(settings);
+        this.settingsString = this.gson.toJson(ModernBetaSettings.CODEC.encode(settings, JsonOps.INSTANCE, new JsonObject()).getOrThrow());
     }
     
     @Override

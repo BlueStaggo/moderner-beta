@@ -9,8 +9,7 @@ import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.api.world.biome.*;
 import mod.bluestaggo.modernerbeta.api.world.cavebiome.CaveBiomeProvider;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
-import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsBiome;
-import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsCaveBiome;
+import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.world.biome.injector.BiomeInjector.BiomeInjectionStep;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
@@ -67,16 +66,16 @@ public class ModernBetaBiomeSource extends BiomeSource {
     }
     
     public void initProvider(long seed) {
-        ModernBetaSettingsBiome biomeSettings = ModernBetaSettingsBiome.fromCompound(this.biomeSettings);
-        ModernBetaSettingsCaveBiome caveBiomeSettings = ModernBetaSettingsCaveBiome.fromCompound(this.caveBiomeSettings);
+        ModernBetaSettings biomeSettings = ModernBetaSettings.fromCompound(this.biomeSettings);
+        ModernBetaSettings caveBiomeSettings = ModernBetaSettings.fromCompound(this.caveBiomeSettings);
         
         this.biomeProvider = ModernBetaRegistries.BIOME
-            .get(biomeSettings.biomeProvider)
-            .apply(this.biomeSettings, this.biomeRegistry, seed);
+            .get(biomeSettings.getProvider())
+            .apply(biomeSettings, this.biomeRegistry, seed);
         
         this.caveBiomeProvider = ModernBetaRegistries.CAVE_BIOME
-            .get(caveBiomeSettings.biomeProvider)
-            .apply(this.caveBiomeSettings, this.biomeRegistry, seed);
+            .get(caveBiomeSettings.getProvider())
+            .apply(caveBiomeSettings, this.biomeRegistry, seed);
     }
     
     @Override
@@ -251,15 +250,15 @@ public class ModernBetaBiomeSource extends BiomeSource {
 
     @Override
     protected Stream<RegistryEntry<Biome>> biomeStream() {
-        ModernBetaSettingsBiome modernBetaBiomeSettings = ModernBetaSettingsBiome.fromCompound(this.biomeSettings);
-        ModernBetaSettingsCaveBiome modernBetaCaveBiomeSettings = ModernBetaSettingsCaveBiome.fromCompound(this.caveBiomeSettings);
+        ModernBetaSettings biomeSettings = ModernBetaSettings.fromCompound(this.biomeSettings);
+        ModernBetaSettings caveBiomeSettings = ModernBetaSettings.fromCompound(this.caveBiomeSettings);
         
         BiomeProvider biomeProvider  = ModernBetaRegistries.BIOME
-            .get(modernBetaBiomeSettings.biomeProvider)
+            .get(biomeSettings.getProvider())
             .apply(biomeSettings, biomeRegistry, 0L);
         
         CaveBiomeProvider caveBiomeProvider = ModernBetaRegistries.CAVE_BIOME
-            .get(modernBetaCaveBiomeSettings.biomeProvider)
+            .get(caveBiomeSettings.getProvider())
             .apply(caveBiomeSettings, biomeRegistry, 0L);
 
         List<RegistryEntry<Biome>> biomes = new ArrayList<>();

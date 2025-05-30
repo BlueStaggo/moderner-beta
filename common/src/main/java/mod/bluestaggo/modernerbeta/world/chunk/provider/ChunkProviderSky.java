@@ -135,17 +135,17 @@ public class ChunkProviderSky extends ChunkProviderNoise {
     protected void sampleNoiseColumn(double[] primaryBuffer, double[] heightmapBuffer, int startNoiseX, int startNoiseZ, int localNoiseX, int localNoiseZ) {
         int noiseX = startNoiseX + localNoiseX;
         int noiseZ = startNoiseZ + localNoiseZ;
-        
-        double coordinateScale = this.chunkSettings.noiseCoordinateScale;
-        double heightScale = this.chunkSettings.noiseHeightScale;
-        
-        double mainNoiseScaleX = this.chunkSettings.noiseMainNoiseScaleX;
-        double mainNoiseScaleY = this.chunkSettings.noiseMainNoiseScaleY;
-        double mainNoiseScaleZ = this.chunkSettings.noiseMainNoiseScaleZ;
 
-        double lowerLimitScale = this.chunkSettings.noiseLowerLimitScale;
-        double upperLimitScale = this.chunkSettings.noiseUpperLimitScale;
-        
+        double coordinateScale = this.noiseScale.coordinate();
+        double heightScale = this.noiseScale.height();
+
+        double mainNoiseScaleX = this.noiseScale.mainNoiseX();
+        double mainNoiseScaleY = this.noiseScale.mainNoiseY();
+        double mainNoiseScaleZ = this.noiseScale.mainNoiseZ();
+
+        double lowerLimitScale = this.noiseScale.lowerLimit();
+        double upperLimitScale = this.noiseScale.upperLimit();
+
         for (int y = 0; y < primaryBuffer.length; ++y) {
             int noiseY = y + this.noiseMinY;
 

@@ -2,10 +2,12 @@ package mod.bluestaggo.modernerbeta.util;
 
 import com.google.gson.*;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.JavaOps;
 import com.mojang.serialization.JsonOps;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,6 +19,11 @@ public class CodecUtil {
     public static <T> void registerTypeAdapter(GsonBuilder gson, Class<T> clazz, Codec<T> codec) {
         gson.registerTypeAdapter(clazz, new JsonSerializer<>(codec));
         gson.registerTypeAdapter(clazz, new JsonDeserializer<>(codec));
+    }
+
+    // Relies on the fact that all fields in the codec have default values
+    public static <T> T getDefaultByMap(Codec<T> codec) {
+        return codec.decode(JavaOps.INSTANCE, Collections.<String, Object>emptyMap()).getOrThrow().getFirst();
     }
 
     public record JsonSerializer<T>(Codec<T> codec) implements com.google.gson.JsonSerializer<T> {

@@ -53,7 +53,7 @@ public abstract class MixinFreezeTopLayerFeature {
         if (chunkGenerator instanceof ModernBetaChunkGenerator modernBetaChunkGenerator
                 && (modernBetaChunkGenerator.getChunkProvider() instanceof ChunkProviderEarlyRelease
                         || modernBetaChunkGenerator.getChunkProvider() instanceof ChunkProviderMajorRelease)) {
-            BetaFreezeTopLayerFeature.setFreezeTopLayer(world, pos, biomeSource, modernBetaChunkGenerator.getChunkProvider().getChunkSettings().useSurfaceRules);
+            BetaFreezeTopLayerFeature.setFreezeTopLayer(world, pos, biomeSource, modernBetaChunkGenerator.allowSurfaceRules());
             info.setReturnValue(true);
             return;
         }

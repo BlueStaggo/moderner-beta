@@ -1,6 +1,5 @@
 package mod.bluestaggo.modernerbeta.world.biome.provider.climate;
 
-import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsBiome;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.world.biome.Biome;
 
@@ -13,14 +12,9 @@ public class ClimateMap {
     private final Map<String, ClimateMapping> climateMap;
     private final ClimateMapping[] climateTable;
     
-    public ClimateMap(ModernBetaSettingsBiome settings) {
-        this.climateMap = new LinkedHashMap<>();
+    public ClimateMap(Map<String, ClimateMapping> climateMappings) {
+        this.climateMap = new LinkedHashMap<>(climateMappings);
         this.climateTable = new ClimateMapping[4096];
-        
-        for (String key : settings.climateMappings.keySet()) {
-            this.climateMap.put(key, settings.climateMappings.get(key));
-        }
-        
         this.generateBiomeLookup();
     }
     

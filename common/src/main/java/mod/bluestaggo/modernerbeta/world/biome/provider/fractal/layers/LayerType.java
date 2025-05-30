@@ -3,8 +3,6 @@ package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers;
 import com.mojang.serialization.MapCodec;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
-import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
-import net.minecraft.registry.Registry;
 
 public record LayerType<L extends Layer>(MapCodec<L> codec) {
     private static IRegistryHandler<LayerType<?>> registryHandler;

@@ -60,11 +60,11 @@ public class ModernBetaGraphicalChunkSettingsScreen extends ModernBetaGraphicalC
             if (isIndevProvider) {
                 levelOptionList.add(this.selectionOption(NbtTags.INDEV_LEVEL_TYPE,
                     Arrays.stream(IndevType.values())
-                        .map(IndevType::getId)
+                        .map(IndevType::asString)
                         .toArray(String[]::new)));
                 levelOptionList.add(this.selectionOption(NbtTags.INDEV_LEVEL_THEME,
                     Arrays.stream(IndevTheme.values())
-                        .map(IndevTheme::getId)
+                        .map(IndevTheme::asString)
                         .toArray(String[]::new)));
             }
 
@@ -204,7 +204,7 @@ public class ModernBetaGraphicalChunkSettingsScreen extends ModernBetaGraphicalC
                 this.floatRangeOption(NbtTags.ISLES_OCEAN_SLIDE_TARGET, -1000.0F, 0.0F),
                 this.selectionOption(NbtTags.ISLES_CENTER_ISLAND_SHAPE,
                     Arrays.stream(IslandShape.values())
-                        .map(IslandShape::getId)
+                        .map(IslandShape::asString)
                         .toArray(String[]::new)),
                 this.intRangeOption(NbtTags.ISLES_CENTER_ISLAND_RADIUS, 1, 100),
                 this.intRangeOption(NbtTags.ISLES_CENTER_ISLAND_FALLOFF_DIST, 1, 100),

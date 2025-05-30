@@ -2,6 +2,11 @@ package mod.bluestaggo.modernerbeta.world.chunk.provider;
 
 import mod.bluestaggo.modernerbeta.api.world.chunk.ChunkProviderFinite;
 import mod.bluestaggo.modernerbeta.api.world.chunk.surface.SurfaceConfig;
+import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
+import mod.bluestaggo.modernerbeta.settings.component.FiniteBeaches;
+import mod.bluestaggo.modernerbeta.settings.component.FiniteCaveGeneration;
+import mod.bluestaggo.modernerbeta.settings.component.FiniteNoiseScale;
+import mod.bluestaggo.modernerbeta.settings.component.FinitePools;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
 import mod.bluestaggo.modernerbeta.util.noise.PerlinOctaveNoise;
 import mod.bluestaggo.modernerbeta.util.noise.PerlinOctaveNoiseCombined;
@@ -47,8 +52,8 @@ public class ChunkProviderIndev extends ChunkProviderFinite {
     public ChunkProviderIndev(ModernBetaChunkGenerator chunkGenerator, long seed) {
         super(chunkGenerator, seed);
         
-        this.levelTheme = IndevTheme.fromId(this.chunkSettings.indevLevelTheme);
-        this.levelType = IndevType.fromId(this.chunkSettings.indevLevelType);
+        this.levelTheme = this.levelProperties.theme();
+        this.levelType = this.levelProperties.type();
         
         this.fluidBlock = this.isFloating() ? BlockStates.AIR : (this.isHell() ? BlockStates.LAVA : this.defaultFluid);
         this.topsoilBlock = this.isHell() ? BlockStates.PODZOL : BlockStates.GRASS_BLOCK;
@@ -76,7 +81,7 @@ public class ChunkProviderIndev extends ChunkProviderFinite {
     }
     
     public void generateIndevHouse(ServerWorld world, BlockPos spawnPos) {
-        if (!this.chunkSettings.indevSpawnHouse) {
+        if (!this.chunkSettings.getOrDefault(SettingsComponentTypes.SPAWN_INDEV_HOUSE)) {
             return;
         }
 
@@ -116,6 +121,10 @@ public class ChunkProviderIndev extends ChunkProviderFinite {
     
     @Override
     protected void pregenerateTerrain() {
+        FiniteNoiseScale noiseSettings = this.chunkSettings.getOrDefault(SettingsComponentTypes.FINITE_NOISE_SCALE);
+        FiniteBeaches beachSettings = this.chunkSettings.getOrDefault(SettingsComponentTypes.FINITE_BEACHES);
+        FinitePools poolSettings = this.chunkSettings.getOrDefault(SettingsComponentTypes.FINITE_POOLS);
+
         for (int layer = 0; layer < this.layers; ++layer) { 
             // Floating island layer generation depends on water level being lowered on each iteration
             this.waterLevel = (this.levelType == IndevType.FLOATING) ? this.levelHeight - 32 - layer * 48 : this.waterLevel;
@@ -124,7 +133,7 @@ public class ChunkProviderIndev extends ChunkProviderFinite {
             minHeightOctaveNoise = new PerlinOctaveNoiseCombined(new PerlinOctaveNoise(random, 8, false), new PerlinOctaveNoise(random, 8, false));
             maxHeightOctaveNoise = new PerlinOctaveNoiseCombined(new PerlinOctaveNoise(random, 8, false), new PerlinOctaveNoise(random, 8, false));
             
-            mainHeightOctaveNoise = new PerlinOctaveNoise(random, 6, false);
+            mainHeightOctaveNoise = new PerlinOctaveNoise(random, noiseSettings.mainHeightOctaves(), false);
             islandOctaveNoise = new PerlinOctaveNoise(random, 2, false);
             
             dirtOctaveNoise = new PerlinOctaveNoise(random, 8, false);
@@ -135,16 +144,16 @@ public class ChunkProviderIndev extends ChunkProviderFinite {
             
             sandOctaveNoise = new PerlinOctaveNoise(random, 8, false);
             gravelOctaveNoise = new PerlinOctaveNoise(random, 8, false);
-            
-            this.generateHeightmap();
+
+            this.generateHeightmap(noiseSettings);
             this.erodeTerrain();
             this.soilTerrain();
-            this.growSurface();
+            this.growSurface(beachSettings);
         }
         
-        if (this.chunkSettings.indevUseCaves) this.carveTerrain();
-        this.floodFluid();   
-        this.floodLava();
+        this.carveTerrain(this.chunkSettings.getOrDefault(SettingsComponentTypes.FINITE_CAVE_GENERATION));
+        this.floodFluid(poolSettings);
+        this.floodLava(poolSettings);
         this.plantSurface();
     }
 
@@ -153,7 +162,6 @@ public class ChunkProviderIndev extends ChunkProviderFinite {
         switch(this.levelType) {
             case ISLAND -> this.generateWaterBorder(chunk);
             case INLAND -> this.generateWorldBorder(chunk);
-            case FLOATING -> {}
             default -> {}
         }
     }
@@ -243,7 +251,7 @@ public class ChunkProviderIndev extends ChunkProviderFinite {
         return blockState;
     }
 
-    private void generateHeightmap() {
+    private void generateHeightmap(FiniteNoiseScale noiseSettings) {
         this.setPhase("Raising");
         
         for (int x = 0; x < this.levelWidth; ++x) {
@@ -252,12 +260,12 @@ public class ChunkProviderIndev extends ChunkProviderFinite {
             for (int z = 0; z < this.levelLength; ++z) {
                 double normalizedZ = Math.abs((z / (this.levelLength - 1.0) - 0.5) * 2.0);
                 
-                double heightLow = minHeightOctaveNoise.sample(x * 1.3f, z * 1.3f)
-                        / this.chunkSettings.indevMinHeightDamp + this.chunkSettings.indevMinHeightBoost;
-                double heightHigh = maxHeightOctaveNoise.sample(x * 1.3f, z * 1.3f)
-                        / this.chunkSettings.indevMaxHeightDamp + this.chunkSettings.indevMaxHeightBoost;
+                double heightLow = minHeightOctaveNoise.sample(x * noiseSettings.heightScale(), z * noiseSettings.heightScale())
+                        / noiseSettings.minHeightDamp() + noiseSettings.minHeightBoost();
+                double heightHigh = maxHeightOctaveNoise.sample(x * noiseSettings.heightScale(), z * noiseSettings.heightScale())
+                        / noiseSettings.maxHeightDamp() + noiseSettings.maxHeightBoost();
 
-                double heightSelector = mainHeightOctaveNoise.sampleXY(x * this.chunkSettings.indevSelectorScale, z * this.chunkSettings.indevSelectorScale) / 8.0;
+                double heightSelector = mainHeightOctaveNoise.sampleXY(x * noiseSettings.selectorScale(), z * noiseSettings.selectorScale()) / 8.0;
                 
                 if (heightSelector > 0.0) {
                     heightHigh = heightLow;
@@ -280,10 +288,10 @@ public class ChunkProviderIndev extends ChunkProviderFinite {
                     heightResult = heightResult * (1.0 - islandRadius) - islandRadius * 10.0 + 5.0;
                     
                     if (heightResult < 0.0) {
-                        heightResult -= heightResult * heightResult * 0.20000000298023224;
+                        heightResult -= heightResult * heightResult * 0.2;
                     }
                 } else if (heightResult < 0.0) {
-                    heightResult /= this.chunkSettings.indevHeightUnderDamp;
+                    heightResult /= noiseSettings.heightUnderDamp();
                 }
                 
                 this.heightmap[x + z * this.levelWidth] = (int)heightResult;
@@ -366,7 +374,7 @@ public class ChunkProviderIndev extends ChunkProviderFinite {
         }
     }
     
-    private void growSurface() {
+    private void growSurface(FiniteBeaches beachSettings) {
         this.setPhase("Growing");
         int surfaceLevel = this.getSeaLevel() - 1;
         
@@ -374,8 +382,8 @@ public class ChunkProviderIndev extends ChunkProviderFinite {
         
         for (int x = 0; x < this.levelWidth; ++x) {
             for (int z = 0; z < this.levelLength; ++z) {
-                double sandBeachThreshold = this.chunkSettings.indevSandBeachThreshold;
-                double gravelBeachThreshold = this.chunkSettings.indevGravelBeachThreshold;
+                double sandBeachThreshold = beachSettings.sandThreshold();
+                double gravelBeachThreshold = beachSettings.gravelThreshold();
 
                 if (this.levelType == IndevType.ISLAND) {
                     sandBeachThreshold -= 16.0;
@@ -397,11 +405,15 @@ public class ChunkProviderIndev extends ChunkProviderFinite {
                 Block blockUp = this.getLevelBlock(x, heightResult + 1, z);
 
                 genSand &= heightResult <= surfaceLevel
-                        && (this.chunkSettings.indevSandBeachUnderAir && blockUp == Blocks.AIR
-                                || this.chunkSettings.indevSandBeachUnderFluid && blockUp == this.fluidBlock.getBlock());
+                        && (beachSettings.sandUnderAir() && blockUp == Blocks.AIR
+                                || beachSettings.sandUnderFluid() && blockUp == this.fluidBlock.getBlock());
                 genGravel &= heightResult <= this.getSeaLevel() - 1
-                        && (this.chunkSettings.indevGravelBeachUnderAir && blockUp == Blocks.AIR
-                                || this.chunkSettings.indevGravelBeachUnderFluid && blockUp == this.fluidBlock.getBlock());
+                        && (beachSettings.gravelUnderAir() && blockUp == Blocks.AIR
+                                || beachSettings.gravelUnderFluid() && blockUp == this.fluidBlock.getBlock());
+
+                if (genGravel && beachSettings.prioritizeGravelBeaches()) {
+                    genSand = false;
+                }
 
                 Block surfaceBlock = genSand ? (this.levelTheme == IndevTheme.HELL ? Blocks.GRASS_BLOCK : Blocks.SAND)
                         : genGravel ? Blocks.GRAVEL
@@ -413,17 +425,17 @@ public class ChunkProviderIndev extends ChunkProviderFinite {
         }
     }
     
-    private void carveTerrain() {
+    private void carveTerrain(FiniteCaveGeneration caveSettings) {
         this.setPhase("Carving");
         
-        int caveCount = this.levelWidth * this.levelLength * this.levelHeight / this.chunkSettings.indevCaveRarity;
+        int caveCount = this.levelWidth * this.levelLength * this.levelHeight / caveSettings.rarity();
         
         for (int i = 0; i < caveCount; ++i) {
             float caveX = random.nextFloat() * this.levelWidth;
             float caveY = random.nextFloat() * this.levelHeight;
             float caveZ = random.nextFloat() * this.levelLength;
 
-            int caveLen = (int)((random.nextFloat() + random.nextFloat()) * 200F);
+            int caveLen = (int)((random.nextFloat() + random.nextFloat()) * caveSettings.length());
             
             float theta = random.nextFloat() * 3.1415927f * 2.0f;
             float deltaTheta = 0.0f;
@@ -458,7 +470,7 @@ public class ChunkProviderIndev extends ChunkProviderFinite {
     }
     
     // Using Classic generation algorithm
-    private void floodFluid() {
+    private void floodFluid(FinitePools poolSettings) {
         this.setPhase("Watering");
         
         Block fluid = this.fluidBlock.getBlock();
@@ -477,31 +489,33 @@ public class ChunkProviderIndev extends ChunkProviderFinite {
             flood(0, this.waterLevel - 1, z, fluid);
         }
         
-        int waterSourceCount = this.levelWidth * this.levelLength / this.chunkSettings.indevWaterRarity;
+        int waterSourceCount = this.levelWidth * this.levelLength / poolSettings.waterRarity();
         
         for (int i = 0; i < waterSourceCount; ++i) {
             int randX = random.nextInt(this.levelWidth);
             int randZ = random.nextInt(this.levelLength);
-            int randY = (this.waterLevel - 1) - random.nextInt(2);
+            int randY = (this.waterLevel - 1) - random.nextInt(poolSettings.uniformLavaHeights() ? 3 : 2);
             
             this.flood(randX, randY, randZ, fluid);
         }
     }
     
     // Using Classic generation algorithm
-    private void floodLava() {
+    private void floodLava(FinitePools poolSettings) {
         this.setPhase("Melting");
         
         if (this.levelType == IndevType.FLOATING) {
             return;
         }
 
-        int lavaSourceCount = this.levelWidth * this.levelLength / this.chunkSettings.indevLavaRarity;
+        int lavaSourceCount = this.levelWidth * this.levelLength / poolSettings.lavaRarity();
          
         for (int i = 0; i < lavaSourceCount; ++i) {
             int randX = random.nextInt(this.levelWidth);
             int randZ = random.nextInt(this.levelLength);
-            int randY = (int)((float)(this.waterLevel - 3) * random.nextFloat() * random.nextFloat());
+            int randY = poolSettings.uniformLavaHeights()
+                ? random.nextInt(this.waterLevel - 4)
+                : (int)((float)(this.waterLevel - 3) * random.nextFloat() * random.nextFloat());
             
             this.flood(randX, randY, randZ, Blocks.LAVA);
         }

@@ -1,7 +1,6 @@
 package mod.bluestaggo.modernerbeta.client.gui.screen;
 
-import mod.bluestaggo.modernerbeta.ModernerBeta;
-import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsChunk;
+import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
 import net.minecraft.client.world.GeneratorOptionsHolder;
@@ -17,13 +16,13 @@ import net.minecraft.world.gen.chunk.ChunkGeneratorSettings;
 
 public class ModernBetaWorldScreenProvider {
     public static GeneratorOptionsHolder.RegistryAwareModifier createModifier(
-        NbtCompound chunkSettings,
-        NbtCompound biomeSettings,
-        NbtCompound caveBiomeSettings
+        NbtCompound chunkSettingsCompound,
+        NbtCompound biomeSettingsCompound,
+        NbtCompound caveBiomeSettingsCompound
     ) {
         return (dynamicRegistryManager, dimensionsRegistryHolder) -> {
-            ModernBetaSettingsChunk modernBetaSettingsChunk = ModernBetaSettingsChunk.fromCompound(chunkSettings);
-            RegistryKey<ChunkGeneratorSettings> modernBetaSettings = keyOfSettings(modernBetaSettingsChunk.chunkProvider);
+            ModernBetaSettings chunkSettings = ModernBetaSettings.fromCompound(chunkSettingsCompound);
+            RegistryKey<ChunkGeneratorSettings> modernBetaSettings = keyOfSettings(chunkSettings.getProvider());
             
             Registry<ChunkGeneratorSettings> registrySettings = dynamicRegistryManager.getOrThrow(RegistryKeys.CHUNK_GENERATOR_SETTINGS);
             RegistryEntry.Reference<ChunkGeneratorSettings> settings = registrySettings.getOrThrow(modernBetaSettings);
@@ -32,11 +31,11 @@ public class ModernBetaWorldScreenProvider {
             ModernBetaChunkGenerator chunkGenerator = new ModernBetaChunkGenerator(
                 new ModernBetaBiomeSource(
                     registryBiome,
-                    biomeSettings,
-                    caveBiomeSettings
+                    biomeSettingsCompound,
+                    caveBiomeSettingsCompound
                 ),
                 settings,
-                chunkSettings
+                chunkSettingsCompound
             );
             
             return dimensionsRegistryHolder.with(dynamicRegistryManager, chunkGenerator);

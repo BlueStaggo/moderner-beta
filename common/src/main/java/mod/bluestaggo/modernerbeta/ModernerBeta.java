@@ -7,6 +7,7 @@ import mod.bluestaggo.modernerbeta.config.ModernBetaConfig;
 import mod.bluestaggo.modernerbeta.network.INetworkHelper;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
+import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.util.CodecUtil;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ConfiguredLayers;
@@ -24,8 +25,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.event.Level;
 
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.SequencedMap;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 public class ModernerBeta {
     public static final String MOD_ID = "moderner_beta";
@@ -45,7 +50,7 @@ public class ModernerBeta {
         Registries.CHUNK_GENERATOR, ModernBetaChunkGenerator::register
     );
 
-    public static Map<Registry<?>, Consumer<IRegistryHandler<?>>> CUSTOM_REGISTRY_HANDLERS;
+    public static SequencedMap<Registry<?>, Consumer<IRegistryHandler<?>>> CUSTOM_REGISTRY_HANDLERS;
     public static INetworkHelper networkHelper;
 
     public static void init() {
@@ -53,19 +58,20 @@ public class ModernerBeta {
     }
 
     public static void setupCustomRegistryHandlers() {
-        CUSTOM_REGISTRY_HANDLERS = Map.ofEntries(
-            Map.entry(ModernBetaRegistries.CHUNK, ModernBetaBuiltInProviders::registerChunkProviders),
-            Map.entry(ModernBetaRegistries.BIOME, ModernBetaBuiltInProviders::registerBiomeProviders),
-            Map.entry(ModernBetaRegistries.CAVE_BIOME, ModernBetaBuiltInProviders::registerCaveBiomeProviders),
-            Map.entry(ModernBetaRegistries.SURFACE_CONFIG, ModernBetaBuiltInProviders::registerSurfaceConfigs),
-            Map.entry(ModernBetaRegistries.HEIGHT_CONFIG, ModernBetaBuiltInProviders::registerHeightConfigs),
-            Map.entry(ModernBetaRegistries.NOISE_POST_PROCESSOR, ModernBetaBuiltInProviders::registerNoisePostProcessors),
-            Map.entry(ModernBetaRegistries.BLOCKSOURCE, ModernBetaBuiltInProviders::registerBlockSources),
-            Map.entry(ModernBetaRegistries.SETTINGS_PRESET, ModernBetaBuiltInProviders::registerSettingsPresets),
-            Map.entry(ModernBetaRegistries.SETTINGS_PRESET_CATEGORY, ModernBetaBuiltInProviders::registerSettingsPresetCategories),
-            Map.entry(ModernBetaRegistries.FRACTAL_LAYER, LayerType::init),
-            Map.entry(ModernBetaRegistries.BIOME_PREDICATE, BiomePredicateType::init)
-        );
+        SequencedMap<Registry<?>, Consumer<IRegistryHandler<?>>> customRegistryHandlers = new LinkedHashMap<>();
+        customRegistryHandlers.put(ModernBetaRegistries.SETTINGS_COMPONENT_TYPE, SettingsComponentTypes::init);
+        customRegistryHandlers.put(ModernBetaRegistries.CHUNK, ModernBetaBuiltInProviders::registerChunkProviders);
+        customRegistryHandlers.put(ModernBetaRegistries.BIOME, ModernBetaBuiltInProviders::registerBiomeProviders);
+        customRegistryHandlers.put(ModernBetaRegistries.CAVE_BIOME, ModernBetaBuiltInProviders::registerCaveBiomeProviders);
+        customRegistryHandlers.put(ModernBetaRegistries.SURFACE_CONFIG, ModernBetaBuiltInProviders::registerSurfaceConfigs);
+        customRegistryHandlers.put(ModernBetaRegistries.HEIGHT_CONFIG, ModernBetaBuiltInProviders::registerHeightConfigs);
+        customRegistryHandlers.put(ModernBetaRegistries.NOISE_POST_PROCESSOR, ModernBetaBuiltInProviders::registerNoisePostProcessors);
+        customRegistryHandlers.put(ModernBetaRegistries.BLOCKSOURCE, ModernBetaBuiltInProviders::registerBlockSources);
+        customRegistryHandlers.put(ModernBetaRegistries.SETTINGS_PRESET, ModernBetaBuiltInProviders::registerSettingsPresets);
+        customRegistryHandlers.put(ModernBetaRegistries.SETTINGS_PRESET_CATEGORY, ModernBetaBuiltInProviders::registerSettingsPresetCategories);
+        customRegistryHandlers.put(ModernBetaRegistries.FRACTAL_LAYER, LayerType::init);
+        customRegistryHandlers.put(ModernBetaRegistries.BIOME_PREDICATE, BiomePredicateType::init);
+        CUSTOM_REGISTRY_HANDLERS = Collections.unmodifiableSequencedMap(customRegistryHandlers);
     }
 
     public static Identifier createId(String name) {

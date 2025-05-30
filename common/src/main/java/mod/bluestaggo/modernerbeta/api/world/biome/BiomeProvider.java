@@ -1,7 +1,6 @@
 package mod.bluestaggo.modernerbeta.api.world.biome;
 
-import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsBiome;
-import net.minecraft.nbt.NbtCompound;
+import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import net.minecraft.registry.RegistryEntryLookup;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.text.Text;
@@ -10,7 +9,7 @@ import net.minecraft.world.biome.Biome;
 import java.util.List;
 
 public abstract class BiomeProvider {
-    protected final ModernBetaSettingsBiome settings;
+    protected final ModernBetaSettings settings;
     protected final RegistryEntryLookup<Biome> biomeRegistry;
     protected final long seed;
     
@@ -21,8 +20,8 @@ public abstract class BiomeProvider {
      * @param settings Biome settings.
      * @param biomeRegistry Minecraft biome registry.
      */
-    public BiomeProvider(NbtCompound settings, RegistryEntryLookup<Biome> biomeRegistry, long seed) {
-        this.settings = ModernBetaSettingsBiome.fromCompound(settings);
+    public BiomeProvider(ModernBetaSettings settings, RegistryEntryLookup<Biome> biomeRegistry, long seed) {
+        this.settings = settings;
         this.biomeRegistry = biomeRegistry;
         this.seed = seed;
     }
@@ -53,7 +52,7 @@ public abstract class BiomeProvider {
      *
      * @return The biome provider settings.
      */
-    public ModernBetaSettingsBiome getSettings() {
+    public ModernBetaSettings getSettings() {
         return this.settings;
     }
 

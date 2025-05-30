@@ -5,12 +5,8 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class SimpleBiomeReplacementLayer extends SingleParentLayer {
     public static final MapCodec<SimpleBiomeReplacementLayer> CODEC = RecordCodecBuilder.mapCodec(

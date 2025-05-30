@@ -3,10 +3,12 @@ package mod.bluestaggo.modernerbeta.world.cavebiome.provider;
 import mod.bluestaggo.modernerbeta.api.world.cavebiome.CaveBiomeProvider;
 import mod.bluestaggo.modernerbeta.api.world.cavebiome.climate.CaveClimateSampler;
 import mod.bluestaggo.modernerbeta.api.world.cavebiome.climate.CaveClime;
+import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
+import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
+import mod.bluestaggo.modernerbeta.settings.component.CaveBiomeVoronoi;
 import mod.bluestaggo.modernerbeta.util.noise.PerlinOctaveNoise;
 import mod.bluestaggo.modernerbeta.world.biome.voronoi.VoronoiPointCaveBiome;
 import mod.bluestaggo.modernerbeta.world.biome.voronoi.VoronoiPointRules;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.RegistryEntryLookup;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
@@ -23,17 +25,18 @@ public class CaveBiomeProviderVoronoi extends CaveBiomeProvider implements CaveC
     private final VoronoiCaveClimateSampler climateSampler;
     private final VoronoiPointRules<RegistryKey<Biome>, CaveClime> rules;
 
-    public CaveBiomeProviderVoronoi(NbtCompound settings, RegistryEntryLookup<Biome> biomeRegistry, long seed) {
+    public CaveBiomeProviderVoronoi(ModernBetaSettings settings, RegistryEntryLookup<Biome> biomeRegistry, long seed) {
         super(settings, biomeRegistry, seed);
 
+        CaveBiomeVoronoi voronoi = this.settings.getOrThrow(SettingsComponentTypes.CAVE_BIOME_VORONOI);
         this.climateSampler = new VoronoiCaveClimateSampler(
             seed,
-            this.settings.voronoiVerticalNoiseScale,
-            this.settings.voronoiHorizontalNoiseScale,
-            this.settings.voronoiDepthMinY,
-            this.settings.voronoiDepthMaxY
+            voronoi.verticalScale(),
+            voronoi.horizontalScale(),
+            voronoi.depthMinY(),
+            voronoi.depthMaxY()
         );
-        this.rules = buildRules(this.settings.voronoiPoints);
+        this.rules = buildRules(voronoi.points());
     }
 
     @Override

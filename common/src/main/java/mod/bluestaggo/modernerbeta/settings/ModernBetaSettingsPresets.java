@@ -1,6 +1,7 @@
 package mod.bluestaggo.modernerbeta.settings;
 
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
+import mod.bluestaggo.modernerbeta.settings.component.*;
 import mod.bluestaggo.modernerbeta.world.biome.HeightConfig;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomes;
 import mod.bluestaggo.modernerbeta.world.biome.provider.climate.ClimateMapping;
@@ -9,7 +10,6 @@ import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.*;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.predicates.BiomePredicate;
 import mod.bluestaggo.modernerbeta.world.biome.voronoi.VoronoiPointBiome;
-import mod.bluestaggo.modernerbeta.world.biome.voronoi.VoronoiPointCaveBiome;
 import mod.bluestaggo.modernerbeta.world.chunk.provider.indev.IndevTheme;
 import mod.bluestaggo.modernerbeta.world.chunk.provider.indev.IndevType;
 import mod.bluestaggo.modernerbeta.world.chunk.provider.island.IslandShape;
@@ -21,6 +21,8 @@ import net.minecraft.world.biome.BiomeKeys;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes.*;
 
 public class ModernBetaSettingsPresets {
     public static final ModernBetaSettingsPreset PRESET_BETA_1_7_3 = presetBeta(false);
@@ -49,7 +51,7 @@ public class ModernBetaSettingsPresets {
     public static final ModernBetaSettingsPreset PRESET_BETA_WATER_WORLD = presetWaterWorld(PRESET_BETA_1_7_3);
     public static final ModernBetaSettingsPreset PRESET_BETA_ISLE_LAND = presetIsleLand(PRESET_BETA_1_7_3);
     public static final ModernBetaSettingsPreset PRESET_BETA_CAVE_DELIGHT = presetCaveDelight(PRESET_BETA_1_7_3);
-    public static final ModernBetaSettingsPreset PRESET_BETA_MOUNTAIN_MADNESS = presetMountainMadness(PRESET_BETA_1_7_3);
+    public static final ModernBetaSettingsPreset PRESET_BETA_MOUNTAIN_MADNESS = presetMountainMadness(PRESET_BETA_1_7_3, false);
     public static final ModernBetaSettingsPreset PRESET_BETA_DROUGHT = presetDrought(PRESET_BETA_1_7_3);
     public static final ModernBetaSettingsPreset PRESET_BETA_CAVE_CHAOS = presetCaveChaos(PRESET_BETA_1_7_3);
     public static final ModernBetaSettingsPreset PRESET_BETA_LARGE_BIOMES = presetBetaLargeBiomes();
@@ -65,7 +67,7 @@ public class ModernBetaSettingsPresets {
     public static final ModernBetaSettingsPreset PRESET_WATER_WORLD = presetWaterWorld(PRESET_RELEASE_1_12_2);
     public static final ModernBetaSettingsPreset PRESET_ISLE_LAND = presetIsleLand(PRESET_RELEASE_1_12_2);
     public static final ModernBetaSettingsPreset PRESET_CAVE_DELIGHT = presetCaveDelight(PRESET_RELEASE_1_12_2);
-    public static final ModernBetaSettingsPreset PRESET_MOUNTAIN_MADNESS = presetMountainMadness(PRESET_RELEASE_1_12_2);
+    public static final ModernBetaSettingsPreset PRESET_MOUNTAIN_MADNESS = presetMountainMadness(PRESET_RELEASE_1_12_2, true);
     public static final ModernBetaSettingsPreset PRESET_DROUGHT = presetDrought(PRESET_RELEASE_1_12_2);
     public static final ModernBetaSettingsPreset PRESET_CAVE_CHAOS = presetCaveChaos(PRESET_RELEASE_1_12_2);
     public static final ModernBetaSettingsPreset PRESET_BETA_1_8_1_LARGE_BIOMES = presetBeta181(2);
@@ -76,7 +78,7 @@ public class ModernBetaSettingsPresets {
     public static final ModernBetaSettingsPreset PRESET_RELEASE_1_6_4_LARGE_BIOMES = preset164(2);
     public static final ModernBetaSettingsPreset PRESET_RELEASE_1_12_2_LARGE_BIOMES = preset1122(2);
     public static final ModernBetaSettingsPreset PRESET_RELEASE_1_17_1_LARGE_BIOMES = preset1171(2);
-    public static final ModernBetaSettingsPreset PRESET_RELEASE_HYBRID_LARGE_BIOMES = presetSnowAintSnowier(2);
+    public static final ModernBetaSettingsPreset PRESET_RELEASE_HYBRID_LARGE_BIOMES = presetReleaseHybrid(2);
     public static final ModernBetaSettingsPreset PRESET_SNOW_AINT_SNOWIER_LARGE_BIOMES = presetSnowAintSnowier(2);
 
     private static ModernBetaSettingsPreset presetBeta() {
@@ -84,1386 +86,1207 @@ public class ModernBetaSettingsPresets {
     }
 
     private static ModernBetaSettingsPreset presetBeta(boolean oakBiomes) {
-        ModernBetaSettingsChunk.Builder settingsChunk = new ModernBetaSettingsChunk.Builder();
-        ModernBetaSettingsBiome.Builder settingsBiome = new ModernBetaSettingsBiome.Builder();
-        ModernBetaSettingsCaveBiome.Builder settingsCaveBiome = new ModernBetaSettingsCaveBiome.Builder();
-        
-        settingsChunk.chunkProvider = ModernBetaBuiltInTypes.Chunk.BETA.id;
-        settingsChunk.useDeepslate = true;
-        settingsChunk.deepslateMinY = 0;
-        settingsChunk.deepslateMaxY = 8;
-        settingsChunk.deepslateBlock = "minecraft:deepslate";
-        settingsChunk.noiseCoordinateScale = 684.412f;
-        settingsChunk.noiseHeightScale = 684.412f;
-        settingsChunk.noiseUpperLimitScale = 512f;
-        settingsChunk.noiseLowerLimitScale = 512f;
-        settingsChunk.noiseDepthNoiseScaleX = 200;
-        settingsChunk.noiseDepthNoiseScaleZ = 200;
-        settingsChunk.noiseMainNoiseScaleX = 80f;
-        settingsChunk.noiseMainNoiseScaleY = 160f;
-        settingsChunk.noiseMainNoiseScaleZ = 80f;
-        settingsChunk.noiseBaseSize = 8.5f;
-        settingsChunk.noiseStretchY = 12.0f;
-        settingsChunk.noiseTopSlideTarget = -10;
-        settingsChunk.noiseTopSlideSize = 3;
-        settingsChunk.noiseTopSlideOffset = 0;
-        settingsChunk.noiseBottomSlideTarget = 15;
-        settingsChunk.noiseBottomSlideSize = 3;
-        settingsChunk.noiseBottomSlideOffset = 0;
-        
-        settingsBiome.biomeProvider = ModernBetaBuiltInTypes.Biome.BETA.id;
-        settingsBiome.climateTempNoiseScale = 0.025f;
-        settingsBiome.climateRainNoiseScale = 0.05f;
-        settingsBiome.climateDetailNoiseScale = 0.25f;
-        settingsBiome.climateMappings = ModernBetaSettingsBiome.Builder.createClimateMapping(
-            new ClimateMapping(
-                ModernBetaBiomes.BETA_DESERT.getValue().toString(),
-                ModernBetaBiomes.BETA_OCEAN.getValue().toString()
-            ),
-            new ClimateMapping(
-                (oakBiomes ? ModernBetaBiomes.BETA_OAK_FOREST : ModernBetaBiomes.BETA_FOREST).getValue().toString(),
-                ModernBetaBiomes.BETA_OCEAN.getValue().toString()
-            ),
-            new ClimateMapping(
-                ModernBetaBiomes.BETA_TUNDRA.getValue().toString(),
-                ModernBetaBiomes.BETA_FROZEN_OCEAN.getValue().toString()
-            ),
-            new ClimateMapping(
-                ModernBetaBiomes.BETA_PLAINS.getValue().toString(),
-                ModernBetaBiomes.BETA_OCEAN.getValue().toString()
-            ),
-            new ClimateMapping(
-                ModernBetaBiomes.BETA_RAINFOREST.getValue().toString(),
-                ModernBetaBiomes.BETA_WARM_OCEAN.getValue().toString()
-            ),
-            new ClimateMapping(
-                ModernBetaBiomes.BETA_SAVANNA.getValue().toString(),
-                ModernBetaBiomes.BETA_OCEAN.getValue().toString()
-            ),
-            new ClimateMapping(
-                ModernBetaBiomes.BETA_SHRUBLAND.getValue().toString(),
-                ModernBetaBiomes.BETA_OCEAN.getValue().toString()
-            ),
-            new ClimateMapping(
-                ModernBetaBiomes.BETA_SEASONAL_FOREST.getValue().toString(),
-                ModernBetaBiomes.BETA_LUKEWARM_OCEAN.getValue().toString()
-            ),
-            new ClimateMapping(
-                ModernBetaBiomes.BETA_SWAMPLAND.getValue().toString(),
-                ModernBetaBiomes.BETA_COLD_OCEAN.getValue().toString()
-            ),
-            new ClimateMapping(
-                (oakBiomes ? ModernBetaBiomes.BETA_OAK_TAIGA : ModernBetaBiomes.BETA_TAIGA).getValue().toString(),
-                ModernBetaBiomes.BETA_FROZEN_OCEAN.getValue().toString()
-            ),
-            new ClimateMapping(
-                ModernBetaBiomes.BETA_TUNDRA.getValue().toString(),
-                ModernBetaBiomes.BETA_FROZEN_OCEAN.getValue().toString()
-            )
-        );
-        
-        settingsCaveBiome.biomeProvider = ModernBetaBuiltInTypes.CaveBiome.VORONOI.id;
-        settingsCaveBiome.voronoiHorizontalNoiseScale = 32.0f;
-        settingsCaveBiome.voronoiVerticalNoiseScale = 16.0f;
-        settingsCaveBiome.voronoiDepthMinY = -64;
-        settingsCaveBiome.voronoiDepthMaxY = 64;
-        settingsCaveBiome.voronoiPoints = List.of(
-            new VoronoiPointCaveBiome("", 0.0, 0.5, 0.75),
-            new VoronoiPointCaveBiome("minecraft:lush_caves", 0.1, 0.5, 0.75),
-            new VoronoiPointCaveBiome("", 0.5, 0.5, 0.75),
-            new VoronoiPointCaveBiome("minecraft:dripstone_caves", 0.9, 0.5, 0.75),
-            new VoronoiPointCaveBiome("", 1.0, 0.5, 0.75),
-
-            new VoronoiPointCaveBiome("", 0.0, 0.5, 0.25),
-            new VoronoiPointCaveBiome("minecraft:lush_caves", 0.2, 0.5, 0.25),
-            new VoronoiPointCaveBiome("", 0.4, 0.5, 0.25),
-            new VoronoiPointCaveBiome("minecraft:deep_dark", 0.5, 0.5, 0.25),
-            new VoronoiPointCaveBiome("", 0.6, 0.5, 0.25),
-            new VoronoiPointCaveBiome("minecraft:dripstone_caves", 0.8, 0.5, 0.25),
-            new VoronoiPointCaveBiome("", 1.0, 0.5, 0.25)
-        );
-        
         return new ModernBetaSettingsPreset(
-            settingsChunk.build(),
-            settingsBiome.build(),
-            settingsCaveBiome.build()
+            ModernBetaSettings.builder()
+                .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.BETA.id)
+                .add(DEEPSLATE_GENERATION, DeepslateGeneration.ENABLED)
+                .addDefault(DEEPSLATE_GENERATION, USE_SURFACE_RULES, SEA_LEVEL_OFFSET, CAVE_GENERATION, NOISE_SCALE, NOISE_SLIDE)
+                .build(),
+            ModernBetaSettings.builder()
+                .add(PROVIDER, ModernBetaBuiltInTypes.Biome.BETA.id)
+                .add(USE_OCEAN_BIOMES, true)
+                .add(CLIMATE_SCALE, ClimateScale.DEFAULT)
+                .add(CLIMATE_MAPPINGS, Map.ofEntries(
+                    Map.entry("desert", new ClimateMapping(
+                        ModernBetaBiomes.BETA_DESERT.getValue(),
+                        ModernBetaBiomes.BETA_OCEAN.getValue()
+                    )),
+                    Map.entry("forest", new ClimateMapping(
+                        (oakBiomes ? ModernBetaBiomes.BETA_OAK_FOREST : ModernBetaBiomes.BETA_FOREST).getValue(),
+                        ModernBetaBiomes.BETA_OCEAN.getValue()
+                    )),
+                    Map.entry("ice_desert", new ClimateMapping(
+                        ModernBetaBiomes.BETA_TUNDRA.getValue(),
+                        ModernBetaBiomes.BETA_FROZEN_OCEAN.getValue()
+                    )),
+                    Map.entry("plains", new ClimateMapping(
+                        ModernBetaBiomes.BETA_PLAINS.getValue(),
+                        ModernBetaBiomes.BETA_OCEAN.getValue()
+                    )),
+                    Map.entry("rainforest", new ClimateMapping(
+                        ModernBetaBiomes.BETA_RAINFOREST.getValue(),
+                        ModernBetaBiomes.BETA_WARM_OCEAN.getValue()
+                    )),
+                    Map.entry("savanna", new ClimateMapping(
+                        ModernBetaBiomes.BETA_SAVANNA.getValue(),
+                        ModernBetaBiomes.BETA_OCEAN.getValue()
+                    )),
+                    Map.entry("shrubland", new ClimateMapping(
+                        ModernBetaBiomes.BETA_SHRUBLAND.getValue(),
+                        ModernBetaBiomes.BETA_OCEAN.getValue()
+                    )),
+                    Map.entry("seasonal_forest", new ClimateMapping(
+                        ModernBetaBiomes.BETA_SEASONAL_FOREST.getValue(),
+                        ModernBetaBiomes.BETA_LUKEWARM_OCEAN.getValue()
+                    )),
+                    Map.entry("swampland", new ClimateMapping(
+                        ModernBetaBiomes.BETA_SWAMPLAND.getValue(),
+                        ModernBetaBiomes.BETA_COLD_OCEAN.getValue()
+                    )),
+                    Map.entry("taiga", new ClimateMapping(
+                        (oakBiomes ? ModernBetaBiomes.BETA_OAK_TAIGA : ModernBetaBiomes.BETA_TAIGA).getValue(),
+                        ModernBetaBiomes.BETA_FROZEN_OCEAN.getValue()
+                    )),
+                    Map.entry("tundra", new ClimateMapping(
+                        ModernBetaBiomes.BETA_TUNDRA.getValue(),
+                        ModernBetaBiomes.BETA_FROZEN_OCEAN.getValue()
+                    ))
+                ))
+                .build(),
+            ModernBetaSettings.builder()
+                .add(PROVIDER, ModernBetaBuiltInTypes.CaveBiome.VORONOI.id)
+                .add(CAVE_BIOME_VORONOI, CaveBiomeVoronoi.DEFAULT)
+                .build()
         );
     }
 
     private static ModernBetaSettingsPreset presetAlpha() {
-        ModernBetaSettingsChunk.Builder settingsChunk = new ModernBetaSettingsChunk.Builder();
-        ModernBetaSettingsBiome.Builder settingsBiome = new ModernBetaSettingsBiome.Builder();
-        ModernBetaSettingsCaveBiome.Builder settingsCaveBiome = new ModernBetaSettingsCaveBiome.Builder();
-        
-        settingsChunk.chunkProvider = ModernBetaBuiltInTypes.Chunk.ALPHA.id;
-        settingsChunk.useDeepslate = false;
-        settingsChunk.noiseCoordinateScale = 684.412f;
-        settingsChunk.noiseHeightScale = 684.412f;
-        settingsChunk.noiseUpperLimitScale = 512f;
-        settingsChunk.noiseLowerLimitScale = 512f;
-        settingsChunk.noiseDepthNoiseScaleX = 100;
-        settingsChunk.noiseDepthNoiseScaleZ = 100;
-        settingsChunk.noiseMainNoiseScaleX = 80f;
-        settingsChunk.noiseMainNoiseScaleY = 160f;
-        settingsChunk.noiseMainNoiseScaleZ = 80f;
-        settingsChunk.noiseBaseSize = 8.5f;
-        settingsChunk.noiseStretchY = 12.0f;
-        settingsChunk.noiseTopSlideTarget = -10;
-        settingsChunk.noiseTopSlideSize = 3;
-        settingsChunk.noiseTopSlideOffset = 0;
-        settingsChunk.noiseBottomSlideTarget = 15;
-        settingsChunk.noiseBottomSlideSize = 3;
-        settingsChunk.noiseBottomSlideOffset = 0;
-        
-        settingsBiome.biomeProvider = ModernBetaBuiltInTypes.Biome.SINGLE.id;
-        settingsBiome.singleBiome = ModernBetaBiomes.ALPHA.getValue().toString();
-        
-        settingsCaveBiome.biomeProvider = ModernBetaBuiltInTypes.CaveBiome.NONE.id;
-        
         return new ModernBetaSettingsPreset(
-            settingsChunk.build(),
-            settingsBiome.build(),
-            settingsCaveBiome.build()
+            ModernBetaSettings.builder()
+                .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.ALPHA.id)
+                .add(DEEPSLATE_GENERATION, DeepslateGeneration.DISABLED)
+                .add(CAVE_GENERATION, CaveGeneration.BETA)
+                .add(NOISE_SCALE, new NoiseScale(
+                    684.412f,
+                    684.412f,
+                    512f,
+                    512f,
+                    100f,
+                    100f,
+                    80f,
+                    160f,
+                    80f,
+                    8.5f,
+                    12.0f
+                ))
+                .addDefault(USE_SURFACE_RULES, SEA_LEVEL_OFFSET, CAVE_GENERATION, NOISE_SLIDE)
+                .build(),
+            ModernBetaSettings.singleBiome(ModernBetaBiomes.ALPHA),
+            ModernBetaSettings.noCaveBiomes()
         );
     }
     
     private static ModernBetaSettingsPreset presetSkylands() {
-        ModernBetaSettingsChunk.Builder settingsChunk = new ModernBetaSettingsChunk.Builder();
-        ModernBetaSettingsBiome.Builder settingsBiome = new ModernBetaSettingsBiome.Builder();
-        ModernBetaSettingsCaveBiome.Builder settingsCaveBiome = new ModernBetaSettingsCaveBiome.Builder();
-        
-        settingsChunk.chunkProvider = ModernBetaBuiltInTypes.Chunk.SKYLANDS.id;
-        settingsChunk.useDeepslate = false;
-        settingsChunk.noiseCoordinateScale = 1368.824f;
-        settingsChunk.noiseHeightScale = 684.412f;
-        settingsChunk.noiseUpperLimitScale = 512f;
-        settingsChunk.noiseLowerLimitScale = 512f;
-        settingsChunk.noiseDepthNoiseScaleX = 100;
-        settingsChunk.noiseDepthNoiseScaleZ = 100;
-        settingsChunk.noiseMainNoiseScaleX = 80f;
-        settingsChunk.noiseMainNoiseScaleY = 160f;
-        settingsChunk.noiseMainNoiseScaleZ = 80f;
-        settingsChunk.noiseBaseSize = 8.5f;
-        settingsChunk.noiseStretchY = 12.0f;
-        settingsChunk.noiseTopSlideTarget = -30;
-        settingsChunk.noiseTopSlideSize = 31;
-        settingsChunk.noiseTopSlideOffset = 0;
-        settingsChunk.noiseBottomSlideTarget = -30;
-        settingsChunk.noiseBottomSlideSize = 7;
-        settingsChunk.noiseBottomSlideOffset = 1;
-        
-        settingsBiome.biomeProvider = ModernBetaBuiltInTypes.Biome.SINGLE.id;
-        settingsBiome.singleBiome = ModernBetaBiomes.BETA_SKY.getValue().toString();
-        settingsBiome.useOceanBiomes = false;
-        
-        settingsCaveBiome.biomeProvider = ModernBetaBuiltInTypes.CaveBiome.NONE.id;
-        
         return new ModernBetaSettingsPreset(
-            settingsChunk.build(),
-            settingsBiome.build(),
-            settingsCaveBiome.build()
-         );
+            ModernBetaSettings.builder()
+                .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.SKYLANDS.id)
+                .add(DEEPSLATE_GENERATION, DeepslateGeneration.DISABLED)
+                .add(NOISE_SCALE, new NoiseScale(
+                    1368.824f,
+                    684.412f,
+                    512f,
+                    512f,
+                    100f,
+                    100f,
+                    80f,
+                    160f,
+                    80f,
+                    8.5f,
+                    12.0f
+                ))
+                .add(NOISE_SLIDE, new NoiseSlide(
+                    -30,
+                    31,
+                    0,
+                    -30,
+                    7,
+                    1
+                ))
+                .addDefault(USE_SURFACE_RULES, CAVE_GENERATION)
+                .build(),
+            ModernBetaSettings.singleBiome(ModernBetaBiomes.BETA_SKY),
+            ModernBetaSettings.noCaveBiomes()
+        );
     }
     
     private static ModernBetaSettingsPreset presetInfdev415() {
-        ModernBetaSettingsChunk.Builder settingsChunk = new ModernBetaSettingsChunk.Builder();
-        ModernBetaSettingsBiome.Builder settingsBiome = new ModernBetaSettingsBiome.Builder();
-        ModernBetaSettingsCaveBiome.Builder settingsCaveBiome = new ModernBetaSettingsCaveBiome.Builder();
-        
-        settingsChunk.chunkProvider = ModernBetaBuiltInTypes.Chunk.INFDEV_415.id;
-        settingsChunk.useDeepslate = false;
-        settingsChunk.useCaves = false;
-        settingsChunk.noiseCoordinateScale = 684.412f;
-        settingsChunk.noiseHeightScale = 984.412f;
-        settingsChunk.noiseUpperLimitScale = 512f;
-        settingsChunk.noiseLowerLimitScale = 512f;
-        settingsChunk.noiseMainNoiseScaleX = 80f;
-        settingsChunk.noiseMainNoiseScaleY = 400f;
-        settingsChunk.noiseMainNoiseScaleZ = 80f;
-        settingsChunk.noiseTopSlideTarget = 0;
-        settingsChunk.noiseTopSlideSize = 0;
-        settingsChunk.noiseTopSlideOffset = 0;
-        settingsChunk.noiseBottomSlideTarget = 0;
-        settingsChunk.noiseBottomSlideSize = 0;
-        settingsChunk.noiseBottomSlideOffset = 0;
-        
-        settingsBiome.biomeProvider = ModernBetaBuiltInTypes.Biome.SINGLE.id;
-        settingsBiome.singleBiome = ModernBetaBiomes.INFDEV_415.getValue().toString();
-        
-        settingsCaveBiome.biomeProvider = ModernBetaBuiltInTypes.CaveBiome.NONE.id;
-        
         return new ModernBetaSettingsPreset(
-            settingsChunk.build(),
-            settingsBiome.build(),
-            settingsCaveBiome.build()
-         );
+            ModernBetaSettings.builder()
+                .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.INFDEV_415.id)
+                .add(DEEPSLATE_GENERATION, DeepslateGeneration.DISABLED)
+                .add(CAVE_GENERATION, CaveGeneration.DISABLED)
+                .add(NOISE_SCALE, new NoiseScale(
+                    684.412f,
+                    984.412f,
+                    512f,
+                    512f,
+                    100f,
+                    100f,
+                    80f,
+                    400f,
+                    80f,
+                    8.5f,
+                    12.0f
+                ))
+                .add(NOISE_SLIDE, NoiseSlide.DISABLED)
+                .addDefault(USE_SURFACE_RULES, SEA_LEVEL_OFFSET)
+                .build(),
+            ModernBetaSettings.singleBiome(ModernBetaBiomes.INFDEV_415),
+            ModernBetaSettings.noCaveBiomes()
+        );
     }
     
     private static ModernBetaSettingsPreset presetInfdev420() {
-        ModernBetaSettingsChunk.Builder settingsChunk = new ModernBetaSettingsChunk.Builder();
-        ModernBetaSettingsBiome.Builder settingsBiome = new ModernBetaSettingsBiome.Builder();
-        ModernBetaSettingsCaveBiome.Builder settingsCaveBiome = new ModernBetaSettingsCaveBiome.Builder();
-        
-        settingsChunk.chunkProvider = ModernBetaBuiltInTypes.Chunk.INFDEV_420.id;
-        settingsChunk.useDeepslate = false;
-        settingsChunk.noiseCoordinateScale = 684.412f;
-        settingsChunk.noiseHeightScale = 684.412f;
-        settingsChunk.noiseUpperLimitScale = 512f;
-        settingsChunk.noiseLowerLimitScale = 512f;
-        settingsChunk.noiseMainNoiseScaleX = 80f;
-        settingsChunk.noiseMainNoiseScaleY = 160f;
-        settingsChunk.noiseMainNoiseScaleZ = 80f;
-        settingsChunk.noiseBaseSize = 8.5f;
-        settingsChunk.noiseStretchY = 12.0f;
-        settingsChunk.noiseTopSlideTarget = 0;
-        settingsChunk.noiseTopSlideSize = 0;
-        settingsChunk.noiseTopSlideOffset = 0;
-        settingsChunk.noiseBottomSlideTarget = 0;
-        settingsChunk.noiseBottomSlideSize = 0;
-        settingsChunk.noiseBottomSlideOffset = 0;
-        
-        settingsBiome.biomeProvider = ModernBetaBuiltInTypes.Biome.SINGLE.id;
-        settingsBiome.singleBiome = ModernBetaBiomes.INFDEV_420.getValue().toString();
-        
-        settingsCaveBiome.biomeProvider = ModernBetaBuiltInTypes.CaveBiome.NONE.id;
-        
         return new ModernBetaSettingsPreset(
-            settingsChunk.build(),
-            settingsBiome.build(),
-            settingsCaveBiome.build()
-         );
+            ModernBetaSettings.builder()
+                .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.INFDEV_420.id)
+                .add(DEEPSLATE_GENERATION, DeepslateGeneration.DISABLED)
+                .add(CAVE_GENERATION, CaveGeneration.DISABLED)
+                .add(NOISE_SCALE, new NoiseScale(
+                    684.412f,
+                    684.412f,
+                    512f,
+                    512f,
+                    100f,
+                    100f,
+                    80f,
+                    160f,
+                    80f,
+                    8.5f,
+                    12.0f
+                ))
+                .add(NOISE_SLIDE, NoiseSlide.DISABLED)
+                .addDefault(USE_SURFACE_RULES, SEA_LEVEL_OFFSET)
+                .build(),
+            ModernBetaSettings.singleBiome(ModernBetaBiomes.INFDEV_420),
+            ModernBetaSettings.noCaveBiomes()
+        );
     }
     
     private static ModernBetaSettingsPreset presetInfdev611() {
-        ModernBetaSettingsChunk.Builder settingsChunk = new ModernBetaSettingsChunk.Builder();
-        ModernBetaSettingsBiome.Builder settingsBiome = new ModernBetaSettingsBiome.Builder();
-        ModernBetaSettingsCaveBiome.Builder settingsCaveBiome = new ModernBetaSettingsCaveBiome.Builder();
-        
-        settingsChunk.chunkProvider = ModernBetaBuiltInTypes.Chunk.INFDEV_611.id;
-        settingsChunk.useDeepslate = false;
-        settingsChunk.noiseCoordinateScale = 684.412f;
-        settingsChunk.noiseHeightScale = 684.412f;
-        settingsChunk.noiseUpperLimitScale = 512f;
-        settingsChunk.noiseLowerLimitScale = 512f;
-        settingsChunk.noiseDepthNoiseScaleX = 100;
-        settingsChunk.noiseDepthNoiseScaleZ = 100;
-        settingsChunk.noiseMainNoiseScaleX = 80f;
-        settingsChunk.noiseMainNoiseScaleY = 160f;
-        settingsChunk.noiseMainNoiseScaleZ = 80f;
-        settingsChunk.noiseBaseSize = 8.5f;
-        settingsChunk.noiseStretchY = 12.0f;
-        settingsChunk.noiseTopSlideTarget = -10;
-        settingsChunk.noiseTopSlideSize = 3;
-        settingsChunk.noiseTopSlideOffset = 0;
-        settingsChunk.noiseBottomSlideTarget = 15;
-        settingsChunk.noiseBottomSlideSize = 3;
-        settingsChunk.noiseBottomSlideOffset = 0;
-        
-        settingsBiome.biomeProvider = ModernBetaBuiltInTypes.Biome.SINGLE.id;
-        settingsBiome.singleBiome = ModernBetaBiomes.INFDEV_611.getValue().toString();
-        
-        settingsCaveBiome.biomeProvider = ModernBetaBuiltInTypes.CaveBiome.NONE.id;
-        
         return new ModernBetaSettingsPreset(
-            settingsChunk.build(),
-            settingsBiome.build(),
-            settingsCaveBiome.build()
+            ModernBetaSettings.builder()
+                .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.INFDEV_611.id)
+                .add(DEEPSLATE_GENERATION, DeepslateGeneration.DISABLED)
+                .add(CAVE_GENERATION, CaveGeneration.BETA)
+                .add(NOISE_SCALE, new NoiseScale(
+                    684.412f,
+                    684.412f,
+                    512f,
+                    512f,
+                    100f,
+                    100f,
+                    80f,
+                    160f,
+                    80f,
+                    8.5f,
+                    12.0f
+                ))
+                .add(NOISE_SLIDE, NoiseSlide.DISABLED)
+                .addDefault(USE_SURFACE_RULES, SEA_LEVEL_OFFSET)
+                .build(),
+            ModernBetaSettings.singleBiome(ModernBetaBiomes.INFDEV_611),
+            ModernBetaSettings.noCaveBiomes()
         );
     }
 
     private static ModernBetaSettingsPreset presetInfdev325() {
-        ModernBetaSettingsChunk.Builder settingsChunk = new ModernBetaSettingsChunk.Builder();
-        ModernBetaSettingsBiome.Builder settingsBiome = new ModernBetaSettingsBiome.Builder();
-        ModernBetaSettingsCaveBiome.Builder settingsCaveBiome = new ModernBetaSettingsCaveBiome.Builder();
-
-        settingsChunk.chunkProvider = ModernBetaBuiltInTypes.Chunk.INFDEV_227.id;
-        settingsChunk.useDeepslate = false;
-        settingsChunk.useCaves = false;
-        settingsChunk.infdevUsePyramid = true;
-        settingsChunk.infdevUseWall = false;
-
-        settingsBiome.biomeProvider = ModernBetaBuiltInTypes.Biome.SINGLE.id;
-        settingsBiome.singleBiome = ModernBetaBiomes.INFDEV_325.getValue().toString();
-
-        settingsCaveBiome.biomeProvider = ModernBetaBuiltInTypes.CaveBiome.NONE.id;
-
         return new ModernBetaSettingsPreset(
-            settingsChunk.build(),
-            settingsBiome.build(),
-            settingsCaveBiome.build()
+            ModernBetaSettings.builder()
+                .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.INFDEV_227.id)
+                .add(DEEPSLATE_GENERATION, DeepslateGeneration.DISABLED)
+                .add(USE_SURFACE_RULES, false)
+                .add(CAVE_GENERATION, CaveGeneration.DISABLED)
+                .add(INFDEV_227_STRUCTURES, new Infdev227Structures(true, false))
+                .build(),
+            ModernBetaSettings.singleBiome(ModernBetaBiomes.INFDEV_325),
+            ModernBetaSettings.noCaveBiomes()
         );
     }
     
     private static ModernBetaSettingsPreset presetInfdev227() {
-        ModernBetaSettingsChunk.Builder settingsChunk = new ModernBetaSettingsChunk.Builder();
-        ModernBetaSettingsBiome.Builder settingsBiome = new ModernBetaSettingsBiome.Builder();
-        ModernBetaSettingsCaveBiome.Builder settingsCaveBiome = new ModernBetaSettingsCaveBiome.Builder();
-        
-        settingsChunk.chunkProvider = ModernBetaBuiltInTypes.Chunk.INFDEV_227.id;
-        settingsChunk.useDeepslate = false;
-        settingsChunk.useCaves = false;
-        settingsChunk.infdevUsePyramid = true;
-        settingsChunk.infdevUseWall = true;
-        
-        settingsBiome.biomeProvider = ModernBetaBuiltInTypes.Biome.SINGLE.id;
-        settingsBiome.singleBiome = ModernBetaBiomes.INFDEV_227.getValue().toString();
-        
-        settingsCaveBiome.biomeProvider = ModernBetaBuiltInTypes.CaveBiome.NONE.id;
-        
         return new ModernBetaSettingsPreset(
-            settingsChunk.build(),
-            settingsBiome.build(),
-            settingsCaveBiome.build()
+            ModernBetaSettings.builder()
+                .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.INFDEV_227.id)
+                .add(DEEPSLATE_GENERATION, DeepslateGeneration.DISABLED)
+                .add(USE_SURFACE_RULES, false)
+                .add(CAVE_GENERATION, CaveGeneration.DISABLED)
+                .add(INFDEV_227_STRUCTURES, new Infdev227Structures(true, true))
+                .build(),
+            ModernBetaSettings.singleBiome(ModernBetaBiomes.INFDEV_227),
+            ModernBetaSettings.noCaveBiomes()
         );
     }
 
     private static ModernBetaSettingsPreset presetIndev() {
-        ModernBetaSettingsChunk.Builder settingsChunk = new ModernBetaSettingsChunk.Builder();
-        ModernBetaSettingsBiome.Builder settingsBiome = new ModernBetaSettingsBiome.Builder();
-        ModernBetaSettingsCaveBiome.Builder settingsCaveBiome = new ModernBetaSettingsCaveBiome.Builder();
-        
-        settingsChunk.chunkProvider = ModernBetaBuiltInTypes.Chunk.INDEV.id;
-        settingsChunk.useDeepslate = false;
-        settingsChunk.useCaves = false;
-        settingsChunk.indevLevelTheme = IndevTheme.NORMAL.getId();
-        settingsChunk.indevLevelType = IndevType.ISLAND.getId();
-        settingsChunk.indevLevelWidth = 256;
-        settingsChunk.indevLevelLength = 256;
-        settingsChunk.indevLevelHeight = 128;
-        settingsChunk.indevCaveRadius = 1.0f;
-        settingsChunk.indevUseCaves = true;
-        
-        settingsBiome.biomeProvider = ModernBetaBuiltInTypes.Biome.SINGLE.id;
-        settingsBiome.singleBiome = ModernBetaBiomes.INDEV_NORMAL.getValue().toString();
-        
-        settingsCaveBiome.biomeProvider = ModernBetaBuiltInTypes.CaveBiome.NONE.id;
-        
         return new ModernBetaSettingsPreset(
-            settingsChunk.build(),
-            settingsBiome.build(),
-            settingsCaveBiome.build()
+            ModernBetaSettings.builder()
+                .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.INDEV.id)
+                .add(DEEPSLATE_GENERATION, DeepslateGeneration.DISABLED)
+                .add(CAVE_GENERATION, CaveGeneration.DISABLED)
+                .addDefault(FINITE_LEVEL_PROPERTIES, FINITE_CAVE_GENERATION, FINITE_NOISE_SCALE, FINITE_BEACHES, FINITE_POOLS)
+                .build(),
+            ModernBetaSettings.singleBiome(ModernBetaBiomes.INDEV_NORMAL),
+            ModernBetaSettings.noCaveBiomes()
         );
     }
     
     private static ModernBetaSettingsPreset presetClassic() {
-        ModernBetaSettingsChunk.Builder settingsChunk = new ModernBetaSettingsChunk.Builder();
-        ModernBetaSettingsBiome.Builder settingsBiome = new ModernBetaSettingsBiome.Builder();
-        ModernBetaSettingsCaveBiome.Builder settingsCaveBiome = new ModernBetaSettingsCaveBiome.Builder();
-        
-        settingsChunk.chunkProvider = ModernBetaBuiltInTypes.Chunk.CLASSIC_0_30.id;
-        settingsChunk.useDeepslate = false;
-        settingsChunk.useCaves = false;
-        settingsChunk.indevLevelWidth = 256;
-        settingsChunk.indevLevelLength = 256;
-        settingsChunk.indevLevelHeight = 128;
-        settingsChunk.indevCaveRadius = 1.0f;
-        settingsChunk.indevUseCaves = true;
-        settingsChunk.indevGravelBeachUnderAir = false;
-        
-        settingsBiome.biomeProvider = ModernBetaBuiltInTypes.Biome.SINGLE.id;
-        settingsBiome.singleBiome = ModernBetaBiomes.INDEV_NORMAL.getValue().toString();
-        
-        settingsCaveBiome.biomeProvider = ModernBetaBuiltInTypes.CaveBiome.NONE.id;
-        
         return new ModernBetaSettingsPreset(
-            settingsChunk.build(),
-            settingsBiome.build(),
-            settingsCaveBiome.build()
+            ModernBetaSettings.builder()
+                .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.CLASSIC_0_30.id)
+                .add(DEEPSLATE_GENERATION, DeepslateGeneration.DISABLED)
+                .add(CAVE_GENERATION, CaveGeneration.DISABLED)
+                .add(FINITE_BEACHES, new FiniteBeaches(
+                    FiniteBeaches.DEFAULT.sandThreshold(),
+                    true,
+                    false,
+                    FiniteBeaches.DEFAULT.gravelThreshold(),
+                    false,
+                    true,
+                    false
+                ))
+                .addDefault(FINITE_LEVEL_PROPERTIES, FINITE_CAVE_GENERATION, FINITE_NOISE_SCALE, FINITE_POOLS, SPAWN_INDEV_HOUSE)
+                .build(),
+            ModernBetaSettings.singleBiome(ModernBetaBiomes.INDEV_NORMAL),
+            ModernBetaSettings.noCaveBiomes()
         );
     }
 
     private static ModernBetaSettingsPreset presetClassic14a08() {
-        ModernBetaSettingsChunk.Builder settingsChunk = new ModernBetaSettingsChunk.Builder();
-        ModernBetaSettingsBiome.Builder settingsBiome = new ModernBetaSettingsBiome.Builder();
-        ModernBetaSettingsCaveBiome.Builder settingsCaveBiome = new ModernBetaSettingsCaveBiome.Builder();
-
-        settingsChunk.chunkProvider = ModernBetaBuiltInTypes.Chunk.CLASSIC_0_30.id;
-        settingsChunk.useDeepslate = false;
-        settingsChunk.useCaves = false;
-        settingsChunk.indevLevelWidth = 256;
-        settingsChunk.indevLevelLength = 256;
-        settingsChunk.indevLevelHeight = 128;
-        settingsChunk.indevCaveRadius = 1.0f;
-        settingsChunk.indevUseCaves = true;
-        settingsChunk.indevUse14aCaves = true;
-        settingsChunk.indevMinHeightDamp = 8.0f;
-        settingsChunk.indevMinHeightBoost = -8.0f;
-        settingsChunk.indevMaxHeightDamp = 6.0f;
-        settingsChunk.indevMaxHeightBoost = 6.0f;
-        settingsChunk.indevMainHeightOctaves = 8;
-        settingsChunk.indevHeightUnderDamp = 2.0f;
-        settingsChunk.indevCaveRarity = 16384;
-        settingsChunk.indevCaveLength = 75.0f;
-        settingsChunk.indevPrioritizeGravelBeaches = true;
-        settingsChunk.indevWaterRarity = 200;
-        settingsChunk.indevLavaRarity = 10000;
-        settingsChunk.indevUniformLavaHeights = true;
-        settingsChunk.indevSandBeachUnderAir = true;
-        settingsChunk.indevSandBeachUnderFluid = false;
-        settingsChunk.indevGravelBeachUnderAir = true;
-        settingsChunk.indevGravelBeachUnderFluid = false;
-
-        settingsBiome.biomeProvider = ModernBetaBuiltInTypes.Biome.SINGLE.id;
-        settingsBiome.singleBiome = ModernBetaBiomes.CLASSIC_14A_08.getValue().toString();
-
-        settingsCaveBiome.biomeProvider = ModernBetaBuiltInTypes.CaveBiome.NONE.id;
-
         return new ModernBetaSettingsPreset(
-            settingsChunk.build(),
-            settingsBiome.build(),
-            settingsCaveBiome.build()
+            ModernBetaSettings.builder()
+                .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.CLASSIC_0_30.id)
+                .add(DEEPSLATE_GENERATION, DeepslateGeneration.DISABLED)
+                .add(CAVE_GENERATION, CaveGeneration.DISABLED)
+                .add(FINITE_CAVE_GENERATION, new FiniteCaveGeneration(
+                    true,
+                    true,
+                    16384,
+                    1.0f,
+                    75.0f
+                ))
+                .add(FINITE_NOISE_SCALE, new FiniteNoiseScale(
+                    1.3f,
+                    1.0f,
+                    8.0f,
+                    -8.0f,
+                    6.0f,
+                    6.0f,
+                    8,
+                    2.0f
+                ))
+                .add(FINITE_BEACHES, new FiniteBeaches(
+                    FiniteBeaches.DEFAULT.sandThreshold(),
+                    true,
+                    false,
+                    FiniteBeaches.DEFAULT.gravelThreshold(),
+                    true,
+                    false,
+                    true
+                ))
+                .add(FINITE_POOLS, new FinitePools(
+                    200,
+                    10000,
+                    true
+                ))
+                .build(),
+            ModernBetaSettings.singleBiome(ModernBetaBiomes.CLASSIC_14A_08),
+            ModernBetaSettings.noCaveBiomes()
         );
     }
     
     private static ModernBetaSettingsPreset presetPE() {
-        ModernBetaSettingsChunk.Builder settingsChunk = new ModernBetaSettingsChunk.Builder();
-        ModernBetaSettingsBiome.Builder settingsBiome = new ModernBetaSettingsBiome.Builder();
-        ModernBetaSettingsCaveBiome.Builder settingsCaveBiome = new ModernBetaSettingsCaveBiome.Builder();
-        
-        settingsChunk.chunkProvider = ModernBetaBuiltInTypes.Chunk.PE.id;
-        settingsChunk.useDeepslate = false;
-        settingsChunk.useCaves = false;
-        settingsChunk.noiseCoordinateScale = 684.412f;
-        settingsChunk.noiseHeightScale = 684.412f;
-        settingsChunk.noiseUpperLimitScale = 512f;
-        settingsChunk.noiseLowerLimitScale = 512f;
-        settingsChunk.noiseDepthNoiseScaleX = 200;
-        settingsChunk.noiseDepthNoiseScaleZ = 200;
-        settingsChunk.noiseMainNoiseScaleX = 80f;
-        settingsChunk.noiseMainNoiseScaleY = 160f;
-        settingsChunk.noiseMainNoiseScaleZ = 80f;
-        settingsChunk.noiseBaseSize = 8.5f;
-        settingsChunk.noiseStretchY = 12.0f;
-        settingsChunk.noiseTopSlideTarget = -10;
-        settingsChunk.noiseTopSlideSize = 3;
-        settingsChunk.noiseTopSlideOffset = 0;
-        settingsChunk.noiseBottomSlideTarget = 15;
-        settingsChunk.noiseBottomSlideSize = 3;
-        settingsChunk.noiseBottomSlideOffset = 0;
-        
-        settingsBiome.biomeProvider = ModernBetaBuiltInTypes.Biome.PE.id;
-        settingsBiome.climateTempNoiseScale = 0.025f;
-        settingsBiome.climateRainNoiseScale = 0.05f;
-        settingsBiome.climateDetailNoiseScale = 0.25f;
-        settingsBiome.climateMappings = ModernBetaSettingsBiome.Builder.createClimateMapping(
-            new ClimateMapping(
-                ModernBetaBiomes.PE_DESERT.getValue().toString(),
-                ModernBetaBiomes.PE_OCEAN.getValue().toString()
-            ),
-            new ClimateMapping(
-                ModernBetaBiomes.PE_FOREST.getValue().toString(),
-                ModernBetaBiomes.PE_OCEAN.getValue().toString()
-            ),
-            new ClimateMapping(
-                ModernBetaBiomes.PE_TUNDRA.getValue().toString(),
-                ModernBetaBiomes.PE_FROZEN_OCEAN.getValue().toString()
-            ),
-            new ClimateMapping(
-                ModernBetaBiomes.PE_PLAINS.getValue().toString(),
-                ModernBetaBiomes.PE_OCEAN.getValue().toString()
-            ),
-            new ClimateMapping(
-                ModernBetaBiomes.PE_RAINFOREST.getValue().toString(),
-                ModernBetaBiomes.PE_WARM_OCEAN.getValue().toString()
-            ),
-            new ClimateMapping(
-                ModernBetaBiomes.PE_SAVANNA.getValue().toString(),
-                ModernBetaBiomes.PE_OCEAN.getValue().toString()
-            ),
-            new ClimateMapping(
-                ModernBetaBiomes.PE_SHRUBLAND.getValue().toString(),
-                ModernBetaBiomes.PE_OCEAN.getValue().toString()
-            ),
-            new ClimateMapping(
-                ModernBetaBiomes.PE_SEASONAL_FOREST.getValue().toString(),
-                ModernBetaBiomes.PE_LUKEWARM_OCEAN.getValue().toString()
-            ),
-            new ClimateMapping(
-                ModernBetaBiomes.PE_SWAMPLAND.getValue().toString(),
-                ModernBetaBiomes.PE_COLD_OCEAN.getValue().toString()
-            ),
-            new ClimateMapping(
-                ModernBetaBiomes.PE_TAIGA.getValue().toString(),
-                ModernBetaBiomes.PE_FROZEN_OCEAN.getValue().toString()
-            ),
-            new ClimateMapping(
-                ModernBetaBiomes.PE_TUNDRA.getValue().toString(),
-                ModernBetaBiomes.PE_FROZEN_OCEAN.getValue().toString()
-            )
-        );
-        
-        settingsCaveBiome.biomeProvider = ModernBetaBuiltInTypes.CaveBiome.NONE.id;
-        
         return new ModernBetaSettingsPreset(
-            settingsChunk.build(),
-            settingsBiome.build(),
-            settingsCaveBiome.build()
+            PRESET_BETA_1_7_3.chunkSettings().extend()
+                .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.PE.id)
+                .add(DEEPSLATE_GENERATION, DeepslateGeneration.DISABLED)
+                .build(),
+            PRESET_BETA_1_7_3.biomeSettings().extend()
+                .add(PROVIDER, ModernBetaBuiltInTypes.Biome.PE.id)
+                .add(CLIMATE_MAPPINGS, Map.ofEntries(
+                    Map.entry("desert", new ClimateMapping(
+                        ModernBetaBiomes.PE_DESERT.getValue(),
+                        ModernBetaBiomes.PE_OCEAN.getValue()
+                    )),
+                    Map.entry("forest", new ClimateMapping(
+                        ModernBetaBiomes.PE_FOREST.getValue(),
+                        ModernBetaBiomes.PE_OCEAN.getValue()
+                    )),
+                    Map.entry("ice_desert", new ClimateMapping(
+                        ModernBetaBiomes.PE_TUNDRA.getValue(),
+                        ModernBetaBiomes.PE_FROZEN_OCEAN.getValue()
+                    )),
+                    Map.entry("plains", new ClimateMapping(
+                        ModernBetaBiomes.PE_PLAINS.getValue(),
+                        ModernBetaBiomes.PE_OCEAN.getValue()
+                    )),
+                    Map.entry("rainforest", new ClimateMapping(
+                        ModernBetaBiomes.PE_RAINFOREST.getValue(),
+                        ModernBetaBiomes.PE_WARM_OCEAN.getValue()
+                    )),
+                    Map.entry("savanna", new ClimateMapping(
+                        ModernBetaBiomes.PE_SAVANNA.getValue(),
+                        ModernBetaBiomes.PE_OCEAN.getValue()
+                    )),
+                    Map.entry("shrubland", new ClimateMapping(
+                        ModernBetaBiomes.PE_SHRUBLAND.getValue(),
+                        ModernBetaBiomes.PE_OCEAN.getValue()
+                    )),
+                    Map.entry("seasonal_forest", new ClimateMapping(
+                        ModernBetaBiomes.PE_SEASONAL_FOREST.getValue(),
+                        ModernBetaBiomes.PE_LUKEWARM_OCEAN.getValue()
+                    )),
+                    Map.entry("swampland", new ClimateMapping(
+                        ModernBetaBiomes.PE_SWAMPLAND.getValue(),
+                        ModernBetaBiomes.PE_COLD_OCEAN.getValue()
+                    )),
+                    Map.entry("taiga", new ClimateMapping(
+                        ModernBetaBiomes.PE_TAIGA.getValue(),
+                        ModernBetaBiomes.PE_FROZEN_OCEAN.getValue()
+                    )),
+                    Map.entry("tundra", new ClimateMapping(
+                        ModernBetaBiomes.PE_TUNDRA.getValue(),
+                        ModernBetaBiomes.PE_FROZEN_OCEAN.getValue()
+                    ))
+                ))
+                .build(),
+            ModernBetaSettings.noCaveBiomes()
         );
     }
     
     private static ModernBetaSettingsPreset presetBetaSkylands() {
-        ModernBetaSettingsPreset initial = presetSkylands();
-        
-        NbtCompound compoundChunk = initial.settingsChunk().toCompound();
-        NbtCompound compoundBiome = initial.settingsBiome().toCompound();
-        NbtCompound compoundCaveBiome = initial.settingsCaveBiome().toCompound();
-        
-        ModernBetaSettingsChunk.Builder settingsChunk = new ModernBetaSettingsChunk.Builder().fromCompound(compoundChunk);
-        ModernBetaSettingsBiome.Builder settingsBiome = new ModernBetaSettingsBiome.Builder().fromCompound(compoundBiome);
-        ModernBetaSettingsCaveBiome.Builder settingsCaveBiome = new ModernBetaSettingsCaveBiome.Builder().fromCompound(compoundCaveBiome);
-        
-        settingsBiome.biomeProvider = ModernBetaBuiltInTypes.Biome.BETA.id;
-        settingsBiome.useOceanBiomes = false;
-        
-        settingsCaveBiome.biomeProvider = ModernBetaBuiltInTypes.CaveBiome.VORONOI.id;
-        
         return new ModernBetaSettingsPreset(
-            settingsChunk.build(),
-            settingsBiome.build(),
-            settingsCaveBiome.build()
+            PRESET_SKYLANDS.chunkSettings(),
+            PRESET_BETA_1_7_3.biomeSettings().extend()
+                .add(USE_OCEAN_BIOMES, false)
+                .build(),
+            PRESET_BETA_1_7_3.caveBiomeSettings()
         );
     }
     
     private static ModernBetaSettingsPreset presetIsles(ModernBetaSettingsPreset initial) {
-        NbtCompound compoundChunk = initial.settingsChunk().toCompound();
-        ModernBetaSettingsChunk.Builder settingsChunk = new ModernBetaSettingsChunk.Builder().fromCompound(compoundChunk);
-
-        settingsChunk.islesUseIslands = true;
-        
         return new ModernBetaSettingsPreset(
-            settingsChunk.build(),
-            initial.settingsBiome(),
-            initial.settingsCaveBiome()
+            initial.chunkSettings().extend()
+                .add(ISLES_PROPERTIES, IslesProperties.ENABLED)
+                .build(),
+            initial.biomeSettings(),
+            initial.caveBiomeSettings()
         );
     }
 
     private static ModernBetaSettingsPreset presetWaterWorld(ModernBetaSettingsPreset initial) {
-        NbtCompound compoundChunk = initial.settingsChunk().toCompound();
-        ModernBetaSettingsChunk.Builder settingsChunk = new ModernBetaSettingsChunk.Builder().fromCompound(compoundChunk);
-
-        settingsChunk.seaLevelOffset = 192;
-        settingsChunk.noiseMainNoiseScaleX = 5000.0f;
-        settingsChunk.noiseMainNoiseScaleY = 1000.0f;
-        settingsChunk.noiseMainNoiseScaleZ = 5000.0f;
-        settingsChunk.noiseStretchY = 8.0f;
-        settingsChunk.releaseBiomeDepthWeight = 2.0f;
-        settingsChunk.releaseBiomeDepthOffset = 0.5f;
-        settingsChunk.releaseBiomeScaleWeight = 2.0f;
-        settingsChunk.releaseBiomeScaleOffset = 0.375f;
-
         return new ModernBetaSettingsPreset(
-            settingsChunk.build(),
-            initial.settingsBiome(),
-            initial.settingsCaveBiome()
+            initial.chunkSettings().extend()
+                .add(SEA_LEVEL_OFFSET, 192)
+                .replace(NOISE_SCALE, base -> new NoiseScale(
+                    base.coordinate(),
+                    base.height(),
+                    base.upperLimit(),
+                    base.lowerLimit(),
+                    base.depthNoiseX(),
+                    base.depthNoiseZ(),
+                    5000.0f,
+                    1000.0f,
+                    5000.0f,
+                    base.baseSize(),
+                    8.0f
+                ))
+                .replace(FORCED_BIOME_HEIGHT, base -> new ForcedBiomeHeight(
+                    base.heightOverrides(),
+                    2.0f,
+                    0.5f,
+                    2.0f,
+                    0.375f
+                ))
+                .build(),
+            initial.biomeSettings(),
+            initial.caveBiomeSettings()
         );
     }
 
     private static ModernBetaSettingsPreset presetIsleLand(ModernBetaSettingsPreset initial) {
-        NbtCompound compoundChunk = initial.settingsChunk().toCompound();
-        ModernBetaSettingsChunk.Builder settingsChunk = new ModernBetaSettingsChunk.Builder().fromCompound(compoundChunk);
-        
-
-        settingsChunk.noiseCoordinateScale = 3000.0f;
-        settingsChunk.noiseHeightScale = 6000.0f;
-        settingsChunk.noiseStretchY = 10.0f;
-        settingsChunk.noiseUpperLimitScale = 250.0f;
-        settingsChunk.noiseLowerLimitScale = 512.0f;
-        
         return new ModernBetaSettingsPreset(
-            settingsChunk.build(),
-            initial.settingsBiome(),
-            initial.settingsCaveBiome()
+            initial.chunkSettings().extend()
+                .replace(NOISE_SCALE, base -> new NoiseScale(
+                    3000.0f,
+                    6000.0f,
+                    250.0f,
+                    512.0f,
+                    base.depthNoiseX(),
+                    base.depthNoiseZ(),
+                    base.mainNoiseX(),
+                    base.mainNoiseY(),
+                    base.mainNoiseZ(),
+                    base.baseSize(),
+                    10.0f
+                ))
+                .build(),
+            initial.biomeSettings(),
+            initial.caveBiomeSettings()
         );
     }
     
 
     private static ModernBetaSettingsPreset presetCaveDelight(ModernBetaSettingsPreset initial) {
-        NbtCompound compoundChunk = initial.settingsChunk().toCompound();
-        ModernBetaSettingsChunk.Builder settingsChunk = new ModernBetaSettingsChunk.Builder().fromCompound(compoundChunk);
-        
-
-        settingsChunk.noiseMainNoiseScaleX = 5000.0f;
-        settingsChunk.noiseMainNoiseScaleY = 1000.0f;
-        settingsChunk.noiseMainNoiseScaleZ = 5000.0f;
-        settingsChunk.noiseStretchY = 5.0f;
-        settingsChunk.releaseBiomeDepthWeight = 2.0f;
-        settingsChunk.releaseBiomeDepthOffset = 1.0f;
-        settingsChunk.releaseBiomeScaleWeight = 4.0f;
-        settingsChunk.releaseBiomeScaleOffset = 1.0f;
-
         return new ModernBetaSettingsPreset(
-            settingsChunk.build(),
-            initial.settingsBiome(),
-            initial.settingsCaveBiome()
+            initial.chunkSettings().extend()
+                .replace(NOISE_SCALE, base -> new NoiseScale(
+                    base.coordinate(),
+                    base.height(),
+                    base.upperLimit(),
+                    base.lowerLimit(),
+                    base.depthNoiseX(),
+                    base.depthNoiseZ(),
+                    5000.0f,
+                    1000.0f,
+                    5000.0f,
+                    base.baseSize(),
+                    5.0f
+                ))
+                .replace(FORCED_BIOME_HEIGHT, base -> new ForcedBiomeHeight(
+                    base.heightOverrides(),
+                    2.0f,
+                    1.0f,
+                    4.0f,
+                    1.0f
+                ))
+                .build(),
+            initial.biomeSettings(),
+            initial.caveBiomeSettings()
         );
     }
 
-    private static ModernBetaSettingsPreset presetMountainMadness(ModernBetaSettingsPreset initial) {
-        NbtCompound compoundChunk = initial.settingsChunk().toCompound();
-        ModernBetaSettingsChunk.Builder settingsChunk = new ModernBetaSettingsChunk.Builder().fromCompound(compoundChunk);
-
-        settingsChunk.noiseMainNoiseScaleX = 1355.9908f;
-        settingsChunk.noiseMainNoiseScaleY = 745.5343f;
-        settingsChunk.noiseMainNoiseScaleZ = 1183.464f;
-        settingsChunk.noiseDepthNoiseScaleX = 374.93652f;
-        settingsChunk.noiseDepthNoiseScaleZ = 288.65228f;
-        settingsChunk.noiseBaseSize = 1.8758626f;
-        settingsChunk.noiseCoordinateScale = 738.41864f;
-        settingsChunk.noiseHeightScale = 157.69133f;
-        settingsChunk.noiseStretchY = 1.7137525f;
-        settingsChunk.noiseUpperLimitScale = 801.4267f;
-        settingsChunk.noiseLowerLimitScale = 1254.1643f;
-        settingsChunk.releaseBiomeDepthWeight = 1.7553768f;
-        settingsChunk.releaseBiomeDepthOffset = 3.4701107f;
-        settingsChunk.releaseBiomeScaleWeight = 1.0f;
-        settingsChunk.releaseBiomeScaleOffset = 2.535211f;
-
-        if (settingsChunk.chunkProvider.equals("beta")) {
-            settingsChunk.noiseBaseSize = 8.5f;
-        }
-
+    private static ModernBetaSettingsPreset presetMountainMadness(ModernBetaSettingsPreset initial, boolean modifyBaseSize) {
         return new ModernBetaSettingsPreset(
-            settingsChunk.build(),
-            initial.settingsBiome(),
-            initial.settingsCaveBiome()
+            initial.chunkSettings().extend()
+                .replace(NOISE_SCALE, base -> new NoiseScale(
+                    738.41864f,
+                    157.69133f,
+                    801.4267f,
+                    1254.1643f,
+                    374.93652f,
+                    288.65228f,
+                    1355.9908f,
+                    745.5343f,
+                    1183.464f,
+                    modifyBaseSize ? 1.8758626f : base.baseSize(),
+                    1.7137525f
+                ))
+                .replace(FORCED_BIOME_HEIGHT, base -> new ForcedBiomeHeight(
+                    base.heightOverrides(),
+                    1.7553768f,
+                    3.4701107f,
+                    1.0f,
+                    2.535211f
+                ))
+                .build(),
+            initial.biomeSettings(),
+            initial.caveBiomeSettings()
         );
     }
 
     private static ModernBetaSettingsPreset presetDrought(ModernBetaSettingsPreset initial) {
-        NbtCompound compoundChunk = initial.settingsChunk().toCompound();
-        ModernBetaSettingsChunk.Builder settingsChunk = new ModernBetaSettingsChunk.Builder().fromCompound(compoundChunk);
-
-        settingsChunk.seaLevelOffset = -43;
-        settingsChunk.noiseMainNoiseScaleX = 1000.0f;
-        settingsChunk.noiseMainNoiseScaleY = 3000.0f;
-        settingsChunk.noiseMainNoiseScaleZ = 1000.0f;
-        settingsChunk.noiseStretchY = 10.0f;
-
         return new ModernBetaSettingsPreset(
-            settingsChunk.build(),
-            initial.settingsBiome(),
-            initial.settingsCaveBiome()
+            initial.chunkSettings().extend()
+                .add(SEA_LEVEL_OFFSET, -43)
+                .replace(NOISE_SCALE, base -> new NoiseScale(
+                    base.coordinate(),
+                    base.height(),
+                    base.upperLimit(),
+                    base.lowerLimit(),
+                    base.depthNoiseX(),
+                    base.depthNoiseZ(),
+                    1000.0f,
+                    3000.0f,
+                    1000.0f,
+                    base.baseSize(),
+                    10.0f
+                ))
+                .build(),
+            initial.biomeSettings(),
+            initial.caveBiomeSettings()
         );
     }
 
     private static ModernBetaSettingsPreset presetCaveChaos(ModernBetaSettingsPreset initial) {
-        NbtCompound compoundChunk = initial.settingsChunk().toCompound();
-        ModernBetaSettingsChunk.Builder settingsChunk = new ModernBetaSettingsChunk.Builder().fromCompound(compoundChunk);
-
-        settingsChunk.seaLevelOffset = -57;
-        settingsChunk.noiseUpperLimitScale = 2.0f;
-        settingsChunk.noiseLowerLimitScale = 64.0f;
-        
         return new ModernBetaSettingsPreset(
-            settingsChunk.build(),
-            initial.settingsBiome(),
-            initial.settingsCaveBiome()
+            initial.chunkSettings().extend()
+                .add(SEA_LEVEL_OFFSET, -57)
+                .replace(NOISE_SCALE, base -> new NoiseScale(
+                    base.coordinate(),
+                    base.height(),
+                    2.0f,
+                    64.0f,
+                    base.depthNoiseX(),
+                    base.depthNoiseZ(),
+                    base.mainNoiseX(),
+                    base.mainNoiseY(),
+                    base.mainNoiseZ(),
+                    base.baseSize(),
+                    8.0f
+                ))
+                .build(),
+            initial.biomeSettings(),
+            initial.caveBiomeSettings()
         );
     }
     
     private static ModernBetaSettingsPreset presetBetaLargeBiomes() {
-        ModernBetaSettingsPreset initial = presetBeta();
-        
-        NbtCompound compoundChunk = initial.settingsChunk().toCompound();
-        NbtCompound compoundBiome = initial.settingsBiome().toCompound();
-        NbtCompound compoundCaveBiome = initial.settingsCaveBiome().toCompound();
-        
-        ModernBetaSettingsChunk.Builder settingsChunk = new ModernBetaSettingsChunk.Builder().fromCompound(compoundChunk);
-        ModernBetaSettingsBiome.Builder settingsBiome = new ModernBetaSettingsBiome.Builder().fromCompound(compoundBiome);
-        ModernBetaSettingsCaveBiome.Builder settingsCaveBiome = new ModernBetaSettingsCaveBiome.Builder().fromCompound(compoundCaveBiome);
-        
-        settingsBiome.climateTempNoiseScale = 0.025f / 4.0f;
-        settingsBiome.climateRainNoiseScale = 0.05f / 4.0f;
-        settingsBiome.climateDetailNoiseScale = 0.25f / 2.0f;
-        
-        settingsCaveBiome.voronoiHorizontalNoiseScale = 32.0f * 4.0f;
-        
         return new ModernBetaSettingsPreset(
-            settingsChunk.build(),
-            settingsBiome.build(),
-            settingsCaveBiome.build()
+            PRESET_BETA_1_7_3.chunkSettings(),
+            PRESET_BETA_1_7_3.biomeSettings().extend()
+                .add(CLIMATE_SCALE, new ClimateScale(
+                    0.025f / 4.0f,
+                    0.05f / 4.0f,
+                    0.25f / 2.0f,
+                    0.003125f / 4.0f
+                ))
+                .build(),
+            ModernBetaSettings.builder()
+                .add(PROVIDER, ModernBetaBuiltInTypes.CaveBiome.VORONOI.id)
+                .add(CAVE_BIOME_VORONOI, new CaveBiomeVoronoi(
+                    128.0f,
+                    16.0f,
+                    -64,
+                    64,
+                    CaveBiomeVoronoi.DEFAULT.points()
+                ))
+                .build()
         );
     }
     
     private static ModernBetaSettingsPreset presetBetaXboxLegacy() {
-        ModernBetaSettingsPreset initial = presetBeta();
-        
-        NbtCompound compoundChunk = initial.settingsChunk().toCompound();
-        NbtCompound compoundBiome = initial.settingsBiome().toCompound();
-        NbtCompound compoundCaveBiome = initial.settingsCaveBiome().toCompound();
-        
-        ModernBetaSettingsChunk.Builder settingsChunk = new ModernBetaSettingsChunk.Builder().fromCompound(compoundChunk);
-        ModernBetaSettingsBiome.Builder settingsBiome = new ModernBetaSettingsBiome.Builder().fromCompound(compoundBiome);
-        ModernBetaSettingsCaveBiome.Builder settingsCaveBiome = new ModernBetaSettingsCaveBiome.Builder().fromCompound(compoundCaveBiome);
-        
-        settingsChunk.islesUseIslands = true;
-        settingsChunk.islesUseOuterIslands = false;
-        settingsChunk.islesCenterIslandShape = IslandShape.SQUARE.getId();
-        settingsChunk.islesCenterIslandRadius = 25;
-        settingsChunk.islesCenterIslandFalloffDistance = 2;
-        
         return new ModernBetaSettingsPreset(
-            settingsChunk.build(),
-            settingsBiome.build(),
-            settingsCaveBiome.build()
+            PRESET_BETA_1_7_3.chunkSettings().extend()
+                .add(ISLES_PROPERTIES, new IslesProperties(
+                    true,
+                    false,
+                    -200.0f,
+                    IslandShape.SQUARE,
+                    25,
+                    2,
+                    64,
+                    16,
+                    300.0f,
+                    0.25f
+                ))
+                .build(),
+            PRESET_BETA_1_7_3.biomeSettings(),
+            PRESET_BETA_1_7_3.caveBiomeSettings()
         );
     }
     
     private static ModernBetaSettingsPreset presetBetaSurvivalIsland() {
-        ModernBetaSettingsPreset initial = presetBeta();
-        
-        NbtCompound compoundChunk = initial.settingsChunk().toCompound();
-        NbtCompound compoundBiome = initial.settingsBiome().toCompound();
-        NbtCompound compoundCaveBiome = initial.settingsCaveBiome().toCompound();
-        
-        ModernBetaSettingsChunk.Builder settingsChunk = new ModernBetaSettingsChunk.Builder().fromCompound(compoundChunk);
-        ModernBetaSettingsBiome.Builder settingsBiome = new ModernBetaSettingsBiome.Builder().fromCompound(compoundBiome);
-        ModernBetaSettingsCaveBiome.Builder settingsCaveBiome = new ModernBetaSettingsCaveBiome.Builder().fromCompound(compoundCaveBiome);
-        
-        settingsChunk.islesUseIslands = true;
-        settingsChunk.islesUseOuterIslands = false;
-        settingsChunk.islesCenterIslandRadius = 1;
-        
         return new ModernBetaSettingsPreset(
-            settingsChunk.build(),
-            settingsBiome.build(),
-            settingsCaveBiome.build()
+            PRESET_BETA_1_7_3.chunkSettings().extend()
+                .add(ISLES_PROPERTIES, new IslesProperties(
+                    true,
+                    false,
+                    -200.0f,
+                    IslandShape.CIRCLE,
+                    1,
+                    8,
+                    64,
+                    16,
+                    300.0f,
+                    0.25f
+                ))
+                .build(),
+            PRESET_BETA_1_7_3.biomeSettings(),
+            PRESET_BETA_1_7_3.caveBiomeSettings()
         );
     }
     
     private static ModernBetaSettingsPreset presetBetaVanilla() {
-        ModernBetaSettingsPreset initial = presetBeta();
-        
-        NbtCompound compoundChunk = initial.settingsChunk().toCompound();
-        NbtCompound compoundBiome = initial.settingsBiome().toCompound();
-        NbtCompound compoundCaveBiome = initial.settingsCaveBiome().toCompound();
-        
-        ModernBetaSettingsChunk.Builder settingsChunk = new ModernBetaSettingsChunk.Builder().fromCompound(compoundChunk);
-        ModernBetaSettingsBiome.Builder settingsBiome = new ModernBetaSettingsBiome.Builder().fromCompound(compoundBiome);
-        ModernBetaSettingsCaveBiome.Builder settingsCaveBiome = new ModernBetaSettingsCaveBiome.Builder().fromCompound(compoundCaveBiome);
-
-        settingsChunk.useSurfaceRules = true;
-        settingsChunk.useFixedCaves = true;
-
-        settingsBiome.biomeProvider = ModernBetaBuiltInTypes.Biome.VORONOI.id;
-        settingsBiome.climateTempNoiseScale = 0.025f / 3.0f;
-        settingsBiome.climateRainNoiseScale = 0.05f / 3.0f;
-        settingsBiome.climateDetailNoiseScale = 0.25f / 1.5f;
-        settingsBiome.voronoiPoints = List.of(
-                // Standard Biomes
-
-               new VoronoiPointBiome(
-                   BiomeKeys.DESERT.getValue().toString(),
-                   BiomeKeys.LUKEWARM_OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_LUKEWARM_OCEAN.getValue().toString(),
-                   0.9, 0.1, 0.5
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.PLAINS.getValue().toString(),
-                   BiomeKeys.LUKEWARM_OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_LUKEWARM_OCEAN.getValue().toString(),
-                   0.9, 0.3, 0.5
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.FOREST.getValue().toString(),
-                   BiomeKeys.LUKEWARM_OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_LUKEWARM_OCEAN.getValue().toString(),
-                   0.9, 0.5, 0.5
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.FOREST.getValue().toString(),
-                   BiomeKeys.WARM_OCEAN.getValue().toString(),
-                   BiomeKeys.WARM_OCEAN.getValue().toString(),
-                   0.9, 0.7, 0.5
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.JUNGLE.getValue().toString(),
-                   BiomeKeys.WARM_OCEAN.getValue().toString(),
-                   BiomeKeys.WARM_OCEAN.getValue().toString(),
-                   0.9, 0.9, 0.5
-               ),
-
-               new VoronoiPointBiome(
-                   BiomeKeys.SAVANNA.getValue().toString(),
-                   BiomeKeys.OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_OCEAN.getValue().toString(),
-                   0.7, 0.1, 0.5
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.PLAINS.getValue().toString(),
-                   BiomeKeys.OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_OCEAN.getValue().toString(),
-                   0.7, 0.3, 0.5
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.FOREST.getValue().toString(),
-                   BiomeKeys.OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_OCEAN.getValue().toString(),
-                   0.7, 0.5, 0.5
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.FOREST.getValue().toString(),
-                   BiomeKeys.OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_OCEAN.getValue().toString(),
-                   0.7, 0.7, 0.5
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.FOREST.getValue().toString(),
-                   BiomeKeys.OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_OCEAN.getValue().toString(),
-                   0.7, 0.9, 0.5
-               ),
-
-               new VoronoiPointBiome(
-                   BiomeKeys.PLAINS.getValue().toString(),
-                   BiomeKeys.OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_OCEAN.getValue().toString(),
-                   0.5, 0.1, 0.5
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.PLAINS.getValue().toString(),
-                   BiomeKeys.OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_OCEAN.getValue().toString(),
-                   0.5, 0.3, 0.5
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.BIRCH_FOREST.getValue().toString(),
-                   BiomeKeys.OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_OCEAN.getValue().toString(),
-                   0.5, 0.5, 0.5
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.BIRCH_FOREST.getValue().toString(),
-                   BiomeKeys.OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_OCEAN.getValue().toString(),
-                   0.5, 0.7, 0.5
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.SWAMP.getValue().toString(),
-                   BiomeKeys.OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_OCEAN.getValue().toString(),
-                   0.5, 0.9, 0.5
-               ),
-
-               new VoronoiPointBiome(
-                   BiomeKeys.SNOWY_PLAINS.getValue().toString(),
-                   BiomeKeys.FROZEN_OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_FROZEN_OCEAN.getValue().toString(),
-                   0.3, 0.1, 0.5
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.TAIGA.getValue().toString(),
-                   BiomeKeys.COLD_OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_COLD_OCEAN.getValue().toString(),
-                   0.3, 0.3, 0.5
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.TAIGA.getValue().toString(),
-                   BiomeKeys.COLD_OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_COLD_OCEAN.getValue().toString(),
-                   0.3, 0.5, 0.5
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.SNOWY_TAIGA.getValue().toString(),
-                   BiomeKeys.FROZEN_OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_FROZEN_OCEAN.getValue().toString(),
-                   0.3, 0.7, 0.5
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.SNOWY_TAIGA.getValue().toString(),
-                   BiomeKeys.FROZEN_OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_FROZEN_OCEAN.getValue().toString(),
-                   0.3, 0.9, 0.5
-               ),
-
-               new VoronoiPointBiome(
-                   BiomeKeys.SNOWY_PLAINS.getValue().toString(),
-                   BiomeKeys.FROZEN_OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_FROZEN_OCEAN.getValue().toString(),
-                   0.1, 0.1, 0.5
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.SNOWY_PLAINS.getValue().toString(),
-                   BiomeKeys.FROZEN_OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_FROZEN_OCEAN.getValue().toString(),
-                   0.1, 0.3, 0.5
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.SNOWY_PLAINS.getValue().toString(),
-                   BiomeKeys.FROZEN_OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_FROZEN_OCEAN.getValue().toString(),
-                   0.1, 0.5, 0.5
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.SNOWY_PLAINS.getValue().toString(),
-                   BiomeKeys.FROZEN_OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_FROZEN_OCEAN.getValue().toString(),
-                   0.1, 0.7, 0.5
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.SNOWY_PLAINS.getValue().toString(),
-                   BiomeKeys.FROZEN_OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_FROZEN_OCEAN.getValue().toString(),
-                   0.1, 0.9, 0.5
-               ),
-               
-               // Mutated Biomes
-
-               new VoronoiPointBiome(
-                   BiomeKeys.DESERT.getValue().toString(),
-                   BiomeKeys.LUKEWARM_OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_LUKEWARM_OCEAN.getValue().toString(),
-                   0.9, 0.1, 0.2
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.SUNFLOWER_PLAINS.getValue().toString(),
-                   BiomeKeys.LUKEWARM_OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_LUKEWARM_OCEAN.getValue().toString(),
-                   0.9, 0.3, 0.2
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.DARK_FOREST.getValue().toString(),
-                   BiomeKeys.LUKEWARM_OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_LUKEWARM_OCEAN.getValue().toString(),
-                   0.9, 0.5, 0.2
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.DARK_FOREST.getValue().toString(),
-                   BiomeKeys.WARM_OCEAN.getValue().toString(),
-                   BiomeKeys.WARM_OCEAN.getValue().toString(),
-                   0.9, 0.7, 0.2
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.BAMBOO_JUNGLE.getValue().toString(),
-                   BiomeKeys.WARM_OCEAN.getValue().toString(),
-                   BiomeKeys.WARM_OCEAN.getValue().toString(),
-                   0.9, 0.9, 0.2
-               ),
-
-               new VoronoiPointBiome(
-                   BiomeKeys.SAVANNA.getValue().toString(),
-                   BiomeKeys.OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_OCEAN.getValue().toString(),
-                   0.7, 0.1, 0.2
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.MEADOW.getValue().toString(),
-                   BiomeKeys.OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_OCEAN.getValue().toString(),
-                   0.7, 0.3, 0.2
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.FLOWER_FOREST.getValue().toString(),
-                   BiomeKeys.OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_OCEAN.getValue().toString(),
-                   0.7, 0.5, 0.2
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.FLOWER_FOREST.getValue().toString(),
-                   BiomeKeys.OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_OCEAN.getValue().toString(),
-                   0.7, 0.7, 0.2
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.FLOWER_FOREST.getValue().toString(),
-                   BiomeKeys.OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_OCEAN.getValue().toString(),
-                   0.7, 0.9, 0.2
-               ),
-
-               new VoronoiPointBiome(
-                   BiomeKeys.MEADOW.getValue().toString(),
-                   BiomeKeys.OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_OCEAN.getValue().toString(),
-                   0.5, 0.1, 0.2
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.MEADOW.getValue().toString(),
-                   BiomeKeys.OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_OCEAN.getValue().toString(),
-                   0.5, 0.3, 0.2
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.CHERRY_GROVE.getValue().toString(),
-                   BiomeKeys.OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_OCEAN.getValue().toString(),
-                   0.5, 0.5, 0.2
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.CHERRY_GROVE.getValue().toString(),
-                   BiomeKeys.OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_OCEAN.getValue().toString(),
-                   0.5, 0.7, 0.2
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.MANGROVE_SWAMP.getValue().toString(),
-                   BiomeKeys.OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_OCEAN.getValue().toString(),
-                   0.5, 0.9, 0.2
-               ),
-
-               new VoronoiPointBiome(
-                   BiomeKeys.SNOWY_PLAINS.getValue().toString(),
-                   BiomeKeys.FROZEN_OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_FROZEN_OCEAN.getValue().toString(),
-                   0.3, 0.1, 0.2
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.OLD_GROWTH_PINE_TAIGA.getValue().toString(),
-                   BiomeKeys.COLD_OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_COLD_OCEAN.getValue().toString(),
-                   0.3, 0.3, 0.2
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.OLD_GROWTH_PINE_TAIGA.getValue().toString(),
-                   BiomeKeys.COLD_OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_COLD_OCEAN.getValue().toString(),
-                   0.3, 0.5, 0.2
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.GROVE.getValue().toString(),
-                   BiomeKeys.FROZEN_OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_FROZEN_OCEAN.getValue().toString(),
-                   0.3, 0.7, 0.2
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.GROVE.getValue().toString(),
-                   BiomeKeys.FROZEN_OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_FROZEN_OCEAN.getValue().toString(),
-                   0.3, 0.9, 0.2
-               ),
-
-               new VoronoiPointBiome(
-                   BiomeKeys.SNOWY_PLAINS.getValue().toString(),
-                   BiomeKeys.FROZEN_OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_FROZEN_OCEAN.getValue().toString(),
-                   0.1, 0.1, 0.2
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.SNOWY_PLAINS.getValue().toString(),
-                   BiomeKeys.FROZEN_OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_FROZEN_OCEAN.getValue().toString(),
-                   0.1, 0.3, 0.2
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.SNOWY_PLAINS.getValue().toString(),
-                   BiomeKeys.FROZEN_OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_FROZEN_OCEAN.getValue().toString(),
-                   0.1, 0.5, 0.2
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.SNOWY_SLOPES.getValue().toString(),
-                   BiomeKeys.FROZEN_OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_FROZEN_OCEAN.getValue().toString(),
-                   0.1, 0.7, 0.2
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.SNOWY_SLOPES.getValue().toString(),
-                   BiomeKeys.FROZEN_OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_FROZEN_OCEAN.getValue().toString(),
-                   0.1, 0.9, 0.2
-               ),
-               
-               // Mutated Biomes 2
-
-               new VoronoiPointBiome(
-                   BiomeKeys.BADLANDS.getValue().toString(),
-                   BiomeKeys.LUKEWARM_OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_LUKEWARM_OCEAN.getValue().toString(),
-                   0.9, 0.1, 0.8
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.PLAINS.getValue().toString(),
-                   BiomeKeys.LUKEWARM_OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_LUKEWARM_OCEAN.getValue().toString(),
-                   0.9, 0.3, 0.8
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.SPARSE_JUNGLE.getValue().toString(),
-                   BiomeKeys.LUKEWARM_OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_LUKEWARM_OCEAN.getValue().toString(),
-                   0.9, 0.5, 0.8
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.SPARSE_JUNGLE.getValue().toString(),
-                   BiomeKeys.WARM_OCEAN.getValue().toString(),
-                   BiomeKeys.WARM_OCEAN.getValue().toString(),
-                   0.9, 0.7, 0.8
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.MUSHROOM_FIELDS.getValue().toString(),
-                   BiomeKeys.WARM_OCEAN.getValue().toString(),
-                   BiomeKeys.WARM_OCEAN.getValue().toString(),
-                   0.9, 0.9, 0.8
-               ),
-
-               new VoronoiPointBiome(
-                   BiomeKeys.SAVANNA.getValue().toString(),
-                   BiomeKeys.OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_OCEAN.getValue().toString(),
-                   0.7, 0.1, 0.8
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.PLAINS.getValue().toString(),
-                   BiomeKeys.OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_OCEAN.getValue().toString(),
-                   0.7, 0.3, 0.8
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.PALE_GARDEN.getValue().toString(),
-                   BiomeKeys.OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_OCEAN.getValue().toString(),
-                   0.7, 0.5, 0.8
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.PALE_GARDEN.getValue().toString(),
-                   BiomeKeys.OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_OCEAN.getValue().toString(),
-                   0.7, 0.7, 0.8
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.PALE_GARDEN.getValue().toString(),
-                   BiomeKeys.OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_OCEAN.getValue().toString(),
-                   0.7, 0.9, 0.8
-               ),
-
-               new VoronoiPointBiome(
-                   BiomeKeys.PLAINS.getValue().toString(),
-                   BiomeKeys.OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_OCEAN.getValue().toString(),
-                   0.5, 0.1, 0.8
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.PLAINS.getValue().toString(),
-                   BiomeKeys.OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_OCEAN.getValue().toString(),
-                   0.5, 0.3, 0.8
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.OLD_GROWTH_BIRCH_FOREST.getValue().toString(),
-                   BiomeKeys.OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_OCEAN.getValue().toString(),
-                   0.5, 0.5, 0.8
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.OLD_GROWTH_BIRCH_FOREST.getValue().toString(),
-                   BiomeKeys.OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_OCEAN.getValue().toString(),
-                   0.5, 0.7, 0.8
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.MANGROVE_SWAMP.getValue().toString(),
-                   BiomeKeys.OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_OCEAN.getValue().toString(),
-                   0.5, 0.9, 0.8
-               ),
-
-               new VoronoiPointBiome(
-                   BiomeKeys.SNOWY_PLAINS.getValue().toString(),
-                   BiomeKeys.FROZEN_OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_FROZEN_OCEAN.getValue().toString(),
-                   0.3, 0.1, 0.8
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.OLD_GROWTH_SPRUCE_TAIGA.getValue().toString(),
-                   BiomeKeys.COLD_OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_COLD_OCEAN.getValue().toString(),
-                   0.3, 0.3, 0.8
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.OLD_GROWTH_SPRUCE_TAIGA.getValue().toString(),
-                   BiomeKeys.COLD_OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_COLD_OCEAN.getValue().toString(),
-                   0.3, 0.5, 0.8
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.GROVE.getValue().toString(),
-                   BiomeKeys.FROZEN_OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_FROZEN_OCEAN.getValue().toString(),
-                   0.3, 0.7, 0.8
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.GROVE.getValue().toString(),
-                   BiomeKeys.FROZEN_OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_FROZEN_OCEAN.getValue().toString(),
-                   0.3, 0.9, 0.8
-               ),
-
-               new VoronoiPointBiome(
-                   BiomeKeys.SNOWY_PLAINS.getValue().toString(),
-                   BiomeKeys.FROZEN_OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_FROZEN_OCEAN.getValue().toString(),
-                   0.1, 0.1, 0.8
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.SNOWY_PLAINS.getValue().toString(),
-                   BiomeKeys.FROZEN_OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_FROZEN_OCEAN.getValue().toString(),
-                   0.1, 0.3, 0.8
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.SNOWY_PLAINS.getValue().toString(),
-                   BiomeKeys.FROZEN_OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_FROZEN_OCEAN.getValue().toString(),
-                   0.1, 0.5, 0.8
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.ICE_SPIKES.getValue().toString(),
-                   BiomeKeys.FROZEN_OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_FROZEN_OCEAN.getValue().toString(),
-                   0.1, 0.7, 0.8
-               ),
-               new VoronoiPointBiome(
-                   BiomeKeys.ICE_SPIKES.getValue().toString(),
-                   BiomeKeys.FROZEN_OCEAN.getValue().toString(),
-                   BiomeKeys.DEEP_FROZEN_OCEAN.getValue().toString(),
-                   0.1, 0.9, 0.8
-               )
-           );
-        
         return new ModernBetaSettingsPreset(
-            settingsChunk.build(),
-            settingsBiome.build(),
-            settingsCaveBiome.build()
+            PRESET_BETA_1_7_3.chunkSettings().extend()
+                .add(USE_SURFACE_RULES, true)
+                .add(CAVE_GENERATION, CaveGeneration.EARLY_RELEASE)
+                .build(),
+            ModernBetaSettings.builder()
+                .add(PROVIDER, ModernBetaBuiltInTypes.Biome.VORONOI.id)
+                .add(CLIMATE_SCALE, new ClimateScale(
+                    0.025f / 3.0f,
+                    0.05f / 3.0f,
+                    0.25f / 1.5f,
+                    0.003125f
+                ))
+                .add(VORONOI_POINTS, List.of(
+                    // Standard Biomes
+
+                    new VoronoiPointBiome(
+                        BiomeKeys.DESERT.getValue(),
+                        BiomeKeys.LUKEWARM_OCEAN.getValue(),
+                        BiomeKeys.DEEP_LUKEWARM_OCEAN.getValue(),
+                        0.9, 0.1, 0.5
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.PLAINS.getValue(),
+                        BiomeKeys.LUKEWARM_OCEAN.getValue(),
+                        BiomeKeys.DEEP_LUKEWARM_OCEAN.getValue(),
+                        0.9, 0.3, 0.5
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.FOREST.getValue(),
+                        BiomeKeys.LUKEWARM_OCEAN.getValue(),
+                        BiomeKeys.DEEP_LUKEWARM_OCEAN.getValue(),
+                        0.9, 0.5, 0.5
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.FOREST.getValue(),
+                        BiomeKeys.WARM_OCEAN.getValue(),
+                        BiomeKeys.WARM_OCEAN.getValue(),
+                        0.9, 0.7, 0.5
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.JUNGLE.getValue(),
+                        BiomeKeys.WARM_OCEAN.getValue(),
+                        BiomeKeys.WARM_OCEAN.getValue(),
+                        0.9, 0.9, 0.5
+                    ),
+
+                    new VoronoiPointBiome(
+                        BiomeKeys.SAVANNA.getValue(),
+                        BiomeKeys.OCEAN.getValue(),
+                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        0.7, 0.1, 0.5
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.PLAINS.getValue(),
+                        BiomeKeys.OCEAN.getValue(),
+                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        0.7, 0.3, 0.5
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.FOREST.getValue(),
+                        BiomeKeys.OCEAN.getValue(),
+                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        0.7, 0.5, 0.5
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.FOREST.getValue(),
+                        BiomeKeys.OCEAN.getValue(),
+                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        0.7, 0.7, 0.5
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.FOREST.getValue(),
+                        BiomeKeys.OCEAN.getValue(),
+                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        0.7, 0.9, 0.5
+                    ),
+
+                    new VoronoiPointBiome(
+                        BiomeKeys.PLAINS.getValue(),
+                        BiomeKeys.OCEAN.getValue(),
+                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        0.5, 0.1, 0.5
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.PLAINS.getValue(),
+                        BiomeKeys.OCEAN.getValue(),
+                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        0.5, 0.3, 0.5
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.BIRCH_FOREST.getValue(),
+                        BiomeKeys.OCEAN.getValue(),
+                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        0.5, 0.5, 0.5
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.BIRCH_FOREST.getValue(),
+                        BiomeKeys.OCEAN.getValue(),
+                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        0.5, 0.7, 0.5
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.SWAMP.getValue(),
+                        BiomeKeys.OCEAN.getValue(),
+                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        0.5, 0.9, 0.5
+                    ),
+
+                    new VoronoiPointBiome(
+                        BiomeKeys.SNOWY_PLAINS.getValue(),
+                        BiomeKeys.FROZEN_OCEAN.getValue(),
+                        BiomeKeys.DEEP_FROZEN_OCEAN.getValue(),
+                        0.3, 0.1, 0.5
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.TAIGA.getValue(),
+                        BiomeKeys.COLD_OCEAN.getValue(),
+                        BiomeKeys.DEEP_COLD_OCEAN.getValue(),
+                        0.3, 0.3, 0.5
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.TAIGA.getValue(),
+                        BiomeKeys.COLD_OCEAN.getValue(),
+                        BiomeKeys.DEEP_COLD_OCEAN.getValue(),
+                        0.3, 0.5, 0.5
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.SNOWY_TAIGA.getValue(),
+                        BiomeKeys.FROZEN_OCEAN.getValue(),
+                        BiomeKeys.DEEP_FROZEN_OCEAN.getValue(),
+                        0.3, 0.7, 0.5
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.SNOWY_TAIGA.getValue(),
+                        BiomeKeys.FROZEN_OCEAN.getValue(),
+                        BiomeKeys.DEEP_FROZEN_OCEAN.getValue(),
+                        0.3, 0.9, 0.5
+                    ),
+
+                    new VoronoiPointBiome(
+                        BiomeKeys.SNOWY_PLAINS.getValue(),
+                        BiomeKeys.FROZEN_OCEAN.getValue(),
+                        BiomeKeys.DEEP_FROZEN_OCEAN.getValue(),
+                        0.1, 0.1, 0.5
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.SNOWY_PLAINS.getValue(),
+                        BiomeKeys.FROZEN_OCEAN.getValue(),
+                        BiomeKeys.DEEP_FROZEN_OCEAN.getValue(),
+                        0.1, 0.3, 0.5
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.SNOWY_PLAINS.getValue(),
+                        BiomeKeys.FROZEN_OCEAN.getValue(),
+                        BiomeKeys.DEEP_FROZEN_OCEAN.getValue(),
+                        0.1, 0.5, 0.5
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.SNOWY_PLAINS.getValue(),
+                        BiomeKeys.FROZEN_OCEAN.getValue(),
+                        BiomeKeys.DEEP_FROZEN_OCEAN.getValue(),
+                        0.1, 0.7, 0.5
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.SNOWY_PLAINS.getValue(),
+                        BiomeKeys.FROZEN_OCEAN.getValue(),
+                        BiomeKeys.DEEP_FROZEN_OCEAN.getValue(),
+                        0.1, 0.9, 0.5
+                    ),
+
+                    // Mutated Biomes
+
+                    new VoronoiPointBiome(
+                        BiomeKeys.DESERT.getValue(),
+                        BiomeKeys.LUKEWARM_OCEAN.getValue(),
+                        BiomeKeys.DEEP_LUKEWARM_OCEAN.getValue(),
+                        0.9, 0.1, 0.2
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.SUNFLOWER_PLAINS.getValue(),
+                        BiomeKeys.LUKEWARM_OCEAN.getValue(),
+                        BiomeKeys.DEEP_LUKEWARM_OCEAN.getValue(),
+                        0.9, 0.3, 0.2
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.DARK_FOREST.getValue(),
+                        BiomeKeys.LUKEWARM_OCEAN.getValue(),
+                        BiomeKeys.DEEP_LUKEWARM_OCEAN.getValue(),
+                        0.9, 0.5, 0.2
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.DARK_FOREST.getValue(),
+                        BiomeKeys.WARM_OCEAN.getValue(),
+                        BiomeKeys.WARM_OCEAN.getValue(),
+                        0.9, 0.7, 0.2
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.BAMBOO_JUNGLE.getValue(),
+                        BiomeKeys.WARM_OCEAN.getValue(),
+                        BiomeKeys.WARM_OCEAN.getValue(),
+                        0.9, 0.9, 0.2
+                    ),
+
+                    new VoronoiPointBiome(
+                        BiomeKeys.SAVANNA.getValue(),
+                        BiomeKeys.OCEAN.getValue(),
+                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        0.7, 0.1, 0.2
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.MEADOW.getValue(),
+                        BiomeKeys.OCEAN.getValue(),
+                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        0.7, 0.3, 0.2
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.FLOWER_FOREST.getValue(),
+                        BiomeKeys.OCEAN.getValue(),
+                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        0.7, 0.5, 0.2
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.FLOWER_FOREST.getValue(),
+                        BiomeKeys.OCEAN.getValue(),
+                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        0.7, 0.7, 0.2
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.FLOWER_FOREST.getValue(),
+                        BiomeKeys.OCEAN.getValue(),
+                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        0.7, 0.9, 0.2
+                    ),
+
+                    new VoronoiPointBiome(
+                        BiomeKeys.MEADOW.getValue(),
+                        BiomeKeys.OCEAN.getValue(),
+                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        0.5, 0.1, 0.2
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.MEADOW.getValue(),
+                        BiomeKeys.OCEAN.getValue(),
+                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        0.5, 0.3, 0.2
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.CHERRY_GROVE.getValue(),
+                        BiomeKeys.OCEAN.getValue(),
+                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        0.5, 0.5, 0.2
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.CHERRY_GROVE.getValue(),
+                        BiomeKeys.OCEAN.getValue(),
+                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        0.5, 0.7, 0.2
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.MANGROVE_SWAMP.getValue(),
+                        BiomeKeys.OCEAN.getValue(),
+                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        0.5, 0.9, 0.2
+                    ),
+
+                    new VoronoiPointBiome(
+                        BiomeKeys.SNOWY_PLAINS.getValue(),
+                        BiomeKeys.FROZEN_OCEAN.getValue(),
+                        BiomeKeys.DEEP_FROZEN_OCEAN.getValue(),
+                        0.3, 0.1, 0.2
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.OLD_GROWTH_PINE_TAIGA.getValue(),
+                        BiomeKeys.COLD_OCEAN.getValue(),
+                        BiomeKeys.DEEP_COLD_OCEAN.getValue(),
+                        0.3, 0.3, 0.2
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.OLD_GROWTH_PINE_TAIGA.getValue(),
+                        BiomeKeys.COLD_OCEAN.getValue(),
+                        BiomeKeys.DEEP_COLD_OCEAN.getValue(),
+                        0.3, 0.5, 0.2
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.GROVE.getValue(),
+                        BiomeKeys.FROZEN_OCEAN.getValue(),
+                        BiomeKeys.DEEP_FROZEN_OCEAN.getValue(),
+                        0.3, 0.7, 0.2
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.GROVE.getValue(),
+                        BiomeKeys.FROZEN_OCEAN.getValue(),
+                        BiomeKeys.DEEP_FROZEN_OCEAN.getValue(),
+                        0.3, 0.9, 0.2
+                    ),
+
+                    new VoronoiPointBiome(
+                        BiomeKeys.SNOWY_PLAINS.getValue(),
+                        BiomeKeys.FROZEN_OCEAN.getValue(),
+                        BiomeKeys.DEEP_FROZEN_OCEAN.getValue(),
+                        0.1, 0.1, 0.2
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.SNOWY_PLAINS.getValue(),
+                        BiomeKeys.FROZEN_OCEAN.getValue(),
+                        BiomeKeys.DEEP_FROZEN_OCEAN.getValue(),
+                        0.1, 0.3, 0.2
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.SNOWY_PLAINS.getValue(),
+                        BiomeKeys.FROZEN_OCEAN.getValue(),
+                        BiomeKeys.DEEP_FROZEN_OCEAN.getValue(),
+                        0.1, 0.5, 0.2
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.SNOWY_SLOPES.getValue(),
+                        BiomeKeys.FROZEN_OCEAN.getValue(),
+                        BiomeKeys.DEEP_FROZEN_OCEAN.getValue(),
+                        0.1, 0.7, 0.2
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.SNOWY_SLOPES.getValue(),
+                        BiomeKeys.FROZEN_OCEAN.getValue(),
+                        BiomeKeys.DEEP_FROZEN_OCEAN.getValue(),
+                        0.1, 0.9, 0.2
+                    ),
+
+                    // Mutated Biomes 2
+
+                    new VoronoiPointBiome(
+                        BiomeKeys.BADLANDS.getValue(),
+                        BiomeKeys.LUKEWARM_OCEAN.getValue(),
+                        BiomeKeys.DEEP_LUKEWARM_OCEAN.getValue(),
+                        0.9, 0.1, 0.8
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.PLAINS.getValue(),
+                        BiomeKeys.LUKEWARM_OCEAN.getValue(),
+                        BiomeKeys.DEEP_LUKEWARM_OCEAN.getValue(),
+                        0.9, 0.3, 0.8
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.SPARSE_JUNGLE.getValue(),
+                        BiomeKeys.LUKEWARM_OCEAN.getValue(),
+                        BiomeKeys.DEEP_LUKEWARM_OCEAN.getValue(),
+                        0.9, 0.5, 0.8
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.SPARSE_JUNGLE.getValue(),
+                        BiomeKeys.WARM_OCEAN.getValue(),
+                        BiomeKeys.WARM_OCEAN.getValue(),
+                        0.9, 0.7, 0.8
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.MUSHROOM_FIELDS.getValue(),
+                        BiomeKeys.WARM_OCEAN.getValue(),
+                        BiomeKeys.WARM_OCEAN.getValue(),
+                        0.9, 0.9, 0.8
+                    ),
+
+                    new VoronoiPointBiome(
+                        BiomeKeys.SAVANNA.getValue(),
+                        BiomeKeys.OCEAN.getValue(),
+                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        0.7, 0.1, 0.8
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.PLAINS.getValue(),
+                        BiomeKeys.OCEAN.getValue(),
+                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        0.7, 0.3, 0.8
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.PALE_GARDEN.getValue(),
+                        BiomeKeys.OCEAN.getValue(),
+                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        0.7, 0.5, 0.8
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.PALE_GARDEN.getValue(),
+                        BiomeKeys.OCEAN.getValue(),
+                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        0.7, 0.7, 0.8
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.PALE_GARDEN.getValue(),
+                        BiomeKeys.OCEAN.getValue(),
+                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        0.7, 0.9, 0.8
+                    ),
+
+                    new VoronoiPointBiome(
+                        BiomeKeys.PLAINS.getValue(),
+                        BiomeKeys.OCEAN.getValue(),
+                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        0.5, 0.1, 0.8
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.PLAINS.getValue(),
+                        BiomeKeys.OCEAN.getValue(),
+                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        0.5, 0.3, 0.8
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.OLD_GROWTH_BIRCH_FOREST.getValue(),
+                        BiomeKeys.OCEAN.getValue(),
+                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        0.5, 0.5, 0.8
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.OLD_GROWTH_BIRCH_FOREST.getValue(),
+                        BiomeKeys.OCEAN.getValue(),
+                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        0.5, 0.7, 0.8
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.MANGROVE_SWAMP.getValue(),
+                        BiomeKeys.OCEAN.getValue(),
+                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        0.5, 0.9, 0.8
+                    ),
+
+                    new VoronoiPointBiome(
+                        BiomeKeys.SNOWY_PLAINS.getValue(),
+                        BiomeKeys.FROZEN_OCEAN.getValue(),
+                        BiomeKeys.DEEP_FROZEN_OCEAN.getValue(),
+                        0.3, 0.1, 0.8
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.OLD_GROWTH_SPRUCE_TAIGA.getValue(),
+                        BiomeKeys.COLD_OCEAN.getValue(),
+                        BiomeKeys.DEEP_COLD_OCEAN.getValue(),
+                        0.3, 0.3, 0.8
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.OLD_GROWTH_SPRUCE_TAIGA.getValue(),
+                        BiomeKeys.COLD_OCEAN.getValue(),
+                        BiomeKeys.DEEP_COLD_OCEAN.getValue(),
+                        0.3, 0.5, 0.8
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.GROVE.getValue(),
+                        BiomeKeys.FROZEN_OCEAN.getValue(),
+                        BiomeKeys.DEEP_FROZEN_OCEAN.getValue(),
+                        0.3, 0.7, 0.8
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.GROVE.getValue(),
+                        BiomeKeys.FROZEN_OCEAN.getValue(),
+                        BiomeKeys.DEEP_FROZEN_OCEAN.getValue(),
+                        0.3, 0.9, 0.8
+                    ),
+
+                    new VoronoiPointBiome(
+                        BiomeKeys.SNOWY_PLAINS.getValue(),
+                        BiomeKeys.FROZEN_OCEAN.getValue(),
+                        BiomeKeys.DEEP_FROZEN_OCEAN.getValue(),
+                        0.1, 0.1, 0.8
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.SNOWY_PLAINS.getValue(),
+                        BiomeKeys.FROZEN_OCEAN.getValue(),
+                        BiomeKeys.DEEP_FROZEN_OCEAN.getValue(),
+                        0.1, 0.3, 0.8
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.SNOWY_PLAINS.getValue(),
+                        BiomeKeys.FROZEN_OCEAN.getValue(),
+                        BiomeKeys.DEEP_FROZEN_OCEAN.getValue(),
+                        0.1, 0.5, 0.8
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.ICE_SPIKES.getValue(),
+                        BiomeKeys.FROZEN_OCEAN.getValue(),
+                        BiomeKeys.DEEP_FROZEN_OCEAN.getValue(),
+                        0.1, 0.7, 0.8
+                    ),
+                    new VoronoiPointBiome(
+                        BiomeKeys.ICE_SPIKES.getValue(),
+                        BiomeKeys.FROZEN_OCEAN.getValue(),
+                        BiomeKeys.DEEP_FROZEN_OCEAN.getValue(),
+                        0.1, 0.9, 0.8
+                    )
+                ))
+                .build(),
+            PRESET_BETA_1_7_3.caveBiomeSettings()
         );
     }
     
     private static ModernBetaSettingsPreset presetAlphaWinter() {
-        ModernBetaSettingsPreset initial = presetAlpha();
-        
-        NbtCompound compoundChunk = initial.settingsChunk().toCompound();
-        NbtCompound compoundBiome = initial.settingsBiome().toCompound();
-        NbtCompound compoundCaveBiome = initial.settingsCaveBiome().toCompound();
-        
-        ModernBetaSettingsChunk.Builder settingsChunk = new ModernBetaSettingsChunk.Builder().fromCompound(compoundChunk);
-        ModernBetaSettingsBiome.Builder settingsBiome = new ModernBetaSettingsBiome.Builder().fromCompound(compoundBiome);
-        ModernBetaSettingsCaveBiome.Builder settingsCaveBiome = new ModernBetaSettingsCaveBiome.Builder().fromCompound(compoundCaveBiome);
-        
-        settingsBiome.singleBiome = ModernBetaBiomes.ALPHA_WINTER.getValue().toString();
-        
         return new ModernBetaSettingsPreset(
-            settingsChunk.build(),
-            settingsBiome.build(),
-            settingsCaveBiome.build()
+            PRESET_ALPHA.chunkSettings(),
+            ModernBetaSettings.singleBiome(ModernBetaBiomes.ALPHA_WINTER),
+            PRESET_ALPHA.caveBiomeSettings()
         );
     }
     
     private static ModernBetaSettingsPreset presetIndevParadise() {
-        ModernBetaSettingsPreset initial = presetIndev();
-        
-        NbtCompound compoundChunk = initial.settingsChunk().toCompound();
-        NbtCompound compoundBiome = initial.settingsBiome().toCompound();
-        NbtCompound compoundCaveBiome = initial.settingsCaveBiome().toCompound();
-        
-        ModernBetaSettingsChunk.Builder settingsChunk = new ModernBetaSettingsChunk.Builder().fromCompound(compoundChunk);
-        ModernBetaSettingsBiome.Builder settingsBiome = new ModernBetaSettingsBiome.Builder().fromCompound(compoundBiome);
-        ModernBetaSettingsCaveBiome.Builder settingsCaveBiome = new ModernBetaSettingsCaveBiome.Builder().fromCompound(compoundCaveBiome);
-        
-        settingsChunk.indevLevelTheme = IndevTheme.PARADISE.getId();
-        
-        settingsBiome.singleBiome = ModernBetaBiomes.INDEV_PARADISE.getValue().toString();
-        
         return new ModernBetaSettingsPreset(
-            settingsChunk.build(),
-            settingsBiome.build(),
-            settingsCaveBiome.build()
+            PRESET_INDEV.chunkSettings().extend()
+                .add(FINITE_LEVEL_PROPERTIES, new FiniteLevelProperties(
+                    IndevType.ISLAND,
+                    IndevTheme.PARADISE,
+                    256,
+                    256,
+                    128
+                ))
+                .build(),
+            ModernBetaSettings.singleBiome(ModernBetaBiomes.INDEV_PARADISE),
+            PRESET_INDEV.caveBiomeSettings()
         );
     }
     
     private static ModernBetaSettingsPreset presetIndevWoods() {
-        ModernBetaSettingsPreset initial = presetIndev();
-        
-        NbtCompound compoundChunk = initial.settingsChunk().toCompound();
-        NbtCompound compoundBiome = initial.settingsBiome().toCompound();
-        NbtCompound compoundCaveBiome = initial.settingsCaveBiome().toCompound();
-        
-        ModernBetaSettingsChunk.Builder settingsChunk = new ModernBetaSettingsChunk.Builder().fromCompound(compoundChunk);
-        ModernBetaSettingsBiome.Builder settingsBiome = new ModernBetaSettingsBiome.Builder().fromCompound(compoundBiome);
-        ModernBetaSettingsCaveBiome.Builder settingsCaveBiome = new ModernBetaSettingsCaveBiome.Builder().fromCompound(compoundCaveBiome);
-        
-        settingsChunk.indevLevelTheme = IndevTheme.WOODS.getId();
-        
-        settingsBiome.singleBiome = ModernBetaBiomes.INDEV_WOODS.getValue().toString();
-        
         return new ModernBetaSettingsPreset(
-            settingsChunk.build(),
-            settingsBiome.build(),
-            settingsCaveBiome.build()
+            PRESET_INDEV.chunkSettings().extend()
+                .add(FINITE_LEVEL_PROPERTIES, new FiniteLevelProperties(
+                    IndevType.ISLAND,
+                    IndevTheme.WOODS,
+                    256,
+                    256,
+                    128
+                ))
+                .build(),
+            ModernBetaSettings.singleBiome(ModernBetaBiomes.INDEV_WOODS),
+            PRESET_INDEV.caveBiomeSettings()
         );
     }
     
     private static ModernBetaSettingsPreset presetIndevHell() {
-        ModernBetaSettingsPreset initial = presetIndev();
-        
-        NbtCompound compoundChunk = initial.settingsChunk().toCompound();
-        NbtCompound compoundBiome = initial.settingsBiome().toCompound();
-        NbtCompound compoundCaveBiome = initial.settingsCaveBiome().toCompound();
-        
-        ModernBetaSettingsChunk.Builder settingsChunk = new ModernBetaSettingsChunk.Builder().fromCompound(compoundChunk);
-        ModernBetaSettingsBiome.Builder settingsBiome = new ModernBetaSettingsBiome.Builder().fromCompound(compoundBiome);
-        ModernBetaSettingsCaveBiome.Builder settingsCaveBiome = new ModernBetaSettingsCaveBiome.Builder().fromCompound(compoundCaveBiome);
-        
-        settingsChunk.indevLevelTheme = IndevTheme.HELL.getId();
-        
-        settingsBiome.singleBiome = ModernBetaBiomes.INDEV_HELL.getValue().toString();
-        
         return new ModernBetaSettingsPreset(
-            settingsChunk.build(),
-            settingsBiome.build(),
-            settingsCaveBiome.build()
+            PRESET_INDEV.chunkSettings().extend()
+                .add(FINITE_LEVEL_PROPERTIES, new FiniteLevelProperties(
+                    IndevType.ISLAND,
+                    IndevTheme.HELL,
+                    256,
+                    256,
+                    128
+                ))
+                .build(),
+            ModernBetaSettings.singleBiome(ModernBetaBiomes.INDEV_HELL),
+            PRESET_INDEV.caveBiomeSettings()
         );
     }
 
     private static ModernBetaSettingsPreset presetBeta181(int biomeScale) {
-        ModernBetaSettingsChunk.Builder settingsChunk = new ModernBetaSettingsChunk.Builder();
-        ModernBetaSettingsBiome.Builder settingsBiome = new ModernBetaSettingsBiome.Builder();
-        ModernBetaSettingsCaveBiome.Builder settingsCaveBiome = new ModernBetaSettingsCaveBiome.Builder();
-
-        settingsChunk.chunkProvider = ModernBetaBuiltInTypes.Chunk.EARLY_RELEASE.id;
-        settingsChunk.useFixedCaves = true;
-        settingsChunk.releaseBiomeHeightConfigs = Map.ofEntries(
-            Map.entry("minecraft:ocean", "-1.0;0.5")
-        );
-
-        settingsBiome.biomeProvider = ModernBetaBuiltInTypes.Biome.FRACTAL.id;
-        settingsBiome.fractalLayers = new ConfiguredLayers(Arrays.asList(
-            new InitLandLayer("land", 1),
-            new FuzzyZoomLayer("land", 2000, "land"),
-            AddLandLayer.forIslandScaleBeta("land", 1, "land"),
-            new ModalZoomLayer("land", 2001, "land"),
-            AddLandLayer.forIslandScaleBeta("land", 2, "land"),
-            new ModalZoomLayer("land", 2002, "land"),
-            AddLandLayer.forIslandScaleBeta("land", 3, "land"),
-            new ModalZoomLayer("land", 2003, "land"),
-            AddLandLayer.forIslandScaleBeta("land", 3, "land"),
-            new ModalZoomLayer("land", 2004, "land"),
-            AddLandLayer.forIslandScaleBeta("land", 3, "land"),
-            new InitRiverLayer("river", 100, "land"),
-            StackedZoomLayer.modal("river", 1000, "river", 6 + biomeScale),
-            new ComputeRiverLayer("river", 0, "river", true),
-            new SmoothLayer("river", 1000, "river"),
-            new RandomBiomeLayer("biome_pool", 200, ExtendedBiomeId.listOf(
-                "minecraft:desert",
-                "minecraft:forest",
-                "moderner_beta:late_beta_extreme_hills",
-                "moderner_beta:late_beta_swampland",
-                "moderner_beta:late_beta_plains",
-                "moderner_beta:late_beta_taiga"
-            )),
-            new BiomeToLayerOverlayLayer("land", 0, "land", Map.of(ExtendedBiomeId.PLAINS, "biome_pool")),
-            StackedZoomLayer.modal("land", 1000, "land", 2),
-            new ModalZoomLayer("land", 1000, "land"),
-            AddLandLayer.forBeta("land", 3, "land"),
-            StackedZoomLayer.modal("land", 1001, "land", 3 + biomeScale),
-            new SmoothLayer("land", 1000, "land"),
-            MixRiverLayer.forEarlyRelease("land", 0, "land", "river")
-        ));
-
         return new ModernBetaSettingsPreset(
-            settingsChunk.build(),
-            settingsBiome.build(),
-            settingsCaveBiome.build()
+            PRESET_BETA_1_7_3.chunkSettings().extend()
+                .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.EARLY_RELEASE.id)
+                .add(CAVE_GENERATION, CaveGeneration.EARLY_RELEASE)
+                .add(FORCED_BIOME_HEIGHT, ForcedBiomeHeight.overridesOnly(Map.of(
+                    ExtendedBiomeId.OCEAN, new HeightConfig(-1.0f, 0.5f)
+                )))
+                .build(),
+            ModernBetaSettings.fractalLayers(
+                new InitLandLayer("land", 1),
+                new FuzzyZoomLayer("land", 2000, "land"),
+                AddLandLayer.forIslandScaleBeta("land", 1, "land"),
+                new ModalZoomLayer("land", 2001, "land"),
+                AddLandLayer.forIslandScaleBeta("land", 2, "land"),
+                new ModalZoomLayer("land", 2002, "land"),
+                AddLandLayer.forIslandScaleBeta("land", 3, "land"),
+                new ModalZoomLayer("land", 2003, "land"),
+                AddLandLayer.forIslandScaleBeta("land", 3, "land"),
+                new ModalZoomLayer("land", 2004, "land"),
+                AddLandLayer.forIslandScaleBeta("land", 3, "land"),
+                new InitRiverLayer("river", 100, "land"),
+                StackedZoomLayer.modal("river", 1000, "river", 6 + biomeScale),
+                new ComputeRiverLayer("river", 0, "river", true),
+                new SmoothLayer("river", 1000, "river"),
+                new RandomBiomeLayer("biome_pool", 200, ExtendedBiomeId.listOf(
+                    "minecraft:desert",
+                    "minecraft:forest",
+                    "moderner_beta:late_beta_extreme_hills",
+                    "moderner_beta:late_beta_swampland",
+                    "moderner_beta:late_beta_plains",
+                    "moderner_beta:late_beta_taiga"
+                )),
+                new BiomeToLayerOverlayLayer("land", 0, "land", Map.of(ExtendedBiomeId.PLAINS, "biome_pool")),
+                StackedZoomLayer.modal("land", 1000, "land", 2),
+                new ModalZoomLayer("land", 1000, "land"),
+                AddLandLayer.forBeta("land", 3, "land"),
+                StackedZoomLayer.modal("land", 1001, "land", 3 + biomeScale),
+                new SmoothLayer("land", 1000, "land"),
+                MixRiverLayer.forEarlyRelease("land", 0, "land", "river")
+            ),
+            PRESET_BETA_1_7_3.caveBiomeSettings()
         );
     }
 
@@ -1520,38 +1343,26 @@ public class ModernBetaSettingsPresets {
     }
 
     private static ModernBetaSettingsPreset presetBeta19Pre3(int biomeScale) {
-        ModernBetaSettingsChunk.Builder settingsChunk = new ModernBetaSettingsChunk.Builder();
-        ModernBetaSettingsBiome.Builder settingsBiome = new ModernBetaSettingsBiome.Builder();
-        ModernBetaSettingsCaveBiome.Builder settingsCaveBiome = new ModernBetaSettingsCaveBiome.Builder();
-
-        settingsChunk.chunkProvider = ModernBetaBuiltInTypes.Chunk.EARLY_RELEASE.id;
-        settingsChunk.useFixedCaves = true;
-
-        settingsBiome.biomeProvider = ModernBetaBuiltInTypes.Biome.FRACTAL.id;
-        settingsBiome.fractalLayers = configuredLayers100Era(biomeScale, ExtendedBiomeId.of(ModernBetaBiomes.LATE_BETA_ICE_PLAINS));
-
         return new ModernBetaSettingsPreset(
-            settingsChunk.build(),
-            settingsBiome.build(),
-            settingsCaveBiome.build()
+            PRESET_BETA_1_7_3.chunkSettings().extend()
+                .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.EARLY_RELEASE.id)
+                .add(CAVE_GENERATION, CaveGeneration.EARLY_RELEASE)
+                .addDefault(FORCED_BIOME_HEIGHT)
+                .build(),
+            ModernBetaSettings.fractalLayers(configuredLayers100Era(biomeScale, ExtendedBiomeId.of(ModernBetaBiomes.LATE_BETA_ICE_PLAINS))),
+            PRESET_BETA_1_7_3.caveBiomeSettings()
         );
     }
 
     private static ModernBetaSettingsPreset preset100(int biomeScale) {
-        ModernBetaSettingsChunk.Builder settingsChunk = new ModernBetaSettingsChunk.Builder();
-        ModernBetaSettingsBiome.Builder settingsBiome = new ModernBetaSettingsBiome.Builder();
-        ModernBetaSettingsCaveBiome.Builder settingsCaveBiome = new ModernBetaSettingsCaveBiome.Builder();
-
-        settingsChunk.chunkProvider = ModernBetaBuiltInTypes.Chunk.EARLY_RELEASE.id;
-        settingsChunk.useFixedCaves = true;
-
-        settingsBiome.biomeProvider = ModernBetaBuiltInTypes.Biome.FRACTAL.id;
-        settingsBiome.fractalLayers = configuredLayers100Era(biomeScale, ExtendedBiomeId.of(ModernBetaBiomes.EARLY_RELEASE_ICE_PLAINS));
-
         return new ModernBetaSettingsPreset(
-            settingsChunk.build(),
-            settingsBiome.build(),
-            settingsCaveBiome.build()
+            PRESET_BETA_1_7_3.chunkSettings().extend()
+                .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.EARLY_RELEASE.id)
+                .add(CAVE_GENERATION, CaveGeneration.EARLY_RELEASE)
+                .addDefault(FORCED_BIOME_HEIGHT)
+                .build(),
+            ModernBetaSettings.fractalLayers(configuredLayers100Era(biomeScale, ExtendedBiomeId.of(ModernBetaBiomes.EARLY_RELEASE_ICE_PLAINS))),
+            PRESET_BETA_1_7_3.caveBiomeSettings()
         );
     }
 
@@ -1688,64 +1499,45 @@ public class ModernBetaSettingsPresets {
     }
 
     private static ModernBetaSettingsPreset preset11(int biomeScale) {
-        ModernBetaSettingsChunk.Builder settingsChunk = new ModernBetaSettingsChunk.Builder();
-        ModernBetaSettingsBiome.Builder settingsBiome = new ModernBetaSettingsBiome.Builder();
-        ModernBetaSettingsCaveBiome.Builder settingsCaveBiome = new ModernBetaSettingsCaveBiome.Builder();
-
-        settingsChunk.chunkProvider = ModernBetaBuiltInTypes.Chunk.EARLY_RELEASE.id;
-        settingsChunk.useFixedCaves = true;
-
-        settingsBiome.biomeProvider = ModernBetaBuiltInTypes.Biome.FRACTAL.id;
-        settingsBiome.fractalLayers = configuredLayers11Era(biomeScale, false, false);
-
         return new ModernBetaSettingsPreset(
-            settingsChunk.build(),
-            settingsBiome.build(),
-            settingsCaveBiome.build()
+            PRESET_BETA_1_7_3.chunkSettings().extend()
+                .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.EARLY_RELEASE.id)
+                .add(CAVE_GENERATION, CaveGeneration.EARLY_RELEASE)
+                .addDefault(FORCED_BIOME_HEIGHT)
+                .build(),
+            ModernBetaSettings.fractalLayers(configuredLayers11Era(biomeScale, false, false)),
+            PRESET_BETA_1_7_3.caveBiomeSettings()
         );
     }
 
     private static ModernBetaSettingsPreset preset125(int biomeScale) {
-        ModernBetaSettingsChunk.Builder settingsChunk = new ModernBetaSettingsChunk.Builder();
-        ModernBetaSettingsBiome.Builder settingsBiome = new ModernBetaSettingsBiome.Builder();
-        ModernBetaSettingsCaveBiome.Builder settingsCaveBiome = new ModernBetaSettingsCaveBiome.Builder();
-
-        settingsChunk.chunkProvider = ModernBetaBuiltInTypes.Chunk.EARLY_RELEASE.id;
-        settingsChunk.useFixedCaves = true;
-
-        settingsBiome.biomeProvider = ModernBetaBuiltInTypes.Biome.FRACTAL.id;
-        settingsBiome.fractalLayers = configuredLayers11Era(biomeScale, true, false);
-
         return new ModernBetaSettingsPreset(
-            settingsChunk.build(),
-            settingsBiome.build(),
-            settingsCaveBiome.build()
+            PRESET_BETA_1_7_3.chunkSettings().extend()
+                .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.EARLY_RELEASE.id)
+                .add(CAVE_GENERATION, CaveGeneration.EARLY_RELEASE)
+                .addDefault(FORCED_BIOME_HEIGHT)
+                .build(),
+            ModernBetaSettings.fractalLayers(configuredLayers11Era(biomeScale, true, false)),
+            PRESET_BETA_1_7_3.caveBiomeSettings()
         );
     }
 
     private static ModernBetaSettingsPreset preset164(int biomeScale) {
-        ModernBetaSettingsChunk.Builder settingsChunk = new ModernBetaSettingsChunk.Builder();
-        ModernBetaSettingsBiome.Builder settingsBiome = new ModernBetaSettingsBiome.Builder();
-        ModernBetaSettingsCaveBiome.Builder settingsCaveBiome = new ModernBetaSettingsCaveBiome.Builder();
-
-        settingsChunk.chunkProvider = ModernBetaBuiltInTypes.Chunk.EARLY_RELEASE.id;
-        settingsChunk.useFixedCaves = true;
-        settingsChunk.releaseBiomeHeightConfigs = Map.ofEntries(
-            Map.entry("minecraft:desert*hills", "0.3;0.8"),
-            Map.entry("minecraft:forest*hills", "0.3;0.7"),
-            Map.entry("moderner_beta:early_release_extreme_hills", "0.3;1.5"),
-            Map.entry("moderner_beta:early_release_ice_plains*hills", "0.3;1.3"),
-            Map.entry("minecraft:jungle*hills", "1.8;0.5"),
-            Map.entry("moderner_beta:early_release_taiga*hills", "0.3;0.8")
-        );
-
-        settingsBiome.biomeProvider = ModernBetaBuiltInTypes.Biome.FRACTAL.id;
-        settingsBiome.fractalLayers = configuredLayers11Era(biomeScale, true, true);
-
         return new ModernBetaSettingsPreset(
-            settingsChunk.build(),
-            settingsBiome.build(),
-            settingsCaveBiome.build()
+            PRESET_BETA_1_7_3.chunkSettings().extend()
+                .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.EARLY_RELEASE.id)
+                .add(CAVE_GENERATION, CaveGeneration.EARLY_RELEASE)
+                .add(FORCED_BIOME_HEIGHT, ForcedBiomeHeight.overridesOnly(Map.of(
+                    ExtendedBiomeId.of("minecraft:desert*hills"), new HeightConfig(0.3f, 0.8f),
+                    ExtendedBiomeId.of("minecraft:forest*hills"), new HeightConfig(0.3f, 0.7f),
+                    ExtendedBiomeId.of("moderner_beta:early_release_extreme_hills"), new HeightConfig(0.3f, 1.5f),
+                    ExtendedBiomeId.of("moderner_beta:early_release_ice_plains*hills"), new HeightConfig(0.3f, 1.3f),
+                    ExtendedBiomeId.of("minecraft:jungle*hills"), new HeightConfig(1.8f, 0.5f),
+                    ExtendedBiomeId.of("moderner_beta:early_release_taiga*hills"), new HeightConfig(0.3f, 0.8f)
+                )))
+                .build(),
+            ModernBetaSettings.fractalLayers(configuredLayers11Era(biomeScale, true, true)),
+            PRESET_BETA_1_7_3.caveBiomeSettings()
         );
     }
 
@@ -2207,105 +1999,45 @@ public class ModernBetaSettingsPresets {
     }
 
     private static ModernBetaSettingsPreset preset1122(int biomeScale) {
-        ModernBetaSettingsChunk.Builder settingsChunk = new ModernBetaSettingsChunk.Builder();
-        ModernBetaSettingsBiome.Builder settingsBiome = new ModernBetaSettingsBiome.Builder();
-        ModernBetaSettingsCaveBiome.Builder settingsCaveBiome = new ModernBetaSettingsCaveBiome.Builder();
-
-        settingsChunk.chunkProvider = ModernBetaBuiltInTypes.Chunk.MAJOR_RELEASE.id;
-        settingsChunk.releaseBiomeHeightConfigs = HeightConfig.MAJOR_RELEASE_CONFIGS;
-        settingsChunk.useSurfaceRules = true;
-        settingsChunk.useFixedCaves = true;
-        settingsChunk.forceBetaCaves = false;
-
-        settingsBiome.biomeProvider = ModernBetaBuiltInTypes.Biome.FRACTAL.id;
-        settingsBiome.fractalLayers = configuredLayers1710Era(biomeScale, false, false, false, false);
-
         return new ModernBetaSettingsPreset(
-            settingsChunk.build(),
-            settingsBiome.build(),
-            settingsCaveBiome.build()
+            PRESET_BETA_1_7_3.chunkSettings().extend()
+                .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.MAJOR_RELEASE.id)
+                .add(USE_SURFACE_RULES, true)
+                .add(CAVE_GENERATION, CaveGeneration.MAJOR_RELEASE)
+                .add(FORCED_BIOME_HEIGHT, ForcedBiomeHeight.overridesOnly(HeightConfig.MAJOR_RELEASE_CONFIGS))
+                .build(),
+            ModernBetaSettings.fractalLayers(configuredLayers1710Era(biomeScale, false, false, false, false)),
+            PRESET_BETA_1_7_3.caveBiomeSettings()
         );
     }
 
     private static ModernBetaSettingsPreset preset1171(int biomeScale) {
-        ModernBetaSettingsChunk.Builder settingsChunk = new ModernBetaSettingsChunk.Builder();
-        ModernBetaSettingsBiome.Builder settingsBiome = new ModernBetaSettingsBiome.Builder();
-        ModernBetaSettingsCaveBiome.Builder settingsCaveBiome = new ModernBetaSettingsCaveBiome.Builder();
-
-        settingsChunk.chunkProvider = ModernBetaBuiltInTypes.Chunk.MAJOR_RELEASE.id;
-        settingsChunk.releaseBiomeHeightConfigs = HeightConfig.MAJOR_RELEASE_CONFIGS;
-        settingsChunk.useSurfaceRules = true;
-        settingsChunk.useFixedCaves = true;
-        settingsChunk.forceBetaCaves = false;
-
-        settingsBiome.biomeProvider = ModernBetaBuiltInTypes.Biome.FRACTAL.id;
-        settingsBiome.fractalLayers = configuredLayers1710Era(biomeScale, true, true, true, false);
-
         return new ModernBetaSettingsPreset(
-            settingsChunk.build(),
-            settingsBiome.build(),
-            settingsCaveBiome.build()
+            PRESET_BETA_1_7_3.chunkSettings().extend()
+                .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.MAJOR_RELEASE.id)
+                .add(USE_SURFACE_RULES, true)
+                .add(CAVE_GENERATION, CaveGeneration.MAJOR_RELEASE)
+                .add(FORCED_BIOME_HEIGHT, ForcedBiomeHeight.overridesOnly(HeightConfig.MAJOR_RELEASE_CONFIGS))
+                .build(),
+            ModernBetaSettings.fractalLayers(configuredLayers1710Era(biomeScale, true, true, true, false)),
+            PRESET_BETA_1_7_3.caveBiomeSettings()
         );
     }
 
     private static ModernBetaSettingsPreset presetSnowAintSnowier(int biomeScale) {
-        ModernBetaSettingsChunk.Builder settingsChunk = new ModernBetaSettingsChunk.Builder();
-        ModernBetaSettingsBiome.Builder settingsBiome = new ModernBetaSettingsBiome.Builder();
-        ModernBetaSettingsCaveBiome.Builder settingsCaveBiome = new ModernBetaSettingsCaveBiome.Builder();
-
-        settingsChunk.chunkProvider = ModernBetaBuiltInTypes.Chunk.MAJOR_RELEASE.id;
-        settingsChunk.releaseBiomeHeightConfigs = HeightConfig.MAJOR_RELEASE_CONFIGS;
-        settingsChunk.useSurfaceRules = true;
-        settingsChunk.useFixedCaves = true;
-        settingsChunk.forceBetaCaves = false;
-
-        settingsBiome.biomeProvider = ModernBetaBuiltInTypes.Biome.FRACTAL.id;
-        settingsBiome.fractalLayers = configuredLayers1710Era(biomeScale, true, true, true, true);
-
         return new ModernBetaSettingsPreset(
-            settingsChunk.build(),
-            settingsBiome.build(),
-            settingsCaveBiome.build()
+            PRESET_BETA_1_7_3.chunkSettings().extend()
+                .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.MAJOR_RELEASE.id)
+                .add(USE_SURFACE_RULES, true)
+                .add(CAVE_GENERATION, CaveGeneration.MAJOR_RELEASE)
+                .add(FORCED_BIOME_HEIGHT, ForcedBiomeHeight.overridesOnly(HeightConfig.MAJOR_RELEASE_CONFIGS))
+                .build(),
+            ModernBetaSettings.fractalLayers(configuredLayers1710Era(biomeScale, true, true, true, true)),
+            PRESET_BETA_1_7_3.caveBiomeSettings()
         );
     }
 
     private static ModernBetaSettingsPreset presetReleaseHybrid(int biomeScale) {
-        ModernBetaSettingsChunk.Builder settingsChunk = new ModernBetaSettingsChunk.Builder();
-        ModernBetaSettingsBiome.Builder settingsBiome = new ModernBetaSettingsBiome.Builder();
-        ModernBetaSettingsCaveBiome.Builder settingsCaveBiome = new ModernBetaSettingsCaveBiome.Builder();
-
-        settingsChunk.chunkProvider = ModernBetaBuiltInTypes.Chunk.EARLY_RELEASE.id;
-        settingsChunk.useFixedCaves = true;
-        settingsChunk.releaseBiomeHeightConfigs = Map.ofEntries(
-            Map.entry("minecraft:desert*hills", "0.3;0.8"),
-            Map.entry("minecraft:forest*hills", "0.3;0.7"),
-            Map.entry("minecraft:taiga*hills", "0.3;0.8"),
-            Map.entry("minecraft:dark_forest*hills", "0.3;0.7"),
-            Map.entry("minecraft:pale_garden*hills", "0.3;0.7"),
-            Map.entry("minecraft:birch_forest*hills", "0.3;0.7"),
-            Map.entry("minecraft:old_growth_birch_forest*hills", "0.3;0.7"),
-            Map.entry("minecraft:flower_forest*hills", "0.3;0.7"),
-            Map.entry("minecraft:old_growth_spruce_taiga*hills", "0.3;0.8"),
-            Map.entry("minecraft:snowy_taiga*hills", "0.3;0.8"),
-            Map.entry("minecraft:snowy_plains*hills", "0.3;1.3"),
-            Map.entry("minecraft:jungle*hills", "1.8;0.5"),
-            Map.entry("minecraft:badlands*plateau", "1.8;0.2"),
-            Map.entry("minecraft:wooded_badlands", "1.8;0.2"),
-            Map.entry("minecraft:cherry_grove", "1.8;0.5"),
-            Map.entry("minecraft:cherry_grove*edge", "0.8;0.3"),
-            Map.entry("minecraft:windswept_hills", "0.3;1.5"),
-            Map.entry("minecraft:windswept_forest", "0.3;1.5"),
-            Map.entry("minecraft:windswept_gravelly_hills", "0.3;1.5"),
-            Map.entry("minecraft:meadow", "1.0;1.0"),
-            Map.entry("minecraft:stony_shore", "0.1;1.6"),
-            Map.entry("minecraft:ice_spikes", "0.3;0.8"),
-            Map.entry("minecraft:windswept_savanna", "0.3;1.5"),
-            Map.entry("minecraft:windswept_savanna*plateau", "1.0;1.0")
-        );
-        settingsChunk.useSurfaceRules = true;
-
-        settingsBiome.biomeProvider = ModernBetaBuiltInTypes.Biome.FRACTAL.id;
-
         Map<ExtendedBiomeId, ExtendedBiomeId> hillsVariants = Map.ofEntries(
             ExtendedBiomeId.of("minecraft:desert").mapTo("*hills"),
             ExtendedBiomeId.of("minecraft:forest").mapTo("*hills"),
@@ -2345,160 +2077,190 @@ public class ModernBetaSettingsPresets {
             ExtendedBiomeId.of("minecraft:snowy_plains").mapTo("minecraft:ice_spikes")
         );
 
-        settingsBiome.fractalLayers = new ConfiguredLayers(Arrays.asList(
-            new InitLandLayer("land", 1),
-            new FuzzyZoomLayer("land", 2000, "land"),
-            AddLandLayer.forIslandScale("land", 1, "land"),
-            new ModalZoomLayer("land", 2001, "land"),
-            AddLandLayer.forIslandScale("land", 2, "land"),
-            new WeightedBiomeLayer("snow", 2, Pool.of(
-                new Weighted<>(ExtendedBiomeId.SNOWY_PLAINS, 1),
-                new Weighted<>(ExtendedBiomeId.NULL, 4)
-            )),
-            new BiomeToLayerOverlayLayer("land", 0, "land", Map.of(ExtendedBiomeId.PLAINS, "snow")),
-            new ModalZoomLayer("land", 2002, "land"),
-            AddLandLayer.forIslandScale("land", 3, "land"),
-            new ModalZoomLayer("land", 2003, "land"),
-            AddLandLayer.forIslandScale("land", 4, "land"),
-            new ConditionalBiomeOverlayLayer("land", 5, "land",
-                BiomePredicate.of(ExtendedBiomeId.OCEAN)
-                    .and(BiomePredicate.diagonalInterior())
-                    .and(BiomePredicate.oneIn(100)),
-                ExtendedBiomeId.MUSHROOM_ISLAND, ExtendedBiomeId.NULL
-            ),
-            new InitRiverLayer("river", 100, "land"),
-            StackedZoomLayer.modal("river", 1000, "river", 6 + biomeScale),
-            new ComputeRiverLayer("river", 0, "river", true),
-            new SmoothLayer("river", 1000, "river"),
-            new RandomBiomeLayer("biome_pool", 200, ExtendedBiomeId.listOf(
-                // Deserts
-                "minecraft:desert",
-                "minecraft:desert",
-                "minecraft:desert",
-                "minecraft:badlands*plateau",
-                "minecraft:badlands*plateau",
-                "minecraft:savanna",
-
-                // Forests
-                "minecraft:forest",
-                "minecraft:forest",
-                "minecraft:forest",
-                "minecraft:dark_forest",
-                "minecraft:birch_forest",
-                "minecraft:cherry_grove",
-
-                // Extreme Hills
-                "minecraft:windswept_hills",
-                "minecraft:windswept_hills",
-                "minecraft:windswept_hills",
-                "minecraft:windswept_hills",
-                "minecraft:meadow",
-                "minecraft:meadow",
-
-                // Swamps
-                "minecraft:swamp",
-                "minecraft:swamp",
-                "minecraft:swamp",
-                "minecraft:swamp",
-                "minecraft:mangrove_swamp",
-                "minecraft:mangrove_swamp",
-
-                // Plains
-                "minecraft:plains",
-                "minecraft:plains",
-                "minecraft:plains",
-                "minecraft:plains",
-                "minecraft:savanna",
-                "minecraft:savanna",
-
-                // Taigas
-                "minecraft:taiga",
-                "minecraft:taiga",
-                "minecraft:taiga",
-                "minecraft:taiga",
-                "minecraft:old_growth_spruce_taiga",
-                "minecraft:old_growth_spruce_taiga",
-
-                // Jungles
-                "minecraft:jungle",
-                "minecraft:jungle",
-                "minecraft:jungle",
-                "minecraft:jungle",
-                "minecraft:badlands*plateau",
-                "minecraft:sparse_jungle"
-            )),
-            new RandomBiomeLayer("snowy_biome_pool", 200, ExtendedBiomeId.listOf(
-                "minecraft:snowy_plains",
-                "minecraft:snowy_plains",
-                "minecraft:snowy_plains",
-                "minecraft:snowy_taiga"
-            )),
-            new BiomeToLayerOverlayLayer("land", 0, "land", Map.of(
-                ExtendedBiomeId.PLAINS, "biome_pool",
-                ExtendedBiomeId.FROZEN_OCEAN, "snowy_biome_pool",
-                ExtendedBiomeId.SNOWY_PLAINS, "snowy_biome_pool"
-            )),
-            StackedZoomLayer.modal("land", 1000, "land", 2),
-            new SimpleBiomeReplacementLayer("hills", 0, "land", hillsVariants),
-            new ConditionalLayerOverlayLayer("land", 1000, "land",
-                BiomePredicate.simpleHills(hillsVariants.keySet()), "hills", "land"),
-            new SimpleBiomeReplacementLayer("mutated_land", 0, "land", mutatedVariants),
-            new MappedNoiseLayer("mutation", 7, List.of(
-                new MappedNoiseLayer.Entry(-0.2, ExtendedBiomeId.of("minecraft:the_void*mutation")),
-                new MappedNoiseLayer.Entry(0.0, ExtendedBiomeId.NULL)
-            ), 2, true),
-            StackedZoomLayer.modal("mutation", 2005, "mutation", 2),
-            new ConditionalLayerOverlayLayer("land", 1000, "mutation",
-                BiomePredicate.of(ExtendedBiomeId.of("minecraft:the_void*mutation")), "mutated_land", "land"),
-            new ModalZoomLayer("land", 1000, "land"),
-            AddLandLayer.forEarlyRelease("land", 3, "land", ExtendedBiomeId.of(BiomeKeys.SNOWY_PLAINS)),
-            new ModalZoomLayer("land", 1001, "land"),
-            new PredicateOverlayLayer("land", 0, "land", List.of(
-                PredicateOverlayLayer.Target.MUSHROOM_SHORE,
-                PredicateOverlayLayer.Target.exclusiveBeach(
-                    ExtendedBiomeId.setOf(
-                        "minecraft:meadow",
-                        "minecraft:cherry_grove"
-                    ),
-                    ExtendedBiomeId.of("minecraft:stony_shore")
-                ),
-                PredicateOverlayLayer.Target.biome(
-                    BiomePredicate.of(ExtendedBiomeId.of("minecraft:cherry_grove"))
-                        .and(BiomePredicate.border()),
-                    ExtendedBiomeId.of("minecraft:cherry_grove*edge")
-                ),
-                PredicateOverlayLayer.Target.inclusiveBeach(
-                    ExtendedBiomeId.setOf(
-                        "minecraft:ocean",
-                        "minecraft:river",
-                        "minecraft:windswept_hills",
-                        "minecraft:windswept_forest",
-                        "minecraft:meadow",
-                        "minecraft:badlands",
-                        "minecraft:swamp",
-                        "minecraft:mangrove_swamp"
-                    ),
-                    ExtendedBiomeId.BEACH
-                )
-            )),
-            StackedZoomLayer.modal("land", 1002, "land", 2 + biomeScale),
-            new SmoothLayer("land", 1000, "land"),
-            MixRiverLayer.forEarlyRelease("land", 0, "land", "river"),
-            new MappedNoiseLayer("ocean_climate", 2, List.of(
-                new MappedNoiseLayer.Entry(0.4, ExtendedBiomeId.WARM_OCEAN),
-                new MappedNoiseLayer.Entry(0.2, ExtendedBiomeId.LUKEWARM_OCEAN),
-                new MappedNoiseLayer.Entry(0.0, ExtendedBiomeId.OCEAN),
-                new MappedNoiseLayer.Entry(-0.2, ExtendedBiomeId.COLD_OCEAN),
-                new MappedNoiseLayer.Entry(-0.4, ExtendedBiomeId.FROZEN_OCEAN)
-            ), 8.0, false),
-            StackedZoomLayer.modal("ocean_climate", 2001, "ocean_climate", 6),
-            new ApplyOceanClimateLayer("land", 0, "land", "ocean_climate")
-        ));
-
         return new ModernBetaSettingsPreset(
-            settingsChunk.build(),
-            settingsBiome.build(),
-            settingsCaveBiome.build()
+            PRESET_BETA_1_7_3.chunkSettings().extend()
+                .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.EARLY_RELEASE.id)
+                .add(USE_SURFACE_RULES, true)
+                .add(CAVE_GENERATION, CaveGeneration.EARLY_RELEASE)
+                .add(FORCED_BIOME_HEIGHT, ForcedBiomeHeight.overridesOnly(
+                    Map.ofEntries(
+                        Map.entry(ExtendedBiomeId.of("minecraft:desert*hills"), new HeightConfig(0.3f, 0.8f)),
+                        Map.entry(ExtendedBiomeId.of("minecraft:forest*hills"), new HeightConfig(0.3f, 0.7f)),
+                        Map.entry(ExtendedBiomeId.of("minecraft:taiga*hills"), new HeightConfig(0.3f, 0.8f)),
+                        Map.entry(ExtendedBiomeId.of("minecraft:dark_forest*hills"), new HeightConfig(0.3f, 0.7f)),
+                        Map.entry(ExtendedBiomeId.of("minecraft:pale_garden*hills"), new HeightConfig(0.3f, 0.7f)),
+                        Map.entry(ExtendedBiomeId.of("minecraft:birch_forest*hills"), new HeightConfig(0.3f, 0.7f)),
+                        Map.entry(ExtendedBiomeId.of("minecraft:old_growth_birch_forest*hills"), new HeightConfig(0.3f, 0.7f)),
+                        Map.entry(ExtendedBiomeId.of("minecraft:flower_forest*hills"), new HeightConfig(0.3f, 0.7f)),
+                        Map.entry(ExtendedBiomeId.of("minecraft:old_growth_spruce_taiga*hills"), new HeightConfig(0.3f, 0.8f)),
+                        Map.entry(ExtendedBiomeId.of("minecraft:snowy_taiga*hills"), new HeightConfig(0.3f, 0.8f)),
+                        Map.entry(ExtendedBiomeId.of("minecraft:snowy_plains*hills"), new HeightConfig(0.3f, 1.3f)),
+                        Map.entry(ExtendedBiomeId.of("minecraft:jungle*hills"), new HeightConfig(1.8f, 0.5f)),
+                        Map.entry(ExtendedBiomeId.of("minecraft:badlands*plateau"), new HeightConfig(1.8f, 0.2f)),
+                        Map.entry(ExtendedBiomeId.of("minecraft:wooded_badlands"), new HeightConfig(1.8f, 0.2f)),
+                        Map.entry(ExtendedBiomeId.of("minecraft:cherry_grove"), new HeightConfig(1.8f, 0.5f)),
+                        Map.entry(ExtendedBiomeId.of("minecraft:cherry_grove*edge"), new HeightConfig(0.8f, 0.3f)),
+                        Map.entry(ExtendedBiomeId.of("minecraft:windswept_hills"), new HeightConfig(0.3f, 1.5f)),
+                        Map.entry(ExtendedBiomeId.of("minecraft:windswept_forest"), new HeightConfig(0.3f, 1.5f)),
+                        Map.entry(ExtendedBiomeId.of("minecraft:windswept_gravelly_hills"), new HeightConfig(0.3f, 1.5f)),
+                        Map.entry(ExtendedBiomeId.of("minecraft:meadow"), new HeightConfig(1.0f, 1.0f)),
+                        Map.entry(ExtendedBiomeId.of("minecraft:stony_shore"), new HeightConfig(0.1f, 1.6f)),
+                        Map.entry(ExtendedBiomeId.of("minecraft:ice_spikes"), new HeightConfig(0.3f, 0.8f)),
+                        Map.entry(ExtendedBiomeId.of("minecraft:windswept_savanna"), new HeightConfig(0.3f, 1.5f)),
+                        Map.entry(ExtendedBiomeId.of("minecraft:windswept_savanna*plateau"), new HeightConfig(1.0f, 1.0f))
+                    )
+                ))
+                .build(),
+            ModernBetaSettings.fractalLayers(
+                new InitLandLayer("land", 1),
+                new FuzzyZoomLayer("land", 2000, "land"),
+                AddLandLayer.forIslandScale("land", 1, "land"),
+                new ModalZoomLayer("land", 2001, "land"),
+                AddLandLayer.forIslandScale("land", 2, "land"),
+                new WeightedBiomeLayer("snow", 2, Pool.of(
+                    new Weighted<>(ExtendedBiomeId.SNOWY_PLAINS, 1),
+                    new Weighted<>(ExtendedBiomeId.NULL, 4)
+                )),
+                new BiomeToLayerOverlayLayer("land", 0, "land", Map.of(ExtendedBiomeId.PLAINS, "snow")),
+                new ModalZoomLayer("land", 2002, "land"),
+                AddLandLayer.forIslandScale("land", 3, "land"),
+                new ModalZoomLayer("land", 2003, "land"),
+                AddLandLayer.forIslandScale("land", 4, "land"),
+                new ConditionalBiomeOverlayLayer("land", 5, "land",
+                    BiomePredicate.of(ExtendedBiomeId.OCEAN)
+                        .and(BiomePredicate.diagonalInterior())
+                        .and(BiomePredicate.oneIn(100)),
+                    ExtendedBiomeId.MUSHROOM_ISLAND, ExtendedBiomeId.NULL
+                ),
+                new InitRiverLayer("river", 100, "land"),
+                StackedZoomLayer.modal("river", 1000, "river", 6 + biomeScale),
+                new ComputeRiverLayer("river", 0, "river", true),
+                new SmoothLayer("river", 1000, "river"),
+                new RandomBiomeLayer("biome_pool", 200, ExtendedBiomeId.listOf(
+                    // Deserts
+                    "minecraft:desert",
+                    "minecraft:desert",
+                    "minecraft:desert",
+                    "minecraft:badlands*plateau",
+                    "minecraft:badlands*plateau",
+                    "minecraft:savanna",
+
+                    // Forests
+                    "minecraft:forest",
+                    "minecraft:forest",
+                    "minecraft:forest",
+                    "minecraft:dark_forest",
+                    "minecraft:birch_forest",
+                    "minecraft:cherry_grove",
+
+                    // Extreme Hills
+                    "minecraft:windswept_hills",
+                    "minecraft:windswept_hills",
+                    "minecraft:windswept_hills",
+                    "minecraft:windswept_hills",
+                    "minecraft:meadow",
+                    "minecraft:meadow",
+
+                    // Swamps
+                    "minecraft:swamp",
+                    "minecraft:swamp",
+                    "minecraft:swamp",
+                    "minecraft:swamp",
+                    "minecraft:mangrove_swamp",
+                    "minecraft:mangrove_swamp",
+
+                    // Plains
+                    "minecraft:plains",
+                    "minecraft:plains",
+                    "minecraft:plains",
+                    "minecraft:plains",
+                    "minecraft:savanna",
+                    "minecraft:savanna",
+
+                    // Taigas
+                    "minecraft:taiga",
+                    "minecraft:taiga",
+                    "minecraft:taiga",
+                    "minecraft:taiga",
+                    "minecraft:old_growth_spruce_taiga",
+                    "minecraft:old_growth_spruce_taiga",
+
+                    // Jungles
+                    "minecraft:jungle",
+                    "minecraft:jungle",
+                    "minecraft:jungle",
+                    "minecraft:jungle",
+                    "minecraft:badlands*plateau",
+                    "minecraft:sparse_jungle"
+                )),
+                new RandomBiomeLayer("snowy_biome_pool", 200, ExtendedBiomeId.listOf(
+                    "minecraft:snowy_plains",
+                    "minecraft:snowy_plains",
+                    "minecraft:snowy_plains",
+                    "minecraft:snowy_taiga"
+                )),
+                new BiomeToLayerOverlayLayer("land", 0, "land", Map.of(
+                    ExtendedBiomeId.PLAINS, "biome_pool",
+                    ExtendedBiomeId.FROZEN_OCEAN, "snowy_biome_pool",
+                    ExtendedBiomeId.SNOWY_PLAINS, "snowy_biome_pool"
+                )),
+                StackedZoomLayer.modal("land", 1000, "land", 2),
+                new SimpleBiomeReplacementLayer("hills", 0, "land", hillsVariants),
+                new ConditionalLayerOverlayLayer("land", 1000, "land",
+                    BiomePredicate.simpleHills(hillsVariants.keySet()), "hills", "land"),
+                new SimpleBiomeReplacementLayer("mutated_land", 0, "land", mutatedVariants),
+                new MappedNoiseLayer("mutation", 7, List.of(
+                    new MappedNoiseLayer.Entry(-0.2, ExtendedBiomeId.of("minecraft:the_void*mutation")),
+                    new MappedNoiseLayer.Entry(0.0, ExtendedBiomeId.NULL)
+                ), 2, true),
+                StackedZoomLayer.modal("mutation", 2005, "mutation", 2),
+                new ConditionalLayerOverlayLayer("land", 1000, "mutation",
+                    BiomePredicate.of(ExtendedBiomeId.of("minecraft:the_void*mutation")), "mutated_land", "land"),
+                new ModalZoomLayer("land", 1000, "land"),
+                AddLandLayer.forEarlyRelease("land", 3, "land", ExtendedBiomeId.of(BiomeKeys.SNOWY_PLAINS)),
+                new ModalZoomLayer("land", 1001, "land"),
+                new PredicateOverlayLayer("land", 0, "land", List.of(
+                    PredicateOverlayLayer.Target.MUSHROOM_SHORE,
+                    PredicateOverlayLayer.Target.exclusiveBeach(
+                        ExtendedBiomeId.setOf(
+                            "minecraft:meadow",
+                            "minecraft:cherry_grove"
+                        ),
+                        ExtendedBiomeId.of("minecraft:stony_shore")
+                    ),
+                    PredicateOverlayLayer.Target.biome(
+                        BiomePredicate.of(ExtendedBiomeId.of("minecraft:cherry_grove"))
+                            .and(BiomePredicate.border()),
+                        ExtendedBiomeId.of("minecraft:cherry_grove*edge")
+                    ),
+                    PredicateOverlayLayer.Target.inclusiveBeach(
+                        ExtendedBiomeId.setOf(
+                            "minecraft:ocean",
+                            "minecraft:river",
+                            "minecraft:windswept_hills",
+                            "minecraft:windswept_forest",
+                            "minecraft:meadow",
+                            "minecraft:badlands",
+                            "minecraft:swamp",
+                            "minecraft:mangrove_swamp"
+                        ),
+                        ExtendedBiomeId.BEACH
+                    )
+                )),
+                StackedZoomLayer.modal("land", 1002, "land", 2 + biomeScale),
+                new SmoothLayer("land", 1000, "land"),
+                MixRiverLayer.forEarlyRelease("land", 0, "land", "river"),
+                new MappedNoiseLayer("ocean_climate", 2, List.of(
+                    new MappedNoiseLayer.Entry(0.4, ExtendedBiomeId.WARM_OCEAN),
+                    new MappedNoiseLayer.Entry(0.2, ExtendedBiomeId.LUKEWARM_OCEAN),
+                    new MappedNoiseLayer.Entry(0.0, ExtendedBiomeId.OCEAN),
+                    new MappedNoiseLayer.Entry(-0.2, ExtendedBiomeId.COLD_OCEAN),
+                    new MappedNoiseLayer.Entry(-0.4, ExtendedBiomeId.FROZEN_OCEAN)
+                ), 8.0, false),
+                StackedZoomLayer.modal("ocean_climate", 2001, "ocean_climate", 6),
+                new ApplyOceanClimateLayer("land", 0, "land", "ocean_climate")
+            ),
+            PRESET_BETA_1_7_3.caveBiomeSettings()
         );
     }
 }

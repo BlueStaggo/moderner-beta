@@ -1,6 +1,7 @@
 package mod.bluestaggo.modernerbeta.world.biome.provider.fractal;
 
 import com.mojang.serialization.Codec;
+import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.ConstantBiomeLayer;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.Layer;
 
 import java.util.*;
@@ -9,6 +10,10 @@ import java.util.function.Function;
 
 public class ConfiguredLayers {
     public static final Codec<ConfiguredLayers> CODEC = Layer.TYPE_CODEC.listOf().xmap(ConfiguredLayers::new, configuredLayers -> configuredLayers.layers);
+
+    public static final ConfiguredLayers DEFAULT
+        = new ConfiguredLayers(List.of(
+            new ConstantBiomeLayer("land", 0, ExtendedBiomeId.PLAINS)));
 
     private final List<Layer> layers;
     private final Layer finalLayer;
@@ -40,5 +45,10 @@ public class ConfiguredLayers {
 
     public Layer getFinalLayer() {
         return this.finalLayer;
+    }
+
+    @Override
+    public String toString() {
+        return "ConfiguredLayers {" + this.layers.toString() + "}";
     }
 }

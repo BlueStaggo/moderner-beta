@@ -6,7 +6,8 @@ import mod.bluestaggo.modernerbeta.api.world.chunk.surface.SurfaceBuilder;
 import mod.bluestaggo.modernerbeta.api.world.spawn.SpawnLocator;
 import mod.bluestaggo.modernerbeta.mixin.AccessorChunkGenerator;
 import mod.bluestaggo.modernerbeta.mixin.AccessorPlacedFeature;
-import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsChunk;
+import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
+import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
 import mod.bluestaggo.modernerbeta.util.noise.PerlinOctaveNoise;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
@@ -41,14 +42,15 @@ import java.util.concurrent.CompletableFuture;
 
 public abstract class ChunkProvider {    
     private final FluidLevelSampler defaultFluidLevelSampler;
-    
+
     protected final ModernBetaChunkGenerator chunkGenerator;
     protected final long seed;
-    
+
     protected final RegistryEntry<ChunkGeneratorSettings> generatorSettings;
-    protected final ModernBetaSettingsChunk chunkSettings;
+    protected final ModernBetaSettings chunkSettings;
+    protected final boolean skipCarvers;
     protected final Random random;
-    
+
     protected final ChunkRandom.RandomProvider randomProvider;
     protected final RandomSplitter randomSplitter;
     
@@ -65,7 +67,7 @@ public abstract class ChunkProvider {
         this.seed = seed;
         
         this.generatorSettings = chunkGenerator.getGeneratorSettings();
-        this.chunkSettings = ModernBetaSettingsChunk.fromCompound(chunkGenerator.getChunkSettings());
+        this.chunkSettings = ModernBetaSettings.fromCompound(chunkGenerator.getChunkSettings());
         this.random = new Random(this.seed);
 
         this.defaultFluidLevelSampler = (x, y, z) -> new FluidLevel(this.getSeaLevel(), BlockStates.AIR);
@@ -78,12 +80,12 @@ public abstract class ChunkProvider {
             .toList();
         
         this.surfaceBuilder = new SurfaceBuilder(this.chunkGenerator.getBiomeSource());
+        this.skipCarvers = !this.chunkSettings.getOrDefault(SettingsComponentTypes.CAVE_GENERATION).useCaves();
     }
     
     /**
      * Generates base terrain for given chunk and returns it.
      * 
-     * @param executor
      * @param blender TODO
      * @param structureAccessor
      * @param chunk
@@ -138,7 +140,7 @@ public abstract class ChunkProvider {
      */
     public boolean skipChunk(int chunkX, int chunkZ, ModernBetaGenerationStep step) {
         if (step == ModernBetaGenerationStep.CARVERS) {
-            return !this.chunkSettings.useCaves;
+            return this.skipCarvers;
         }
         
         return false;
@@ -255,7 +257,7 @@ public abstract class ChunkProvider {
         );
     }
     
-    public ModernBetaSettingsChunk getChunkSettings() {
+    public ModernBetaSettings getChunkSettings() {
         return this.chunkSettings;
     }
     

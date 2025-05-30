@@ -5,6 +5,8 @@ import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.GridWidget;
@@ -23,6 +25,7 @@ import org.apache.logging.log4j.util.TriConsumer;
 
 import java.util.Random;
 
+@Environment(EnvType.CLIENT)
 public class ModernBetaWorldScreen extends ModernBetaScreen {
     private static final String TEXT_TITLE = "createWorld.customize.modern_beta.title"; 
     private static final String TEXT_TITLE_CHUNK = "createWorld.customize.modern_beta.title.chunk"; 

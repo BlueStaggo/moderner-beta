@@ -1,11 +1,14 @@
 package mod.bluestaggo.modernerbeta.client.gui.optioncallbacks;
 
 import com.mojang.serialization.Codec;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.option.SimpleOption;
 import net.minecraft.util.math.MathHelper;
 
 import java.util.Optional;
 
+@Environment(EnvType.CLIENT)
 public record FloatSliderCallbacks(float min, float max) implements SimpleOption.SliderCallbacks<Float> {
     public Optional<Float> validate(Float value) {
         return value >= this.min && value <= this.max ? Optional.of(value) : Optional.empty();

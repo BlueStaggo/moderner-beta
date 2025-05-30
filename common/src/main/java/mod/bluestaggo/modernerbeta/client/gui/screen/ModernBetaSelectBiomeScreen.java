@@ -1,6 +1,8 @@
 package mod.bluestaggo.modernerbeta.client.gui.screen;
 
 import com.ibm.icu.text.Collator;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.*;
@@ -22,6 +24,7 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.function.Consumer;
 
+@Environment(EnvType.CLIENT)
 public class ModernBetaSelectBiomeScreen extends Screen {
     private final ThreePartsLayoutWidget layout = new ThreePartsLayoutWidget(this);
     private final Screen parent;

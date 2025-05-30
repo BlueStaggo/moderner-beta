@@ -1,8 +1,11 @@
 package mod.bluestaggo.modernerbeta.client.color;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.TextureContents;
 
+@Environment(EnvType.CLIENT)
 public class BlockColormap {
     private TextureContents colormap;
     

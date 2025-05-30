@@ -33,7 +33,7 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 	public BiomeProviderFractal(ModernBetaSettings settings, RegistryEntryLookup<Biome> biomeRegistry, long seed) {
 		super(settings, biomeRegistry, seed);
 
-		this.baseBiome = Suppliers.memoize(() -> this.getBiomeEntry(this.settings.getOrDefault(SettingsComponentTypes.SINGLE_BIOME)).orElseThrow());
+		this.baseBiome = Suppliers.memoize(() -> this.getBiomeEntry(this.settings.getOrDefault(SettingsComponentTypes.SINGLE_BIOME).orElseThrow()));
 		this.biomeAccess = new BiomeAccess(this, seed);
 
 		ConfiguredLayers fractalLayers = this.settings.getOrThrow(SettingsComponentTypes.FRACTAL_LAYERS);

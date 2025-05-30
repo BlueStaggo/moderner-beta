@@ -2,6 +2,8 @@ package mod.bluestaggo.modernerbeta.client.gui.screen;
 
 import mod.bluestaggo.modernerbeta.client.gui.optioncallbacks.*;
 import mod.bluestaggo.modernerbeta.imixin.ModernBetaClearableWidget;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.option.GameOptionsScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -18,6 +20,7 @@ import net.minecraft.util.Identifier;
 
 import java.util.function.Consumer;
 
+@Environment(EnvType.CLIENT)
 public abstract class ModernBetaGraphicalSettingsScreen<T extends NbtElement> extends GameOptionsScreen {
     protected static final String STRING_PREFIX = "createWorld.customize.modern_beta.settings.";
 

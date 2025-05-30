@@ -1,5 +1,7 @@
 package mod.bluestaggo.modernerbeta.client.gui.screen;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.OptionListWidget;
 import net.minecraft.client.option.SimpleOption;
@@ -13,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+@Environment(EnvType.CLIENT)
 public abstract class ModernBetaGraphicalMapSettingsScreen extends ModernBetaGraphicalCompoundSettingsScreen {
     protected static final String KEY = "$MB MAP KEY$.";
     protected static final String VALUE = "$MB MAP VALUE$.";

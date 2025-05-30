@@ -5,6 +5,8 @@ import mod.bluestaggo.modernerbeta.client.gui.optioncallbacks.BiomePickerCallbac
 import mod.bluestaggo.modernerbeta.client.gui.optioncallbacks.TextFieldCallbacks;
 import mod.bluestaggo.modernerbeta.util.NbtTags;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.OptionListWidget;
 import net.minecraft.client.option.GameOptions;
@@ -19,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+@Environment(EnvType.CLIENT)
 public abstract class ModernBetaGraphicalListSettingsScreen extends ModernBetaGraphicalSettingsScreen<NbtList> {
     public ModernBetaGraphicalListSettingsScreen(
         String title,

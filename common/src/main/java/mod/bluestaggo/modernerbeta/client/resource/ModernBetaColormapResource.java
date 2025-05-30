@@ -1,6 +1,8 @@
 package mod.bluestaggo.modernerbeta.client.resource;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.texture.TextureContents;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.SynchronousResourceReloader;
@@ -9,6 +11,7 @@ import net.minecraft.util.Identifier;
 import java.io.IOException;
 import java.util.function.Consumer;
 
+@Environment(EnvType.CLIENT)
 public class ModernBetaColormapResource implements SynchronousResourceReloader {
     private final Identifier id;
     private final Consumer<TextureContents> consumer;

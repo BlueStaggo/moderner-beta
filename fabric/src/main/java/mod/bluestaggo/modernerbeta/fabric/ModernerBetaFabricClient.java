@@ -7,12 +7,15 @@ import mod.bluestaggo.modernerbeta.fabric.client.resource.ModernBetaFabricColorm
 import mod.bluestaggo.modernerbeta.network.BiomeProviderInfoPayload;
 import mod.bluestaggo.modernerbeta.network.S2CPacketHandlers;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.resource.ResourceType;
 
+@Environment(EnvType.CLIENT)
 public class ModernerBetaFabricClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {

@@ -2,6 +2,8 @@ package mod.bluestaggo.modernerbeta.client.color;
 
 import mod.bluestaggo.modernerbeta.api.world.biome.climate.ClimateSampler;
 import mod.bluestaggo.modernerbeta.api.world.biome.climate.Clime;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.TallPlantBlock;
 import net.minecraft.block.enums.DoubleBlockHalf;
@@ -13,6 +15,7 @@ import net.minecraft.world.biome.GrassColors;
 
 import java.util.Optional;
 
+@Environment(EnvType.CLIENT)
 public final class BlockColorSampler {
     public static final BlockColorSampler INSTANCE = new BlockColorSampler();
 

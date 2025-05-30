@@ -1,5 +1,7 @@
 package mod.bluestaggo.modernerbeta.client.gui.screen;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -7,6 +9,7 @@ import net.minecraft.client.gui.widget.GridWidget;
 import net.minecraft.client.gui.widget.TextWidget;
 import net.minecraft.text.Text;
 
+@Environment(EnvType.CLIENT)
 public abstract class ModernBetaScreen extends Screen {
     public static final int BUTTON_HEIGHT = 20;
     public static final int BUTTON_LENGTH = 150;

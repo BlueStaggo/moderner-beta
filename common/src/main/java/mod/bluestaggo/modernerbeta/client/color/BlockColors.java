@@ -1,9 +1,12 @@
 package mod.bluestaggo.modernerbeta.client.color;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.color.block.BlockColorProvider;
 
+@Environment(EnvType.CLIENT)
 public final class BlockColors {
     @FunctionalInterface
     public interface BlockColorRegisterer {

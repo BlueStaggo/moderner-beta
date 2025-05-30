@@ -6,6 +6,8 @@ import mod.bluestaggo.modernerbeta.world.biome.HeightConfig;
 import mod.bluestaggo.modernerbeta.world.chunk.provider.indev.IndevTheme;
 import mod.bluestaggo.modernerbeta.world.chunk.provider.indev.IndevType;
 import mod.bluestaggo.modernerbeta.world.chunk.provider.island.IslandShape;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.OptionListWidget;
 import net.minecraft.client.option.GameOptions;
@@ -24,6 +26,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
+@Environment(EnvType.CLIENT)
 public class ModernBetaGraphicalChunkSettingsScreen extends ModernBetaGraphicalCompoundSettingsScreen {
     public ModernBetaGraphicalChunkSettingsScreen(
         String title,

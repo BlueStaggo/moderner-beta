@@ -7,6 +7,8 @@ import com.google.gson.JsonSyntaxException;
 import com.mojang.serialization.JsonOps;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.EditBox;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.*;
@@ -16,6 +18,7 @@ import net.minecraft.util.Formatting;
 
 import java.util.function.Consumer;
 
+@Environment(EnvType.CLIENT)
 public class ModernBetaSettingsScreen extends ModernBetaScreen {
     private static final String TEXT_NAVIGATION = "createWorld.customize.modern_beta.navigation";
     private static final String TEXT_SETTINGS = "createWorld.customize.modern_beta.settings";

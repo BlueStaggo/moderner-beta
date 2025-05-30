@@ -2,6 +2,8 @@ package mod.bluestaggo.modernerbeta.client.gui.screen.config;
 
 import mod.bluestaggo.modernerbeta.util.NbtCompoundBuilder;
 import mod.bluestaggo.modernerbeta.util.NbtTags;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.option.SimpleOption;
 import net.minecraft.client.world.GeneratorOptionsHolder;
@@ -12,6 +14,7 @@ import net.minecraft.world.biome.BiomeKeys;
 import java.util.List;
 import java.util.function.Consumer;
 
+@Environment(EnvType.CLIENT)
 public class VoronoiPointBiomeListScreen extends ModernBetaGraphicalListSettingsScreen {
     public VoronoiPointBiomeListScreen(String title, Screen parent, GeneratorOptionsHolder generatorOptionsHolder, NbtList settings, Consumer<NbtList> onDone) {
         super(title, parent, generatorOptionsHolder, settings, onDone);

@@ -1,5 +1,7 @@
 package mod.bluestaggo.modernerbeta.client.gui.screen.config;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.option.SimpleOption;
 import net.minecraft.client.world.GeneratorOptionsHolder;
@@ -14,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+@Environment(EnvType.CLIENT)
 public class ExtendedBiomeIdToListScreen extends ModernBetaGraphicalMapSettingsScreen {
     public ExtendedBiomeIdToListScreen(String title, Screen parent, GeneratorOptionsHolder generatorOptionsHolder, NbtCompound settings, Consumer<NbtCompound> onDone) {
         super(title, parent, generatorOptionsHolder, settings, onDone);

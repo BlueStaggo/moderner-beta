@@ -3,7 +3,10 @@ package mod.bluestaggo.modernerbeta.client;
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
 import mod.bluestaggo.modernerbeta.client.gui.screen.config.GraphicalConfigBuilder;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
+@Environment(EnvType.CLIENT)
 @SuppressWarnings("unchecked")
 public class ModernBetaClientBuiltInProviders {
     public static void registerGraphicalConfigBuilders(IRegistryHandler<?> handler) {

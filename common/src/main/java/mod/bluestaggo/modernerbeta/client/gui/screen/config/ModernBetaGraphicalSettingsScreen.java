@@ -1,4 +1,4 @@
-package mod.bluestaggo.modernerbeta.client.gui.screen;
+package mod.bluestaggo.modernerbeta.client.gui.screen.config;
 
 import mod.bluestaggo.modernerbeta.client.gui.optioncallbacks.*;
 import mod.bluestaggo.modernerbeta.imixin.ModernBetaClearableWidget;
@@ -112,7 +112,11 @@ public abstract class ModernBetaGraphicalSettingsScreen<T extends NbtElement> ex
     }
 
     protected String getTextKey(String key, String subKey) {
-        String text = STRING_PREFIX + type + "." + key;
+        String text = STRING_PREFIX;
+        if (this.type != null) {
+            text += type + ".";
+        }
+        text += "." + key;
         if (subKey != null) {
             text += "." + subKey;
         }
@@ -135,11 +139,11 @@ public abstract class ModernBetaGraphicalSettingsScreen<T extends NbtElement> ex
         return Text.translatable(getTextKey(key, subKey));
     }
 
-    protected SimpleOption<Void> headerOption(Text text) {
+    public SimpleOption<Void> headerOption(Text text) {
         return this.headerOption(text, 0.5F);
     }
 
-    protected SimpleOption<Void> headerOption(Text text, float alignment) {
+    public SimpleOption<Void> headerOption(Text text, float alignment) {
         return new SimpleOption<>(
             "",
             SimpleOption.emptyTooltip(),
@@ -150,11 +154,11 @@ public abstract class ModernBetaGraphicalSettingsScreen<T extends NbtElement> ex
         );
     }
 
-    protected SimpleOption<Void> placeholderOption(String key) {
+    public SimpleOption<Void> placeholderOption(String key) {
         return this.headerOption(this.getText(key).formatted(Formatting.RED, Formatting.ITALIC));
     }
 
-    protected SimpleOption<Void> customButton(Text text, Runnable onPress) {
+    public SimpleOption<Void> customButton(Text text, Runnable onPress) {
         return new SimpleOption<>(
             "",
             SimpleOption.emptyTooltip(),

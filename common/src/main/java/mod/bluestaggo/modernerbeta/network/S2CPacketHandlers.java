@@ -3,12 +3,11 @@ package mod.bluestaggo.modernerbeta.network;
 import mod.bluestaggo.modernerbeta.api.world.biome.BiomeProvider;
 import mod.bluestaggo.modernerbeta.api.world.biome.climate.ClimateSampler;
 import mod.bluestaggo.modernerbeta.api.world.biome.climate.ClimateSamplerSky;
-import mod.bluestaggo.modernerbeta.api.world.provider.BiomeProviderCreator;
+import mod.bluestaggo.modernerbeta.api.world.provider.BiomeProviderType;
 import mod.bluestaggo.modernerbeta.client.color.BlockColorSampler;
 import mod.bluestaggo.modernerbeta.client.color.SkyColorSampler;
 import mod.bluestaggo.modernerbeta.client.world.ModernBetaClientWorld;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
-import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryEntryLookup;
 import net.minecraft.registry.RegistryKeys;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
@@ -29,7 +28,7 @@ public class S2CPacketHandlers {
                 return;
 
             RegistryEntryLookup<Biome> biomeRegistry = world.getRegistryManager().getOrThrow(RegistryKeys.BIOME);
-            BiomeProviderCreator<?> providerCreator = ModernBetaRegistries.BIOME.get(payload.providerId().orElseThrow());
+            BiomeProviderType<?> providerCreator = ModernBetaRegistries.BIOME.get(payload.providerId().orElseThrow());
             BiomeProvider provider = providerCreator.apply(ModernBetaSettings.fromCompound(payload.settings().orElseThrow()), biomeRegistry, payload.seed().orElseThrow());
 
             if (provider instanceof ClimateSampler climateSampler) {

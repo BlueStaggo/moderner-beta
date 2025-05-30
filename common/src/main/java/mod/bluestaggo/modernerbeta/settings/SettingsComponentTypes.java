@@ -1,6 +1,7 @@
 package mod.bluestaggo.modernerbeta.settings;
 
 import com.mojang.serialization.Codec;
+import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import mod.bluestaggo.modernerbeta.settings.component.*;
@@ -45,42 +46,111 @@ public class SettingsComponentTypes {
     // Cave biome provider
     public static SettingsComponentType<CaveBiomeVoronoi> CAVE_BIOME_VORONOI;
 
-    private static <T> SettingsComponentType<T> register(String id, Codec<T> codec, T defaultValue) {
-        return registryHandler.register(ModernerBeta.createId(id), new SettingsComponentType<>(codec, defaultValue));
+    private static <T> SettingsComponentType<T> register(Identifier id, Codec<T> codec, T defaultValue) {
+        return registryHandler.register(id, new SettingsComponentType<>(codec, defaultValue));
     }
 
     @SuppressWarnings("unchecked")
     public static void init(IRegistryHandler<?> handler) {
         registryHandler = (IRegistryHandler<SettingsComponentType<?>>) handler;
 
-        PROVIDER = register("provider", Identifier.CODEC, null);
+        PROVIDER = register(
+            ModernBetaBuiltInTypes.SettingsComponentType.PROVIDER.id,
+            Identifier.CODEC,
+            null);
 
         // Chunk provider
-        DEEPSLATE_GENERATION = register("deepslate_generation", DeepslateGeneration.CODEC, DeepslateGeneration.DEFAULT);
-        USE_SURFACE_RULES = register("use_surface_rules", Codec.BOOL, false);
-        SEA_LEVEL_OFFSET = register("sea_level_offset", Codec.INT, 0);
-        CAVE_GENERATION = register("cave_generation", CaveGeneration.CODEC, CaveGeneration.DEFAULT);
-        NOISE_SCALE = register("noise_scale", NoiseScale.CODEC, NoiseScale.DEFAULT);
-        NOISE_SLIDE = register("noise_slide", NoiseSlide.CODEC, NoiseSlide.DEFAULT);
-        FORCED_BIOME_HEIGHT = register("forced_biome_height", ForcedBiomeHeight.CODEC, ForcedBiomeHeight.DEFAULT);
-        INFDEV_227_STRUCTURES = register("infdev_227_structures", Infdev227Structures.CODEC, Infdev227Structures.DEFAULT);
-        FINITE_LEVEL_PROPERTIES = register("finite_level_properties", FiniteLevelProperties.CODEC, FiniteLevelProperties.DEFAULT);
-        FINITE_CAVE_GENERATION = register("finite_cave_generation", FiniteCaveGeneration.CODEC, FiniteCaveGeneration.DEFAULT);
-        FINITE_NOISE_SCALE = register("finite_noise_scale", FiniteNoiseScale.CODEC, FiniteNoiseScale.DEFAULT);
-        FINITE_BEACHES = register("finite_beaches", FiniteBeaches.CODEC, FiniteBeaches.DEFAULT);
-        FINITE_POOLS = register("finite_pools", FinitePools.CODEC, FinitePools.DEFAULT);
-        SPAWN_INDEV_HOUSE = register("spawn_indev_house", Codec.BOOL, true);
-        ISLES_PROPERTIES = register("isles_properties", IslesProperties.CODEC, IslesProperties.DEFAULT);
+        DEEPSLATE_GENERATION = register(
+            ModernBetaBuiltInTypes.SettingsComponentType.DEEPSLATE_GENERATION.id,
+            DeepslateGeneration.CODEC,
+            DeepslateGeneration.DEFAULT);
+        USE_SURFACE_RULES = register(
+            ModernBetaBuiltInTypes.SettingsComponentType.USE_SURFACE_RULES.id,
+            Codec.BOOL,
+            false);
+        SEA_LEVEL_OFFSET = register(
+            ModernBetaBuiltInTypes.SettingsComponentType.SEA_LEVEL_OFFSET.id,
+            Codec.INT,
+            0);
+        CAVE_GENERATION = register(
+            ModernBetaBuiltInTypes.SettingsComponentType.CAVE_GENERATION.id,
+            CaveGeneration.CODEC,
+            CaveGeneration.DEFAULT);
+        NOISE_SCALE = register(
+            ModernBetaBuiltInTypes.SettingsComponentType.NOISE_SCALE.id,
+            NoiseScale.CODEC,
+            NoiseScale.DEFAULT);
+        NOISE_SLIDE = register(
+            ModernBetaBuiltInTypes.SettingsComponentType.NOISE_SLIDE.id,
+            NoiseSlide.CODEC,
+            NoiseSlide.DEFAULT);
+        FORCED_BIOME_HEIGHT = register(
+            ModernBetaBuiltInTypes.SettingsComponentType.FORCED_BIOME_HEIGHT.id,
+            ForcedBiomeHeight.CODEC,
+            ForcedBiomeHeight.DEFAULT);
+        INFDEV_227_STRUCTURES = register(
+            ModernBetaBuiltInTypes.SettingsComponentType.INFDEV_227_STRUCTURES.id,
+            Infdev227Structures.CODEC,
+            Infdev227Structures.DEFAULT);
+        FINITE_LEVEL_PROPERTIES = register(
+            ModernBetaBuiltInTypes.SettingsComponentType.FINITE_LEVEL_PROPERTIES.id,
+            FiniteLevelProperties.CODEC,
+            FiniteLevelProperties.DEFAULT);
+        FINITE_CAVE_GENERATION = register(
+            ModernBetaBuiltInTypes.SettingsComponentType.FINITE_CAVE_GENERATION.id,
+            FiniteCaveGeneration.CODEC,
+            FiniteCaveGeneration.DEFAULT);
+        FINITE_NOISE_SCALE = register(
+            ModernBetaBuiltInTypes.SettingsComponentType.FINITE_NOISE_SCALE.id,
+            FiniteNoiseScale.CODEC,
+            FiniteNoiseScale.DEFAULT);
+        FINITE_BEACHES = register(
+            ModernBetaBuiltInTypes.SettingsComponentType.FINITE_BEACHES.id,
+            FiniteBeaches.CODEC,
+            FiniteBeaches.DEFAULT);
+        FINITE_POOLS = register(
+            ModernBetaBuiltInTypes.SettingsComponentType.FINITE_POOLS.id,
+            FinitePools.CODEC,
+            FinitePools.DEFAULT);
+        SPAWN_INDEV_HOUSE = register(
+            ModernBetaBuiltInTypes.SettingsComponentType.SPAWN_INDEV_HOUSE.id,
+            Codec.BOOL,
+            true);
+        ISLES_PROPERTIES = register(
+            ModernBetaBuiltInTypes.SettingsComponentType.ISLES_PROPERTIES.id,
+            IslesProperties.CODEC,
+            IslesProperties.DEFAULT);
 
         // Biome provider
-        SINGLE_BIOME = register("single_biome", Identifier.CODEC, Identifier.of("moderner_beta:beta_plains"));
-        CLIMATE_SCALE = register("climate_scale", ClimateScale.CODEC, ClimateScale.DEFAULT);
-        CLIMATE_MAPPINGS = register("climate_mappings", ClimateMapping.MAP_CODEC, ClimateMapping.DEFAULT_MAPPINGS);
-        VORONOI_POINTS = register("voronoi_points", VoronoiPointBiome.CODEC.listOf(), List.of());
-        FRACTAL_LAYERS = register("fractal_layers", ConfiguredLayers.CODEC, ConfiguredLayers.DEFAULT);
-        USE_OCEAN_BIOMES = register("use_ocean_biomes", Codec.BOOL, false);
+        SINGLE_BIOME = register(
+            ModernBetaBuiltInTypes.SettingsComponentType.SINGLE_BIOME.id,
+            Identifier.CODEC,
+            Identifier.of("moderner_beta:beta_plains"));
+        CLIMATE_SCALE = register(
+            ModernBetaBuiltInTypes.SettingsComponentType.CLIMATE_SCALE.id,
+            ClimateScale.CODEC,
+            ClimateScale.DEFAULT);
+        CLIMATE_MAPPINGS = register(
+            ModernBetaBuiltInTypes.SettingsComponentType.CLIMATE_MAPPINGS.id,
+            ClimateMapping.MAP_CODEC,
+            ClimateMapping.DEFAULT_MAPPINGS);
+        VORONOI_POINTS = register(
+            ModernBetaBuiltInTypes.SettingsComponentType.VORONOI_POINTS.id,
+            VoronoiPointBiome.CODEC.listOf(),
+            List.of());
+        FRACTAL_LAYERS = register(
+            ModernBetaBuiltInTypes.SettingsComponentType.FRACTAL_LAYERS.id,
+            ConfiguredLayers.CODEC,
+            ConfiguredLayers.DEFAULT);
+        USE_OCEAN_BIOMES = register(
+            ModernBetaBuiltInTypes.SettingsComponentType.USE_OCEAN_BIOMES.id,
+            Codec.BOOL,
+            false);
 
         // Cave biome provider
-        CAVE_BIOME_VORONOI = register("cave_biome_voronoi", CaveBiomeVoronoi.CODEC, CaveBiomeVoronoi.DEFAULT);
+        CAVE_BIOME_VORONOI = register(
+            ModernBetaBuiltInTypes.SettingsComponentType.CAVE_BIOME_VORONOI.id,
+            CaveBiomeVoronoi.CODEC,
+            CaveBiomeVoronoi.DEFAULT);
     }
 }

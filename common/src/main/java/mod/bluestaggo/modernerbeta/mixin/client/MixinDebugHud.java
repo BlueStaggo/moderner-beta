@@ -59,11 +59,11 @@ public abstract class MixinDebugHud {
             if (chunkGenerator instanceof ModernBetaChunkGenerator modernBetaChunkGenerator) {
                 ChunkProvider chunkProvider = modernBetaChunkGenerator.getChunkProvider();
                 if (chunkProvider instanceof ChunkProviderForcedHeight chunkProviderForcedHeight) {
-                    ExtendedBiomeId biomeInfo = chunkProviderForcedHeight.getExtendedBiomeId(x >> 2, z >> 2);
+                    ExtendedBiomeId extendedBiomeId = chunkProviderForcedHeight.getExtendedBiomeId(x >> 2, z >> 2);
                     info.getReturnValue().add(
                         String.format(
-                            "[Modern Beta] Biome variant: %s",
-                            biomeInfo
+                            "[Modern Beta] Extended biome: %s",
+                            extendedBiomeId
                         )
                     );
                 }

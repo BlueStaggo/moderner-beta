@@ -1,15 +1,16 @@
 package mod.bluestaggo.modernerbeta;
 
 import mod.bluestaggo.modernerbeta.api.world.BlockSourceCreator;
-import mod.bluestaggo.modernerbeta.api.world.provider.BiomeProviderCreator;
-import mod.bluestaggo.modernerbeta.api.world.provider.CaveBiomeProviderCreator;
-import mod.bluestaggo.modernerbeta.api.world.provider.ChunkProviderCreator;
+import mod.bluestaggo.modernerbeta.api.world.provider.BiomeProviderType;
+import mod.bluestaggo.modernerbeta.api.world.provider.CaveBiomeProviderType;
+import mod.bluestaggo.modernerbeta.api.world.provider.ChunkProviderType;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import mod.bluestaggo.modernerbeta.api.world.chunk.noise.NoisePostProcessor;
 import mod.bluestaggo.modernerbeta.api.world.chunk.surface.SurfaceConfig;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPresetCategory;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPresets;
+import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.world.biome.HeightConfig;
 import mod.bluestaggo.modernerbeta.world.biome.provider.*;
 import mod.bluestaggo.modernerbeta.world.blocksource.BlockSourceDeepslate;
@@ -27,40 +28,177 @@ public class ModernBetaBuiltInProviders {
     
     // Register default chunk providers
     public static void registerChunkProviders(IRegistryHandler<?> handler) {
-        IRegistryHandler<ChunkProviderCreator> registryHandler = (IRegistryHandler<ChunkProviderCreator>) handler;
+        IRegistryHandler<ChunkProviderType<?>> registryHandler = (IRegistryHandler<ChunkProviderType<?>>) handler;
 
-        registryHandler.register(ModernBetaBuiltInTypes.Chunk.BETA.id, ChunkProviderBeta::new);
-        registryHandler.register(ModernBetaBuiltInTypes.Chunk.SKYLANDS.id, ChunkProviderSky::new);
-        registryHandler.register(ModernBetaBuiltInTypes.Chunk.ALPHA.id, ChunkProviderAlpha::new);
-        registryHandler.register(ModernBetaBuiltInTypes.Chunk.INFDEV_611.id, ChunkProviderInfdev611::new);
-        registryHandler.register(ModernBetaBuiltInTypes.Chunk.INFDEV_420.id, ChunkProviderInfdev420::new);
-        registryHandler.register(ModernBetaBuiltInTypes.Chunk.INFDEV_415.id, ChunkProviderInfdev415::new);
-        registryHandler.register(ModernBetaBuiltInTypes.Chunk.INFDEV_227.id, ChunkProviderInfdev227::new);
-        registryHandler.register(ModernBetaBuiltInTypes.Chunk.INDEV.id, ChunkProviderIndev::new);
-        registryHandler.register(ModernBetaBuiltInTypes.Chunk.CLASSIC_0_30.id, ChunkProviderClassic030::new);
-        registryHandler.register(ModernBetaBuiltInTypes.Chunk.PE.id, ChunkProviderPE::new);
-        registryHandler.register(ModernBetaBuiltInTypes.Chunk.EARLY_RELEASE.id, ChunkProviderEarlyRelease::new);
-        registryHandler.register(ModernBetaBuiltInTypes.Chunk.MAJOR_RELEASE.id, ChunkProviderMajorRelease::new);
+        registryHandler.register(ModernBetaBuiltInTypes.Chunk.BETA.id, new ChunkProviderType<>(
+            ChunkProviderBeta::new,
+            SettingsComponentTypes.DEEPSLATE_GENERATION,
+            SettingsComponentTypes.USE_SURFACE_RULES,
+            SettingsComponentTypes.SEA_LEVEL_OFFSET,
+            SettingsComponentTypes.CAVE_GENERATION,
+            SettingsComponentTypes.NOISE_SCALE,
+            SettingsComponentTypes.NOISE_SLIDE,
+            SettingsComponentTypes.ISLES_PROPERTIES
+        ));
+        registryHandler.register(ModernBetaBuiltInTypes.Chunk.SKYLANDS.id, new ChunkProviderType<>(
+            ChunkProviderSky::new,
+            SettingsComponentTypes.DEEPSLATE_GENERATION,
+            SettingsComponentTypes.USE_SURFACE_RULES,
+            SettingsComponentTypes.CAVE_GENERATION,
+            SettingsComponentTypes.NOISE_SCALE,
+            SettingsComponentTypes.NOISE_SLIDE,
+            SettingsComponentTypes.ISLES_PROPERTIES
+        ));
+        registryHandler.register(ModernBetaBuiltInTypes.Chunk.ALPHA.id, new ChunkProviderType<>(
+            ChunkProviderAlpha::new,
+            SettingsComponentTypes.DEEPSLATE_GENERATION,
+            SettingsComponentTypes.USE_SURFACE_RULES,
+            SettingsComponentTypes.SEA_LEVEL_OFFSET,
+            SettingsComponentTypes.CAVE_GENERATION,
+            SettingsComponentTypes.NOISE_SCALE,
+            SettingsComponentTypes.NOISE_SLIDE,
+            SettingsComponentTypes.ISLES_PROPERTIES
+        ));
+        registryHandler.register(ModernBetaBuiltInTypes.Chunk.INFDEV_611.id, new ChunkProviderType<>(
+            ChunkProviderInfdev611::new,
+            SettingsComponentTypes.DEEPSLATE_GENERATION,
+            SettingsComponentTypes.USE_SURFACE_RULES,
+            SettingsComponentTypes.SEA_LEVEL_OFFSET,
+            SettingsComponentTypes.CAVE_GENERATION,
+            SettingsComponentTypes.NOISE_SCALE,
+            SettingsComponentTypes.NOISE_SLIDE,
+            SettingsComponentTypes.ISLES_PROPERTIES
+        ));
+        registryHandler.register(ModernBetaBuiltInTypes.Chunk.INFDEV_420.id, new ChunkProviderType<>(
+            ChunkProviderInfdev420::new,
+            SettingsComponentTypes.DEEPSLATE_GENERATION,
+            SettingsComponentTypes.USE_SURFACE_RULES,
+            SettingsComponentTypes.SEA_LEVEL_OFFSET,
+            SettingsComponentTypes.CAVE_GENERATION,
+            SettingsComponentTypes.NOISE_SCALE,
+            SettingsComponentTypes.NOISE_SLIDE,
+            SettingsComponentTypes.ISLES_PROPERTIES
+        ));
+        registryHandler.register(ModernBetaBuiltInTypes.Chunk.INFDEV_415.id, new ChunkProviderType<>(
+            ChunkProviderInfdev415::new,
+            SettingsComponentTypes.DEEPSLATE_GENERATION,
+            SettingsComponentTypes.USE_SURFACE_RULES,
+            SettingsComponentTypes.SEA_LEVEL_OFFSET,
+            SettingsComponentTypes.CAVE_GENERATION,
+            SettingsComponentTypes.NOISE_SCALE,
+            SettingsComponentTypes.NOISE_SLIDE,
+            SettingsComponentTypes.ISLES_PROPERTIES
+        ));
+        registryHandler.register(ModernBetaBuiltInTypes.Chunk.INFDEV_227.id, new ChunkProviderType<>(
+            ChunkProviderInfdev227::new,
+            SettingsComponentTypes.DEEPSLATE_GENERATION,
+            SettingsComponentTypes.USE_SURFACE_RULES,
+            SettingsComponentTypes.SEA_LEVEL_OFFSET,
+            SettingsComponentTypes.CAVE_GENERATION,
+            SettingsComponentTypes.INFDEV_227_STRUCTURES
+        ));
+        registryHandler.register(ModernBetaBuiltInTypes.Chunk.INDEV.id, new ChunkProviderType<>(
+            ChunkProviderIndev::new,
+            SettingsComponentTypes.DEEPSLATE_GENERATION,
+            SettingsComponentTypes.USE_SURFACE_RULES,
+            SettingsComponentTypes.SEA_LEVEL_OFFSET,
+            SettingsComponentTypes.CAVE_GENERATION,
+            SettingsComponentTypes.FINITE_LEVEL_PROPERTIES,
+            SettingsComponentTypes.FINITE_CAVE_GENERATION,
+            SettingsComponentTypes.FINITE_NOISE_SCALE,
+            SettingsComponentTypes.FINITE_BEACHES,
+            SettingsComponentTypes.FINITE_POOLS,
+            SettingsComponentTypes.SPAWN_INDEV_HOUSE
+        ));
+        registryHandler.register(ModernBetaBuiltInTypes.Chunk.CLASSIC_0_30.id, new ChunkProviderType<>(
+            ChunkProviderClassic030::new,
+            SettingsComponentTypes.DEEPSLATE_GENERATION,
+            SettingsComponentTypes.USE_SURFACE_RULES,
+            SettingsComponentTypes.SEA_LEVEL_OFFSET,
+            SettingsComponentTypes.CAVE_GENERATION,
+            SettingsComponentTypes.FINITE_LEVEL_PROPERTIES,
+            SettingsComponentTypes.FINITE_CAVE_GENERATION,
+            SettingsComponentTypes.FINITE_NOISE_SCALE,
+            SettingsComponentTypes.FINITE_BEACHES,
+            SettingsComponentTypes.FINITE_POOLS
+        ));
+        registryHandler.register(ModernBetaBuiltInTypes.Chunk.PE.id, new ChunkProviderType<>(
+            ChunkProviderPE::new,
+            SettingsComponentTypes.DEEPSLATE_GENERATION,
+            SettingsComponentTypes.USE_SURFACE_RULES,
+            SettingsComponentTypes.SEA_LEVEL_OFFSET,
+            SettingsComponentTypes.CAVE_GENERATION,
+            SettingsComponentTypes.NOISE_SCALE,
+            SettingsComponentTypes.NOISE_SLIDE,
+            SettingsComponentTypes.ISLES_PROPERTIES
+        ));
+        registryHandler.register(ModernBetaBuiltInTypes.Chunk.EARLY_RELEASE.id, new ChunkProviderType<>(
+            ChunkProviderEarlyRelease::new,
+            SettingsComponentTypes.DEEPSLATE_GENERATION,
+            SettingsComponentTypes.USE_SURFACE_RULES,
+            SettingsComponentTypes.SEA_LEVEL_OFFSET,
+            SettingsComponentTypes.CAVE_GENERATION,
+            SettingsComponentTypes.NOISE_SCALE,
+            SettingsComponentTypes.NOISE_SLIDE,
+            SettingsComponentTypes.FORCED_BIOME_HEIGHT,
+            SettingsComponentTypes.ISLES_PROPERTIES
+        ));
+        registryHandler.register(ModernBetaBuiltInTypes.Chunk.MAJOR_RELEASE.id, new ChunkProviderType<>(
+            ChunkProviderMajorRelease::new,
+            SettingsComponentTypes.DEEPSLATE_GENERATION,
+            SettingsComponentTypes.USE_SURFACE_RULES,
+            SettingsComponentTypes.SEA_LEVEL_OFFSET,
+            SettingsComponentTypes.CAVE_GENERATION,
+            SettingsComponentTypes.NOISE_SCALE,
+            SettingsComponentTypes.NOISE_SLIDE,
+            SettingsComponentTypes.FORCED_BIOME_HEIGHT,
+            SettingsComponentTypes.ISLES_PROPERTIES
+        ));
     }
     
     // Register default biome providers
     public static void registerBiomeProviders(IRegistryHandler<?> handler) {
-        IRegistryHandler<BiomeProviderCreator<?>> registryHandler = (IRegistryHandler<BiomeProviderCreator<?>>) handler;
+        IRegistryHandler<BiomeProviderType<?>> registryHandler = (IRegistryHandler<BiomeProviderType<?>>) handler;
 
-        registryHandler.register(ModernBetaBuiltInTypes.Biome.BETA.id, new BiomeProviderCreator<>(BiomeProviderBeta::new, BiomeProviderBeta.class));
-        registryHandler.register(ModernBetaBuiltInTypes.Biome.SINGLE.id, new BiomeProviderCreator<>(BiomeProviderSingle::new, BiomeProviderSingle.class));
-        registryHandler.register(ModernBetaBuiltInTypes.Biome.PE.id, new BiomeProviderCreator<>(BiomeProviderPE::new, BiomeProviderPE.class));
-        registryHandler.register(ModernBetaBuiltInTypes.Biome.VORONOI.id, new BiomeProviderCreator<>(BiomeProviderVoronoi::new, BiomeProviderVoronoi.class));
-        registryHandler.register(ModernBetaBuiltInTypes.Biome.FRACTAL.id, new BiomeProviderCreator<>(BiomeProviderFractal::new, BiomeProviderFractal.class));
+        registryHandler.register(ModernBetaBuiltInTypes.Biome.BETA.id, new BiomeProviderType<>(
+            BiomeProviderBeta::new, BiomeProviderBeta.class,
+            SettingsComponentTypes.CLIMATE_SCALE,
+            SettingsComponentTypes.CLIMATE_MAPPINGS
+        ));
+        registryHandler.register(ModernBetaBuiltInTypes.Biome.SINGLE.id, new BiomeProviderType<>(
+            BiomeProviderSingle::new, BiomeProviderSingle.class,
+            SettingsComponentTypes.SINGLE_BIOME
+        ));
+        registryHandler.register(ModernBetaBuiltInTypes.Biome.PE.id, new BiomeProviderType<>(
+            BiomeProviderPE::new, BiomeProviderPE.class,
+            SettingsComponentTypes.CLIMATE_SCALE,
+            SettingsComponentTypes.CLIMATE_MAPPINGS
+        ));
+        registryHandler.register(ModernBetaBuiltInTypes.Biome.VORONOI.id, new BiomeProviderType<>(
+            BiomeProviderVoronoi::new, BiomeProviderVoronoi.class,
+            SettingsComponentTypes.VORONOI_POINTS
+        ));
+        registryHandler.register(ModernBetaBuiltInTypes.Biome.FRACTAL.id, new BiomeProviderType<>(
+            BiomeProviderFractal::new, BiomeProviderFractal.class,
+            SettingsComponentTypes.FRACTAL_LAYERS
+        ));
     }
     
     // Register default cave biome providers
     public static void registerCaveBiomeProviders(IRegistryHandler<?> handler) {
-        IRegistryHandler<CaveBiomeProviderCreator> registryHandler = (IRegistryHandler<CaveBiomeProviderCreator>) handler;
+        IRegistryHandler<CaveBiomeProviderType<?>> registryHandler = (IRegistryHandler<CaveBiomeProviderType<?>>) handler;
 
-        registryHandler.register(ModernBetaBuiltInTypes.CaveBiome.NONE.id, CaveBiomeProviderNone::new);
-        registryHandler.register(ModernBetaBuiltInTypes.CaveBiome.SINGLE.id, CaveBiomeProviderSingle::new);
-        registryHandler.register(ModernBetaBuiltInTypes.CaveBiome.VORONOI.id, CaveBiomeProviderVoronoi::new);
+        registryHandler.register(ModernBetaBuiltInTypes.CaveBiome.NONE.id, new CaveBiomeProviderType<>(
+            CaveBiomeProviderNone::new
+        ));
+        registryHandler.register(ModernBetaBuiltInTypes.CaveBiome.SINGLE.id, new CaveBiomeProviderType<>(
+            CaveBiomeProviderSingle::new,
+            SettingsComponentTypes.SINGLE_BIOME
+        ));
+        registryHandler.register(ModernBetaBuiltInTypes.CaveBiome.VORONOI.id, new CaveBiomeProviderType<>(
+            CaveBiomeProviderVoronoi::new,
+            SettingsComponentTypes.DEEPSLATE_GENERATION
+        ));
     }
     
     public static void registerNoisePostProcessors(IRegistryHandler<?> handler) {

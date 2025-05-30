@@ -4,9 +4,9 @@ import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
 import mod.bluestaggo.modernerbeta.api.world.BlockSourceCreator;
 import mod.bluestaggo.modernerbeta.api.world.chunk.noise.NoisePostProcessor;
 import mod.bluestaggo.modernerbeta.api.world.chunk.surface.SurfaceConfig;
-import mod.bluestaggo.modernerbeta.api.world.provider.BiomeProviderCreator;
-import mod.bluestaggo.modernerbeta.api.world.provider.CaveBiomeProviderCreator;
-import mod.bluestaggo.modernerbeta.api.world.provider.ChunkProviderCreator;
+import mod.bluestaggo.modernerbeta.api.world.provider.BiomeProviderType;
+import mod.bluestaggo.modernerbeta.api.world.provider.CaveBiomeProviderType;
+import mod.bluestaggo.modernerbeta.api.world.provider.ChunkProviderType;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPresetCategory;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentType;
@@ -21,9 +21,9 @@ public final class ModernBetaRegistries {
     private static IRegistryHelper registryHelper;
 
     public static Registry<SettingsComponentType<?>> SETTINGS_COMPONENT_TYPE;
-    public static Registry<ChunkProviderCreator> CHUNK;
-    public static Registry<BiomeProviderCreator<?>> BIOME;
-    public static Registry<CaveBiomeProviderCreator> CAVE_BIOME;
+    public static Registry<ChunkProviderType<?>> CHUNK;
+    public static Registry<BiomeProviderType<?>> BIOME;
+    public static Registry<CaveBiomeProviderType<?>> CAVE_BIOME;
     public static Registry<NoisePostProcessor> NOISE_POST_PROCESSOR;
     public static Registry<SurfaceConfig> SURFACE_CONFIG;
     public static Registry<HeightConfig> HEIGHT_CONFIG;

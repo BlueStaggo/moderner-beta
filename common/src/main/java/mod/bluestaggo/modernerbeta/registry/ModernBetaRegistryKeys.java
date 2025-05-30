@@ -4,9 +4,9 @@ import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.api.world.BlockSourceCreator;
 import mod.bluestaggo.modernerbeta.api.world.chunk.noise.NoisePostProcessor;
 import mod.bluestaggo.modernerbeta.api.world.chunk.surface.SurfaceConfig;
-import mod.bluestaggo.modernerbeta.api.world.provider.BiomeProviderCreator;
-import mod.bluestaggo.modernerbeta.api.world.provider.CaveBiomeProviderCreator;
-import mod.bluestaggo.modernerbeta.api.world.provider.ChunkProviderCreator;
+import mod.bluestaggo.modernerbeta.api.world.provider.BiomeProviderType;
+import mod.bluestaggo.modernerbeta.api.world.provider.CaveBiomeProviderType;
+import mod.bluestaggo.modernerbeta.api.world.provider.ChunkProviderType;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPresetCategory;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentType;
@@ -17,9 +17,9 @@ import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 
 public final class ModernBetaRegistryKeys {
-    public static final RegistryKey<Registry<ChunkProviderCreator>> CHUNK = of("chunk_provider");
-    public static final RegistryKey<Registry<BiomeProviderCreator<?>>> BIOME = of("biome_provider");
-    public static final RegistryKey<Registry<CaveBiomeProviderCreator>> CAVE_BIOME = of("cave_biome_provider");
+    public static final RegistryKey<Registry<ChunkProviderType<?>>> CHUNK = of("chunk_provider");
+    public static final RegistryKey<Registry<BiomeProviderType<?>>> BIOME = of("biome_provider");
+    public static final RegistryKey<Registry<CaveBiomeProviderType<?>>> CAVE_BIOME = of("cave_biome_provider");
     public static final RegistryKey<Registry<NoisePostProcessor>> NOISE_POST_PROCESSOR = of("noise_post_processor");
     public static final RegistryKey<Registry<SurfaceConfig>> SURFACE_CONFIG = of("surface_config");
     public static final RegistryKey<Registry<HeightConfig>> HEIGHT_CONFIG = of("height_config");

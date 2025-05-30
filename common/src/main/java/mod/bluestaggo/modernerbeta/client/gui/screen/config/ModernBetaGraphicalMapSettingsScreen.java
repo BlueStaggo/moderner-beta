@@ -1,4 +1,4 @@
-package mod.bluestaggo.modernerbeta.client.gui.screen;
+package mod.bluestaggo.modernerbeta.client.gui.screen.config;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

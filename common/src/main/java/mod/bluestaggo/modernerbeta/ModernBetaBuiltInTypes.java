@@ -6,8 +6,39 @@ import net.minecraft.util.Identifier;
 import java.util.Set;
 
 public final class ModernBetaBuiltInTypes {
-    public static final String DEFAULT_ID = "default";
-    
+    public enum SettingsComponentType {
+        PROVIDER("provider"),
+        DEEPSLATE_GENERATION("deepslate_generation"),
+        USE_SURFACE_RULES("use_surface_rules"),
+        SEA_LEVEL_OFFSET("sea_level_offset"),
+        CAVE_GENERATION("cave_generation"),
+        NOISE_SCALE("noise_scale"),
+        NOISE_SLIDE("noise_slide"),
+        FORCED_BIOME_HEIGHT("forced_biome_height"),
+        INFDEV_227_STRUCTURES("infdev_227_structures"),
+        FINITE_LEVEL_PROPERTIES("finite_level_properties"),
+        FINITE_CAVE_GENERATION("finite_cave_generation"),
+        FINITE_NOISE_SCALE("finite_noise_scale"),
+        FINITE_BEACHES("finite_beaches"),
+        FINITE_POOLS("finite_pools"),
+        SPAWN_INDEV_HOUSE("spawn_indev_house"),
+        ISLES_PROPERTIES("isles_properties"),
+        SINGLE_BIOME("single_biome"),
+        CLIMATE_SCALE("climate_scale"),
+        CLIMATE_MAPPINGS("climate_mappings"),
+        VORONOI_POINTS("voronoi_points"),
+        FRACTAL_LAYERS("fractal_layers"),
+        USE_OCEAN_BIOMES("use_ocean_biomes"),
+        CAVE_BIOME_VORONOI("cave_biome_voronoi"),
+        ;
+
+        public final Identifier id;
+
+        SettingsComponentType(String id) {
+            this.id = ModernerBeta.createId(id);
+        }
+    }
+
     public enum Chunk {
         BETA("beta"),
         SKYLANDS("skylands"),
@@ -20,7 +51,7 @@ public final class ModernBetaBuiltInTypes {
         CLASSIC_0_30("classic_0_30"),
         PE("pe"),
         EARLY_RELEASE("early_release"),
-        MAJOR_RELEASE("major_release")
+        MAJOR_RELEASE("major_release"),
         ;
 
         public static final Set<Identifier> CHUNK_PROVIDER_NOISE = Set.of(
@@ -31,7 +62,7 @@ public final class ModernBetaBuiltInTypes {
 
         public final Identifier id;
         
-        private Chunk(String id) {
+        Chunk(String id) {
             this.id = ModernerBeta.createId(id);
         }
     }
@@ -41,25 +72,25 @@ public final class ModernBetaBuiltInTypes {
         SINGLE("single"),
         PE("pe"),
         VORONOI("voronoi"),
-        FRACTAL("fractal")
+        FRACTAL("fractal"),
         ;
 
         public static final Set<Identifier> BIOME_PROVIDER_USES_NOISE = Set.of(BETA.id, PE.id, VORONOI.id);
 
         public final Identifier id;
         
-        private Biome(String id) { this.id = ModernerBeta.createId(id); }
+        Biome(String id) { this.id = ModernerBeta.createId(id); }
     }
     
     public enum CaveBiome {
         NONE("none"),
         SINGLE("single"),
-        VORONOI("voronoi")
+        VORONOI("voronoi"),
         ;
 
         public final Identifier id;
         
-        private CaveBiome(String id) {
+        CaveBiome(String id) {
             this.id = ModernerBeta.createId(id);
         }
     }
@@ -82,12 +113,12 @@ public final class ModernBetaBuiltInTypes {
         SNOW(ModernBetaBiomeTags.SURFACE_CONFIG_SNOW.id().getPath()),
         SNOW_DIRT(ModernBetaBiomeTags.SURFACE_CONFIG_SNOW_DIRT.id().getPath()),
         SNOW_PACKED_ICE(ModernBetaBiomeTags.SURFACE_CONFIG_SNOW_PACKED_ICE.id().getPath()),
-        SNOW_STONE(ModernBetaBiomeTags.SURFACE_CONFIG_SNOW_STONE.id().getPath())
+        SNOW_STONE(ModernBetaBiomeTags.SURFACE_CONFIG_SNOW_STONE.id().getPath()),
         ;
         
         public final Identifier id;
         
-        private SurfaceConfig(String id) {
+        SurfaceConfig(String id) {
             this.id = ModernerBeta.createId(id);
         }
     }
@@ -113,34 +144,34 @@ public final class ModernBetaBuiltInTypes {
         HEIGHT_CONFIG_PLATEAU(ModernBetaBiomeTags.HEIGHT_CONFIG_PLATEAU.id().getPath()),
         HEIGHT_CONFIG_SWAMPLAND_HILLS(ModernBetaBiomeTags.HEIGHT_CONFIG_SWAMPLAND_HILLS.id().getPath()),
         HEIGHT_CONFIG_PLATEAU_HILL(ModernBetaBiomeTags.HEIGHT_CONFIG_PLATEAU_HILL.id().getPath()),
-        HEIGHT_CONFIG_DEEP_OCEAN(ModernBetaBiomeTags.HEIGHT_CONFIG_DEEP_OCEAN.id().getPath())
+        HEIGHT_CONFIG_DEEP_OCEAN(ModernBetaBiomeTags.HEIGHT_CONFIG_DEEP_OCEAN.id().getPath()),
         ;
 
         public final Identifier id;
 
-        private HeightConfig(String id) {
+        HeightConfig(String id) {
             this.id = ModernerBeta.createId(id);
         }
     }
     
     public enum NoisePostProcessor {
-        NONE("none")
+        NONE("none"),
         ;
         
         public final Identifier id;
         
-        private NoisePostProcessor(String id) {
+        NoisePostProcessor(String id) {
             this.id = ModernerBeta.createId(id);
         }
     }
     
     public enum BlockSource {
-        DEEPSLATE("deepslate")
+        DEEPSLATE("deepslate"),
         ;
         
         public final Identifier id;
         
-        private BlockSource(String id) {
+        BlockSource(String id) {
             this.id = ModernerBeta.createId(id);
         }
     }
@@ -205,7 +236,7 @@ public final class ModernBetaBuiltInTypes {
         
         public final Identifier id;
         
-        private Preset(String id) {
+        Preset(String id) {
             this.id = ModernerBeta.createId(id);
         }
     }
@@ -223,7 +254,7 @@ public final class ModernBetaBuiltInTypes {
 
         public final Identifier id;
 
-        private PresetCategory(String id) {
+        PresetCategory(String id) {
             this.id = ModernerBeta.createId(id);
         }
     }

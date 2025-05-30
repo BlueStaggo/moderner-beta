@@ -1,8 +1,7 @@
-package mod.bluestaggo.modernerbeta.client.gui.screen;
+package mod.bluestaggo.modernerbeta.client.gui.screen.config;
 
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
 import mod.bluestaggo.modernerbeta.util.NbtTags;
-import mod.bluestaggo.modernerbeta.world.biome.HeightConfig;
 import mod.bluestaggo.modernerbeta.world.chunk.provider.indev.IndevTheme;
 import mod.bluestaggo.modernerbeta.world.chunk.provider.indev.IndevType;
 import mod.bluestaggo.modernerbeta.world.chunk.provider.island.IslandShape;
@@ -14,12 +13,8 @@ import net.minecraft.client.option.GameOptions;
 import net.minecraft.client.option.SimpleOption;
 import net.minecraft.client.world.GeneratorOptionsHolder;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtString;
-import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
-import net.minecraft.world.biome.BiomeKeys;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -136,7 +131,7 @@ public class ModernBetaGraphicalChunkSettingsScreen extends ModernBetaGraphicalC
                 list.addSingleOptionEntry(this.mapEditButton(
                     this.getText(NbtTags.RELEASE_BIOME_HEIGHT_CONFIGS),
                     NbtTags.RELEASE_BIOME_HEIGHT_CONFIGS,
-                    BiomeInfoToHeightConfigMapScreen::new
+                    ExtendedBiomeIdToHeightConfigMapScreen::new
                 ));
             }
 
@@ -216,32 +211,6 @@ public class ModernBetaGraphicalChunkSettingsScreen extends ModernBetaGraphicalC
                 this.floatRangeOption(NbtTags.ISLES_OUTER_ISLAND_NOISE_SCALE, 0.01F, 5000.0F),
                 this.floatRangeOption(NbtTags.ISLES_OUTER_ISLAND_NOISE_OFFSET, -1.0F, 1.0F)
             );
-        }
-    }
-
-    private static class BiomeInfoToHeightConfigMapScreen extends ModernBetaGraphicalMapSettingsScreen {
-        public BiomeInfoToHeightConfigMapScreen(String title, Screen parent, GeneratorOptionsHolder generatorOptionsHolder, NbtCompound settings, Consumer<NbtCompound> onDone) {
-            super(title, parent, generatorOptionsHolder, settings, onDone);
-        }
-
-        @Override
-        protected List<SimpleOption<?>> getOptions(int i) {
-            ArrayList<SimpleOption<?>> options = new ArrayList<>();
-            options.add(this.headerOption(Text.translatable(this.getTextKey("item"), i).formatted(Formatting.BOLD)));
-            options.add(null);
-            options.addAll(this.extendedBiomeIdOption(KEY + i, false));
-            options.addAll(this.heightConfigOption(VALUE + i));
-            return options;
-        }
-
-        @Override
-        protected String getDefaultKey() {
-            return BiomeKeys.PLAINS.getValue().toString();
-        }
-
-        @Override
-        protected NbtElement getDefaultValue() {
-            return NbtString.of(HeightConfig.DEFAULT.makeString());
         }
     }
 }

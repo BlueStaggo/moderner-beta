@@ -1,4 +1,4 @@
-package mod.bluestaggo.modernerbeta.client.gui.screen;
+package mod.bluestaggo.modernerbeta.client.gui.screen.config;
 
 import com.mojang.serialization.Codec;
 import mod.bluestaggo.modernerbeta.client.gui.optioncallbacks.*;
@@ -64,7 +64,7 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
         return defaultPair;
     }
 
-    protected SimpleOption<Identifier> primarySelectionOption(String key, Identifier... options) {
+    public SimpleOption<Identifier> primarySelectionOption(String key, Identifier... options) {
         Pair<NbtCompound, String> resolvedSettings = this.resolveSettings(key);
         NbtCompound settings = resolvedSettings.getLeft();
         String subKey = resolvedSettings.getRight();
@@ -86,7 +86,7 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
         );
     }
 
-    protected SimpleOption<String> selectionOption(String key, String... options) {
+    public SimpleOption<String> selectionOption(String key, String... options) {
         Pair<NbtCompound, String> resolvedSettings = this.resolveSettings(key);
         NbtCompound settings = resolvedSettings.getLeft();
         String subKey = resolvedSettings.getRight();
@@ -105,7 +105,7 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
         );
     }
 
-    protected SimpleOption<Boolean> booleanOption(String key) {
+    public SimpleOption<Boolean> booleanOption(String key) {
         Pair<NbtCompound, String> resolvedSettings = this.resolveSettings(key);
         NbtCompound settings = resolvedSettings.getLeft();
         String subKey = resolvedSettings.getRight();
@@ -117,19 +117,19 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
         );
     }
 
-    protected SimpleOption<Integer> intRangeOption(String key, int min, int max) {
+    public SimpleOption<Integer> intRangeOption(String key, int min, int max) {
         return this.intRangeOption(key, new SimpleOption.ValidatingIntSliderCallbacks(min, max), (optionText, value) -> GameOptions.getGenericValueText(this.getText(key), value));
     }
 
-    protected SimpleOption<Integer> intRangeOption(String key, int min, int max, int multiple) {
+    public SimpleOption<Integer> intRangeOption(String key, int min, int max, int multiple) {
         return this.intRangeOption(key, new ValidatingIntMultipleSliderCallbacks(min, max, multiple), (optionText, value) -> GameOptions.getGenericValueText(this.getText(key), value));
     }
 
-    protected SimpleOption<Integer> intRangeOption(String key, SimpleOption.IntSliderCallbacks intSliderCallbacks) {
+    public SimpleOption<Integer> intRangeOption(String key, SimpleOption.IntSliderCallbacks intSliderCallbacks) {
         return this.intRangeOption(key, intSliderCallbacks, (optionText, value) -> GameOptions.getGenericValueText(this.getText(key), value));
     }
 
-    protected SimpleOption<Integer> intRangeOption(String key, SimpleOption.IntSliderCallbacks intSliderCallbacks, SimpleOption.ValueTextGetter<Integer> valueTextGetter) {
+    public SimpleOption<Integer> intRangeOption(String key, SimpleOption.IntSliderCallbacks intSliderCallbacks, SimpleOption.ValueTextGetter<Integer> valueTextGetter) {
         Pair<NbtCompound, String> resolvedSettings = this.resolveSettings(key);
         NbtCompound settings = resolvedSettings.getLeft();
         String subKey = resolvedSettings.getRight();
@@ -144,11 +144,11 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
         );
     }
 
-    protected SimpleOption<Integer> intFieldOption(String key) {
+    public SimpleOption<Integer> intFieldOption(String key) {
         return this.intFieldOption(key, "");
     }
 
-    protected SimpleOption<Integer> intFieldOption(String key, String prefix) {
+    public SimpleOption<Integer> intFieldOption(String key, String prefix) {
         if (prefix == null) {
             prefix = "";
         }
@@ -167,7 +167,7 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
         );
     }
 
-    protected SimpleOption<Integer> intFieldOptionFromString(String key, String prefix) {
+    public SimpleOption<Integer> intFieldOptionFromString(String key, String prefix) {
         if (prefix == null) {
             prefix = "";
         }
@@ -192,7 +192,7 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
         );
     }
 
-    protected SimpleOption<Float> floatRangeOption(String key, float min, float max) {
+    public SimpleOption<Float> floatRangeOption(String key, float min, float max) {
         Pair<NbtCompound, String> resolvedSettings = this.resolveSettings(key);
         NbtCompound settings = resolvedSettings.getLeft();
         String subKey = resolvedSettings.getRight();
@@ -207,11 +207,11 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
         );
     }
 
-    protected SimpleOption<String> stringOption(String key) {
+    public SimpleOption<String> stringOption(String key) {
         return this.stringOption(key, TextFieldCallbacks.NO_VALIDATION);
     }
 
-    protected SimpleOption<String> stringOption(String key, TextFieldCallbacks callbacks) {
+    public SimpleOption<String> stringOption(String key, TextFieldCallbacks callbacks) {
         Pair<NbtCompound, String> resolvedSettings = this.resolveSettings(key);
         NbtCompound settings = resolvedSettings.getLeft();
         String subKey = resolvedSettings.getRight();
@@ -226,14 +226,14 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
         );
     }
 
-    protected SimpleOption<String> blockOption(String key) {
+    public SimpleOption<String> blockOption(String key) {
         return this.stringOption(key, new TextFieldCallbacks(
             value -> Registries.BLOCK.containsId(Identifier.tryParse(value)),
             value -> Identifier.validate(value).isSuccess()
         ));
     }
 
-    protected SimpleOption<String> biomeOption(String key, boolean allowNone) {
+    public SimpleOption<String> biomeOption(String key, boolean allowNone) {
         Pair<NbtCompound, String> resolvedSettings = this.resolveSettings(key);
         NbtCompound settings = resolvedSettings.getLeft();
         String subKey = resolvedSettings.getRight();
@@ -251,7 +251,7 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
         );
     }
 
-    protected List<SimpleOption<?>> extendedBiomeIdOption(String key, boolean allowNone) {
+    public List<SimpleOption<?>> extendedBiomeIdOption(String key) {
         Pair<NbtCompound, String> resolvedSettings = this.resolveSettings(key);
         NbtCompound settings = resolvedSettings.getLeft();
         String subKey = resolvedSettings.getRight();
@@ -271,7 +271,7 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
         );
     }
 
-    protected List<SimpleOption<?>> heightConfigOption(String key) {
+    public List<SimpleOption<?>> heightConfigOption(String key) {
         Pair<NbtCompound, String> resolvedSettings = this.resolveSettings(key);
         NbtCompound settings = resolvedSettings.getLeft();
         String subKey = resolvedSettings.getRight();
@@ -310,7 +310,7 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
         );
     }
 
-    protected SimpleOption<Void> listEditButton(
+    public SimpleOption<Void> listEditButton(
         Text text, String key, int type,
         ModernBetaGraphicalListSettingsScreen.Constructor listSettingsScreenConstructor
     ) {
@@ -330,7 +330,7 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
         );
     }
 
-    protected SimpleOption<Void> mapEditButton(
+    public SimpleOption<Void> mapEditButton(
         Text text, String key,
         ModernBetaGraphicalMapSettingsScreen.Constructor mapSettingsScreenConstructor
     ) {

@@ -1,6 +1,5 @@
 package mod.bluestaggo.modernerbeta.fabric;
 
-import com.mojang.serialization.Codec;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.command.DebugProviderSettingsCommand;
 import mod.bluestaggo.modernerbeta.fabric.network.NetworkHelperImpl;
@@ -14,21 +13,17 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
-import net.fabricmc.fabric.api.event.registry.DynamicRegistries;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.util.Pair;
 
 import java.util.Map;
 import java.util.function.Consumer;
 
 public class ModernerBetaFabric implements ModInitializer {
     @Override
-    @SuppressWarnings("unchecked")
     public void onInitialize() {
         // Register mod stuff
         ModernBetaRegistries.makeRegistries(new RegistryHelperImpl());
@@ -39,10 +34,6 @@ public class ModernerBetaFabric implements ModInitializer {
 
         setupRegistryHandlers(ModernerBeta.REGISTRY_HANDLERS);
         setupRegistryHandlers(ModernerBeta.CUSTOM_REGISTRY_HANDLERS);
-
-        for (Pair<RegistryKey<?>, Codec<?>> dynamicRegistry : ModernerBeta.DYNAMIC_REGISTRIES) {
-            DynamicRegistries.register((RegistryKey<Registry<Object>>)dynamicRegistry.getLeft(), (Codec<Object>)dynamicRegistry.getRight());
-        }
 
         if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
             CommandRegistrationCallback.EVENT.register(DebugProviderSettingsCommand::register);

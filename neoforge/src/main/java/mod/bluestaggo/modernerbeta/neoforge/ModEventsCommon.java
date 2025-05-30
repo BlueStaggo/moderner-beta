@@ -1,6 +1,5 @@
 package mod.bluestaggo.modernerbeta.neoforge;
 
-import com.mojang.serialization.Codec;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.neoforge.network.NetworkHelperImpl;
 import mod.bluestaggo.modernerbeta.neoforge.registry.RegistryHelperImpl;
@@ -10,16 +9,12 @@ import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHelper;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.registry.VanillaRegistryHandler;
-import mod.bluestaggo.modernerbeta.world.ModernBetaWorldInitializer;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
 import net.minecraft.resource.ResourcePackProfile;
 import net.minecraft.resource.ResourcePackSource;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Pair;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLConstructModEvent;
@@ -27,7 +22,6 @@ import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
-import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 import net.neoforged.neoforge.registries.RegisterEvent;
 
@@ -59,16 +53,6 @@ public class ModEventsCommon {
         IRegistryHelper registryHelper = new RegistryHelperImpl(event);
         ModernBetaRegistries.makeRegistries(registryHelper);
         ModernerBeta.setupCustomRegistryHandlers();
-    }
-
-    @SubscribeEvent
-    @SuppressWarnings("unchecked")
-    public static void registerDatapackRegistries(DataPackRegistryEvent.NewRegistry event) {
-        for (Pair<RegistryKey<?>, Codec<?>> dynamicRegistry : ModernerBeta.DYNAMIC_REGISTRIES) {
-            RegistryKey<Registry<Object>> registryKey = (RegistryKey<Registry<Object>>)dynamicRegistry.getLeft();
-            Codec<Object> codec = (Codec<Object>)dynamicRegistry.getRight();
-            event.dataPackRegistry(registryKey, codec, codec);
-        }
     }
 
     @SubscribeEvent

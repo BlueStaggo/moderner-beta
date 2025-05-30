@@ -146,7 +146,7 @@ public class ChunkProviderClassic030 extends ChunkProviderFinite {
         
         this.minHeightOctaveNoise = new PerlinOctaveNoiseCombined(new PerlinOctaveNoise(random, 8, false), new PerlinOctaveNoise(random, 8, false));
         this.maxHeightOctaveNoise = new PerlinOctaveNoiseCombined(new PerlinOctaveNoise(random, 8, false), new PerlinOctaveNoise(random, 8, false));
-        this.mainHeightOctaveNoise = new PerlinOctaveNoise(random, 6, false);
+        this.mainHeightOctaveNoise = new PerlinOctaveNoise(random, this.chunkSettings.indevMainHeightOctaves, false);
         
         for (int x = 0; x < this.levelWidth; ++x) {
             for (int z = 0; z < this.levelLength; ++z) {
@@ -243,7 +243,7 @@ public class ChunkProviderClassic030 extends ChunkProviderFinite {
             float caveY = random.nextFloat() * this.levelHeight;
             float caveZ = random.nextFloat() * this.levelLength;
 
-            int caveLen = (int)((random.nextFloat() + random.nextFloat()) * 200F);
+            int caveLen = (int)((random.nextFloat() + random.nextFloat()) * this.chunkSettings.indevCaveLength);
             
             float theta = random.nextFloat() * 3.1415927f * 2.0f;
             float deltaTheta = 0.0f;
@@ -260,19 +260,28 @@ public class ChunkProviderClassic030 extends ChunkProviderFinite {
                 // TODO: Double-check
                 theta = theta + deltaTheta * 0.2f;
                 deltaTheta = (deltaTheta * 0.9f) + (random.nextFloat() - random.nextFloat());
-                phi = phi * 0.5f + deltaPhi * 0.25f;
-                deltaPhi = (deltaPhi * 0.75f) + (random.nextFloat() - random.nextFloat());
-                
-                if (random.nextFloat() >= 0.25f) {
-                    float centerX = caveX + (random.nextFloat() * 4.0f - 2.0f) * 0.2f;
-                    float centerY = caveY + (random.nextFloat() * 4.0f - 2.0f) * 0.2f;
-                    float centerZ = caveZ + (random.nextFloat() * 4.0f - 2.0f) * 0.2f;
-                    
-                    float radius = (this.levelHeight - centerY) / this.levelHeight;
-                    radius = 1.2f + (radius * 3.5f + 1.0f) * caveRadius;
-                    radius = radius * MathHelper.sin(len * 3.1415927f / caveLen);
-                    
-                    fillOblateSpheroid(centerX, centerY, centerZ, radius, Blocks.AIR);
+
+                if (this.chunkSettings.indevUse14aCaves) {
+                    phi = phi * 0.5f + deltaPhi * 0.5f;
+                    deltaPhi = (deltaPhi * 0.9f) + (random.nextFloat() - random.nextFloat());
+                    float radius = MathHelper.sin(len * 3.1415927f / caveLen) * 2.5F + 1.0F;
+
+                    fillOblateSpheroid(caveX, caveY, caveZ, radius, Blocks.AIR);
+                } else {
+                    phi = phi * 0.5f + deltaPhi * 0.25f;
+                    deltaPhi = (deltaPhi * 0.75f) + (random.nextFloat() - random.nextFloat());
+
+                    if (random.nextFloat() >= 0.25f) {
+                        float centerX = caveX + (random.nextFloat() * 4.0f - 2.0f) * 0.2f;
+                        float centerY = caveY + (random.nextFloat() * 4.0f - 2.0f) * 0.2f;
+                        float centerZ = caveZ + (random.nextFloat() * 4.0f - 2.0f) * 0.2f;
+
+                        float radius = (this.levelHeight - centerY) / this.levelHeight;
+                        radius = 1.2f + (radius * 3.5f + 1.0f) * caveRadius;
+                        radius = radius * MathHelper.sin(len * 3.1415927f / caveLen);
+
+                        fillOblateSpheroid(centerX, centerY, centerZ, radius, Blocks.AIR);
+                    }
                 }
             }
         }
@@ -299,7 +308,7 @@ public class ChunkProviderClassic030 extends ChunkProviderFinite {
         for (int i = 0; i < waterSourceCount; ++i) {
             int randX = random.nextInt(this.levelWidth);
             int randZ = random.nextInt(this.levelLength);
-            int randY = (this.waterLevel - 1) - random.nextInt(2);
+            int randY = (this.waterLevel - 1) - random.nextInt(this.chunkSettings.indevUniformLavaHeights ? 3 : 2);
             
             this.flood(randX, randY, randZ, fluid);
         }
@@ -314,7 +323,9 @@ public class ChunkProviderClassic030 extends ChunkProviderFinite {
         for (int i = 0; i < lavaSourceCount; ++i) {
             int randX = random.nextInt(this.levelWidth);
             int randZ = random.nextInt(this.levelLength);
-            int randY = (int)((float)(this.waterLevel - 3) * random.nextFloat() * random.nextFloat());
+            int randY = this.chunkSettings.indevUniformLavaHeights
+                ? random.nextInt(this.waterLevel - 4)
+                : (int)((float)(this.waterLevel - 3) * random.nextFloat() * random.nextFloat());
             
             this.flood(randX, randY, randZ, Blocks.LAVA);
         }
@@ -340,6 +351,10 @@ public class ChunkProviderClassic030 extends ChunkProviderFinite {
                 genGravel &= heightResult <= this.waterLevel - 1
                         && (this.chunkSettings.indevGravelBeachUnderAir && blockUp == Blocks.AIR
                                 || this.chunkSettings.indevGravelBeachUnderFluid && blockUp == this.defaultFluid.getBlock());
+
+                if (this.chunkSettings.indevPrioritizeGravelBeaches && genGravel) {
+                    genSand = false;
+                }
 
                 Block surfaceBlock = genSand ? Blocks.SAND
                         : genGravel ? Blocks.GRAVEL

@@ -1,7 +1,6 @@
 package mod.bluestaggo.modernerbeta.client.gui.screen.config;
 
 import mod.bluestaggo.modernerbeta.util.NbtCompoundBuilder;
-import mod.bluestaggo.modernerbeta.util.NbtTags;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.Screen;
@@ -28,10 +27,10 @@ public class VoronoiPointCaveBiomeListScreen extends ModernBetaGraphicalListSett
     @Override
     protected NbtElement getDefaultElement() {
         return new NbtCompoundBuilder()
-            .putString(NbtTags.BIOME, BiomeKeys.LUSH_CAVES.getValue().toString())
-            .putFloat(NbtTags.TEMP, 0.5F)
-            .putFloat(NbtTags.RAIN, 0.5F)
-            .putFloat(NbtTags.DEPTH, 0.5F)
+            .putString("biome", BiomeKeys.LUSH_CAVES.getValue().toString())
+            .putFloat("temp", 0.5F)
+            .putFloat("rain", 0.5F)
+            .putFloat("depth", 0.5F)
             .build();
     }
 }

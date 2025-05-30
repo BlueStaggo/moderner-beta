@@ -5,12 +5,12 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.util.CodecUtil;
 
 public record Infdev227Structures(
-    boolean pyramids,
+    boolean brickPyramids,
     boolean obsidianWalls
 ) {
     public static final Codec<Infdev227Structures> CODEC = RecordCodecBuilder.create(
         instance -> instance.group(
-            Codec.BOOL.fieldOf("pyramids").orElse(true).forGetter(Infdev227Structures::pyramids),
+            Codec.BOOL.fieldOf("brickPyramids").orElse(true).forGetter(Infdev227Structures::brickPyramids),
             Codec.BOOL.fieldOf("obsidianWalls").orElse(false).forGetter(Infdev227Structures::obsidianWalls)
         ).apply(instance, Infdev227Structures::new)
     );

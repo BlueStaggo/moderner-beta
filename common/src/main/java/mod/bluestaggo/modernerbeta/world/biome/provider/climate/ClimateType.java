@@ -1,11 +1,9 @@
 package mod.bluestaggo.modernerbeta.world.biome.provider.climate;
 
-import mod.bluestaggo.modernerbeta.util.NbtTags;
-
 public enum ClimateType {
-    LAND(NbtTags.BIOME),
-    OCEAN(NbtTags.OCEAN_BIOME),
-    DEEP_OCEAN(NbtTags.DEEP_OCEAN_BIOME)
+    LAND("biome"),
+    OCEAN("oceanBiome"),
+    DEEP_OCEAN("deepOceanBiome")
     ;
     
     public final String tag;

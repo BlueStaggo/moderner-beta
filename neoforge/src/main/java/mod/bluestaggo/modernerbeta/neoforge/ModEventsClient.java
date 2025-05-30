@@ -11,7 +11,6 @@ import mod.bluestaggo.modernerbeta.config.ModernBetaConfig;
 import mod.bluestaggo.modernerbeta.neoforge.registry.RegistryHelperImpl;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHelper;
-import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.registry.VanillaRegistryHandler;
 import net.minecraft.registry.Registry;
 import net.neoforged.api.distmarker.Dist;

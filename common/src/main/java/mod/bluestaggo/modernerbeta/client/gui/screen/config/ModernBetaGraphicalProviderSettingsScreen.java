@@ -55,7 +55,7 @@ public class ModernBetaGraphicalProviderSettingsScreen extends ModernBetaGraphic
             this.worldMaxY = this.worldMinY + chunkGenerator.getWorldHeight();
         } else {
             this.worldMinY = -64;
-            this.worldMaxY = 384;
+            this.worldMaxY = 320;
         }
     }
 
@@ -70,7 +70,14 @@ public class ModernBetaGraphicalProviderSettingsScreen extends ModernBetaGraphic
     @Override
     protected Pair<NbtCompound, String> resolveSettings(String key) {
         if (this.currentComponentType != null) {
-            key = this.currentComponentType + "." + key;
+            if ("self".equals(key)) {
+                return new Pair<>(this.settings, this.currentComponentType.toString());
+            }
+            if (key.isEmpty()) {
+                key = this.currentComponentType.toString();
+            } else {
+                key = this.currentComponentType + "." + key;
+            }
         }
         return super.resolveSettings(key);
     }
@@ -116,7 +123,7 @@ public class ModernBetaGraphicalProviderSettingsScreen extends ModernBetaGraphic
                         Identifier componentTypeId = componentTypeKey.getValue();
 
                         GraphicalConfigBuilder configBuilder
-                            = ModernBetaClientRegistries.GRAPHICAL_CONFIG_BUILDER.get(componentTypeId);
+                            = ModernBetaClientRegistries.SETTINGS_COMPONENT_TYPE_GUI.get(componentTypeId);
 
                         if (configBuilder == null) {
                             list.addSingleOptionEntry(this.headerOption(

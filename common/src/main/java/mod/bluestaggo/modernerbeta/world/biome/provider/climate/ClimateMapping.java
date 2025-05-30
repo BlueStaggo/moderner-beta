@@ -3,18 +3,12 @@ package mod.bluestaggo.modernerbeta.world.biome.provider.climate;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.Keyable;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import mod.bluestaggo.modernerbeta.util.NbtCompoundBuilder;
-import mod.bluestaggo.modernerbeta.util.NbtReader;
-import mod.bluestaggo.modernerbeta.util.NbtTags;
-import mod.bluestaggo.modernerbeta.util.NbtUtil;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomes;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.biome.Biome;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 

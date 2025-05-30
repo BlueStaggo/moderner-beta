@@ -339,12 +339,12 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
      * @return Modified noise density.
      */
     protected double applySlides(double density, int noiseY) {
-        if (this.noiseSlide.topSize() > 0.0) {
+        if (this.noiseSlide.topSize() > 0) {
             double delta = ((double)(this.noiseSizeY - noiseY) - this.noiseSlide.topOffset()) / this.noiseSlide.topSize();
             density = MathHelper.clampedLerp(this.noiseSlide.topTarget(), density, delta);
         }
         
-        if (this.noiseSlide.bottomSize() > 0.0) {
+        if (this.noiseSlide.bottomSize() > 0) {
             double delta = ((double)noiseY - this.noiseSlide.bottomOffset()) / this.noiseSlide.bottomSize();
             density = MathHelper.clampedLerp(this.noiseSlide.bottomTarget(), density, delta);
         }

@@ -10,11 +10,15 @@ A major number change means a big update. For this update, significant parts of 
 - Added a biome previewer to preview the biomes that will be generated for a world.
 
 ## Changes
-- Reworked the fractal layer system:
+- **BREAKING CHANGE**: Every single property has been moved
+  - This is due to a more modular approach to configuration being implemented. This allows for addons to use the Moderner Beta API to add their own configuration options.
+  - This also affects how settings appear in graphical configuration menus. They should still be accessible, just in different positions.
+- **BREAKING CHANGE**: Reworked the fractal layer system:
   - All options for the fractal biome provider have been removed in place of a single option giving users control of every single layer in the pipeline through JSON.
-  - The new system allows for much greater accuracy for the 1.12 and 1.17 presets as it can easily satisfy all sorts of edge cases without introducing too many options for the provider.
+  - The new system allows for much greater accuracy for the 1.12 and 1.17 presets as it can easily satisfy all sorts of edge cases without introducing too many individual options.
   - All fractal-based biome provider settings are incompatible for this release so they need to be adapted to the new format. This may be tedious for some users, but documentation may release some time soon.
   - Currently, the new layer system has no graphical configuration screen.
+- **BREAKING CHANGE**: Moderner Beta now uses the vanilla registry implementation instead of its own custom implementation.
 - Improved accuracy of the 0.0.14a_08 preset.
 - Removed dependency on Architectury API.
 - Made ocean biome injectors not be used if the biome provider already generates oceans.

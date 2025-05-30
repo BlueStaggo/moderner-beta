@@ -30,7 +30,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.SequencedMap;
 import java.util.function.Consumer;
-import java.util.stream.Stream;
 
 public class ModernerBeta {
     public static final String MOD_ID = "moderner_beta";

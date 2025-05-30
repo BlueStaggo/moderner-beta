@@ -116,7 +116,7 @@ public abstract class ModernBetaGraphicalSettingsScreen<T extends NbtElement> ex
         if (this.type != null) {
             text += type + ".";
         }
-        text += "." + key;
+        text += key;
         if (subKey != null) {
             text += "." + subKey;
         }
@@ -127,15 +127,15 @@ public abstract class ModernBetaGraphicalSettingsScreen<T extends NbtElement> ex
         return getTextKey(key, subKey != null ? subKey.getPath() : null);
     }
 
-    protected MutableText getText(String key) {
+    public MutableText getText(String key) {
         return this.getText(key, (String) null);
     }
 
-    protected MutableText getText(String key, String subKey) {
+    public MutableText getText(String key, String subKey) {
         return Text.translatable(getTextKey(key, subKey));
     }
 
-    protected MutableText getText(String key, Identifier subKey) {
+    public MutableText getText(String key, Identifier subKey) {
         return Text.translatable(getTextKey(key, subKey));
     }
 

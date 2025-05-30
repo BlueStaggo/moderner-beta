@@ -2,13 +2,8 @@ package mod.bluestaggo.modernerbeta.world.biome.voronoi;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import mod.bluestaggo.modernerbeta.util.*;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomes;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtList;
 import net.minecraft.util.Identifier;
-
-import java.util.List;
 
 public record VoronoiPointBiome(Identifier biome, Identifier oceanBiome, Identifier deepOceanBiome, double temp, double rain, double weird) {
     public static final Codec<VoronoiPointBiome> CODEC = RecordCodecBuilder.create(

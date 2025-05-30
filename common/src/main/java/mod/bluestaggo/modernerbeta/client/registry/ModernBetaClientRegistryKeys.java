@@ -9,7 +9,7 @@ import net.minecraft.registry.RegistryKey;
 
 @Environment(EnvType.CLIENT)
 public class ModernBetaClientRegistryKeys {
-    public static final RegistryKey<Registry<GraphicalConfigBuilder>> GRAPHICAL_CONFIG_BUILDER = of("graphical_config_builder");
+    public static final RegistryKey<Registry<GraphicalConfigBuilder>> SETTINGS_COMPONENT_TYPE_GUI = of("settings_component_type_gui");
 
     private static <T> RegistryKey<Registry<T>> of(String id) {
         return RegistryKey.ofRegistry(ModernerBeta.createId(id));

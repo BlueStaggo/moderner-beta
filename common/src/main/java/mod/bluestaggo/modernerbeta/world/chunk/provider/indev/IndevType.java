@@ -17,14 +17,4 @@ public enum IndevType implements StringIdentifiable {
     public String asString() {
         return this.id;
     }
-    
-    public static IndevType fromId(String id) {
-        for (IndevType type : IndevType.values()) {
-            if (type.id.equalsIgnoreCase(id)) {
-                return type;
-            }
-        }
-        
-        throw new IllegalArgumentException("No Indev Type matching id: " + id);
-    }
 }

@@ -5,7 +5,7 @@ import mod.bluestaggo.modernerbeta.api.world.chunk.surface.SurfaceConfig;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.settings.component.FiniteBeaches;
 import mod.bluestaggo.modernerbeta.settings.component.FiniteCaveGeneration;
-import mod.bluestaggo.modernerbeta.settings.component.FiniteNoiseScale;
+import mod.bluestaggo.modernerbeta.settings.component.FiniteNoise;
 import mod.bluestaggo.modernerbeta.settings.component.FinitePools;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
 import mod.bluestaggo.modernerbeta.util.noise.PerlinOctaveNoise;
@@ -43,7 +43,7 @@ public class ChunkProviderClassic030 extends ChunkProviderFinite {
 
     @Override
     protected void pregenerateTerrain() {
-        this.generateHeightmap(this.chunkSettings.getOrDefault(SettingsComponentTypes.FINITE_NOISE_SCALE));
+        this.generateHeightmap(this.chunkSettings.getOrDefault(SettingsComponentTypes.FINITE_NOISE));
         this.erodeTerrain();
         this.soilTerrain();
         this.carveTerrain(this.chunkSettings.getOrDefault(SettingsComponentTypes.FINITE_CAVE_GENERATION));
@@ -147,18 +147,18 @@ public class ChunkProviderClassic030 extends ChunkProviderFinite {
         return blockState;
     }
 
-    private void generateHeightmap(FiniteNoiseScale noiseScale) {
+    private void generateHeightmap(FiniteNoise noiseScale) {
         this.setPhase("Raising");
         
         this.minHeightOctaveNoise = new PerlinOctaveNoiseCombined(new PerlinOctaveNoise(random, 8, false), new PerlinOctaveNoise(random, 8, false));
         this.maxHeightOctaveNoise = new PerlinOctaveNoiseCombined(new PerlinOctaveNoise(random, 8, false), new PerlinOctaveNoise(random, 8, false));
-        this.mainHeightOctaveNoise = new PerlinOctaveNoise(random, noiseScale.mainHeightOctaves(), false);
+        this.mainHeightOctaveNoise = new PerlinOctaveNoise(random, noiseScale.selectorOctaves(), false);
         
         for (int x = 0; x < this.levelWidth; ++x) {
             for (int z = 0; z < this.levelLength; ++z) {
-                double heightLow = minHeightOctaveNoise.sample(x * noiseScale.heightScale(), z * noiseScale.heightScale())
+                double heightLow = minHeightOctaveNoise.sample(x * noiseScale.heightNoiseScale(), z * noiseScale.heightNoiseScale())
                         / noiseScale.minHeightDamp() + noiseScale.minHeightBoost();
-                double heightHigh = maxHeightOctaveNoise.sample(x * noiseScale.heightScale(), z * noiseScale.heightScale())
+                double heightHigh = maxHeightOctaveNoise.sample(x * noiseScale.heightNoiseScale(), z * noiseScale.heightNoiseScale())
                         / noiseScale.maxHeightDamp() + noiseScale.maxHeightBoost();
                 
                 double heightSelector = mainHeightOctaveNoise.sampleXY(x * noiseScale.selectorScale(), z * noiseScale.selectorScale()) / 8.0;

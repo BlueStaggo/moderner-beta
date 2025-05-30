@@ -11,7 +11,7 @@ import net.minecraft.registry.RegistryKey;
 public final class ModernBetaClientRegistries {
     private static IRegistryHelper registryHelper;
 
-    public static Registry<GraphicalConfigBuilder> GRAPHICAL_CONFIG_BUILDER;
+    public static Registry<GraphicalConfigBuilder> SETTINGS_COMPONENT_TYPE_GUI;
 
     private static <T> Registry<T> register(RegistryKey<Registry<T>> key) {
         return registryHelper.createSimple(key).build();
@@ -20,6 +20,6 @@ public final class ModernBetaClientRegistries {
     public static void makeRegistries(IRegistryHelper helper) {
         registryHelper = helper;
 
-        GRAPHICAL_CONFIG_BUILDER = register(ModernBetaClientRegistryKeys.GRAPHICAL_CONFIG_BUILDER);
+        SETTINGS_COMPONENT_TYPE_GUI = register(ModernBetaClientRegistryKeys.SETTINGS_COMPONENT_TYPE_GUI);
     }
 }

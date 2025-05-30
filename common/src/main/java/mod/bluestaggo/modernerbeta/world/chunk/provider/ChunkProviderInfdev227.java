@@ -74,7 +74,7 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
         this.defaultFluid = generatorSettings.defaultFluid();
 
         Infdev227Structures structures = this.chunkSettings.getOrElse(SettingsComponentTypes.INFDEV_227_STRUCTURES, Infdev227Structures.DISABLED);
-        this.infdevUsePyramid = structures.pyramids();
+        this.infdevUsePyramid = structures.brickPyramids();
         this.infdevUseWall = structures.obsidianWalls();
         
         this.octaveNoiseA = new PerlinOctaveNoise(this.random, 16, true); 

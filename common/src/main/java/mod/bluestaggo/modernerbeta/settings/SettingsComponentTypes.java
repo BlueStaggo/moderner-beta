@@ -2,7 +2,6 @@ package mod.bluestaggo.modernerbeta.settings;
 
 import com.mojang.serialization.Codec;
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
-import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import mod.bluestaggo.modernerbeta.settings.component.*;
 import mod.bluestaggo.modernerbeta.world.biome.provider.climate.ClimateMapping;
@@ -29,7 +28,7 @@ public class SettingsComponentTypes {
     public static SettingsComponentType<Infdev227Structures> INFDEV_227_STRUCTURES;
     public static SettingsComponentType<FiniteLevelProperties> FINITE_LEVEL_PROPERTIES;
     public static SettingsComponentType<FiniteCaveGeneration> FINITE_CAVE_GENERATION;
-    public static SettingsComponentType<FiniteNoiseScale> FINITE_NOISE_SCALE;
+    public static SettingsComponentType<FiniteNoise> FINITE_NOISE;
     public static SettingsComponentType<FiniteBeaches> FINITE_BEACHES;
     public static SettingsComponentType<FinitePools> FINITE_POOLS;
     public static SettingsComponentType<Boolean> SPAWN_INDEV_HOUSE;
@@ -100,10 +99,10 @@ public class SettingsComponentTypes {
             ModernBetaBuiltInTypes.SettingsComponentType.FINITE_CAVE_GENERATION.id,
             FiniteCaveGeneration.CODEC,
             FiniteCaveGeneration.DEFAULT);
-        FINITE_NOISE_SCALE = register(
-            ModernBetaBuiltInTypes.SettingsComponentType.FINITE_NOISE_SCALE.id,
-            FiniteNoiseScale.CODEC,
-            FiniteNoiseScale.DEFAULT);
+        FINITE_NOISE = register(
+            ModernBetaBuiltInTypes.SettingsComponentType.FINITE_NOISE.id,
+            FiniteNoise.CODEC,
+            FiniteNoise.DEFAULT);
         FINITE_BEACHES = register(
             ModernBetaBuiltInTypes.SettingsComponentType.FINITE_BEACHES.id,
             FiniteBeaches.CODEC,

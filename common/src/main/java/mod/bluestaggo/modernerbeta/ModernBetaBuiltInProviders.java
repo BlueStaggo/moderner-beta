@@ -105,7 +105,7 @@ public class ModernBetaBuiltInProviders {
             SettingsComponentTypes.CAVE_GENERATION,
             SettingsComponentTypes.FINITE_LEVEL_PROPERTIES,
             SettingsComponentTypes.FINITE_CAVE_GENERATION,
-            SettingsComponentTypes.FINITE_NOISE_SCALE,
+            SettingsComponentTypes.FINITE_NOISE,
             SettingsComponentTypes.FINITE_BEACHES,
             SettingsComponentTypes.FINITE_POOLS,
             SettingsComponentTypes.SPAWN_INDEV_HOUSE
@@ -118,7 +118,7 @@ public class ModernBetaBuiltInProviders {
             SettingsComponentTypes.CAVE_GENERATION,
             SettingsComponentTypes.FINITE_LEVEL_PROPERTIES,
             SettingsComponentTypes.FINITE_CAVE_GENERATION,
-            SettingsComponentTypes.FINITE_NOISE_SCALE,
+            SettingsComponentTypes.FINITE_NOISE,
             SettingsComponentTypes.FINITE_BEACHES,
             SettingsComponentTypes.FINITE_POOLS
         ));
@@ -197,7 +197,7 @@ public class ModernBetaBuiltInProviders {
         ));
         registryHandler.register(ModernBetaBuiltInTypes.CaveBiome.VORONOI.id, new CaveBiomeProviderType<>(
             CaveBiomeProviderVoronoi::new,
-            SettingsComponentTypes.DEEPSLATE_GENERATION
+            SettingsComponentTypes.VORONOI_POINTS
         ));
     }
     

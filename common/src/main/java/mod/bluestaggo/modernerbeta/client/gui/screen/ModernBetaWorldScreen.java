@@ -1,9 +1,6 @@
 package mod.bluestaggo.modernerbeta.client.gui.screen;
 
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
-import mod.bluestaggo.modernerbeta.client.gui.screen.config.ModernBetaGraphicalBiomeSettingsScreen;
-import mod.bluestaggo.modernerbeta.client.gui.screen.config.ModernBetaGraphicalCaveBiomeSettingsScreen;
-import mod.bluestaggo.modernerbeta.client.gui.screen.config.ModernBetaGraphicalChunkSettingsScreen;
 import mod.bluestaggo.modernerbeta.client.gui.screen.config.ModernBetaGraphicalProviderSettingsScreen;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
@@ -170,7 +167,7 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
                     Pair<ModernBetaSettingsPreset, Boolean> updatedPreset = this.preset.setNbt(null, nbtCompound, null);
                     this.preset = updatedPreset.getLeft();
                 },
-                ModernBetaRegistries.CHUNK
+                ModernBetaRegistries.BIOME
             ))
         ).build();
 

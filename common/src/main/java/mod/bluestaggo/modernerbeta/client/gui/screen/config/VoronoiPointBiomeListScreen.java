@@ -1,7 +1,6 @@
 package mod.bluestaggo.modernerbeta.client.gui.screen.config;
 
 import mod.bluestaggo.modernerbeta.util.NbtCompoundBuilder;
-import mod.bluestaggo.modernerbeta.util.NbtTags;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.Screen;
@@ -28,12 +27,12 @@ public class VoronoiPointBiomeListScreen extends ModernBetaGraphicalListSettings
     @Override
     protected NbtElement getDefaultElement() {
         return new NbtCompoundBuilder()
-            .putString(NbtTags.BIOME, BiomeKeys.PLAINS.getValue().toString())
-            .putString(NbtTags.OCEAN_BIOME, BiomeKeys.OCEAN.getValue().toString())
-            .putString(NbtTags.DEEP_OCEAN_BIOME, BiomeKeys.DEEP_OCEAN.getValue().toString())
-            .putFloat(NbtTags.TEMP, 0.5F)
-            .putFloat(NbtTags.RAIN, 0.5F)
-            .putFloat(NbtTags.WEIRD, 0.5F)
+            .putString("biome", BiomeKeys.PLAINS.getValue().toString())
+            .putString("oceanBiome", BiomeKeys.OCEAN.getValue().toString())
+            .putString("deepOceanBiome", BiomeKeys.DEEP_OCEAN.getValue().toString())
+            .putFloat("temp", 0.5F)
+            .putFloat("rain", 0.5F)
+            .putFloat("weird", 0.5F)
             .build();
     }
 }

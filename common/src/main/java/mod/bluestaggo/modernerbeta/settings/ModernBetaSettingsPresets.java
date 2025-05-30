@@ -13,7 +13,6 @@ import mod.bluestaggo.modernerbeta.world.biome.voronoi.VoronoiPointBiome;
 import mod.bluestaggo.modernerbeta.world.chunk.provider.indev.IndevTheme;
 import mod.bluestaggo.modernerbeta.world.chunk.provider.indev.IndevType;
 import mod.bluestaggo.modernerbeta.world.chunk.provider.island.IslandShape;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.collection.Pool;
 import net.minecraft.util.collection.Weighted;
 import net.minecraft.world.biome.BiomeKeys;
@@ -324,7 +323,7 @@ public class ModernBetaSettingsPresets {
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.INDEV.id)
                 .add(DEEPSLATE_GENERATION, DeepslateGeneration.DISABLED)
                 .add(CAVE_GENERATION, CaveGeneration.DISABLED)
-                .addDefault(FINITE_LEVEL_PROPERTIES, FINITE_CAVE_GENERATION, FINITE_NOISE_SCALE, FINITE_BEACHES, FINITE_POOLS)
+                .addDefault(FINITE_LEVEL_PROPERTIES, FINITE_CAVE_GENERATION, FINITE_NOISE, FINITE_BEACHES, FINITE_POOLS)
                 .build(),
             ModernBetaSettings.singleBiome(ModernBetaBiomes.INDEV_NORMAL),
             ModernBetaSettings.noCaveBiomes()
@@ -346,7 +345,7 @@ public class ModernBetaSettingsPresets {
                     true,
                     false
                 ))
-                .addDefault(FINITE_LEVEL_PROPERTIES, FINITE_CAVE_GENERATION, FINITE_NOISE_SCALE, FINITE_POOLS, SPAWN_INDEV_HOUSE)
+                .addDefault(FINITE_LEVEL_PROPERTIES, FINITE_CAVE_GENERATION, FINITE_NOISE, FINITE_POOLS, SPAWN_INDEV_HOUSE)
                 .build(),
             ModernBetaSettings.singleBiome(ModernBetaBiomes.INDEV_NORMAL),
             ModernBetaSettings.noCaveBiomes()
@@ -366,7 +365,7 @@ public class ModernBetaSettingsPresets {
                     1.0f,
                     75.0f
                 ))
-                .add(FINITE_NOISE_SCALE, new FiniteNoiseScale(
+                .add(FINITE_NOISE, new FiniteNoise(
                     1.3f,
                     1.0f,
                     8.0f,

@@ -18,7 +18,7 @@ public final class ModernBetaBuiltInTypes {
         INFDEV_227_STRUCTURES("infdev_227_structures"),
         FINITE_LEVEL_PROPERTIES("finite_level_properties"),
         FINITE_CAVE_GENERATION("finite_cave_generation"),
-        FINITE_NOISE_SCALE("finite_noise_scale"),
+        FINITE_NOISE("finite_noise"),
         FINITE_BEACHES("finite_beaches"),
         FINITE_POOLS("finite_pools"),
         SPAWN_INDEV_HOUSE("spawn_indev_house"),

@@ -5,7 +5,7 @@ import mod.bluestaggo.modernerbeta.api.world.chunk.surface.SurfaceConfig;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.settings.component.FiniteBeaches;
 import mod.bluestaggo.modernerbeta.settings.component.FiniteCaveGeneration;
-import mod.bluestaggo.modernerbeta.settings.component.FiniteNoiseScale;
+import mod.bluestaggo.modernerbeta.settings.component.FiniteNoise;
 import mod.bluestaggo.modernerbeta.settings.component.FinitePools;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
 import mod.bluestaggo.modernerbeta.util.noise.PerlinOctaveNoise;
@@ -121,7 +121,7 @@ public class ChunkProviderIndev extends ChunkProviderFinite {
     
     @Override
     protected void pregenerateTerrain() {
-        FiniteNoiseScale noiseSettings = this.chunkSettings.getOrDefault(SettingsComponentTypes.FINITE_NOISE_SCALE);
+        FiniteNoise noiseSettings = this.chunkSettings.getOrDefault(SettingsComponentTypes.FINITE_NOISE);
         FiniteBeaches beachSettings = this.chunkSettings.getOrDefault(SettingsComponentTypes.FINITE_BEACHES);
         FinitePools poolSettings = this.chunkSettings.getOrDefault(SettingsComponentTypes.FINITE_POOLS);
 
@@ -133,7 +133,7 @@ public class ChunkProviderIndev extends ChunkProviderFinite {
             minHeightOctaveNoise = new PerlinOctaveNoiseCombined(new PerlinOctaveNoise(random, 8, false), new PerlinOctaveNoise(random, 8, false));
             maxHeightOctaveNoise = new PerlinOctaveNoiseCombined(new PerlinOctaveNoise(random, 8, false), new PerlinOctaveNoise(random, 8, false));
             
-            mainHeightOctaveNoise = new PerlinOctaveNoise(random, noiseSettings.mainHeightOctaves(), false);
+            mainHeightOctaveNoise = new PerlinOctaveNoise(random, noiseSettings.selectorOctaves(), false);
             islandOctaveNoise = new PerlinOctaveNoise(random, 2, false);
             
             dirtOctaveNoise = new PerlinOctaveNoise(random, 8, false);
@@ -251,7 +251,7 @@ public class ChunkProviderIndev extends ChunkProviderFinite {
         return blockState;
     }
 
-    private void generateHeightmap(FiniteNoiseScale noiseSettings) {
+    private void generateHeightmap(FiniteNoise noiseSettings) {
         this.setPhase("Raising");
         
         for (int x = 0; x < this.levelWidth; ++x) {
@@ -260,9 +260,9 @@ public class ChunkProviderIndev extends ChunkProviderFinite {
             for (int z = 0; z < this.levelLength; ++z) {
                 double normalizedZ = Math.abs((z / (this.levelLength - 1.0) - 0.5) * 2.0);
                 
-                double heightLow = minHeightOctaveNoise.sample(x * noiseSettings.heightScale(), z * noiseSettings.heightScale())
+                double heightLow = minHeightOctaveNoise.sample(x * noiseSettings.heightNoiseScale(), z * noiseSettings.heightNoiseScale())
                         / noiseSettings.minHeightDamp() + noiseSettings.minHeightBoost();
-                double heightHigh = maxHeightOctaveNoise.sample(x * noiseSettings.heightScale(), z * noiseSettings.heightScale())
+                double heightHigh = maxHeightOctaveNoise.sample(x * noiseSettings.heightNoiseScale(), z * noiseSettings.heightNoiseScale())
                         / noiseSettings.maxHeightDamp() + noiseSettings.maxHeightBoost();
 
                 double heightSelector = mainHeightOctaveNoise.sampleXY(x * noiseSettings.selectorScale(), z * noiseSettings.selectorScale()) / 8.0;

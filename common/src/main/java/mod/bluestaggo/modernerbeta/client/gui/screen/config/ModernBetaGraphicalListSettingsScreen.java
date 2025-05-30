@@ -3,7 +3,6 @@ package mod.bluestaggo.modernerbeta.client.gui.screen.config;
 import mod.bluestaggo.modernerbeta.client.gui.optioncallbacks.FloatSliderCallbacks;
 import mod.bluestaggo.modernerbeta.client.gui.optioncallbacks.BiomePickerCallbacks;
 import mod.bluestaggo.modernerbeta.client.gui.optioncallbacks.TextFieldCallbacks;
-import mod.bluestaggo.modernerbeta.util.NbtTags;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -122,7 +121,7 @@ public abstract class ModernBetaGraphicalListSettingsScreen extends ModernBetaGr
         );
     }
 
-    protected List<SimpleOption<?>> extendedBiomeIdOption(int i, boolean allowNone) {
+    protected List<SimpleOption<?>> extendedBiomeIdOption(int i) {
         return List.of(
             new SimpleOption<>(
                 "",
@@ -140,15 +139,15 @@ public abstract class ModernBetaGraphicalListSettingsScreen extends ModernBetaGr
 
     protected List<SimpleOption<?>> voronoiPointBiomeOption(int i) {
         ArrayList<SimpleOption<?>> list = new ArrayList<>(List.of(
-            this.headerOption(Text.translatable(STRING_PREFIX + "biome.climateMappings." + NbtTags.BIOME)),
-            this.biomeSubOption(i, NbtTags.BIOME, false),
-            this.headerOption(Text.translatable(STRING_PREFIX + "biome.climateMappings." + NbtTags.OCEAN_BIOME)),
-            this.biomeSubOption(i, NbtTags.OCEAN_BIOME, false),
-            this.headerOption(Text.translatable(STRING_PREFIX + "biome.climateMappings." + NbtTags.DEEP_OCEAN_BIOME)),
-            this.biomeSubOption(i, NbtTags.DEEP_OCEAN_BIOME, false),
-            this.floatRangeSubOption(i, NbtTags.TEMP, 0.0F, 1.0F),
-            this.floatRangeSubOption(i, NbtTags.RAIN, 0.0F, 1.0F),
-            this.floatRangeSubOption(i, NbtTags.WEIRD, 0.0F, 1.0F)
+            this.headerOption(Text.translatable(STRING_PREFIX + "climate_mappings.biome")),
+            this.biomeSubOption(i, "biome", false),
+            this.headerOption(Text.translatable(STRING_PREFIX + "climate_mappings.oceanBiome")),
+            this.biomeSubOption(i, "ocean", false),
+            this.headerOption(Text.translatable(STRING_PREFIX + "climate_mappings.deepOceanBiome")),
+            this.biomeSubOption(i, "deepOcean", false),
+            this.floatRangeSubOption(i, "temp", 0.0F, 1.0F),
+            this.floatRangeSubOption(i, "rain", 0.0F, 1.0F),
+            this.floatRangeSubOption(i, "weird", 0.0F, 1.0F)
         ));
         list.add(null);
         return list;
@@ -156,11 +155,11 @@ public abstract class ModernBetaGraphicalListSettingsScreen extends ModernBetaGr
 
     protected List<SimpleOption<?>> voronoiPointCaveBiomeOption(int i) {
         ArrayList<SimpleOption<?>> list = new ArrayList<>(List.of(
-            this.headerOption(Text.translatable(STRING_PREFIX + "biome.climateMappings." + NbtTags.BIOME)),
-            this.biomeSubOption(i, NbtTags.BIOME, true),
-            this.floatRangeSubOption(i, NbtTags.TEMP, 0.0F, 1.0F),
-            this.floatRangeSubOption(i, NbtTags.RAIN, 0.0F, 1.0F),
-            this.floatRangeSubOption(i, NbtTags.DEPTH, 0.0F, 1.0F)
+            this.headerOption(Text.translatable(STRING_PREFIX + "climate_mappings.biome")),
+            this.biomeSubOption(i, "biome", true),
+            this.floatRangeSubOption(i, "temp", 0.0F, 1.0F),
+            this.floatRangeSubOption(i, "rain", 0.0F, 1.0F),
+            this.floatRangeSubOption(i, "depth", 0.0F, 1.0F)
         ));
         list.add(null);
         return list;

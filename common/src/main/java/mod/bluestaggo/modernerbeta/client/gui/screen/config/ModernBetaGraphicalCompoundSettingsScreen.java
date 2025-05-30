@@ -17,11 +17,13 @@ import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
+import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.MathHelper;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 @Environment(EnvType.CLIENT)
 public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBetaGraphicalSettingsScreen<NbtCompound> {
@@ -68,11 +70,12 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
         Pair<NbtCompound, String> resolvedSettings = this.resolveSettings(key);
         NbtCompound settings = resolvedSettings.getLeft();
         String subKey = resolvedSettings.getRight();
+        String textKey = this.getTextKey(key);
 
         return new SimpleOption<>(
-            this.getTextKey(key),
+            textKey,
             SimpleOption.emptyTooltip(),
-            (optionText, value) -> this.getText(key, value),
+            (optionText, value) -> Text.translatable(textKey + "." + value),
             new SimpleOption.LazyCyclingCallbacks<>(
                 () -> Arrays.stream(options).toList(),
                 value -> Arrays.stream(options).filter(value::equals).findFirst(),
@@ -86,15 +89,23 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
         );
     }
 
+    public SimpleOption<String> selectionOption(String key, Supplier<StringIdentifiable[]> options) {
+        return this.selectionOption(key,
+            Arrays.stream(options.get())
+                .map(StringIdentifiable::asString)
+                .toArray(String[]::new));
+    }
+
     public SimpleOption<String> selectionOption(String key, String... options) {
         Pair<NbtCompound, String> resolvedSettings = this.resolveSettings(key);
         NbtCompound settings = resolvedSettings.getLeft();
         String subKey = resolvedSettings.getRight();
+        String textKey = this.getTextKey(key);
 
         return new SimpleOption<>(
-            this.getTextKey(key),
+            textKey,
             SimpleOption.emptyTooltip(),
-            (optionText, value) -> this.getText(key, value),
+            (optionText, value) -> Text.translatable(textKey + "." + value),
             new SimpleOption.LazyCyclingCallbacks<>(
                 () -> Arrays.stream(options).toList(),
                 value -> Arrays.stream(options).filter(value::equals).findFirst(),
@@ -118,15 +129,21 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
     }
 
     public SimpleOption<Integer> intRangeOption(String key, int min, int max) {
-        return this.intRangeOption(key, new SimpleOption.ValidatingIntSliderCallbacks(min, max), (optionText, value) -> GameOptions.getGenericValueText(this.getText(key), value));
+        String textKey = this.getTextKey(key);
+        return this.intRangeOption(key, new SimpleOption.ValidatingIntSliderCallbacks(min, max),
+            (optionText, value) -> GameOptions.getGenericValueText(Text.translatable(textKey), value));
     }
 
     public SimpleOption<Integer> intRangeOption(String key, int min, int max, int multiple) {
-        return this.intRangeOption(key, new ValidatingIntMultipleSliderCallbacks(min, max, multiple), (optionText, value) -> GameOptions.getGenericValueText(this.getText(key), value));
+        String textKey = this.getTextKey(key);
+        return this.intRangeOption(key, new ValidatingIntMultipleSliderCallbacks(min, max, multiple),
+            (optionText, value) -> GameOptions.getGenericValueText(Text.translatable(textKey), value));
     }
 
     public SimpleOption<Integer> intRangeOption(String key, SimpleOption.IntSliderCallbacks intSliderCallbacks) {
-        return this.intRangeOption(key, intSliderCallbacks, (optionText, value) -> GameOptions.getGenericValueText(this.getText(key), value));
+        String textKey = this.getTextKey(key);
+        return this.intRangeOption(key, intSliderCallbacks,
+            (optionText, value) -> GameOptions.getGenericValueText(Text.translatable(textKey), value));
     }
 
     public SimpleOption<Integer> intRangeOption(String key, SimpleOption.IntSliderCallbacks intSliderCallbacks, SimpleOption.ValueTextGetter<Integer> valueTextGetter) {
@@ -196,11 +213,12 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
         Pair<NbtCompound, String> resolvedSettings = this.resolveSettings(key);
         NbtCompound settings = resolvedSettings.getLeft();
         String subKey = resolvedSettings.getRight();
+        String textKey = this.getTextKey(key);
 
         return new SimpleOption<>(
-            this.getTextKey(key),
+            textKey,
             SimpleOption.emptyTooltip(),
-            (optionText, value) -> GameOptions.getGenericValueText(this.getText(key), Text.literal("%.3f".formatted(value))),
+            (optionText, value) -> GameOptions.getGenericValueText(Text.translatable(textKey), Text.literal("%.3f".formatted(value))),
             new FloatSliderCallbacks(min, max),
             settings.getFloat(subKey).orElse(0.0F),
             value -> settings.putFloat(subKey, value)

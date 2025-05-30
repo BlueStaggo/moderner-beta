@@ -21,7 +21,7 @@ public class ExtendedBiomeIdListScreen extends ModernBetaGraphicalListSettingsSc
 
     @Override
     protected List<SimpleOption<?>> getOptions(int i) {
-        return this.extendedBiomeIdOption(i, false);
+        return this.extendedBiomeIdOption(i);
     }
 
     @Override

@@ -24,17 +24,7 @@ public enum IslandShape implements StringIdentifiable {
     public double getDistance(int noiseX, int noiseZ) {
         return this.provider.apply(noiseX, noiseZ);
     }
-    
-    public static IslandShape fromId(String id) {
-        for (IslandShape shape : IslandShape.values()) {
-            if (shape.id.equalsIgnoreCase(id)) {
-                return shape;
-            }
-        }
-        
-        throw new IllegalArgumentException("No Island Shape matching id: " + id);
-    }
-    
+
     @FunctionalInterface
     public interface DistanceProvider {
         double apply(int noiseX, int noiseZ);

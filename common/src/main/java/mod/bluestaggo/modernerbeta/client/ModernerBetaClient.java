@@ -17,7 +17,7 @@ public class ModernerBetaClient {
 
     public static void setupCustomRegistryHandlers() {
         SequencedMap<Registry<?>, Consumer<IRegistryHandler<?>>> customRegistryHandlers = new LinkedHashMap<>();
-        customRegistryHandlers.put(ModernBetaClientRegistries.GRAPHICAL_CONFIG_BUILDER, ModernBetaClientBuiltInProviders::registerGraphicalConfigBuilders);
+        customRegistryHandlers.put(ModernBetaClientRegistries.SETTINGS_COMPONENT_TYPE_GUI, ModernBetaClientBuiltInProviders::registerSettingsComponentTypeGuis);
         CUSTOM_REGISTRY_HANDLERS = Collections.unmodifiableSequencedMap(customRegistryHandlers);
     }
 }

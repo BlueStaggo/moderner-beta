@@ -26,7 +26,7 @@ public class ModernBetaSettingsPresets {
     public static final ModernBetaSettingsPreset PRESET_BETA_1_7_3 = presetBeta(false);
     public static final ModernBetaSettingsPreset PRESET_BETA_1_1_02 = presetBeta(true);
     public static final ModernBetaSettingsPreset PRESET_ALPHA = presetAlpha();
-    public static final ModernBetaSettingsPreset PRESET_SKYLANDS = presetSkylands();
+    public static final ModernBetaSettingsPreset PRESET_SKYLANDS = presetSkylands(false);
     public static final ModernBetaSettingsPreset PRESET_INFDEV_415 = presetInfdev415();
     public static final ModernBetaSettingsPreset PRESET_INFDEV_420 = presetInfdev420();
     public static final ModernBetaSettingsPreset PRESET_INFDEV_611 = presetInfdev611();
@@ -44,7 +44,7 @@ public class ModernBetaSettingsPresets {
     public static final ModernBetaSettingsPreset PRESET_RELEASE_1_6_4 = preset164(0);
     public static final ModernBetaSettingsPreset PRESET_RELEASE_1_12_2 = preset1122(0);
     public static final ModernBetaSettingsPreset PRESET_RELEASE_1_17_1 = preset1171(0);
-    public static final ModernBetaSettingsPreset PRESET_BETA_SKYLANDS = presetBetaSkylands();
+    public static final ModernBetaSettingsPreset PRESET_BETA_SKYLANDS = presetSkylands(true);
     public static final ModernBetaSettingsPreset PRESET_BETA_ISLES = presetIsles(PRESET_BETA_1_7_3);
     public static final ModernBetaSettingsPreset PRESET_BETA_WATER_WORLD = presetWaterWorld(PRESET_BETA_1_7_3);
     public static final ModernBetaSettingsPreset PRESET_BETA_ISLE_LAND = presetIsleLand(PRESET_BETA_1_7_3);
@@ -227,7 +227,7 @@ public class ModernBetaSettingsPresets {
         );
     }
     
-    private static ModernBetaSettingsPreset presetSkylands() {
+    private static ModernBetaSettingsPreset presetSkylands(boolean overworldBiomes) {
         ModernBetaSettingsChunk.Builder settingsChunk = new ModernBetaSettingsChunk.Builder();
         ModernBetaSettingsBiome.Builder settingsBiome = new ModernBetaSettingsBiome.Builder();
         ModernBetaSettingsCaveBiome.Builder settingsCaveBiome = new ModernBetaSettingsCaveBiome.Builder();
@@ -251,13 +251,17 @@ public class ModernBetaSettingsPresets {
         settingsChunk.noiseBottomSlideTarget = -30;
         settingsChunk.noiseBottomSlideSize = 7;
         settingsChunk.noiseBottomSlideOffset = 1;
-        
-        settingsBiome.biomeProvider = ModernBetaBuiltInTypes.Biome.SINGLE.id;
-        settingsBiome.singleBiome = ModernBetaBiomes.BETA_SKY.getValue();
+
+        if (overworldBiomes) {
+            settingsBiome.biomeProvider = ModernBetaBuiltInTypes.Biome.BETA.id;
+            settingsCaveBiome.biomeProvider = ModernBetaBuiltInTypes.CaveBiome.VORONOI.id;
+        } else {
+            settingsBiome.biomeProvider = ModernBetaBuiltInTypes.Biome.SINGLE.id;
+            settingsBiome.singleBiome = ModernBetaBiomes.BETA_SKY.getValue();
+            settingsCaveBiome.biomeProvider = ModernBetaBuiltInTypes.CaveBiome.NONE.id;
+        }
         settingsBiome.useOceanBiomes = false;
-        
-        settingsCaveBiome.biomeProvider = ModernBetaBuiltInTypes.CaveBiome.NONE.id;
-        
+
         return new ModernBetaSettingsPreset(
             settingsChunk.build(),
             settingsBiome.build(),
@@ -593,29 +597,6 @@ public class ModernBetaSettingsPresets {
         );
         
         settingsCaveBiome.biomeProvider = ModernBetaBuiltInTypes.CaveBiome.NONE.id;
-        
-        return new ModernBetaSettingsPreset(
-            settingsChunk.build(),
-            settingsBiome.build(),
-            settingsCaveBiome.build()
-        );
-    }
-    
-    private static ModernBetaSettingsPreset presetBetaSkylands() {
-        ModernBetaSettingsPreset initial = presetSkylands();
-        
-        NbtCompound compoundChunk = initial.settingsChunk().toCompound();
-        NbtCompound compoundBiome = initial.settingsBiome().toCompound();
-        NbtCompound compoundCaveBiome = initial.settingsCaveBiome().toCompound();
-        
-        ModernBetaSettingsChunk.Builder settingsChunk = new ModernBetaSettingsChunk.Builder().fromCompound(compoundChunk);
-        ModernBetaSettingsBiome.Builder settingsBiome = new ModernBetaSettingsBiome.Builder().fromCompound(compoundBiome);
-        ModernBetaSettingsCaveBiome.Builder settingsCaveBiome = new ModernBetaSettingsCaveBiome.Builder().fromCompound(compoundCaveBiome);
-        
-        settingsBiome.biomeProvider = ModernBetaBuiltInTypes.Biome.BETA.id;
-        settingsBiome.useOceanBiomes = false;
-        
-        settingsCaveBiome.biomeProvider = ModernBetaBuiltInTypes.CaveBiome.VORONOI.id;
         
         return new ModernBetaSettingsPreset(
             settingsChunk.build(),

@@ -63,8 +63,8 @@ public class ModernerBeta {
             Map.entry(ModernBetaRegistries.BLOCKSOURCE, ModernBetaBuiltInProviders::registerBlockSources),
             Map.entry(ModernBetaRegistries.SETTINGS_PRESET, ModernBetaBuiltInProviders::registerSettingsPresets),
             Map.entry(ModernBetaRegistries.SETTINGS_PRESET_CATEGORY, ModernBetaBuiltInProviders::registerSettingsPresetCategories),
-            Map.entry(ModernBetaRegistries.FRACTAL_LAYER, handler -> LayerType.init()),
-            Map.entry(ModernBetaRegistries.BIOME_PREDICATE, handler -> BiomePredicateType.init())
+            Map.entry(ModernBetaRegistries.FRACTAL_LAYER, LayerType::init),
+            Map.entry(ModernBetaRegistries.BIOME_PREDICATE, BiomePredicateType::init)
         );
     }
 

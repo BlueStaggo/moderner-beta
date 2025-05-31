@@ -117,7 +117,7 @@ public class ModernBetaGraphicalProviderSettingsScreen extends ModernBetaGraphic
         if (providerType == null) {
             list.addSingleOptionEntry(this.headerOption(Text.translatable(STRING_PREFIX + "invalidProvider")));
         } else {
-            for (SettingsComponentType<?> componentType : providerType.requiredSettingsComponents()) {
+            for (SettingsComponentType<?> componentType : providerType.requiredSettingsComponents().get()) {
                 ModernBetaRegistries.SETTINGS_COMPONENT_TYPE.getKey(componentType)
                     .ifPresent(componentTypeKey -> {
                         Identifier componentTypeId = componentTypeKey.getValue();

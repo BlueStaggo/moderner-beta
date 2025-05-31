@@ -6,17 +6,13 @@ import mod.bluestaggo.modernerbeta.settings.SettingsComponentType;
 import net.minecraft.registry.RegistryEntryLookup;
 import net.minecraft.world.biome.Biome;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.function.Supplier;
 
 public record CaveBiomeProviderType<T extends CaveBiomeProvider>(
     Constructor<T> constructor,
-    List<SettingsComponentType<?>> requiredSettingsComponents
+    Supplier<List<SettingsComponentType<?>>> requiredSettingsComponents
 ) implements ProviderType {
-    public CaveBiomeProviderType(Constructor<T> constructor, SettingsComponentType<?>... requiredSettingsComponents) {
-        this(constructor, Arrays.asList(requiredSettingsComponents));
-    }
-
     public T apply(ModernBetaSettings settings, RegistryEntryLookup<Biome> biomeRegistry, long seed) {
         return constructor.apply(settings, biomeRegistry, seed);
     }

@@ -19,6 +19,9 @@ import mod.bluestaggo.modernerbeta.world.cavebiome.provider.CaveBiomeProviderSin
 import mod.bluestaggo.modernerbeta.world.cavebiome.provider.CaveBiomeProviderVoronoi;
 import mod.bluestaggo.modernerbeta.world.chunk.provider.*;
 
+import java.util.Collections;
+import java.util.List;
+
 /*
  * Registration of built-in providers for various things.
  *  
@@ -31,128 +34,140 @@ public class ModernBetaBuiltInProviders {
         IRegistryHandler<ChunkProviderType<?>> registryHandler = (IRegistryHandler<ChunkProviderType<?>>) handler;
 
         registryHandler.register(ModernBetaBuiltInTypes.Chunk.BETA.id, new ChunkProviderType<>(
-            ChunkProviderBeta::new,
-            SettingsComponentTypes.DEEPSLATE_GENERATION,
-            SettingsComponentTypes.USE_SURFACE_RULES,
-            SettingsComponentTypes.SEA_LEVEL_OFFSET,
-            SettingsComponentTypes.CAVE_GENERATION,
-            SettingsComponentTypes.NOISE_SCALE,
-            SettingsComponentTypes.NOISE_SLIDE,
-            SettingsComponentTypes.ISLES_PROPERTIES
+            ChunkProviderBeta::new, () -> List.of(
+                SettingsComponentTypes.DEEPSLATE_GENERATION,
+                SettingsComponentTypes.USE_SURFACE_RULES,
+                SettingsComponentTypes.SEA_LEVEL_OFFSET,
+                SettingsComponentTypes.CAVE_GENERATION,
+                SettingsComponentTypes.NOISE_SCALE,
+                SettingsComponentTypes.NOISE_SLIDE,
+                SettingsComponentTypes.ISLES_PROPERTIES
+            )
         ));
         registryHandler.register(ModernBetaBuiltInTypes.Chunk.SKYLANDS.id, new ChunkProviderType<>(
-            ChunkProviderSky::new,
-            SettingsComponentTypes.DEEPSLATE_GENERATION,
-            SettingsComponentTypes.USE_SURFACE_RULES,
-            SettingsComponentTypes.CAVE_GENERATION,
-            SettingsComponentTypes.NOISE_SCALE,
-            SettingsComponentTypes.NOISE_SLIDE,
-            SettingsComponentTypes.ISLES_PROPERTIES
+            ChunkProviderSky::new, () -> List.of(
+                SettingsComponentTypes.DEEPSLATE_GENERATION,
+                SettingsComponentTypes.USE_SURFACE_RULES,
+                SettingsComponentTypes.CAVE_GENERATION,
+                SettingsComponentTypes.NOISE_SCALE,
+                SettingsComponentTypes.NOISE_SLIDE,
+                SettingsComponentTypes.ISLES_PROPERTIES
+            )
         ));
         registryHandler.register(ModernBetaBuiltInTypes.Chunk.ALPHA.id, new ChunkProviderType<>(
-            ChunkProviderAlpha::new,
-            SettingsComponentTypes.DEEPSLATE_GENERATION,
-            SettingsComponentTypes.USE_SURFACE_RULES,
-            SettingsComponentTypes.SEA_LEVEL_OFFSET,
-            SettingsComponentTypes.CAVE_GENERATION,
-            SettingsComponentTypes.NOISE_SCALE,
-            SettingsComponentTypes.NOISE_SLIDE,
-            SettingsComponentTypes.ISLES_PROPERTIES
+            ChunkProviderAlpha::new, () -> List.of(
+                SettingsComponentTypes.DEEPSLATE_GENERATION,
+                SettingsComponentTypes.USE_SURFACE_RULES,
+                SettingsComponentTypes.SEA_LEVEL_OFFSET,
+                SettingsComponentTypes.CAVE_GENERATION,
+                SettingsComponentTypes.NOISE_SCALE,
+                SettingsComponentTypes.NOISE_SLIDE,
+                SettingsComponentTypes.ISLES_PROPERTIES
+            )
         ));
         registryHandler.register(ModernBetaBuiltInTypes.Chunk.INFDEV_611.id, new ChunkProviderType<>(
-            ChunkProviderInfdev611::new,
-            SettingsComponentTypes.DEEPSLATE_GENERATION,
-            SettingsComponentTypes.USE_SURFACE_RULES,
-            SettingsComponentTypes.SEA_LEVEL_OFFSET,
-            SettingsComponentTypes.CAVE_GENERATION,
-            SettingsComponentTypes.NOISE_SCALE,
-            SettingsComponentTypes.NOISE_SLIDE,
-            SettingsComponentTypes.ISLES_PROPERTIES
+            ChunkProviderInfdev611::new, () -> List.of(
+                SettingsComponentTypes.DEEPSLATE_GENERATION,
+                SettingsComponentTypes.USE_SURFACE_RULES,
+                SettingsComponentTypes.SEA_LEVEL_OFFSET,
+                SettingsComponentTypes.CAVE_GENERATION,
+                SettingsComponentTypes.NOISE_SCALE,
+                SettingsComponentTypes.NOISE_SLIDE,
+                SettingsComponentTypes.ISLES_PROPERTIES
+            )
         ));
         registryHandler.register(ModernBetaBuiltInTypes.Chunk.INFDEV_420.id, new ChunkProviderType<>(
-            ChunkProviderInfdev420::new,
-            SettingsComponentTypes.DEEPSLATE_GENERATION,
-            SettingsComponentTypes.USE_SURFACE_RULES,
-            SettingsComponentTypes.SEA_LEVEL_OFFSET,
-            SettingsComponentTypes.CAVE_GENERATION,
-            SettingsComponentTypes.NOISE_SCALE,
-            SettingsComponentTypes.NOISE_SLIDE,
-            SettingsComponentTypes.ISLES_PROPERTIES
+            ChunkProviderInfdev420::new, () -> List.of(
+                SettingsComponentTypes.DEEPSLATE_GENERATION,
+                SettingsComponentTypes.USE_SURFACE_RULES,
+                SettingsComponentTypes.SEA_LEVEL_OFFSET,
+                SettingsComponentTypes.CAVE_GENERATION,
+                SettingsComponentTypes.NOISE_SCALE,
+                SettingsComponentTypes.NOISE_SLIDE,
+                SettingsComponentTypes.ISLES_PROPERTIES
+            )
         ));
         registryHandler.register(ModernBetaBuiltInTypes.Chunk.INFDEV_415.id, new ChunkProviderType<>(
-            ChunkProviderInfdev415::new,
-            SettingsComponentTypes.DEEPSLATE_GENERATION,
-            SettingsComponentTypes.USE_SURFACE_RULES,
-            SettingsComponentTypes.SEA_LEVEL_OFFSET,
-            SettingsComponentTypes.CAVE_GENERATION,
-            SettingsComponentTypes.NOISE_SCALE,
-            SettingsComponentTypes.NOISE_SLIDE,
-            SettingsComponentTypes.ISLES_PROPERTIES
+            ChunkProviderInfdev415::new, () -> List.of(
+                SettingsComponentTypes.DEEPSLATE_GENERATION,
+                SettingsComponentTypes.USE_SURFACE_RULES,
+                SettingsComponentTypes.SEA_LEVEL_OFFSET,
+                SettingsComponentTypes.CAVE_GENERATION,
+                SettingsComponentTypes.NOISE_SCALE,
+                SettingsComponentTypes.NOISE_SLIDE,
+                SettingsComponentTypes.ISLES_PROPERTIES
+            )
         ));
         registryHandler.register(ModernBetaBuiltInTypes.Chunk.INFDEV_227.id, new ChunkProviderType<>(
-            ChunkProviderInfdev227::new,
-            SettingsComponentTypes.DEEPSLATE_GENERATION,
-            SettingsComponentTypes.USE_SURFACE_RULES,
-            SettingsComponentTypes.SEA_LEVEL_OFFSET,
-            SettingsComponentTypes.CAVE_GENERATION,
-            SettingsComponentTypes.INFDEV_227_STRUCTURES
+            ChunkProviderInfdev227::new, () -> List.of(
+                SettingsComponentTypes.DEEPSLATE_GENERATION,
+                SettingsComponentTypes.USE_SURFACE_RULES,
+                SettingsComponentTypes.SEA_LEVEL_OFFSET,
+                SettingsComponentTypes.CAVE_GENERATION,
+                SettingsComponentTypes.INFDEV_227_STRUCTURES
+            )
         ));
         registryHandler.register(ModernBetaBuiltInTypes.Chunk.INDEV.id, new ChunkProviderType<>(
-            ChunkProviderIndev::new,
-            SettingsComponentTypes.DEEPSLATE_GENERATION,
-            SettingsComponentTypes.USE_SURFACE_RULES,
-            SettingsComponentTypes.SEA_LEVEL_OFFSET,
-            SettingsComponentTypes.CAVE_GENERATION,
-            SettingsComponentTypes.FINITE_LEVEL_PROPERTIES,
-            SettingsComponentTypes.FINITE_CAVE_GENERATION,
-            SettingsComponentTypes.FINITE_NOISE,
-            SettingsComponentTypes.FINITE_BEACHES,
-            SettingsComponentTypes.FINITE_POOLS,
-            SettingsComponentTypes.SPAWN_INDEV_HOUSE
+            ChunkProviderIndev::new, () -> List.of(
+                SettingsComponentTypes.DEEPSLATE_GENERATION,
+                SettingsComponentTypes.USE_SURFACE_RULES,
+                SettingsComponentTypes.SEA_LEVEL_OFFSET,
+                SettingsComponentTypes.CAVE_GENERATION,
+                SettingsComponentTypes.FINITE_LEVEL_PROPERTIES,
+                SettingsComponentTypes.FINITE_CAVE_GENERATION,
+                SettingsComponentTypes.FINITE_NOISE,
+                SettingsComponentTypes.FINITE_BEACHES,
+                SettingsComponentTypes.FINITE_POOLS,
+                SettingsComponentTypes.SPAWN_INDEV_HOUSE
+            )
         ));
         registryHandler.register(ModernBetaBuiltInTypes.Chunk.CLASSIC_0_30.id, new ChunkProviderType<>(
-            ChunkProviderClassic030::new,
-            SettingsComponentTypes.DEEPSLATE_GENERATION,
-            SettingsComponentTypes.USE_SURFACE_RULES,
-            SettingsComponentTypes.SEA_LEVEL_OFFSET,
-            SettingsComponentTypes.CAVE_GENERATION,
-            SettingsComponentTypes.FINITE_LEVEL_PROPERTIES,
-            SettingsComponentTypes.FINITE_CAVE_GENERATION,
-            SettingsComponentTypes.FINITE_NOISE,
-            SettingsComponentTypes.FINITE_BEACHES,
-            SettingsComponentTypes.FINITE_POOLS
+            ChunkProviderClassic030::new, () -> List.of(
+                SettingsComponentTypes.DEEPSLATE_GENERATION,
+                SettingsComponentTypes.USE_SURFACE_RULES,
+                SettingsComponentTypes.SEA_LEVEL_OFFSET,
+                SettingsComponentTypes.CAVE_GENERATION,
+                SettingsComponentTypes.FINITE_LEVEL_PROPERTIES,
+                SettingsComponentTypes.FINITE_CAVE_GENERATION,
+                SettingsComponentTypes.FINITE_NOISE,
+                SettingsComponentTypes.FINITE_BEACHES,
+                SettingsComponentTypes.FINITE_POOLS
+            )
         ));
         registryHandler.register(ModernBetaBuiltInTypes.Chunk.PE.id, new ChunkProviderType<>(
-            ChunkProviderPE::new,
-            SettingsComponentTypes.DEEPSLATE_GENERATION,
-            SettingsComponentTypes.USE_SURFACE_RULES,
-            SettingsComponentTypes.SEA_LEVEL_OFFSET,
-            SettingsComponentTypes.CAVE_GENERATION,
-            SettingsComponentTypes.NOISE_SCALE,
-            SettingsComponentTypes.NOISE_SLIDE,
-            SettingsComponentTypes.ISLES_PROPERTIES
+            ChunkProviderPE::new, () -> List.of(
+                SettingsComponentTypes.DEEPSLATE_GENERATION,
+                SettingsComponentTypes.USE_SURFACE_RULES,
+                SettingsComponentTypes.SEA_LEVEL_OFFSET,
+                SettingsComponentTypes.CAVE_GENERATION,
+                SettingsComponentTypes.NOISE_SCALE,
+                SettingsComponentTypes.NOISE_SLIDE,
+                SettingsComponentTypes.ISLES_PROPERTIES
+            )
         ));
         registryHandler.register(ModernBetaBuiltInTypes.Chunk.EARLY_RELEASE.id, new ChunkProviderType<>(
-            ChunkProviderEarlyRelease::new,
-            SettingsComponentTypes.DEEPSLATE_GENERATION,
-            SettingsComponentTypes.USE_SURFACE_RULES,
-            SettingsComponentTypes.SEA_LEVEL_OFFSET,
-            SettingsComponentTypes.CAVE_GENERATION,
-            SettingsComponentTypes.NOISE_SCALE,
-            SettingsComponentTypes.NOISE_SLIDE,
-            SettingsComponentTypes.FORCED_BIOME_HEIGHT,
-            SettingsComponentTypes.ISLES_PROPERTIES
+            ChunkProviderEarlyRelease::new, () -> List.of(
+                SettingsComponentTypes.DEEPSLATE_GENERATION,
+                SettingsComponentTypes.USE_SURFACE_RULES,
+                SettingsComponentTypes.SEA_LEVEL_OFFSET,
+                SettingsComponentTypes.CAVE_GENERATION,
+                SettingsComponentTypes.NOISE_SCALE,
+                SettingsComponentTypes.NOISE_SLIDE,
+                SettingsComponentTypes.FORCED_BIOME_HEIGHT,
+                SettingsComponentTypes.ISLES_PROPERTIES
+            )
         ));
         registryHandler.register(ModernBetaBuiltInTypes.Chunk.MAJOR_RELEASE.id, new ChunkProviderType<>(
-            ChunkProviderMajorRelease::new,
-            SettingsComponentTypes.DEEPSLATE_GENERATION,
-            SettingsComponentTypes.USE_SURFACE_RULES,
-            SettingsComponentTypes.SEA_LEVEL_OFFSET,
-            SettingsComponentTypes.CAVE_GENERATION,
-            SettingsComponentTypes.NOISE_SCALE,
-            SettingsComponentTypes.NOISE_SLIDE,
-            SettingsComponentTypes.FORCED_BIOME_HEIGHT,
-            SettingsComponentTypes.ISLES_PROPERTIES
+            ChunkProviderMajorRelease::new, () -> List.of(
+                SettingsComponentTypes.DEEPSLATE_GENERATION,
+                SettingsComponentTypes.USE_SURFACE_RULES,
+                SettingsComponentTypes.SEA_LEVEL_OFFSET,
+                SettingsComponentTypes.CAVE_GENERATION,
+                SettingsComponentTypes.NOISE_SCALE,
+                SettingsComponentTypes.NOISE_SLIDE,
+                SettingsComponentTypes.FORCED_BIOME_HEIGHT,
+                SettingsComponentTypes.ISLES_PROPERTIES
+            )
         ));
     }
     
@@ -161,26 +176,31 @@ public class ModernBetaBuiltInProviders {
         IRegistryHandler<BiomeProviderType<?>> registryHandler = (IRegistryHandler<BiomeProviderType<?>>) handler;
 
         registryHandler.register(ModernBetaBuiltInTypes.Biome.BETA.id, new BiomeProviderType<>(
-            BiomeProviderBeta::new, BiomeProviderBeta.class,
-            SettingsComponentTypes.CLIMATE_SCALE,
-            SettingsComponentTypes.CLIMATE_MAPPINGS
+            BiomeProviderBeta::new, BiomeProviderBeta.class, () -> List.of(
+                SettingsComponentTypes.CLIMATE_SCALE,
+                SettingsComponentTypes.CLIMATE_MAPPINGS
+            )
         ));
         registryHandler.register(ModernBetaBuiltInTypes.Biome.SINGLE.id, new BiomeProviderType<>(
-            BiomeProviderSingle::new, BiomeProviderSingle.class,
-            SettingsComponentTypes.SINGLE_BIOME
+            BiomeProviderSingle::new, BiomeProviderSingle.class, () -> List.of(
+                SettingsComponentTypes.SINGLE_BIOME
+            )
         ));
         registryHandler.register(ModernBetaBuiltInTypes.Biome.PE.id, new BiomeProviderType<>(
-            BiomeProviderPE::new, BiomeProviderPE.class,
-            SettingsComponentTypes.CLIMATE_SCALE,
-            SettingsComponentTypes.CLIMATE_MAPPINGS
+            BiomeProviderPE::new, BiomeProviderPE.class, () -> List.of(
+                SettingsComponentTypes.CLIMATE_SCALE,
+                SettingsComponentTypes.CLIMATE_MAPPINGS
+            )
         ));
         registryHandler.register(ModernBetaBuiltInTypes.Biome.VORONOI.id, new BiomeProviderType<>(
-            BiomeProviderVoronoi::new, BiomeProviderVoronoi.class,
-            SettingsComponentTypes.VORONOI_POINTS
+            BiomeProviderVoronoi::new, BiomeProviderVoronoi.class, () -> List.of(
+                SettingsComponentTypes.VORONOI_POINTS
+            )
         ));
         registryHandler.register(ModernBetaBuiltInTypes.Biome.FRACTAL.id, new BiomeProviderType<>(
-            BiomeProviderFractal::new, BiomeProviderFractal.class,
-            SettingsComponentTypes.FRACTAL_LAYERS
+            BiomeProviderFractal::new, BiomeProviderFractal.class, () -> List.of(
+                SettingsComponentTypes.FRACTAL_LAYERS
+            )
         ));
     }
     
@@ -189,15 +209,18 @@ public class ModernBetaBuiltInProviders {
         IRegistryHandler<CaveBiomeProviderType<?>> registryHandler = (IRegistryHandler<CaveBiomeProviderType<?>>) handler;
 
         registryHandler.register(ModernBetaBuiltInTypes.CaveBiome.NONE.id, new CaveBiomeProviderType<>(
-            CaveBiomeProviderNone::new
+            CaveBiomeProviderNone::new,
+            Collections::emptyList
         ));
         registryHandler.register(ModernBetaBuiltInTypes.CaveBiome.SINGLE.id, new CaveBiomeProviderType<>(
-            CaveBiomeProviderSingle::new,
-            SettingsComponentTypes.SINGLE_BIOME
+            CaveBiomeProviderSingle::new, () -> List.of(
+                SettingsComponentTypes.SINGLE_BIOME
+            )
         ));
         registryHandler.register(ModernBetaBuiltInTypes.CaveBiome.VORONOI.id, new CaveBiomeProviderType<>(
-            CaveBiomeProviderVoronoi::new,
-            SettingsComponentTypes.VORONOI_POINTS
+            CaveBiomeProviderVoronoi::new, () -> List.of(
+                SettingsComponentTypes.VORONOI_POINTS
+            )
         ));
     }
     

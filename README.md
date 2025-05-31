@@ -8,16 +8,20 @@
     </p>
 </center>
 
-Moderner Beta is the successor of [b3spectacled](https://github.com/b3spectacled)'s [Modern Beta](https://github.com/b3spectacled/modern-beta-fabric). It originally started as a pull request for the original Modern Beta to add in world generation from Beta 1.8 to 1.6.4, however due to b3spectacled's inactivity it has become its own project. The mod is currently supported for 1.20.1, 1.21 and 1.21.2.
+Moderner Beta is the successor to [b3spectacled](https://github.com/b3spectacled)'s [Modern Beta](https://github.com/b3spectacled/modern-beta-fabric). It originally started as a pull request for the original Modern Beta to add in world generation from Beta 1.8 to 1.6.4, however due to b3spectacled's inactivity it has become its own project. The mod is currently supported for 1.20.1, 1.21.1, 1.21.4, 1.21.5 and 1.21.6.
 
 ## Features
-In addition to everything in Modern Beta...
+What Modern Beta offered:
+- World generation for various old versions of Minecraft ranging from Classic to Beta 1.7.3
+- 
+
+What Moderner Beta offers:
 - Support for NeoForge in addition to Fabric
-- Graphical settings menu for every customizable option
-- World generation from Beta 1.8 up to Release 1.6 with experimental support for 1.7 to 1.17 generation
+- Graphical settings menu for simple options
+- World generation from Beta 1.8 up to Release 1.6.4 with near-accurate biome generation from 1.7 to 1.17.1
 - Additional world generation from Infdev 20100325, Classic 0.0.14a_08 and Beta 1.1
 - Fixed surface rules for Beta Vanilla and 1.12.2 presets
-- Highly customisable biome layout for Beta 1.8+ versions
+- Extremely customizable biome fractal layer pipeline for Beta 1.8+ versions
 
 ## Setup
 
@@ -33,6 +37,6 @@ This project is licensed under LGPLv3, up to and including commit 55519d1.
 
 ## Credits
 
-Thanks to icanttellyou for porting the mod to 1.21, 1.21.2 and NeoForge.
+Thanks to [icanttellyou](https://github.com/forkiesassds) for porting the mod to various platforms.
 
 In addition see Modern Beta credits [here](https://github.com/b3spectacled/modern-beta-fabric/wiki/Credits).

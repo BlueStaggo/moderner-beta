@@ -8,16 +8,13 @@ import net.minecraft.world.biome.Biome;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Supplier;
 
 public record BiomeProviderType<T extends BiomeProvider>(
     Constructor<T> constructor,
     Class<T> providerClass,
-    List<SettingsComponentType<?>> requiredSettingsComponents
+    Supplier<List<SettingsComponentType<?>>> requiredSettingsComponents
 ) implements ProviderType {
-    public BiomeProviderType(Constructor<T> constructor, Class<T> providerClass, SettingsComponentType<?>... requiredSettingsComponents) {
-        this(constructor, providerClass, Arrays.asList(requiredSettingsComponents));
-    }
-
     public T apply(ModernBetaSettings settings, RegistryEntryLookup<Biome> biomeRegistry, long seed) {
         return constructor.apply(settings, biomeRegistry, seed);
     }

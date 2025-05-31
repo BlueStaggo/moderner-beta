@@ -7,9 +7,6 @@ import mod.bluestaggo.modernerbeta.api.world.provider.ChunkProviderType;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import mod.bluestaggo.modernerbeta.api.world.chunk.noise.NoisePostProcessor;
 import mod.bluestaggo.modernerbeta.api.world.chunk.surface.SurfaceConfig;
-import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
-import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPresetCategory;
-import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPresets;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.world.biome.HeightConfig;
 import mod.bluestaggo.modernerbeta.world.biome.provider.*;
@@ -281,78 +278,5 @@ public class ModernBetaBuiltInProviders {
     public static void registerBlockSources(IRegistryHandler<?> handler) {
         IRegistryHandler<BlockSourceCreator> registryHandler = (IRegistryHandler<BlockSourceCreator>) handler;
         registryHandler.register(ModernBetaBuiltInTypes.BlockSource.DEEPSLATE.id, BlockSourceDeepslate::new);
-    }
-    
-    public static void registerSettingsPresets(IRegistryHandler<?> handler) {
-        IRegistryHandler<ModernBetaSettingsPreset> registryHandler = (IRegistryHandler<ModernBetaSettingsPreset>) handler;
-
-        registryHandler.register(ModernBetaBuiltInTypes.Preset.BETA_1_7_3.id, ModernBetaSettingsPresets.PRESET_BETA_1_7_3);
-        registryHandler.register(ModernBetaBuiltInTypes.Preset.BETA_1_1_02.id, ModernBetaSettingsPresets.PRESET_BETA_1_1_02);
-        registryHandler.register(ModernBetaBuiltInTypes.Preset.SKYLANDS.id, ModernBetaSettingsPresets.PRESET_SKYLANDS);
-        registryHandler.register(ModernBetaBuiltInTypes.Preset.ALPHA_1_1_2_01.id, ModernBetaSettingsPresets.PRESET_ALPHA);
-        registryHandler.register(ModernBetaBuiltInTypes.Preset.INFDEV_611.id, ModernBetaSettingsPresets.PRESET_INFDEV_611);
-        registryHandler.register(ModernBetaBuiltInTypes.Preset.INFDEV_420.id, ModernBetaSettingsPresets.PRESET_INFDEV_420);
-        registryHandler.register(ModernBetaBuiltInTypes.Preset.INFDEV_415.id, ModernBetaSettingsPresets.PRESET_INFDEV_415);
-        registryHandler.register(ModernBetaBuiltInTypes.Preset.INFDEV_325.id, ModernBetaSettingsPresets.PRESET_INFDEV_325);
-        registryHandler.register(ModernBetaBuiltInTypes.Preset.INFDEV_227.id, ModernBetaSettingsPresets.PRESET_INFDEV_227);
-        registryHandler.register(ModernBetaBuiltInTypes.Preset.INDEV.id, ModernBetaSettingsPresets.PRESET_INDEV);
-        registryHandler.register(ModernBetaBuiltInTypes.Preset.CLASSIC_0_30.id, ModernBetaSettingsPresets.PRESET_CLASSIC);
-        registryHandler.register(ModernBetaBuiltInTypes.Preset.CLASSIC_0_0_14A_08.id, ModernBetaSettingsPresets.PRESET_CLASSIC_14A_08);
-        registryHandler.register(ModernBetaBuiltInTypes.Preset.PE.id, ModernBetaSettingsPresets.PRESET_PE);
-        registryHandler.register(ModernBetaBuiltInTypes.Preset.BETA_1_8_1.id, ModernBetaSettingsPresets.PRESET_BETA_1_8_1);
-        registryHandler.register(ModernBetaBuiltInTypes.Preset.BETA_1_9_PRE_3.id, ModernBetaSettingsPresets.PRESET_BETA_1_9_PRE_3);
-        registryHandler.register(ModernBetaBuiltInTypes.Preset.RELEASE_1_0_0.id, ModernBetaSettingsPresets.PRESET_RELEASE_1_0_0);
-        registryHandler.register(ModernBetaBuiltInTypes.Preset.RELEASE_1_1.id, ModernBetaSettingsPresets.PRESET_RELEASE_1_1);
-        registryHandler.register(ModernBetaBuiltInTypes.Preset.RELEASE_1_2_5.id, ModernBetaSettingsPresets.PRESET_RELEASE_1_2_5);
-        registryHandler.register(ModernBetaBuiltInTypes.Preset.RELEASE_1_6_4.id, ModernBetaSettingsPresets.PRESET_RELEASE_1_6_4);
-        registryHandler.register(ModernBetaBuiltInTypes.Preset.RELEASE_1_12_2.id, ModernBetaSettingsPresets.PRESET_RELEASE_1_12_2);
-        registryHandler.register(ModernBetaBuiltInTypes.Preset.RELEASE_1_17_1.id, ModernBetaSettingsPresets.PRESET_RELEASE_1_17_1);
-        registryHandler.register(ModernBetaBuiltInTypes.Preset.BETA_SKYLANDS.id, ModernBetaSettingsPresets.PRESET_BETA_SKYLANDS);
-        registryHandler.register(ModernBetaBuiltInTypes.Preset.BETA_ISLES.id, ModernBetaSettingsPresets.PRESET_BETA_ISLES);
-        registryHandler.register(ModernBetaBuiltInTypes.Preset.BETA_WATER_WORLD.id, ModernBetaSettingsPresets.PRESET_BETA_WATER_WORLD);
-        registryHandler.register(ModernBetaBuiltInTypes.Preset.BETA_ISLE_LAND.id, ModernBetaSettingsPresets.PRESET_BETA_ISLE_LAND);
-        registryHandler.register(ModernBetaBuiltInTypes.Preset.BETA_CAVE_DELIGHT.id, ModernBetaSettingsPresets.PRESET_BETA_CAVE_DELIGHT);
-        registryHandler.register(ModernBetaBuiltInTypes.Preset.BETA_MOUNTAIN_MADNESS.id, ModernBetaSettingsPresets.PRESET_BETA_MOUNTAIN_MADNESS);
-        registryHandler.register(ModernBetaBuiltInTypes.Preset.BETA_DROUGHT.id, ModernBetaSettingsPresets.PRESET_BETA_DROUGHT);
-        registryHandler.register(ModernBetaBuiltInTypes.Preset.BETA_CAVE_CHAOS.id, ModernBetaSettingsPresets.PRESET_BETA_CAVE_CHAOS);
-        registryHandler.register(ModernBetaBuiltInTypes.Preset.BETA_LARGE_BIOMES.id, ModernBetaSettingsPresets.PRESET_BETA_LARGE_BIOMES);
-        registryHandler.register(ModernBetaBuiltInTypes.Preset.BETA_XBOX_LEGACY.id, ModernBetaSettingsPresets.PRESET_BETA_XBOX_LEGACY);
-        registryHandler.register(ModernBetaBuiltInTypes.Preset.BETA_SURVIVAL_ISLAND.id, ModernBetaSettingsPresets.PRESET_BETA_SURVIVAL_ISLAND);
-        registryHandler.register(ModernBetaBuiltInTypes.Preset.BETA_VANILLA.id, ModernBetaSettingsPresets.PRESET_BETA_VANILLA);
-        registryHandler.register(ModernBetaBuiltInTypes.Preset.RELEASE_HYBRID.id, ModernBetaSettingsPresets.PRESET_RELEASE_HYBRID);
-        registryHandler.register(ModernBetaBuiltInTypes.Preset.SNOW_AINT_SNOWIER.id, ModernBetaSettingsPresets.PRESET_SNOW_AINT_SNOWIER);
-        registryHandler.register(ModernBetaBuiltInTypes.Preset.ALPHA_WINTER.id, ModernBetaSettingsPresets.PRESET_ALPHA_WINTER);
-        registryHandler.register(ModernBetaBuiltInTypes.Preset.INDEV_PARADISE.id, ModernBetaSettingsPresets.PRESET_INDEV_PARADISE);
-        registryHandler.register(ModernBetaBuiltInTypes.Preset.INDEV_WOODS.id, ModernBetaSettingsPresets.PRESET_INDEV_WOODS);
-        registryHandler.register(ModernBetaBuiltInTypes.Preset.INDEV_HELL.id, ModernBetaSettingsPresets.PRESET_INDEV_HELL);
-        registryHandler.register(ModernBetaBuiltInTypes.Preset.WATER_WORLD.id, ModernBetaSettingsPresets.PRESET_WATER_WORLD);
-        registryHandler.register(ModernBetaBuiltInTypes.Preset.ISLE_LAND.id, ModernBetaSettingsPresets.PRESET_ISLE_LAND);
-        registryHandler.register(ModernBetaBuiltInTypes.Preset.CAVE_DELIGHT.id, ModernBetaSettingsPresets.PRESET_CAVE_DELIGHT);
-        registryHandler.register(ModernBetaBuiltInTypes.Preset.MOUNTAIN_MADNESS.id, ModernBetaSettingsPresets.PRESET_MOUNTAIN_MADNESS);
-        registryHandler.register(ModernBetaBuiltInTypes.Preset.DROUGHT.id, ModernBetaSettingsPresets.PRESET_DROUGHT);
-        registryHandler.register(ModernBetaBuiltInTypes.Preset.CAVE_CHAOS.id, ModernBetaSettingsPresets.PRESET_CAVE_CHAOS);
-        registryHandler.register(ModernBetaBuiltInTypes.Preset.BETA_1_8_1_LARGE_BIOMES.id, ModernBetaSettingsPresets.PRESET_BETA_1_8_1_LARGE_BIOMES);
-        registryHandler.register(ModernBetaBuiltInTypes.Preset.BETA_1_9_PRE_3_LARGE_BIOMES.id, ModernBetaSettingsPresets.PRESET_BETA_1_9_PRE_3_LARGE_BIOMES);
-        registryHandler.register(ModernBetaBuiltInTypes.Preset.RELEASE_1_0_0_LARGE_BIOMES.id, ModernBetaSettingsPresets.PRESET_RELEASE_1_0_0_LARGE_BIOMES);
-        registryHandler.register(ModernBetaBuiltInTypes.Preset.RELEASE_1_1_LARGE_BIOMES.id, ModernBetaSettingsPresets.PRESET_RELEASE_1_1_LARGE_BIOMES);
-        registryHandler.register(ModernBetaBuiltInTypes.Preset.RELEASE_1_2_5_LARGE_BIOMES.id, ModernBetaSettingsPresets.PRESET_RELEASE_1_2_5_LARGE_BIOMES);
-        registryHandler.register(ModernBetaBuiltInTypes.Preset.RELEASE_1_6_4_LARGE_BIOMES.id, ModernBetaSettingsPresets.PRESET_RELEASE_1_6_4_LARGE_BIOMES);
-        registryHandler.register(ModernBetaBuiltInTypes.Preset.RELEASE_1_12_2_LARGE_BIOMES.id, ModernBetaSettingsPresets.PRESET_RELEASE_1_12_2_LARGE_BIOMES);
-        registryHandler.register(ModernBetaBuiltInTypes.Preset.RELEASE_1_17_1_LARGE_BIOMES.id, ModernBetaSettingsPresets.PRESET_RELEASE_1_17_1_LARGE_BIOMES);
-        registryHandler.register(ModernBetaBuiltInTypes.Preset.RELEASE_HYBRID_LARGE_BIOMES.id, ModernBetaSettingsPresets.PRESET_RELEASE_HYBRID_LARGE_BIOMES);
-        registryHandler.register(ModernBetaBuiltInTypes.Preset.SNOW_AINT_SNOWIER_LARGE_BIOMES.id, ModernBetaSettingsPresets.PRESET_SNOW_AINT_SNOWIER_LARGE_BIOMES);
-    }
-
-    public static void registerSettingsPresetCategories(IRegistryHandler<?> handler) {
-        IRegistryHandler<ModernBetaSettingsPresetCategory> registryHandler = (IRegistryHandler<ModernBetaSettingsPresetCategory>) handler;
-
-        registryHandler.register(ModernBetaBuiltInTypes.PresetCategory.BETA.id, ModernBetaSettingsPresetCategory.BETA);
-        registryHandler.register(ModernBetaBuiltInTypes.PresetCategory.ALPHA_INFDEV.id, ModernBetaSettingsPresetCategory.ALPHA_INFDEV);
-        registryHandler.register(ModernBetaBuiltInTypes.PresetCategory.FINITE.id, ModernBetaSettingsPresetCategory.FINITE);
-        registryHandler.register(ModernBetaBuiltInTypes.PresetCategory.EARLY_RELEASE.id, ModernBetaSettingsPresetCategory.EARLY_RELEASE);
-        registryHandler.register(ModernBetaBuiltInTypes.PresetCategory.EARLY_RELEASE_LARGE_BIOMES.id, ModernBetaSettingsPresetCategory.EARLY_RELEASE_LARGE_BIOMES);
-        registryHandler.register(ModernBetaBuiltInTypes.PresetCategory.MAJOR_RELEASE.id, ModernBetaSettingsPresetCategory.MAJOR_RELEASE);
-        registryHandler.register(ModernBetaBuiltInTypes.PresetCategory.BETA_CUSTOM.id, ModernBetaSettingsPresetCategory.BETA_CUSTOM);
-        registryHandler.register(ModernBetaBuiltInTypes.PresetCategory.RELEASE_CUSTOM.id, ModernBetaSettingsPresetCategory.RELEASE_CUSTOM);
     }
 }

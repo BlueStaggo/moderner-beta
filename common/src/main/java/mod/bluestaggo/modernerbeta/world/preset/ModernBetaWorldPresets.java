@@ -54,7 +54,7 @@ public class ModernBetaWorldPresets {
         RegistryEntry.Reference<DimensionType> dimensionType = registryDimensionType.getOrThrow(DimensionTypes.OVERWORLD);
         RegistryEntry.Reference<ChunkGeneratorSettings> settings = registrySettings.getOrThrow(ModernBetaChunkGeneratorSettings.BETA);
         
-        ModernBetaSettingsPreset defaultPreset = ModernBetaRegistries.SETTINGS_PRESET.get(ModernBetaBuiltInTypes.Chunk.BETA.id);
+        ModernBetaSettingsPreset defaultPreset = ModernBetaSettingsPreset.DEFAULT.get();
 
         assert defaultPreset != null;
         return new DimensionOptions(

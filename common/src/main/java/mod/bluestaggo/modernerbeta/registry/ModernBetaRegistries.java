@@ -28,8 +28,6 @@ public final class ModernBetaRegistries {
     public static Registry<SurfaceConfig> SURFACE_CONFIG;
     public static Registry<HeightConfig> HEIGHT_CONFIG;
     public static Registry<BlockSourceCreator> BLOCKSOURCE;
-    public static Registry<ModernBetaSettingsPreset> SETTINGS_PRESET;
-    public static Registry<ModernBetaSettingsPresetCategory> SETTINGS_PRESET_CATEGORY;
     public static Registry<LayerType<?>> FRACTAL_LAYER;
     public static Registry<BiomePredicateType<?>> BIOME_PREDICATE;
 
@@ -52,8 +50,6 @@ public final class ModernBetaRegistries {
         SURFACE_CONFIG = register(ModernBetaRegistryKeys.SURFACE_CONFIG);
         HEIGHT_CONFIG = registerDefaulted(ModernBetaRegistryKeys.HEIGHT_CONFIG, ModernBetaBuiltInTypes.HeightConfig.HEIGHT_CONFIG_DEFAULT.id);
         BLOCKSOURCE = register(ModernBetaRegistryKeys.BLOCKSOURCE);
-        SETTINGS_PRESET = registerDefaulted(ModernBetaRegistryKeys.SETTINGS_PRESET, ModernBetaBuiltInTypes.Preset.BETA_1_7_3.id);
-        SETTINGS_PRESET_CATEGORY = registerDefaulted(ModernBetaRegistryKeys.SETTINGS_PRESET_CATEGORY, ModernBetaBuiltInTypes.PresetCategory.BETA.id);
         FRACTAL_LAYER = register(ModernBetaRegistryKeys.FRACTAL_LAYER);
         BIOME_PREDICATE = register(ModernBetaRegistryKeys.BIOME_PREDICATE);
     }

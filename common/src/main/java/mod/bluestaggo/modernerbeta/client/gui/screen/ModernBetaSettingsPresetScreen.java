@@ -1,7 +1,7 @@
 package mod.bluestaggo.modernerbeta.client.gui.screen;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;
-import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
+import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistryKeys;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPresetCategory;
 import net.fabricmc.api.EnvType;
@@ -14,6 +14,8 @@ import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.sound.PositionedSoundInstance;
+import net.minecraft.registry.DynamicRegistryManager;
+import net.minecraft.registry.Registry;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.MutableText;
@@ -41,21 +43,29 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
     private final List<Identifier> presets;
     private final boolean displayCategories;
 
+    private final Registry<ModernBetaSettingsPreset> presetRegistry;
+    private final Registry<ModernBetaSettingsPresetCategory> presetCategoryRegistry;
+
     private ModernBetaSettingsPreset preset;
     private PresetsListWidget listWidget;
     private ButtonWidget selectPresetButton;
 
     public ModernBetaSettingsPresetScreen(
         ModernBetaScreen parent,
+        Registry<ModernBetaSettingsPreset> presetRegistry,
+        Registry<ModernBetaSettingsPresetCategory> presetCategoryRegistry,
         List<Identifier> presets,
         ModernBetaSettingsPreset preset,
         boolean displayCategories
     ) {
         super(Text.translatable(TEXT_TITLE), parent);
-        
+
         this.presets = presets;
         this.preset = preset;
         this.displayCategories = displayCategories;
+
+        this.presetRegistry = presetRegistry;
+        this.presetCategoryRegistry = presetCategoryRegistry;
 
         Screen worldScreen = parent;
         while (!(worldScreen instanceof ModernBetaWorldScreen)) {
@@ -127,14 +137,14 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
                 presets.forEach(key -> {
                     this.addEntry(new PresetCategoryEntry(
                         key,
-                        ModernBetaRegistries.SETTINGS_PRESET_CATEGORY.get(key)
+                        presetCategoryRegistry.get(key)
                     ));
                 });
             } else {
                 presets.forEach(key -> {
                     this.addEntry(new PresetEntry(
                         key,
-                        ModernBetaRegistries.SETTINGS_PRESET.get(key)
+                        presetRegistry.get(key)
                     ));
                 });
             }
@@ -308,7 +318,7 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
 
             @Override
             protected Identifier getPresetTexture(Identifier presetName) {
-                presetName = ModernBetaRegistries.SETTINGS_PRESET_CATEGORY.get(presetName).defaultIcon();
+                presetName = presetCategoryRegistry.get(presetName).defaultIcon();
                 return super.getPresetTexture(presetName);
             }
 
@@ -342,6 +352,8 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
 
                 client.setScreen(new ModernBetaSettingsPresetScreen(
                     ModernBetaSettingsPresetScreen.this,
+                    presetRegistry,
+                    presetCategoryRegistry,
                     presetCategory.presets(),
                     preset,
                     false

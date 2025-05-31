@@ -3,7 +3,9 @@ package mod.bluestaggo.modernerbeta.client.gui.screen;
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
 import mod.bluestaggo.modernerbeta.client.gui.screen.config.ModernBetaGraphicalProviderSettingsScreen;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
+import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistryKeys;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
+import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPresetCategory;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
 import net.fabricmc.api.EnvType;
@@ -15,6 +17,8 @@ import net.minecraft.client.gui.widget.SimplePositioningWidget;
 import net.minecraft.client.gui.widget.TextWidget;
 import net.minecraft.client.world.GeneratorOptionsHolder;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.DynamicRegistryManager;
+import net.minecraft.registry.Registry;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
@@ -55,6 +59,8 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
     private final TriConsumer<NbtCompound, NbtCompound, NbtCompound> onDone;
     private final String hintString;
     private final GeneratorOptionsHolder generatorOptionsHolder;
+    private final Registry<ModernBetaSettingsPreset> presetRegistry;
+    private final Registry<ModernBetaSettingsPresetCategory> presetCategoryRegistry;
 
     private ModernBetaSettingsPreset preset;
     private ButtonWidget buttonPreset;
@@ -65,7 +71,10 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
         ChunkGenerator chunkGenerator = generatorOptionsHolder.selectedDimensions().getChunkGenerator();
         ModernBetaChunkGenerator modernBetaChunkGenerator = (ModernBetaChunkGenerator)chunkGenerator;
         ModernBetaBiomeSource modernBetaBiomeSource = (ModernBetaBiomeSource)modernBetaChunkGenerator.getBiomeSource();
-        
+
+        this.presetRegistry = generatorOptionsHolder.getCombinedRegistryManager().getOrThrow(ModernBetaRegistryKeys.SETTINGS_PRESET);
+        this.presetCategoryRegistry = generatorOptionsHolder.getCombinedRegistryManager().getOrThrow(ModernBetaRegistryKeys.SETTINGS_PRESET_CATEGORY);
+
         this.onDone = onDone;
         this.hintString = TEXT_HINTS[new Random().nextInt(TEXT_HINTS.length)];
         
@@ -117,12 +126,15 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
             Text.translatable(TEXT_PRESET_CUSTOM).formatted(Formatting.AQUA) :
             Text.translatable(TEXT_PRESET_NAME + "." + presetKey.getPath()).formatted(Formatting.YELLOW)
         );
-            
+
+        DynamicRegistryManager dynamicRegistryManager = this.generatorOptionsHolder.getCombinedRegistryManager();
         this.buttonPreset = ButtonWidget.builder(
             presetText,
             button -> this.client.setScreen(new ModernBetaSettingsPresetScreen(
                 this,
-                ModernBetaRegistries.SETTINGS_PRESET_CATEGORY.getIds().stream().sorted().toList(),
+                this.presetRegistry,
+                this.presetCategoryRegistry,
+                this.presetCategoryRegistry.getIds().stream().sorted().toList(),
                 this.preset,
                 true
             ))
@@ -258,11 +270,11 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
     }
 
     private void resetPreset() {
-        this.preset = ModernBetaRegistries.SETTINGS_PRESET.get(ModernBetaBuiltInTypes.Preset.BETA_1_7_3.id);
+        this.preset = this.presetRegistry.get(ModernBetaBuiltInTypes.Preset.BETA_1_7_3.id);
     }
 
     private Identifier getPresetKey() {
-        return ModernBetaRegistries.SETTINGS_PRESET.streamEntries()
+        return this.presetRegistry.streamEntries()
             .filter(entry -> entry.value().equals(this.preset))
             .map(entry -> entry.registryKey().getValue())
             .findFirst()

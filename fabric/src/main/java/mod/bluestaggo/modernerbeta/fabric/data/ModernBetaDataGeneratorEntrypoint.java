@@ -1,5 +1,6 @@
 package mod.bluestaggo.modernerbeta.fabric.data;
 
+import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistryKeys;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomes;
 import mod.bluestaggo.modernerbeta.world.carver.configured.ModernBetaConfiguredCarvers;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGeneratorSettings;
@@ -35,5 +36,7 @@ public class ModernBetaDataGeneratorEntrypoint implements DataGeneratorEntrypoin
         registryBuilder.addRegistry(RegistryKeys.STRUCTURE, ModernBetaStructures::bootstrap);
         registryBuilder.addRegistry(RegistryKeys.STRUCTURE_SET, ModernBetaStructureSets::bootstrap);
         registryBuilder.addRegistry(RegistryKeys.WORLD_PRESET, ModernBetaWorldPresets::bootstrap);
+        registryBuilder.addRegistry(ModernBetaRegistryKeys.SETTINGS_PRESET, ModernBetaSettingsPresets::bootstrap);
+        registryBuilder.addRegistry(ModernBetaRegistryKeys.SETTINGS_PRESET_CATEGORY, ModernBetaSettingsPresetCategories::bootstrap);
     }
 }

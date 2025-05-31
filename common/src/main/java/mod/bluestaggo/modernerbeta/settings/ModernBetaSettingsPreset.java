@@ -2,14 +2,53 @@ package mod.bluestaggo.modernerbeta.settings;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Pair;
 import org.slf4j.event.Level;
 
+import java.util.function.Supplier;
+
 public record ModernBetaSettingsPreset(ModernBetaSettings chunkSettings, ModernBetaSettings biomeSettings, ModernBetaSettings caveBiomeSettings) {
+    public static final Codec<ModernBetaSettingsPreset> CODEC = RecordCodecBuilder.create(
+        instance -> instance.group(
+            ModernBetaSettings.CODEC.fieldOf("chunkSettings").forGetter(ModernBetaSettingsPreset::chunkSettings),
+            ModernBetaSettings.CODEC.fieldOf("biomeSettings").forGetter(ModernBetaSettingsPreset::biomeSettings),
+            ModernBetaSettings.CODEC.fieldOf("caveBiomeSettings").forGetter(ModernBetaSettingsPreset::caveBiomeSettings)
+        ).apply(instance, ModernBetaSettingsPreset::new)
+    );
+
+    public static final Supplier<ModernBetaSettingsPreset> DEFAULT = () -> new ModernBetaSettingsPreset(
+        ModernBetaSettings.builder()
+            .add(SettingsComponentTypes.PROVIDER, ModernBetaBuiltInTypes.Chunk.BETA.id)
+            .addDefault(
+                SettingsComponentTypes.DEEPSLATE_GENERATION,
+                SettingsComponentTypes.USE_SURFACE_RULES,
+                SettingsComponentTypes.SEA_LEVEL_OFFSET,
+                SettingsComponentTypes.CAVE_GENERATION,
+                SettingsComponentTypes.NOISE_SCALE,
+                SettingsComponentTypes.NOISE_SLIDE
+            )
+            .build(),
+        ModernBetaSettings.builder()
+            .add(SettingsComponentTypes.PROVIDER, ModernBetaBuiltInTypes.Biome.BETA.id)
+            .add(SettingsComponentTypes.USE_OCEAN_BIOMES, true)
+            .addDefault(
+                SettingsComponentTypes.CLIMATE_SCALE,
+                SettingsComponentTypes.CLIMATE_MAPPINGS
+            )
+            .build(),
+        ModernBetaSettings.builder()
+            .add(SettingsComponentTypes.PROVIDER, ModernBetaBuiltInTypes.CaveBiome.VORONOI.id)
+            .addDefault(SettingsComponentTypes.CAVE_BIOME_VORONOI)
+            .build()
+    );
+
     public ModernBetaSettingsPreset(
         NbtCompound newChunkSettings,
         NbtCompound newBiomeSettings,

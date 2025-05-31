@@ -1,6 +1,9 @@
 package mod.bluestaggo.modernerbeta.fabric.data;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;
+import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistryKeys;
+import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
+import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPresetCategory;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;
 import net.minecraft.registry.RegistryKeys;
@@ -32,6 +35,8 @@ public class ModernBetaWorldGenProvider extends FabricDynamicRegistryProvider {
         RegistryWrapper.Impl<Structure> registryStructure = registries.getOrThrow(RegistryKeys.STRUCTURE);
         RegistryWrapper.Impl<StructureSet> registryStructureSet = registries.getOrThrow(RegistryKeys.STRUCTURE_SET);
         RegistryWrapper.Impl<WorldPreset> registryWorldPreset = registries.getOrThrow(RegistryKeys.WORLD_PRESET);
+        RegistryWrapper.Impl<ModernBetaSettingsPreset> registrySettingsPreset = registries.getOrThrow(ModernBetaRegistryKeys.SETTINGS_PRESET);
+        RegistryWrapper.Impl<ModernBetaSettingsPresetCategory> registrySettingsPresetCategory= registries.getOrThrow(ModernBetaRegistryKeys.SETTINGS_PRESET_CATEGORY);
 
         entries.addAll(registryBiome);
         entries.addAll(registryConfiguredFeature);
@@ -41,6 +46,8 @@ public class ModernBetaWorldGenProvider extends FabricDynamicRegistryProvider {
         entries.addAll(registryStructure);
         entries.addAll(registryStructureSet);
         entries.addAll(registryWorldPreset);
+        entries.addAll(registrySettingsPreset);
+        entries.addAll(registrySettingsPresetCategory);
     }
     
     @Override

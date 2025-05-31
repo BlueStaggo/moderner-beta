@@ -489,33 +489,6 @@ public class ModernBetaTagProviderBiome extends FabricTagProvider<Biome> {
                 BiomeKeys.DEEP_COLD_OCEAN,
                 BiomeKeys.DEEP_LUKEWARM_OCEAN
             );
-
-        /* Modern Beta Fractal Tags */
-
-        getOrCreateTagBuilder(FRACTAL_SWAMP_RIVERS)
-            .addTag(HEIGHT_CONFIG_SWAMPLAND);
-
-        getOrCreateTagBuilder(FRACTAL_JUNGLE_RIVERS)
-            .addTag(HEIGHT_CONFIG_JUNGLE);
-
-        getOrCreateTagBuilder(FRACTAL_NO_BEACHES)
-            .addTag(BiomeTags.IS_OCEAN)
-            .add(
-                BiomeKeys.RIVER,
-                ModernBetaBiomes.LATE_BETA_SWAMPLAND,
-                ModernBetaBiomes.EARLY_RELEASE_SWAMPLAND,
-                BiomeKeys.SWAMP,
-                BiomeKeys.MANGROVE_SWAMP
-            );
-
-        getOrCreateTagBuilder(FRACTAL_HAS_STONY_SHORE)
-            .add(
-                ModernBetaBiomes.LATE_BETA_EXTREME_HILLS,
-                ModernBetaBiomes.EARLY_RELEASE_EXTREME_HILLS,
-                BiomeKeys.WINDSWEPT_HILLS,
-                BiomeKeys.WINDSWEPT_FOREST,
-                BiomeKeys.WINDSWEPT_GRAVELLY_HILLS
-            );
     }
     
     private void configureVanilla(WrapperLookup lookup) {

@@ -1,12 +1,16 @@
 package mod.bluestaggo.modernerbeta;
 
 import com.google.gson.GsonBuilder;
+import com.mojang.serialization.Codec;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import mod.bluestaggo.modernerbeta.config.ModernBetaConfig;
 import mod.bluestaggo.modernerbeta.network.INetworkHelper;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
+import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistryKeys;
+import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
+import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPresetCategory;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.util.CodecUtil;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
@@ -20,15 +24,13 @@ import mod.bluestaggo.modernerbeta.world.feature.ModernBetaFoliagePlacers;
 import mod.bluestaggo.modernerbeta.world.feature.placement.ModernBetaPlacementTypes;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.event.Level;
 
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.SequencedMap;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class ModernerBeta {
@@ -50,6 +52,7 @@ public class ModernerBeta {
     );
 
     public static SequencedMap<Registry<?>, Consumer<IRegistryHandler<?>>> CUSTOM_REGISTRY_HANDLERS;
+    public static SequencedMap<RegistryKey<?>, Codec<?>> CUSTOM_DYNAMIC_REGISTRIES;
     public static INetworkHelper networkHelper;
 
     public static void init() {
@@ -66,11 +69,16 @@ public class ModernerBeta {
         customRegistryHandlers.put(ModernBetaRegistries.HEIGHT_CONFIG, ModernBetaBuiltInProviders::registerHeightConfigs);
         customRegistryHandlers.put(ModernBetaRegistries.NOISE_POST_PROCESSOR, ModernBetaBuiltInProviders::registerNoisePostProcessors);
         customRegistryHandlers.put(ModernBetaRegistries.BLOCKSOURCE, ModernBetaBuiltInProviders::registerBlockSources);
-        customRegistryHandlers.put(ModernBetaRegistries.SETTINGS_PRESET, ModernBetaBuiltInProviders::registerSettingsPresets);
-        customRegistryHandlers.put(ModernBetaRegistries.SETTINGS_PRESET_CATEGORY, ModernBetaBuiltInProviders::registerSettingsPresetCategories);
         customRegistryHandlers.put(ModernBetaRegistries.FRACTAL_LAYER, LayerType::init);
         customRegistryHandlers.put(ModernBetaRegistries.BIOME_PREDICATE, BiomePredicateType::init);
         CUSTOM_REGISTRY_HANDLERS = Collections.unmodifiableSequencedMap(customRegistryHandlers);
+    }
+
+    public static void setupCustomDynamicRegistries() {
+        SequencedMap<RegistryKey<?>, Codec<?>> dynamicRegistries = new LinkedHashMap<>();
+        dynamicRegistries.put(ModernBetaRegistryKeys.SETTINGS_PRESET, ModernBetaSettingsPreset.CODEC);
+        dynamicRegistries.put(ModernBetaRegistryKeys.SETTINGS_PRESET_CATEGORY, ModernBetaSettingsPresetCategory.CODEC);
+        CUSTOM_DYNAMIC_REGISTRIES = Collections.unmodifiableSequencedMap(dynamicRegistries);
     }
 
     public static Identifier createId(String name) {

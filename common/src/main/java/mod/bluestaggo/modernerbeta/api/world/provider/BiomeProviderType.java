@@ -6,7 +6,6 @@ import mod.bluestaggo.modernerbeta.settings.SettingsComponentType;
 import net.minecraft.registry.RegistryEntryLookup;
 import net.minecraft.world.biome.Biome;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
 

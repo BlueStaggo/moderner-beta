@@ -1,6 +1,10 @@
-package mod.bluestaggo.modernerbeta.settings;
+package mod.bluestaggo.modernerbeta.fabric.data;
 
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
+import mod.bluestaggo.modernerbeta.ModernerBeta;
+import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistryKeys;
+import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
+import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.settings.component.*;
 import mod.bluestaggo.modernerbeta.world.biome.HeightConfig;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomes;
@@ -13,6 +17,8 @@ import mod.bluestaggo.modernerbeta.world.biome.voronoi.VoronoiPointBiome;
 import mod.bluestaggo.modernerbeta.world.chunk.provider.indev.IndevTheme;
 import mod.bluestaggo.modernerbeta.world.chunk.provider.indev.IndevType;
 import mod.bluestaggo.modernerbeta.world.chunk.provider.island.IslandShape;
+import net.minecraft.registry.Registerable;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.util.collection.Pool;
 import net.minecraft.util.collection.Weighted;
 import net.minecraft.world.biome.BiomeKeys;
@@ -23,62 +29,71 @@ import java.util.stream.Stream;
 
 import static mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes.*;
 
-public class ModernBetaSettingsPresets {
-    public static final ModernBetaSettingsPreset PRESET_BETA_1_7_3 = presetBeta(false);
-    public static final ModernBetaSettingsPreset PRESET_BETA_1_1_02 = presetBeta(true);
-    public static final ModernBetaSettingsPreset PRESET_ALPHA = presetAlpha();
-    public static final ModernBetaSettingsPreset PRESET_SKYLANDS = presetSkylands();
-    public static final ModernBetaSettingsPreset PRESET_INFDEV_415 = presetInfdev415();
-    public static final ModernBetaSettingsPreset PRESET_INFDEV_420 = presetInfdev420();
-    public static final ModernBetaSettingsPreset PRESET_INFDEV_611 = presetInfdev611();
-    public static final ModernBetaSettingsPreset PRESET_INFDEV_325 = presetInfdev325();
-    public static final ModernBetaSettingsPreset PRESET_INFDEV_227 = presetInfdev227();
-    public static final ModernBetaSettingsPreset PRESET_INDEV = presetIndev();
-    public static final ModernBetaSettingsPreset PRESET_CLASSIC = presetClassic();
-    public static final ModernBetaSettingsPreset PRESET_CLASSIC_14A_08 = presetClassic14a08();
-    public static final ModernBetaSettingsPreset PRESET_PE = presetPE();
-    public static final ModernBetaSettingsPreset PRESET_BETA_1_8_1 = presetBeta181(0);
-    public static final ModernBetaSettingsPreset PRESET_BETA_1_9_PRE_3 = presetBeta19Pre3(0);
-    public static final ModernBetaSettingsPreset PRESET_RELEASE_1_0_0 = preset100(0);
-    public static final ModernBetaSettingsPreset PRESET_RELEASE_1_1 = preset11(0);
-    public static final ModernBetaSettingsPreset PRESET_RELEASE_1_2_5 = preset125(0);
-    public static final ModernBetaSettingsPreset PRESET_RELEASE_1_6_4 = preset164(0);
-    public static final ModernBetaSettingsPreset PRESET_RELEASE_1_12_2 = preset1122(0);
-    public static final ModernBetaSettingsPreset PRESET_RELEASE_1_17_1 = preset1171(0);
-    public static final ModernBetaSettingsPreset PRESET_BETA_SKYLANDS = presetBetaSkylands();
-    public static final ModernBetaSettingsPreset PRESET_BETA_ISLES = presetIsles(PRESET_BETA_1_7_3);
-    public static final ModernBetaSettingsPreset PRESET_BETA_WATER_WORLD = presetWaterWorld(PRESET_BETA_1_7_3);
-    public static final ModernBetaSettingsPreset PRESET_BETA_ISLE_LAND = presetIsleLand(PRESET_BETA_1_7_3);
-    public static final ModernBetaSettingsPreset PRESET_BETA_CAVE_DELIGHT = presetCaveDelight(PRESET_BETA_1_7_3);
-    public static final ModernBetaSettingsPreset PRESET_BETA_MOUNTAIN_MADNESS = presetMountainMadness(PRESET_BETA_1_7_3, false);
-    public static final ModernBetaSettingsPreset PRESET_BETA_DROUGHT = presetDrought(PRESET_BETA_1_7_3);
-    public static final ModernBetaSettingsPreset PRESET_BETA_CAVE_CHAOS = presetCaveChaos(PRESET_BETA_1_7_3);
-    public static final ModernBetaSettingsPreset PRESET_BETA_LARGE_BIOMES = presetBetaLargeBiomes();
-    public static final ModernBetaSettingsPreset PRESET_BETA_XBOX_LEGACY = presetBetaXboxLegacy();
-    public static final ModernBetaSettingsPreset PRESET_BETA_SURVIVAL_ISLAND = presetBetaSurvivalIsland();
-    public static final ModernBetaSettingsPreset PRESET_BETA_VANILLA = presetBetaVanilla();
-    public static final ModernBetaSettingsPreset PRESET_RELEASE_HYBRID = presetReleaseHybrid(0);
-    public static final ModernBetaSettingsPreset PRESET_SNOW_AINT_SNOWIER = presetSnowAintSnowier(0);
-    public static final ModernBetaSettingsPreset PRESET_ALPHA_WINTER = presetAlphaWinter();
-    public static final ModernBetaSettingsPreset PRESET_INDEV_PARADISE = presetIndevParadise();
-    public static final ModernBetaSettingsPreset PRESET_INDEV_WOODS = presetIndevWoods();
-    public static final ModernBetaSettingsPreset PRESET_INDEV_HELL = presetIndevHell();
-    public static final ModernBetaSettingsPreset PRESET_WATER_WORLD = presetWaterWorld(PRESET_RELEASE_1_12_2);
-    public static final ModernBetaSettingsPreset PRESET_ISLE_LAND = presetIsleLand(PRESET_RELEASE_1_12_2);
-    public static final ModernBetaSettingsPreset PRESET_CAVE_DELIGHT = presetCaveDelight(PRESET_RELEASE_1_12_2);
-    public static final ModernBetaSettingsPreset PRESET_MOUNTAIN_MADNESS = presetMountainMadness(PRESET_RELEASE_1_12_2, true);
-    public static final ModernBetaSettingsPreset PRESET_DROUGHT = presetDrought(PRESET_RELEASE_1_12_2);
-    public static final ModernBetaSettingsPreset PRESET_CAVE_CHAOS = presetCaveChaos(PRESET_RELEASE_1_12_2);
-    public static final ModernBetaSettingsPreset PRESET_BETA_1_8_1_LARGE_BIOMES = presetBeta181(2);
-    public static final ModernBetaSettingsPreset PRESET_BETA_1_9_PRE_3_LARGE_BIOMES = presetBeta19Pre3(2);
-    public static final ModernBetaSettingsPreset PRESET_RELEASE_1_0_0_LARGE_BIOMES = preset100(2);
-    public static final ModernBetaSettingsPreset PRESET_RELEASE_1_1_LARGE_BIOMES = preset11(2);
-    public static final ModernBetaSettingsPreset PRESET_RELEASE_1_2_5_LARGE_BIOMES = preset125(2);
-    public static final ModernBetaSettingsPreset PRESET_RELEASE_1_6_4_LARGE_BIOMES = preset164(2);
-    public static final ModernBetaSettingsPreset PRESET_RELEASE_1_12_2_LARGE_BIOMES = preset1122(2);
-    public static final ModernBetaSettingsPreset PRESET_RELEASE_1_17_1_LARGE_BIOMES = preset1171(2);
-    public static final ModernBetaSettingsPreset PRESET_RELEASE_HYBRID_LARGE_BIOMES = presetReleaseHybrid(2);
-    public static final ModernBetaSettingsPreset PRESET_SNOW_AINT_SNOWIER_LARGE_BIOMES = presetSnowAintSnowier(2);
+public final class ModernBetaSettingsPresets {
+    public static final ModernBetaSettingsPreset DEFAULT_BETA = presetBeta(false);
+    public static final ModernBetaSettingsPreset DEFAULT_MAJOR = preset1122(0);
+
+    public static void bootstrap(Registerable<ModernBetaSettingsPreset> presetRegisterable) {
+        presetRegisterable.register(keyOf("beta"), DEFAULT_BETA);
+        presetRegisterable.register(keyOf("beta_1_1_02"), presetBeta(true));
+        presetRegisterable.register(keyOf("alpha"), presetAlpha());
+        presetRegisterable.register(keyOf("skylands"), presetSkylands());
+        presetRegisterable.register(keyOf("infdev_415"), presetInfdev415());
+        presetRegisterable.register(keyOf("infdev_420"), presetInfdev420());
+        presetRegisterable.register(keyOf("infdev_611"), presetInfdev611());
+        presetRegisterable.register(keyOf("infdev_325"), presetInfdev325());
+        presetRegisterable.register(keyOf("infdev_227"), presetInfdev227());
+        presetRegisterable.register(keyOf("indev"), presetIndev());
+        presetRegisterable.register(keyOf("classic"), presetClassic());
+        presetRegisterable.register(keyOf("classic_14a_08"), presetClassic14a08());
+        presetRegisterable.register(keyOf("pe"), presetPE());
+        presetRegisterable.register(keyOf("beta_1_8_1"), presetBeta181(0));
+        presetRegisterable.register(keyOf("beta_1_9_pre_3"), presetBeta19Pre3(0));
+        presetRegisterable.register(keyOf("release_1_0_0"), preset100(0));
+        presetRegisterable.register(keyOf("release_1_1"), preset11(0));
+        presetRegisterable.register(keyOf("release_1_2_5"), preset125(0));
+        presetRegisterable.register(keyOf("release_1_6_4"), preset164(0));
+        presetRegisterable.register(keyOf("release_1_12_2"), DEFAULT_MAJOR);
+        presetRegisterable.register(keyOf("release_1_17_1"), preset1171(0));
+        presetRegisterable.register(keyOf("beta_skylands"), presetBetaSkylands());
+        presetRegisterable.register(keyOf("beta_isles"), presetIsles(DEFAULT_BETA));
+        presetRegisterable.register(keyOf("beta_water_world"), presetWaterWorld(DEFAULT_BETA));
+        presetRegisterable.register(keyOf("beta_isle_land"), presetIsleLand(DEFAULT_BETA));
+        presetRegisterable.register(keyOf("beta_cave_delight"), presetCaveDelight(DEFAULT_BETA));
+        presetRegisterable.register(keyOf("beta_mountain_madness"), presetMountainMadness(DEFAULT_BETA, false));
+        presetRegisterable.register(keyOf("beta_drought"), presetDrought(DEFAULT_BETA));
+        presetRegisterable.register(keyOf("beta_cave_chaos"), presetCaveChaos(DEFAULT_BETA));
+        presetRegisterable.register(keyOf("beta_large_biomes"), presetBetaLargeBiomes());
+        presetRegisterable.register(keyOf("beta_xbox_legacy"), presetBetaXboxLegacy());
+        presetRegisterable.register(keyOf("beta_survival_island"), presetBetaSurvivalIsland());
+        presetRegisterable.register(keyOf("beta_vanilla"), presetBetaVanilla());
+        presetRegisterable.register(keyOf("release_hybrid"), presetReleaseHybrid(0));
+        presetRegisterable.register(keyOf("snow_aint_snowier"), presetSnowAintSnowier(0));
+        presetRegisterable.register(keyOf("alpha_winter"), presetAlphaWinter());
+        presetRegisterable.register(keyOf("indev_paradise"), presetIndevParadise());
+        presetRegisterable.register(keyOf("indev_woods"), presetIndevWoods());
+        presetRegisterable.register(keyOf("indev_hell"), presetIndevHell());
+        presetRegisterable.register(keyOf("water_world"), presetWaterWorld(DEFAULT_MAJOR));
+        presetRegisterable.register(keyOf("isle_land"), presetIsleLand(DEFAULT_MAJOR));
+        presetRegisterable.register(keyOf("cave_delight"), presetCaveDelight(DEFAULT_MAJOR));
+        presetRegisterable.register(keyOf("mountain_madness"), presetMountainMadness(DEFAULT_MAJOR, true));
+        presetRegisterable.register(keyOf("drought"), presetDrought(DEFAULT_MAJOR));
+        presetRegisterable.register(keyOf("cave_chaos"), presetCaveChaos(DEFAULT_MAJOR));
+        presetRegisterable.register(keyOf("beta_1_8_1_large_biomes"), presetBeta181(2));
+        presetRegisterable.register(keyOf("beta_1_9_pre_3_large_biomes"), presetBeta19Pre3(2));
+        presetRegisterable.register(keyOf("release_1_0_0_large_biomes"), preset100(2));
+        presetRegisterable.register(keyOf("release_1_1_large_biomes"), preset11(2));
+        presetRegisterable.register(keyOf("release_1_2_5_large_biomes"), preset125(2));
+        presetRegisterable.register(keyOf("release_1_6_4_large_biomes"), preset164(2));
+        presetRegisterable.register(keyOf("release_1_12_2_large_biomes"), preset1122(2));
+        presetRegisterable.register(keyOf("release_1_17_1_large_biomes"), preset1171(2));
+        presetRegisterable.register(keyOf("release_hybrid_large_biomes"), presetReleaseHybrid(2));
+        presetRegisterable.register(keyOf("snow_aint_snowier_large_biomes"), presetSnowAintSnowier(2));
+    }
+
+    private static RegistryKey<ModernBetaSettingsPreset> keyOf(String id) {
+        return RegistryKey.of(ModernBetaRegistryKeys.SETTINGS_PRESET, ModernerBeta.createId(id));
+    }
 
     private static ModernBetaSettingsPreset presetBeta() {
         return presetBeta(false);
@@ -88,13 +103,11 @@ public class ModernBetaSettingsPresets {
         return new ModernBetaSettingsPreset(
             ModernBetaSettings.builder()
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.BETA.id)
-                .add(DEEPSLATE_GENERATION, DeepslateGeneration.ENABLED)
                 .addDefault(DEEPSLATE_GENERATION, USE_SURFACE_RULES, SEA_LEVEL_OFFSET, CAVE_GENERATION, NOISE_SCALE, NOISE_SLIDE)
                 .build(),
             ModernBetaSettings.builder()
                 .add(PROVIDER, ModernBetaBuiltInTypes.Biome.BETA.id)
                 .add(USE_OCEAN_BIOMES, true)
-                .add(CLIMATE_SCALE, ClimateScale.DEFAULT)
                 .add(CLIMATE_MAPPINGS, Map.ofEntries(
                     Map.entry("desert", new ClimateMapping(
                         ModernBetaBiomes.BETA_DESERT.getValue(),
@@ -141,10 +154,11 @@ public class ModernBetaSettingsPresets {
                         ModernBetaBiomes.BETA_FROZEN_OCEAN.getValue()
                     ))
                 ))
+                .addDefault(CLIMATE_SCALE)
                 .build(),
             ModernBetaSettings.builder()
                 .add(PROVIDER, ModernBetaBuiltInTypes.CaveBiome.VORONOI.id)
-                .add(CAVE_BIOME_VORONOI, CaveBiomeVoronoi.DEFAULT)
+                .addDefault(CAVE_BIOME_VORONOI)
                 .build()
         );
     }
@@ -397,11 +411,11 @@ public class ModernBetaSettingsPresets {
     
     private static ModernBetaSettingsPreset presetPE() {
         return new ModernBetaSettingsPreset(
-            PRESET_BETA_1_7_3.chunkSettings().extend()
+            DEFAULT_BETA.chunkSettings().extend()
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.PE.id)
                 .add(DEEPSLATE_GENERATION, DeepslateGeneration.DISABLED)
                 .build(),
-            PRESET_BETA_1_7_3.biomeSettings().extend()
+            DEFAULT_BETA.biomeSettings().extend()
                 .add(PROVIDER, ModernBetaBuiltInTypes.Biome.PE.id)
                 .add(CLIMATE_MAPPINGS, Map.ofEntries(
                     Map.entry("desert", new ClimateMapping(
@@ -456,11 +470,11 @@ public class ModernBetaSettingsPresets {
     
     private static ModernBetaSettingsPreset presetBetaSkylands() {
         return new ModernBetaSettingsPreset(
-            PRESET_SKYLANDS.chunkSettings(),
-            PRESET_BETA_1_7_3.biomeSettings().extend()
+            presetSkylands().chunkSettings(),
+            DEFAULT_BETA.biomeSettings().extend()
                 .add(USE_OCEAN_BIOMES, false)
                 .build(),
-            PRESET_BETA_1_7_3.caveBiomeSettings()
+            DEFAULT_BETA.caveBiomeSettings()
         );
     }
     
@@ -633,8 +647,8 @@ public class ModernBetaSettingsPresets {
     
     private static ModernBetaSettingsPreset presetBetaLargeBiomes() {
         return new ModernBetaSettingsPreset(
-            PRESET_BETA_1_7_3.chunkSettings(),
-            PRESET_BETA_1_7_3.biomeSettings().extend()
+            DEFAULT_BETA.chunkSettings(),
+            DEFAULT_BETA.biomeSettings().extend()
                 .add(CLIMATE_SCALE, new ClimateScale(
                     0.025f / 4.0f,
                     0.05f / 4.0f,
@@ -657,7 +671,7 @@ public class ModernBetaSettingsPresets {
     
     private static ModernBetaSettingsPreset presetBetaXboxLegacy() {
         return new ModernBetaSettingsPreset(
-            PRESET_BETA_1_7_3.chunkSettings().extend()
+            DEFAULT_BETA.chunkSettings().extend()
                 .add(ISLES_PROPERTIES, new IslesProperties(
                     true,
                     false,
@@ -671,14 +685,14 @@ public class ModernBetaSettingsPresets {
                     0.25f
                 ))
                 .build(),
-            PRESET_BETA_1_7_3.biomeSettings(),
-            PRESET_BETA_1_7_3.caveBiomeSettings()
+            DEFAULT_BETA.biomeSettings(),
+            DEFAULT_BETA.caveBiomeSettings()
         );
     }
     
     private static ModernBetaSettingsPreset presetBetaSurvivalIsland() {
         return new ModernBetaSettingsPreset(
-            PRESET_BETA_1_7_3.chunkSettings().extend()
+            DEFAULT_BETA.chunkSettings().extend()
                 .add(ISLES_PROPERTIES, new IslesProperties(
                     true,
                     false,
@@ -692,14 +706,14 @@ public class ModernBetaSettingsPresets {
                     0.25f
                 ))
                 .build(),
-            PRESET_BETA_1_7_3.biomeSettings(),
-            PRESET_BETA_1_7_3.caveBiomeSettings()
+            DEFAULT_BETA.biomeSettings(),
+            DEFAULT_BETA.caveBiomeSettings()
         );
     }
     
     private static ModernBetaSettingsPreset presetBetaVanilla() {
         return new ModernBetaSettingsPreset(
-            PRESET_BETA_1_7_3.chunkSettings().extend()
+            DEFAULT_BETA.chunkSettings().extend()
                 .add(USE_SURFACE_RULES, true)
                 .add(CAVE_GENERATION, CaveGeneration.EARLY_RELEASE)
                 .build(),
@@ -1184,21 +1198,23 @@ public class ModernBetaSettingsPresets {
                     )
                 ))
                 .build(),
-            PRESET_BETA_1_7_3.caveBiomeSettings()
+            DEFAULT_BETA.caveBiomeSettings()
         );
     }
     
     private static ModernBetaSettingsPreset presetAlphaWinter() {
+        ModernBetaSettingsPreset basePreset = presetAlpha();
         return new ModernBetaSettingsPreset(
-            PRESET_ALPHA.chunkSettings(),
+            basePreset.chunkSettings(),
             ModernBetaSettings.singleBiome(ModernBetaBiomes.ALPHA_WINTER),
-            PRESET_ALPHA.caveBiomeSettings()
+            basePreset.caveBiomeSettings()
         );
     }
     
     private static ModernBetaSettingsPreset presetIndevParadise() {
+        ModernBetaSettingsPreset basePreset = presetIndev();
         return new ModernBetaSettingsPreset(
-            PRESET_INDEV.chunkSettings().extend()
+            basePreset.chunkSettings().extend()
                 .add(FINITE_LEVEL_PROPERTIES, new FiniteLevelProperties(
                     IndevType.ISLAND,
                     IndevTheme.PARADISE,
@@ -1208,13 +1224,14 @@ public class ModernBetaSettingsPresets {
                 ))
                 .build(),
             ModernBetaSettings.singleBiome(ModernBetaBiomes.INDEV_PARADISE),
-            PRESET_INDEV.caveBiomeSettings()
+            basePreset.caveBiomeSettings()
         );
     }
     
     private static ModernBetaSettingsPreset presetIndevWoods() {
+        ModernBetaSettingsPreset basePreset = presetIndev();
         return new ModernBetaSettingsPreset(
-            PRESET_INDEV.chunkSettings().extend()
+            basePreset.chunkSettings().extend()
                 .add(FINITE_LEVEL_PROPERTIES, new FiniteLevelProperties(
                     IndevType.ISLAND,
                     IndevTheme.WOODS,
@@ -1224,13 +1241,14 @@ public class ModernBetaSettingsPresets {
                 ))
                 .build(),
             ModernBetaSettings.singleBiome(ModernBetaBiomes.INDEV_WOODS),
-            PRESET_INDEV.caveBiomeSettings()
+            basePreset.caveBiomeSettings()
         );
     }
     
     private static ModernBetaSettingsPreset presetIndevHell() {
+        ModernBetaSettingsPreset basePreset = presetIndev();
         return new ModernBetaSettingsPreset(
-            PRESET_INDEV.chunkSettings().extend()
+            basePreset.chunkSettings().extend()
                 .add(FINITE_LEVEL_PROPERTIES, new FiniteLevelProperties(
                     IndevType.ISLAND,
                     IndevTheme.HELL,
@@ -1240,13 +1258,13 @@ public class ModernBetaSettingsPresets {
                 ))
                 .build(),
             ModernBetaSettings.singleBiome(ModernBetaBiomes.INDEV_HELL),
-            PRESET_INDEV.caveBiomeSettings()
+            basePreset.caveBiomeSettings()
         );
     }
 
     private static ModernBetaSettingsPreset presetBeta181(int biomeScale) {
         return new ModernBetaSettingsPreset(
-            PRESET_BETA_1_7_3.chunkSettings().extend()
+            DEFAULT_BETA.chunkSettings().extend()
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.EARLY_RELEASE.id)
                 .add(CAVE_GENERATION, CaveGeneration.EARLY_RELEASE)
                 .add(FORCED_BIOME_HEIGHT, ForcedBiomeHeight.overridesOnly(Map.of(
@@ -1285,7 +1303,7 @@ public class ModernBetaSettingsPresets {
                 new SmoothLayer("land", 1000, "land"),
                 MixRiverLayer.forEarlyRelease("land", 0, "land", "river")
             ),
-            PRESET_BETA_1_7_3.caveBiomeSettings()
+            DEFAULT_BETA.caveBiomeSettings()
         );
     }
 
@@ -1343,25 +1361,25 @@ public class ModernBetaSettingsPresets {
 
     private static ModernBetaSettingsPreset presetBeta19Pre3(int biomeScale) {
         return new ModernBetaSettingsPreset(
-            PRESET_BETA_1_7_3.chunkSettings().extend()
+            DEFAULT_BETA.chunkSettings().extend()
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.EARLY_RELEASE.id)
                 .add(CAVE_GENERATION, CaveGeneration.EARLY_RELEASE)
                 .addDefault(FORCED_BIOME_HEIGHT)
                 .build(),
             ModernBetaSettings.fractalLayers(configuredLayers100Era(biomeScale, ExtendedBiomeId.of(ModernBetaBiomes.LATE_BETA_ICE_PLAINS))),
-            PRESET_BETA_1_7_3.caveBiomeSettings()
+            DEFAULT_BETA.caveBiomeSettings()
         );
     }
 
     private static ModernBetaSettingsPreset preset100(int biomeScale) {
         return new ModernBetaSettingsPreset(
-            PRESET_BETA_1_7_3.chunkSettings().extend()
+            DEFAULT_BETA.chunkSettings().extend()
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.EARLY_RELEASE.id)
                 .add(CAVE_GENERATION, CaveGeneration.EARLY_RELEASE)
                 .addDefault(FORCED_BIOME_HEIGHT)
                 .build(),
             ModernBetaSettings.fractalLayers(configuredLayers100Era(biomeScale, ExtendedBiomeId.of(ModernBetaBiomes.EARLY_RELEASE_ICE_PLAINS))),
-            PRESET_BETA_1_7_3.caveBiomeSettings()
+            DEFAULT_BETA.caveBiomeSettings()
         );
     }
 
@@ -1499,31 +1517,31 @@ public class ModernBetaSettingsPresets {
 
     private static ModernBetaSettingsPreset preset11(int biomeScale) {
         return new ModernBetaSettingsPreset(
-            PRESET_BETA_1_7_3.chunkSettings().extend()
+            DEFAULT_BETA.chunkSettings().extend()
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.EARLY_RELEASE.id)
                 .add(CAVE_GENERATION, CaveGeneration.EARLY_RELEASE)
                 .addDefault(FORCED_BIOME_HEIGHT)
                 .build(),
             ModernBetaSettings.fractalLayers(configuredLayers11Era(biomeScale, false, false)),
-            PRESET_BETA_1_7_3.caveBiomeSettings()
+            DEFAULT_BETA.caveBiomeSettings()
         );
     }
 
     private static ModernBetaSettingsPreset preset125(int biomeScale) {
         return new ModernBetaSettingsPreset(
-            PRESET_BETA_1_7_3.chunkSettings().extend()
+            DEFAULT_BETA.chunkSettings().extend()
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.EARLY_RELEASE.id)
                 .add(CAVE_GENERATION, CaveGeneration.EARLY_RELEASE)
                 .addDefault(FORCED_BIOME_HEIGHT)
                 .build(),
             ModernBetaSettings.fractalLayers(configuredLayers11Era(biomeScale, true, false)),
-            PRESET_BETA_1_7_3.caveBiomeSettings()
+            DEFAULT_BETA.caveBiomeSettings()
         );
     }
 
     private static ModernBetaSettingsPreset preset164(int biomeScale) {
         return new ModernBetaSettingsPreset(
-            PRESET_BETA_1_7_3.chunkSettings().extend()
+            DEFAULT_BETA.chunkSettings().extend()
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.EARLY_RELEASE.id)
                 .add(CAVE_GENERATION, CaveGeneration.EARLY_RELEASE)
                 .add(FORCED_BIOME_HEIGHT, ForcedBiomeHeight.overridesOnly(Map.of(
@@ -1536,7 +1554,7 @@ public class ModernBetaSettingsPresets {
                 )))
                 .build(),
             ModernBetaSettings.fractalLayers(configuredLayers11Era(biomeScale, true, true)),
-            PRESET_BETA_1_7_3.caveBiomeSettings()
+            DEFAULT_BETA.caveBiomeSettings()
         );
     }
 
@@ -1999,40 +2017,40 @@ public class ModernBetaSettingsPresets {
 
     private static ModernBetaSettingsPreset preset1122(int biomeScale) {
         return new ModernBetaSettingsPreset(
-            PRESET_BETA_1_7_3.chunkSettings().extend()
+            DEFAULT_BETA.chunkSettings().extend()
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.MAJOR_RELEASE.id)
                 .add(USE_SURFACE_RULES, true)
                 .add(CAVE_GENERATION, CaveGeneration.MAJOR_RELEASE)
                 .add(FORCED_BIOME_HEIGHT, ForcedBiomeHeight.overridesOnly(HeightConfig.MAJOR_RELEASE_CONFIGS))
                 .build(),
             ModernBetaSettings.fractalLayers(configuredLayers1710Era(biomeScale, false, false, false, false)),
-            PRESET_BETA_1_7_3.caveBiomeSettings()
+            DEFAULT_BETA.caveBiomeSettings()
         );
     }
 
     private static ModernBetaSettingsPreset preset1171(int biomeScale) {
         return new ModernBetaSettingsPreset(
-            PRESET_BETA_1_7_3.chunkSettings().extend()
+            DEFAULT_BETA.chunkSettings().extend()
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.MAJOR_RELEASE.id)
                 .add(USE_SURFACE_RULES, true)
                 .add(CAVE_GENERATION, CaveGeneration.MAJOR_RELEASE)
                 .add(FORCED_BIOME_HEIGHT, ForcedBiomeHeight.overridesOnly(HeightConfig.MAJOR_RELEASE_CONFIGS))
                 .build(),
             ModernBetaSettings.fractalLayers(configuredLayers1710Era(biomeScale, true, true, true, false)),
-            PRESET_BETA_1_7_3.caveBiomeSettings()
+            DEFAULT_BETA.caveBiomeSettings()
         );
     }
 
     private static ModernBetaSettingsPreset presetSnowAintSnowier(int biomeScale) {
         return new ModernBetaSettingsPreset(
-            PRESET_BETA_1_7_3.chunkSettings().extend()
+            DEFAULT_BETA.chunkSettings().extend()
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.MAJOR_RELEASE.id)
                 .add(USE_SURFACE_RULES, true)
                 .add(CAVE_GENERATION, CaveGeneration.MAJOR_RELEASE)
                 .add(FORCED_BIOME_HEIGHT, ForcedBiomeHeight.overridesOnly(HeightConfig.MAJOR_RELEASE_CONFIGS))
                 .build(),
             ModernBetaSettings.fractalLayers(configuredLayers1710Era(biomeScale, true, true, true, true)),
-            PRESET_BETA_1_7_3.caveBiomeSettings()
+            DEFAULT_BETA.caveBiomeSettings()
         );
     }
 
@@ -2077,7 +2095,7 @@ public class ModernBetaSettingsPresets {
         );
 
         return new ModernBetaSettingsPreset(
-            PRESET_BETA_1_7_3.chunkSettings().extend()
+            DEFAULT_BETA.chunkSettings().extend()
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.EARLY_RELEASE.id)
                 .add(USE_SURFACE_RULES, true)
                 .add(CAVE_GENERATION, CaveGeneration.EARLY_RELEASE)
@@ -2259,7 +2277,7 @@ public class ModernBetaSettingsPresets {
                 StackedZoomLayer.modal("ocean_climate", 2001, "ocean_climate", 6),
                 new ApplyOceanClimateLayer("land", 0, "land", "ocean_climate")
             ),
-            PRESET_BETA_1_7_3.caveBiomeSettings()
+            DEFAULT_BETA.caveBiomeSettings()
         );
     }
 }

@@ -1,5 +1,6 @@
 package mod.bluestaggo.modernerbeta.neoforge;
 
+import com.mojang.serialization.Codec;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.neoforge.network.NetworkHelperImpl;
 import mod.bluestaggo.modernerbeta.neoforge.registry.RegistryHelperImpl;
@@ -10,6 +11,7 @@ import mod.bluestaggo.modernerbeta.registry.IRegistryHelper;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.registry.VanillaRegistryHandler;
 import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.resource.ResourcePackProfile;
 import net.minecraft.resource.ResourcePackSource;
 import net.minecraft.resource.ResourceType;
@@ -22,9 +24,11 @@ import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
+import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 import net.neoforged.neoforge.registries.RegisterEvent;
 
+import java.util.Map;
 import java.util.function.Consumer;
 
 @EventBusSubscriber(modid = ModernerBeta.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
@@ -53,6 +57,15 @@ public class ModEventsCommon {
         IRegistryHelper registryHelper = new RegistryHelperImpl(event);
         ModernBetaRegistries.makeRegistries(registryHelper);
         ModernerBeta.setupCustomRegistryHandlers();
+    }
+
+    @SubscribeEvent
+    @SuppressWarnings("unchecked")
+    public static void registerDatapackRegistries(DataPackRegistryEvent.NewRegistry event) {
+        ModernerBeta.setupCustomDynamicRegistries();
+        for (Map.Entry<RegistryKey<?>, Codec<?>> dynamicRegistry : ModernerBeta.CUSTOM_DYNAMIC_REGISTRIES.entrySet()) {
+            event.dataPackRegistry((RegistryKey<Registry<Object>>)dynamicRegistry.getKey(), (Codec<Object>)dynamicRegistry.getValue());
+        }
     }
 
     @SubscribeEvent

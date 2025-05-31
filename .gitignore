@@ -28,4 +28,4 @@ bin/
 
 run/
 remappedSrc/
-common/src/main/generated/
+versions/*/src/main/generated/

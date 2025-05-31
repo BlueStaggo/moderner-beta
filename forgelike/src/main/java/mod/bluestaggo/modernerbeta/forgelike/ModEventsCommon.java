@@ -1,9 +1,9 @@
-package mod.bluestaggo.modernerbeta.neoforge;
+package mod.bluestaggo.modernerbeta.forgelike;
 
 import com.mojang.serialization.Codec;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
-import mod.bluestaggo.modernerbeta.neoforge.network.NetworkHelperImpl;
-import mod.bluestaggo.modernerbeta.neoforge.registry.RegistryHelperImpl;
+import mod.bluestaggo.modernerbeta.forgelike.network.NetworkHelperImpl;
+import mod.bluestaggo.modernerbeta.forgelike.registry.RegistryHelperImpl;
 import mod.bluestaggo.modernerbeta.network.BiomeProviderInfoPayload;
 import mod.bluestaggo.modernerbeta.network.S2CPacketHandlers;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;

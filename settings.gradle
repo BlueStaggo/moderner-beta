@@ -16,6 +16,19 @@ pluginManagement {
     }
 }
 
-include("common")
-include("fabric")
-include("neoforge")
+plugins {
+    id("dev.kikugie.stonecutter") version "0.6"
+}
+
+stonecutter {
+    kotlinController = false
+    centralScript = "build.gradle"
+
+    create(getRootProject()) {
+        versions "1.20.1", "1.21.1", "1.21.4", "1.21.5"
+        branch("fabric")
+        branch("forgelike")
+
+        vcsVersion = "1.21.5"
+    }
+}

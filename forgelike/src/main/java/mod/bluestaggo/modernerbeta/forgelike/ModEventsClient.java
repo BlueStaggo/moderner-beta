@@ -1,4 +1,4 @@
-package mod.bluestaggo.modernerbeta.neoforge;
+package mod.bluestaggo.modernerbeta.forgelike;
 
 import me.shedaniel.autoconfig.AutoConfig;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
@@ -8,7 +8,7 @@ import mod.bluestaggo.modernerbeta.client.color.BlockColors;
 import mod.bluestaggo.modernerbeta.client.registry.ModernBetaClientRegistries;
 import mod.bluestaggo.modernerbeta.client.resource.ModernBetaColormapResource;
 import mod.bluestaggo.modernerbeta.config.ModernBetaConfig;
-import mod.bluestaggo.modernerbeta.neoforge.registry.RegistryHelperImpl;
+import mod.bluestaggo.modernerbeta.forgelike.registry.RegistryHelperImpl;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHelper;
 import mod.bluestaggo.modernerbeta.registry.VanillaRegistryHandler;

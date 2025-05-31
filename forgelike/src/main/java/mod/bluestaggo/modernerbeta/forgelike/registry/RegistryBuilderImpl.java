@@ -1,4 +1,4 @@
-package mod.bluestaggo.modernerbeta.neoforge.registry;
+package mod.bluestaggo.modernerbeta.forgelike.registry;
 
 import mod.bluestaggo.modernerbeta.registry.IRegistryBuilder;
 import net.minecraft.registry.Registry;

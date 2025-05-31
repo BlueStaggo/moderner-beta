@@ -23,11 +23,11 @@ jobs:
         java-version: '21'
         distribution: 'temurin'
     - name: Run Data Generation
-      run: ./gradlew fabric:runDatagen
+      run: ./gradlew chiseledDatagen
       env:
         CI: 'true'
     - name: Build artifacts
-      run: ./gradlew build
+      run: ./gradlew chiseledBuild
     - name: Get build hash
       id: get-build-hash
       run: |
@@ -42,5 +42,6 @@ jobs:
       with:
         name: moderner-beta-${{steps.get-branch.outputs.branch}}-${{steps.get-build-hash.outputs.id}}
         path: |
-          neoforge/build/libs
-          fabric/build/libs
+          build/libs/fabric
+          build/libs/neoforge
+          build/libs/forge

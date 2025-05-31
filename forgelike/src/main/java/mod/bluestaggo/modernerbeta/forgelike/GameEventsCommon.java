@@ -1,4 +1,4 @@
-package mod.bluestaggo.modernerbeta.neoforge;
+package mod.bluestaggo.modernerbeta.forgelike;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.command.DebugProviderSettingsCommand;

@@ -1,0 +1,33 @@
+modLoader = "javafml"
+loaderVersion = "(,)"
+issueTrackerURL = "https://github.com/BlueStaggo/moderner-beta/issues"
+license = "MIT"
+
+[[mods]]
+modId = "moderner_beta"
+version = "${version}"
+displayName = "Moderner Beta"
+authors = "BlueStaggo, bespectacled"
+credits = "SuperCoder7979, Arenovas, Amb0s, PaulEvs, ErzeKawek, icanttellyou, comp500, ErzeKawe"
+description = '''
+Old (and not so old) world generation for modern Minecraft!
+'''
+logoFile = "assets/moderner_beta/banner.png"
+
+[[dependencies.moderner_beta]]
+modId = "neoforge"
+versionRange = "${loader_version_range}"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.moderner_beta]]
+modId = "minecraft"
+versionRange = "${minecraft_version_range}"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.moderner_beta]]
+modId = "cloth_config"
+versionRange = "(,)"
+ordering = "NONE"
+side = "BOTH"

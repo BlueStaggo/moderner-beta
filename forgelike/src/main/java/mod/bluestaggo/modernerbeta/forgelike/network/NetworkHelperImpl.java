@@ -1,4 +1,4 @@
-package mod.bluestaggo.modernerbeta.neoforge.network;
+package mod.bluestaggo.modernerbeta.forgelike.network;
 
 import mod.bluestaggo.modernerbeta.network.INetworkHelper;
 import net.minecraft.network.packet.CustomPayload;

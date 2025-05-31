@@ -5,22 +5,33 @@ plugins {
 }
 
 var mc = stonecutter.current.version
+var neoforge = stonecutter.eval(mc, ">=1.20.2")
 var commonPr = stonecutter.node.sibling("").project
 
 if (commonPr == null) {
     throw new Exception("No common project for $project")
 }
 
+var loader = neoforge ? "neoforge" : "forge"
+project.ext["loom.platform"] = loader
+
 apply plugin: 'dev.architectury.loom'
+
+stonecutter.const("forge", !neoforge)
+stonecutter.const("neoforge", neoforge)
 
 version = "${rootProject.mod_version}+$mc"
 base {
-    archivesName.set("${rootProject.archives_base_name}-fabric")
+    archivesName.set("${rootProject.archives_base_name}-$loader")
 }
 
 architectury {
     platformSetupLoomIde()
-    fabric()
+    if (neoforge) {
+        neoForge()
+    } else {
+        forge()
+    }
 }
 
 loom {
@@ -37,13 +48,10 @@ loom {
         runDir = "../../../run"
     }
 
-    runs {
-        datagen {
-            server()
-            name "Data Generation"
-            vmArg "-Dfabric-api.datagen"
-            vmArg "-Dfabric-api.datagen.output-dir=${commonPr.file("src/main/generated")}"
-            vmArg "-Dfabric-api.datagen.modid=moderner_beta"
+    if (!neoforge) {
+        forge {
+            mixinConfig "moderner_beta-common.mixins.json"
+            convertAccessWideners = true
         }
     }
 }
@@ -53,47 +61,74 @@ configurations {
     shadowCommon // Don't use shadow from the shadow plugin because we don't want IDEA to index this.
     compileClasspath.extendsFrom common
     runtimeClasspath.extendsFrom common
-    developmentFabric.extendsFrom common
+    if (neoforge) {
+        developmentNeoForge.extendsFrom common
+    } else {
+        developmentForge.extendsFrom common
+    }
+}
+
+repositories {
+    if (neoforge) {
+        maven {
+            name "NeoForged"
+            url "https://maven.neoforged.net/releases"
+        }
+    } else {
+        maven {
+            name = 'Forge'
+            url = 'https://maven.minecraftforge.net/'
+        }
+    }
 }
 
 dependencies {
     minecraft "net.minecraft:minecraft:$mc"
-    mappings "net.fabricmc:yarn:${commonPr.yarn_mappings}:v2"
-    modImplementation "net.fabricmc:fabric-loader:$fabric_loader_version"
-
-    // Fabric API. This is technically optional, but you probably want it anyway.
-    modApi "net.fabricmc.fabric-api:fabric-api:${commonPr.fabric_api_version}"
-
-    // Configuration
-    modApi("me.shedaniel.cloth:cloth-config-fabric:${commonPr.cloth_config_version}") {
-        exclude(group: "net.fabricmc.fabric-api")
+    if (neoforge && property('yarn_mappings_neoforge_patch') != "N/A") {
+        mappings loom.layered() {
+            mappings "net.fabricmc:yarn:${commonPr.yarn_mappings}:v2"
+            mappings "dev.architectury:yarn-mappings-patch-neoforge:${commonPr.yarn_mappings_neoforge_patch}"
+        }
+    } else {
+        mappings "net.fabricmc:yarn:${commonPr.yarn_mappings}:v2"
     }
 
-    modImplementation("com.terraformersmc:modmenu:${commonPr.mod_menu_version}")
+    if (neoforge) {
+        neoForge "net.neoforged:neoforge:${commonPr.neoforge_version}"
+    } else {
+        forge "net.minecraftforge:forge:${commonPr.forge_version}"
+    }
 
-    //Fixes https://github.com/architectury/architectury-loom/issues/189 which is something we need for CI
-    modLocalRuntime "com.github.jab125.architectury-data-generation-fix:architectury-data-generation-fix-fabric:${commonPr.arch_datagen_fix_version}"
+    var clothConfig = neoforge ? "me.shedaniel.cloth:cloth-config-neoforge" :
+            "me.shedaniel.cloth:cloth-config-forge"
+    modApi "${clothConfig}:${commonPr.cloth_config_version}"
 
     common(project(path: commonPr.path, configuration: "namedElements")) { transitive false }
-    shadowCommon(project(path: commonPr.path, configuration: "transformProductionFabric")) { transitive false }
+    shadowCommon(project(path: commonPr.path, configuration: neoforge ? "transformProductionNeoForge" : "transformProductionForge")) { transitive false }
 }
 
 repositories {
     mavenCentral()
     maven { url "https://maven.shedaniel.me/" }
-    maven { url "https://maven.terraformersmc.com/releases" }
-    maven { url 'https://jitpack.io' }
 }
 
 processResources {
     var toExpand = [
         "version": commonPr.version,
-        "minecraft_version_range": commonPr.fabric_version_range
+        "loader_version_range": neoforge ? commonPr.neoforge_version_range : commonPr.forge_version_range,
+        "minecraft_version_range": commonPr.forge_like_version_range
     ]
 
-    filesMatching("fabric.mod.json") {
+    var neoforgeModsToml = neoforge && stonecutter.eval(mc, ">=1.20.5")
+
+    var tomlInclude = neoforgeModsToml ? "META-INF/neoforge.mods.toml" : "META-INF/mods.toml"
+    var tomlExclude = neoforgeModsToml ? "META-INF/mods.toml" : "META-INF/neoforge.mods.toml"
+
+    filesMatching(tomlInclude) {
         expand toExpand
     }
+
+    exclude tomlExclude
 
     from(commonPr.file("src/main/generated")) {
         include "**/**"
@@ -103,11 +138,12 @@ processResources {
     from(rootProject.file("src/main/resources")) {
         include "**/**"
         exclude "moderner_beta-common.mixins.json"
-        exclude "assets/moderner_beta/banner.png"
+        exclude "assets/moderner_beta/icon.png"
     }
 }
 
 shadowJar {
+    exclude "fabric.mod.json"
     exclude "architectury.common.json"
 
     configurations = [project.configurations.shadowCommon]
@@ -115,21 +151,15 @@ shadowJar {
 }
 
 remapJar {
-    injectAccessWidener = true
+    if (!neoforge) {
+        injectAccessWidener = true
+    }
+
     input.set shadowJar.archiveFile
     dependsOn shadowJar
     archiveClassifier = null
+    atAccessWideners.add "moderner_beta.accesswidener"
 }
-
-task renameJarForPublication(type: Zip, dependsOn: remapJar) {
-    from remapJar.archiveFile.map { zipTree(it) }
-    archiveExtension = "jar"
-    metadataCharset "UTF-8"
-    destinationDirectory = base.libsDirectory
-    archiveClassifier = project.name
-}
-
-assemble.dependsOn renameJarForPublication
 
 jar {
     archiveClassifier = "dev"
@@ -148,11 +178,11 @@ tasks.build {
     description = "Must run through 'chiseledBuild'"
 }
 
-task buildAndCollect (type: Copy) {
+tasks.register('buildAndCollect', Copy) {
     group = "versioned"
     description = "Must run through 'chiseledBuild'"
     from tasks.remapJar.archiveFile, tasks.remapSourcesJar.archiveFile
-    into rootProject.layout.buildDirectory.file("libs/fabric")
+    into rootProject.layout.buildDirectory.file("libs/$loader")
     dependsOn build
 }
 
@@ -163,10 +193,9 @@ modrinth {
     versionNumber = commonPr.version
     gameVersions = commonPr.supported_versions.split(",").toList()
     changelog = rootProject.file("CHANGELOG.md").text
-    loaders = ["fabric", "quilt"]
-    uploadFile = renameJarForPublication
+    loaders = [neoforge ? "neoforge" : "forge"]
+    uploadFile = tasks.remapJar
     dependencies {
-        required.project "fabric-api"
         required.project "cloth-config"
     }
 }

@@ -1,13 +1,13 @@
 plugins {
 	id "architectury-plugin" version "3.4.+"
-	id 'maven-publish'
+	id "maven-publish"
 }
 
 var mc = stonecutter.current.version
 version = project.mod_version + "+" + mc
 group = project.maven_group
 
-apply plugin: 'dev.architectury.loom'
+apply plugin: "dev.architectury.loom"
 base {
 	archivesName.set("${archives_base_name}-common")
 }
@@ -21,7 +21,7 @@ architectury {
 dependencies {
 	// To change the versions see the gradle.properties file
 	minecraft "net.minecraft:minecraft:$mc"
-	mappings "net.fabricmc:yarn:${property('yarn_mappings')}:v2"
+	mappings "net.fabricmc:yarn:${property("yarn_mappings")}:v2"
 	modImplementation("net.fabricmc:fabric-loader:$fabric_loader_version")
 	modApi "me.shedaniel.cloth:cloth-config:$cloth_config_version"
 }
@@ -32,6 +32,17 @@ loom {
 	decompilers {
 		vineflower { // Adds names to lambdas - useful for mixins
 			options.put("mark-corresponding-synthetics", "1")
+		}
+	}
+}
+
+stonecutter {
+	replacements {
+		regex {
+			it.direction = eval(mc, ">=1.21.5")
+			it.replace(/\bDataPool\b/, "Pool")
+			it.reverse(/\bPool\b/, "DataPool")
+			it.phase = "LAST"
 		}
 	}
 }
@@ -60,11 +71,6 @@ java {
 	var javaVer = stonecutter.eval(mc, ">=1.20.5") ? JavaVersion.VERSION_21 : JavaVersion.VERSION_17
 	sourceCompatibility = javaVer
 	targetCompatibility = javaVer
-}
-
-tasks.build {
-	group = "versioned"
-	description = "Must run through 'chiseledBuild'"
 }
 
 jar {

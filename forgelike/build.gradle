@@ -1,7 +1,7 @@
 plugins {
     id "architectury-plugin" version "3.4.+"
     id "com.github.johnrengelman.shadow" version "8.1.1"
-    id 'com.modrinth.minotaur' version '2.+'
+    id "com.modrinth.minotaur" version "2.+"
 }
 
 var mc = stonecutter.current.version
@@ -15,7 +15,7 @@ if (commonPr == null) {
 var loader = neoforge ? "neoforge" : "forge"
 project.ext["loom.platform"] = loader
 
-apply plugin: 'dev.architectury.loom'
+apply plugin: "dev.architectury.loom"
 
 stonecutter.const("forge", !neoforge)
 stonecutter.const("neoforge", neoforge)
@@ -76,15 +76,15 @@ repositories {
         }
     } else {
         maven {
-            name = 'Forge'
-            url = 'https://maven.minecraftforge.net/'
+            name = "Forge"
+            url = "https://maven.minecraftforge.net/"
         }
     }
 }
 
 dependencies {
     minecraft "net.minecraft:minecraft:$mc"
-    if (neoforge && property('yarn_mappings_neoforge_patch') != "N/A") {
+    if (neoforge && property("yarn_mappings_neoforge_patch") != "N/A") {
         mappings loom.layered() {
             mappings "net.fabricmc:yarn:${commonPr.yarn_mappings}:v2"
             mappings "dev.architectury:yarn-mappings-patch-neoforge:${commonPr.yarn_mappings_neoforge_patch}"
@@ -171,19 +171,6 @@ java {
     var javaVer = stonecutter.eval(mc, ">=1.20.5") ? JavaVersion.VERSION_21 : JavaVersion.VERSION_17
     sourceCompatibility = javaVer
     targetCompatibility = javaVer
-}
-
-tasks.build {
-    group = "versioned"
-    description = "Must run through 'chiseledBuild'"
-}
-
-tasks.register('buildAndCollect', Copy) {
-    group = "versioned"
-    description = "Must run through 'chiseledBuild'"
-    from tasks.remapJar.archiveFile, tasks.remapSourcesJar.archiveFile
-    into rootProject.layout.buildDirectory.file("libs/$loader")
-    dependsOn build
 }
 
 modrinth {

@@ -1,7 +1,7 @@
 plugins {
     id "architectury-plugin" version "3.4.+"
     id "com.github.johnrengelman.shadow" version "8.1.1"
-    id 'com.modrinth.minotaur' version '2.+'
+    id "com.modrinth.minotaur" version "2.+"
 }
 
 var mc = stonecutter.current.version
@@ -11,7 +11,7 @@ if (commonPr == null) {
     throw new Exception("No common project for $project")
 }
 
-apply plugin: 'dev.architectury.loom'
+apply plugin: "dev.architectury.loom"
 
 version = "${rootProject.mod_version}+$mc"
 base {
@@ -82,7 +82,7 @@ repositories {
     mavenCentral()
     maven { url "https://maven.shedaniel.me/" }
     maven { url "https://maven.terraformersmc.com/releases" }
-    maven { url 'https://jitpack.io' }
+    maven { url "https://jitpack.io" }
 }
 
 processResources {
@@ -141,19 +141,6 @@ java {
     var javaVer = stonecutter.eval(mc, ">=1.20.5") ? JavaVersion.VERSION_21 : JavaVersion.VERSION_17
     sourceCompatibility = javaVer
     targetCompatibility = javaVer
-}
-
-tasks.build {
-    group = "versioned"
-    description = "Must run through 'chiseledBuild'"
-}
-
-task buildAndCollect (type: Copy) {
-    group = "versioned"
-    description = "Must run through 'chiseledBuild'"
-    from tasks.remapJar.archiveFile, tasks.remapSourcesJar.archiveFile
-    into rootProject.layout.buildDirectory.file("libs/fabric")
-    dependsOn build
 }
 
 modrinth {

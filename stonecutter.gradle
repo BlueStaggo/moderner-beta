@@ -1,23 +1,7 @@
 plugins {
     id "dev.kikugie.stonecutter"
-    id 'dev.architectury.loom' version "${loom_version}" apply false
+    id "dev.architectury.loom" version "${loom_version}" apply false
 }
 
 plugins.apply "dev.kikugie.stonecutter"
 stonecutter.active "1.21.5"
-
-stonecutter.registerChiseled tasks.register("chiseledBuild", stonecutter.chiseled) { 
-    setGroup "project"
-    ofTask "buildAndCollect"
-}
-
-stonecutter.registerChiseled tasks.register("chiseledDatagen", stonecutter.chiseled) {
-    setGroup "project"
-    versions { branch, _ -> branch == "fabric" }
-    ofTask "runDatagen"
-}
-
-stonecutter.registerChiseled tasks.register("chiseledPublish", stonecutter.chiseled) {
-    setGroup "project"
-    ofTask "modrinth"
-}

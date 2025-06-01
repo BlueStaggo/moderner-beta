@@ -17,11 +17,11 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
       - name: Run Data Generation
-        run: ./gradlew chiseledDatagen
+        run: ./gradlew runDatagen
         env:
           CI: 'true'
       - name: Build and publish
-        run: ./gradlew chiseledBuild chiseledPublish --stacktrace
+        run: ./gradlew build modrinth --stacktrace
         env:
           MODRINTH_TOKEN: ${{secrets.MODRINTH_TOKEN}}
       - name: Upload build artifacts

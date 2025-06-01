@@ -23,11 +23,11 @@ jobs:
         java-version: '21'
         distribution: 'temurin'
     - name: Run Data Generation
-      run: ./gradlew chiseledDatagen
+      run: ./gradlew runDatagen
       env:
         CI: 'true'
     - name: Build artifacts
-      run: ./gradlew chiseledBuild
+      run: ./gradlew build
     - name: Get build hash
       id: get-build-hash
       run: |

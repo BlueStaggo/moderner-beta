@@ -142,6 +142,7 @@ processResources {
     }
 }
 
+var outDir = rootProject.layout.buildDirectory.dir("libs/$loader")
 shadowJar {
     exclude "fabric.mod.json"
     exclude "architectury.common.json"
@@ -159,6 +160,11 @@ remapJar {
     dependsOn shadowJar
     archiveClassifier = null
     atAccessWideners.add "moderner_beta.accesswidener"
+    destinationDirectory = outDir
+}
+
+remapSourcesJar {
+    destinationDirectory = outDir
 }
 
 jar {

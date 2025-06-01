@@ -107,6 +107,7 @@ processResources {
     }
 }
 
+var outDir = rootProject.layout.buildDirectory.dir("libs/fabric")
 shadowJar {
     exclude "architectury.common.json"
 
@@ -119,17 +120,12 @@ remapJar {
     input.set shadowJar.archiveFile
     dependsOn shadowJar
     archiveClassifier = null
+    destinationDirectory = outDir
 }
 
-task renameJarForPublication(type: Zip, dependsOn: remapJar) {
-    from remapJar.archiveFile.map { zipTree(it) }
-    archiveExtension = "jar"
-    metadataCharset "UTF-8"
-    destinationDirectory = base.libsDirectory
-    archiveClassifier = project.name
+remapSourcesJar {
+    destinationDirectory = outDir
 }
-
-assemble.dependsOn renameJarForPublication
 
 jar {
     archiveClassifier = "dev"
@@ -151,7 +147,7 @@ modrinth {
     gameVersions = commonPr.supported_versions.split(",").toList()
     changelog = rootProject.file("CHANGELOG.md").text
     loaders = ["fabric", "quilt"]
-    uploadFile = renameJarForPublication
+    uploadFile = tasks.remapJar
     dependencies {
         required.project "fabric-api"
         required.project "cloth-config"

@@ -1,0 +1,18 @@
+plugins {
+    id("dev.kikugie.stonecutter")
+    id("dev.architectury.loom").apply(false)
+}
+
+plugins.apply("dev.kikugie.stonecutter")
+stonecutter.active("1.21.5")
+
+stonecutter.parameters {
+    replacements {
+        regex {
+            direction = eval(metadata.version, "<1.21.5")
+            replace("""\bPool\b""", "DataPool")
+            reverse("""\bDataPool\b""", "Pool")
+            phase = "LAST"
+        }
+    }
+}

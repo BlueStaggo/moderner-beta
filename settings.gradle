@@ -17,14 +17,23 @@ pluginManagement {
         }
         gradlePluginPortal()
     }
+
+    resolutionStrategy {
+        eachPlugin {
+            if (it.requested.id.id == "dev.architectury.loom") {
+                println("${loom_version}")
+                it.useVersion("${loom_version}")
+            }
+        }
+    }
 }
 
 plugins {
-    id("dev.kikugie.stonecutter") version "0.7-alpha.19"
+    id("dev.kikugie.stonecutter") version "0.7-alpha.20"
 }
 
 stonecutter {
-    kotlinController = false
+    kotlinController = true
     centralScript = "build.gradle"
 
     create(getRootProject()) {

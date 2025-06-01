@@ -20,7 +20,6 @@ import mod.bluestaggo.modernerbeta.world.chunk.provider.island.IslandShape;
 import net.minecraft.registry.Registerable;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.util.collection.Pool;
-import net.minecraft.util.collection.Weighted;
 import net.minecraft.world.biome.BiomeKeys;
 
 import java.util.*;
@@ -1314,10 +1313,10 @@ public final class ModernBetaSettingsPresets {
             AddLandLayer.forIslandScale("land", 1, "land"),
             new ModalZoomLayer("land", 2001, "land"),
             AddLandLayer.forIslandScale("land", 2, "land"),
-            new WeightedBiomeLayer("snow", 2, Pool.of(
-                new Weighted<>(ExtendedBiomeId.SNOWY_PLAINS, 1),
-                new Weighted<>(ExtendedBiomeId.NULL, 4)
-            )),
+            new WeightedBiomeLayer("snow", 2, Pool.<ExtendedBiomeId>builder()
+                .add(ExtendedBiomeId.SNOWY_PLAINS, 1)
+                .add(ExtendedBiomeId.NULL, 4)
+                .build()),
             new BiomeToLayerOverlayLayer("land", 0, "land", Map.of(ExtendedBiomeId.PLAINS, "snow")),
             new ModalZoomLayer("land", 2002, "land"),
             AddLandLayer.forIslandScale("land", 3, "land"),
@@ -1414,10 +1413,10 @@ public final class ModernBetaSettingsPresets {
             );
         }
 
-        Layer swampLakesLayer = new WeightedBiomeLayer("swamp_lakes", 1000, Pool.of(
-            new Weighted<>(ExtendedBiomeId.RIVER, 1),
-            new Weighted<>(ExtendedBiomeId.NULL, 5)
-        ));
+        Layer swampLakesLayer = new WeightedBiomeLayer("swamp_lakes", 1000, Pool.<ExtendedBiomeId>builder()
+            .add(ExtendedBiomeId.RIVER, 1)
+            .add(ExtendedBiomeId.NULL, 5)
+            .build());
         List<PredicateOverlayLayer.Target> lakeOverlays = List.of(
             PredicateOverlayLayer.Target.layer(
                 BiomePredicate.of(ExtendedBiomeId.of("~moderner_beta:early_release_swampland")),
@@ -1446,10 +1445,10 @@ public final class ModernBetaSettingsPresets {
             AddLandLayer.forIslandScale("land", 1, "land"),
             new ModalZoomLayer("land", 2001, "land"),
             AddLandLayer.forIslandScale("land", 2, "land"),
-            new WeightedBiomeLayer("snow", 2, Pool.of(
-                new Weighted<>(ExtendedBiomeId.SNOWY_PLAINS, 1),
-                new Weighted<>(ExtendedBiomeId.NULL, 4)
-            )),
+            new WeightedBiomeLayer("snow", 2, Pool.<ExtendedBiomeId>builder()
+                .add(ExtendedBiomeId.SNOWY_PLAINS, 1)
+                .add(ExtendedBiomeId.NULL, 4)
+                .build()),
             new BiomeToLayerOverlayLayer("land", 0, "land", Map.of(ExtendedBiomeId.PLAINS, "snow")),
             new ModalZoomLayer("land", 2002, "land"),
             AddLandLayer.forIslandScale("land", 3, "land"),
@@ -1503,10 +1502,10 @@ public final class ModernBetaSettingsPresets {
             MixRiverLayer.forEarlyRelease("land", 0, "land", "river")
         );
         if (addJungles) {
-            Layer jungleLakesLayer = new WeightedBiomeLayer("jungle_lakes", 1000, Pool.of(
-                new Weighted<>(ExtendedBiomeId.RIVER, 1),
-                new Weighted<>(ExtendedBiomeId.NULL, 7)
-            ));
+            Layer jungleLakesLayer = new WeightedBiomeLayer("jungle_lakes", 1000, Pool.<ExtendedBiomeId>builder()
+                .add(ExtendedBiomeId.RIVER, 1)
+                .add(ExtendedBiomeId.NULL, 7)
+                .build());
 
             layers = new ArrayList<>(layers);
             layers.add(layers.lastIndexOf(swampLakesLayer), jungleLakesLayer);
@@ -1739,11 +1738,11 @@ public final class ModernBetaSettingsPresets {
                 ExtendedBiomeId.PLAINS, ExtendedBiomeId.NULL
             ),
             // region AddSnowLayer
-            new WeightedBiomeLayer("climate", 2, Pool.of(
-                new Weighted<>(ExtendedBiomeId.CLIMATE_SNOWY, 1),
-                new Weighted<>(ExtendedBiomeId.CLIMATE_COOL, 1),
-                new Weighted<>(ExtendedBiomeId.CLIMATE_WARM, 4)
-            )),
+            new WeightedBiomeLayer("climate", 2, Pool.<ExtendedBiomeId>builder()
+                .add(ExtendedBiomeId.CLIMATE_SNOWY, 1)
+                .add(ExtendedBiomeId.CLIMATE_COOL, 1)
+                .add(ExtendedBiomeId.CLIMATE_WARM, 4)
+                .build()),
             new BiomeToLayerOverlayLayer("land", 0, "land", Map.of(ExtendedBiomeId.PLAINS, "climate")),
             // endregion AddSnowLayer
             AddLandLayer.forIslandScaleMajor("land", 3, "land"),
@@ -2134,10 +2133,11 @@ public final class ModernBetaSettingsPresets {
                 AddLandLayer.forIslandScale("land", 1, "land"),
                 new ModalZoomLayer("land", 2001, "land"),
                 AddLandLayer.forIslandScale("land", 2, "land"),
-                new WeightedBiomeLayer("snow", 2, Pool.of(
-                    new Weighted<>(ExtendedBiomeId.SNOWY_PLAINS, 1),
-                    new Weighted<>(ExtendedBiomeId.NULL, 4)
-                )),
+                new WeightedBiomeLayer("snow", 2, Pool.<ExtendedBiomeId>builder()
+                    .add(ExtendedBiomeId.CLIMATE_SNOWY, 1)
+                    .add(ExtendedBiomeId.CLIMATE_COOL)
+                    .add(ExtendedBiomeId.CLIMATE_WARM, 4)
+                    .build()),
                 new BiomeToLayerOverlayLayer("land", 0, "land", Map.of(ExtendedBiomeId.PLAINS, "snow")),
                 new ModalZoomLayer("land", 2002, "land"),
                 AddLandLayer.forIslandScale("land", 3, "land"),

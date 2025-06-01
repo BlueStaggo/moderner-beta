@@ -39,9 +39,9 @@ loom {
 stonecutter {
 	replacements {
 		regex {
-			it.direction = eval(mc, ">=1.21.5")
-			it.replace(/\bDataPool\b/, "Pool")
-			it.reverse(/\bPool\b/, "DataPool")
+			it.direction = eval(mc, "<1.21.5")
+			it.replace(/\bPool\b/, "DataPool")
+			it.reverse(/\bDataPool\b/, "Pool")
 			it.phase = "LAST"
 		}
 	}

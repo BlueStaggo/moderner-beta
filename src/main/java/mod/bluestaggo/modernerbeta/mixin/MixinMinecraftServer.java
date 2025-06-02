@@ -1,5 +1,7 @@
 package mod.bluestaggo.modernerbeta.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.api.world.chunk.ChunkProvider;
 import mod.bluestaggo.modernerbeta.api.world.chunk.ChunkProviderFinite;
@@ -33,23 +35,35 @@ public abstract class MixinMinecraftServer {
             worldProperties.setSpawnPos(worldProperties.getSpawnPos(), -90.0f);
         }
     }
-    
-    @Redirect(
+
+    //? if >=1.20.2 {
+    @WrapOperation(
+    //?} else {
+    /*@Redirect(
+    *///?}
         method = "setupSpawn", 
         at = @At(
             value = "INVOKE", 
             target = "Lnet/minecraft/server/network/SpawnLocating;findServerSpawnPoint(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/util/math/ChunkPos;)Lnet/minecraft/util/math/BlockPos;"
         )
     )
-    private static BlockPos redirectSpawnLocating(ServerWorld world, ChunkPos chunkPos) {
+    private static BlockPos redirectSpawnLocating(ServerWorld world, ChunkPos chunkPos
+            //? if >=1.20.2
+            , Operation<BlockPos> original
+    ) {
         ChunkGenerator chunkGenerator = world.getChunkManager().getChunkGenerator();
-        BlockPos spawnPos = SpawnLocating.findServerSpawnPoint(world, chunkPos);
+        //? if <1.20.2
+        /*BlockPos spawnPos = SpawnLocating.findServerSpawnPoint(world, chunkPos);*/
         
         if (chunkGenerator instanceof ModernBetaChunkGenerator modernBetaChunkGenerator) {
             ChunkProvider chunkProvider = modernBetaChunkGenerator.getChunkProvider();
             
             world.getGameRules().get(GameRules.SPAWN_RADIUS).set(0, world.getServer()); // Ensure a centered spawn
-            spawnPos = chunkProvider.getSpawnLocator().locateSpawn().orElse(spawnPos);
+            //? if >=1.20.2 {
+            BlockPos spawnPos = chunkProvider.getSpawnLocator().locateSpawn().orElseGet(() -> original.call(world, chunkPos));
+            //?} else {
+            /*spawnPos = chunkProvider.getSpawnLocator().locateSpawn().orElse(spawnPos);
+            *///?}
             
             if (spawnPos != null && ModernerBeta.DEV_ENV) {
                 int x = spawnPos.getX();
@@ -70,9 +84,16 @@ public abstract class MixinMinecraftServer {
             if (chunkProvider instanceof ChunkProviderFinite) {
                 ChunkProviderFinite.resetPhase();
             }
+
+            //? if >=1.20.2
+            return spawnPos;
         }
-        
-        return spawnPos;
+
+        //? if >=1.20.2 {
+        return original.call(world, chunkPos);
+        //?} else {
+        /*return spawnPos;
+        *///?}
     }
     
     @Unique

@@ -10,6 +10,7 @@ A major number change means a big update. For this update, significant parts of 
 - Added a biome previewer to preview the biomes that will be generated for a world.
 
 ## Changes
+- The mod now supports Minecraft 1.21.6
 - **BREAKING CHANGE**: Every single property has been moved
   - This is due to a more modular approach to configuration being implemented. This allows for addons to use the Moderner Beta API to add their own configuration options.
   - This also affects how settings appear in graphical configuration menus. They should still be accessible, just in different positions.
@@ -22,6 +23,8 @@ A major number change means a big update. For this update, significant parts of 
 - Improved accuracy of the 0.0.14a_08 preset.
 - Removed dependency on Architectury API.
 - Made ocean biome injectors not be used if the biome provider already generates oceans.
+- (1.21+) Replaced use of `@Redirect` mixins with `@WrapOperation` mixins
+- (1.21 only) Bumped NeoForge to 21.0.110-beta to fix crashes when entering the mod config screen.
 
 ## Removals
 - Removed Fixed Seed options, as it has been made redundant by the addition of the networking code for biome provider settings and world seed.

@@ -1,5 +1,7 @@
 package mod.bluestaggo.modernerbeta.mixin.client;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.api.world.biome.climate.Clime;
 import mod.bluestaggo.modernerbeta.client.color.BlockColorSampler;
@@ -28,15 +30,22 @@ public abstract class MixinBackgroundRenderer {
     @Unique private static int modernBeta_renderDistance = 16;
     @Unique private static float modernBeta_fogWeight = calculateFogWeight(16);
     @Unique private static boolean modernBeta_isModernBetaWorld = false;
-    
-    @Redirect(
+
+    //? if >=1.20.2 {
+    @WrapOperation(
+    //?} else {
+    /*@Redirect(
+    *///?}
         method = "getFogColor",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/biome/Biome;getWaterFogColor()I"
         )
     )
-    private static int modifyWaterFogColor(Biome instance) {
+    private static int modifyWaterFogColor(Biome instance
+            //? if >=1.20.2
+            , Operation<Integer> original
+    ) {
         if (BlockColorSampler.INSTANCE.useWaterColor()) {
             int x = (int)modernBeta_pos.getX();
             int z = (int)modernBeta_pos.getZ();
@@ -45,8 +54,12 @@ public abstract class MixinBackgroundRenderer {
             
             return BlockColorSampler.INSTANCE.colormapUnderwater.getColor(clime.temp(), clime.rain());
         }
-        
-        return instance.getWaterFogColor();
+
+        //? if >=1.20.2 {
+        return original.call(instance);
+        //?} else {
+        /*return instance.getWaterFogColor();
+        *///?}
     }
     
     @Inject(method = "getFogColor", at = @At("HEAD"))

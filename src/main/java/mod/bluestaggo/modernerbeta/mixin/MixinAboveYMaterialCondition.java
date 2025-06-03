@@ -12,8 +12,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(targets = "net.minecraft.world.gen.surfacebuilder.MaterialRules$AboveYMaterialCondition")
 public abstract class MixinAboveYMaterialCondition {
-    @Shadow @Final private YOffset anchor;
-    @Shadow @Final private int surfaceDepthMultiplier;
+    @Shadow public abstract YOffset anchor();
+    @Shadow public abstract int surfaceDepthMultiplier();
 
     @Inject(
         method = "apply(Lnet/minecraft/world/gen/surfacebuilder/MaterialRules$MaterialRuleContext;)Lnet/minecraft/world/gen/surfacebuilder/MaterialRules$BooleanSupplier;",
@@ -24,7 +24,7 @@ public abstract class MixinAboveYMaterialCondition {
         AccessorMaterialRuleContext context = (AccessorMaterialRuleContext)(Object)materialRuleContext;
         assert context != null;
         if (context.getChunkNoiseSampler() instanceof ModernBetaChunkNoiseSampler) {
-            cir.setReturnValue(() -> context.getBlockY() >= this.anchor.getY(context.getHeightContext()) + context.getRunDepth() * this.surfaceDepthMultiplier);
+            cir.setReturnValue(() -> context.getBlockY() >= this.anchor().getY(context.getHeightContext()) + context.getRunDepth() * this.surfaceDepthMultiplier());
         }
     }
 }

@@ -1,5 +1,7 @@
 package mod.bluestaggo.modernerbeta.util;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.gson.*;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JavaOps;
@@ -13,7 +15,7 @@ import java.util.Set;
 
 public class CodecUtil {
     public static <T> Codec<Set<T>> set(Codec<T> elementType) {
-        return elementType.listOf().xmap(HashSet::new, ArrayList::new);
+        return elementType.listOf().xmap(ImmutableSet::copyOf, ImmutableList::copyOf);
     }
 
     public static <T> void registerTypeAdapter(GsonBuilder gson, Class<T> clazz, Codec<T> codec) {

@@ -2081,7 +2081,7 @@ public final class ModernBetaSettingsPresets {
             ExtendedBiomeId.of("minecraft:swamp").mapTo("minecraft:swamp*hills"),
             ExtendedBiomeId.of("minecraft:savanna").mapTo("minecraft:windswept_savanna"),
             ExtendedBiomeId.of("minecraft:savanna_plateau").mapTo("minecraft:windswept_savanna*plateau"),
-            ExtendedBiomeId.of("minecraft:badlands").mapTo("*minecraft:windswept_savanna"),
+            ExtendedBiomeId.of("minecraft:badlands*plateau").mapTo("minecraft:wooded_badlands"),
             ExtendedBiomeId.of("minecraft:birch_forest").mapTo("minecraft:old_growth_birch_forest"),
             ExtendedBiomeId.of("minecraft:birch_forest*hills").mapTo("minecraft:old_growth_birch_forest*hills"),
             ExtendedBiomeId.of("minecraft:dark_forest").mapTo("minecraft:pale_garden"),
@@ -2106,8 +2106,10 @@ public final class ModernBetaSettingsPresets {
                         Map.entry(ExtendedBiomeId.of("minecraft:dark_forest*hills"), new HeightConfig(0.3f, 0.7f)),
                         Map.entry(ExtendedBiomeId.of("minecraft:pale_garden*hills"), new HeightConfig(0.3f, 0.7f)),
                         Map.entry(ExtendedBiomeId.of("minecraft:birch_forest*hills"), new HeightConfig(0.3f, 0.7f)),
-                        Map.entry(ExtendedBiomeId.of("minecraft:old_growth_birch_forest*hills"), new HeightConfig(0.3f, 0.7f)),
-                        Map.entry(ExtendedBiomeId.of("minecraft:flower_forest*hills"), new HeightConfig(0.3f, 0.7f)),
+                        Map.entry(ExtendedBiomeId.of("minecraft:old_growth_birch_forest"), new HeightConfig(0.1f, 0.8f)),
+                        Map.entry(ExtendedBiomeId.of("minecraft:old_growth_birch_forest*hills"), new HeightConfig(0.3f, 1.3f)),
+                        Map.entry(ExtendedBiomeId.of("minecraft:flower_forest"), new HeightConfig(0.1f, 0.8f)),
+                        Map.entry(ExtendedBiomeId.of("minecraft:flower_forest*hills"), new HeightConfig(0.3f, 1.3f)),
                         Map.entry(ExtendedBiomeId.of("minecraft:old_growth_spruce_taiga*hills"), new HeightConfig(0.3f, 0.8f)),
                         Map.entry(ExtendedBiomeId.of("minecraft:snowy_taiga*hills"), new HeightConfig(0.3f, 0.8f)),
                         Map.entry(ExtendedBiomeId.of("minecraft:snowy_plains*hills"), new HeightConfig(0.3f, 1.3f)),
@@ -2134,9 +2136,8 @@ public final class ModernBetaSettingsPresets {
                 new ModalZoomLayer("land", 2001, "land"),
                 AddLandLayer.forIslandScale("land", 2, "land"),
                 new WeightedBiomeLayer("snow", 2, Pool.<ExtendedBiomeId>builder()
-                    .add(ExtendedBiomeId.CLIMATE_SNOWY, 1)
-                    .add(ExtendedBiomeId.CLIMATE_COOL)
-                    .add(ExtendedBiomeId.CLIMATE_WARM, 4)
+                    .add(ExtendedBiomeId.SNOWY_PLAINS, 1)
+                    .add(ExtendedBiomeId.NULL, 4)
                     .build()),
                 new BiomeToLayerOverlayLayer("land", 0, "land", Map.of(ExtendedBiomeId.PLAINS, "snow")),
                 new ModalZoomLayer("land", 2002, "land"),
@@ -2224,7 +2225,9 @@ public final class ModernBetaSettingsPresets {
                 StackedZoomLayer.modal("land", 1000, "land", 2),
                 new SimpleBiomeReplacementLayer("hills", 0, "land", hillsVariants),
                 new ConditionalLayerOverlayLayer("land", 1000, "land",
-                    BiomePredicate.simpleHills(hillsVariants.keySet()), "hills", "land"),
+                    BiomePredicate.inSet(hillsVariants.keySet())
+                        .and(BiomePredicate.identicalNeighbors(3, false))
+                        .and(BiomePredicate.oneIn(3)), "hills", "land"),
                 new SimpleBiomeReplacementLayer("mutated_land", 0, "land", mutatedVariants),
                 new MappedNoiseLayer("mutation", 7, List.of(
                     new MappedNoiseLayer.Entry(-0.2, ExtendedBiomeId.of("minecraft:the_void*mutation")),
@@ -2249,6 +2252,19 @@ public final class ModernBetaSettingsPresets {
                         BiomePredicate.of(ExtendedBiomeId.of("minecraft:cherry_grove"))
                             .and(BiomePredicate.border()),
                         ExtendedBiomeId.of("minecraft:cherry_grove*edge")
+                    ),
+                    PredicateOverlayLayer.Target.biome(
+                        BiomePredicate.inSet(
+                            ExtendedBiomeId.of("minecraft:badlands*plateau"),
+                            ExtendedBiomeId.of("minecraft:wooded_badlands")
+                        )
+                            .and(BiomePredicate.neighborsMatch(
+                                BiomePredicate.inSet(
+                                    ExtendedBiomeId.of("~minecraft:badlands"),
+                                    ExtendedBiomeId.of("~minecraft:wooded_badlands"),
+                                    ExtendedBiomeId.of("~minecraft:eroded_badlands")
+                                ), 4).invert()),
+                        ExtendedBiomeId.of("minecraft:badlands")
                     ),
                     PredicateOverlayLayer.Target.inclusiveBeach(
                         ExtendedBiomeId.setOf(

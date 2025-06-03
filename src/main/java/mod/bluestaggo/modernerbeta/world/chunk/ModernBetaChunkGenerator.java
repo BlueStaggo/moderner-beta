@@ -290,21 +290,13 @@ public class ModernBetaChunkGenerator extends NoiseChunkGenerator {
     }
     
     public ChunkNoiseSampler createChunkNoiseSampler(Chunk chunk, StructureAccessor world, Blender blender, NoiseConfig noiseConfig) {
-        return ChunkNoiseSampler.create(
+        return ModernBetaChunkNoiseSampler.create(
             chunk,
             noiseConfig,
-            StructureWeightSampler.createStructureWeightSampler(world, chunk.getPos()),
             this.settings.value(),
             this.chunkProvider.getFluidLevelSampler(),
-            blender
+            this.chunkProvider
         );
-//        return ModernBetaChunkNoiseSampler.create(
-//            chunk,
-//            noiseConfig,
-//            this.settings.value(),
-//            this.chunkProvider.getFluidLevelSampler(),
-//            this.chunkProvider
-//        );
     }
 
     public RegistryEntry<ChunkGeneratorSettings> getGeneratorSettings() {

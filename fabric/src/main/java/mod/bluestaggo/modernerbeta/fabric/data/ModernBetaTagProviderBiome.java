@@ -580,6 +580,11 @@ public class ModernBetaTagProviderBiome extends FabricTagProvider<Biome> {
         
         getOrCreateTagBuilder(BiomeTags.SWAMP_HUT_HAS_STRUCTURE)
             .addTag(IS_SWAMP);
+
+        //? if >=1.21 {
+        getOrCreateTagBuilder(BiomeTags.TRIAL_CHAMBERS_HAS_STRUCTURE)
+            .addTag(IS_MODERN_BETA);
+        //? }
         
         getOrCreateTagBuilder(BiomeTags.VILLAGE_DESERT_HAS_STRUCTURE)
             .addTag(IS_DESERT);
@@ -627,17 +632,17 @@ public class ModernBetaTagProviderBiome extends FabricTagProvider<Biome> {
 
         getOrCreateTagBuilder(BiomeTags.SPAWNS_SNOW_FOXES)
             .add(
-                    ModernBetaBiomes.BETA_TAIGA,
-                    ModernBetaBiomes.PE_TAIGA,
-                    ModernBetaBiomes.EARLY_RELEASE_TAIGA
+                ModernBetaBiomes.BETA_TAIGA,
+                ModernBetaBiomes.PE_TAIGA,
+                ModernBetaBiomes.EARLY_RELEASE_TAIGA
             );
 
         //? if >=1.21.5 {
         getOrCreateTagBuilder(BiomeTags.SPAWNS_COLD_VARIANT_FARM_ANIMALS)
             .addTag(IS_TAIGA)
             .add(
-                    ModernBetaBiomes.LATE_BETA_EXTREME_HILLS,
-                    ModernBetaBiomes.EARLY_RELEASE_EXTREME_HILLS
+                ModernBetaBiomes.LATE_BETA_EXTREME_HILLS,
+                ModernBetaBiomes.EARLY_RELEASE_EXTREME_HILLS
             );
         
         getOrCreateTagBuilder(BiomeTags.SPAWNS_WARM_VARIANT_FARM_ANIMALS)

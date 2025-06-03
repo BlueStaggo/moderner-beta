@@ -8,6 +8,7 @@ import mod.bluestaggo.modernerbeta.settings.component.FiniteCaveGeneration;
 import mod.bluestaggo.modernerbeta.settings.component.FiniteNoise;
 import mod.bluestaggo.modernerbeta.settings.component.FinitePools;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
+import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.util.noise.PerlinOctaveNoise;
 import mod.bluestaggo.modernerbeta.util.noise.PerlinOctaveNoiseCombined;
 import mod.bluestaggo.modernerbeta.world.blocksource.BlockSourceRules;
@@ -64,9 +65,9 @@ public class ChunkProviderClassic030 extends ChunkProviderFinite {
                     pos.set(x, y, z);
                     
                     if (y < this.waterLevel - 2) {
-                        chunk.setBlockState(pos, BlockStates.BEDROCK);
+                        VersionCompat.setBlockState(chunk, pos, BlockStates.BEDROCK);
                     } else if (y < this.waterLevel) {
-                        chunk.setBlockState(pos, this.defaultFluid);
+                        VersionCompat.setBlockState(chunk, pos, this.defaultFluid);
                     }
                 }
             }
@@ -112,7 +113,7 @@ public class ChunkProviderClassic030 extends ChunkProviderFinite {
         
         // Set bedrock at y0 to simulate bottom of world.
         if (y == 0)
-            chunk.setBlockState(pos, BlockStates.BEDROCK);
+            VersionCompat.setBlockState(chunk, pos, BlockStates.BEDROCK);
     }
 
     @Override

@@ -8,6 +8,7 @@ import mod.bluestaggo.modernerbeta.settings.component.FiniteCaveGeneration;
 import mod.bluestaggo.modernerbeta.settings.component.FiniteNoise;
 import mod.bluestaggo.modernerbeta.settings.component.FinitePools;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
+import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.util.noise.PerlinOctaveNoise;
 import mod.bluestaggo.modernerbeta.util.noise.PerlinOctaveNoiseCombined;
 import mod.bluestaggo.modernerbeta.world.blocksource.BlockSourceRules;
@@ -209,9 +210,9 @@ public class ChunkProviderIndev extends ChunkProviderFinite {
             return;
         
         if (y == 1 + this.bedrockFloor && chunk.getBlockState(pos.up()).isAir()) {
-            chunk.setBlockState(pos, BlockStates.LAVA);
+            VersionCompat.setBlockState(chunk, pos, BlockStates.LAVA);
         } else if (y <= 1 + this.bedrockFloor) {
-            chunk.setBlockState(pos, BlockStates.BEDROCK);
+            VersionCompat.setBlockState(chunk, pos, BlockStates.BEDROCK);
         }
     }
 
@@ -550,9 +551,9 @@ public class ChunkProviderIndev extends ChunkProviderFinite {
                     pos.set(x, y, z);
                     
                     if (y < this.waterLevel) {
-                        chunk.setBlockState(pos, BlockStates.BEDROCK);
+                        VersionCompat.setBlockState(chunk, pos, BlockStates.BEDROCK);
                     } else if (y == this.waterLevel) {
-                        chunk.setBlockState(pos, topBlock);
+                        VersionCompat.setBlockState(chunk, pos, topBlock);
                     }
                 }
             }
@@ -568,11 +569,11 @@ public class ChunkProviderIndev extends ChunkProviderFinite {
                     pos.set(x, y, z);
                     
                     if (y < this.waterLevel - 10) {
-                        chunk.setBlockState(pos, BlockStates.BEDROCK);
+                        VersionCompat.setBlockState(chunk, pos, BlockStates.BEDROCK);
                     } else if (y == this.waterLevel - 10) {
-                        chunk.setBlockState(pos, BlockStates.DIRT);
+                        VersionCompat.setBlockState(chunk, pos, BlockStates.DIRT);
                     } else if (y < this.waterLevel) {
-                        chunk.setBlockState(pos, this.fluidBlock);
+                        VersionCompat.setBlockState(chunk, pos, this.fluidBlock);
                     }
                 }
             }

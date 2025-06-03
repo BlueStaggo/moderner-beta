@@ -6,6 +6,7 @@ import mod.bluestaggo.modernerbeta.api.world.chunk.surface.SurfaceConfig;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.settings.component.Infdev227Structures;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
+import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkCache;
 import mod.bluestaggo.modernerbeta.util.noise.PerlinOctaveNoise;
 import mod.bluestaggo.modernerbeta.util.noise.SimpleNoisePos;
@@ -133,7 +134,7 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
                     
                     // Place bedrock
                     if (y <= bedrockFloor + bedrockRand.nextInt(5)) {
-                        chunk.setBlockState(pos, BlockStates.BEDROCK);
+                        VersionCompat.setBlockState(chunk, pos, BlockStates.BEDROCK);
                         continue;
                     }
 
@@ -153,7 +154,7 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
                     
                     runDepth++;
 
-                    chunk.setBlockState(pos, blockState);
+                    VersionCompat.setBlockState(chunk, pos, blockState);
                 }
             }
         }
@@ -262,7 +263,7 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
                     blockHolder.setBlock(block);
                     BlockState blockState = blockSources.apply(x, y, z);
 
-                    chunk.setBlockState(mutable.set(localX, y, localZ), blockState);
+                    VersionCompat.setBlockState(chunk, mutable.set(localX, y, localZ), blockState);
                     
                     heightmapOcean.trackUpdate(localX, y, localZ, blockState);
                     heightmapSurface.trackUpdate(localX, y, localZ, blockState);

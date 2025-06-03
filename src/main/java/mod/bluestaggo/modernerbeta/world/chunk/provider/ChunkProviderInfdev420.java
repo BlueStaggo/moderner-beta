@@ -5,6 +5,7 @@ import mod.bluestaggo.modernerbeta.api.world.chunk.surface.SurfaceBlocks;
 import mod.bluestaggo.modernerbeta.api.world.chunk.surface.SurfaceConfig;
 import mod.bluestaggo.modernerbeta.api.world.spawn.SpawnLocator;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
+import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkHeightmap;
 import mod.bluestaggo.modernerbeta.util.noise.PerlinOctaveNoise;
 import mod.bluestaggo.modernerbeta.util.noise.SimpleNoisePos;
@@ -111,7 +112,7 @@ public class ChunkProviderInfdev420 extends ChunkProviderNoise {
 
                     // Place bedrock
                     if (y <= this.bedrockFloor + bedrockRand.nextInt(5)) {
-                        chunk.setBlockState(pos, BlockStates.BEDROCK);
+                        VersionCompat.setBlockState(chunk, pos, BlockStates.BEDROCK);
                         continue;
                     }
                     
@@ -159,11 +160,11 @@ public class ChunkProviderInfdev420 extends ChunkProviderNoise {
                                 topBlock : 
                                 fillerBlock;
                             
-                            chunk.setBlockState(pos, blockState);
+                            VersionCompat.setBlockState(chunk, pos, blockState);
                             
                         } else if (runDepth > 0) {
                             --runDepth;
-                            chunk.setBlockState(pos, fillerBlock);
+                            VersionCompat.setBlockState(chunk, pos, fillerBlock);
                         }
                     }
                 }
@@ -216,12 +217,12 @@ public class ChunkProviderInfdev420 extends ChunkProviderNoise {
                 if (surfaceDepth <= 0) {
                     int y = surfaceTopY;
                     pos.setY(y);
-                    chunk.setBlockState(pos, y < this.seaLevel ? BlockStates.WATER : BlockStates.AIR);
+                    VersionCompat.setBlockState(chunk, pos, y < this.seaLevel ? BlockStates.WATER : BlockStates.AIR);
                     pos.setY(--y);
 
                     BlockState blockState;
                     while (!(blockState = chunk.getBlockState(pos)).isAir() && !blockState.isOf(this.defaultBlock.getBlock())) {
-                        chunk.setBlockState(pos, this.defaultBlock);
+                        VersionCompat.setBlockState(chunk, pos, this.defaultBlock);
                         pos.setY(--y);
                     }
                 } else if (surfaceTopY >= this.seaLevel - 4 && surfaceTopY < this.seaLevel + 1) {
@@ -230,15 +231,15 @@ public class ChunkProviderInfdev420 extends ChunkProviderNoise {
                         int y = surfaceTopY;
                         pos.setY(y);
                         if (beach.topBlock().isAir() && y < this.seaLevel) {
-                            chunk.setBlockState(pos, BlockStates.WATER);
+                            VersionCompat.setBlockState(chunk, pos, BlockStates.WATER);
                         } else {
-                            chunk.setBlockState(pos, beach.topBlock());
+                            VersionCompat.setBlockState(chunk, pos, beach.topBlock());
                         }
                         pos.setY(--y);
 
                         BlockState blockState;
                         while (!(blockState = chunk.getBlockState(pos)).isAir() && !blockState.isOf(this.defaultBlock.getBlock())) {
-                            chunk.setBlockState(pos, beach.fillerBlock());
+                            VersionCompat.setBlockState(chunk, pos, beach.fillerBlock());
                             pos.setY(--y);
                         }
                     }
@@ -247,7 +248,7 @@ public class ChunkProviderInfdev420 extends ChunkProviderNoise {
                 for (int y = this.bedrockFloor; y < this.bedrockFloor + 5; y++) {
                     if (y <= this.bedrockFloor + this.random.nextInt(5)) {
                         pos.setY(y);
-                        chunk.setBlockState(pos, BlockStates.BEDROCK);
+                        VersionCompat.setBlockState(chunk, pos, BlockStates.BEDROCK);
                     }
                 }
             }

@@ -25,8 +25,9 @@ public final class BlockColors {
             BlockColorSampler.INSTANCE::getShortGrassColor,
             Blocks.FERN,
             Blocks.SHORT_GRASS,
-            Blocks.POTTED_FERN,
-            Blocks.BUSH
+            Blocks.POTTED_FERN
+            //? if >=1.21.5
+            , Blocks.BUSH
         );
 
         // Tall grass blocks
@@ -39,8 +40,9 @@ public final class BlockColors {
         // Petal blocks
         registerer.register(
             BlockColorSampler.INSTANCE::getPetalColor,
-            Blocks.PINK_PETALS,
-            Blocks.WILDFLOWERS
+            Blocks.PINK_PETALS
+            //? if >=1.21.5
+            , Blocks.WILDFLOWERS
         );
 
         // Foliage blocks

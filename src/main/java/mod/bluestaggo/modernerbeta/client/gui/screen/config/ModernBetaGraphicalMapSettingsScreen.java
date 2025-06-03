@@ -1,5 +1,6 @@
 package mod.bluestaggo.modernerbeta.client.gui.screen.config;
 
+import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.Screen;
@@ -52,7 +53,7 @@ public abstract class ModernBetaGraphicalMapSettingsScreen extends ModernBetaGra
         NbtCompound compound = new NbtCompound();
         for (int i = 0; i < this.keys.getSize(); i++) {
             String si = String.valueOf(i);
-            compound.put(this.keys.getString(si).orElseThrow(), this.values.get(si));
+            compound.put(VersionCompat.unwrap(this.keys.getString(si)), this.values.get(si));
         }
         return compound;
     }

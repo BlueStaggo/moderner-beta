@@ -2,6 +2,7 @@ package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import net.minecraft.util.collection.Pool;
 import net.minecraft.util.collection.Weighted;
@@ -29,13 +30,17 @@ public class WeightedBiomeLayer extends Layer {
 
     @Override
     protected ExtendedBiomeId generate(int x, int z) {
-        return this.biomes.get(this.getRandom(x, z));
+        return VersionCompat.accessPool(this.biomes, this.getRandom(x, z));
     }
 
     @Override
     protected void addPossibleBiomes(Set<ExtendedBiomeId> biomes) {
         this.biomes.getEntries().stream()
+            //? if >=1.21.5 {
             .map(Weighted::value)
+            //?} else {
+            /*.map(Weighted.Present::data)
+            *///?}
             .forEach(biomes::add);
     }
 }

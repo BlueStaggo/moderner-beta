@@ -4,10 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
 import mod.bluestaggo.modernerbeta.api.world.biome.climate.ClimateSampler;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.FluidBlock;
-import net.minecraft.block.SnowyBlock;
+import net.minecraft.block.*;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.util.math.BlockPos;
@@ -81,15 +78,15 @@ public class BetaFreezeTopLayerFeature extends Feature<DefaultFeatureConfig> {
                 }
                 
                 if (canSetIce(world, mutableDown, false, temp, coldThreshold, heightType)) {
-                    world.setBlockState(mutableDown, Blocks.ICE.getDefaultState(), 2);
+                    world.setBlockState(mutableDown, Blocks.ICE.getDefaultState(), Block.NOTIFY_LISTENERS);
                 }
 
                 if (canSetSnow(world, mutable, temp, coldThreshold, heightType)) {
-                    world.setBlockState(mutable, Blocks.SNOW.getDefaultState(), 2);
+                    world.setBlockState(mutable, Blocks.SNOW.getDefaultState(), Block.NOTIFY_LISTENERS);
 
                     BlockState blockState = world.getBlockState(mutableDown);
                     if (blockState.contains(SnowyBlock.SNOWY)) {
-                        world.setBlockState(mutableDown, blockState.with(SnowyBlock.SNOWY, true), 2);
+                        world.setBlockState(mutableDown, blockState.with(SnowyBlock.SNOWY, true), Block.NOTIFY_LISTENERS);
                     }
                 }
             }

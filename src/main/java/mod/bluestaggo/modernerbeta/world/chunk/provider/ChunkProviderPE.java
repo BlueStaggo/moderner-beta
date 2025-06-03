@@ -7,6 +7,7 @@ import mod.bluestaggo.modernerbeta.api.world.chunk.surface.SurfaceConfig;
 import mod.bluestaggo.modernerbeta.api.world.spawn.SpawnLocator;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
+import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkHeightmap;
 import mod.bluestaggo.modernerbeta.util.mersenne.MTRandom;
 import mod.bluestaggo.modernerbeta.util.noise.PerlinOctaveNoise;
@@ -133,7 +134,7 @@ public class ChunkProviderPE extends ChunkProviderNoise {
                     
                     // Place bedrock
                     if (y <= this.bedrockFloor + rand.nextInt(5)) {
-                        chunk.setBlockState(pos, BlockStates.BEDROCK);
+                        VersionCompat.setBlockState(chunk, pos, BlockStates.BEDROCK);
                         continue;
                     }
                     
@@ -186,7 +187,7 @@ public class ChunkProviderPE extends ChunkProviderNoise {
                             topBlock : 
                             fillerBlock;
                         
-                        chunk.setBlockState(pos, blockState);
+                        VersionCompat.setBlockState(chunk, pos, blockState);
 
                         continue;
                     }
@@ -196,7 +197,7 @@ public class ChunkProviderPE extends ChunkProviderNoise {
                     }
 
                     runDepth--;
-                    chunk.setBlockState(pos, fillerBlock);
+                    VersionCompat.setBlockState(chunk, pos, fillerBlock);
 
                     // Generates layer of sandstone starting at lowest block of sand, of height 1 to 4.
                     if (runDepth == 0 && fillerBlock.isOf(Blocks.SAND)) {

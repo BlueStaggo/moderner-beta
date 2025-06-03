@@ -1,5 +1,6 @@
 package mod.bluestaggo.modernerbeta.world.biome.biomes.latebeta;
 
+import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeColors;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeFeatures;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeMobs;
@@ -14,7 +15,7 @@ public class BiomeLateBetaExtremeHills {
     public static Biome create(RegistryEntryLookup<PlacedFeature> featureLookup, RegistryEntryLookup<ConfiguredCarver<?>> carverLookup) {
         SpawnSettings.Builder spawnSettings = new SpawnSettings.Builder();
         ModernBetaBiomeMobs.addCommonMobs(spawnSettings);
-        spawnSettings.spawn(SpawnGroup.CREATURE, 5, new SpawnSettings.SpawnEntry(EntityType.LLAMA, 4, 6));
+        VersionCompat.addSpawnEntry(spawnSettings, SpawnGroup.CREATURE, EntityType.LLAMA, 5, 4, 6);
 
         GenerationSettings.LookupBackedBuilder genSettings = new GenerationSettings.LookupBackedBuilder(featureLookup, carverLookup);
         ModernBetaBiomeFeatures.addExtremeHillsFeatures(genSettings);

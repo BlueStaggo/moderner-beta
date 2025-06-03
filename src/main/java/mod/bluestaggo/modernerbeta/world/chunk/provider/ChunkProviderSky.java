@@ -3,6 +3,7 @@ package mod.bluestaggo.modernerbeta.world.chunk.provider;
 import mod.bluestaggo.modernerbeta.api.world.chunk.ChunkProviderNoise;
 import mod.bluestaggo.modernerbeta.api.world.chunk.surface.SurfaceConfig;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
+import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.util.noise.PerlinOctaveNoise;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
@@ -104,7 +105,7 @@ public class ChunkProviderSky extends ChunkProviderNoise {
                             topBlock : 
                             fillerBlock;
                         
-                        chunk.setBlockState(pos, blockState);
+                        VersionCompat.setBlockState(chunk, pos, blockState);
 
                         continue;
                     }
@@ -114,7 +115,7 @@ public class ChunkProviderSky extends ChunkProviderNoise {
                     }
 
                     runDepth--;
-                    chunk.setBlockState(pos, fillerBlock);
+                    VersionCompat.setBlockState(chunk, pos, fillerBlock);
 
                     // Generates layer of sandstone starting at lowest block of sand, of height 1 to 4.
                     if (runDepth == 0 && fillerBlock.isOf(Blocks.SAND)) {

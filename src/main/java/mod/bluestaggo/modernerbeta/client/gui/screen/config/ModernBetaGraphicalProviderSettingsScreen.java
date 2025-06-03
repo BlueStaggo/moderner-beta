@@ -7,12 +7,14 @@ import mod.bluestaggo.modernerbeta.api.world.provider.ProviderType;
 import mod.bluestaggo.modernerbeta.client.registry.ModernBetaClientRegistries;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentType;
+import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.OptionListWidget;
 import net.minecraft.client.world.GeneratorOptionsHolder;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.text.Text;
@@ -109,7 +111,7 @@ public class ModernBetaGraphicalProviderSettingsScreen extends ModernBetaGraphic
     @SuppressWarnings("unchecked")
     protected void addOptions(OptionListWidget list) {
         String providerKey = ModernBetaBuiltInTypes.SettingsComponentType.PROVIDER.id.toString();
-        Identifier providerId = Identifier.of(this.settings.getString(providerKey).orElseThrow());
+        Identifier providerId = Identifier.of(VersionCompat.unwrap(this.settings.getString(providerKey)));
 
         list.addSingleOptionEntry(this.primarySelectionOption(providerKey, this.providers));
 
@@ -133,7 +135,12 @@ public class ModernBetaGraphicalProviderSettingsScreen extends ModernBetaGraphic
                         }
 
                         if (!this.settings.contains(componentTypeId.toString())) {
-                            this.settings.put(componentTypeId.toString(), (Codec<Object>)componentType.codec(), componentType.defaultValue());
+                            this.settings.put(
+                                componentTypeId.toString(),
+                                ((Codec<Object>)componentType.codec())
+                                    .encodeStart(NbtOps.INSTANCE, componentType.defaultValue())
+                                    .getOrThrow()
+                            );
                         }
 
                         this.currentComponentType = componentTypeId;

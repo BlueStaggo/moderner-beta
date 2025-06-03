@@ -3,6 +3,7 @@ package mod.bluestaggo.modernerbeta.world.chunk.provider;
 import mod.bluestaggo.modernerbeta.api.world.chunk.ChunkProviderForcedHeight;
 import mod.bluestaggo.modernerbeta.api.world.spawn.SpawnLocator;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
+import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.util.noise.PerlinOctaveNoise;
 import mod.bluestaggo.modernerbeta.util.noise.SimplexOctaveNoise;
 import mod.bluestaggo.modernerbeta.world.biome.HeightConfig;
@@ -73,23 +74,23 @@ public class ChunkProviderMajorRelease extends ChunkProviderForcedHeight {
                 if (surfaceDepth <= 0) {
                     int y = surfaceTopY;
                     pos.setY(y);
-                    chunk.setBlockState(pos, y < this.seaLevel ? BlockStates.WATER : BlockStates.AIR);
+                    VersionCompat.setBlockState(chunk, pos, y < this.seaLevel ? BlockStates.WATER : BlockStates.AIR);
                     pos.setY(--y);
 
                     BlockState blockState;
                     while (!(blockState = chunk.getBlockState(pos)).isAir() && !blockState.isOf(this.defaultBlock.getBlock())) {
-                        chunk.setBlockState(pos, this.defaultBlock);
+                        VersionCompat.setBlockState(chunk, pos, this.defaultBlock);
                         pos.setY(--y);
                     }
                 } else if (surfaceTopY < this.seaLevel - 7 - surfaceDepth) {
                     int y = surfaceTopY;
                     pos.setY(y);
-                    chunk.setBlockState(pos, BlockStates.GRAVEL);
+                    VersionCompat.setBlockState(chunk, pos, BlockStates.GRAVEL);
                     pos.setY(--y);
 
                     BlockState blockState;
                     while (!(blockState = chunk.getBlockState(pos)).isAir() && !blockState.isOf(this.defaultBlock.getBlock())) {
-                        chunk.setBlockState(pos, this.defaultBlock);
+                        VersionCompat.setBlockState(chunk, pos, this.defaultBlock);
                         pos.setY(--y);
                     }
                 }
@@ -97,7 +98,7 @@ public class ChunkProviderMajorRelease extends ChunkProviderForcedHeight {
                 for (int y = this.bedrockFloor; y < this.bedrockFloor + 5; y++) {
                     if (y <= this.bedrockFloor + this.random.nextInt(5)) {
                         pos.setY(y);
-                        chunk.setBlockState(pos, BlockStates.BEDROCK);
+                        VersionCompat.setBlockState(chunk, pos, BlockStates.BEDROCK);
                     }
                 }
             }

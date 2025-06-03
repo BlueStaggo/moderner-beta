@@ -8,6 +8,7 @@ import mod.bluestaggo.modernerbeta.api.world.spawn.SpawnLocator;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.settings.component.FiniteLevelProperties;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
+import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.util.noise.SimpleNoisePos;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.world.blocksource.BlockSourceRules;
@@ -151,11 +152,11 @@ public abstract class ChunkProviderFinite extends ChunkProvider implements Chunk
                     
                     BlockState blockState = this.postProcessSurfaceState(chunk.getBlockState(pos), surfaceConfig, pos, isCold);
                     
-                    chunk.setBlockState(pos, blockState);
+                    VersionCompat.setBlockState(chunk, pos, blockState);
 
                     // Set snow on top of snowy blocks
                     if (blockState.contains(Properties.SNOWY) && blockState.get(Properties.SNOWY).booleanValue())
-                        chunk.setBlockState(pos.up(), BlockStates.SNOW);
+                        VersionCompat.setBlockState(chunk, pos.up(), BlockStates.SNOW);
                         
                 }
             }
@@ -313,7 +314,7 @@ public abstract class ChunkProviderFinite extends ChunkProvider implements Chunk
                     
                     BlockState blockState = this.postProcessTerrainState(block, blockSources, terrainState, pos, topY);
                     
-                    chunk.setBlockState(pos.set(localX, y, localZ), blockState);
+                    VersionCompat.setBlockState(chunk, pos.set(localX, y, localZ), blockState);
                      
                     this.generateBedrock(chunk, block, pos);
                     

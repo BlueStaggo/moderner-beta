@@ -1,5 +1,6 @@
 package mod.bluestaggo.modernerbeta.world.biome.biomes.latebeta;
 
+import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeColors;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
@@ -13,7 +14,9 @@ public class BiomeLateBetaTaiga {
     public static Biome create(RegistryEntryLookup<PlacedFeature> featureLookup, RegistryEntryLookup<ConfiguredCarver<?>> carverLookup) {
         SpawnSettings.Builder spawnSettings = new SpawnSettings.Builder();
         DefaultBiomeFeatures.addFarmAnimals(spawnSettings);
-        spawnSettings.spawn(SpawnGroup.CREATURE, 8, new SpawnSettings.SpawnEntry(EntityType.WOLF, 4, 4)).spawn(SpawnGroup.CREATURE, 4, new SpawnSettings.SpawnEntry(EntityType.RABBIT, 2, 3)).spawn(SpawnGroup.CREATURE, 8, new SpawnSettings.SpawnEntry(EntityType.FOX, 2, 4));
+        VersionCompat.addSpawnEntry(spawnSettings, SpawnGroup.CREATURE, EntityType.WOLF, 8, 4, 4);
+        VersionCompat.addSpawnEntry(spawnSettings, SpawnGroup.CREATURE, EntityType.RABBIT, 4, 2, 3);
+        VersionCompat.addSpawnEntry(spawnSettings, SpawnGroup.CREATURE, EntityType.FOX, 8, 2, 4);
         DefaultBiomeFeatures.addBatsAndMonsters(spawnSettings);
 
         GenerationSettings.LookupBackedBuilder genSettings = new GenerationSettings.LookupBackedBuilder(featureLookup, carverLookup);
@@ -28,7 +31,7 @@ public class BiomeLateBetaTaiga {
         DefaultBiomeFeatures.addTaigaTrees(genSettings);
         DefaultBiomeFeatures.addDefaultFlowers(genSettings);
         DefaultBiomeFeatures.addDefaultGrass(genSettings);
-        DefaultBiomeFeatures.addDefaultVegetation(genSettings, true);
+        DefaultBiomeFeatures.addDefaultVegetation(genSettings /*? if >=1.21.5 {*/, true/*?}*/);
         DefaultBiomeFeatures.addSweetBerryBushes(genSettings);
 
         return (new Biome.Builder())

@@ -3,6 +3,7 @@ package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import net.minecraft.util.collection.Pool;
 import net.minecraft.util.collection.Weighted;
@@ -32,18 +33,24 @@ public class WeightedLayerLayer extends Layer {
 
     @Override
     public void configure(Function<String, Layer> layerMap) {
-        this.layerRefs = layers.transform(layerMap);
+        //? if >=1.21.5 {
+        this.layerRefs = this.layers.transform(layerMap);
+        //?} else {
+        /*Pool.Builder<Layer> poolBuilder = Pool.builder();
+        for (Weighted.Present<String> entry : this.layers.getEntries()) {
+            poolBuilder.add(layerMap.apply(VersionCompat.getWeightedValue(entry)), entry.getWeight().getValue());
+        }
+        this.layerRefs = poolBuilder.build();
+        *///?}
     }
 
     @Override
     protected ExtendedBiomeId generate(int x, int z) {
-        return this.layerRefs.get(this.getRandom(x, z)).sample(x, z);
+        return VersionCompat.accessPool(this.layerRefs, this.getRandom(x, z)).sample(x, z);
     }
 
     @Override
     protected void addPossibleBiomes(Set<ExtendedBiomeId> biomes) {
-        for (Weighted<Layer> layer : this.layerRefs.getEntries()) {
-            layer.value().addPossibleBiomes(biomes);
-        }
+        VersionCompat.forEachValueInPool(this.layerRefs, layer -> layer.addPossibleBiomes(biomes));
     }
 }

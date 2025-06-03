@@ -4,6 +4,7 @@ import mod.bluestaggo.modernerbeta.api.world.chunk.ChunkProviderForcedHeight;
 import mod.bluestaggo.modernerbeta.api.world.chunk.surface.SurfaceConfig;
 import mod.bluestaggo.modernerbeta.api.world.spawn.SpawnLocator;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
+import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkHeightmap;
 import mod.bluestaggo.modernerbeta.util.noise.PerlinOctaveNoise;
 import mod.bluestaggo.modernerbeta.util.noise.SimpleNoisePos;
@@ -103,7 +104,7 @@ public class ChunkProviderEarlyRelease extends ChunkProviderForcedHeight {
                     
                     // Place bedrock
                     if (y <= this.bedrockFloor + rand.nextInt(5)) {
-                        chunk.setBlockState(pos, BlockStates.BEDROCK);
+                        VersionCompat.setBlockState(chunk, pos, BlockStates.BEDROCK);
                         continue;
                     }
                     
@@ -147,7 +148,7 @@ public class ChunkProviderEarlyRelease extends ChunkProviderForcedHeight {
                             topBlock : 
                             fillerBlock;
                         
-                        chunk.setBlockState(pos, blockState);
+                        VersionCompat.setBlockState(chunk, pos, blockState);
 
                         continue;
                     }
@@ -157,7 +158,7 @@ public class ChunkProviderEarlyRelease extends ChunkProviderForcedHeight {
                     }
 
                     runDepth--;
-                    chunk.setBlockState(pos, fillerBlock);
+                    VersionCompat.setBlockState(chunk, pos, fillerBlock);
 
                     // Generates layer of sandstone starting at lowest block of sand, of height 1 to 4.
                     if (runDepth == 0 && fillerBlock.isOf(Blocks.SAND)) {
@@ -200,12 +201,12 @@ public class ChunkProviderEarlyRelease extends ChunkProviderForcedHeight {
                 if (surfaceDepth <= 0) {
                     int y = surfaceTopY;
                     pos.setY(y);
-                    chunk.setBlockState(pos, y < this.seaLevel ? BlockStates.WATER : BlockStates.AIR);
+                    VersionCompat.setBlockState(chunk, pos, y < this.seaLevel ? BlockStates.WATER : BlockStates.AIR);
                     pos.setY(--y);
 
                     BlockState blockState;
                     while (!(blockState = chunk.getBlockState(pos)).isAir() && !blockState.isOf(this.defaultBlock.getBlock())) {
-                        chunk.setBlockState(pos, this.defaultBlock);
+                        VersionCompat.setBlockState(chunk, pos, this.defaultBlock);
                         pos.setY(--y);
                     }
                 }
@@ -213,7 +214,7 @@ public class ChunkProviderEarlyRelease extends ChunkProviderForcedHeight {
                 for (int y = this.bedrockFloor; y < this.bedrockFloor + 5; y++) {
                     if (y <= this.bedrockFloor + this.random.nextInt(5)) {
                         pos.setY(y);
-                        chunk.setBlockState(pos, BlockStates.BEDROCK);
+                        VersionCompat.setBlockState(chunk, pos, BlockStates.BEDROCK);
                     }
                 }
             }

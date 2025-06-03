@@ -145,7 +145,11 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
 
             this.image = new NativeImage(width, height, false);
             this.image.fillRect(0, 0, width, height, EMPTY_COLOR);
-            this.texture = new NativeImageBackedTexture(TEXTURE_ID::toString, this.image);
+            this.texture = new NativeImageBackedTexture(
+                //? if >=1.21.5
+                TEXTURE_ID::toString,
+                this.image
+            );
             this.texture.upload();
             this.textureManager = client.getTextureManager();
             this.textureManager.registerTexture(TEXTURE_ID, this.texture);
@@ -233,7 +237,7 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
             int diffOffsetY = (int)Math.round(this.offsetY.get()) - (int)Math.round(prevOffsetY);
 
             synchronized (this.image) {
-                int[] pixels = this.image.copyPixelsAbgr();
+                int[] pixels = this.image.copyPixelsArgb();
                 int i = 0;
                 this.image.fillRect(0, 0, this.width, this.height, 0x7F000000);
                 for (int srcY = 0; srcY < this.height; srcY++) {
@@ -241,7 +245,7 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                         int dstX = srcX - diffOffsetX;
                         int dstY = srcY - diffOffsetY;
                         if (dstX >= 0 && dstX < this.width && dstY >= 0 && dstY < this.height) {
-                            this.image.setColor(dstX, dstY, pixels[i]);
+                            this.image.setColorArgb(dstX, dstY, pixels[i]);
                         }
                         i++;
                     }

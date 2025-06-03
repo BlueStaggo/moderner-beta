@@ -3,6 +3,7 @@ package mod.bluestaggo.modernerbeta.client.gui.screen.config;
 import mod.bluestaggo.modernerbeta.client.gui.optioncallbacks.FloatSliderCallbacks;
 import mod.bluestaggo.modernerbeta.client.gui.optioncallbacks.BiomePickerCallbacks;
 import mod.bluestaggo.modernerbeta.client.gui.optioncallbacks.TextFieldCallbacks;
+import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -11,6 +12,7 @@ import net.minecraft.client.gui.widget.OptionListWidget;
 import net.minecraft.client.option.GameOptions;
 import net.minecraft.client.option.SimpleOption;
 import net.minecraft.client.world.GeneratorOptionsHolder;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtString;
@@ -19,6 +21,7 @@ import net.minecraft.text.Text;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 @Environment(EnvType.CLIENT)
 public abstract class ModernBetaGraphicalListSettingsScreen extends ModernBetaGraphicalSettingsScreen<NbtList> {
@@ -82,12 +85,13 @@ public abstract class ModernBetaGraphicalListSettingsScreen extends ModernBetaGr
     }
 
     protected SimpleOption<?> biomeOption(int i, boolean allowNone) {
+        Supplier<String> stringSupplier = () -> VersionCompat.unwrap(settings.getString(i));
         return new SimpleOption<>(
             "",
             SimpleOption.emptyTooltip(),
-            (optionText, value) -> Text.of(settings.getString(i).orElseThrow()),
+            (optionText, value) -> Text.of(stringSupplier.get()),
             new BiomePickerCallbacks(this.client::setScreen, this, this.generatorOptionsHolder, allowNone),
-            settings.getString(i).orElseThrow(),
+            stringSupplier.get(),
             value -> {
                 settings.remove(i);
                 settings.add(i, NbtString.of(value));
@@ -97,38 +101,42 @@ public abstract class ModernBetaGraphicalListSettingsScreen extends ModernBetaGr
     }
 
     protected SimpleOption<?> biomeSubOption(int i, String subKey, boolean allowNone) {
+        Supplier<NbtCompound> compoundSupplier = () -> VersionCompat.unwrap(settings.getCompound(i));
+        Supplier<String> stringSupplier = () -> VersionCompat.unwrapOrElse(compoundSupplier.get().getString(subKey), "");
         return new SimpleOption<>(
             "",
             SimpleOption.emptyTooltip(),
-            (optionText, value) -> Text.of(settings.getCompound(i).orElseThrow().getString(subKey, "")),
+            (optionText, value) -> Text.of(stringSupplier.get()),
             new BiomePickerCallbacks(this.client::setScreen, this, this.generatorOptionsHolder, allowNone),
-            settings.getCompound(i).orElseThrow().getString(subKey, ""),
+            stringSupplier.get(),
             value -> {
-                settings.getCompound(i).orElseThrow().put(subKey, NbtString.of(value));
+                compoundSupplier.get().put(subKey, NbtString.of(value));
                 this.clearAndInit();
             }
         );
     }
 
     protected SimpleOption<Float> floatRangeSubOption(int i, String subKey, float min, float max) {
+        Supplier<NbtCompound> compoundSupplier = () -> VersionCompat.unwrap(settings.getCompound(i));
         return new SimpleOption<>(
             this.getTextKey(subKey),
             SimpleOption.emptyTooltip(),
             (optionText, value) -> GameOptions.getGenericValueText(this.getText(subKey), Text.literal("%.3f".formatted(value))),
             new FloatSliderCallbacks(min, max),
-            settings.getCompound(i).orElseThrow().getFloat(subKey).orElse(0.0F),
-            value -> settings.getCompound(i).orElseThrow().putFloat(subKey, value)
+            VersionCompat.unwrapOrElse(compoundSupplier.get().getFloat(subKey), 0.0F),
+            value -> compoundSupplier.get().putFloat(subKey, value)
         );
     }
 
     protected List<SimpleOption<?>> extendedBiomeIdOption(int i) {
+        Supplier<String> stringSupplier = () -> VersionCompat.unwrapOrElse(settings.getString(i), "");
         return List.of(
             new SimpleOption<>(
                 "",
                 SimpleOption.emptyTooltip(),
-                (optionText, value) -> Text.of(settings.getString(i).orElseThrow()),
+                (optionText, value) -> Text.of(stringSupplier.get()),
                 new TextFieldCallbacks(string -> ExtendedBiomeId.validate(string).isSuccess()),
-                ExtendedBiomeId.of(settings.getString(i).orElseThrow()).toString(),
+                ExtendedBiomeId.of(stringSupplier.get()).toString(),
                 value -> {
                     settings.add(i, NbtString.of(value));
                     this.clearAndInit();

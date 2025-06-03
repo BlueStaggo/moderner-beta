@@ -2,6 +2,7 @@ package mod.bluestaggo.modernerbeta.world.carver;
 
 import com.mojang.serialization.Codec;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
+import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -371,7 +372,7 @@ public class BetaCaveCarver extends Carver<BetaCaveCarverConfig> {
                         BlockState carverState = this.getBlockState(context, config, carverPos, aquiferSampler);
                         
                         if (carverState != null) {
-                            chunk.setBlockState(carverPos, carverState);
+                            VersionCompat.setBlockState(chunk, carverPos, carverState);
                             
                             if (aquiferSampler.needsFluidTick() && !carverState.getFluidState().isEmpty()) {
                                 chunk.markBlockForPostProcessing(carverPos);
@@ -379,7 +380,7 @@ public class BetaCaveCarver extends Carver<BetaCaveCarverConfig> {
                             
                             // Replaces carved-out dirt with grass, if block that was removed was grass.
                             if (isGrassBlock && chunk.getBlockState(carverPos.down()).getBlock() == Blocks.DIRT) {
-                                chunk.setBlockState(carverPos.down(), BlockStates.GRASS_BLOCK);
+                                VersionCompat.setBlockState(chunk, carverPos.down(), BlockStates.GRASS_BLOCK);
                             }
                         }
                     }

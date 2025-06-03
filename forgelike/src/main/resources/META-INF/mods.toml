@@ -1,6 +1,6 @@
 modLoader = "javafml"
 loaderVersion = "(,)"
-issueTrackerURL = "https://github.com/BlueStaggo/moderner-beta/issues"
+issueTrackerURL = "https://github.com/Nostalgica-Reverie/moderner-beta/issues"
 license = "MIT"
 
 [[mods]]

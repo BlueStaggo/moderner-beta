@@ -10,6 +10,7 @@ import mod.bluestaggo.modernerbeta.settings.component.IslesProperties;
 import mod.bluestaggo.modernerbeta.settings.component.NoiseScale;
 import mod.bluestaggo.modernerbeta.settings.component.NoiseSlide;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
+import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkCache;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkHeightmap;
 import mod.bluestaggo.modernerbeta.util.noise.SimpleNoisePos;
@@ -134,7 +135,7 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
         GenerationShapeConfig shapeConfig = this.generatorSettings.value().generationShapeConfig();
         
         int minY = Math.max(shapeConfig.minimumY(), chunk.getBottomY());
-        int topY = Math.min(shapeConfig.minimumY() + shapeConfig.height(), chunk.getTopYInclusive() + 1);
+        int topY = Math.min(shapeConfig.minimumY() + shapeConfig.height(), VersionCompat.getTopYExclusive(chunk));
         
         @SuppressWarnings("unused")
         int noiseMinY = MathHelper.floorDiv(minY, this.noiseResolutionVertical);

@@ -3,6 +3,7 @@ package mod.bluestaggo.modernerbeta.world.feature;
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
 import mod.bluestaggo.modernerbeta.api.world.biome.climate.ClimateSampler;
+import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
 import net.minecraft.block.*;
 import net.minecraft.fluid.FluidState;
@@ -111,7 +112,7 @@ public class BetaFreezeTopLayerFeature extends Feature<DefaultFeatureConfig> {
         }
         
         if (blockPos.getY() >= worldView.getBottomY() &&
-            blockPos.getY() <= worldView.getTopYInclusive() &&
+            blockPos.getY() < VersionCompat.getTopYExclusive(worldView) &&
             worldView.getLightLevel(LightType.BLOCK, blockPos) < 10
         ) {
             BlockState blockState = worldView.getBlockState(blockPos);

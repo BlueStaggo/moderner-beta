@@ -27,7 +27,12 @@ public class S2CPacketHandlers {
             if (!payload.hasBiomeProvider())
                 return;
 
-            RegistryEntryLookup<Biome> biomeRegistry = world.getRegistryManager().getOrThrow(RegistryKeys.BIOME);
+            RegistryEntryLookup<Biome> biomeRegistry = world.getRegistryManager()
+                //? if >=1.21.2 {
+                .getOrThrow(RegistryKeys.BIOME);
+                //?} else {
+                /*.getWrapperOrThrow(RegistryKeys.BIOME);
+                *///?}
             BiomeProviderType<?> providerCreator = ModernBetaRegistries.BIOME.get(payload.providerId().orElseThrow());
             BiomeProvider provider = providerCreator.apply(ModernBetaSettings.fromCompound(payload.settings().orElseThrow()), biomeRegistry, payload.seed().orElseThrow());
 

@@ -1084,6 +1084,7 @@ public final class ModernBetaSettingsPresets {
                         BiomeKeys.DEEP_OCEAN.getValue(),
                         0.7, 0.3, 0.8
                     ),
+                    //? if >=1.21.4 {
                     new VoronoiPointBiome(
                         BiomeKeys.PALE_GARDEN.getValue(),
                         BiomeKeys.OCEAN.getValue(),
@@ -1102,6 +1103,7 @@ public final class ModernBetaSettingsPresets {
                         BiomeKeys.DEEP_OCEAN.getValue(),
                         0.7, 0.9, 0.8
                     ),
+                    //?}
 
                     new VoronoiPointBiome(
                         BiomeKeys.PLAINS.getValue(),

@@ -147,7 +147,7 @@ public abstract class ChunkProvider {
     }
     
     /**
-     * Get total world height in blocks, including minimum Y. 
+     * Get total world height in blocks, including minimum Y.
      * (i.e. Returns 320 if bottomY is -64 and topY is 256.)
      * 
      * @return Total world height in blocks.

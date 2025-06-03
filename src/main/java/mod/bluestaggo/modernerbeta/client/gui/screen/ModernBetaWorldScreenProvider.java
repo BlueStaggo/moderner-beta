@@ -28,9 +28,20 @@ public class ModernBetaWorldScreenProvider {
             RegistryKey<ChunkGeneratorSettings> modernBetaSettings = keyOfSettings(chunkSettings.getProvider());
             
             Registry<ChunkGeneratorSettings> registrySettings = dynamicRegistryManager.getOrThrow(RegistryKeys.CHUNK_GENERATOR_SETTINGS);
-            RegistryEntry.Reference<ChunkGeneratorSettings> settings = registrySettings.getOrThrow(modernBetaSettings);
-            RegistryEntryLookup<Biome> registryBiome = dynamicRegistryManager.getOrThrow(RegistryKeys.BIOME);
-            
+            RegistryEntry.Reference<ChunkGeneratorSettings> settings = registrySettings
+                //? if >=1.21.2 {
+                .getOrThrow(modernBetaSettings);
+                //?} else {
+                /*.getEntry(modernBetaSettings)
+                .orElseThrow();
+                *///?}
+            RegistryEntryLookup<Biome> registryBiome = dynamicRegistryManager
+                //? if >=1.21.2 {
+                .getOrThrow(RegistryKeys.BIOME);
+                //?} else {
+                /*.getWrapperOrThrow(RegistryKeys.BIOME);
+                *///?}
+
             ModernBetaChunkGenerator chunkGenerator = new ModernBetaChunkGenerator(
                 new ModernBetaBiomeSource(
                     registryBiome,

@@ -2,6 +2,7 @@ package mod.bluestaggo.modernerbeta.api.world.chunk;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
+import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.random.LocalRandom;
@@ -93,7 +94,7 @@ public class AquiferSamplerProvider {
         }
         
         int minY = Math.max(this.worldMinY, chunk.getBottomY());
-        int topY = Math.min(this.worldMinY + this.worldHeight, chunk.getTopYInclusive() + 1);
+        int topY = Math.min(this.worldMinY + this.worldHeight, VersionCompat.getTopYExclusive(chunk));
         
         int noiseMinY = MathHelper.floorDiv(minY, this.noiseResolutionVertical);
         int noiseTopY = MathHelper.floorDiv(topY - minY, this.noiseResolutionVertical);

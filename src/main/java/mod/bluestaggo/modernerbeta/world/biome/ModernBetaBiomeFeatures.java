@@ -4,9 +4,11 @@ import mod.bluestaggo.modernerbeta.world.carver.configured.ModernBetaConfiguredC
 import mod.bluestaggo.modernerbeta.world.feature.placed.ModernBetaMiscPlacedFeatures;
 import mod.bluestaggo.modernerbeta.world.feature.placed.ModernBetaOrePlacedFeatures;
 import mod.bluestaggo.modernerbeta.world.feature.placed.ModernBetaVegetationPlacedFeatures;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.world.biome.GenerationSettings;
 import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.GenerationStep.Feature;
+import net.minecraft.world.gen.carver.ConfiguredCarver;
 import net.minecraft.world.gen.carver.ConfiguredCarvers;
 import net.minecraft.world.gen.feature.*;
 
@@ -538,18 +540,26 @@ public class ModernBetaBiomeFeatures {
 
     private static void addCarvers(GenerationSettings.LookupBackedBuilder builder, boolean addCanyons, boolean useBetaCarvers) {
         if (useBetaCarvers) {
-            builder.carver(ModernBetaConfiguredCarvers.BETA_CAVE);
-            builder.carver(ModernBetaConfiguredCarvers.BETA_CAVE_DEEP);
+            addCarver(builder, ModernBetaConfiguredCarvers.BETA_CAVE);
+            addCarver(builder, ModernBetaConfiguredCarvers.BETA_CAVE_DEEP);
             if (addCanyons) {
-                builder.carver(ModernBetaConfiguredCarvers.BETA_CANYON);
+                addCarver(builder, ModernBetaConfiguredCarvers.BETA_CANYON);
             }
         } else {
-            builder.carver(ConfiguredCarvers.CAVE);
-            builder.carver(ConfiguredCarvers.CAVE_EXTRA_UNDERGROUND);
+            addCarver(builder, ConfiguredCarvers.CAVE);
+            addCarver(builder, ConfiguredCarvers.CAVE_EXTRA_UNDERGROUND);
             if (addCanyons) {
-                builder.carver(ConfiguredCarvers.CANYON);
+                addCarver(builder, ConfiguredCarvers.CANYON);
             }
         }
+    }
+
+    private static void addCarver(GenerationSettings.LookupBackedBuilder builder, RegistryKey<ConfiguredCarver<?>> carver) {
+        builder.carver(
+            //? if <1.21.2
+            /*GenerationStep.Carver.AIR,*/
+            carver
+        );
     }
     
     private static void addLakes(GenerationSettings.LookupBackedBuilder builder) {

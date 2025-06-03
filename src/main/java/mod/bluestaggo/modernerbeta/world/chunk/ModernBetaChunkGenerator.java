@@ -35,8 +35,9 @@ import net.minecraft.world.biome.source.BiomeSource;
 import net.minecraft.world.biome.source.util.MultiNoiseUtil.MultiNoiseSampler;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ProtoChunk;
+//? if <1.21.2
+/*import net.minecraft.world.gen.GenerationStep;*/
 import net.minecraft.world.gen.StructureAccessor;
-import net.minecraft.world.gen.StructureWeightSampler;
 import net.minecraft.world.gen.carver.CarverContext;
 import net.minecraft.world.gen.carver.CarvingMask;
 import net.minecraft.world.gen.carver.ConfiguredCarver;
@@ -140,9 +141,12 @@ public class ModernBetaChunkGenerator extends NoiseChunkGenerator {
     public void buildDefaultSurface(ChunkRegion chunkRegion, StructureAccessor structureAccessor, NoiseConfig noiseConfig, Chunk chunk) {
         super.buildSurface(chunkRegion, structureAccessor, noiseConfig, chunk);
     }
-    
+
     @Override
-    public void carve(ChunkRegion chunkRegion, long seed, NoiseConfig noiseConfig, BiomeAccess biomeAccess, StructureAccessor structureAccessor, Chunk chunk) {
+    public void carve(ChunkRegion chunkRegion, long seed, NoiseConfig noiseConfig, BiomeAccess biomeAccess, StructureAccessor structureAccessor, Chunk chunk
+                      //? if <1.21.2
+                      /*, GenerationStep.Carver carverStep*/
+    ) {
         if (this.chunkProvider.skipChunk(chunk.getPos().x, chunk.getPos().z, ModernBetaGenerationStep.CARVERS)) return;
 
         BiomeAccess biomeAccessWithSource = biomeAccess.withSource((biomeX, biomeY, biomeZ) -> this.biomeSource.getBiome(biomeX, biomeY, biomeZ, noiseConfig.getMultiNoiseSampler()));
@@ -158,7 +162,10 @@ public class ModernBetaChunkGenerator extends NoiseChunkGenerator {
 
         Registry<ConfiguredCarver<?>> configuredCarverRegistry = chunkRegion.getRegistryManager().getOrThrow(RegistryKeys.CONFIGURED_CARVER);
         CarverContext carverContext = new CarverContext(this, chunkRegion.getRegistryManager(), chunk.getHeightLimitView(), chunkNoiseSampler, noiseConfig, this.settings.value().surfaceRule());
-        CarvingMask carvingMask = ((ProtoChunk)chunk).getOrCreateCarvingMask();
+        CarvingMask carvingMask = ((ProtoChunk)chunk).getOrCreateCarvingMask(
+            //? if <1.21.2
+            /*carverStep*/
+        );
         
         LocalRandom random = new LocalRandom(seed);
         long l = (random.nextLong() / 2L) * 2L + 1L;
@@ -173,7 +180,10 @@ public class ModernBetaChunkGenerator extends NoiseChunkGenerator {
                 GenerationSettings genSettings = carverChunk.getOrCreateGenerationSettings(() -> this.getGenerationSettings(
                     this.biomeSource.getBiome(BiomeCoords.fromBlock(carverPos.getStartX()), 0, BiomeCoords.fromBlock(carverPos.getStartZ()), noiseConfig.getMultiNoiseSampler()))
                 );
-                Iterable<RegistryEntry<ConfiguredCarver<?>>> carverList = genSettings.getCarversForStep();
+                Iterable<RegistryEntry<ConfiguredCarver<?>>> carverList = genSettings.getCarversForStep(
+                    //? if <1.21.2
+                    /*carverStep*/
+                );
 
                 for(RegistryEntry<ConfiguredCarver<?>> carverEntry : carverList) {
                     ConfiguredCarver<?> configuredCarver = carverEntry.value();

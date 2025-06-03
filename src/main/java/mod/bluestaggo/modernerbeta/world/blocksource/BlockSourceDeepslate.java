@@ -24,7 +24,10 @@ public class BlockSourceDeepslate implements BlockSource {
         this.minY = deepslateGeneration.minY();
         this.maxY = deepslateGeneration.maxY();
         this.useDeepslate = deepslateGeneration.enabled();
-        this.deepslateBlock = Registries.BLOCK.getOrThrow(RegistryKey.of(RegistryKeys.BLOCK, deepslateGeneration.block())).value().getDefaultState();
+        this.deepslateBlock = Registries.BLOCK.getOrThrow(RegistryKey.of(RegistryKeys.BLOCK, deepslateGeneration.block()))
+            //? if >=1.21.2
+            .value()
+            .getDefaultState();
         this.randomSplitter = randomSplitter;
     }
     

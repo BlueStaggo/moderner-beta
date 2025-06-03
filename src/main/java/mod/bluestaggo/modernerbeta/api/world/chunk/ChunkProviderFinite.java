@@ -144,7 +144,11 @@ public abstract class ChunkProviderFinite extends ChunkProvider implements Chunk
                     climateSampler.useBiomeFeature()) {
                     isCold = climateSampler.sample(x, z).temp() < 0.5D;
                 } else {
+                    //? if >=1.21.2 {
                     isCold = biome.value().isCold(pos, seaLevel);
+                    //?} else {
+                    /*isCold = biome.value().isCold(pos.down(seaLevel - 63));
+                    *///?}
                 }
                 
                 for (int y = worldTopY - 1; y >= this.worldMinY; --y) {
@@ -155,7 +159,7 @@ public abstract class ChunkProviderFinite extends ChunkProvider implements Chunk
                     VersionCompat.setBlockState(chunk, pos, blockState);
 
                     // Set snow on top of snowy blocks
-                    if (blockState.contains(Properties.SNOWY) && blockState.get(Properties.SNOWY).booleanValue())
+                    if (blockState.contains(Properties.SNOWY) && blockState.get(Properties.SNOWY))
                         VersionCompat.setBlockState(chunk, pos.up(), BlockStates.SNOW);
                         
                 }
@@ -328,20 +332,12 @@ public abstract class ChunkProviderFinite extends ChunkProvider implements Chunk
     protected boolean inWorldBounds(int x, int z) {
         int halfWidth = this.levelWidth / 2;
         int halfLength = this.levelLength / 2;
-        
-        if (x >= -halfWidth && x < halfWidth && z >= -halfLength && z < halfLength) {
-            return true;
-        }
-        
-        return false;
+
+        return x >= -halfWidth && x < halfWidth && z >= -halfLength && z < halfLength;
     }
 
     protected boolean inLevelBounds(int x, int y, int z) {
-        if (x < 0 || x >= this.levelWidth || y < 0 || y >= this.levelHeight || z < 0 || z >= this.levelLength) {
-            return false;
-        }
-            
-        return true;
+        return x >= 0 && x < this.levelWidth && y >= 0 && y < this.levelHeight && z >= 0 && z < this.levelLength;
     }
 
     protected void setPhase(String phase) {

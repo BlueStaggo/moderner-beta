@@ -1,6 +1,7 @@
 package mod.bluestaggo.modernerbeta.util;
 
-import net.minecraft.block.Block;
+//? if <1.21.2
+/*import net.minecraft.block.Block;*/
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
@@ -8,6 +9,7 @@ import net.minecraft.util.collection.Pool;
 import net.minecraft.util.collection.Weighted;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
+import net.minecraft.world.HeightLimitView;
 import net.minecraft.world.biome.SpawnSettings;
 import net.minecraft.world.chunk.Chunk;
 
@@ -68,20 +70,30 @@ public final class VersionCompat {
         *///?}
     }
 
+    public static int getTopYExclusive(HeightLimitView heightLimitView) {
+        //? if >=1.21.2 {
+        return heightLimitView.getTopYInclusive() + 1;
+        //?} else {
+        /*return heightLimitView.getTopY();
+        *///?}
+    }
+
+    @SuppressWarnings("unused")
     public static <T> T unwrap(T t) {
         return t;
     }
 
-    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    @SuppressWarnings({"unused", "OptionalUsedAsFieldOrParameterType"})
     public static <T> T unwrap(Optional<T> optional) {
         return optional.orElseThrow();
     }
 
+    @SuppressWarnings("unused")
     public static <T> T unwrapOrElse(T t, T orElse) {
         return t;
     }
 
-    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    @SuppressWarnings({"unused", "OptionalUsedAsFieldOrParameterType"})
     public static <T> T unwrapOrElse(Optional<T> optional, T orElse) {
         return optional.orElse(orElse);
     }

@@ -241,9 +241,11 @@ public record HeightConfig(float depth, float scale, String type) {
 		majorReleaseHeightConfigs.put(
 			ExtendedBiomeId.of("minecraft:cherry_grove"),
 			new HeightConfig(1.5f, 0.6f));
+		//? if >=1.21.4 {
 		majorReleaseHeightConfigs.put(
 			ExtendedBiomeId.of("minecraft:pale_garden"),
 			new HeightConfig(1.5f, 0.6f));
+		//?}
 		majorReleaseHeightConfigs.put(
 			ExtendedBiomeId.of("minecraft:mangrove_swamp"),
 			new HeightConfig(-0.2f, 0.2f));

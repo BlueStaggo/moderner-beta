@@ -237,6 +237,7 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
                     
                     context.fill(x, y, x + ICON_SIZE, y + ICON_SIZE, -1601138544);
                     context.drawGuiTexture(
+                        //? if >=1.21.2
                         RenderLayer::getGuiTextured,
                         texture,
                         x,
@@ -269,7 +270,15 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
             }
 
             private void draw(DrawContext context, int x, int y, Identifier textureId) {
-                context.drawTexture(RenderLayer::getGuiTextured, textureId, x, y, 0.0f, 0.0f, ICON_SIZE, ICON_SIZE, ICON_SIZE, ICON_SIZE);
+                context.drawTexture(
+                    //? if >=1.21.2
+                    RenderLayer::getGuiTextured,
+                    textureId,
+                    x, y,
+                    0.0f, 0.0f,
+                    ICON_SIZE, ICON_SIZE,
+                    ICON_SIZE, ICON_SIZE
+                );
             }
             
             private List<OrderedText> splitText(TextRenderer textRenderer, Text text) {

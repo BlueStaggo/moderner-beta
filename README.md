@@ -5,7 +5,9 @@
     <p align="center">
         <img src="banner.png" alt="Moderner Beta Banner"/>
     </p>
-    <i>Part of the <a href="https://discord.gg/6fQG4AstMC">Nostalgica Reverie</a> project</i>
+    <p>
+        <i>Part of the <a href="https://discord.gg/6fQG4AstMC">Nostalgica Reverie</a> project</i>
+    </p>
     <hr/>
 </center>
 

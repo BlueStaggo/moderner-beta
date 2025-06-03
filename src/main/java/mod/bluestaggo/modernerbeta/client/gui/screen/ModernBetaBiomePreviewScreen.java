@@ -20,7 +20,6 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.*;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.client.texture.TextureManager;
@@ -196,7 +195,12 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
             }
 
             context.drawTexture(
-                RenderLayer::getGuiTextured, TEXTURE_ID,
+                //? if >= 1.21.6 {
+                /*net.minecraft.client.gl.RenderPipelines.GUI_TEXTURED,*/
+                //?} else if >=1.21.4 {
+                net.minecraft.client.render.RenderLayer::getGuiTextured,
+                //?}
+                TEXTURE_ID,
                 this.getX(), this.getY(),
                 0.0F, 0.0F,
                 this.getWidth(), this.getHeight(),
@@ -207,7 +211,7 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                 MutableText stepName = Text.literal((step + 1) + "/" + resolverStepped.getStepCount() + " - ");
                 stepName.append(resolverStepped.getStepName(step));
                 context.fill(this.getX(), this.getY(), this.getX() + textRenderer.getWidth(stepName) + 8, this.getY() + 16, 0xAA000000);
-                context.drawText(textRenderer, stepName, this.getX() + 4, this.getY() + 4, 0xFFFFFF, false);
+                context.drawText(textRenderer, stepName, this.getX() + 4, this.getY() + 4, 0xFFFFFFFF, false);
             }
 
             int offsetMouseX = mouseX - this.getX();

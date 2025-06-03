@@ -1,7 +1,6 @@
 package mod.bluestaggo.modernerbeta.client.gui.screen;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;
-import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistryKeys;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPresetCategory;
 import net.fabricmc.api.EnvType;
@@ -12,9 +11,7 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.sound.PositionedSoundInstance;
-import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.Registry;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.sound.SoundEvents;
@@ -237,7 +234,11 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
                     
                     context.fill(x, y, x + ICON_SIZE, y + ICON_SIZE, -1601138544);
                     context.drawGuiTexture(
-                        RenderLayer::getGuiTextured,
+                        //? if >= 1.21.6 {
+                        /*net.minecraft.client.gl.RenderPipelines.GUI_TEXTURED,*/
+                        //?} else if >=1.21.4 {
+                        net.minecraft.client.render.RenderLayer::getGuiTextured,
+                        //?}
                         texture,
                         x,
                         y,
@@ -269,7 +270,18 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
             }
 
             private void draw(DrawContext context, int x, int y, Identifier textureId) {
-                context.drawTexture(RenderLayer::getGuiTextured, textureId, x, y, 0.0f, 0.0f, ICON_SIZE, ICON_SIZE, ICON_SIZE, ICON_SIZE);
+                context.drawTexture(
+                    //? if >= 1.21.6 {
+                    /*net.minecraft.client.gl.RenderPipelines.GUI_TEXTURED,*/
+                    //?} else if >=1.21.4 {
+                    net.minecraft.client.render.RenderLayer::getGuiTextured,
+                    //?}
+                    textureId,
+                    x, y,
+                    0.0f, 0.0f,
+                    ICON_SIZE, ICON_SIZE,
+                    ICON_SIZE, ICON_SIZE
+                );
             }
             
             private List<OrderedText> splitText(TextRenderer textRenderer, Text text) {

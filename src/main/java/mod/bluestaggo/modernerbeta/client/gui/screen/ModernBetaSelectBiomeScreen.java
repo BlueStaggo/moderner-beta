@@ -140,7 +140,7 @@ public class ModernBetaSelectBiomeScreen extends Screen {
 
             @Override
             public void render(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-                context.drawTextWithShadow(ModernBetaSelectBiomeScreen.this.textRenderer, this.text, x + 5, y + 2, 0xFFFFFF);
+                context.drawTextWithShadow(ModernBetaSelectBiomeScreen.this.textRenderer, this.text, x + 5, y + 2, 0xFFFFFFFF);
             }
 
             @Override

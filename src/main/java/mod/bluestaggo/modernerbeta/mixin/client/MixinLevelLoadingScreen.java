@@ -35,7 +35,7 @@ public abstract class MixinLevelLoadingScreen extends Screen {
                 phase,
                 this.width / 2,
                 (this.height / 2) + 90,
-                0xFFFFFF
+                0xFFFFFFFF
             );
         }
     }

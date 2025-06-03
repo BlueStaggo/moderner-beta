@@ -2161,9 +2161,9 @@ public final class ModernBetaSettingsPresets {
                     "minecraft:desert",
                     "minecraft:desert",
                     "minecraft:desert",
+                    "minecraft:desert",
                     "minecraft:badlands*plateau",
                     "minecraft:badlands*plateau",
-                    "minecraft:savanna",
 
                     // Forests
                     "minecraft:forest",
@@ -2210,7 +2210,7 @@ public final class ModernBetaSettingsPresets {
                     "minecraft:jungle",
                     "minecraft:jungle",
                     "minecraft:jungle",
-                    "minecraft:badlands*plateau",
+                    "minecraft:jungle",
                     "minecraft:sparse_jungle"
                 )),
                 new RandomBiomeLayer("snowy_biome_pool", 200, ExtendedBiomeId.listOf(

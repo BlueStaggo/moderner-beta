@@ -103,7 +103,7 @@ public abstract class MixinBackgroundRenderer {
             /*target = "Lnet/minecraft/client/world/ClientWorld;getSkyColor(Lnet/minecraft/util/math/Vec3d;F)Lnet/minecraft/util/math/Vec3d;"
             *///?}
         ),
-        index = 10
+        index = /*? if >=1.21.2 {*/10/*?} else {*/ /*7 *//*?}*/
     )
     private static float modifyFogWeighting(float weight) {
         return modernBeta_isModernBetaWorld && ModernerBeta.CONFIG.useOldFogColor ? modernBeta_fogWeight : weight;

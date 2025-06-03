@@ -402,8 +402,10 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                         this.uploadRequested = true;
                     }
                     //?} else {
-                    /*color <<= 8;
-                    color |= 0xFF;
+                    /*int r = (color >> 16) & 0xFF;
+                    int g = (color >> 8) & 0xFF;
+                    int b = color & 0xFF;
+                    color = r | g << 8 | b << 16 | 0xFF << 24;
                     synchronized (image) {
                         image.setColor(this.genX, this.genY, color);
                         this.uploadRequested = true;

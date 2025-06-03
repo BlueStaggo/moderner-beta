@@ -442,6 +442,7 @@ public class ModernBetaTagProviderBiome extends FabricTagProvider<Biome> {
                 BiomeKeys.FLOWER_FOREST,
                 BiomeKeys.BIRCH_FOREST,
                 BiomeKeys.DARK_FOREST,
+                //? if >=1.21.4
                 BiomeKeys.PALE_GARDEN,
                 BiomeKeys.OLD_GROWTH_BIRCH_FOREST,
                 BiomeKeys.SNOWY_BEACH
@@ -584,7 +585,7 @@ public class ModernBetaTagProviderBiome extends FabricTagProvider<Biome> {
         //? if >=1.21 {
         getOrCreateTagBuilder(BiomeTags.TRIAL_CHAMBERS_HAS_STRUCTURE)
             .addTag(IS_MODERN_BETA);
-        //? }
+        //?}
         
         getOrCreateTagBuilder(BiomeTags.VILLAGE_DESERT_HAS_STRUCTURE)
             .addTag(IS_DESERT);

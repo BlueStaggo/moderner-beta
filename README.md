@@ -4,8 +4,9 @@
 <center>
     <p align="center">
         <img src="banner.png" alt="Moderner Beta Banner"/>
-        <hr/>
     </p>
+    <i>Part of the <a href="https://discord.gg/6fQG4AstMC">Nostalgica Reverie</a> project</i>
+    <hr/>
 </center>
 
 Moderner Beta is the successor to [b3spectacled](https://github.com/b3spectacled)'s [Modern Beta](https://github.com/b3spectacled/modern-beta-fabric). It originally started as a pull request for the original Modern Beta to add in world generation from Beta 1.8 to 1.6.4, however due to b3spectacled's inactivity it has become its own project. The mod is currently supported for 1.20.1, 1.21.1, 1.21.4, 1.21.5 and 1.21.6.

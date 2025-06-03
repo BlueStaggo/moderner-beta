@@ -39,7 +39,7 @@ public abstract class MixinClientWorld implements ModernBetaClientWorld {
             value = "INVOKE_ASSIGN",  
             target = "Lnet/minecraft/util/CubicSampler;sampleColor(Lnet/minecraft/util/math/Vec3d;Lnet/minecraft/util/CubicSampler$RgbFetcher;)Lnet/minecraft/util/math/Vec3d;"
         ),
-        index = 5
+        index = /*? if >=1.21.2 {*/5/*?} else {*/ /*6 *//*?}*/
     )
     private Vec3d injectSkyColor(Vec3d skyColorVec, Vec3d cameraPos) {
         return SkyColorSampler.INSTANCE.getSkyColor(cameraPos, skyColorVec);

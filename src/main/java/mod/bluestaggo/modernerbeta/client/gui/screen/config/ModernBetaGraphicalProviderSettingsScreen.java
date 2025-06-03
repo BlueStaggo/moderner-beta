@@ -17,6 +17,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
@@ -24,6 +25,7 @@ import net.minecraft.util.Pair;
 import net.minecraft.world.dimension.DimensionOptions;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 
+import java.util.Optional;
 import java.util.function.Consumer;
 
 @Environment(EnvType.CLIENT)
@@ -45,7 +47,9 @@ public class ModernBetaGraphicalProviderSettingsScreen extends ModernBetaGraphic
     ) {
         super(title, parent, generatorOptionsHolder, null, settings, onDone);
         this.providerRegistry = providerRegistry;
-        this.providers = providerRegistry.streamKeys()
+        this.providers = providerRegistry.streamEntries()
+            .map(RegistryEntry::getKey)
+            .flatMap(Optional::stream)
             .map(RegistryKey::getValue)
             .sorted()
             .toArray(Identifier[]::new);

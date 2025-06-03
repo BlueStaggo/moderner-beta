@@ -236,7 +236,7 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
                     context.drawGuiTexture(
                         //? if >= 1.21.6 {
                         /*net.minecraft.client.gl.RenderPipelines.GUI_TEXTURED,*/
-                        //?} else if >=1.21.4 {
+                        //?} else if >=1.21.2 {
                         net.minecraft.client.render.RenderLayer::getGuiTextured,
                         //?}
                         texture,
@@ -273,7 +273,7 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
                 context.drawTexture(
                     //? if >= 1.21.6 {
                     /*net.minecraft.client.gl.RenderPipelines.GUI_TEXTURED,*/
-                    //?} else if >=1.21.4 {
+                    //?} else if >=1.21.2 {
                     net.minecraft.client.render.RenderLayer::getGuiTextured,
                     //?}
                     textureId,

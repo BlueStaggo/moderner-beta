@@ -18,13 +18,28 @@ public record BiomeProviderInfoPayload(
 ) implements CustomPayload {
     public static final CustomPayload.Id<BiomeProviderInfoPayload> ID = new CustomPayload.Id<>(ModernBetaNetworkConstants.BIOME_PROVIDER_INFO_PACKET_ID);
     public static final PacketCodec<RegistryByteBuf, BiomeProviderInfoPayload> CODEC = PacketCodec.tuple(
-            PacketCodecs.BOOLEAN, BiomeProviderInfoPayload::isModernBetaWorld,
-            PacketCodecs.BOOLEAN, BiomeProviderInfoPayload::hasBiomeProvider,
-            PacketCodecs.LONG.collect(PacketCodecs::optional), BiomeProviderInfoPayload::seed,
-            Identifier.PACKET_CODEC.collect(PacketCodecs::optional), BiomeProviderInfoPayload::providerId,
-            PacketCodecs.NBT_COMPOUND.collect(PacketCodecs::optional), BiomeProviderInfoPayload::settings,
+        //? if >=1.21.4 {
+        PacketCodecs.BOOLEAN,
+        //?} else {
+        /*PacketCodecs.BOOL,
+        *///?}
+        BiomeProviderInfoPayload::isModernBetaWorld,
+        //? if >=1.21.4 {
+        PacketCodecs.BOOLEAN,
+        //?} else {
+        /*PacketCodecs.BOOL,
+        *///?}
+        BiomeProviderInfoPayload::hasBiomeProvider,
+        //? if >=1.21.2 {
+        PacketCodecs.LONG
+        //?} else {
+        /*PacketCodecs.VAR_LONG
+        *///?}
+            .collect(PacketCodecs::optional), BiomeProviderInfoPayload::seed,
+        Identifier.PACKET_CODEC.collect(PacketCodecs::optional), BiomeProviderInfoPayload::providerId,
+        PacketCodecs.NBT_COMPOUND.collect(PacketCodecs::optional), BiomeProviderInfoPayload::settings,
 
-            BiomeProviderInfoPayload::new
+        BiomeProviderInfoPayload::new
     );
 
     @Override

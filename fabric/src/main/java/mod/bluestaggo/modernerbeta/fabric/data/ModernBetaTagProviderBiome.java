@@ -442,6 +442,7 @@ public class ModernBetaTagProviderBiome extends FabricTagProvider<Biome> {
                 BiomeKeys.FLOWER_FOREST,
                 BiomeKeys.BIRCH_FOREST,
                 BiomeKeys.DARK_FOREST,
+                //? if >=1.21.4
                 BiomeKeys.PALE_GARDEN,
                 BiomeKeys.OLD_GROWTH_BIRCH_FOREST,
                 BiomeKeys.SNOWY_BEACH

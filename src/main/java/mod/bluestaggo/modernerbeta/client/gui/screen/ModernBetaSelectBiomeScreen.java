@@ -42,16 +42,21 @@ public class ModernBetaSelectBiomeScreen extends Screen {
         this.allowNone = allowNone;
         this.biomeRegistry = generatorOptionsHolder.getCombinedRegistryManager().getOrThrow(RegistryKeys.BIOME);
         RegistryEntry<Biome> registryEntry = this.biomeRegistry
-                .getOptional(BiomeKeys.PLAINS)
-                .or(() -> this.biomeRegistry.streamEntries().findAny())
-                .orElseThrow();
+            //? if >=1.21.2 {
+            .getOptional
+            //?} else {
+            /*.getEntry
+            *///?}
+            (BiomeKeys.PLAINS)
+            .or(() -> this.biomeRegistry.streamEntries().findAny())
+            .orElseThrow();
         this.biome = generatorOptionsHolder.selectedDimensions()
-                .getChunkGenerator()
-                .getBiomeSource()
-                .getBiomes()
-                .stream()
-                .findFirst()
-                .orElse(registryEntry);
+            .getChunkGenerator()
+            .getBiomeSource()
+            .getBiomes()
+            .stream()
+            .findFirst()
+            .orElse(registryEntry);
     }
 
     @Override
@@ -81,7 +86,6 @@ public class ModernBetaSelectBiomeScreen extends Screen {
         this.refreshWidgetPositions();
     }
 
-    @Override
     protected void refreshWidgetPositions() {
         this.layout.refreshPositions();
         this.biomeSelectionList.position(this.width, this.layout);

@@ -14,5 +14,17 @@ stonecutter.parameters {
             reverse("""\bDataPool\b""", "Pool")
             phase = "LAST"
         }
+
+        string {
+            direction = eval(metadata.version, "<1.21.2")
+            replace(".getOrThrow(ModernBetaRegistryKeys.", ".get(ModernBetaRegistryKeys.")
+            phase = "LAST"
+        }
+
+        string {
+            direction = eval(metadata.version, "<1.21.2")
+            replace(".getOrThrow(RegistryKeys.", ".get(RegistryKeys.")
+            phase = "LAST"
+        }
     }
 }

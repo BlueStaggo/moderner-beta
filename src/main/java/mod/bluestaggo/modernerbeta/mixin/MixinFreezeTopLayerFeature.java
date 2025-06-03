@@ -1,6 +1,7 @@
 package mod.bluestaggo.modernerbeta.mixin;
 
 import mod.bluestaggo.modernerbeta.api.world.biome.climate.ClimateSampler;
+import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
 import mod.bluestaggo.modernerbeta.world.chunk.provider.ChunkProviderEarlyRelease;
@@ -73,9 +74,13 @@ public abstract class MixinFreezeTopLayerFeature {
             Reference<PlacedFeature> betaFreezeTopLayer = context.getWorld()
                 .getRegistryManager()
                 .getOrThrow(RegistryKeys.PLACED_FEATURE)
+                //? if >=1.21.2 {
                 .getOptional(ModernBetaMiscPlacedFeatures.FREEZE_TOP_LAYER)
+                //?} else {
+                /*.getEntry(ModernBetaMiscPlacedFeatures.FREEZE_TOP_LAYER)
+                *///?}
                 .orElse(null);
-            
+
             boolean hasBetaFreezeTopLayer = topBiome.value()
                 .getGenerationSettings()
                 .getFeatures()

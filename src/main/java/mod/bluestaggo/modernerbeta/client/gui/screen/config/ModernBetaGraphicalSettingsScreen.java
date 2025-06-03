@@ -65,7 +65,12 @@ public abstract class ModernBetaGraphicalSettingsScreen<T extends NbtElement> ex
     @Override
     protected void clearChildren() {
         if (this.body != null) {
-            this.prevScroll = this.body.getScrollY();
+            this.prevScroll =
+                //? if >=1.21.4 {
+                this.body.getScrollY();
+                //?} else {
+                /*this.body.getScrollAmount();
+                *///?}
         }
 
         super.clearChildren();
@@ -78,7 +83,12 @@ public abstract class ModernBetaGraphicalSettingsScreen<T extends NbtElement> ex
         this.body = this.layout.addBody(new OptionListWidget(this.client, this.width, this));
         this.addOptions(this.body);
         if (this.prevScroll >= 0.0D && this.body != null) {
-            this.body.setScrollY(this.prevScroll);
+            //? if >=1.21.4 {
+            this.body.setScrollY
+            //?} else {
+            /*this.body.setScrollAmount
+            *///?}
+                (this.prevScroll);
         }
     }
 

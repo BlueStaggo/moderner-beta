@@ -152,6 +152,7 @@ public class ModernBetaConfig implements ConfigData {
         biomePreviewColors.put("minecraft:deep_dark", 0x031f29);
         biomePreviewColors.put("minecraft:mangrove_swamp", 0x2ccc8e);
         biomePreviewColors.put("minecraft:cherry_grove", 0xff91c8);
+        //? if >=1.21.4
         biomePreviewColors.put("minecraft:pale_garden", 0x696d95);
         biomePreviewColors.put("moderner_beta:beta_rainforest", 0x08fa36);
         biomePreviewColors.put("moderner_beta:beta_swampland", 0x07f9b2);

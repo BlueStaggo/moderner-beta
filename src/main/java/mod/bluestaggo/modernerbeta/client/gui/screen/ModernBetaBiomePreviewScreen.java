@@ -52,7 +52,12 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
         this.biomeProvider = ModernBetaRegistries.BIOME.get(biomeSettings.getProvider())
             .apply(
                 biomeSettings,
-                generationOptions.getCombinedRegistryManager().getOrThrow(RegistryKeys.BIOME),
+                generationOptions.getCombinedRegistryManager()
+                    //? if >=1.21.2 {
+                    .getOrThrow(RegistryKeys.BIOME),
+                    //?} else {
+                    /*.getWrapperOrThrow(RegistryKeys.BIOME),
+                    *///?}
                 generationOptions.generatorOptions().getSeed()
             );
     }
@@ -197,7 +202,7 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
             context.drawTexture(
                 //? if >= 1.21.6 {
                 /*net.minecraft.client.gl.RenderPipelines.GUI_TEXTURED,*/
-                //?} else if >=1.21.4 {
+                //?} else if >=1.21.2 {
                 net.minecraft.client.render.RenderLayer::getGuiTextured,
                 //?}
                 TEXTURE_ID,
@@ -222,10 +227,15 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                 Text biomeName = biomeProvider instanceof BiomeResolverStepped resolverStepped
                     ? resolverStepped.getBiomeNameForStep(sampleX, 64, sampleY, step)
                     : biomeProvider.getBiomeName(sampleX, 64, sampleY);
-                context.drawTooltip(textRenderer, List.of(
-                    Text.literal((sampleX * 4) + ", " + (sampleY * 4)),
-                    biomeName
-                ), mouseX, mouseY, null);
+                context.drawTooltip(
+                    textRenderer,
+                    List.of(
+                        Text.literal((sampleX * 4) + ", " + (sampleY * 4)),
+                        biomeName
+                    ),
+                    mouseX,
+                    mouseY
+                );
             }
 
             this.prevMouseX = mouseX;
@@ -241,7 +251,12 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
             int diffOffsetY = (int)Math.round(this.offsetY.get()) - (int)Math.round(prevOffsetY);
 
             synchronized (this.image) {
-                int[] pixels = this.image.copyPixelsArgb();
+                int[] pixels =
+                    //? if >=1.21.2 {
+                    this.image.copyPixelsArgb();
+                    //?} else {
+                    /*this.image.copyPixelsRgba();
+                    *///?}
                 int i = 0;
                 this.image.fillRect(0, 0, this.width, this.height, 0x7F000000);
                 for (int srcY = 0; srcY < this.height; srcY++) {
@@ -249,7 +264,13 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                         int dstX = srcX - diffOffsetX;
                         int dstY = srcY - diffOffsetY;
                         if (dstX >= 0 && dstX < this.width && dstY >= 0 && dstY < this.height) {
-                            this.image.setColorArgb(dstX, dstY, pixels[i]);
+                            this.image.
+                                //? if >=1.21.2 {
+                                setColorArgb
+                                //?} else {
+                                /*setColor
+                                *///?}
+                                (dstX, dstY, pixels[i]);
                         }
                         i++;
                     }
@@ -327,7 +348,13 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
 
                     int baseAlpha;
                     synchronized (image) {
-                        baseAlpha = image.getColorArgb(this.genX, this.genY) >>> 24;
+                        baseAlpha = image.
+                            //? if >=1.21.2 {
+                            getColorArgb
+                            //?} else {
+                            /*getColor
+                            *///?}
+                            (this.genX, this.genY) >>> 24;
                     }
                     if (baseAlpha == 0xFF) {
                         continue;
@@ -370,12 +397,22 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                         color = r << 16 | g << 8 | b;
                     }
 
+                    //? if >=1.21.2 {
                     color |= 0xFF000000;
-
                     synchronized (image) {
                         image.setColorArgb(this.genX, this.genY, color);
                         this.uploadRequested = true;
                     }
+                    //?} else {
+                    /*int r = (color >> 16) & 0xFF;
+                    int g = (color >> 8) & 0xFF;
+                    int b = color & 0xFF;
+                    color = r | g << 8 | b << 16 | 0xFF << 24;
+                    synchronized (image) {
+                        image.setColor(this.genX, this.genY, color);
+                        this.uploadRequested = true;
+                    }
+                    *///?}
                 }
             }
 

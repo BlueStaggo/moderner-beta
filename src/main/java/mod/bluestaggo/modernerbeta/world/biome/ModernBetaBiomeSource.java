@@ -10,6 +10,7 @@ import mod.bluestaggo.modernerbeta.api.world.biome.*;
 import mod.bluestaggo.modernerbeta.api.world.cavebiome.CaveBiomeProvider;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
+import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.world.biome.injector.BiomeInjector.BiomeInjectionStep;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
@@ -147,7 +148,7 @@ public class ModernBetaBiomeSource extends BiomeSource {
         
         int searchRadius = Math.floorDiv(radius, horizontalBlockCheckInterval);
         int[] sections = MathHelper
-            .stream(origin.getY(), world.getBottomY() + 1, world.getTopYInclusive() + 1, verticalBlockCheckInterval)
+            .stream(origin.getY(), world.getBottomY() + 1, VersionCompat.getTopYExclusive(world), verticalBlockCheckInterval)
             .toArray();
         
         for (BlockPos.Mutable mutable : BlockPos.iterateInSquare(BlockPos.ORIGIN, searchRadius, Direction.EAST, Direction.SOUTH)) {

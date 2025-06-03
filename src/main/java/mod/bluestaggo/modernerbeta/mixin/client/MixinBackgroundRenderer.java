@@ -15,7 +15,6 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.biome.Biome;
-import org.joml.Vector4f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -25,14 +24,27 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 //?} else {
 /*import org.spongepowered.asm.mixin.injection.Redirect;
 *///?}
+
+//? if >=1.21.2 {
+import org.joml.Vector4f;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+//?} else {
+/*import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+*///?}
 
 @Environment(EnvType.CLIENT)
 @Mixin(BackgroundRenderer.class)
 public abstract class MixinBackgroundRenderer {
+    @Unique private static final String GET_FOG_COLOR_METHOD =
+        //? if >=1.21.2 {
+        "getFogColor";
+        //?} else {
+        /*"render";
+        *///?}
+
     @Unique private static Vec3d modernBeta_pos;
     @Unique private static int modernBeta_renderDistance = 16;
-    @Unique private static float modernBeta_fogWeight = calculateFogWeight(16);
+    @Unique private static float modernBeta_fogWeight = modernerBeta$calculateFogWeight(16);
     @Unique private static boolean modernBeta_isModernBetaWorld = false;
 
     //? if >=1.20.2 {
@@ -40,7 +52,7 @@ public abstract class MixinBackgroundRenderer {
     //?} else {
     /*@Redirect(
     *///?}
-        method = "getFogColor",
+        method = GET_FOG_COLOR_METHOD,
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/biome/Biome;getWaterFogColor()I"
@@ -66,13 +78,19 @@ public abstract class MixinBackgroundRenderer {
         *///?}
     }
     
-    @Inject(method = "getFogColor", at = @At("HEAD"))
-    private static void captureVars(Camera camera, float tickDelta, ClientWorld world, int renderDistance, float skyDarkness, CallbackInfoReturnable<Vector4f> cir) {
+    @Inject(method = GET_FOG_COLOR_METHOD, at = @At("HEAD"))
+    private static void captureVars(Camera camera, float tickDelta, ClientWorld world, int renderDistance, float skyDarkness,
+                                    //? if >=1.21.2 {
+                                    CallbackInfoReturnable<Vector4f> cir
+                                    //?} else {
+                                    /*CallbackInfo ci
+                                    *///?}
+    ) {
         modernBeta_pos = camera.getPos();
 
         if (modernBeta_renderDistance != renderDistance) {
             modernBeta_renderDistance = renderDistance;
-            modernBeta_fogWeight = calculateFogWeight(renderDistance);
+            modernBeta_fogWeight = modernerBeta$calculateFogWeight(renderDistance);
         }
 
         // Track whether current client world is Modern Beta world,
@@ -81,19 +99,23 @@ public abstract class MixinBackgroundRenderer {
     }
     
     @ModifyVariable(
-        method = "getFogColor",
+        method = GET_FOG_COLOR_METHOD,
         at = @At(
-            value = "INVOKE", 
+            value = "INVOKE",
+            //? if >=1.21.2 {
             target = "Lnet/minecraft/client/world/ClientWorld;getSkyColor(Lnet/minecraft/util/math/Vec3d;F)I"
+            //?} else {
+            /*target = "Lnet/minecraft/client/world/ClientWorld;getSkyColor(Lnet/minecraft/util/math/Vec3d;F)Lnet/minecraft/util/math/Vec3d;"
+            *///?}
         ),
-        index = 10
+        index = /*? if >=1.21.2 {*/10/*?} else {*/ /*7 *//*?}*/
     )
     private static float modifyFogWeighting(float weight) {
         return modernBeta_isModernBetaWorld && ModernerBeta.CONFIG.useOldFogColor ? modernBeta_fogWeight : weight;
     }
     
     @Unique
-    private static float calculateFogWeight(int renderDistance) {
+    private static float modernerBeta$calculateFogWeight(int renderDistance) {
         // Old fog formula with old render distance: weight = 1.0F / (float)(4 - renderDistance) 
         // where renderDistance is 0-3, 0 being 'Far' and 3 being 'Very Short'
         

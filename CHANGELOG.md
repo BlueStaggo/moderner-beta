@@ -28,6 +28,7 @@ A major number change means a big update. For this update, significant parts of 
 
 ## Removals
 - Removed Fixed Seed options, as it has been made redundant by the addition of the networking code for biome provider settings and world seed.
+- Removed biome tags relating to fractal biome generation (this does not include height config tags)
 
 ## Fixes
 - Fixed Beta water colours not working on NeoForge.

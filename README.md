@@ -13,12 +13,12 @@ Moderner Beta is the successor to [b3spectacled](https://github.com/b3spectacled
 ## Features
 What Modern Beta offered:
 - World generation for various old versions of Minecraft ranging from Classic to Beta 1.7.3
-- 
+- A range of custom options to modify terrain shape and biome distribution
 
 What Moderner Beta offers:
 - Support for NeoForge in addition to Fabric
 - Graphical settings menu for simple options
-- World generation from Beta 1.8 up to Release 1.6.4 with near-accurate biome generation from 1.7 to 1.17.1
+- World generation from Beta 1.8 up to Release 1.6.4 and near-accurate biome generation from 1.7 to 1.17.1
 - Additional world generation from Infdev 20100325, Classic 0.0.14a_08 and Beta 1.1
 - Fixed surface rules for Beta Vanilla and 1.12.2 presets
 - Extremely customizable biome fractal layer pipeline for Beta 1.8+ versions

@@ -115,7 +115,7 @@ public class ModernBetaGraphicalProviderSettingsScreen extends ModernBetaGraphic
     @SuppressWarnings("unchecked")
     protected void addOptions(OptionListWidget list) {
         String providerKey = ModernBetaBuiltInTypes.SettingsComponentType.PROVIDER.id.toString();
-        Identifier providerId = Identifier.of(VersionCompat.unwrap(this.settings.getString(providerKey)));
+        Identifier providerId = VersionCompat.id(VersionCompat.unwrap(this.settings.getString(providerKey)));
 
         list.addSingleOptionEntry(this.primarySelectionOption(providerKey, this.providers));
 

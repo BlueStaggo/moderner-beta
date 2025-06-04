@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import mod.bluestaggo.modernerbeta.settings.component.*;
+import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.world.biome.provider.climate.ClimateMapping;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ConfiguredLayers;
 import mod.bluestaggo.modernerbeta.world.biome.voronoi.VoronoiPointBiome;
@@ -124,7 +125,7 @@ public class SettingsComponentTypes {
         SINGLE_BIOME = register(
             ModernBetaBuiltInTypes.SettingsComponentType.SINGLE_BIOME.id,
             Identifier.CODEC,
-            Identifier.of("moderner_beta:beta_plains"));
+            VersionCompat.id("moderner_beta:beta_plains"));
         CLIMATE_SCALE = register(
             ModernBetaBuiltInTypes.SettingsComponentType.CLIMATE_SCALE.id,
             ClimateScale.CODEC,

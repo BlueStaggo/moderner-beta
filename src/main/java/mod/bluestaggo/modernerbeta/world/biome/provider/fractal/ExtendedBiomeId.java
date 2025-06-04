@@ -59,14 +59,7 @@ public record ExtendedBiomeId(Identifier baseId, String ext, boolean weak) {
             ext = "";
             baseId = baseId.substring(1);
         }
-        return new ExtendedBiomeId(
-            //? if >=1.21 {
-            Identifier.of(baseId),
-            //?} else {
-            /*new Identifier(baseId),
-            *///?}
-            ext, weak
-        );
+        return new ExtendedBiomeId(VersionCompat.id(baseId), ext, weak);
     }
 
     public static ExtendedBiomeId of(Identifier baseId) {

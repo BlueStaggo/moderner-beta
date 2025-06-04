@@ -8,8 +8,8 @@ import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.network.packet.CustomPayload;
 //?} else {
-//import net.minecraft.network.PacketByteBuf;
-//?}
+/*import net.minecraft.network.PacketByteBuf;
+*///?}
 import net.minecraft.util.Identifier;
 
 import java.util.Optional;

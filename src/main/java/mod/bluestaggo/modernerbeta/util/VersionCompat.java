@@ -6,6 +6,7 @@ import com.mojang.serialization.DataResult;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.Pool;
 import net.minecraft.util.collection.Weighted;
 import net.minecraft.util.math.BlockPos;
@@ -104,6 +105,14 @@ public final class VersionCompat {
         return result.getOrThrow();
         //?} else {
         /*return result.getOrThrow(false, string -> {});
+        *///?}
+    }
+    
+    public static Identifier id(String string) {
+        //? if >=1.21 {
+        return Identifier.of(string);
+        //?} else {
+        /*return new Identifier(string);
         *///?}
     }
 }

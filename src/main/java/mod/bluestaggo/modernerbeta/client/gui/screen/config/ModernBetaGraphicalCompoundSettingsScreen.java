@@ -86,7 +86,7 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
                 value -> Arrays.stream(options).filter(value::equals).findFirst(),
                 Identifier.CODEC
             ),
-            Identifier.of(stringSupplier.get()),
+            VersionCompat.id(stringSupplier.get()),
             value -> {
                 settings.putString(subKey, value.toString());
                 this.clearAndInit();

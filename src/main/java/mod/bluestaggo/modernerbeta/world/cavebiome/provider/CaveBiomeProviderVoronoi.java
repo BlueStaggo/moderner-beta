@@ -6,6 +6,7 @@ import mod.bluestaggo.modernerbeta.api.world.cavebiome.climate.CaveClime;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.settings.component.CaveBiomeVoronoi;
+import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.util.noise.PerlinOctaveNoise;
 import mod.bluestaggo.modernerbeta.world.biome.voronoi.VoronoiPointCaveBiome;
 import mod.bluestaggo.modernerbeta.world.biome.voronoi.VoronoiPointRules;
@@ -61,7 +62,7 @@ public class CaveBiomeProviderVoronoi extends CaveBiomeProvider implements CaveC
         VoronoiPointRules.Builder<RegistryKey<Biome>, CaveClime> builder = new VoronoiPointRules.Builder<>();
         
         for (VoronoiPointCaveBiome point : points) {
-            RegistryKey<Biome> biomeKey = point.biome().isBlank() ? null : RegistryKey.of(RegistryKeys.BIOME, Identifier.of(point.biome()));
+            RegistryKey<Biome> biomeKey = point.biome().isBlank() ? null : RegistryKey.of(RegistryKeys.BIOME, VersionCompat.id(point.biome()));
             
             double temp = MathHelper.clamp(point.temp(), 0.0, 1.0);
             double rain = MathHelper.clamp(point.rain(), 0.0, 1.0);

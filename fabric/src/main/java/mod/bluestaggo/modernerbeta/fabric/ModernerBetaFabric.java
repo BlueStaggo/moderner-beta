@@ -49,7 +49,11 @@ public class ModernerBetaFabric implements ModInitializer {
         ServerLifecycleEvents.SERVER_STARTING.register(ModernBetaWorldInitializer::init);
 
         ModernerBeta.networkHelper = new NetworkHelperImpl();
+
+        //? if >=1.20.2 {
         PayloadTypeRegistry.playS2C().register(BiomeProviderInfoPayload.ID, BiomeProviderInfoPayload.CODEC);
+        //?} else {
+        //?}
     }
 
     private static void registerDataPacks() {

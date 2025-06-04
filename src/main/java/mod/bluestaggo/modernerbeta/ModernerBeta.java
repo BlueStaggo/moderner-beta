@@ -26,6 +26,7 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.event.Level;
@@ -51,8 +52,8 @@ public class ModernerBeta {
         Registries.CHUNK_GENERATOR, ModernBetaChunkGenerator::register
     );
 
-    public static SequencedMap<Registry<?>, Consumer<IRegistryHandler<?>>> CUSTOM_REGISTRY_HANDLERS;
-    public static SequencedMap<RegistryKey<?>, Codec<?>> CUSTOM_DYNAMIC_REGISTRIES;
+    public static List<Pair<Registry<?>, Consumer<IRegistryHandler<?>>>> CUSTOM_REGISTRY_HANDLERS;
+    public static List<Pair<RegistryKey<?>, Codec<?>>> CUSTOM_DYNAMIC_REGISTRIES;
     public static INetworkHelper networkHelper;
 
     public static void init() {
@@ -60,25 +61,25 @@ public class ModernerBeta {
     }
 
     public static void setupCustomRegistryHandlers() {
-        SequencedMap<Registry<?>, Consumer<IRegistryHandler<?>>> customRegistryHandlers = new LinkedHashMap<>();
-        customRegistryHandlers.put(ModernBetaRegistries.SETTINGS_COMPONENT_TYPE, SettingsComponentTypes::init);
-        customRegistryHandlers.put(ModernBetaRegistries.CHUNK, ModernBetaBuiltInProviders::registerChunkProviders);
-        customRegistryHandlers.put(ModernBetaRegistries.BIOME, ModernBetaBuiltInProviders::registerBiomeProviders);
-        customRegistryHandlers.put(ModernBetaRegistries.CAVE_BIOME, ModernBetaBuiltInProviders::registerCaveBiomeProviders);
-        customRegistryHandlers.put(ModernBetaRegistries.SURFACE_CONFIG, ModernBetaBuiltInProviders::registerSurfaceConfigs);
-        customRegistryHandlers.put(ModernBetaRegistries.HEIGHT_CONFIG, ModernBetaBuiltInProviders::registerHeightConfigs);
-        customRegistryHandlers.put(ModernBetaRegistries.NOISE_POST_PROCESSOR, ModernBetaBuiltInProviders::registerNoisePostProcessors);
-        customRegistryHandlers.put(ModernBetaRegistries.BLOCKSOURCE, ModernBetaBuiltInProviders::registerBlockSources);
-        customRegistryHandlers.put(ModernBetaRegistries.FRACTAL_LAYER, LayerType::init);
-        customRegistryHandlers.put(ModernBetaRegistries.BIOME_PREDICATE, BiomePredicateType::init);
-        CUSTOM_REGISTRY_HANDLERS = Collections.unmodifiableSequencedMap(customRegistryHandlers);
+        CUSTOM_REGISTRY_HANDLERS = List.of(
+            new Pair<>(ModernBetaRegistries.SETTINGS_COMPONENT_TYPE, SettingsComponentTypes::init),
+            new Pair<>(ModernBetaRegistries.CHUNK, ModernBetaBuiltInProviders::registerChunkProviders),
+            new Pair<>(ModernBetaRegistries.BIOME, ModernBetaBuiltInProviders::registerBiomeProviders),
+            new Pair<>(ModernBetaRegistries.CAVE_BIOME, ModernBetaBuiltInProviders::registerCaveBiomeProviders),
+            new Pair<>(ModernBetaRegistries.SURFACE_CONFIG, ModernBetaBuiltInProviders::registerSurfaceConfigs),
+            new Pair<>(ModernBetaRegistries.HEIGHT_CONFIG, ModernBetaBuiltInProviders::registerHeightConfigs),
+            new Pair<>(ModernBetaRegistries.NOISE_POST_PROCESSOR, ModernBetaBuiltInProviders::registerNoisePostProcessors),
+            new Pair<>(ModernBetaRegistries.BLOCKSOURCE, ModernBetaBuiltInProviders::registerBlockSources),
+            new Pair<>(ModernBetaRegistries.FRACTAL_LAYER, LayerType::init),
+            new Pair<>(ModernBetaRegistries.BIOME_PREDICATE, BiomePredicateType::init)
+        );
     }
 
     public static void setupCustomDynamicRegistries() {
-        SequencedMap<RegistryKey<?>, Codec<?>> dynamicRegistries = new LinkedHashMap<>();
-        dynamicRegistries.put(ModernBetaRegistryKeys.SETTINGS_PRESET, ModernBetaSettingsPreset.CODEC);
-        dynamicRegistries.put(ModernBetaRegistryKeys.SETTINGS_PRESET_CATEGORY, ModernBetaSettingsPresetCategory.CODEC);
-        CUSTOM_DYNAMIC_REGISTRIES = Collections.unmodifiableSequencedMap(dynamicRegistries);
+        CUSTOM_DYNAMIC_REGISTRIES = List.of(
+            new Pair<>(ModernBetaRegistryKeys.SETTINGS_PRESET, ModernBetaSettingsPreset.CODEC),
+            new Pair<>(ModernBetaRegistryKeys.SETTINGS_PRESET_CATEGORY, ModernBetaSettingsPresetCategory.CODEC)
+        );
     }
 
     public static Identifier createId(String name) {

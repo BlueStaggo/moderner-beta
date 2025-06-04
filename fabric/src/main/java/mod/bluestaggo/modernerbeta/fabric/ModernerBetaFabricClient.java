@@ -42,10 +42,18 @@ public class ModernerBetaFabricClient implements ClientModInitializer {
                 BlockColorSampler.INSTANCE.colormapUnderwater::setColormap
         ));
 
+
+        //? if >=1.20.2 {
         ClientPlayNetworking.registerGlobalReceiver(BiomeProviderInfoPayload.ID, (payload, context) -> {
             @SuppressWarnings("resource")
             MinecraftClient client = context.client();
             client.execute(() -> S2CPacketHandlers.onBiomeProviderInfo(client.world, payload));
         });
+        //?} else {
+        /*ClientPlayNetworking.registerGlobalReceiver(BiomeProviderInfoPayload.ID, (minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender) -> {
+            BiomeProviderInfoPayload payload = BiomeProviderInfoPayload.fromPacketByteBuf(packetByteBuf);
+            minecraftClient.execute(() -> S2CPacketHandlers.onBiomeProviderInfo(minecraftClient.world, payload));
+        });
+        *///?}
     }
 }

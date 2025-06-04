@@ -41,7 +41,9 @@ public class ModEventsClient {
         Registry<?> registry = event.getRegistry();
 
         VanillaRegistryHandler<?> registryHandler = new VanillaRegistryHandler<>(registry);
-        ModernerBetaClient.CUSTOM_REGISTRY_HANDLERS.getOrDefault(registry, NONE).accept(registryHandler);
+        ModernerBetaClient.CUSTOM_REGISTRY_HANDLERS.stream()
+            .filter(pair -> pair.getLeft().equals(registry))
+            .forEach(pair -> pair.getRight().accept(registryHandler));
     }
 
     @SubscribeEvent

@@ -141,9 +141,10 @@ public class ModernBetaGraphicalProviderSettingsScreen extends ModernBetaGraphic
                         if (!this.settings.contains(componentTypeId.toString())) {
                             this.settings.put(
                                 componentTypeId.toString(),
-                                ((Codec<Object>)componentType.codec())
-                                    .encodeStart(NbtOps.INSTANCE, componentType.defaultValue())
-                                    .getOrThrow()
+                                VersionCompat.getOrThrow(
+                                    ((Codec<Object>)componentType.codec())
+                                        .encodeStart(NbtOps.INSTANCE, componentType.defaultValue())
+                                )
                             );
                         }
 

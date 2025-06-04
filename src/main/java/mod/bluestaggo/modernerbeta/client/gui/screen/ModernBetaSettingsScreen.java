@@ -7,6 +7,7 @@ import com.google.gson.JsonSyntaxException;
 import com.mojang.serialization.JsonOps;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
+import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.EditBox;
@@ -38,7 +39,8 @@ public class ModernBetaSettingsScreen extends ModernBetaScreen {
 
         this.onDone = onDone;
         this.gson = ModernerBeta.getSettingsGson().setPrettyPrinting().create();
-        this.settingsString = this.gson.toJson(ModernBetaSettings.CODEC.encode(settings, JsonOps.INSTANCE, new JsonObject()).getOrThrow());
+        this.settingsString = this.gson.toJson(VersionCompat.getOrThrow(
+            ModernBetaSettings.CODEC.encode(settings, JsonOps.INSTANCE, new JsonObject())));
     }
     
     @Override

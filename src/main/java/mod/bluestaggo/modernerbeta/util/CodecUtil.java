@@ -4,13 +4,9 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.gson.*;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.JavaOps;
 import com.mojang.serialization.JsonOps;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
 
 public class CodecUtil {
@@ -25,20 +21,20 @@ public class CodecUtil {
 
     // Relies on the fact that all fields in the codec have default values
     public static <T> T getDefaultByMap(Codec<T> codec) {
-        return codec.decode(JavaOps.INSTANCE, Collections.<String, Object>emptyMap()).getOrThrow().getFirst();
+        return VersionCompat.getOrThrow(codec.decode(JsonOps.INSTANCE, new JsonObject())).getFirst();
     }
 
     public record JsonSerializer<T>(Codec<T> codec) implements com.google.gson.JsonSerializer<T> {
         @Override
         public JsonElement serialize(T src, Type typeOfSrc, JsonSerializationContext context) {
-            return codec.encodeStart(JsonOps.INSTANCE, src).getOrThrow();
+            return VersionCompat.getOrThrow(codec.encodeStart(JsonOps.INSTANCE, src));
         }
     }
 
     public record JsonDeserializer<T>(Codec<T> codec) implements com.google.gson.JsonDeserializer<T> {
         @Override
         public T deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-            return codec.decode(JsonOps.INSTANCE, json).getOrThrow().getFirst();
+            return VersionCompat.getOrThrow(codec.decode(JsonOps.INSTANCE, json)).getFirst();
         }
     }
 }

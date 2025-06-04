@@ -2,6 +2,7 @@ package mod.bluestaggo.modernerbeta.world.biome.provider.fractal;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
+import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.biome.Biome;
@@ -48,7 +49,7 @@ public record ExtendedBiomeId(Identifier baseId, String ext, boolean weak) {
         CLIMATE_SNOWY_RARE = rareClimate(BiomeKeys.ICE_SPIKES);
 
     public static ExtendedBiomeId of(String id) {
-        return validate(id).getOrThrow();
+        return VersionCompat.getOrThrow(validate(id));
     }
 
     public static ExtendedBiomeId of(String baseId, String ext) {
@@ -58,7 +59,14 @@ public record ExtendedBiomeId(Identifier baseId, String ext, boolean weak) {
             ext = "";
             baseId = baseId.substring(1);
         }
-        return new ExtendedBiomeId(Identifier.of(baseId), ext, weak);
+        return new ExtendedBiomeId(
+            //? if >=1.21 {
+            Identifier.of(baseId),
+            //?} else {
+            /*new Identifier(baseId),
+            *///?}
+            ext, weak
+        );
     }
 
     public static ExtendedBiomeId of(Identifier baseId) {

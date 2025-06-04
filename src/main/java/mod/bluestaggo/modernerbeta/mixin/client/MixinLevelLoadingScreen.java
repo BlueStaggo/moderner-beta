@@ -5,8 +5,13 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
+//? if >=1.20.3 {
 import net.minecraft.client.gui.screen.world.LevelLoadingScreen;
 import net.minecraft.server.WorldGenerationProgressTracker;
+//?} else {
+/*import net.minecraft.client.gui.screen.LevelLoadingScreen;
+import net.minecraft.client.gui.WorldGenerationProgressTracker;
+*///?}
 import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -20,7 +25,15 @@ public abstract class MixinLevelLoadingScreen extends Screen {
         super(title);
     }
 
-    @Inject(method = " <init>(Lnet/minecraft/server/WorldGenerationProgressTracker;)V", at = @At("TAIL"))
+    @Inject(
+        method =
+            //? if >=1.20.3 {
+            " <init>(Lnet/minecraft/server/WorldGenerationProgressTracker;)V",
+            //?} else {
+            /*" <init>(Lnet/minecraft/client/gui/WorldGenerationProgressTracker;)V",
+            *///?}
+        at = @At("TAIL")
+    )
     private void injectInit(WorldGenerationProgressTracker progressProvider, CallbackInfo info) {
         ChunkProviderFinite.resetPhase();
     }

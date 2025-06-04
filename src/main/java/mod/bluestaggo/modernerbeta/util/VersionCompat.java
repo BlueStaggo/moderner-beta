@@ -2,6 +2,7 @@ package mod.bluestaggo.modernerbeta.util;
 
 //? if <1.21.2
 /*import net.minecraft.block.Block;*/
+import com.mojang.serialization.DataResult;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
@@ -35,8 +36,8 @@ public final class VersionCompat {
         //? if >=1.20.5 {
         return weighted.data();
         //?} else {
-        //return weighted.getData();
-        //?}
+        /^return weighted.getData();
+        ^///?}
     }
     *///?}
 
@@ -96,5 +97,13 @@ public final class VersionCompat {
     @SuppressWarnings({"unused", "OptionalUsedAsFieldOrParameterType"})
     public static <T> T unwrapOrElse(Optional<T> optional, T orElse) {
         return optional.orElse(orElse);
+    }
+
+    public static <T> T getOrThrow(DataResult<T> result) {
+        //? if >=1.20.4 {
+        return result.getOrThrow();
+        //?} else {
+        /*return result.getOrThrow(false, string -> {});
+        *///?}
     }
 }

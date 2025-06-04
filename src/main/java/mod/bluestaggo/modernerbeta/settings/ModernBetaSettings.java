@@ -7,6 +7,7 @@ import it.unimi.dsi.fastutil.objects.Reference2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
+import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ConfiguredLayers;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.Layer;
 import net.minecraft.nbt.NbtCompound;
@@ -72,7 +73,7 @@ public class ModernBetaSettings implements Iterable<SettingsComponent<?>> {
     }
 
     public static ModernBetaSettings fromCompound(NbtCompound compound) {
-        return CODEC.decode(NbtOps.INSTANCE, compound).getOrThrow().getFirst();
+        return VersionCompat.getOrThrow(CODEC.decode(NbtOps.INSTANCE, compound)).getFirst();
     }
 
     private ModernBetaSettings(Map<SettingsComponentType<?>, Object> components) {
@@ -132,7 +133,7 @@ public class ModernBetaSettings implements Iterable<SettingsComponent<?>> {
     }
 
     public NbtCompound toCompound() {
-        return (NbtCompound)CODEC.encode(this, NbtOps.INSTANCE, new NbtCompound()).getOrThrow();
+        return (NbtCompound)VersionCompat.getOrThrow(CODEC.encode(this, NbtOps.INSTANCE, new NbtCompound()));
     }
 
     public Builder extend() {

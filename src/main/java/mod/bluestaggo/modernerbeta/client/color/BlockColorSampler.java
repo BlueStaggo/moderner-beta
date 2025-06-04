@@ -10,8 +10,13 @@ import net.minecraft.block.enums.DoubleBlockHalf;
 import net.minecraft.client.color.world.BiomeColors;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockRenderView;
+//? if >=1.21 {
 import net.minecraft.world.biome.FoliageColors;
 import net.minecraft.world.biome.GrassColors;
+//?} else {
+/*import net.minecraft.client.color.world.FoliageColors;
+import net.minecraft.client.color.world.GrassColors;
+*///?}
 
 import java.util.Optional;
 

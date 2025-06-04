@@ -8,6 +8,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
+import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Pair;
 import org.slf4j.event.Level;
@@ -77,15 +78,15 @@ public record ModernBetaSettingsPreset(ModernBetaSettings chunkSettings, ModernB
 
             // Attempt to read settings
             chunkSettings = jsonChunk != null ?
-                ModernBetaSettings.CODEC.decode(JsonOps.INSTANCE, jsonChunk).getOrThrow().getFirst() :
+                VersionCompat.getOrThrow(ModernBetaSettings.CODEC.decode(JsonOps.INSTANCE, jsonChunk)).getFirst() :
                 this.chunkSettings;
             
             biomeSettings = jsonBiome != null ?
-                ModernBetaSettings.CODEC.decode(JsonOps.INSTANCE, jsonBiome).getOrThrow().getFirst() :
+                VersionCompat.getOrThrow(ModernBetaSettings.CODEC.decode(JsonOps.INSTANCE, jsonBiome)).getFirst() :
                 this.biomeSettings;
             
             caveBiomeSettings = jsonCaveBiome != null ?
-                ModernBetaSettings.CODEC.decode(JsonOps.INSTANCE, jsonCaveBiome).getOrThrow().getFirst() :
+                VersionCompat.getOrThrow(ModernBetaSettings.CODEC.decode(JsonOps.INSTANCE, jsonCaveBiome)).getFirst() :
                 this.caveBiomeSettings;
             
             // Test providers

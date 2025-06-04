@@ -32,7 +32,18 @@ public abstract class MixinMinecraftServer {
 
         // Set old spawn angle (doesn't seem to work?)
         if (chunkGenerator instanceof ModernBetaChunkGenerator) {
-            worldProperties.setSpawnPos(worldProperties.getSpawnPos(), -90.0f);
+            worldProperties.setSpawnPos(
+                //? if >=1.20.5 {
+                worldProperties.getSpawnPos(), 
+                //?} else {
+                /*new BlockPos(
+                    worldProperties.getSpawnX(),
+                    worldProperties.getSpawnY(),
+                    worldProperties.getSpawnZ()
+                ),
+                *///?}
+                -90.0f
+            );
         }
     }
 

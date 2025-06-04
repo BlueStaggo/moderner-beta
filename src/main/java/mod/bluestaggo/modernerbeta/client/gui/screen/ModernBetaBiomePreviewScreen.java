@@ -190,7 +190,13 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
         }
 
         @Override
-        protected void renderWidget(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
+        protected void
+        //? if >=1.20.3 {
+        renderWidget 
+        //?} else {
+        /*renderButton
+        *///?}
+            (DrawContext context, int mouseX, int mouseY, float deltaTicks) {
             int step = this.step.get();
 
             if (this.renderThread.uploadRequested) {
@@ -282,7 +288,10 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
         }
 
         @Override
-        public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
+        public boolean mouseScrolled(double mouseX, double mouseY,
+                                     //? if >=1.20.2
+                                     double horizontalAmount,
+                                     double verticalAmount) {
             if (verticalAmount < 0.0) {
                 this.zoomOut();
                 return true;
@@ -314,24 +323,23 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
             volatile boolean stop;
             volatile boolean uploadRequested;
 
-            int genX = -1;
-            int genY;
-            boolean full;
-
-            Int2IntMap randColors = new Int2IntAVLTreeMap();
-            Random random = new Random();
-
             @Override
             public void run() {
+                int genX = -1;
+                int genY = 0;
+                boolean full = true;
+                Int2IntMap randColors = new Int2IntAVLTreeMap();
+                Random random = new Random();
+
                 while (!stop) {
-                    this.genX++;
-                    if (this.genX >= width) {
-                        this.genX = 0;
-                        this.genY++;
+                    genX++;
+                    if (genX >= width) {
+                        genX = 0;
+                        genY++;
                     }
-                    if (this.genY >= height) {
-                        this.genY = 0;
-                        if (this.full) {
+                    if (genY >= height) {
+                        genY = 0;
+                        if (full) {
                             synchronized (BiomeDisplayWidget.this) {
                                 try {
                                     BiomeDisplayWidget.this.wait();
@@ -343,7 +351,7 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                                 break;
                             }
                         }
-                        this.full = true;
+                        full = true;
                     }
 
                     int baseAlpha;
@@ -354,20 +362,20 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                             //?} else {
                             /*getColor
                             *///?}
-                            (this.genX, this.genY) >>> 24;
+                            (genX, genY) >>> 24;
                     }
                     if (baseAlpha == 0xFF) {
                         continue;
                     }
-                    this.full = false;
+                    full = false;
 
                     int scale = zoom.get();
                     @SuppressWarnings("IntegerDivisionInFloatingPointContext")
                     int gridScale = (int)Math.pow(2, ((int)(Math.log(scale) / Math.log(2)) + 2) / 4 * 4);
                     int intOffX = (int)Math.round(offsetX.get());
                     int intOffY = (int)Math.round(offsetY.get());
-                    int sampleX = (this.genX + intOffX - width / 2) * scale;
-                    int sampleY = (this.genY + intOffY - height / 2) * scale;
+                    int sampleX = (genX + intOffX - width / 2) * scale;
+                    int sampleY = (genY + intOffY - height / 2) * scale;
 
                     int step = BiomeDisplayWidget.this.step.get();
                     RegistryEntry<Biome> biome = biomeProvider instanceof BiomeResolverStepped resolverStepped
@@ -378,7 +386,9 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                             ? resolverExtendedIdStepped.getExtendedBiomeIdForStep(sampleX, 64, sampleY, step)
                             : resolverExtendedId.getExtendedBiomeId(sampleX, 64, sampleY)
                         : ExtendedBiomeId.NULL;
-                    int color = this.getBiomeColor(biome, extendedBiome.ext(), sampleX, sampleY);
+
+                    int color = this.getBiomeColor(biome, extendedBiome.ext(), sampleX, sampleY, randColors, random);
+
                     if (sampleX % (64 * gridScale) == 0 || sampleY % (64 * gridScale) == 0) {
                         int r = (color >> 16) & 0xFF;
                         int g = (color >> 8) & 0xFF;
@@ -400,7 +410,7 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                     //? if >=1.21.2 {
                     color |= 0xFF000000;
                     synchronized (image) {
-                        image.setColorArgb(this.genX, this.genY, color);
+                        image.setColorArgb(genX, genY, color);
                         this.uploadRequested = true;
                     }
                     //?} else {
@@ -409,15 +419,15 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                     int b = color & 0xFF;
                     color = r | g << 8 | b << 16 | 0xFF << 24;
                     synchronized (image) {
-                        image.setColor(this.genX, this.genY, color);
+                        image.setColor(genX, genY, color);
                         this.uploadRequested = true;
                     }
                     *///?}
                 }
             }
 
-            private int getBiomeColor(RegistryEntry<Biome> biomeEntry, String ext, int x, int y) {
-                String id = biomeEntry.getIdAsString();
+            private int getBiomeColor(RegistryEntry<Biome> biomeEntry, String ext, int x, int y, Int2IntMap randColors, Random random) {
+                String id = biomeEntry.getKey().map(key -> key.getValue().toString()).orElse("[unregistered]");
                 if (ext != null && !ext.isEmpty()) {
                     String extId = id + "*" + ext;
                     Integer registeredExtColor = ModernerBeta.CONFIG.biomePreviewColors.get(extId);
@@ -429,9 +439,9 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                     if (extIntMatcher.find()) {
                         try {
                             int extInt = Integer.parseInt(extIntMatcher.group());
-                            return extInt >= 256 ? extInt : this.randColors.computeIfAbsent(
+                            return extInt >= 256 ? extInt : randColors.computeIfAbsent(
                                 Integer.parseInt(extIntMatcher.group()),
-                                i -> this.random.nextInt(0xFFFFFF)
+                                i -> random.nextInt(0xFFFFFF)
                             );
                         } catch (Exception ignored) {
                         }

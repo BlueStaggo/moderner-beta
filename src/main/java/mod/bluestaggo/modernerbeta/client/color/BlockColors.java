@@ -24,7 +24,11 @@ public final class BlockColors {
         registerer.register(
             BlockColorSampler.INSTANCE::getShortGrassColor,
             Blocks.FERN,
+            //? if >=1.20.3 {
             Blocks.SHORT_GRASS,
+            //?} else {
+            /*Blocks.GRASS,
+            *///?}
             Blocks.POTTED_FERN
             //? if >=1.21.5
             , Blocks.BUSH

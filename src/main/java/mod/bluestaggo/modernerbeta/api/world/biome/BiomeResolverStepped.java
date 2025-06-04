@@ -10,6 +10,7 @@ public interface BiomeResolverStepped {
     Text getStepName(int step);
 
     default Text getBiomeNameForStep(int biomeX, int biomeY, int biomeZ, int step) {
-        return Text.literal(this.getBiomeForStep(biomeX, biomeY, biomeZ, step).getIdAsString());
+        return Text.literal(this.getBiomeForStep(biomeX, biomeY, biomeZ, step)
+            .getKey().map(key -> key.getValue().toString()).orElse("[unregistered]"));
     }
 }

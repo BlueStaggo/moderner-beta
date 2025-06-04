@@ -7,6 +7,8 @@ import mod.bluestaggo.modernerbeta.world.chunk.provider.indev.IndevType;
 import mod.bluestaggo.modernerbeta.world.chunk.provider.island.IslandShape;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.widget.OptionListWidget;
+import net.minecraft.client.option.SimpleOption;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.util.Formatting;
 
@@ -15,6 +17,10 @@ import static mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes.SettingsCompone
 @Environment(EnvType.CLIENT)
 @SuppressWarnings("unchecked")
 public class ModernBetaClientBuiltInProviders {
+    private static void addAll(OptionListWidget list, SimpleOption<?>... options) {
+        list.addAll(options);
+    }
+
     public static void registerSettingsComponentTypeGuis(IRegistryHandler<?> handler) {
         IRegistryHandler<GraphicalConfigBuilder> registryHandler = (IRegistryHandler<GraphicalConfigBuilder>) handler;
 
@@ -28,7 +34,8 @@ public class ModernBetaClientBuiltInProviders {
                     maxY = providerSettingsScreen.worldMaxY;
                 }
 
-                options.addAll(
+                addAll(
+                    options,
                     screen.booleanOption("enabled"),
                     screen.blockOption("block"),
                     screen.intRangeOption("minY", minY, maxY),
@@ -61,7 +68,8 @@ public class ModernBetaClientBuiltInProviders {
         registryHandler.register(
             CAVE_GENERATION.id,
             (screen, options) -> {
-                options.addAll(
+                addAll(
+                    options,
                     screen.booleanOption("useCaves"),
                     screen.booleanOption("useFixedCaves"),
                     screen.booleanOption("forceBetaCaves"),
@@ -73,7 +81,8 @@ public class ModernBetaClientBuiltInProviders {
         registryHandler.register(
             NOISE_SCALE.id,
             (screen, options) -> {
-                options.addAll(
+                addAll(
+                    options,
                     screen.floatRangeOption("mainNoiseX", 1.0f, 5000.0f),
                     screen.floatRangeOption("mainNoiseY", 1.0f, 5000.0f),
                     screen.floatRangeOption("mainNoiseZ", 1.0f, 5000.0f),
@@ -92,7 +101,8 @@ public class ModernBetaClientBuiltInProviders {
         registryHandler.register(
             NOISE_SLIDE.id,
             (screen, options) -> {
-                options.addAll(
+                addAll(
+                    options,
                     screen.intRangeOption("topTarget", -50, 0),
                     screen.intRangeOption("bottomTarget", 0, 50),
                     screen.intRangeOption("topSize", 0, 50),
@@ -111,7 +121,8 @@ public class ModernBetaClientBuiltInProviders {
                     "heightOverrides",
                     ExtendedBiomeIdToHeightConfigMapScreen::new
                 ));
-                options.addAll(
+                addAll(
+                    options,
                     screen.floatRangeOption("depthWeight", 1.0f, 20.0f),
                     screen.floatRangeOption("depthOffset", 0.0f, 20.0f),
                     screen.floatRangeOption("scaleWeight", 1.0f, 20.0f),
@@ -123,7 +134,8 @@ public class ModernBetaClientBuiltInProviders {
         registryHandler.register(
             INFDEV_227_STRUCTURES.id,
             (screen, options) -> {
-                options.addAll(
+                addAll(
+                    options,
                     screen.booleanOption("brickPyramids"),
                     screen.booleanOption("obsidianWalls")
                 );
@@ -140,7 +152,8 @@ public class ModernBetaClientBuiltInProviders {
                     maxY = providerSettingsScreen.worldMaxY;
                 }
 
-                options.addAll(
+                addAll(
+                    options,
                     screen.selectionOption("type", IndevType::values),
                     screen.selectionOption("theme", IndevTheme::values),
                     screen.intRangeOption("width", 64, 1024, 64),
@@ -153,7 +166,8 @@ public class ModernBetaClientBuiltInProviders {
         registryHandler.register(
             FINITE_CAVE_GENERATION.id,
             (screen, options) -> {
-                options.addAll(
+                addAll(
+                    options,
                     screen.booleanOption("useCaves"),
                     screen.booleanOption("use14aCaves"),
                     screen.intRangeOption("rarity", 1024, 40960, 1024),
@@ -166,7 +180,8 @@ public class ModernBetaClientBuiltInProviders {
         registryHandler.register(
             FINITE_NOISE.id,
             (screen, options) -> {
-                options.addAll(
+                addAll(
+                    options,
                     screen.floatRangeOption("heightNoiseScale", 0.01f, 10.0f),
                     screen.floatRangeOption("selectorScale", 0.01f, 10.0f),
                     screen.floatRangeOption("minHeightDamp", 0.01f, 25.0f),
@@ -182,7 +197,8 @@ public class ModernBetaClientBuiltInProviders {
         registryHandler.register(
             FINITE_BEACHES.id,
             (screen, options) -> {
-                options.addAll(
+                addAll(
+                    options,
                     screen.floatRangeOption("sandThreshold", -32.0f, 32.0f),
                     screen.booleanOption("sandUnderAir"),
                     screen.booleanOption("sandUnderFluid"),
@@ -197,7 +213,8 @@ public class ModernBetaClientBuiltInProviders {
         registryHandler.register(
             FINITE_POOLS.id,
             (screen, options) -> {
-                options.addAll(
+                addAll(
+                    options,
                     screen.intRangeOption("waterRarity", 1000, 50000, 1000),
                     screen.intRangeOption("lavaRarity", 1000, 50000, 1000),
                     screen.booleanOption("uniformLavaHeights")
@@ -215,7 +232,8 @@ public class ModernBetaClientBuiltInProviders {
         registryHandler.register(
             ISLES_PROPERTIES.id,
             (screen, options) -> {
-                options.addAll(
+                addAll(
+                    options,
                     screen.booleanOption("useIslands"),
                     screen.booleanOption("useOuterIslands"),
                     screen.floatRangeOption("oceanSlideTarget", -1000.0f, 0.0f),
@@ -257,7 +275,8 @@ public class ModernBetaClientBuiltInProviders {
 
                 for (String target : climateMappingTargets) {
                     options.addSingleOptionEntry(screen.headerOption(screen.getText(target).formatted(Formatting.BOLD)));
-                    options.addAll(
+                    addAll(
+                        options,
                         screen.headerOption(screen.getText("biome")),
                         screen.biomeOption(target + ".biome", false),
                         screen.headerOption(screen.getText("oceanBiome")),
@@ -306,7 +325,8 @@ public class ModernBetaClientBuiltInProviders {
                     maxY = providerSettingsScreen.worldMaxY;
                 }
 
-                options.addAll(
+                addAll(
+                    options,
                     screen.floatRangeOption("horizontalScale", 0.001F, 100.0F),
                     screen.floatRangeOption("verticalScale", 0.001F, 100.0F),
                     screen.intRangeOption("depthMinY", minY, maxY),

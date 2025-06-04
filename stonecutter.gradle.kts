@@ -32,5 +32,17 @@ stonecutter.parameters {
             replace("this.getOrCreateTagBuilder(", "this.builder(")
             phase = "LAST"
         }
+
+        string {
+            direction = eval(metadata.version, "<1.20.5")
+            replace("com.mojang.serialization.MapCodec<", "com.mojang.serialization./*Map*/Codec<")
+            phase = "LAST"
+        }
+
+        string {
+            direction = eval(metadata.version, "<1.20.5")
+            replace("RecordCodecBuilder.mapCodec(", "RecordCodecBuilder./*mapCodec*/create(")
+            phase = "LAST"
+        }
     }
 }

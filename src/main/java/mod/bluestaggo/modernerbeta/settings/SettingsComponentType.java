@@ -5,26 +5,25 @@ import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 
 import java.util.Map;
 
-//? if <1.20.4 {
+//? if <1.20.5 {
 /*import com.google.common.collect.ImmutableMap;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.util.Identifier;
 
-import java.util.HashMap;
 import java.util.List;
 *///?}
 
 public record SettingsComponentType<T>(Codec<T> codec, T defaultValue) {
     public static final Codec<SettingsComponentType<?>> CODEC =
-        //? if >=1.20.4 {
+        //? if >=1.20.5 {
         Codec.lazyInitialized(ModernBetaRegistries.SETTINGS_COMPONENT_TYPE::getCodec);
         //?} else {
         /*ModernBetaRegistries.SETTINGS_COMPONENT_TYPE.getCodec();
         *///?}
-    //? if <1.20.4
+    //? if <1.20.5
     /*@SuppressWarnings("unchecked")*/
     public static final Codec<Map<SettingsComponentType<?>, Object>> TYPE_TO_VALUE_MAP_CODEC =
-        //? if >=1.20.4 {
+        //? if >=1.20.5 {
         Codec.dispatchedMap(CODEC, SettingsComponentType::codec);
         //?} else {
         /*Codec.of(

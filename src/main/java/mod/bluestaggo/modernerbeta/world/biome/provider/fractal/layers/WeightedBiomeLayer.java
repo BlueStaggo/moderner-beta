@@ -36,11 +36,7 @@ public class WeightedBiomeLayer extends Layer {
     @Override
     protected void addPossibleBiomes(Set<ExtendedBiomeId> biomes) {
         this.biomes.getEntries().stream()
-            //? if >=1.21.5 {
-            .map(Weighted::value)
-            //?} else {
-            /*.map(Weighted.Present::data)
-            *///?}
+            .map(VersionCompat::getWeightedValue)
             .forEach(biomes::add);
     }
 }

@@ -2,7 +2,6 @@ package mod.bluestaggo.modernerbeta.world.biome;
 
 import com.google.common.collect.Sets;
 import com.mojang.datafixers.util.Pair;
-import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
@@ -38,12 +37,13 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class ModernBetaBiomeSource extends BiomeSource {
-    public static final MapCodec<ModernBetaBiomeSource> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
-        .group(
+    public static final com.mojang.serialization.MapCodec<ModernBetaBiomeSource> CODEC = RecordCodecBuilder.mapCodec(
+        instance -> instance.group(
             RegistryOps.getEntryLookupCodec(RegistryKeys.BIOME),
             NbtCompound.CODEC.fieldOf("provider_settings").forGetter(biomeSource -> biomeSource.biomeSettings),
             NbtCompound.CODEC.fieldOf("cave_provider_settings").forGetter(biomeSource -> biomeSource.caveBiomeSettings)
-        ).apply(instance, (instance).stable(ModernBetaBiomeSource::new)));
+        ).apply(instance, (instance).stable(ModernBetaBiomeSource::new))
+    );
     
     private final RegistryEntryLookup<Biome> biomeRegistry;
     private final NbtCompound biomeSettings;
@@ -240,13 +240,13 @@ public class ModernBetaBiomeSource extends BiomeSource {
     
     @SuppressWarnings("unchecked")
     public static void register(IRegistryHandler<?> handler) {
-        IRegistryHandler<MapCodec<?>> registryHandler = (IRegistryHandler<MapCodec<?>>) handler;
+        var registryHandler = (IRegistryHandler<com.mojang.serialization.MapCodec<?>>) handler;
         registryHandler.register(ModernerBeta.createId(ModernerBeta.MOD_ID), CODEC);
     }
 
     @Override
-    protected MapCodec<? extends BiomeSource> getCodec() {
-        return ModernBetaBiomeSource.CODEC;
+    protected com.mojang.serialization.MapCodec<? extends BiomeSource> getCodec() {
+        return CODEC;
     }
 
     @Override

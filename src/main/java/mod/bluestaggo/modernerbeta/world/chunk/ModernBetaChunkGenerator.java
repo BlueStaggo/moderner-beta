@@ -1,6 +1,5 @@
 package mod.bluestaggo.modernerbeta.world.chunk;
 
-import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
@@ -47,13 +46,17 @@ import net.minecraft.world.gen.noise.NoiseConfig;
 
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+//? if <1.21
+/*import java.util.concurrent.Executor;*/
 
 public class ModernBetaChunkGenerator extends NoiseChunkGenerator {
-    public static final MapCodec<ModernBetaChunkGenerator> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+    public static final com.mojang.serialization.MapCodec<ModernBetaChunkGenerator> CODEC = RecordCodecBuilder.mapCodec(
+        instance -> instance.group(
             BiomeSource.CODEC.fieldOf("biome_source").forGetter(generator -> generator.biomeSource),
             ChunkGeneratorSettings.REGISTRY_CODEC.fieldOf("settings").forGetter(generator -> generator.settings),
             NbtCompound.CODEC.fieldOf("provider_settings").forGetter(generator -> generator.chunkSettings)
-        ).apply(instance, instance.stable(ModernBetaChunkGenerator::new)));
+        ).apply(instance, instance.stable(ModernBetaChunkGenerator::new))
+    );
 
     private final RegistryEntry<ChunkGeneratorSettings> settings;
     private final NbtCompound chunkSettings;
@@ -102,7 +105,10 @@ public class ModernBetaChunkGenerator extends NoiseChunkGenerator {
     }
 
     @Override
-    public CompletableFuture<Chunk> populateBiomes(NoiseConfig noiseConfig, Blender blender, StructureAccessor structureAccessor, Chunk chunk) {
+    public CompletableFuture<Chunk> populateBiomes(
+        //? if <1.21
+        /*Executor executor,*/
+        NoiseConfig noiseConfig, Blender blender, StructureAccessor structureAccessor, Chunk chunk) {
         return CompletableFuture.supplyAsync(Util.debugSupplier(() -> {
             ChunkNoiseSampler noiseSampler = chunk.getOrCreateChunkNoiseSampler(c -> this.createChunkNoiseSampler(c, structureAccessor, blender, noiseConfig));
             chunk.populateBiomes(this.biomeSource, noiseSampler.createMultiNoiseSampler(noiseConfig.getNoiseRouter(), this.settings.value().spawnTarget()));
@@ -112,7 +118,10 @@ public class ModernBetaChunkGenerator extends NoiseChunkGenerator {
     }
     
     @Override
-    public CompletableFuture<Chunk> populateNoise(Blender blender, NoiseConfig noiseConfig, StructureAccessor structureAccessor, Chunk chunk) {
+    public CompletableFuture<Chunk> populateNoise(
+        //? if <1.21
+        /*Executor executor,*/
+        Blender blender, NoiseConfig noiseConfig, StructureAccessor structureAccessor, Chunk chunk) {
         CompletableFuture<Chunk> completedChunk = this.chunkProvider.provideChunk(Blender.getNoBlending(), structureAccessor, chunk, noiseConfig);
         
         return completedChunk;
@@ -330,8 +339,8 @@ public class ModernBetaChunkGenerator extends NoiseChunkGenerator {
     }
 
     @Override
-    protected MapCodec<? extends ChunkGenerator> getCodec() {
-        return ModernBetaChunkGenerator.CODEC;
+    protected com.mojang.serialization.MapCodec<? extends ChunkGenerator> getCodec() {
+        return CODEC;
     }
     
     private void injectBiomes(Chunk chunk, MultiNoiseSampler noiseSampler, BiomeInjectionStep step) {
@@ -342,7 +351,7 @@ public class ModernBetaChunkGenerator extends NoiseChunkGenerator {
 
     @SuppressWarnings("unchecked")
     public static void register(IRegistryHandler<?> handler) {
-        IRegistryHandler<MapCodec<?>> registryHandler = (IRegistryHandler<MapCodec<?>>) handler;
+        var registryHandler = (IRegistryHandler<com.mojang.serialization.MapCodec<?>>) handler;
         registryHandler.register(ModernerBeta.createId(ModernerBeta.MOD_ID), CODEC);
     }
 }

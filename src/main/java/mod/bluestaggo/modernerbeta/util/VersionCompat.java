@@ -101,7 +101,7 @@ public final class VersionCompat {
     }
 
     public static <T> T getOrThrow(DataResult<T> result) {
-        //? if >=1.20.4 {
+        //? if >=1.20.3 {
         return result.getOrThrow();
         //?} else {
         /*return result.getOrThrow(false, string -> {});
@@ -112,6 +112,14 @@ public final class VersionCompat {
         //? if >=1.21 {
         return Identifier.of(string);
         //?} else {
+        /*return new Identifier(string);
+        *///?}
+    }
+
+    public static Identifier vanillaId(String string) {
+        //? if >=1.21 {
+        return Identifier.ofVanilla(string);
+         //?} else {
         /*return new Identifier(string);
         *///?}
     }

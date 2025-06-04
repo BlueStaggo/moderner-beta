@@ -3,6 +3,7 @@ package mod.bluestaggo.modernerbeta.client.gui.screen;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPresetCategory;
+import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -122,6 +123,7 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
         private static final int ICON_SIZE = 56;
 
         public PresetsListWidget(List<Identifier> presets) {
+            //? if >=1.20.3 {
             super(
                 ModernBetaSettingsPresetScreen.this.client,
                 ModernBetaSettingsPresetScreen.this.width,
@@ -129,6 +131,16 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
                 32,
                 ITEM_HEIGHT
             );
+            //?} else {
+            /*super(
+                ModernBetaSettingsPresetScreen.this.client,
+                ModernBetaSettingsPresetScreen.this.width,
+                ModernBetaSettingsPresetScreen.this.height,
+                32,
+                ModernBetaSettingsPresetScreen.this.height - 32,
+                ITEM_HEIGHT
+            );
+            *///?}
 
             if (ModernBetaSettingsPresetScreen.this.displayCategories) {
                 presets.forEach(key -> {
@@ -153,20 +165,28 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
 
             ModernBetaSettingsPresetScreen.this.updateSelectButton(entry instanceof PresetEntry);
         }
-        
+
+        //? if >=1.20.5 {
         @Override
         protected int getScrollbarX() {
             return super.getScrollbarX() + 30;
         }
-        
+        //?}
+
         @Override
         public int getRowWidth() {
             return super.getRowWidth() + 85;
         }
         
         private abstract class AbstractPresetEntry extends AlwaysSelectedEntryListWidget.Entry<AbstractPresetEntry> {
-            private static final Identifier TEXTURE_JOIN = Identifier.ofVanilla("world_list/join");
-            private static final Identifier TEXTURE_JOIN_HIGHLIGHTED =  Identifier.ofVanilla("world_list/join_highlighted");
+            //? if >=1.20.2 {
+            private static final Identifier TEXTURE_JOIN = VersionCompat.vanillaId("world_list/join");
+            private static final Identifier TEXTURE_JOIN_HIGHLIGHTED =  VersionCompat.vanillaId("world_list/join_highlighted");
+            //?} else {
+            /*private static final Identifier TEXTURE_WORLD_SELECT = new Identifier("textures/gui/world_selection.png");
+            private static final int TEXTURE_WORLD_SELECT_ATLAS_SIZE = 256;
+            private static final int TEXTURE_WORLD_SELECT_SIZE= 32;
+            *///?}
             
             private static final int TEXT_SPACING = 11;
             private static final int TEXT_LENGTH = 240;
@@ -230,11 +250,12 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
 
                 if (client != null && client.options.getTouchscreen().getValue() || hovered) {
                     boolean isMouseHovering = (mouseX - x) < ICON_SIZE;
-                    Identifier texture = isMouseHovering ? TEXTURE_JOIN_HIGHLIGHTED : TEXTURE_JOIN;
-                    
+
                     context.fill(x, y, x + ICON_SIZE, y + ICON_SIZE, -1601138544);
+                    //? if >=1.20.2 {
+                    Identifier texture = isMouseHovering ? TEXTURE_JOIN_HIGHLIGHTED : TEXTURE_JOIN;
                     context.drawGuiTexture(
-                        //? if >= 1.21.6 {
+                        //? if >=1.21.6 {
                         /*net.minecraft.client.gl.RenderPipelines.GUI_TEXTURED,*/
                         //?} else if >=1.21.2 {
                         net.minecraft.client.render.RenderLayer::getGuiTextured,
@@ -245,6 +266,22 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
                         ICON_SIZE,
                         ICON_SIZE
                     );
+                    //?} else {
+                    /*float v = isMouseHovering ? TEXTURE_WORLD_SELECT_SIZE : 0;
+                    context.drawTexture(
+                        TEXTURE_WORLD_SELECT,
+                        x,
+                        y,
+                        ICON_SIZE,
+                        ICON_SIZE,
+                        0.0f,
+                        v,
+                        TEXTURE_WORLD_SELECT_SIZE,
+                        TEXTURE_WORLD_SELECT_SIZE,
+                        TEXTURE_WORLD_SELECT_ATLAS_SIZE,
+                        TEXTURE_WORLD_SELECT_ATLAS_SIZE
+                    );
+                    *///?}
                 }
             }
             

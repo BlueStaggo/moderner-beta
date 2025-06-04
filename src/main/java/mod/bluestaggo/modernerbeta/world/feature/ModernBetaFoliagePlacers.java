@@ -1,6 +1,5 @@
 package mod.bluestaggo.modernerbeta.world.feature;
 
-import com.mojang.serialization.MapCodec;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import mod.bluestaggo.modernerbeta.world.feature.foliage.Oak14a08FoliagePlacer;
@@ -11,7 +10,14 @@ public class ModernBetaFoliagePlacers {
 	private static IRegistryHandler<FoliagePlacerType<?>> registryHandler;
 	public static FoliagePlacerType<Oak14a08FoliagePlacer> OAK_14A_08_FOLIAGE_PLACER;
 
-	private static <P extends FoliagePlacer> FoliagePlacerType<P> register(String id, MapCodec<P> codec) {
+	private static <P extends FoliagePlacer> FoliagePlacerType<P> register(
+		String id,
+		//? if >=1.20.5 {
+		com.mojang.serialization.MapCodec<P> codec
+		//?} else {
+		/*com.mojang.serialization.Codec<P> codec
+		*///?}
+	) {
 		return registryHandler.register(ModernerBeta.createId(id), new FoliagePlacerType<>(codec));
     }
 

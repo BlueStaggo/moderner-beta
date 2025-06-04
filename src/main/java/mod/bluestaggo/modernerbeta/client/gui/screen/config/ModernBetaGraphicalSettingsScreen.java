@@ -4,11 +4,13 @@ import mod.bluestaggo.modernerbeta.client.gui.optioncallbacks.*;
 import mod.bluestaggo.modernerbeta.imixin.ModernBetaClearableWidget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.option.GameOptionsScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.GridWidget;
 import net.minecraft.client.gui.widget.OptionListWidget;
+import net.minecraft.client.gui.widget.ThreePartsLayoutWidget;
 import net.minecraft.client.option.SimpleOption;
 import net.minecraft.client.world.GeneratorOptionsHolder;
 import net.minecraft.nbt.NbtElement;
@@ -31,6 +33,11 @@ public abstract class ModernBetaGraphicalSettingsScreen<T extends NbtElement> ex
 
     private double prevScroll = -1.0D;
 
+    //? if <1.21
+    /*protected OptionListWidget body;*/
+    //? if <1.20.5
+    /*public final ThreePartsLayoutWidget layout = new ThreePartsLayoutWidget(this);*/
+
     public ModernBetaGraphicalSettingsScreen(
         String title,
         Screen parent,
@@ -47,9 +54,19 @@ public abstract class ModernBetaGraphicalSettingsScreen<T extends NbtElement> ex
         this.generatorOptionsHolder = generatorOptionsHolder;
     }
 
+    //? if <1.20.5 {
+    /*@Override
+    protected void init() {
+        this.initHeader();
+        this.initBody();
+        this.initFooter();
+        this.layout.forEachChild(this::addDrawableChild);
+        this.initTabNavigation();
+    }
+    *///?}
+
     protected abstract void addOptions(OptionListWidget list);
 
-    @Override
     protected void addOptions() {
     }
 
@@ -78,10 +95,26 @@ public abstract class ModernBetaGraphicalSettingsScreen<T extends NbtElement> ex
         ((ModernBetaClearableWidget)this.layout).modernBeta$clear();
     }
 
-    @Override
+    protected void initHeader() {
+    }
+
     protected void initBody() {
-        this.body = this.layout.addBody(new OptionListWidget(this.client, this.width, this));
+        this.body =
+            //? if >=1.20.5 {
+            this.layout.addBody(
+                //? if >=1.21 {
+                new OptionListWidget(this.client, this.width, this)
+                //?} else {
+                /*new OptionListWidget(this.client, this.width, 0, this)
+                *///?}
+            );
+            //?} else {
+            /*new OptionListWidget(this.client, this.width, this.height, 32, this.height - 32, 25);
+            *///?}
         this.addOptions(this.body);
+        //? if <1.21
+        /*this.addSelectableChild(this.body);*/
+
         if (this.prevScroll >= 0.0D && this.body != null) {
             //? if >=1.21.4 {
             this.body.setScrollY
@@ -90,9 +123,23 @@ public abstract class ModernBetaGraphicalSettingsScreen<T extends NbtElement> ex
             *///?}
                 (this.prevScroll);
         }
+
+        //? if <1.21 {
+        /*this.addDrawableChild(ButtonWidget.builder(
+            Text.translatable("createWorld.customize.modern_beta.settings.save"),
+            onPress -> {
+                this.onDone.accept(this.getResult());
+                this.client.setScreen(this.parent);
+            }
+        ).dimensions(this.width / 2 - 155, this.height - 28, 150, 20).build());
+
+        this.addDrawableChild(ButtonWidget.builder(
+            ScreenTexts.CANCEL,
+            onPress -> this.client.setScreen(this.parent)
+        ).dimensions(this.width / 2 + 5, this.height - 28, 150, 20).build());
+        *///?}
     }
 
-    @Override
     protected void initFooter() {
         GridWidget gridWidget = new GridWidget().setColumnSpacing(8);
         GridWidget.Adder gridWidgetAdder = gridWidget.createAdder(2);
@@ -112,6 +159,15 @@ public abstract class ModernBetaGraphicalSettingsScreen<T extends NbtElement> ex
 
         this.layout.addFooter(gridWidget);
     }
+
+    //? if <1.21 {
+    /*@Override
+    protected void render(DrawContext context, OptionListWidget optionButtons, int mouseX, int mouseY, float tickDelta) {
+        super.renderBackground(context);
+        this.body.render(context, mouseX, mouseY, tickDelta);
+        super.render(context, optionButtons, mouseX, mouseY, tickDelta);
+    }
+    *///?}
 
     protected T getResult() {
         return this.settings;

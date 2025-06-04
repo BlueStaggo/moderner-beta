@@ -24,7 +24,12 @@ public abstract class MixinSpawnLocating {
         if (chunkGenerator instanceof ModernBetaChunkGenerator modernBetaChunkGenerator && 
             modernBetaChunkGenerator.getChunkProvider().getSpawnLocator() != SpawnLocator.DEFAULT
         ) {
-            int spawnY = world.getLevelProperties().getSpawnPos().getY();
+            int spawnY = world.getLevelProperties()
+                //? if >=1.20.5 {
+                .getSpawnPos().getY();
+                //?} else {
+                /*.getSpawnY();
+                *///?}
             
             info.setReturnValue(new BlockPos(x, spawnY, z));
         }

@@ -13,10 +13,10 @@ public class ModernBetaFoliagePlacers {
 	private static <P extends FoliagePlacer> FoliagePlacerType<P> register(
 		String id,
 		//? if >=1.20.5 {
-		com.mojang.serialization.MapCodec<P> codec
-		//?} else {
-		/*com.mojang.serialization.Codec<P> codec
-		*///?}
+		/*com.mojang.serialization.MapCodec<P> codec
+		*///?} else {
+		com.mojang.serialization.Codec<P> codec
+		//?}
 	) {
 		return registryHandler.register(ModernerBeta.createId(id), new FoliagePlacerType<>(codec));
     }

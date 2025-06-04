@@ -3,10 +3,6 @@ package mod.bluestaggo.modernerbeta.util;
 //? if >=1.20.2
 import net.minecraft.network.packet.CustomPayload;
 
-import io.netty.buffer.Unpooled;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.Identifier;
-
 public interface ModernBetaPayload
     //? if >=1.20.2
     extends CustomPayload

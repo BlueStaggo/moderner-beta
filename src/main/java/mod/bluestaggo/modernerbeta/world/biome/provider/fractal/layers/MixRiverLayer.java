@@ -1,7 +1,6 @@
 package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.util.CodecUtil;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomes;
@@ -12,7 +11,7 @@ import java.util.*;
 import java.util.function.Function;
 
 public class MixRiverLayer extends SingleParentLayer {
-    public static final MapCodec<MixRiverLayer> CODEC = RecordCodecBuilder.mapCodec(
+    public static final com.mojang.serialization.MapCodec<MixRiverLayer> CODEC = RecordCodecBuilder.mapCodec(
         instance -> fillSingleParentLayerFields(instance)
             .and(instance.group(
                 Codec.STRING.fieldOf("riverSource").forGetter(layer -> layer.riverSource),

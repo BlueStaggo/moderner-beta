@@ -1,6 +1,5 @@
 package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.predicates;
 
-import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.Layer;
@@ -11,7 +10,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 public class AllOfBiomePredicate extends BiomePredicate {
-    public static final MapCodec<AllOfBiomePredicate> CODEC = RecordCodecBuilder.mapCodec(
+    public static final com.mojang.serialization.MapCodec<AllOfBiomePredicate> CODEC = RecordCodecBuilder.mapCodec(
         instance -> instance
             .group(
                 BiomePredicate.BASE_CODEC.listOf().fieldOf("terms").forGetter(predicate -> predicate.terms)

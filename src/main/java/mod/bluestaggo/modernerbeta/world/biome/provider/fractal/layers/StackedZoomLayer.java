@@ -1,7 +1,6 @@
 package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import net.minecraft.util.StringIdentifiable;
@@ -11,7 +10,7 @@ import java.util.function.Function;
 import java.util.function.LongFunction;
 
 public class StackedZoomLayer extends SingleParentLayer {
-    public static final MapCodec<StackedZoomLayer> CODEC = RecordCodecBuilder.mapCodec(
+    public static final com.mojang.serialization.MapCodec<StackedZoomLayer> CODEC = RecordCodecBuilder.mapCodec(
         instance -> fillSingleParentLayerFields(instance)
             .and(instance.group(
                 Codec.INT.fieldOf("level").orElse(1).forGetter(layer -> layer.level),

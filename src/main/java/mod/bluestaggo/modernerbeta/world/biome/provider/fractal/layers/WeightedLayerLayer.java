@@ -1,18 +1,16 @@
 package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import net.minecraft.util.collection.Pool;
-import net.minecraft.util.collection.Weighted;
 
 import java.util.Set;
 import java.util.function.Function;
 
 public class WeightedLayerLayer extends Layer {
-    public static final MapCodec<WeightedLayerLayer> CODEC = RecordCodecBuilder.mapCodec(
+    public static final com.mojang.serialization.MapCodec<WeightedLayerLayer> CODEC = RecordCodecBuilder.mapCodec(
         instance -> fillLayerFields(instance)
             .and(Pool.createCodec(Codec.STRING).fieldOf("layers").forGetter(layer -> layer.layers))
             .apply(instance, WeightedLayerLayer::new)

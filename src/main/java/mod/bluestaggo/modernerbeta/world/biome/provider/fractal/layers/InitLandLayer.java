@@ -1,7 +1,6 @@
 package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 
@@ -11,7 +10,7 @@ import static mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedB
 import static mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId.PLAINS;
 
 public class InitLandLayer extends Layer {
-    public static final MapCodec<InitLandLayer> CODEC = RecordCodecBuilder.mapCodec(
+    public static final com.mojang.serialization.MapCodec<InitLandLayer> CODEC = RecordCodecBuilder.mapCodec(
         instance -> fillLayerFields(instance)
             .and(Codec.INT.fieldOf("landChance").orElse(10).forGetter(layer -> layer.landChance))
             .apply(instance, InitLandLayer::new)

@@ -1,7 +1,6 @@
 package mod.bluestaggo.modernerbeta.mixin;
 
 import mod.bluestaggo.modernerbeta.api.world.biome.climate.ClimateSampler;
-import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
 import mod.bluestaggo.modernerbeta.world.chunk.provider.ChunkProviderEarlyRelease;

@@ -6,7 +6,6 @@ import net.minecraft.registry.Registry;
 import net.minecraft.util.Pair;
 
 import java.util.List;
-import java.util.Map;
 import java.util.function.Consumer;
 
 public interface ModernerBetaInitializer {

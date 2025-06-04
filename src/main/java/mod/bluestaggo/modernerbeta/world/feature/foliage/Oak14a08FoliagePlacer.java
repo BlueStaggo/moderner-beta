@@ -1,7 +1,6 @@
 package mod.bluestaggo.modernerbeta.world.feature.foliage;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.world.feature.ModernBetaFoliagePlacers;
 import net.minecraft.util.math.intprovider.IntProvider;
@@ -12,7 +11,7 @@ import net.minecraft.world.gen.foliage.FoliagePlacer;
 import net.minecraft.world.gen.foliage.FoliagePlacerType;
 
 public class Oak14a08FoliagePlacer extends FoliagePlacer {
-	public static final MapCodec<Oak14a08FoliagePlacer> CODEC = RecordCodecBuilder.mapCodec(instance -> fillFoliagePlacerFields(instance)
+	public static final com.mojang.serialization.MapCodec<Oak14a08FoliagePlacer> CODEC = RecordCodecBuilder.mapCodec(instance -> fillFoliagePlacerFields(instance)
 			.and(Codec.intRange(0, 16).fieldOf("height").forGetter(placer -> placer.height))
 			.apply(instance, Oak14a08FoliagePlacer::new));
 

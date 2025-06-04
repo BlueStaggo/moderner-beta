@@ -1,6 +1,5 @@
 package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.predicates;
 
-import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.Layer;
@@ -10,7 +9,7 @@ import net.minecraft.util.StringIdentifiable;
 import java.util.function.Supplier;
 
 public class InteriorBiomePredicate extends BiomePredicate {
-    public static final MapCodec<InteriorBiomePredicate> CODEC = RecordCodecBuilder.mapCodec(
+    public static final com.mojang.serialization.MapCodec<InteriorBiomePredicate> CODEC = RecordCodecBuilder.mapCodec(
         instance -> instance
             .group(
                 StringIdentifiable.createCodec(Type::values).fieldOf("type").orElse(Type.INTERIOR).forGetter(predicate -> predicate.type)

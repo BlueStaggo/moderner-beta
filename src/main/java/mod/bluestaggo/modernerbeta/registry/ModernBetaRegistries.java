@@ -7,8 +7,6 @@ import mod.bluestaggo.modernerbeta.api.world.chunk.surface.SurfaceConfig;
 import mod.bluestaggo.modernerbeta.api.world.provider.BiomeProviderType;
 import mod.bluestaggo.modernerbeta.api.world.provider.CaveBiomeProviderType;
 import mod.bluestaggo.modernerbeta.api.world.provider.ChunkProviderType;
-import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
-import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPresetCategory;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentType;
 import mod.bluestaggo.modernerbeta.world.biome.HeightConfig;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.LayerType;

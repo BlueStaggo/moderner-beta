@@ -1,7 +1,6 @@
 package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.*;
 
@@ -13,7 +12,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class BiomeToLayerOverlayLayer extends SingleParentLayer {
-    public static final MapCodec<BiomeToLayerOverlayLayer> CODEC = RecordCodecBuilder.mapCodec(
+    public static final com.mojang.serialization.MapCodec<BiomeToLayerOverlayLayer> CODEC = RecordCodecBuilder.mapCodec(
         instance -> fillSingleParentLayerFields(instance)
             .and(Codec.unboundedMap(ExtendedBiomeId.CODEC, Codec.STRING).fieldOf("targets").forGetter(layer -> layer.targets))
             .apply(instance, BiomeToLayerOverlayLayer::new)

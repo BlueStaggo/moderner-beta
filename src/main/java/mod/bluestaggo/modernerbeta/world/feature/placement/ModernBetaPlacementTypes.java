@@ -18,7 +18,7 @@ public class ModernBetaPlacementTypes {
     
     public static PlacementModifierType<HeightmapSpreadDoublePlacementModifier> HEIGHTMAP_SPREAD_DOUBLE;
     
-    private static <P extends PlacementModifier> PlacementModifierType<P> register(String id, MapCodec<P> codec) {
+    private static <P extends PlacementModifier> PlacementModifierType<P> register(String id, com.mojang.serialization.MapCodec<P> codec) {
         return registryHandler.register(ModernerBeta.createId(id), () -> codec);
     }
     

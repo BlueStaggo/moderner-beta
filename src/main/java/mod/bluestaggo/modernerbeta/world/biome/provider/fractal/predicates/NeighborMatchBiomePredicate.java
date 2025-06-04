@@ -1,6 +1,5 @@
 package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.predicates;
 
-import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.Layer;
@@ -9,7 +8,7 @@ import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.LayerRand
 import java.util.function.Supplier;
 
 public class NeighborMatchBiomePredicate extends NeighborComparisonPredicate {
-    public static final MapCodec<NeighborMatchBiomePredicate> CODEC = RecordCodecBuilder.mapCodec(
+    public static final com.mojang.serialization.MapCodec<NeighborMatchBiomePredicate> CODEC = RecordCodecBuilder.mapCodec(
         instance -> fillNeighborComparisonFields(instance)
             .and(BiomePredicate.BASE_CODEC.fieldOf("neighborPredicate").forGetter(predicate -> predicate.neighborPredicate))
             .apply(instance, NeighborMatchBiomePredicate::new)

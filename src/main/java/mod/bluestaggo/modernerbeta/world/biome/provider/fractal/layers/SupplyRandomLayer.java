@@ -1,12 +1,11 @@
 package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 
 public class SupplyRandomLayer extends Layer {
-    public static final MapCodec<SupplyRandomLayer> CODEC = RecordCodecBuilder.mapCodec(
+    public static final com.mojang.serialization.MapCodec<SupplyRandomLayer> CODEC = RecordCodecBuilder.mapCodec(
         instance -> fillLayerFields(instance)
             .and(Codec.INT.fieldOf("range").forGetter(layer -> layer.range))
             .apply(instance, SupplyRandomLayer::new)

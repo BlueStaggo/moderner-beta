@@ -1,7 +1,6 @@
 package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomes;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
@@ -13,7 +12,7 @@ import java.util.Set;
 import static mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId.*;
 
 public class AddLandLayer extends SingleParentLayer {
-    public static final MapCodec<AddLandLayer> CODEC = RecordCodecBuilder.mapCodec(
+    public static final com.mojang.serialization.MapCodec<AddLandLayer> CODEC = RecordCodecBuilder.mapCodec(
         instance -> fillSingleParentLayerFields(instance)
             .and(instance.group(
                 Codec.BOOL.fieldOf("betaShape").orElse(false).forGetter(layer -> layer.betaShape),

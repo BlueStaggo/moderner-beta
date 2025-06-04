@@ -1,7 +1,6 @@
 package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import net.minecraft.util.math.noise.PerlinNoiseSampler;
@@ -13,7 +12,7 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 public class MappedNoiseLayer extends Layer {
-    public static final MapCodec<MappedNoiseLayer> CODEC = RecordCodecBuilder.mapCodec(
+    public static final com.mojang.serialization.MapCodec<MappedNoiseLayer> CODEC = RecordCodecBuilder.mapCodec(
         instance -> fillLayerFields(instance)
             .and(instance.group(
                 Entry.CODEC

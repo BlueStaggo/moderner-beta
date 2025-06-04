@@ -1,11 +1,10 @@
 package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 public class PreSkipRandomLayer extends LayerWrapperLayer {
-    public static final MapCodec<PreSkipRandomLayer> CODEC = RecordCodecBuilder.mapCodec(
+    public static final com.mojang.serialization.MapCodec<PreSkipRandomLayer> CODEC = RecordCodecBuilder.mapCodec(
         instance -> fillLayerWrapperFields(instance)
             .and(Codec.INT.fieldOf("skipAmount").forGetter(layer -> layer.skipAmount))
             .apply(instance, PreSkipRandomLayer::new)

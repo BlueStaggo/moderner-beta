@@ -1,10 +1,9 @@
 package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers;
 
-import com.mojang.serialization.MapCodec;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 
-public record LayerType<L extends Layer>(MapCodec<L> codec) {
+public record LayerType<L extends Layer>(com.mojang.serialization.MapCodec<L> codec) {
     private static IRegistryHandler<LayerType<?>> registryHandler;
 
     public static LayerType<AddLandLayer> ADD_LAND;
@@ -32,7 +31,7 @@ public record LayerType<L extends Layer>(MapCodec<L> codec) {
     public static LayerType<WeightedBiomeLayer> WEIGHTED_BIOME;
     public static LayerType<WeightedLayerLayer> WEIGHTED_LAYER;
 
-    private static <L extends Layer> LayerType<L> register(String id, MapCodec<L> codec) {
+    private static <L extends Layer> LayerType<L> register(String id, com.mojang.serialization.MapCodec<L> codec) {
         LayerType<L> layerType = new LayerType<>(codec);
         return registryHandler.register(ModernerBeta.createId(id), layerType);
     }

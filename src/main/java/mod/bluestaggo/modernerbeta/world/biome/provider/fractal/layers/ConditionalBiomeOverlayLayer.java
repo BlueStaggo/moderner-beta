@@ -1,13 +1,12 @@
 package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers;
 
 import com.google.common.base.Suppliers;
-import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.predicates.BiomePredicate;
 
 public class ConditionalBiomeOverlayLayer extends SingleParentLayer {
-    public static final MapCodec<ConditionalBiomeOverlayLayer> CODEC = RecordCodecBuilder.mapCodec(
+    public static final com.mojang.serialization.MapCodec<ConditionalBiomeOverlayLayer> CODEC = RecordCodecBuilder.mapCodec(
         instance -> fillSingleParentLayerFields(instance)
             .and(instance.group(
                 BiomePredicate.BASE_CODEC.fieldOf("predicate").forGetter(layer -> layer.predicate),

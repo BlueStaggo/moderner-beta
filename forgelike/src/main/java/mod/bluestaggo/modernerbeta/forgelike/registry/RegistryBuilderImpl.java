@@ -2,8 +2,13 @@ package mod.bluestaggo.modernerbeta.forgelike.registry;
 
 import mod.bluestaggo.modernerbeta.registry.IRegistryBuilder;
 import net.minecraft.registry.Registry;
+//? if neoforge {
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 import net.neoforged.neoforge.registries.RegistryBuilder;
+//?} else {
+/*import net.minecraftforge.registries.NewRegistryEvent;
+import net.minecraftforge.registries.RegistryBuilder;
+*///?}
 
 public class RegistryBuilderImpl<T> implements IRegistryBuilder<T> {
     private final NewRegistryEvent event;

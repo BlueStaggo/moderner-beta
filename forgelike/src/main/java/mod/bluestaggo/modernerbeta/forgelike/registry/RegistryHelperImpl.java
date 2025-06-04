@@ -5,8 +5,13 @@ import mod.bluestaggo.modernerbeta.registry.IRegistryHelper;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.util.Identifier;
+//? if neoforge {
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 import net.neoforged.neoforge.registries.RegistryBuilder;
+//?} else {
+/*import net.minecraftforge.registries.NewRegistryEvent;
+import net.minecraftforge.registries.RegistryBuilder;
+*///?}
 
 public record RegistryHelperImpl(NewRegistryEvent event) implements IRegistryHelper {
     @Override

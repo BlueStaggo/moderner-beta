@@ -17,6 +17,7 @@ import net.minecraft.resource.ResourcePackSource;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+//? if neoforge {
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLConstructModEvent;
@@ -27,11 +28,37 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 import net.neoforged.neoforge.registries.RegisterEvent;
+//?} else {
+/*import mod.bluestaggo.modernerbeta.forgelike.registry.ForgeRegistryHandler;
+import net.minecraft.resource.DirectoryResourcePack;
+import net.minecraftforge.event.AddPackFindersEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLConstructModEvent;
+import net.minecraftforge.fml.loading.FMLLoader;
+import net.minecraftforge.registries.DataPackRegistryEvent;
+import net.minecraftforge.registries.NewRegistryEvent;
+import net.minecraftforge.registries.RegisterEvent;
+
+import java.nio.file.Path;
+*///?}
 
 import java.util.Map;
 import java.util.function.Consumer;
 
-@EventBusSubscriber(modid = ModernerBeta.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
+//? if neoforge {
+@EventBusSubscriber(
+ //?} else {
+/*@Mod.EventBusSubscriber(
+*///?}
+        modid = ModernerBeta.MOD_ID,
+        //? if neoforge {
+        bus = EventBusSubscriber.Bus.MOD
+        //?} else {
+        /*bus = Mod.EventBusSubscriber.Bus.MOD
+        *///?}
+)
 public class ModEventsCommon {
     @SubscribeEvent
     public static void commonInit(FMLConstructModEvent event) {
@@ -45,11 +72,20 @@ public class ModEventsCommon {
 
     @SubscribeEvent
     public static void registerToRegistries(RegisterEvent event) {
+        //? if neoforge {
         Registry<?> registry = event.getRegistry();
 
         VanillaRegistryHandler<?> registryHandler = new VanillaRegistryHandler<>(registry);
         ModernerBeta.REGISTRY_HANDLERS.getOrDefault(registry, NONE).accept(registryHandler);
         ModernerBeta.CUSTOM_REGISTRY_HANDLERS.getOrDefault(registry, NONE).accept(registryHandler);
+        //?} else {
+        /*Registry<?> registry = event.getVanillaRegistry();
+        if (registry == null) return;
+
+        ForgeRegistryHandler<?> registryHandler = new ForgeRegistryHandler<>(event);
+        ModernerBeta.REGISTRY_HANDLERS.get(registry, NONE).accept(registryHandler);
+        ModernerBeta.CUSTOM_REGISTRY_HANDLERS.get(registry, NONE).accept(registryHandler);
+        *///?}
     }
 
     @SubscribeEvent
@@ -68,6 +104,8 @@ public class ModEventsCommon {
         }
     }
 
+    //TODO
+    //? if neoforge {
     @SubscribeEvent
     public static void registerPayloadHandlers(RegisterPayloadHandlersEvent event) {
         ModernerBeta.networkHelper = new NetworkHelperImpl();
@@ -81,28 +119,48 @@ public class ModEventsCommon {
                 }
         );
     }
+    //?}
 
     @SubscribeEvent
     public static void addPackFinders(AddPackFindersEvent event) {
-        if (event.getPackType() == ResourceType.SERVER_DATA)
-            event.addPackFinders(
-                    ModernerBeta.createId("resourcepacks/reduced_height"),
-                    ResourceType.SERVER_DATA,
-                    Text.of("Reduced Height"), //TODO: i18n perhaps?
-                    new ResourcePackSource() {
-                        @Override
-                        public Text decorate(Text packDisplayName) {
-                            return Text.translatable("pack.nameAndSource", packDisplayName,
-                                    Text.translatable("pack.source.builtin")).formatted(Formatting.GRAY);
-                        }
+        if (event.getPackType() == ResourceType.SERVER_DATA) {
+            Text title = Text.of("Reduced Height"); //TODO: i18n perhaps?
+            ResourcePackSource source = new ResourcePackSource() {
+                @Override
+                public Text decorate(Text packDisplayName) {
+                    return Text.translatable("pack.nameAndSource", packDisplayName,
+                            Text.translatable("pack.source.builtin")).formatted(Formatting.GRAY);
+                }
 
-                        @Override
-                        public boolean canBeEnabledLater() {
-                            return false;
-                        }
-                    },
+                @Override
+                public boolean canBeEnabledLater() {
+                    return false;
+                }
+            };
+
+            //? if neoforge {
+            event.addPackFinders(
+            ModernerBeta.createId("resourcepacks/reduced_height"),
+                    ResourceType.SERVER_DATA,
+                    title,
+                    source,
                     false,
                     ResourcePackProfile.InsertionPosition.TOP
             );
+            //?} else {
+            /*Path resourcePath = ModList.get().getModFileById(ModernerBeta.MOD_ID).getFile().findResource("resourcepacks/reduced_height");
+            ResourcePackProfile pack = ResourcePackProfile.create(
+                    "moderner_beta/reduced_height",
+                    title,
+                    false,
+                    path -> new DirectoryResourcePack(path, resourcePath, false),
+                    ResourceType.SERVER_DATA,
+                    ResourcePackProfile.InsertionPosition.TOP,
+                    source
+            );
+
+            event.addRepositorySource(consumer -> consumer.accept(pack));
+            *///?}
+        }
     }
 }

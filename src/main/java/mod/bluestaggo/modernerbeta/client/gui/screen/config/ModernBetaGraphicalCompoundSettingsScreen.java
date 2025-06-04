@@ -259,7 +259,7 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
     public SimpleOption<String> blockOption(String key) {
         return this.stringOption(key, new TextFieldCallbacks(
             value -> Registries.BLOCK.containsId(Identifier.tryParse(value)),
-            value -> Identifier.validate(value).isSuccess()
+            value -> Identifier.validate(value).error().isEmpty()
         ));
     }
 
@@ -293,7 +293,7 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
                 "",
                 SimpleOption.emptyTooltip(),
                 (optionText, value) -> Text.of(stringSupplier.get()),
-                new TextFieldCallbacks(string -> ExtendedBiomeId.validate(string).isSuccess()),
+                new TextFieldCallbacks(string -> ExtendedBiomeId.validate(string).error().isEmpty()),
                 ExtendedBiomeId.of(stringSupplier.get()).toString(),
                 value -> {
                     settings.putString(subKey, value);

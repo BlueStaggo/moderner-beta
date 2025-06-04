@@ -1,7 +1,5 @@
 package mod.bluestaggo.modernerbeta.mixin;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.api.world.chunk.ChunkProvider;
 import mod.bluestaggo.modernerbeta.api.world.chunk.ChunkProviderFinite;
@@ -21,6 +19,14 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+//? if <1.20.2 {
+/*import org.spongepowered.asm.mixin.injection.Redirect;
+import net.minecraft.server.network.SpawnLocating;
+*///?} else {
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+//?}
 
 @Mixin(MinecraftServer.class)
 public abstract class MixinMinecraftServer {

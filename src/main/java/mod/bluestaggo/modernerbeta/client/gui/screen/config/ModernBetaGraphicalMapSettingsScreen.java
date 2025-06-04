@@ -104,7 +104,7 @@ public abstract class ModernBetaGraphicalMapSettingsScreen extends ModernBetaGra
                 SimpleOption<?> right = options.get(j + 1);
 
                 if (right != null) {
-                    list.addAll(left, right);
+                    list.addAll(new SimpleOption[] {left, right});
                 } else {
                     list.addSingleOptionEntry(left);
                 }

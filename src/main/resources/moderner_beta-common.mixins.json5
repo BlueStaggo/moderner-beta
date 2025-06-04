@@ -14,7 +14,8 @@
     "MixinPlayerManager",
     "MixinSpawnLocating",
     "MixinStructure",
-    "MixinWaterMaterialCondition"
+    "MixinWaterMaterialCondition",
+    "AccessorFoliagePlacerType"
   ],
   "client": [
     "client.AccessorTextWidget",

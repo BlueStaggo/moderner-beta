@@ -24,7 +24,7 @@ public class RegistryBuilderImpl<T> implements IRegistryBuilder<T> {
         //? if >=1.21.4 {
         registryBuilder.attribute(RegistryAttribute.OPTIONAL);
         //?} else {
-        /*ModernerBeta.log(Level.WARN,
+        /*mod.bluestaggo.modernerbeta.ModernerBeta.log(org.slf4j.event.Level.WARN,
             "Creation of optional registry has been attempted." +
             "This is not supported by Fabric API for this version." +
             "Unexpected behavior may arise.");

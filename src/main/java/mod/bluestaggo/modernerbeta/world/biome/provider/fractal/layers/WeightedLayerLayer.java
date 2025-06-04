@@ -5,6 +5,8 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import net.minecraft.util.collection.Pool;
+//? if <1.21.5
+/*import net.minecraft.util.collection.Weighted;*/
 
 import java.util.Set;
 import java.util.function.Function;

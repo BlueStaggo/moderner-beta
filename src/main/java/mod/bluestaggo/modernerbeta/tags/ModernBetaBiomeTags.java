@@ -26,6 +26,7 @@ public class ModernBetaBiomeTags {
     public static final TagKey<Biome> IS_TAIGA = keyOf("is_taiga");
     public static final TagKey<Biome> IS_TUNDRA = keyOf("is_tundra");
     public static final TagKey<Biome> IS_OCEAN = keyOf("is_ocean");
+    public static final TagKey<Biome> IS_EXTREME_HILLS = keyOf("is_extreme_hills");
     public static final TagKey<Biome> IS_RELEASE_SPAWN = keyOf("is_early_release_spawn");
 
     public static final TagKey<Biome> INDEV_STRONGHOLD_HAS_STRUCTURE = keyOf("has_structure/indev_stronghold");

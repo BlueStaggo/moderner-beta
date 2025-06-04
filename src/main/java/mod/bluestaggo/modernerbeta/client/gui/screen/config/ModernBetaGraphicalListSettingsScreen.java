@@ -67,7 +67,7 @@ public abstract class ModernBetaGraphicalListSettingsScreen extends ModernBetaGr
                 SimpleOption<?> right = options.get(j + 1);
 
                 if (right != null) {
-                    list.addAll(left, right);
+                    list.addAll(new SimpleOption[] {left, right});
                 } else {
                     list.addSingleOptionEntry(left);
                 }
@@ -135,7 +135,7 @@ public abstract class ModernBetaGraphicalListSettingsScreen extends ModernBetaGr
                 "",
                 SimpleOption.emptyTooltip(),
                 (optionText, value) -> Text.of(stringSupplier.get()),
-                new TextFieldCallbacks(string -> ExtendedBiomeId.validate(string).isSuccess()),
+                new TextFieldCallbacks(string -> ExtendedBiomeId.validate(string).error().isEmpty()),
                 ExtendedBiomeId.of(stringSupplier.get()).toString(),
                 value -> {
                     settings.add(i, NbtString.of(value));

@@ -5,22 +5,23 @@ import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.command.DebugProviderSettingsCommand;
 import mod.bluestaggo.modernerbeta.fabric.network.NetworkHelperImpl;
 import mod.bluestaggo.modernerbeta.fabric.registry.RegistryHelperImpl;
-import mod.bluestaggo.modernerbeta.network.BiomeProviderInfoPayload;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.world.ModernBetaWorldInitializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.registry.DynamicRegistries;
+//? if >=1.20.2 {
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import mod.bluestaggo.modernerbeta.network.BiomeProviderInfoPayload;
+//?}
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
-
-import java.util.Map;
+import net.minecraft.util.Pair;
 
 public class ModernerBetaFabric implements ModInitializer {
     @Override
@@ -37,8 +38,8 @@ public class ModernerBetaFabric implements ModInitializer {
         ModernerBetaInitializer.setupRegistryHandlers(ModernerBeta.CUSTOM_REGISTRY_HANDLERS);
 
         ModernerBeta.setupCustomDynamicRegistries();
-        for (Map.Entry<RegistryKey<?>, Codec<?>> dynamicRegistry : ModernerBeta.CUSTOM_DYNAMIC_REGISTRIES.entrySet()) {
-            DynamicRegistries.register((RegistryKey<Registry<Object>>)dynamicRegistry.getKey(), (Codec<Object>)dynamicRegistry.getValue());
+        for (Pair<RegistryKey<?>, Codec<?>> dynamicRegistry : ModernerBeta.CUSTOM_DYNAMIC_REGISTRIES) {
+            DynamicRegistries.register((RegistryKey<Registry<Object>>)dynamicRegistry.getLeft(), (Codec<Object>)dynamicRegistry.getRight());
         }
 
         if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
@@ -52,7 +53,6 @@ public class ModernerBetaFabric implements ModInitializer {
 
         //? if >=1.20.2 {
         PayloadTypeRegistry.playS2C().register(BiomeProviderInfoPayload.ID, BiomeProviderInfoPayload.CODEC);
-        //?} else {
         //?}
     }
 

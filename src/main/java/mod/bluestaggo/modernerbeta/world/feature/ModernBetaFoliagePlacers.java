@@ -1,6 +1,7 @@
 package mod.bluestaggo.modernerbeta.world.feature;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;
+import mod.bluestaggo.modernerbeta.mixin.AccessorFoliagePlacerType;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import mod.bluestaggo.modernerbeta.world.feature.foliage.Oak14a08FoliagePlacer;
 import net.minecraft.world.gen.foliage.FoliagePlacer;
@@ -12,13 +13,9 @@ public class ModernBetaFoliagePlacers {
 
 	private static <P extends FoliagePlacer> FoliagePlacerType<P> register(
 		String id,
-		//? if >=1.20.5 {
-		/*com.mojang.serialization.MapCodec<P> codec
-		*///?} else {
-		com.mojang.serialization.Codec<P> codec
-		//?}
+		com.mojang.serialization.MapCodec<P> codec
 	) {
-		return registryHandler.register(ModernerBeta.createId(id), new FoliagePlacerType<>(codec));
+		return registryHandler.register(ModernerBeta.createId(id), AccessorFoliagePlacerType.create(codec));
     }
 
 	@SuppressWarnings("unchecked")

@@ -43,13 +43,13 @@ public class ModernerBeta {
     public static final ModernBetaConfig CONFIG = AutoConfig.register(ModernBetaConfig.class, GsonConfigSerializer::new).getConfig();
     private static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
-    public static final Map<Registry<?>, Consumer<IRegistryHandler<?>>> REGISTRY_HANDLERS = Map.of(
-        Registries.FOLIAGE_PLACER_TYPE, ModernBetaFoliagePlacers::register,
-        Registries.PLACEMENT_MODIFIER_TYPE, ModernBetaPlacementTypes::register,
-        Registries.FEATURE, ModernBetaFeatures::register,
-        Registries.CARVER, ModernBetaCarvers::register,
-        Registries.BIOME_SOURCE, ModernBetaBiomeSource::register,
-        Registries.CHUNK_GENERATOR, ModernBetaChunkGenerator::register
+    public static final List<Pair<Registry<?>, Consumer<IRegistryHandler<?>>>> REGISTRY_HANDLERS = List.of(
+        new Pair<>(Registries.FOLIAGE_PLACER_TYPE, ModernBetaFoliagePlacers::register),
+        new Pair<>(Registries.PLACEMENT_MODIFIER_TYPE, ModernBetaPlacementTypes::register),
+        new Pair<>(Registries.FEATURE, ModernBetaFeatures::register),
+        new Pair<>(Registries.CARVER, ModernBetaCarvers::register),
+        new Pair<>(Registries.BIOME_SOURCE, ModernBetaBiomeSource::register),
+        new Pair<>(Registries.CHUNK_GENERATOR, ModernBetaChunkGenerator::register)
     );
 
     public static List<Pair<Registry<?>, Consumer<IRegistryHandler<?>>>> CUSTOM_REGISTRY_HANDLERS;

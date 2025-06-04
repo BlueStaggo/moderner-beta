@@ -66,11 +66,24 @@ public class ModernBetaSelectBiomeScreen extends Screen {
 
     @Override
     protected void init() {
+        //? if >=1.20.2 {
         DirectionalLayoutWidget header = this.layout.addHeader(DirectionalLayoutWidget.vertical().spacing(8));
+        //?} else {
+        /*GridWidget.Adder header = this.layout.addHeader(new GridWidget().setColumnSpacing(8)).createAdder(1);
+        *///?}
+
         header.getMainPositioner().alignHorizontalCenter();
         header.add(new TextWidget(this.getTitle(), this.textRenderer));
+
+        //? if >=1.20.2 {
         this.biomeSelectionList = this.layout.addBody(new ModernBetaSelectBiomeScreen.BiomeListWidget());
         DirectionalLayoutWidget footer = this.layout.addFooter(DirectionalLayoutWidget.horizontal().spacing(8));
+        //?} else {
+        /*this.biomeSelectionList = new ModernBetaSelectBiomeScreen.BiomeListWidget();
+        this.addDrawableChild(this.biomeSelectionList);
+        GridWidget.Adder footer = this.layout.addFooter(new GridWidget().setColumnSpacing(8)).createAdder(2);
+        *///?}
+
         this.confirmButton = footer.add(ButtonWidget.builder(ScreenTexts.DONE, button -> {
             this.onDone.accept(this.biome);
             this.close();
@@ -88,6 +101,7 @@ public class ModernBetaSelectBiomeScreen extends Screen {
 
     protected void refreshWidgetPositions() {
         this.layout.refreshPositions();
+        //? if >=1.20.2
         this.biomeSelectionList.position(this.width, this.layout);
     }
 
@@ -97,7 +111,11 @@ public class ModernBetaSelectBiomeScreen extends Screen {
 
     class BiomeListWidget extends AlwaysSelectedEntryListWidget<BiomeListWidget.BiomeItem> {
         BiomeListWidget() {
+            //? if >=1.20.2 {
             super(ModernBetaSelectBiomeScreen.this.client, ModernBetaSelectBiomeScreen.this.width, ModernBetaSelectBiomeScreen.this.height - 77, 40, 16);
+            //?} else {
+            /*super(ModernBetaSelectBiomeScreen.this.client, ModernBetaSelectBiomeScreen.this.width, ModernBetaSelectBiomeScreen.this.height, 37, ModernBetaSelectBiomeScreen.this.height - 37, 16);
+            *///?}
             Collator collator = Collator.getInstance(Locale.getDefault());
             if (ModernBetaSelectBiomeScreen.this.allowNone)
                 this.addEntry(new BiomeItem());

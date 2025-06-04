@@ -26,5 +26,11 @@ stonecutter.parameters {
             replace(".getOrThrow(RegistryKeys.", ".get(RegistryKeys.")
             phase = "LAST"
         }
+
+        string {
+            direction = eval(metadata.version, ">=1.21.6")
+            replace("this.getOrCreateTagBuilder(", "this.builder(")
+            phase = "LAST"
+        }
     }
 }

@@ -13,6 +13,9 @@ pluginManagement {
             url = "https://maven.neoforged.net/releases"
         }
         maven {
+            url = "https://maven.kikugie.dev/releases"
+        }
+        maven {
             url = "https://maven.kikugie.dev/snapshots"
         }
         gradlePluginPortal()

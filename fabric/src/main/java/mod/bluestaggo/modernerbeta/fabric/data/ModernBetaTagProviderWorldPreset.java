@@ -21,7 +21,7 @@ public class ModernBetaTagProviderWorldPreset extends FabricTagProvider<WorldPre
 
     @Override
     protected void configure(WrapperLookup lookup) {
-        getOrCreateTagBuilder(WorldPresetTags.NORMAL)
+        this.getOrCreateTagBuilder(WorldPresetTags.NORMAL)
             .add(MODERN_BETA);
     }
     

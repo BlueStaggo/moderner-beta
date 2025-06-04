@@ -18,7 +18,12 @@
   ],
   "client": [
     "client.AccessorTextWidget",
+    //? if >=1.21.6 {
+    /*"client.StandardFogModifier",
+    "client.MixinWaterFogModifier",
+    *///?} else {
     "client.MixinBackgroundRenderer",
+    //?}
     "client.MixinBiomeColors",
     "client.MixinClientWorld",
     "client.MixinDebugHud",

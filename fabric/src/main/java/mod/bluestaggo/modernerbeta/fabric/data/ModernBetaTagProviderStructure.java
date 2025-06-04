@@ -18,7 +18,7 @@ public class ModernBetaTagProviderStructure extends FabricTagProvider<Structure>
 
     @Override
     protected void configure(WrapperLookup lookup) {
-        getOrCreateTagBuilder(StructureTags.EYE_OF_ENDER_LOCATED)
+        this.getOrCreateTagBuilder(StructureTags.EYE_OF_ENDER_LOCATED)
             .add(ModernBetaStructures.INDEV_STRONGHOLD);
     }
 }

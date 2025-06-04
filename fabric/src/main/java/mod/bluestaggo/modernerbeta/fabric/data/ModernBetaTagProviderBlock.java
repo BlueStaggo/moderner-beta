@@ -11,14 +11,27 @@ import net.minecraft.registry.RegistryWrapper.WrapperLookup;
 
 import java.util.concurrent.CompletableFuture;
 
-public class ModernBetaTagProviderBlock extends FabricTagProvider<Block> {
+public class ModernBetaTagProviderBlock
+        extends
+        //? if >=1.21.6 {
+        /*FabricTagProvider.BlockTagProvider
+        *///?} else {
+        FabricTagProvider<Block>
+        //?}
+{
     public ModernBetaTagProviderBlock(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
-        super(output, RegistryKeys.BLOCK, registriesFuture);
+        super(output, /*? <1.21.6 {*/ RegistryKeys.BLOCK, /*?}*/ registriesFuture);
     }
 
     @Override
     protected void configure(WrapperLookup lookup) {
-        getOrCreateTagBuilder(ModernBetaBlockTags.OVERWORLD_CARVER_REPLACEABLES).add(
+        //? if >=1.21.6 {
+        /*this.valueLookupBuilder(
+        *///?} else {
+        this.getOrCreateTagBuilder(
+        //?}
+                ModernBetaBlockTags.OVERWORLD_CARVER_REPLACEABLES
+        ).add(
             Blocks.STONE,
             Blocks.COBBLESTONE,
             Blocks.DIRT,

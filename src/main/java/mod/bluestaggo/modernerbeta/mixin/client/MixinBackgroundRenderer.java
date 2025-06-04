@@ -5,6 +5,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.api.world.biome.climate.Clime;
+import mod.bluestaggo.modernerbeta.client.FogUtils;
 import mod.bluestaggo.modernerbeta.client.color.BlockColorSampler;
 import mod.bluestaggo.modernerbeta.client.world.ModernBetaClientWorld;
 import net.fabricmc.api.EnvType;
@@ -12,7 +13,6 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.render.BackgroundRenderer;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.biome.Biome;
 import org.spongepowered.asm.mixin.Mixin;
@@ -44,7 +44,7 @@ public abstract class MixinBackgroundRenderer {
 
     @Unique private static Vec3d modernBeta_pos;
     @Unique private static int modernBeta_renderDistance = 16;
-    @Unique private static float modernBeta_fogWeight = modernerBeta$calculateFogWeight(16);
+    @Unique private static float modernBeta_fogWeight = FogUtils.calculateFogWeight(16);
     @Unique private static boolean modernBeta_isModernBetaWorld = false;
 
     //? if >=1.20.2 {
@@ -90,7 +90,7 @@ public abstract class MixinBackgroundRenderer {
 
         if (modernBeta_renderDistance != renderDistance) {
             modernBeta_renderDistance = renderDistance;
-            modernBeta_fogWeight = modernerBeta$calculateFogWeight(renderDistance);
+            modernBeta_fogWeight = FogUtils.calculateFogWeight(renderDistance);
         }
 
         // Track whether current client world is Modern Beta world,
@@ -112,23 +112,6 @@ public abstract class MixinBackgroundRenderer {
     )
     private static float modifyFogWeighting(float weight) {
         return modernBeta_isModernBetaWorld && ModernerBeta.CONFIG.useOldFogColor ? modernBeta_fogWeight : weight;
-    }
-    
-    @Unique
-    private static float modernerBeta$calculateFogWeight(int renderDistance) {
-        // Old fog formula with old render distance: weight = 1.0F / (float)(4 - renderDistance) 
-        // where renderDistance is 0-3, 0 being 'Far' and 3 being 'Very Short'
-        
-        int clampedDistance = MathHelper.clamp(renderDistance, 4, 16);
-        clampedDistance -= 4;
-        clampedDistance /= 4;
-
-        int oldRenderDistance = Math.abs(clampedDistance - 3); 
-        
-        float weight = 1.0F / (float)(4 - oldRenderDistance);
-        weight = 1.0F - (float)Math.pow(weight, 0.25);
-        
-        return weight;
     }
 }
 //?}

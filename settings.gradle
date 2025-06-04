@@ -24,7 +24,6 @@ pluginManagement {
     resolutionStrategy {
         eachPlugin {
             if (it.requested.id.id == "dev.architectury.loom") {
-                println("${loom_version}")
                 it.useVersion("${loom_version}")
             }
         }

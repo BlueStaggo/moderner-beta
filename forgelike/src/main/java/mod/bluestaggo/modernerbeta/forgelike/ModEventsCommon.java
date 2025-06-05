@@ -9,7 +9,6 @@ import mod.bluestaggo.modernerbeta.network.S2CPacketHandlers;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHelper;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
-import mod.bluestaggo.modernerbeta.registry.VanillaRegistryHandler;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.resource.ResourcePackProfile;
@@ -17,8 +16,9 @@ import net.minecraft.resource.ResourcePackSource;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-//? if neoforge {
 import net.minecraft.util.Pair;
+//? if neoforge {
+import mod.bluestaggo.modernerbeta.registry.VanillaRegistryHandler;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLConstructModEvent;

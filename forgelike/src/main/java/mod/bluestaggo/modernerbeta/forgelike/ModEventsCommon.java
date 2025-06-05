@@ -75,26 +75,19 @@ public class ModEventsCommon {
     public static void registerToRegistries(RegisterEvent event) {
         //? if neoforge {
         Registry<?> registry = event.getRegistry();
-
         VanillaRegistryHandler<?> registryHandler = new VanillaRegistryHandler<>(registry);
-        ModernerBeta.REGISTRY_HANDLERS.stream()
-            .filter(pair -> pair.getLeft().equals(registry))
-            .forEach(pair -> pair.getRight().accept(registryHandler));
-        ModernerBeta.CUSTOM_REGISTRY_HANDLERS.stream()
-            .filter(pair -> pair.getLeft().equals(registry))
-            .forEach(pair -> pair.getRight().accept(registryHandler));
         //?} else {
         /*Registry<?> registry = event.getVanillaRegistry();
         if (registry == null) return;
 
         ForgeRegistryHandler<?> registryHandler = new ForgeRegistryHandler<>(event);
+        *///?}
         ModernerBeta.REGISTRY_HANDLERS.stream()
             .filter(pair -> pair.getLeft().equals(registry))
             .forEach(pair -> pair.getRight().accept(registryHandler));
         ModernerBeta.CUSTOM_REGISTRY_HANDLERS.stream()
             .filter(pair -> pair.getLeft().equals(registry))
             .forEach(pair -> pair.getRight().accept(registryHandler));
-        *///?}
     }
 
     @SubscribeEvent

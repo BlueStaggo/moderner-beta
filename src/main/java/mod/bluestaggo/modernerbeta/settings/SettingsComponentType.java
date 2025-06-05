@@ -32,10 +32,20 @@ public record SettingsComponentType<T>(Codec<T> codec, T defaultValue) {
                 public <T2> DataResult<T2> encode(Map<SettingsComponentType<?>, Object> input, DynamicOps<T2> ops, T2 prefix) {
                     var recordBuilder = (RecordBuilder<Object>) ops.mapBuilder();
                     for (Map.Entry<SettingsComponentType<?>, Object> entry : input.entrySet()) {
+                        DataResult<T2> identifierResult = Identifier.CODEC.encodeStart(
+                            ops, ModernBetaRegistries.SETTINGS_COMPONENT_TYPE.getId(entry.getKey()));
+                        if (identifierResult.result().isEmpty()) {
+                            return DataResult.error(identifierResult.error().orElseThrow()::message);
+                        }
+
+                        DataResult<T2> entryResult = ((Codec<Object>) entry.getKey().codec()).encodeStart(ops, entry.getValue());
+                        if (entryResult.result().isEmpty()) {
+                            return DataResult.error(entryResult.error().orElseThrow()::message);
+                        }
+
                         recordBuilder.add(
-                            Identifier.CODEC.encodeStart(
-                                ops, ModernBetaRegistries.SETTINGS_COMPONENT_TYPE.getId(entry.getKey())),
-                            ((Codec<Object>) entry.getKey().codec()).encodeStart(ops, entry.getValue())
+                            identifierResult.result().get(),
+                            entryResult.result().get()
                         );
                     }
                     return (DataResult<T2>) recordBuilder.build(prefix);
@@ -60,14 +70,14 @@ public record SettingsComponentType<T>(Codec<T> codec, T defaultValue) {
                                 return DataResult.error(() -> "Settings component type \"" + identifierResult.result());
                             }
 
-                            DataResult<?> settingsComponentResult = settingsComponentType.codec().decode(ops, pair.getSecond());
+                            DataResult<? extends Pair<?, T2>> settingsComponentResult = settingsComponentType.codec().decode(ops, pair.getSecond());
                             if (settingsComponentResult.result().isEmpty()) {
                                 return DataResult.error(settingsComponentResult.error().orElseThrow()::message);
                             }
 
                             return DataResult.success(Pair.of(
                                 settingsComponentType,
-                                settingsComponentResult.result().get()
+                                settingsComponentResult.result().get().getFirst()
                             ));
                         })
                         .toList();

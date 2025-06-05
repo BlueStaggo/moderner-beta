@@ -127,7 +127,6 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
             Text.translatable(TEXT_PRESET_NAME + "." + presetKey.getPath()).formatted(Formatting.YELLOW)
         );
 
-        DynamicRegistryManager dynamicRegistryManager = this.generatorOptionsHolder.getCombinedRegistryManager();
         this.buttonPreset = ButtonWidget.builder(
             presetText,
             button -> this.client.setScreen(new ModernBetaSettingsPresetScreen(

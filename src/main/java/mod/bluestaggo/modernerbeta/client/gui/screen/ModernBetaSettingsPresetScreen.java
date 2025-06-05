@@ -97,10 +97,19 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
 
         this.updateSelectButton(this.listWidget.getSelectedOrNull() instanceof PresetsListWidget.PresetEntry);
     }
-    
+
+    //? if <1.20.5 {
+    /*@Override
+    public void renderBackground(DrawContext context) {
+    }
+    *///?}
+
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+        //? if <1.20.5
+        /*this.listWidget.render(context, mouseX, mouseY, delta);*/
         super.render(context, mouseX, mouseY, delta);
+        //? if >=1.20.5
         this.listWidget.render(context, mouseX, mouseY, delta);
     }
 

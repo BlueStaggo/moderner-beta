@@ -26,7 +26,12 @@ public abstract class MixinPlayerManager {
             method = "sendWorldInfo",
             at = @At(
                     value = "INVOKE",
+                    //? if >=1.20.5 {
                     target = "Lnet/minecraft/server/ServerTickManager;sendPackets(Lnet/minecraft/server/network/ServerPlayerEntity;)V",
+                    //?} else {
+                    /*target = "Lnet/minecraft/server/network/ServerPlayNetworkHandler;sendPacket(Lnet/minecraft/network/packet/Packet;)V",
+                    ordinal = 0,
+                    *///?}
                     shift = At.Shift.BEFORE
             )
     )

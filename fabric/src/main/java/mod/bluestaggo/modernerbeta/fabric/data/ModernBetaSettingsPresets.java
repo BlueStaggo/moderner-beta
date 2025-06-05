@@ -2274,6 +2274,7 @@ public final class ModernBetaSettingsPresets {
                             "minecraft:river",
                             "minecraft:windswept_hills",
                             "minecraft:windswept_forest",
+                            "minecraft:windswept_gravelly_hills",
                             "minecraft:meadow",
                             "minecraft:badlands",
                             "minecraft:swamp",

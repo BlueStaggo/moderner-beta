@@ -1,7 +1,5 @@
 package mod.bluestaggo.modernerbeta.util;
 
-//? if <1.21.2
-/*import net.minecraft.block.Block;*/
 import com.mojang.serialization.DataResult;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

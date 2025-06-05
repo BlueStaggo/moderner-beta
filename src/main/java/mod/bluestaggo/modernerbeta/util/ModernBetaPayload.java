@@ -5,20 +5,29 @@ import net.minecraft.network.packet.CustomPayload;
 //?} else {
 /*import io.netty.buffer.Unpooled;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.listener.PacketListener;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.util.Identifier;
 *///?}
 
 public interface ModernBetaPayload
-    //? if >=1.20.2
+    //? if >=1.20.2 {
     extends CustomPayload
+    //?} else {
+    /*extends Packet<PacketListener>
+    *///?}
 {
     //? if <1.20.2 {
-    /*void writeToPacketByteBuf(PacketByteBuf packetByteBuf);
+    /*void write(PacketByteBuf packetByteBuf);
     Identifier getId();
+
+    @Override
+    default void apply(PacketListener listener) {
+    }
 
     default PacketByteBuf toPacketByteBuf() {
         PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-        this.writeToPacketByteBuf(buf);
+        this.write(buf);
         return buf;
     }
     *///?}

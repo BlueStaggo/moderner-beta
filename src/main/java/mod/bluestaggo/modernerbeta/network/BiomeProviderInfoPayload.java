@@ -70,7 +70,7 @@ public record BiomeProviderInfoPayload(
     }
 
     @Override
-    public void writeToPacketByteBuf(PacketByteBuf packetByteBuf) {
+    public void write(PacketByteBuf packetByteBuf) {
         packetByteBuf.writeBoolean(this.isModernBetaWorld());
         packetByteBuf.writeBoolean(this.hasBiomeProvider());
         packetByteBuf.writeOptional(this.seed(), PacketByteBuf::writeLong);

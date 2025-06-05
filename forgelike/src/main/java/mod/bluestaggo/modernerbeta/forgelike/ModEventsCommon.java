@@ -18,6 +18,7 @@ import net.minecraft.resource.ResourceType;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 //? if neoforge {
+import net.minecraft.util.Pair;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLConstructModEvent;
@@ -76,15 +77,23 @@ public class ModEventsCommon {
         Registry<?> registry = event.getRegistry();
 
         VanillaRegistryHandler<?> registryHandler = new VanillaRegistryHandler<>(registry);
-        ModernerBeta.REGISTRY_HANDLERS.getOrDefault(registry, NONE).accept(registryHandler);
-        ModernerBeta.CUSTOM_REGISTRY_HANDLERS.getOrDefault(registry, NONE).accept(registryHandler);
+        ModernerBeta.REGISTRY_HANDLERS.stream()
+            .filter(pair -> pair.getLeft().equals(registry))
+            .forEach(pair -> pair.getRight().accept(registryHandler));
+        ModernerBeta.CUSTOM_REGISTRY_HANDLERS.stream()
+            .filter(pair -> pair.getLeft().equals(registry))
+            .forEach(pair -> pair.getRight().accept(registryHandler));
         //?} else {
         /*Registry<?> registry = event.getVanillaRegistry();
         if (registry == null) return;
 
         ForgeRegistryHandler<?> registryHandler = new ForgeRegistryHandler<>(event);
-        ModernerBeta.REGISTRY_HANDLERS.get(registry, NONE).accept(registryHandler);
-        ModernerBeta.CUSTOM_REGISTRY_HANDLERS.get(registry, NONE).accept(registryHandler);
+        ModernerBeta.REGISTRY_HANDLERS.stream()
+            .filter(pair -> pair.getLeft().equals(registry))
+            .forEach(pair -> pair.getRight().accept(registryHandler));
+        ModernerBeta.CUSTOM_REGISTRY_HANDLERS.stream()
+            .filter(pair -> pair.getLeft().equals(registry))
+            .forEach(pair -> pair.getRight().accept(registryHandler));
         *///?}
     }
 
@@ -99,8 +108,8 @@ public class ModEventsCommon {
     @SuppressWarnings("unchecked")
     public static void registerDatapackRegistries(DataPackRegistryEvent.NewRegistry event) {
         ModernerBeta.setupCustomDynamicRegistries();
-        for (Map.Entry<RegistryKey<?>, Codec<?>> dynamicRegistry : ModernerBeta.CUSTOM_DYNAMIC_REGISTRIES.entrySet()) {
-            event.dataPackRegistry((RegistryKey<Registry<Object>>)dynamicRegistry.getKey(), (Codec<Object>)dynamicRegistry.getValue());
+        for (Pair<RegistryKey<?>, Codec<?>> dynamicRegistry : ModernerBeta.CUSTOM_DYNAMIC_REGISTRIES) {
+            event.dataPackRegistry((RegistryKey<Registry<Object>>)dynamicRegistry.getLeft(), (Codec<Object>)dynamicRegistry.getRight());
         }
     }
 

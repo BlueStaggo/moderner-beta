@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "(,)"
+loaderVersion = "[1,)"
 issueTrackerURL = "https://github.com/Nostalgica-Reverie/moderner-beta/issues"
 license = "MIT"
 
@@ -11,7 +11,7 @@ modId = "moderner_beta"
 version = "${version}"
 displayName = "Moderner Beta"
 authors = "BlueStaggo, bespectacled"
-credits = "SuperCoder7979, Arenovas, Amb0s, PaulEvs, ErzeKawek, icanttellyou comp500, ErzeKawe"
+credits = "SuperCoder7979, Arenovas, Amb0s, PaulEvs, ErzeKawek, icanttellyou, comp500, ErzeKawe"
 description = '''
 Old (and not so old) world generation for modern Minecraft!
 '''
@@ -31,6 +31,6 @@ side = "BOTH"
 
 [[dependencies.moderner_beta]]
 modId = "cloth_config"
-versionRange = "(,)"
+versionRange = "[1,)"
 ordering = "NONE"
 side = "BOTH"

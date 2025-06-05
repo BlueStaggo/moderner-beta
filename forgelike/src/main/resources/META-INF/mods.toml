@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "(,)"
+loaderVersion = "[1,)"
 issueTrackerURL = "https://github.com/Nostalgica-Reverie/moderner-beta/issues"
 license = "MIT"
 
@@ -28,6 +28,6 @@ side = "BOTH"
 
 [[dependencies.moderner_beta]]
 modId = "cloth_config"
-versionRange = "(,)"
+versionRange = "[1,)"
 ordering = "NONE"
 side = "BOTH"

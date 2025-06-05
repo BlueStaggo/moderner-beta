@@ -1,5 +1,6 @@
 package mod.bluestaggo.modernerbeta.client.color;
 
+import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -24,7 +25,7 @@ public final class BlockColors {
         registerer.register(
             BlockColorSampler.INSTANCE::getShortGrassColor,
             Blocks.FERN,
-            Blocks.SHORT_GRASS,
+            VersionCompat.SHORT_GRASS,
             Blocks.POTTED_FERN
             //? if >=1.21.5
             , Blocks.BUSH

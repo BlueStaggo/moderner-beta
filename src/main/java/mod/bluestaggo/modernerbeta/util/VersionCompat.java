@@ -3,7 +3,9 @@ package mod.bluestaggo.modernerbeta.util;
 //? if <1.21.2
 /*import net.minecraft.block.Block;*/
 import com.mojang.serialization.DataResult;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.util.Identifier;
@@ -19,6 +21,13 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 public final class VersionCompat {
+    public static final Block SHORT_GRASS =
+        //? if >=1.20.3 {
+        Blocks.SHORT_GRASS;
+        //?} else {
+        /*Blocks.GRASS;
+        *///?}
+
     public static <T> T accessPool(Pool<T> pool, Random random) {
         //? if >=1.21.5 {
         return pool.get(random);

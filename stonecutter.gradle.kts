@@ -50,11 +50,5 @@ stonecutter.parameters {
             replace("RecordCodecBuilder.mapCodec(", "RecordCodecBuilder./*mapCodec*/create(")
             phase = "LAST"
         }
-
-        string {
-            direction = eval(metadata.version, "<1.20.3")
-            replace("Blocks.SHORT_GRASS", "Blocks./*SHORT_*/GRASS")
-            phase = "LAST"
-        }
     }
 }

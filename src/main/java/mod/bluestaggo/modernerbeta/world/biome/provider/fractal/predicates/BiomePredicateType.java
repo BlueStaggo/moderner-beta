@@ -44,4 +44,9 @@ public record BiomePredicateType<P extends BiomePredicate>(com.mojang.serializat
         TRUE = register("true", TrueBiomePredicate.CODEC);
         WRAPPED_INT_MATCH = register("wrapped_int_match", WrappedIntMatchBiomePredicate.CODEC);
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return this == obj;
+    }
 }

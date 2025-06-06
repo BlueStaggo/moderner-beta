@@ -3,6 +3,7 @@ package mod.bluestaggo.modernerbeta.world.biome;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -286,11 +287,16 @@ public record HeightConfig(float depth, float scale, String type) {
 	}
 
 	@Override
-	public String toString() {
+	public @NotNull String toString() {
 		return String.format(
 			"[depth=%.3f, scale=%.3f]",
 			this.depth,
 			this.scale
 		);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		return this == obj;
 	}
 }

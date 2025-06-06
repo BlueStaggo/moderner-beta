@@ -244,5 +244,12 @@ public class ForgeRegistryWrapper<T> implements Registry<T> {
     public @NotNull Iterator<T> iterator() {
         return this.getForgeRegistry().getValues().iterator();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        ForgeRegistryWrapper<?> that = (ForgeRegistryWrapper<?>) o;
+        return this.forgeRegistrySupplier.get() == that.forgeRegistrySupplier.get();
+    }
 }
 *///?}

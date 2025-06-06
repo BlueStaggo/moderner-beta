@@ -97,4 +97,9 @@ public record SettingsComponentType<T>(Codec<T> codec, T defaultValue) {
             }
         );
         *///?}
+
+    @Override
+    public boolean equals(Object obj) {
+        return this == obj;
+    }
 }

@@ -65,4 +65,9 @@ public record LayerType<L extends Layer>(com.mojang.serialization.MapCodec<L> co
         WEIGHTED_BIOME = register("weighted_biome", WeightedBiomeLayer.CODEC);
         WEIGHTED_LAYER = register("weighted_layer", WeightedLayerLayer.CODEC);
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return this == obj;
+    }
 }

@@ -37,7 +37,6 @@ public class RegistryBuilderImpl<T> implements IRegistryBuilder<T> {
     @Override
     public Registry<T> build() {
         //? if neoforge {
-        
         this.registryBuilder.sync(this.sync);
         Registry<T> registry = this.registryBuilder.create();
         this.event.register(registry);

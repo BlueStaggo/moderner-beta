@@ -6,7 +6,6 @@ import mod.bluestaggo.modernerbeta.forgelike.network.NetworkHelperImpl;
 import mod.bluestaggo.modernerbeta.forgelike.registry.RegistryHelperImpl;
 import mod.bluestaggo.modernerbeta.network.BiomeProviderInfoPayload;
 import mod.bluestaggo.modernerbeta.network.S2CPacketHandlers;
-import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHelper;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import net.minecraft.registry.Registry;
@@ -32,19 +31,26 @@ import net.neoforged.neoforge.registries.RegisterEvent;
 //?} else {
 /*import mod.bluestaggo.modernerbeta.forgelike.registry.ForgeRegistryHandler;
 import net.minecraft.resource.DirectoryResourcePack;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.common.util.LogicalSidedProvider;
 import net.minecraftforge.event.AddPackFindersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLConstructModEvent;
 import net.minecraftforge.fml.loading.FMLLoader;
+import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.registries.DataPackRegistryEvent;
+import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.NewRegistryEvent;
 import net.minecraftforge.registries.RegisterEvent;
 
 import java.nio.file.Path;
 *///?}
 
+import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 //? if neoforge {
@@ -67,9 +73,33 @@ public class ModEventsCommon {
 
         if (!FMLLoader.isProduction())
             ModernerBeta.DEV_ENV = true;
-    }
 
-    private static final Consumer<IRegistryHandler<?>> NONE = h -> {};
+        //? if forge {
+        /*NetworkHelperImpl networkHelper = new NetworkHelperImpl();
+        ModernerBeta.networkHelper = networkHelper;
+
+        int id = 0;
+        networkHelper.channel.registerMessage(
+            ++id,
+            BiomeProviderInfoPayload.class,
+            BiomeProviderInfoPayload::write,
+            BiomeProviderInfoPayload::fromPacketByteBuf,
+            (payload, context) -> {
+                context.get().enqueueWork(() -> {
+                    DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () ->
+                        S2CPacketHandlers.onBiomeProviderInfo(
+                            LogicalSidedProvider.CLIENTWORLD.get(
+                                context.get().getDirection().getReceptionSide())
+                                .orElseThrow(),
+                            payload
+                        ));
+                });
+                context.get().setPacketHandled(true);
+            },
+            Optional.of(NetworkDirection.PLAY_TO_CLIENT)
+        );
+        *///?}
+    }
 
     @SubscribeEvent
     public static void registerToRegistries(RegisterEvent event) {
@@ -77,16 +107,13 @@ public class ModEventsCommon {
         Registry<?> registry = event.getRegistry();
         VanillaRegistryHandler<?> registryHandler = new VanillaRegistryHandler<>(registry);
         //?} else {
-        /*Registry<?> registry = event.getVanillaRegistry();
-        if (registry == null) return;
-
-        ForgeRegistryHandler<?> registryHandler = new ForgeRegistryHandler<>(event);
+        /*ForgeRegistryHandler<?> registryHandler = new ForgeRegistryHandler<>(event);
         *///?}
         ModernerBeta.REGISTRY_HANDLERS.stream()
-            .filter(pair -> pair.getLeft().equals(registry))
+            .filter(pair -> pair.getLeft().getKey().equals(event.getRegistryKey()))
             .forEach(pair -> pair.getRight().accept(registryHandler));
         ModernerBeta.CUSTOM_REGISTRY_HANDLERS.stream()
-            .filter(pair -> pair.getLeft().equals(registry))
+            .filter(pair -> pair.getLeft().getKey().equals(event.getRegistryKey()))
             .forEach(pair -> pair.getRight().accept(registryHandler));
     }
 
@@ -106,7 +133,6 @@ public class ModEventsCommon {
         }
     }
 
-    //TODO
     //? if neoforge {
     @SubscribeEvent
     public static void registerPayloadHandlers(RegisterPayloadHandlersEvent event) {

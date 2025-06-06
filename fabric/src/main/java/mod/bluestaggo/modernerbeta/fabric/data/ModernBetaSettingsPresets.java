@@ -1605,7 +1605,9 @@ public final class ModernBetaSettingsPresets {
             ExtendedBiomeId.of("minecraft:windswept_forest").mapTo("minecraft:windswept_gravelly_hills")
         );
         var modernVariants = Map.ofEntries(
+            //? if >=1.21.4 {
             ExtendedBiomeId.of("minecraft:dark_forest").mapTo("minecraft:pale_garden"),
+            //?}
             ExtendedBiomeId.of("minecraft:windswept_hills").mapTo("minecraft:meadow"),
             ExtendedBiomeId.of("minecraft:taiga").mapTo("minecraft:cherry_grove"),
             ExtendedBiomeId.of("minecraft:swamp").mapTo("minecraft:mangrove_swamp")

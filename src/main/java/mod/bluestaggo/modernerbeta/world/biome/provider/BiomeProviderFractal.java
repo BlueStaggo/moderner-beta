@@ -2,6 +2,7 @@ package mod.bluestaggo.modernerbeta.world.biome.provider;
 
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
+import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
 import mod.bluestaggo.modernerbeta.api.world.biome.*;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
@@ -37,8 +38,8 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 		this.biomeAccess = new BiomeAccess(this, seed);
 
 		ConfiguredLayers fractalLayers = this.settings.getOrThrow(SettingsComponentTypes.FRACTAL_LAYERS);
-		this.allLayers = fractalLayers.getAllLayers();
-		this.layer = fractalLayers.getFinalLayer();
+		this.allLayers = fractalLayers.getPipeline();
+		this.layer = fractalLayers.getOutputOrThrow(ModernBetaBuiltInTypes.LayerOutput.BIOME.id);
 		this.layer.init(seed);
 
 		Set<ExtendedBiomeId> allExtendedBiomes = new HashSet<>();

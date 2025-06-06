@@ -52,12 +52,12 @@ public class ModernBetaSettings implements Iterable<SettingsComponent<?>> {
             .addAll(settings);
     }
 
-    public static ModernBetaSettings fractalLayers(Layer... layers) {
-        return fractalLayers(Arrays.asList(layers));
+    public static ModernBetaSettings fractalLayers(Map<Identifier, String> outputs, Layer... pipeline) {
+        return fractalLayers(outputs, Arrays.asList(pipeline));
     }
 
-    public static ModernBetaSettings fractalLayers(List<Layer> layers) {
-        return fractalLayers(new ConfiguredLayers(layers));
+    public static ModernBetaSettings fractalLayers(Map<Identifier, String> outputs, List<Layer> pipeline) {
+        return fractalLayers(new ConfiguredLayers(pipeline, outputs));
     }
 
     public static ModernBetaSettings fractalLayers(ConfiguredLayers configuredLayers) {

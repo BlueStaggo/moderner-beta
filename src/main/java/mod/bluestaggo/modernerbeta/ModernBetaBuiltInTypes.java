@@ -3,8 +3,6 @@ package mod.bluestaggo.modernerbeta;
 import mod.bluestaggo.modernerbeta.tags.ModernBetaBiomeTags;
 import net.minecraft.util.Identifier;
 
-import java.util.Set;
-
 public final class ModernBetaBuiltInTypes {
     public enum SettingsComponentType {
         PRESET("preset"),
@@ -55,12 +53,6 @@ public final class ModernBetaBuiltInTypes {
         MAJOR_RELEASE("major_release"),
         ;
 
-        public static final Set<Identifier> CHUNK_PROVIDER_NOISE = Set.of(
-            BETA.id, SKYLANDS.id, ALPHA.id, INFDEV_611.id, INFDEV_420.id, INFDEV_415.id, PE.id, EARLY_RELEASE.id, MAJOR_RELEASE.id);
-        public static final Set<Identifier> CHUNK_PROVIDER_FORCED_HEIGHT = Set.of(EARLY_RELEASE.id, MAJOR_RELEASE.id);
-        public static final Set<Identifier> CHUNK_PROVIDER_FINITE = Set.of(INDEV.id, CLASSIC_0_30.id);
-        public static final Set<Identifier> CHUNK_PROVIDER_SEA_LEVEL_63 = Set.of(EARLY_RELEASE.id, MAJOR_RELEASE.id);
-
         public final Identifier id;
         
         Chunk(String id) {
@@ -75,8 +67,6 @@ public final class ModernBetaBuiltInTypes {
         VORONOI("voronoi"),
         FRACTAL("fractal"),
         ;
-
-        public static final Set<Identifier> BIOME_PROVIDER_USES_NOISE = Set.of(BETA.id, PE.id, VORONOI.id);
 
         public final Identifier id;
         
@@ -242,20 +232,13 @@ public final class ModernBetaBuiltInTypes {
         }
     }
 
-    public enum PresetCategory {
-        BETA("beta"),
-        ALPHA_INFDEV("alpha_infdev"),
-        FINITE("finite"),
-        EARLY_RELEASE("early_release"),
-        EARLY_RELEASE_LARGE_BIOMES("early_release_large_biomes"),
-        MAJOR_RELEASE("major_release"),
-        BETA_CUSTOM("beta_custom"),
-        RELEASE_CUSTOM("release_custom"),
+    public enum LayerOutput {
+        BIOME("biome"),
         ;
 
         public final Identifier id;
 
-        PresetCategory(String id) {
+        LayerOutput(String id) {
             this.id = ModernerBeta.createId(id);
         }
     }

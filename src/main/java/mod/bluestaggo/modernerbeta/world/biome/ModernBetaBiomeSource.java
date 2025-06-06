@@ -8,7 +8,9 @@ import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.api.world.biome.*;
 import mod.bluestaggo.modernerbeta.api.world.cavebiome.CaveBiomeProvider;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
+import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistryKeys;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
+import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.world.biome.injector.BiomeInjector.BiomeInjectionStep;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
@@ -40,12 +42,14 @@ public class ModernBetaBiomeSource extends BiomeSource {
     public static final com.mojang.serialization.MapCodec<ModernBetaBiomeSource> CODEC = RecordCodecBuilder.mapCodec(
         instance -> instance.group(
             RegistryOps.getEntryLookupCodec(RegistryKeys.BIOME),
+            RegistryOps.getEntryLookupCodec(ModernBetaRegistryKeys.SETTINGS_PRESET),
             NbtCompound.CODEC.fieldOf("provider_settings").forGetter(biomeSource -> biomeSource.biomeSettings),
             NbtCompound.CODEC.fieldOf("cave_provider_settings").forGetter(biomeSource -> biomeSource.caveBiomeSettings)
         ).apply(instance, (instance).stable(ModernBetaBiomeSource::new))
     );
-    
+
     private final RegistryEntryLookup<Biome> biomeRegistry;
+    private final RegistryEntryLookup<ModernBetaSettingsPreset> presetRegistry;
     private final NbtCompound biomeSettings;
     private final NbtCompound caveBiomeSettings;
     
@@ -56,19 +60,23 @@ public class ModernBetaBiomeSource extends BiomeSource {
     
     public ModernBetaBiomeSource(
         RegistryEntryLookup<Biome> biomeRegistry,
+        RegistryEntryLookup<ModernBetaSettingsPreset> presetRegistry,
         NbtCompound biomeSettings,
         NbtCompound caveBiomeSettings
     ) {
         super();
         
         this.biomeRegistry = biomeRegistry;
+        this.presetRegistry = presetRegistry;
         this.biomeSettings = biomeSettings;
         this.caveBiomeSettings = caveBiomeSettings;
     }
     
     public void initProvider(long seed) {
-        ModernBetaSettings biomeSettings = ModernBetaSettings.fromCompound(this.biomeSettings);
-        ModernBetaSettings caveBiomeSettings = ModernBetaSettings.fromCompound(this.caveBiomeSettings);
+        ModernBetaSettings biomeSettings = ModernBetaSettings.fromCompound(this.biomeSettings)
+            .mapPreset(this.presetRegistry, ModernBetaSettingsPreset::biomeSettings);
+        ModernBetaSettings caveBiomeSettings = ModernBetaSettings.fromCompound(this.caveBiomeSettings)
+            .mapPreset(this.presetRegistry, ModernBetaSettingsPreset::caveBiomeSettings);
         
         this.biomeProvider = ModernBetaRegistries.BIOME
             .get(biomeSettings.getProvider())
@@ -251,8 +259,10 @@ public class ModernBetaBiomeSource extends BiomeSource {
 
     @Override
     protected Stream<RegistryEntry<Biome>> biomeStream() {
-        ModernBetaSettings biomeSettings = ModernBetaSettings.fromCompound(this.biomeSettings);
-        ModernBetaSettings caveBiomeSettings = ModernBetaSettings.fromCompound(this.caveBiomeSettings);
+        ModernBetaSettings biomeSettings = ModernBetaSettings.fromCompound(this.biomeSettings)
+            .mapPreset(this.presetRegistry, ModernBetaSettingsPreset::biomeSettings);
+        ModernBetaSettings caveBiomeSettings = ModernBetaSettings.fromCompound(this.caveBiomeSettings)
+            .mapPreset(this.presetRegistry, ModernBetaSettingsPreset::caveBiomeSettings);
         
         BiomeProvider biomeProvider  = ModernBetaRegistries.BIOME
             .get(biomeSettings.getProvider())

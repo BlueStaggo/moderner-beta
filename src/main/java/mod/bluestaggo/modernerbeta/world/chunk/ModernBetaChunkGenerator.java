@@ -1,11 +1,14 @@
 package mod.bluestaggo.modernerbeta.world.chunk;
 
+import com.google.common.base.Suppliers;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.api.world.chunk.ChunkProvider;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
+import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistryKeys;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
+import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.settings.component.CaveGeneration;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
@@ -16,9 +19,7 @@ import mod.bluestaggo.modernerbeta.world.carver.BetaCaveCarverConfig;
 import mod.bluestaggo.modernerbeta.world.carver.configured.ModernBetaConfiguredCarvers;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.*;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.ChunkPos;
@@ -46,6 +47,7 @@ import net.minecraft.world.gen.noise.NoiseConfig;
 
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Supplier;
 //? if <1.21
 /*import java.util.concurrent.Executor;*/
 
@@ -53,14 +55,16 @@ public class ModernBetaChunkGenerator extends NoiseChunkGenerator {
     public static final com.mojang.serialization.MapCodec<ModernBetaChunkGenerator> CODEC = RecordCodecBuilder.mapCodec(
         instance -> instance.group(
             BiomeSource.CODEC.fieldOf("biome_source").forGetter(generator -> generator.biomeSource),
+            RegistryOps.getEntryLookupCodec(ModernBetaRegistryKeys.SETTINGS_PRESET),
             ChunkGeneratorSettings.REGISTRY_CODEC.fieldOf("settings").forGetter(generator -> generator.settings),
             NbtCompound.CODEC.fieldOf("provider_settings").forGetter(generator -> generator.chunkSettings)
         ).apply(instance, instance.stable(ModernBetaChunkGenerator::new))
     );
 
+    private final RegistryEntryLookup<ModernBetaSettingsPreset> presetRegistry;
     private final RegistryEntry<ChunkGeneratorSettings> settings;
     private final NbtCompound chunkSettings;
-    private final BiomeInjector biomeInjector;
+    private final Supplier<BiomeInjector> biomeInjector;
 
     private boolean useSurfaceRules;
     private boolean forceBetaCaves;
@@ -71,16 +75,18 @@ public class ModernBetaChunkGenerator extends NoiseChunkGenerator {
 
     public ModernBetaChunkGenerator(
         BiomeSource biomeSource,
+        RegistryEntryLookup<ModernBetaSettingsPreset> presetRegistry,
         RegistryEntry<ChunkGeneratorSettings> settings,
         NbtCompound chunkProviderSettings
     ) {
         super(biomeSource, settings);
 
         this.settings = settings;
+        this.presetRegistry = presetRegistry;
         this.chunkSettings = chunkProviderSettings;
-        this.biomeInjector = this.biomeSource instanceof ModernBetaBiomeSource modernBetaBiomeSource ?
-            new BiomeInjector(this, modernBetaBiomeSource) : 
-            null;
+        this.biomeInjector = Suppliers.memoize(() ->
+            this.biomeSource instanceof ModernBetaBiomeSource modernBetaBiomeSource
+                ? new BiomeInjector(this, modernBetaBiomeSource) : null);
         
         if (this.biomeSource instanceof ModernBetaBiomeSource modernBetaBiomeSource) {
             modernBetaBiomeSource.setChunkGenerator(this);
@@ -88,7 +94,8 @@ public class ModernBetaChunkGenerator extends NoiseChunkGenerator {
     }
 
     public void initProvider(long seed) {
-        ModernBetaSettings chunkSettings = ModernBetaSettings.fromCompound(this.chunkSettings);
+        ModernBetaSettings chunkSettings = ModernBetaSettings.fromCompound(this.chunkSettings)
+            .mapPreset(this.presetRegistry, ModernBetaSettingsPreset::chunkSettings);
 
         this.chunkProvider = ModernBetaRegistries.CHUNK
             .get(chunkSettings.getProvider())
@@ -108,7 +115,8 @@ public class ModernBetaChunkGenerator extends NoiseChunkGenerator {
     public CompletableFuture<Chunk> populateBiomes(
         //? if <1.21
         /*Executor executor,*/
-        NoiseConfig noiseConfig, Blender blender, StructureAccessor structureAccessor, Chunk chunk) {
+        NoiseConfig noiseConfig, Blender blender, StructureAccessor structureAccessor, Chunk chunk
+    ) {
         return CompletableFuture.supplyAsync(Util.debugSupplier(() -> {
             ChunkNoiseSampler noiseSampler = chunk.getOrCreateChunkNoiseSampler(c -> this.createChunkNoiseSampler(c, structureAccessor, blender, noiseConfig));
             chunk.populateBiomes(this.biomeSource, noiseSampler.createMultiNoiseSampler(noiseConfig.getNoiseRouter(), this.settings.value().spawnTarget()));
@@ -121,10 +129,9 @@ public class ModernBetaChunkGenerator extends NoiseChunkGenerator {
     public CompletableFuture<Chunk> populateNoise(
         //? if <1.21
         /*Executor executor,*/
-        Blender blender, NoiseConfig noiseConfig, StructureAccessor structureAccessor, Chunk chunk) {
-        CompletableFuture<Chunk> completedChunk = this.chunkProvider.provideChunk(Blender.getNoBlending(), structureAccessor, chunk, noiseConfig);
-        
-        return completedChunk;
+        Blender blender, NoiseConfig noiseConfig, StructureAccessor structureAccessor, Chunk chunk
+    ) {
+        return this.chunkProvider.provideChunk(Blender.getNoBlending(), structureAccessor, chunk, noiseConfig);
     }
 
     @Override
@@ -321,7 +328,11 @@ public class ModernBetaChunkGenerator extends NoiseChunkGenerator {
     public RegistryEntry<ChunkGeneratorSettings> getGeneratorSettings() {
         return this.settings;
     }
-    
+
+    public RegistryEntryLookup<ModernBetaSettingsPreset> getPresetRegistry() {
+        return this.presetRegistry;
+    }
+
     public ChunkProvider getChunkProvider() {
         return this.chunkProvider;
     }
@@ -331,7 +342,7 @@ public class ModernBetaChunkGenerator extends NoiseChunkGenerator {
     }
     
     public BiomeInjector getBiomeInjector() {
-        return this.biomeInjector;
+        return this.biomeInjector.get();
     }
 
     public boolean allowSurfaceRules() {
@@ -344,8 +355,9 @@ public class ModernBetaChunkGenerator extends NoiseChunkGenerator {
     }
     
     private void injectBiomes(Chunk chunk, MultiNoiseSampler noiseSampler, BiomeInjectionStep step) {
-        if (this.biomeInjector != null) {
-            this.biomeInjector.injectBiomes(chunk, noiseSampler, step);
+        BiomeInjector biomeInjector = this.biomeInjector.get();
+        if (biomeInjector != null) {
+            biomeInjector.injectBiomes(chunk, noiseSampler, step);
         }
     }
 

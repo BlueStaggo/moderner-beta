@@ -4,6 +4,7 @@ import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
+import net.minecraft.util.Identifier;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,6 +38,10 @@ public class ModernBetaConfig implements ConfigData {
     @ConfigEntry.Category(value = "other")
     @ConfigEntry.Gui.Tooltip(count = 2)
     public boolean useOldFogColor = true;
+
+    @ConfigEntry.Category(value = "other")
+    @ConfigEntry.Gui.Tooltip(count = 2)
+    public String defaultSettingsPreset = "moderner_beta:beta";
 
     @ConfigEntry.Category(value = "other")
     @ConfigEntry.Gui.Excluded
@@ -152,7 +157,6 @@ public class ModernBetaConfig implements ConfigData {
         biomePreviewColors.put("minecraft:deep_dark", 0x031f29);
         biomePreviewColors.put("minecraft:mangrove_swamp", 0x2ccc8e);
         biomePreviewColors.put("minecraft:cherry_grove", 0xff91c8);
-        //? if >=1.21.4
         biomePreviewColors.put("minecraft:pale_garden", 0x696d95);
         biomePreviewColors.put("moderner_beta:beta_rainforest", 0x08fa36);
         biomePreviewColors.put("moderner_beta:beta_swampland", 0x07f9b2);
@@ -189,5 +193,14 @@ public class ModernBetaConfig implements ConfigData {
         biomePreviewColors.put("moderner_beta:pe_ocean", 0x000070);
         biomePreviewColors.put("moderner_beta:pe_cold_ocean", 0x202070);
         biomePreviewColors.put("moderner_beta:pe_frozen_ocean", 0x7070d6);
+    }
+
+    @Override
+    public void validatePostLoad() {
+        try {
+            Identifier.of(this.defaultSettingsPreset);
+        } catch (Exception e) {
+            this.defaultSettingsPreset = ModernerBeta.createId("beta").toString();
+        }
     }
 }

@@ -4,12 +4,14 @@ import mod.bluestaggo.modernerbeta.api.world.chunk.ChunkProvider;
 import mod.bluestaggo.modernerbeta.api.world.chunk.ChunkProviderNoise;
 import mod.bluestaggo.modernerbeta.mixin.AccessorChunkSection;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
+import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkHeightmap;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.world.biome.injector.BiomeInjectionRules.BiomeInjectionContext;
 import mod.bluestaggo.modernerbeta.world.cavebiome.provider.CaveBiomeProviderNone;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
+import net.minecraft.registry.RegistryEntryLookup;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.math.ChunkPos;
@@ -48,7 +50,8 @@ public class BiomeInjector {
         this.modernBetaBiomeSource = modernBetaBiomeSource;
         
         ModernBetaSettings settingsBiome;
-        settingsBiome = ModernBetaSettings.fromCompound(this.modernBetaBiomeSource.getBiomeSettings());
+        settingsBiome = ModernBetaSettings.fromCompound(this.modernBetaBiomeSource.getBiomeSettings())
+            .mapPreset(modernBetaChunkGenerator.getPresetRegistry(), ModernBetaSettingsPreset::biomeSettings);
 
         boolean useOceanBiomes = settingsBiome.getOrDefault(SettingsComponentTypes.USE_OCEAN_BIOMES);
         

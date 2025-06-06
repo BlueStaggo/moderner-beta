@@ -1,6 +1,8 @@
 package mod.bluestaggo.modernerbeta.client.gui.screen;
 
+import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistryKeys;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
+import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
 import net.fabricmc.api.EnvType;
@@ -24,9 +26,17 @@ public class ModernBetaWorldScreenProvider {
         NbtCompound caveBiomeSettingsCompound
     ) {
         return (dynamicRegistryManager, dimensionsRegistryHolder) -> {
-            ModernBetaSettings chunkSettings = ModernBetaSettings.fromCompound(chunkSettingsCompound);
+            RegistryEntryLookup<ModernBetaSettingsPreset> registryPreset = dynamicRegistryManager
+                //? if >=1.21.2 {
+                .getOrThrow(ModernBetaRegistryKeys.SETTINGS_PRESET);
+                //?} else {
+                /*.getWrapperOrThrow(ModernBetaRegistryKeys.SETTINGS_PRESET);
+                 *///?}
+
+            ModernBetaSettings chunkSettings = ModernBetaSettings.fromCompound(chunkSettingsCompound)
+                .mapPreset(registryPreset, ModernBetaSettingsPreset::chunkSettings);
             RegistryKey<ChunkGeneratorSettings> modernBetaSettings = keyOfSettings(chunkSettings.getProvider());
-            
+
             Registry<ChunkGeneratorSettings> registrySettings = dynamicRegistryManager.getOrThrow(RegistryKeys.CHUNK_GENERATOR_SETTINGS);
             RegistryEntry.Reference<ChunkGeneratorSettings> settings = registrySettings
                 //? if >=1.21.2 {
@@ -45,13 +55,15 @@ public class ModernBetaWorldScreenProvider {
             ModernBetaChunkGenerator chunkGenerator = new ModernBetaChunkGenerator(
                 new ModernBetaBiomeSource(
                     registryBiome,
+                    registryPreset,
                     biomeSettingsCompound,
                     caveBiomeSettingsCompound
                 ),
+                registryPreset,
                 settings,
                 chunkSettingsCompound
             );
-            
+
             return dimensionsRegistryHolder.with(dynamicRegistryManager, chunkGenerator);
         };
     }

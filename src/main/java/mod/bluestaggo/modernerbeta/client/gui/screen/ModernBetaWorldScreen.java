@@ -1,11 +1,14 @@
 package mod.bluestaggo.modernerbeta.client.gui.screen;
 
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
+import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.client.gui.screen.config.ModernBetaGraphicalProviderSettingsScreen;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistryKeys;
+import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPresetCategory;
+import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
 import net.fabricmc.api.EnvType;
@@ -19,6 +22,7 @@ import net.minecraft.client.world.GeneratorOptionsHolder;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryEntryLookup;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
@@ -139,13 +143,20 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
             ))
         ).dimensions(0, 0, BUTTON_LENGTH_PRESET, BUTTON_HEIGHT_PRESET).build();
 
+        RegistryEntryLookup<ModernBetaSettingsPreset> presetLookup =
+            //? if >=1.21.2 {
+            this.presetRegistry;
+            //?} else {
+            /*this.presetRegistry.getReadOnlyWrapper();
+            *///?}
+
         ButtonWidget buttonChunk = ButtonWidget.builder(
             Text.translatable(TEXT_SETTINGS),
             button -> this.client.setScreen(new ModernBetaGraphicalProviderSettingsScreen(
                 TEXT_TITLE_CHUNK,
                 this,
                 this.generatorOptionsHolder,
-                this.preset.chunkSettings().toCompound(),
+                this.preset.chunkSettings().mapPreset(presetLookup, ModernBetaSettingsPreset::chunkSettings).toCompound(),
                 nbtCompound -> {
                     Pair<ModernBetaSettingsPreset, Boolean> updatedPreset = this.preset.setNbt(nbtCompound, null, null);
                     this.preset = updatedPreset.getLeft();
@@ -159,7 +170,7 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
             button -> this.client.setScreen(new ModernBetaSettingsScreen(
                 TEXT_TITLE_CHUNK,
                 this,
-                this.preset.chunkSettings(),
+                this.preset.chunkSettings().mapPreset(presetLookup, ModernBetaSettingsPreset::chunkSettings),
                 string -> {
                     Pair<ModernBetaSettingsPreset, Boolean> updatedPreset = this.preset.setJson(string, "", "");
                     this.preset = updatedPreset.getLeft();
@@ -173,7 +184,7 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
                 TEXT_TITLE_CHUNK,
                 this,
                 this.generatorOptionsHolder,
-                this.preset.biomeSettings().toCompound(),
+                this.preset.biomeSettings().mapPreset(presetLookup, ModernBetaSettingsPreset::biomeSettings).toCompound(),
                 nbtCompound -> {
                     Pair<ModernBetaSettingsPreset, Boolean> updatedPreset = this.preset.setNbt(null, nbtCompound, null);
                     this.preset = updatedPreset.getLeft();
@@ -187,7 +198,7 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
             button -> this.client.setScreen(new ModernBetaSettingsScreen(
                 TEXT_TITLE_BIOME,
                 this,
-                this.preset.biomeSettings(),
+                this.preset.biomeSettings().mapPreset(presetLookup, ModernBetaSettingsPreset::biomeSettings),
                 string -> {
                     Pair<ModernBetaSettingsPreset, Boolean> updatedPreset = this.preset.setJson("", string, "");
                     this.preset = updatedPreset.getLeft();
@@ -201,7 +212,7 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
                 TEXT_TITLE_CHUNK,
                 this,
                 this.generatorOptionsHolder,
-                this.preset.caveBiomeSettings().toCompound(),
+                this.preset.caveBiomeSettings().mapPreset(presetLookup, ModernBetaSettingsPreset::caveBiomeSettings).toCompound(),
                 nbtCompound -> {
                     Pair<ModernBetaSettingsPreset, Boolean> updatedPreset = this.preset.setNbt(null, null, nbtCompound);
                     this.preset = updatedPreset.getLeft();
@@ -215,7 +226,7 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
             button -> this.client.setScreen(new ModernBetaSettingsScreen(
                 TEXT_TITLE_CAVE_BIOME,
                 this,
-                this.preset.caveBiomeSettings(),
+                this.preset.caveBiomeSettings().mapPreset(presetLookup, ModernBetaSettingsPreset::caveBiomeSettings),
                 string -> {
                     Pair<ModernBetaSettingsPreset, Boolean> updatedPreset = this.preset.setJson("", "", string);
                     this.preset = updatedPreset.getLeft();
@@ -239,7 +250,7 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
                 Text.translatable(TEXT_SETTINGS_PREVIEW),
                 this,
                 this.generatorOptionsHolder,
-                this.preset.biomeSettings()
+                this.preset.biomeSettings().mapPreset(presetLookup, ModernBetaSettingsPreset::biomeSettings)
             ))
         ).build();
 
@@ -269,14 +280,22 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
     }
 
     private void resetPreset() {
-        this.preset = this.presetRegistry.get(ModernBetaBuiltInTypes.Preset.BETA_1_7_3.id);
+        this.preset = ModernBetaSettingsPreset.referenced(ModernBetaSettings.DEFAULT_PRESET_ID);
     }
 
     private Identifier getPresetKey() {
-        return this.presetRegistry.streamEntries()
-            .filter(entry -> entry.value().equals(this.preset))
-            .map(entry -> entry.registryKey().getValue())
-            .findFirst()
-            .orElse(null);
+        Identifier presetKey = null;
+        for (ModernBetaSettings settings : this.preset.asList()) {
+            Identifier subPresetKey = settings.get(SettingsComponentTypes.PRESET);
+            if (ModernBetaSettings.DEFAULT_PRESET_ID.equals(subPresetKey)) {
+                subPresetKey = Identifier.of(ModernerBeta.CONFIG.defaultSettingsPreset);
+            }
+
+            if (subPresetKey == null || presetKey != null && !presetKey.equals(subPresetKey)) {
+                return null;
+            }
+            presetKey = subPresetKey;
+        }
+        return presetKey;
     }
 }

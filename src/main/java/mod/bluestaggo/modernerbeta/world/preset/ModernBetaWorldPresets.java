@@ -1,7 +1,10 @@
 package mod.bluestaggo.modernerbeta.world.preset;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;
+import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistryKeys;
+import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
+import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGeneratorSettings;
@@ -32,9 +35,10 @@ public class ModernBetaWorldPresets {
         RegistryEntryLookup<DimensionType> registryDimensionType = presetRegisterable.getRegistryLookup(RegistryKeys.DIMENSION_TYPE);
         RegistryEntryLookup<ChunkGeneratorSettings> registrySettings = presetRegisterable.getRegistryLookup(RegistryKeys.CHUNK_GENERATOR_SETTINGS);
         RegistryEntryLookup<Biome> registryBiome = presetRegisterable.getRegistryLookup(RegistryKeys.BIOME);
+        RegistryEntryLookup<ModernBetaSettingsPreset> registryPreset = presetRegisterable.getRegistryLookup(ModernBetaRegistryKeys.SETTINGS_PRESET);
         RegistryEntryLookup<MultiNoiseBiomeSourceParameterList> registryParameters = presetRegisterable.getRegistryLookup(RegistryKeys.MULTI_NOISE_BIOME_SOURCE_PARAMETER_LIST);
 
-        DimensionOptions overworld = createOverworldOptions(registryDimensionType, registrySettings, registryBiome);
+        DimensionOptions overworld = createOverworldOptions(registryDimensionType, registrySettings, registryBiome, registryPreset);
         DimensionOptions nether = createNetherOptions(registryDimensionType, registrySettings, registryParameters);
         DimensionOptions end = createEndOptions(registryDimensionType, registrySettings, registryBiome);
         
@@ -47,22 +51,24 @@ public class ModernBetaWorldPresets {
     private static DimensionOptions createOverworldOptions(
         RegistryEntryLookup<DimensionType> registryDimensionType,
         RegistryEntryLookup<ChunkGeneratorSettings> registrySettings,
-        RegistryEntryLookup<Biome> registryBiome
+        RegistryEntryLookup<Biome> registryBiome,
+        RegistryEntryLookup<ModernBetaSettingsPreset> registryPreset
     ) {
         RegistryEntry.Reference<DimensionType> dimensionType = registryDimensionType.getOrThrow(DimensionTypes.OVERWORLD);
         RegistryEntry.Reference<ChunkGeneratorSettings> settings = registrySettings.getOrThrow(ModernBetaChunkGeneratorSettings.BETA);
         
-        ModernBetaSettingsPreset defaultPreset = ModernBetaSettingsPreset.DEFAULT.get();
+        ModernBetaSettingsPreset defaultPreset = ModernBetaSettingsPreset.referenced(ModernBetaSettings.DEFAULT_PRESET_ID);
 
-        assert defaultPreset != null;
         return new DimensionOptions(
             dimensionType,
             new ModernBetaChunkGenerator(
                 new ModernBetaBiomeSource(
                     registryBiome,
+                    registryPreset,
                     defaultPreset.biomeSettings().toCompound(),
                     defaultPreset.caveBiomeSettings().toCompound()
                 ),
+                registryPreset,
                 settings,
                 defaultPreset.chunkSettings().toCompound()
             )

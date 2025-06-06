@@ -34,7 +34,6 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
     private static final String TEXT_PRESET_CATEGORY_NAME = "createWorld.customize.modern_beta.preset_category.name";
     private static final String TEXT_PRESET_CATEGORY_DESC = "createWorld.customize.modern_beta.preset_category.desc";
     
-    //private static final Identifier TEXTURE_PRESET_DEFAULT = createTextureId("default");
     private static final Identifier TEXTURE_PRESET_CUSTOM = createTextureId("custom");
     
     private final ModernBetaWorldScreen worldScreen;
@@ -160,10 +159,7 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
                 });
             } else {
                 presets.forEach(key -> {
-                    this.addEntry(new PresetEntry(
-                        key,
-                        presetRegistry.get(key)
-                    ));
+                    this.addEntry(new PresetEntry(key));
                 });
             }
         }
@@ -336,17 +332,17 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
         }
 
         private class PresetEntry extends AbstractPresetEntry {
-            private final ModernBetaSettingsPreset preset;
+            private final Identifier key;
 
-            public PresetEntry(Identifier presetName, ModernBetaSettingsPreset preset) {
+            public PresetEntry(Identifier presetName) {
                 super(presetName);
-                this.preset = preset;
+                this.key = presetName;
             }
 
             @Override
             protected void setPreset() {
                 PresetsListWidget.this.setSelected(this);
-                ModernBetaSettingsPresetScreen.this.preset = this.preset.copy();
+                ModernBetaSettingsPresetScreen.this.preset = ModernBetaSettingsPreset.referenced(this.key);
             }
 
             @Override
@@ -358,7 +354,7 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
                     PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0f)
                 );
 
-                presetScreen.worldScreen.setPreset(this.preset);
+            presetScreen.worldScreen.setPreset(ModernBetaSettingsPreset.referenced(this.key));
 
                 while (minecraftClient.currentScreen instanceof ModernBetaSettingsPresetScreen subPresetScreen) {
                     minecraftClient.setScreen(subPresetScreen.parent);

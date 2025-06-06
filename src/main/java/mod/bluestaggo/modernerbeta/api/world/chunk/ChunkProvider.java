@@ -7,6 +7,7 @@ import mod.bluestaggo.modernerbeta.api.world.spawn.SpawnLocator;
 import mod.bluestaggo.modernerbeta.mixin.AccessorChunkGenerator;
 import mod.bluestaggo.modernerbeta.mixin.AccessorPlacedFeature;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
+import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
 import mod.bluestaggo.modernerbeta.util.noise.PerlinOctaveNoise;
@@ -67,7 +68,8 @@ public abstract class ChunkProvider {
         this.seed = seed;
         
         this.generatorSettings = chunkGenerator.getGeneratorSettings();
-        this.chunkSettings = ModernBetaSettings.fromCompound(chunkGenerator.getChunkSettings());
+        this.chunkSettings = ModernBetaSettings.fromCompound(chunkGenerator.getChunkSettings())
+            .mapPreset(chunkGenerator.getPresetRegistry(), ModernBetaSettingsPreset::chunkSettings);
         this.random = new Random(this.seed);
 
         this.defaultFluidLevelSampler = (x, y, z) -> new FluidLevel(this.getSeaLevel(), BlockStates.AIR);

@@ -16,6 +16,7 @@ import java.util.Map;
 public class SettingsComponentTypes {
     private static IRegistryHandler<SettingsComponentType<?>> registryHandler;
 
+    public static SettingsComponentType<Identifier> PRESET;
     public static SettingsComponentType<Identifier> PROVIDER;
 
     // Chunk provider
@@ -54,6 +55,10 @@ public class SettingsComponentTypes {
     public static void init(IRegistryHandler<?> handler) {
         registryHandler = (IRegistryHandler<SettingsComponentType<?>>) handler;
 
+        PRESET = register(
+            ModernBetaBuiltInTypes.SettingsComponentType.PRESET.id,
+            Identifier.CODEC,
+            null);
         PROVIDER = register(
             ModernBetaBuiltInTypes.SettingsComponentType.PROVIDER.id,
             Identifier.CODEC,

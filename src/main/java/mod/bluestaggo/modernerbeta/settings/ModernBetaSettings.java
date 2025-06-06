@@ -7,17 +7,23 @@ import it.unimi.dsi.fastutil.objects.Reference2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
+import mod.bluestaggo.modernerbeta.ModernerBeta;
+import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistryKeys;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ConfiguredLayers;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.Layer;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtOps;
+import net.minecraft.registry.RegistryEntryLookup;
 import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.biome.Biome;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.event.Level;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -28,6 +34,8 @@ public class ModernBetaSettings implements Iterable<SettingsComponent<?>> {
             ModernBetaSettings::new,
             settings -> DataResult.success(settings.components)
         );
+
+    public static final Identifier DEFAULT_PRESET_ID = ModernerBeta.createId("default");
 
     private final Map<SettingsComponentType<?>, Object> components;
 
@@ -82,6 +90,25 @@ public class ModernBetaSettings implements Iterable<SettingsComponent<?>> {
 
     public Identifier getProvider() {
         return this.getOrThrow(SettingsComponentTypes.PROVIDER);
+    }
+
+    public ModernBetaSettings mapPreset(RegistryEntryLookup<ModernBetaSettingsPreset> presetRegistry, Function<ModernBetaSettingsPreset, ModernBetaSettings> settingsProvider) {
+        Identifier presetId = this.get(SettingsComponentTypes.PRESET);
+        if (presetId == null) {
+            return this;
+        }
+
+        if (presetId.equals(DEFAULT_PRESET_ID)) {
+            presetId = Identifier.of(ModernerBeta.CONFIG.defaultSettingsPreset);
+        }
+
+        Optional<RegistryEntry.Reference<ModernBetaSettingsPreset>> preset = presetRegistry.getOptional(RegistryKey.of(ModernBetaRegistryKeys.SETTINGS_PRESET, presetId));
+        if (preset.isEmpty()) {
+            ModernerBeta.log(Level.WARN, "Modern beta settings reference preset \"" + presetId + "\" which is not registered.");
+            return this;
+        }
+
+        return settingsProvider.apply(preset.get().value());
     }
 
     @SuppressWarnings("unchecked")

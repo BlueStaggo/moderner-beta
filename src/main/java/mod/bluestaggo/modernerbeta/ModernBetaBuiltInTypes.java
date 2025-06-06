@@ -7,6 +7,7 @@ import java.util.Set;
 
 public final class ModernBetaBuiltInTypes {
     public enum SettingsComponentType {
+        PRESET("preset"),
         PROVIDER("provider"),
         DEEPSLATE_GENERATION("deepslate_generation"),
         USE_SURFACE_RULES("use_surface_rules"),

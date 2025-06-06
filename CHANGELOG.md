@@ -20,6 +20,8 @@ A major number change means a big update. For this update, significant parts of 
   - All fractal-based biome provider settings are incompatible for this release so they need to be adapted to the new format. This may be tedious for some users, but documentation may release some time soon.
   - Currently, the new layer system has no graphical configuration screen.
 - **BREAKING CHANGE**: Moderner Beta now uses the vanilla registry implementation instead of its own custom implementation.
+- Settings can now be referenced by their preset id.
+  - This eliminates the chance of breaking changes affecting worlds that use built-in presets. Worlds using custom presets are still affected.
 - Improved accuracy of the 0.0.14a_08 preset.
 - Removed dependency on Architectury API.
 - Made ocean biome injectors not be used if the biome provider already generates oceans.

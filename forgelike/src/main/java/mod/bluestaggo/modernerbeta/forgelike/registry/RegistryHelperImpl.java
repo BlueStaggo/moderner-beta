@@ -16,13 +16,23 @@ import net.minecraftforge.registries.RegistryBuilder;
 public record RegistryHelperImpl(NewRegistryEvent event) implements IRegistryHelper {
     @Override
     public <T> IRegistryBuilder<T> createSimple(RegistryKey<Registry<T>> key) {
-        RegistryBuilder<T> registryBuilder = new RegistryBuilder<>(key);
+        RegistryBuilder<T> registryBuilder =
+            //? if neoforge {
+            new RegistryBuilder<>(key);
+            //?} else {
+            /*new RegistryBuilder<T>().setName(key.getValue());
+            *///?}
         return new RegistryBuilderImpl<>(event, registryBuilder);
     }
 
     @Override
     public <T> IRegistryBuilder<T> createDefaulted(RegistryKey<Registry<T>> key, Identifier defaultKey) {
-        RegistryBuilder<T> registryBuilder = new RegistryBuilder<>(key).defaultKey(defaultKey);
+        RegistryBuilder<T> registryBuilder =
+            //? if neoforge {
+            new RegistryBuilder<>(key).defaultKey(defaultKey);
+             //?} else {
+            /*new RegistryBuilder<T>().setName(key.getValue()).setDefaultKey(defaultKey);
+            *///?}
         return new RegistryBuilderImpl<>(event, registryBuilder);
     }
 }

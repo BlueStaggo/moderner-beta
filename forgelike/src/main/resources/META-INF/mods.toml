@@ -15,19 +15,22 @@ Old (and not so old) world generation for modern Minecraft!
 logoFile = "assets/moderner_beta/banner.png"
 
 [[dependencies.moderner_beta]]
-modId = "neoforge"
+modId = "forge"
+mandatory = true
 versionRange = "${loader_version_range}"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.moderner_beta]]
 modId = "minecraft"
+mandatory = true
 versionRange = "${minecraft_version_range}"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.moderner_beta]]
 modId = "cloth_config"
+mandatory = true
 versionRange = "[1,)"
 ordering = "NONE"
 side = "BOTH"

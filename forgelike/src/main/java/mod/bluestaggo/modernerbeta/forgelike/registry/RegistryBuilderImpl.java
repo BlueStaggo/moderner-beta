@@ -6,13 +6,17 @@ import net.minecraft.registry.Registry;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 import net.neoforged.neoforge.registries.RegistryBuilder;
 //?} else {
-/*import net.minecraftforge.registries.NewRegistryEvent;
+/*import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.NewRegistryEvent;
 import net.minecraftforge.registries.RegistryBuilder;
+
+import java.util.function.Supplier;
 *///?}
 
 public class RegistryBuilderImpl<T> implements IRegistryBuilder<T> {
     private final NewRegistryEvent event;
     private final RegistryBuilder<T> registryBuilder;
+    private boolean sync;
 
     public RegistryBuilderImpl(NewRegistryEvent event, RegistryBuilder<T> registryBuilder) {
         this.event = event;
@@ -21,7 +25,7 @@ public class RegistryBuilderImpl<T> implements IRegistryBuilder<T> {
 
     @Override
     public IRegistryBuilder<T> synced() {
-        registryBuilder.sync(true);
+        this.sync = true;
         return this;
     }
 
@@ -32,8 +36,18 @@ public class RegistryBuilderImpl<T> implements IRegistryBuilder<T> {
 
     @Override
     public Registry<T> build() {
-        Registry<T> registry = registryBuilder.create();
-        event.register(registry);
+        //? if neoforge {
+        
+        this.registryBuilder.sync(this.sync);
+        Registry<T> registry = this.registryBuilder.create();
+        this.event.register(registry);
         return registry;
+        //?} else {
+        /*if (!this.sync) {
+            this.registryBuilder.disableSync();
+        }
+        Supplier<IForgeRegistry<T>> forgeRegistrySupplier = this.event.create(this.registryBuilder);
+        return new ForgeRegistryWrapper<>(forgeRegistrySupplier);
+        *///?}
     }
 }

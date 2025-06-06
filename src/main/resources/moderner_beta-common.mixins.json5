@@ -2,7 +2,11 @@
   "required": true,
   "minVersion": "0.8",
   "package": "mod.bluestaggo.modernerbeta.mixin",
+  //? if >=1.20.5 {
   "compatibilityLevel": "JAVA_21",
+  //?} else {
+  /*"compatibilityLevel": "JAVA_17",
+  *///?}
   "mixins": [
     "AccessorChunkGenerator",
     "AccessorChunkSection",

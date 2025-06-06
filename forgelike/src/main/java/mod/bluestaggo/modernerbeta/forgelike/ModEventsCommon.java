@@ -45,13 +45,13 @@ import net.minecraftforge.registries.RegisterEvent;
 import java.nio.file.Path;
 *///?}
 
-import java.util.Map;
 import java.util.function.Consumer;
 
 //? if neoforge {
 @EventBusSubscriber(
  //?} else {
-/*@Mod.EventBusSubscriber(
+/*@Mod(ModernerBeta.MOD_ID)
+@Mod.EventBusSubscriber(
 *///?}
         modid = ModernerBeta.MOD_ID,
         //? if neoforge {

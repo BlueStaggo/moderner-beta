@@ -3,6 +3,9 @@ loaderVersion = "[1,)"
 issueTrackerURL = "https://github.com/Nostalgica-Reverie/moderner-beta/issues"
 license = "MIT"
 
+[[mixins]]
+config = "moderner_beta-common.mixins.json"
+
 [[mods]]
 modId = "moderner_beta"
 version = "${version}"
@@ -15,22 +18,22 @@ Old (and not so old) world generation for modern Minecraft!
 logoFile = "assets/moderner_beta/banner.png"
 
 [[dependencies.moderner_beta]]
-modId = "forge"
-mandatory = true
+modId = "${loader}"
+${mandatory}
 versionRange = "${loader_version_range}"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.moderner_beta]]
 modId = "minecraft"
-mandatory = true
+${mandatory}
 versionRange = "${minecraft_version_range}"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.moderner_beta]]
 modId = "cloth_config"
-mandatory = true
+${mandatory}
 versionRange = "[1,)"
 ordering = "NONE"
 side = "BOTH"

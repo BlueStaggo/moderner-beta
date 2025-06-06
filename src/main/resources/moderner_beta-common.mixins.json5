@@ -12,14 +12,13 @@
     "AccessorChunkSection",
     "AccessorMaterialRuleContext",
     "AccessorPlacedFeature",
-    "MixinAboveYMaterialCondition",
     "MixinFreezeTopLayerFeature",
     "MixinMinecraftServer",
     "MixinPlayerManager",
     "MixinSpawnLocating",
     "MixinStructure",
-    "MixinWaterMaterialCondition",
-    "AccessorFoliagePlacerType"
+    "AccessorFoliagePlacerType",
+    "MixinVanillaSurfaceRules"
   ],
   "client": [
     "client.AccessorTextWidget",

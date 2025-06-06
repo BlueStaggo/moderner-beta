@@ -21,6 +21,8 @@ import net.minecraft.world.gen.surfacebuilder.VanillaSurfaceRules;
 import java.util.List;
 
 public class ModernBetaChunkGeneratorSettings {
+    private static boolean useModernBetaSurfaceRules;
+
     public static final RegistryKey<ChunkGeneratorSettings> BETA;
     public static final RegistryKey<ChunkGeneratorSettings> ALPHA;
     public static final RegistryKey<ChunkGeneratorSettings> SKYLANDS;
@@ -91,7 +93,9 @@ public class ModernBetaChunkGeneratorSettings {
         RegistryEntryLookup<DensityFunction> densityFunctionLookup = settingsRegisterable.getRegistryLookup(RegistryKeys.DENSITY_FUNCTION);
         RegistryEntryLookup<DoublePerlinNoiseSampler.NoiseParameters> noiseParametersLookup = settingsRegisterable.getRegistryLookup(RegistryKeys.NOISE_PARAMETERS);
 
+        useModernBetaSurfaceRules = true;
         MaterialRules.MaterialRule materialRule = VanillaSurfaceRules.createDefaultRule(false, false, true);
+        useModernBetaSurfaceRules = false;
 
         return new ChunkGeneratorSettings(
             shapeConfig,
@@ -106,6 +110,10 @@ public class ModernBetaChunkGeneratorSettings {
             false,
             true
         );
+    }
+
+    public static boolean useModernBetaSurfaceRules() {
+        return useModernBetaSurfaceRules;
     }
 
     static {

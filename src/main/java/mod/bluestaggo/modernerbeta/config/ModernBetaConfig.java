@@ -4,7 +4,7 @@ import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
-import net.minecraft.util.Identifier;
+import mod.bluestaggo.modernerbeta.util.VersionCompat;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -198,7 +198,7 @@ public class ModernBetaConfig implements ConfigData {
     @Override
     public void validatePostLoad() {
         try {
-            Identifier.of(this.defaultSettingsPreset);
+            VersionCompat.id(this.defaultSettingsPreset);
         } catch (Exception e) {
             this.defaultSettingsPreset = ModernerBeta.createId("beta").toString();
         }

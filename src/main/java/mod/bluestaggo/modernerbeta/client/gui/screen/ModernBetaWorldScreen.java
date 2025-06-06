@@ -1,6 +1,5 @@
 package mod.bluestaggo.modernerbeta.client.gui.screen;
 
-import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.client.gui.screen.config.ModernBetaGraphicalProviderSettingsScreen;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
@@ -9,6 +8,7 @@ import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPresetCategory;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
+import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
 import net.fabricmc.api.EnvType;
@@ -20,7 +20,6 @@ import net.minecraft.client.gui.widget.SimplePositioningWidget;
 import net.minecraft.client.gui.widget.TextWidget;
 import net.minecraft.client.world.GeneratorOptionsHolder;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryEntryLookup;
 import net.minecraft.screen.ScreenTexts;
@@ -288,7 +287,7 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
         for (ModernBetaSettings settings : this.preset.asList()) {
             Identifier subPresetKey = settings.get(SettingsComponentTypes.PRESET);
             if (ModernBetaSettings.DEFAULT_PRESET_ID.equals(subPresetKey)) {
-                subPresetKey = Identifier.of(ModernerBeta.CONFIG.defaultSettingsPreset);
+                subPresetKey = VersionCompat.id(ModernerBeta.CONFIG.defaultSettingsPreset);
             }
 
             if (subPresetKey == null || presetKey != null && !presetKey.equals(subPresetKey)) {

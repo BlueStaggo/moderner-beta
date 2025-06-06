@@ -18,7 +18,8 @@
     "MixinSpawnLocating",
     "MixinStructure",
     "AccessorFoliagePlacerType",
-    "MixinVanillaSurfaceRules"
+    "MixinVanillaSurfaceRules",
+    "AccessorRegistryEntryReference"
   ],
   "client": [
     "client.AccessorTextWidget",

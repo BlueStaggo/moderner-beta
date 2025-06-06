@@ -63,7 +63,6 @@ public abstract class ModernBetaGraphicalSettingsScreen<T extends NbtElement> ex
         this.initBody();
         this.initFooter();
         this.layout.forEachChild(this::addDrawableChild);
-        this.initTabNavigation();
     }
     *///?}
 
@@ -164,10 +163,10 @@ public abstract class ModernBetaGraphicalSettingsScreen<T extends NbtElement> ex
 
     //? if <1.21 {
     /*@Override
-    protected void render(DrawContext context, OptionListWidget optionButtons, int mouseX, int mouseY, float tickDelta) {
+    public void render(DrawContext context, int mouseX, int mouseY, float tickDelta) {
         super.renderBackground(context);
         this.body.render(context, mouseX, mouseY, tickDelta);
-        super.render(context, optionButtons, mouseX, mouseY, tickDelta);
+        super.render(context, mouseX, mouseY, tickDelta);
     }
     *///?}
 

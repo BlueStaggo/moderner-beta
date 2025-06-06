@@ -3,6 +3,7 @@
 
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Lifecycle;
+import mod.bluestaggo.modernerbeta.mixin.AccessorRegistryEntryReference;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryWrapper;
@@ -147,12 +148,9 @@ public class ForgeRegistryWrapper<T> implements Registry<T> {
             return Optional.empty();
         }
 
-        Collection<T> values = this.getForgeRegistry().getValues();
-        int index = random.nextInt(values.size());
-        return Optional.of(RegistryEntry.Reference.intrusive(
-            this.wrapper,
-            values.stream().skip(index).findAny().orElseThrow()
-        ));
+        Collection<Identifier> keys = this.getForgeRegistry().getKeys();
+        int index = random.nextInt(keys.size());
+        return Optional.of(this.createEntry(RegistryKey.of(this.getKey(), keys.stream().skip(index).findAny().orElseThrow())));
     }
 
     @Override
@@ -172,7 +170,19 @@ public class ForgeRegistryWrapper<T> implements Registry<T> {
 
     @Override
     public RegistryEntry.Reference<T> createEntry(T value) {
-        return RegistryEntry.Reference.intrusive(this.wrapper, value);
+        //return RegistryEntry.Reference.intrusive(this.wrapper, value);
+        return this.createEntry(this.getKey(value).orElseThrow(), value);
+    }
+
+    public RegistryEntry.Reference<T> createEntry(RegistryKey<T> key) {
+        return this.createEntry(key, this.get(key));
+    }
+
+    @SuppressWarnings("unchecked")
+    public RegistryEntry.Reference<T> createEntry(RegistryKey<T> key, T value) {
+        RegistryEntry.Reference<T> entry = RegistryEntry.Reference.standAlone(this.wrapper, key);
+        ((AccessorRegistryEntryReference<T>)entry).invokeSetValue(value);
+        return entry;
     }
 
     @Override
@@ -197,7 +207,7 @@ public class ForgeRegistryWrapper<T> implements Registry<T> {
     @Override
     public Stream<RegistryEntry.Reference<T>> streamEntries() {
         return this.getForgeRegistry().getEntries().stream()
-            .map(entry -> this.createEntry(entry.getValue()));
+            .map(entry -> this.createEntry(entry.getKey(), entry.getValue()));
     }
 
     @Override

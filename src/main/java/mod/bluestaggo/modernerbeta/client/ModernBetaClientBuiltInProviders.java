@@ -1,5 +1,6 @@
 package mod.bluestaggo.modernerbeta.client;
 
+import mod.bluestaggo.modernerbeta.api.world.biome.climate.TemperatureHeightScaling;
 import mod.bluestaggo.modernerbeta.client.gui.screen.config.*;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import mod.bluestaggo.modernerbeta.world.chunk.provider.indev.IndevTheme;
@@ -295,6 +296,15 @@ public class ModernBetaClientBuiltInProviders {
                     options,
                     screen.booleanOption("fuzzyGrass"),
                     screen.booleanOption("smoothBorders")
+                );
+            }
+        );
+
+        registryHandler.register(
+            TEMPERATURE_HEIGHT_SCALING.id,
+            (screen, options) -> {
+                options.addSingleOptionEntry(
+                    screen.selectionOption("self", TemperatureHeightScaling::values)
                 );
             }
         );

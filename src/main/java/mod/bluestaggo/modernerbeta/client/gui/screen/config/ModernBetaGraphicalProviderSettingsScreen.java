@@ -133,7 +133,7 @@ public class ModernBetaGraphicalProviderSettingsScreen extends ModernBetaGraphic
 
                         if (configBuilder == null) {
                             list.addSingleOptionEntry(this.headerOption(
-                                Text.translatable(STRING_PREFIX + "invalidComponentType", componentTypeId)
+                                Text.translatable(STRING_PREFIX + "invalidComponentType", componentTypeId.toString())
                                     .formatted(Formatting.RED, Formatting.ITALIC)));
                             return;
                         }

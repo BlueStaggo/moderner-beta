@@ -1,7 +1,9 @@
 package mod.bluestaggo.modernerbeta.api.world.biome.climate;
 
+import mod.bluestaggo.modernerbeta.mixin.AccessorBiome;
 import mod.bluestaggo.modernerbeta.settings.component.ClimateDistribution;
-import mod.bluestaggo.modernerbeta.world.feature.BetaFreezeTopLayerFeature;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.biome.Biome;
 
 /**
  * Implemented by a climate sampler to provide temperatures and rainfall values,
@@ -18,7 +20,32 @@ public interface ClimateSampler {
      * @return A Clime containing temperature/rainfall values in range [0.0, 1.0] sampled at position.
      */
     Clime sample(int x, int z);
-    
+
+    /**
+     * Sample temperature/rainfall values with a modifier.
+     *
+     * @param blockPos Block coordinates to sample from.
+     * @param modifier The modifier to apply.
+     *
+     * @return A Clime containing temperature/rainfall values in range [0.0, 1.0] sampled at position.
+     */
+    default double sampleModifiedTemperature(BlockPos blockPos, Biome.TemperatureModifier modifier) {
+        double temp = this.sample(blockPos.getX(), blockPos.getZ()).temp();
+        if (modifier != Biome.TemperatureModifier.NONE) {
+            temp = modifier.getModifiedTemperature(blockPos, (float)temp);
+        }
+        return temp;
+    }
+
+    default Biome.Precipitation samplePrecipitation(Biome biome, BlockPos blockPos) {
+        if (!biome.hasPrecipitation()) {
+            return Biome.Precipitation.NONE;
+        }
+        double temperature = this.sampleModifiedTemperature(blockPos,
+            ((AccessorBiome)(Object)biome).getWeather().temperatureModifier());
+        return temperature < this.getSnowThreshold() ? Biome.Precipitation.SNOW : Biome.Precipitation.RAIN;
+    }
+
     /**
      * Indicate to block colors whether to sample climate values for biome tinting.
      * 
@@ -69,7 +96,7 @@ public interface ClimateSampler {
      *
      * @return The formula to use for calculating temperature at different altitudes.
      */
-    default BetaFreezeTopLayerFeature.HeightType getHeightType() {
-        return BetaFreezeTopLayerFeature.HeightType.BETA;
+    default TemperatureHeightScaling getHeightType() {
+        return TemperatureHeightScaling.NONE;
     }
 }

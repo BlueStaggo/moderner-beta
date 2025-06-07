@@ -12,14 +12,14 @@ import java.util.Optional;
 public class SkyColorSampler {
     public static final SkyColorSampler INSTANCE = new SkyColorSampler();
 
-    private Optional<ClimateSamplerSky> climateSampler = Optional.empty();
+    private ClimateSamplerSky climateSampler = null;
 
-    public Optional<ClimateSamplerSky> getClimateSampler() {
+    public ClimateSamplerSky getClimateSampler() {
         return this.climateSampler;
     }
 
     public void setClimateSampler(ClimateSamplerSky climateSampler) {
-        this.climateSampler = Optional.ofNullable(climateSampler);
+        this.climateSampler = climateSampler;
     }
 
     public Vec3d getSkyColor(Vec3d cameraPos, Vec3d skyColorVec) {
@@ -27,7 +27,7 @@ public class SkyColorSampler {
             int x = (int)cameraPos.getX();
             int z = (int)cameraPos.getZ();
 
-            float temp = (float)this.climateSampler.get().sampleSky(x, z);
+            float temp = (float)this.climateSampler.sampleSky(x, z);
             temp /= 3F;
             temp = MathHelper.clamp(temp, -1F, 1F);
 
@@ -38,6 +38,6 @@ public class SkyColorSampler {
     }
 
     public boolean useSkyColor() {
-        return this.climateSampler.isPresent() && this.climateSampler.get().useSkyColor();
+        return this.climateSampler != null && this.climateSampler.useSkyColor();
     }
 }

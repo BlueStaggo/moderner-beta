@@ -7,7 +7,7 @@ import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.api.world.biome.climate.Clime;
 import mod.bluestaggo.modernerbeta.client.FogUtils;
 import mod.bluestaggo.modernerbeta.client.color.BlockColorSampler;
-import mod.bluestaggo.modernerbeta.client.world.ModernBetaClientWorld;
+import mod.bluestaggo.modernerbeta.imixin.ModernBetaWorld;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.BackgroundRenderer;
@@ -93,7 +93,7 @@ public abstract class MixinBackgroundRenderer {
 
         // Track whether current client world is Modern Beta world,
         // old fog weighting won't be used if not.
-        modernBeta_isModernBetaWorld = ((ModernBetaClientWorld)world).isModernBetaWorld();
+        modernBeta_isModernBetaWorld = ((ModernBetaWorld)world).modernerBeta$isModded();
     }
     
     @ModifyVariable(

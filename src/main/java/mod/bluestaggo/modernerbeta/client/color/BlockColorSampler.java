@@ -35,7 +35,7 @@ import java.util.function.Function;
 
 @Environment(EnvType.CLIENT)
 public final class BlockColorSampler {
-    private static final int CLIME_CACHE_CAPACITY = 100;
+    private static final int CLIME_CACHE_CAPACITY = 128;
 
     public static final BlockColorSampler INSTANCE = new BlockColorSampler();
 
@@ -78,7 +78,7 @@ public final class BlockColorSampler {
                 return clime;
             }
 
-            while (this.climeCache.size() >= CLIME_CACHE_CAPACITY) {
+            if (this.climeCache.size() == CLIME_CACHE_CAPACITY) {
                 this.climeCache.removeFirst();
             }
 

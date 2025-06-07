@@ -47,7 +47,8 @@ public class ModernerBetaFabric implements ModInitializer {
             ModernerBeta.DEV_ENV = true;
         }
 
-        ServerLifecycleEvents.SERVER_STARTING.register(ModernBetaWorldInitializer::init);
+        ServerLifecycleEvents.SERVER_STARTING.register(ModernBetaWorldInitializer::initStarting);
+        ServerLifecycleEvents.SERVER_STARTED.register(ModernBetaWorldInitializer::initStarted);
 
         ModernerBeta.networkHelper = new NetworkHelperImpl();
 

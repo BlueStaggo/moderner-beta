@@ -1,5 +1,6 @@
 package mod.bluestaggo.modernerbeta.world.chunk.provider;
 
+import mod.bluestaggo.modernerbeta.api.world.biome.climate.TemperatureHeightScaling;
 import mod.bluestaggo.modernerbeta.api.world.chunk.ChunkProviderForcedHeight;
 import mod.bluestaggo.modernerbeta.api.world.spawn.SpawnLocator;
 import mod.bluestaggo.modernerbeta.util.BlockStates;

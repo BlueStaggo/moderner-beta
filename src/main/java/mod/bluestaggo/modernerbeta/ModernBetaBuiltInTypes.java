@@ -29,6 +29,7 @@ public final class ModernBetaBuiltInTypes {
         VORONOI_POINTS("voronoi_points"),
         FRACTAL_LAYERS("fractal_layers"),
         USE_OCEAN_BIOMES("use_ocean_biomes"),
+        TEMPERATURE_HEIGHT_SCALING("temperature_height_scaling"),
         CAVE_BIOME_VORONOI("cave_biome_voronoi"),
         ;
 

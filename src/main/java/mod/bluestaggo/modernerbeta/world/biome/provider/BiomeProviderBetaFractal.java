@@ -1,6 +1,7 @@
 package mod.bluestaggo.modernerbeta.world.biome.provider;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;
+import mod.bluestaggo.modernerbeta.api.world.biome.climate.TemperatureHeightScaling;
 import mod.bluestaggo.modernerbeta.api.world.biome.climate.ClimateSampler;
 import mod.bluestaggo.modernerbeta.api.world.biome.climate.ClimateSamplerSky;
 import mod.bluestaggo.modernerbeta.api.world.biome.climate.Clime;
@@ -11,7 +12,6 @@ import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.intlayers.IntCli
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.intlayers.IntLayer;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.intlayers.IntZoomLayer;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.Layer;
-import mod.bluestaggo.modernerbeta.world.feature.BetaFreezeTopLayerFeature;
 import net.minecraft.registry.RegistryEntryLookup;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.biome.Biome;
@@ -100,7 +100,7 @@ public class BiomeProviderBetaFractal extends BiomeProviderFractal implements Cl
     }
 
     @Override
-    public BetaFreezeTopLayerFeature.HeightType getHeightType() {
-        return BetaFreezeTopLayerFeature.HeightType.NONE;
+    public TemperatureHeightScaling getHeightType() {
+        return TemperatureHeightScaling.NONE;
     }
 }

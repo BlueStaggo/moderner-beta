@@ -6,7 +6,7 @@ import mod.bluestaggo.modernerbeta.api.world.biome.climate.ClimateSamplerSky;
 import mod.bluestaggo.modernerbeta.api.world.provider.BiomeProviderType;
 import mod.bluestaggo.modernerbeta.client.color.BlockColorSampler;
 import mod.bluestaggo.modernerbeta.client.color.SkyColorSampler;
-import mod.bluestaggo.modernerbeta.client.world.ModernBetaClientWorld;
+import mod.bluestaggo.modernerbeta.imixin.ModernBetaWorld;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import net.minecraft.registry.RegistryEntryLookup;
 import net.minecraft.registry.RegistryKeys;
@@ -21,7 +21,7 @@ public class S2CPacketHandlers {
 
         if (payload.isModernBetaWorld()) {
             if (world != null) {
-                ((ModernBetaClientWorld) world).setModernBetaWorld(true);
+                ((ModernBetaWorld) world).modernerBeta$setModded(true);
             }
 
             if (!payload.hasBiomeProvider())
@@ -35,16 +35,18 @@ public class S2CPacketHandlers {
                 *///?}
             BiomeProviderType<?> providerCreator = ModernBetaRegistries.BIOME.get(payload.providerId().orElseThrow());
             BiomeProvider provider = providerCreator.apply(ModernBetaSettings.fromCompound(payload.settings().orElseThrow()), biomeRegistry, payload.seed().orElseThrow());
+            ((ModernBetaWorld) world).modernerBeta$setTemperatureHeightScaling(provider.getTemperatureHeightScaling());
 
             if (provider instanceof ClimateSampler climateSampler) {
                 BlockColorSampler.INSTANCE.setClimateSampler(climateSampler);
+                ((ModernBetaWorld) world).modernerBeta$setClimateSampler(climateSampler);
             }
 
             if (provider instanceof ClimateSamplerSky climateSamplerSky) {
                 SkyColorSampler.INSTANCE.setClimateSampler(climateSamplerSky);
             }
         } else if (world != null) {
-            ((ModernBetaClientWorld) world).setModernBetaWorld(false);
+            ((ModernBetaWorld) world).modernerBeta$setModded(false);
         }
     }
 }

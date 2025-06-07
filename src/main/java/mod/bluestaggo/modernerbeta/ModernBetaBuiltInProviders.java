@@ -174,33 +174,42 @@ public class ModernBetaBuiltInProviders {
 
         registryHandler.register(ModernBetaBuiltInTypes.Biome.BETA.id, new BiomeProviderType<>(
             BiomeProviderBeta::new, BiomeProviderBeta.class, () -> List.of(
+                SettingsComponentTypes.TEMPERATURE_HEIGHT_SCALING,
+                SettingsComponentTypes.CLIMATE_DISTRIBUTION,
                 SettingsComponentTypes.CLIMATE_SCALE,
                 SettingsComponentTypes.CLIMATE_MAPPINGS
             )
         ));
         registryHandler.register(ModernBetaBuiltInTypes.Biome.SINGLE.id, new BiomeProviderType<>(
             BiomeProviderSingle::new, BiomeProviderSingle.class, () -> List.of(
+                SettingsComponentTypes.TEMPERATURE_HEIGHT_SCALING,
                 SettingsComponentTypes.SINGLE_BIOME
             )
         ));
         registryHandler.register(ModernBetaBuiltInTypes.Biome.PE.id, new BiomeProviderType<>(
             BiomeProviderPE::new, BiomeProviderPE.class, () -> List.of(
+                SettingsComponentTypes.TEMPERATURE_HEIGHT_SCALING,
+                SettingsComponentTypes.CLIMATE_DISTRIBUTION,
                 SettingsComponentTypes.CLIMATE_SCALE,
                 SettingsComponentTypes.CLIMATE_MAPPINGS
             )
         ));
         registryHandler.register(ModernBetaBuiltInTypes.Biome.VORONOI.id, new BiomeProviderType<>(
             BiomeProviderVoronoi::new, BiomeProviderVoronoi.class, () -> List.of(
+                SettingsComponentTypes.TEMPERATURE_HEIGHT_SCALING,
                 SettingsComponentTypes.VORONOI_POINTS
             )
         ));
         registryHandler.register(ModernBetaBuiltInTypes.Biome.FRACTAL.id, new BiomeProviderType<>(
             BiomeProviderFractal::new, BiomeProviderFractal.class, () -> List.of(
+                SettingsComponentTypes.TEMPERATURE_HEIGHT_SCALING,
                 SettingsComponentTypes.FRACTAL_LAYERS
             )
         ));
         registryHandler.register(ModernBetaBuiltInTypes.Biome.BETA_FRACTAL.id, new BiomeProviderType<>(
             BiomeProviderBetaFractal::new, BiomeProviderBetaFractal.class, () -> List.of(
+                SettingsComponentTypes.TEMPERATURE_HEIGHT_SCALING,
+                SettingsComponentTypes.CLIMATE_DISTRIBUTION,
                 SettingsComponentTypes.FRACTAL_LAYERS
             )
         ));

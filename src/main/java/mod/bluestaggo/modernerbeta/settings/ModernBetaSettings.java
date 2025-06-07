@@ -53,35 +53,33 @@ public class ModernBetaSettings implements Iterable<SettingsComponent<?>> {
             .addAll(settings);
     }
 
-    public static ModernBetaSettings betaFractalLayers(Map<Identifier, String> outputs, ClimateDistribution climateDistribution, Layer... pipeline) {
+    public static Builder betaFractalLayers(Map<Identifier, String> outputs, ClimateDistribution climateDistribution, Layer... pipeline) {
         return betaFractalLayers(outputs, climateDistribution, Arrays.asList(pipeline));
     }
 
-    public static ModernBetaSettings betaFractalLayers(Map<Identifier, String> outputs, ClimateDistribution climateDistribution, List<Layer> pipeline) {
+    public static Builder betaFractalLayers(Map<Identifier, String> outputs, ClimateDistribution climateDistribution, List<Layer> pipeline) {
         return betaFractalLayers(new ConfiguredLayers(pipeline, outputs), climateDistribution);
     }
 
-    public static ModernBetaSettings betaFractalLayers(ConfiguredLayers configuredLayers, ClimateDistribution climateDistribution) {
+    public static Builder betaFractalLayers(ConfiguredLayers configuredLayers, ClimateDistribution climateDistribution) {
         return new Builder()
             .add(SettingsComponentTypes.PROVIDER, ModernBetaBuiltInTypes.Biome.BETA_FRACTAL.id)
             .add(SettingsComponentTypes.FRACTAL_LAYERS, configuredLayers)
-            .add(SettingsComponentTypes.CLIMATE_DISTRIBUTION, climateDistribution)
-            .build();
+            .add(SettingsComponentTypes.CLIMATE_DISTRIBUTION, climateDistribution);
     }
 
-    public static ModernBetaSettings fractalLayers(Map<Identifier, String> outputs, Layer... pipeline) {
+    public static Builder fractalLayers(Map<Identifier, String> outputs, Layer... pipeline) {
         return fractalLayers(outputs, Arrays.asList(pipeline));
     }
 
-    public static ModernBetaSettings fractalLayers(Map<Identifier, String> outputs, List<Layer> pipeline) {
+    public static Builder fractalLayers(Map<Identifier, String> outputs, List<Layer> pipeline) {
         return fractalLayers(new ConfiguredLayers(pipeline, outputs));
     }
 
-    public static ModernBetaSettings fractalLayers(ConfiguredLayers configuredLayers) {
+    public static Builder fractalLayers(ConfiguredLayers configuredLayers) {
         return new Builder()
             .add(SettingsComponentTypes.PROVIDER, ModernBetaBuiltInTypes.Biome.FRACTAL.id)
-            .add(SettingsComponentTypes.FRACTAL_LAYERS, configuredLayers)
-            .build();
+            .add(SettingsComponentTypes.FRACTAL_LAYERS, configuredLayers);
     }
 
     public static ModernBetaSettings singleBiome(RegistryKey<Biome> biome) {

@@ -1,6 +1,8 @@
 package mod.bluestaggo.modernerbeta.api.world.biome;
 
+import mod.bluestaggo.modernerbeta.api.world.biome.climate.TemperatureHeightScaling;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
+import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import net.minecraft.registry.RegistryEntryLookup;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.text.Text;
@@ -12,6 +14,8 @@ public abstract class BiomeProvider {
     protected final ModernBetaSettings settings;
     protected final RegistryEntryLookup<Biome> biomeRegistry;
     protected final long seed;
+
+    private final TemperatureHeightScaling temperatureHeightScaling;
     
     /**
      * Constructs a Modern Beta biome provider initialized with seed.
@@ -24,6 +28,8 @@ public abstract class BiomeProvider {
         this.settings = settings;
         this.biomeRegistry = biomeRegistry;
         this.seed = seed;
+
+        this.temperatureHeightScaling = settings.getOrDefault(SettingsComponentTypes.TEMPERATURE_HEIGHT_SCALING);
     }
     
     /**
@@ -54,6 +60,15 @@ public abstract class BiomeProvider {
      */
     public ModernBetaSettings getSettings() {
         return this.settings;
+    }
+
+    /**
+     * Gets the temperature heigh scaling.
+     *
+     * @return The temperature heigh scaling.
+     */
+    public TemperatureHeightScaling getTemperatureHeightScaling() {
+        return temperatureHeightScaling;
     }
 
     /**

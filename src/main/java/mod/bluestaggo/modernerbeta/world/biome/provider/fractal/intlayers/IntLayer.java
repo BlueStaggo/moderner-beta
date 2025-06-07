@@ -41,7 +41,7 @@ public abstract class IntLayer {
         }
 
         value = this.generate(biomeRegistry, x, z);
-        while (this.cache.size() >= Layer.CACHE_CAPACITY) {
+        if (this.cache.size() == Layer.CACHE_CAPACITY) {
             this.cache.removeFirstInt();
         }
         this.cache.put(coord, value);

@@ -2,6 +2,7 @@ package mod.bluestaggo.modernerbeta.settings;
 
 import com.mojang.serialization.Codec;
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
+import mod.bluestaggo.modernerbeta.api.world.biome.climate.TemperatureHeightScaling;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import mod.bluestaggo.modernerbeta.settings.component.*;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
@@ -9,6 +10,7 @@ import mod.bluestaggo.modernerbeta.world.biome.provider.climate.ClimateMapping;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ConfiguredLayers;
 import mod.bluestaggo.modernerbeta.world.biome.voronoi.VoronoiPointBiome;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.StringIdentifiable;
 
 import java.util.List;
 import java.util.Map;
@@ -44,6 +46,7 @@ public class SettingsComponentTypes {
     public static SettingsComponentType<List<VoronoiPointBiome>> VORONOI_POINTS;
     public static SettingsComponentType<ConfiguredLayers> FRACTAL_LAYERS;
     public static SettingsComponentType<Boolean> USE_OCEAN_BIOMES;
+    public static SettingsComponentType<TemperatureHeightScaling> TEMPERATURE_HEIGHT_SCALING;
 
     // Cave biome provider
     public static SettingsComponentType<CaveBiomeVoronoi> CAVE_BIOME_VORONOI;
@@ -156,6 +159,10 @@ public class SettingsComponentTypes {
             ModernBetaBuiltInTypes.SettingsComponentType.USE_OCEAN_BIOMES.id,
             Codec.BOOL,
             false);
+        TEMPERATURE_HEIGHT_SCALING = register(
+            ModernBetaBuiltInTypes.SettingsComponentType.TEMPERATURE_HEIGHT_SCALING.id,
+            StringIdentifiable.createCodec(TemperatureHeightScaling::values),
+            TemperatureHeightScaling.NONE);
 
         // Cave biome provider
         CAVE_BIOME_VORONOI = register(

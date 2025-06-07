@@ -62,9 +62,9 @@ public abstract class MixinMinecraftServer {
             target = "Lnet/minecraft/server/network/SpawnLocating;findServerSpawnPoint(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/util/math/ChunkPos;)Lnet/minecraft/util/math/BlockPos;"
         )
     )
-    private static BlockPos redirectSpawnLocating(ServerWorld world, ChunkPos chunkPos
-            //? if >=1.20.2
-            , Operation<BlockPos> original
+    private static BlockPos redirectSpawnLocating(
+        ServerWorld world, ChunkPos chunkPos
+        /*? if >=1.20.2 {*/, Operation<BlockPos> original/*?}*/
     ) {
         ChunkGenerator chunkGenerator = world.getChunkManager().getChunkGenerator();
         //? if <1.20.2

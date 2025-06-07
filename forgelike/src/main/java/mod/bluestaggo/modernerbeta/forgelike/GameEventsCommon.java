@@ -9,9 +9,11 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.server.ServerAboutToStartEvent;
+import net.neoforged.neoforge.event.server.ServerStartedEvent;
 //?} else {
 /*import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
+import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.loading.FMLLoader;
@@ -39,6 +41,11 @@ public class GameEventsCommon {
 
     @SubscribeEvent
     public static void serverStarting(ServerAboutToStartEvent event) {
-        ModernBetaWorldInitializer.init(event.getServer());
+        ModernBetaWorldInitializer.initStarting(event.getServer());
+    }
+
+    @SubscribeEvent
+    public static void serverStarting(ServerStartedEvent event) {
+        ModernBetaWorldInitializer.initStarted(event.getServer());
     }
 }

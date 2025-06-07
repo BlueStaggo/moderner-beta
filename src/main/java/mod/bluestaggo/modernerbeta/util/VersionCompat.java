@@ -1,6 +1,7 @@
 package mod.bluestaggo.modernerbeta.util;
 
 import com.mojang.serialization.DataResult;
+import mod.bluestaggo.modernerbeta.api.world.biome.climate.ClimateSampler;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -12,6 +13,7 @@ import net.minecraft.util.collection.Weighted;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.HeightLimitView;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.SpawnSettings;
 import net.minecraft.world.chunk.Chunk;
 
@@ -24,6 +26,13 @@ public final class VersionCompat {
         Blocks.SHORT_GRASS;
         //?} else {
         /*Blocks.GRASS;
+        *///?}
+
+    public static final String BIOME_GET_PRECIPITATION_TARGET =
+        //? if >=1.21.2 {
+        "Lnet/minecraft/world/biome/Biome;getPrecipitation(Lnet/minecraft/util/math/BlockPos;I)Lnet/minecraft/world/biome/Biome$Precipitation;";
+        //?} else {
+        /*"Lnet/minecraft/world/biome/Biome;getPrecipitation(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/world/biome/Biome$Precipitation;";
         *///?}
 
     public static <T> T accessPool(Pool<T> pool, Random random) {

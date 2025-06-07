@@ -23,13 +23,14 @@ A major number change means a big update. For this update, significant parts of 
 - Settings can now be referenced by their preset id.
   - This eliminates the chance of breaking changes affecting worlds that use built-in presets. Worlds using custom presets are still affected.
 - Improved accuracy of the 0.0.14a_08 preset.
+- Improved accuracy of Beta 1.8, 1.0.0 and 1.1 climate, providing the signature messy look as well as ice plains generating without snow on its edges.
 - Removed dependency on Architectury API.
 - Made ocean biome injectors not be used if the biome provider already generates oceans.
 - (1.21+) Replaced use of `@Redirect` mixins with `@WrapOperation` mixins
 - (1.21 only) Bumped NeoForge to 21.0.110-beta to fix crashes when entering the mod config screen.
 
 ## Removals
-- Removed Fixed Seed options, as it has been made redundant by the addition of the networking code for biome provider settings and world seed.
+- Removed fixed seed options, as it has been made redundant by the addition of the networking code for biome provider settings and world seed.
 - Removed biome tags relating to fractal biome generation (this does not include height config tags)
 
 ## Fixes
@@ -41,3 +42,4 @@ A major number change means a big update. For this update, significant parts of 
 - Main noise scale now affects Indev worlds
 - Terracotta stripes no longer generate in underground badlands.
   - This was done by disabling "addStoneDepth" for surface rules in Moderner Beta worlds; this may have unintended side effects with modded surface rules.
+- Snowfall now occurs in the right places in worlds

@@ -20,7 +20,10 @@
     "AccessorFoliagePlacerType",
     "MixinVanillaSurfaceRules",
     "AccessorRegistryEntryReference",
-    "AccessorBiome"
+    "AccessorBiome",
+    "MixinServerWorld",
+    "MixinBiome",
+    "MixinWorld"
   ],
   "client": [
     "client.AccessorTextWidget",
@@ -37,7 +40,12 @@
     "client.MixinSimplePositioningWidget",
     "client.MixinThreePartsLayoutWidget",
     "client.MixinWorldCreator",
-    "client.AccessorChunkRendererRegion"
+    "client.AccessorChunkRendererRegion",
+    //? if >=1.21.2 {
+    "client.MixinWeatherRendering"
+    //?} else {
+    /*"client.MixinWorldRenderer"
+    *///?}
   ],
   "injectors": {
     "defaultRequire": 1

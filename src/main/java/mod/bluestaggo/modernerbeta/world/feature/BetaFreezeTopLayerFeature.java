@@ -1,8 +1,9 @@
 package mod.bluestaggo.modernerbeta.world.feature;
 
-import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
+import mod.bluestaggo.modernerbeta.api.world.biome.climate.TemperatureHeightScaling;
 import mod.bluestaggo.modernerbeta.api.world.biome.climate.ClimateSampler;
+import mod.bluestaggo.modernerbeta.mixin.AccessorBiome;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
 import net.minecraft.block.*;
@@ -10,10 +11,6 @@ import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.noise.OctaveSimplexNoiseSampler;
-import net.minecraft.util.math.random.CheckedRandom;
-import net.minecraft.util.math.random.ChunkRandom;
-import net.minecraft.util.math.random.Random;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.LightType;
 import net.minecraft.world.StructureWorldAccess;
@@ -26,8 +23,6 @@ import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.util.FeatureContext;
 
 public class BetaFreezeTopLayerFeature extends Feature<DefaultFeatureConfig> {
-    private static final OctaveSimplexNoiseSampler TEMPERATURE_NOISE = new OctaveSimplexNoiseSampler((Random)new ChunkRandom(new CheckedRandom(1234L)), ImmutableList.of(0));
-
     public BetaFreezeTopLayerFeature(Codec<DefaultFeatureConfig> codec) {
         super(codec);
     }
@@ -57,25 +52,24 @@ public class BetaFreezeTopLayerFeature extends Feature<DefaultFeatureConfig> {
                 mutable.set(x, y, z);
                 mutableDown.set(mutable).move(Direction.DOWN, 1);
                 
-                HeightType heightType;
-                double temp;
-                double coldThreshold;
+                TemperatureHeightScaling heightType = TemperatureHeightScaling.NONE;
+                double temp = world.getBiome(mutable).value().getTemperature();
+                double coldThreshold = 0.15;
 
-                if (biomeSource instanceof ModernBetaBiomeSource modernBetaBiomeSource &&
-                    modernBetaBiomeSource.getBiomeProvider() instanceof ClimateSampler climateSampler &&
-                    climateSampler.useBiomeFeature()
-                ) {
-                    heightType = climateSampler.getHeightType();
-                    temp = climateSampler.sample(x, z).temp();
-                    coldThreshold = climateSampler.getSnowThreshold();
-                } else {
-                    heightType = HeightType.NONE;
-                    temp = world.getBiome(mutable).value().getTemperature();
-                    coldThreshold = 0.15;
+                Biome.TemperatureModifier temperatureModifier = ((AccessorBiome)(Object)world.getBiome(mutable).value()).getWeather().temperatureModifier();
+                if (biomeSource instanceof ModernBetaBiomeSource modernBetaBiomeSource) {
+                    heightType = modernBetaBiomeSource.getBiomeProvider().getTemperatureHeightScaling();
+                    if (modernBetaBiomeSource.getBiomeProvider() instanceof ClimateSampler climateSampler
+                        && climateSampler.useBiomeFeature()) {
+                        temp = climateSampler.sampleModifiedTemperature(mutable, temperatureModifier);
+                        coldThreshold = climateSampler.getSnowThreshold();
+                    } else if (temperatureModifier != Biome.TemperatureModifier.NONE) {
+                        temp = temperatureModifier.getModifiedTemperature(mutable, (float)temp);
+                    }
                 }
 
                 if (modernHeightSnow) {
-                    heightType = HeightType.MAJOR_RELEASE;
+                    heightType = TemperatureHeightScaling.MAJOR_RELEASE;
                 }
                 
                 if (canSetIce(world, mutableDown, false, temp, coldThreshold, heightType)) {
@@ -94,20 +88,15 @@ public class BetaFreezeTopLayerFeature extends Feature<DefaultFeatureConfig> {
         }
     }
 
-    private static boolean canSetIce(
+    public static boolean canSetIce(
         WorldView worldView,
         BlockPos blockPos,
         boolean doWaterCheck,
         double temp,
         double coldThreshold,
-        HeightType heightType
+        TemperatureHeightScaling heightType
     ) {
-        if (heightType == HeightType.MAJOR_RELEASE) {
-            Biome biome = worldView.getBiome(blockPos).value();
-            return biome.canSetIce(worldView, blockPos, doWaterCheck);
-        }
-
-        if (temp >= coldThreshold) {
+        if (heightType.modifyTemperature(blockPos, temp) >= coldThreshold) {
             return false;
         }
         
@@ -138,18 +127,8 @@ public class BetaFreezeTopLayerFeature extends Feature<DefaultFeatureConfig> {
         return false;
     }
 
-    private static boolean canSetSnow(WorldView worldView, BlockPos blockPos, double temp, double coldThreshold, HeightType heightType) {
-        double heightTemp = switch (heightType) {
-            case BETA -> temp - ((double) (blockPos.getY() - 64) / 64.0) * 0.3;
-            case MAJOR_RELEASE -> {
-                if (blockPos.getY() <= 64) yield temp;
-                double g = TEMPERATURE_NOISE.sample((float)blockPos.getX() / 8.0f, (float)blockPos.getZ() / 8.0f, false) * 4.0;
-                yield temp - (g + (float)blockPos.getY() - 64.0) * 0.05 / 30.0;
-            }
-            default -> temp;
-        };
-
-        if (heightTemp >= coldThreshold) {
+    public static boolean canSetSnow(WorldView worldView, BlockPos blockPos, double temp, double coldThreshold, TemperatureHeightScaling heightType) {
+        if (heightType.modifyTemperature(blockPos, temp) >= coldThreshold) {
             return false;
         }
         
@@ -162,11 +141,5 @@ public class BetaFreezeTopLayerFeature extends Feature<DefaultFeatureConfig> {
         }
         
         return false;
-    }
-
-    public enum HeightType {
-        BETA,
-        MAJOR_RELEASE,
-        NONE
     }
 }

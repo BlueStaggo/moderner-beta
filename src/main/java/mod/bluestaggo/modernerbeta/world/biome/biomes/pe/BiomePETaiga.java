@@ -23,12 +23,9 @@ public class BiomePETaiga {
         
         return (new Biome.Builder())
             .precipitation(true)
-            //.temperature(0.4F) TODO: Re-add this later as it looks more accurate; for some reason precipitation currently does not work properly.
-            //.downfall(0.8F)
-            .temperature(0.0F)
-            .downfall(0.5F)
+            .temperature(0.4F)
+            .downfall(0.8F)
             .effects((new BiomeEffects.Builder())
-                //.skyColor(8756991) TODO: Re-add when above fixed
                 .skyColor(ModernBetaBiomeColors.PE_SKY_COLOR)
                 .fogColor(ModernBetaBiomeColors.PE_FOG_COLOR)
                 .waterColor(ModernBetaBiomeColors.OLD_WATER_COLOR)

@@ -103,7 +103,7 @@ public abstract class Layer {
         }
 
         biome = this.generate(x, z);
-        while (this.cache.size() >= CACHE_CAPACITY) {
+        if (this.cache.size() == CACHE_CAPACITY) {
             this.cache.removeFirst();
         }
         this.cache.put(pos, biome);

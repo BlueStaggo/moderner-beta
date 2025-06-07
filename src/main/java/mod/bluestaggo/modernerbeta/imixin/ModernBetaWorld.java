@@ -1,0 +1,18 @@
+package mod.bluestaggo.modernerbeta.imixin;
+
+import mod.bluestaggo.modernerbeta.api.world.biome.climate.ClimateSampler;
+import mod.bluestaggo.modernerbeta.api.world.biome.climate.TemperatureHeightScaling;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.biome.Biome;
+
+public interface ModernBetaWorld {
+    boolean modernerBeta$isModded();
+    void modernerBeta$setModded(boolean toggle);
+    ClimateSampler modernerBeta$getClimateSampler();
+    void modernerBeta$setClimateSampler(ClimateSampler climateSampler);
+    TemperatureHeightScaling modernerBeta$getTemperatureHeightScaling();
+    void modernerBeta$setTemperatureHeightScaling(TemperatureHeightScaling temperatureHeightScaling);
+
+    double modernerBeta$sampleTemperature(Biome biome, BlockPos pos);
+    Biome.Precipitation modernerBeta$samplePrecipitation(Biome biome, BlockPos pos);
+}

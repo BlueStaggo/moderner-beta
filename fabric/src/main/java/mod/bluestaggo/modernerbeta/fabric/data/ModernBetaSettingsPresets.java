@@ -3,6 +3,7 @@ package mod.bluestaggo.modernerbeta.fabric.data;
 import com.google.common.collect.ImmutableMap;
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
+import mod.bluestaggo.modernerbeta.api.world.biome.climate.TemperatureHeightScaling;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistryKeys;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
@@ -109,6 +110,7 @@ public final class ModernBetaSettingsPresets {
             ModernBetaSettings.builder()
                 .add(PROVIDER, ModernBetaBuiltInTypes.Biome.BETA.id)
                 .add(USE_OCEAN_BIOMES, true)
+                .add(TEMPERATURE_HEIGHT_SCALING, TemperatureHeightScaling.BETA)
                 .add(CLIMATE_DISTRIBUTION, ClimateDistribution.BETA)
                 .add(CLIMATE_MAPPINGS, Map.ofEntries(
                     Map.entry("desert", new ClimateMapping(
@@ -420,6 +422,7 @@ public final class ModernBetaSettingsPresets {
             DEFAULT_BETA.biomeSettings().extend()
                 .add(PROVIDER, ModernBetaBuiltInTypes.Biome.PE.id)
                 .add(USE_OCEAN_BIOMES, false)
+                .add(TEMPERATURE_HEIGHT_SCALING, TemperatureHeightScaling.BETA)
                 .add(CLIMATE_DISTRIBUTION, ClimateDistribution.BETA)
                 .add(CLIMATE_MAPPINGS, Map.ofEntries(
                     Map.entry("desert", new ClimateMapping(
@@ -729,6 +732,7 @@ public final class ModernBetaSettingsPresets {
                     0.25f / 1.5f,
                     0.003125f
                 ))
+                .add(TEMPERATURE_HEIGHT_SCALING, TemperatureHeightScaling.MAJOR_RELEASE)
                 .add(VORONOI_POINTS, List.of(
                     // Standard Biomes
 
@@ -1321,7 +1325,9 @@ public final class ModernBetaSettingsPresets {
                     ExtendedBiomeId.OCEAN, new HeightConfig(-1.0f, 0.5f)
                 )))
                 .build(),
-            ModernBetaSettings.betaFractalLayers(earlyReleaseLayerOutputs(biomeScale), ClimateDistribution.BETA, layers),
+            ModernBetaSettings.betaFractalLayers(earlyReleaseLayerOutputs(biomeScale), ClimateDistribution.BETA, layers)
+                .add(TEMPERATURE_HEIGHT_SCALING, TemperatureHeightScaling.NONE)
+                .build(),
             DEFAULT_BETA.caveBiomeSettings()
         );
     }
@@ -1389,7 +1395,9 @@ public final class ModernBetaSettingsPresets {
                 .add(CAVE_GENERATION, CaveGeneration.EARLY_RELEASE)
                 .addDefault(FORCED_BIOME_HEIGHT)
                 .build(),
-            ModernBetaSettings.betaFractalLayers(configuredLayers100Era(biomeScale, ExtendedBiomeId.of(ModernBetaBiomes.LATE_BETA_ICE_PLAINS)), ClimateDistribution.RELEASE_1_0),
+            ModernBetaSettings.betaFractalLayers(configuredLayers100Era(biomeScale, ExtendedBiomeId.of(ModernBetaBiomes.LATE_BETA_ICE_PLAINS)), ClimateDistribution.RELEASE_1_0)
+                .add(TEMPERATURE_HEIGHT_SCALING, TemperatureHeightScaling.NONE)
+                .build(),
             DEFAULT_BETA.caveBiomeSettings()
         );
     }
@@ -1401,7 +1409,9 @@ public final class ModernBetaSettingsPresets {
                 .add(CAVE_GENERATION, CaveGeneration.EARLY_RELEASE)
                 .addDefault(FORCED_BIOME_HEIGHT)
                 .build(),
-            ModernBetaSettings.betaFractalLayers(configuredLayers100Era(biomeScale, ExtendedBiomeId.of(ModernBetaBiomes.EARLY_RELEASE_ICE_PLAINS)), ClimateDistribution.RELEASE_1_0),
+            ModernBetaSettings.betaFractalLayers(configuredLayers100Era(biomeScale, ExtendedBiomeId.of(ModernBetaBiomes.EARLY_RELEASE_ICE_PLAINS)), ClimateDistribution.RELEASE_1_0)
+                .add(TEMPERATURE_HEIGHT_SCALING, TemperatureHeightScaling.NONE)
+                .build(),
             DEFAULT_BETA.caveBiomeSettings()
         );
     }
@@ -1552,7 +1562,9 @@ public final class ModernBetaSettingsPresets {
                 .add(CAVE_GENERATION, CaveGeneration.EARLY_RELEASE)
                 .addDefault(FORCED_BIOME_HEIGHT)
                 .build(),
-            ModernBetaSettings.betaFractalLayers(configuredLayers11Era(biomeScale, false, false), ClimateDistribution.RELEASE_1_1),
+            ModernBetaSettings.betaFractalLayers(configuredLayers11Era(biomeScale, false, false), ClimateDistribution.RELEASE_1_1)
+                .add(TEMPERATURE_HEIGHT_SCALING, TemperatureHeightScaling.NONE)
+                .build(),
             DEFAULT_BETA.caveBiomeSettings()
         );
     }
@@ -1564,7 +1576,9 @@ public final class ModernBetaSettingsPresets {
                 .add(CAVE_GENERATION, CaveGeneration.EARLY_RELEASE)
                 .addDefault(FORCED_BIOME_HEIGHT)
                 .build(),
-            ModernBetaSettings.fractalLayers(configuredLayers11Era(biomeScale, true, false)),
+            ModernBetaSettings.fractalLayers(configuredLayers11Era(biomeScale, true, false))
+                .add(TEMPERATURE_HEIGHT_SCALING, TemperatureHeightScaling.NONE)
+                .build(),
             DEFAULT_BETA.caveBiomeSettings()
         );
     }
@@ -1583,7 +1597,9 @@ public final class ModernBetaSettingsPresets {
                     ExtendedBiomeId.of("moderner_beta:early_release_taiga*hills"), new HeightConfig(0.3f, 0.8f)
                 )))
                 .build(),
-            ModernBetaSettings.fractalLayers(configuredLayers11Era(biomeScale, true, true)),
+            ModernBetaSettings.fractalLayers(configuredLayers11Era(biomeScale, true, true))
+                .add(TEMPERATURE_HEIGHT_SCALING, TemperatureHeightScaling.NONE)
+                .build(),
             DEFAULT_BETA.caveBiomeSettings()
         );
     }
@@ -2055,7 +2071,9 @@ public final class ModernBetaSettingsPresets {
                 .add(CAVE_GENERATION, CaveGeneration.MAJOR_RELEASE)
                 .add(FORCED_BIOME_HEIGHT, ForcedBiomeHeight.overridesOnly(HeightConfig.MAJOR_RELEASE_CONFIGS))
                 .build(),
-            ModernBetaSettings.fractalLayers(configuredLayers1710Era(biomeScale, false, false, false, false)),
+            ModernBetaSettings.fractalLayers(configuredLayers1710Era(biomeScale, false, false, false, false))
+                .add(TEMPERATURE_HEIGHT_SCALING, TemperatureHeightScaling.MAJOR_RELEASE)
+                .build(),
             DEFAULT_BETA.caveBiomeSettings()
         );
     }
@@ -2068,7 +2086,9 @@ public final class ModernBetaSettingsPresets {
                 .add(CAVE_GENERATION, CaveGeneration.MAJOR_RELEASE)
                 .add(FORCED_BIOME_HEIGHT, ForcedBiomeHeight.overridesOnly(HeightConfig.MAJOR_RELEASE_CONFIGS))
                 .build(),
-            ModernBetaSettings.fractalLayers(configuredLayers1710Era(biomeScale, true, true, true, false)),
+            ModernBetaSettings.fractalLayers(configuredLayers1710Era(biomeScale, true, true, true, false))
+                .add(TEMPERATURE_HEIGHT_SCALING, TemperatureHeightScaling.MAJOR_RELEASE)
+                .build(),
             DEFAULT_BETA.caveBiomeSettings()
         );
     }
@@ -2081,7 +2101,9 @@ public final class ModernBetaSettingsPresets {
                 .add(CAVE_GENERATION, CaveGeneration.MAJOR_RELEASE)
                 .add(FORCED_BIOME_HEIGHT, ForcedBiomeHeight.overridesOnly(HeightConfig.MAJOR_RELEASE_CONFIGS))
                 .build(),
-            ModernBetaSettings.fractalLayers(configuredLayers1710Era(biomeScale, true, true, true, true)),
+            ModernBetaSettings.fractalLayers(configuredLayers1710Era(biomeScale, true, true, true, true))
+                .add(TEMPERATURE_HEIGHT_SCALING, TemperatureHeightScaling.MAJOR_RELEASE)
+                .build(),
             DEFAULT_BETA.caveBiomeSettings()
         );
     }
@@ -2327,7 +2349,9 @@ public final class ModernBetaSettingsPresets {
                 ), 8.0, false),
                 StackedZoomLayer.modal("ocean_climate", 2001, "ocean_climate", 6),
                 new ApplyOceanClimateLayer("land", 0, "land", "ocean_climate")
-            ),
+            )
+                .add(TEMPERATURE_HEIGHT_SCALING, TemperatureHeightScaling.MAJOR_RELEASE)
+                .build(),
             DEFAULT_BETA.caveBiomeSettings()
         );
     }

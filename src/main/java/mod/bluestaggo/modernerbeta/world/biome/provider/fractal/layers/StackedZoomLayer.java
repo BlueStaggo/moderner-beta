@@ -35,7 +35,7 @@ public class StackedZoomLayer extends SingleParentLayer {
         Layer layer = this.parentLayer;
         for (int i = 0; i < this.level; i++) {
             Layer zoomParent = layer;
-            BaseZoomLayer zoomLayer = this.zoomType.constructor.apply(this.seed + i);
+            Layer zoomLayer = this.zoomType.constructor.apply(this.seed + i);
             zoomLayer.configure(key -> zoomParent);
             layer = zoomLayer;
         }
@@ -80,9 +80,9 @@ public class StackedZoomLayer extends SingleParentLayer {
         FUZZY("fuzzy", seed -> new FuzzyZoomLayer("", seed, ""));
 
         public final String id;
-        public final LongFunction<BaseZoomLayer> constructor;
+        public final LongFunction<Layer> constructor;
 
-        Type(String id, LongFunction<BaseZoomLayer> constructor) {
+        Type(String id, LongFunction<Layer> constructor) {
             this.id = id;
             this.constructor = constructor;
         }

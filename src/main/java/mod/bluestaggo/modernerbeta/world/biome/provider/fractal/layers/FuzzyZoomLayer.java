@@ -3,7 +3,7 @@ package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 
-public class FuzzyZoomLayer extends BaseZoomLayer {
+public class FuzzyZoomLayer extends SingleParentLayer {
     public static final com.mojang.serialization.MapCodec<FuzzyZoomLayer> CODEC = RecordCodecBuilder.mapCodec(
         instance -> fillSingleParentLayerFields(instance)
             .apply(instance, FuzzyZoomLayer::new)
@@ -19,19 +19,34 @@ public class FuzzyZoomLayer extends BaseZoomLayer {
     }
 
     @Override
-    protected ExtendedBiomeId interpolate(LayerRandom random, ExtendedBiomeId a, ExtendedBiomeId b) {
-        return random.nextInt(2) == 0 ? a : b;
-    }
+    protected ExtendedBiomeId generate(int x, int z) {
+        int xHalf = x & 1;
+        int zHalf = z & 1;
 
-    @Override
-    protected ExtendedBiomeId interpolate(LayerRandom random, ExtendedBiomeId a, ExtendedBiomeId b, ExtendedBiomeId c, ExtendedBiomeId d) {
-        int choice = random.nextInt(4);
-        return switch (choice) {
-            case 0 -> a;
-            case 1 -> b;
-            case 2 -> c;
-            case 3 -> d;
-            default -> throw new IllegalStateException("Unexpected value: " + choice);
-        };
+        int halfX = x >> 1;
+        int halfZ = z >> 1;
+
+        ExtendedBiomeId biome00 = this.parentLayer.sample(halfX, halfZ);
+        if (xHalf == 0 && zHalf == 0) {
+            return biome00;
+        }
+
+        LayerRandom random = this.getRandom(halfX << 1, halfZ << 1);
+        if (xHalf == 0) {
+            return random.nextInt(2) == 1 ? this.parentLayer.sample(halfX, halfZ + 1) : biome00;
+        } else if (zHalf == 0) {
+            random.skip(1);
+            return random.nextInt(2) == 1 ? this.parentLayer.sample(halfX + 1, halfZ) : biome00;
+        } else {
+            random.skip(2);
+            int choice = random.nextInt(4);
+            return switch (choice) {
+                case 0 -> biome00;
+                case 1 -> this.parentLayer.sample(halfX + 1, halfZ);
+                case 2 -> this.parentLayer.sample(halfX, halfZ + 1);
+                case 3 -> this.parentLayer.sample(halfX + 1, halfZ + 1);
+                default -> throw new IllegalStateException("Unexpected value: " + choice);
+            };
+        }
     }
 }

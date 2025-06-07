@@ -19,7 +19,37 @@ public class ModalZoomLayer extends FuzzyZoomLayer {
     }
 
     @Override
-    protected ExtendedBiomeId interpolate(LayerRandom random, ExtendedBiomeId a, ExtendedBiomeId b, ExtendedBiomeId c, ExtendedBiomeId d) {
+    protected ExtendedBiomeId generate(int x, int z) {
+        int xHalf = x & 1;
+        int zHalf = z & 1;
+
+        int halfX = x >> 1;
+        int halfZ = z >> 1;
+
+        ExtendedBiomeId biome00 = this.parentLayer.sample(halfX, halfZ);
+        if (xHalf == 0 && zHalf == 0) {
+            return biome00;
+        }
+
+        LayerRandom random = this.getRandom(halfX << 1, halfZ << 1);
+        if (xHalf == 0) {
+            return random.nextInt(2) == 1 ? this.parentLayer.sample(halfX, halfZ + 1) : biome00;
+        } else if (zHalf == 0) {
+            random.skip(1);
+            return random.nextInt(2) == 1 ? this.parentLayer.sample(halfX + 1, halfZ) : biome00;
+        } else {
+            random.skip(2);
+            return this.interpolate(
+                random,
+                this.parentLayer.sample(halfX, halfZ),
+                this.parentLayer.sample(halfX + 1, halfZ),
+                this.parentLayer.sample(halfX, halfZ + 1),
+                this.parentLayer.sample(halfX + 1, halfZ + 1)
+            );
+        }
+    }
+
+    private ExtendedBiomeId interpolate(LayerRandom random, ExtendedBiomeId a, ExtendedBiomeId b, ExtendedBiomeId c, ExtendedBiomeId d) {
         boolean ab = a.equals(b);
         boolean ac = a.equals(c);
         boolean ad = a.equals(d);
@@ -35,7 +65,14 @@ public class ModalZoomLayer extends FuzzyZoomLayer {
         } else if (cd && !ab) {
             return c;
         } else {
-            return super.interpolate(random, a, b, c, d);
+            int choice = random.nextInt(4);
+            return switch (choice) {
+                case 0 -> a;
+                case 1 -> b;
+                case 2 -> c;
+                case 3 -> d;
+                default -> throw new IllegalStateException("Unexpected value: " + choice);
+            };
         }
     }
 }

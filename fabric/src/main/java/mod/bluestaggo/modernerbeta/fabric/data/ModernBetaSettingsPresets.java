@@ -1,5 +1,6 @@
 package mod.bluestaggo.modernerbeta.fabric.data;
 
+import com.google.common.collect.ImmutableMap;
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistryKeys;
@@ -19,6 +20,7 @@ import mod.bluestaggo.modernerbeta.world.chunk.provider.indev.IndevType;
 import mod.bluestaggo.modernerbeta.world.chunk.provider.island.IslandShape;
 import net.minecraft.registry.Registerable;
 import net.minecraft.registry.RegistryKey;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.Pool;
 import net.minecraft.world.biome.BiomeKeys;
 
@@ -107,6 +109,7 @@ public final class ModernBetaSettingsPresets {
             ModernBetaSettings.builder()
                 .add(PROVIDER, ModernBetaBuiltInTypes.Biome.BETA.id)
                 .add(USE_OCEAN_BIOMES, true)
+                .add(CLIMATE_DISTRIBUTION, ClimateDistribution.BETA)
                 .add(CLIMATE_MAPPINGS, Map.ofEntries(
                     Map.entry("desert", new ClimateMapping(
                         ModernBetaBiomes.BETA_DESERT.getValue(),
@@ -416,6 +419,8 @@ public final class ModernBetaSettingsPresets {
                 .build(),
             DEFAULT_BETA.biomeSettings().extend()
                 .add(PROVIDER, ModernBetaBuiltInTypes.Biome.PE.id)
+                .add(USE_OCEAN_BIOMES, false)
+                .add(CLIMATE_DISTRIBUTION, ClimateDistribution.BETA)
                 .add(CLIMATE_MAPPINGS, Map.ofEntries(
                     Map.entry("desert", new ClimateMapping(
                         ModernBetaBiomes.PE_DESERT.getValue(),
@@ -1263,7 +1268,51 @@ public final class ModernBetaSettingsPresets {
         );
     }
 
+    private static Map<Identifier, String> earlyReleaseLayerOutputs(int biomeScale) {
+        ImmutableMap.Builder<Identifier, String> builder = new ImmutableMap.Builder<>();
+        builder.put(ModernBetaBuiltInTypes.LayerOutput.BIOME.id, "land");
+        for (int i = 0; i < 4 + biomeScale; i++) {
+            builder.put(ModernerBeta.createId("climate_" + i), "land_" + i);
+        }
+        return builder.build();
+    }
+
     private static ModernBetaSettingsPreset presetBeta181(int biomeScale) {
+        List<Layer> layers = new ArrayList<>(List.of(
+            new InitLandLayer("land", 1),
+            new FuzzyZoomLayer("land", 2000, "land"),
+            AddLandLayer.forIslandScaleBeta("land", 1, "land"),
+            new ModalZoomLayer("land", 2001, "land"),
+            AddLandLayer.forIslandScaleBeta("land", 2, "land"),
+            new ModalZoomLayer("land", 2002, "land"),
+            AddLandLayer.forIslandScaleBeta("land", 3, "land"),
+            new ModalZoomLayer("land", 2003, "land"),
+            AddLandLayer.forIslandScaleBeta("land", 3, "land"),
+            new ModalZoomLayer("land", 2004, "land"),
+            AddLandLayer.forIslandScaleBeta("land", 3, "land"),
+            new InitRiverLayer("river", 100, "land"),
+            StackedZoomLayer.modal("river", 1000, "river", 6 + biomeScale),
+            new ComputeRiverLayer("river", 0, "river", true),
+            new SmoothLayer("river", 1000, "river"),
+            new RandomBiomeLayer("biome_pool", 200, ExtendedBiomeId.listOf(
+                "minecraft:desert",
+                "minecraft:forest",
+                "moderner_beta:late_beta_extreme_hills",
+                "moderner_beta:late_beta_swampland",
+                "moderner_beta:late_beta_plains",
+                "moderner_beta:late_beta_taiga"
+            )),
+            new BiomeToLayerOverlayLayer("land", 0, "land", Map.of(ExtendedBiomeId.PLAINS, "biome_pool")),
+            StackedZoomLayer.modal("land", 1000, "land", 2),
+            new ModalZoomLayer("land_0", 1000, "land"),
+            AddLandLayer.forBeta("land_0", 3, "land_0")
+        ));
+        for (int i = 0; i < 3 + biomeScale; i++) {
+            layers.add(new ModalZoomLayer("land_" + (1 + i), 1001 + i, "land_" + i));
+        }
+        layers.add(new SmoothLayer("land", 1000, "land_" + (3 + biomeScale)));
+        layers.add(MixRiverLayer.forEarlyRelease("land", 0, "land", "river"));
+
         return new ModernBetaSettingsPreset(
             DEFAULT_BETA.chunkSettings().extend()
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.EARLY_RELEASE.id)
@@ -1272,96 +1321,65 @@ public final class ModernBetaSettingsPresets {
                     ExtendedBiomeId.OCEAN, new HeightConfig(-1.0f, 0.5f)
                 )))
                 .build(),
-            ModernBetaSettings.fractalLayers(
-                Map.of(ModernBetaBuiltInTypes.LayerOutput.BIOME.id, "land"),
-                new InitLandLayer("land", 1),
-                new FuzzyZoomLayer("land", 2000, "land"),
-                AddLandLayer.forIslandScaleBeta("land", 1, "land"),
-                new ModalZoomLayer("land", 2001, "land"),
-                AddLandLayer.forIslandScaleBeta("land", 2, "land"),
-                new ModalZoomLayer("land", 2002, "land"),
-                AddLandLayer.forIslandScaleBeta("land", 3, "land"),
-                new ModalZoomLayer("land", 2003, "land"),
-                AddLandLayer.forIslandScaleBeta("land", 3, "land"),
-                new ModalZoomLayer("land", 2004, "land"),
-                AddLandLayer.forIslandScaleBeta("land", 3, "land"),
-                new InitRiverLayer("river", 100, "land"),
-                StackedZoomLayer.modal("river", 1000, "river", 6 + biomeScale),
-                new ComputeRiverLayer("river", 0, "river", true),
-                new SmoothLayer("river", 1000, "river"),
-                new RandomBiomeLayer("biome_pool", 200, ExtendedBiomeId.listOf(
-                    "minecraft:desert",
-                    "minecraft:forest",
-                    "moderner_beta:late_beta_extreme_hills",
-                    "moderner_beta:late_beta_swampland",
-                    "moderner_beta:late_beta_plains",
-                    "moderner_beta:late_beta_taiga"
-                )),
-                new BiomeToLayerOverlayLayer("land", 0, "land", Map.of(ExtendedBiomeId.PLAINS, "biome_pool")),
-                StackedZoomLayer.modal("land", 1000, "land", 2),
-                new ModalZoomLayer("land", 1000, "land"),
-                AddLandLayer.forBeta("land", 3, "land"),
-                StackedZoomLayer.modal("land", 1001, "land", 3 + biomeScale),
-                new SmoothLayer("land", 1000, "land"),
-                MixRiverLayer.forEarlyRelease("land", 0, "land", "river")
-            ),
+            ModernBetaSettings.betaFractalLayers(earlyReleaseLayerOutputs(biomeScale), ClimateDistribution.BETA, layers),
             DEFAULT_BETA.caveBiomeSettings()
         );
     }
 
     private static ConfiguredLayers configuredLayers100Era(int biomeScale, ExtendedBiomeId icePlains) {
-        return new ConfiguredLayers(
-            Arrays.asList(
-                new InitLandLayer("land", 1),
-                new FuzzyZoomLayer("land", 2000, "land"),
-                AddLandLayer.forIslandScale("land", 1, "land"),
-                new ModalZoomLayer("land", 2001, "land"),
-                AddLandLayer.forIslandScale("land", 2, "land"),
-                new WeightedBiomeLayer("snow", 2, Pool.<ExtendedBiomeId>builder()
-                    .add(ExtendedBiomeId.SNOWY_PLAINS, 1)
-                    .add(ExtendedBiomeId.NULL, 4)
-                    .build()),
-                new BiomeToLayerOverlayLayer("land", 0, "land", Map.of(ExtendedBiomeId.PLAINS, "snow")),
-                new ModalZoomLayer("land", 2002, "land"),
-                AddLandLayer.forIslandScale("land", 3, "land"),
-                new ModalZoomLayer("land", 2003, "land"),
-                AddLandLayer.forIslandScale("land", 4, "land"),
-                new ConditionalBiomeOverlayLayer("land", 5, "land",
-                    BiomePredicate.of(ExtendedBiomeId.OCEAN)
-                        .and(BiomePredicate.diagonalInterior())
-                        .and(BiomePredicate.oneIn(100)),
-                    ExtendedBiomeId.MUSHROOM_ISLAND, ExtendedBiomeId.NULL
-                ),
-                new InitRiverLayer("river", 100, "land"),
-                StackedZoomLayer.modal("river", 1000, "river", 6 + biomeScale),
-                new ComputeRiverLayer("river", 0, "river", true),
-                new SmoothLayer("river", 1000, "river"),
-                new RandomBiomeLayer("biome_pool", 200, ExtendedBiomeId.listOf(
-                    "minecraft:desert",
-                    "minecraft:forest",
-                    "moderner_beta:late_beta_extreme_hills",
-                    "moderner_beta:early_release_swampland",
-                    "moderner_beta:late_beta_plains",
-                    "moderner_beta:late_beta_taiga"
-                )),
-                new ConstantBiomeLayer("ice_plains", 0, icePlains),
-                new BiomeToLayerOverlayLayer("land", 0, "land", Map.of(
-                    ExtendedBiomeId.PLAINS, "biome_pool",
-                    ExtendedBiomeId.FROZEN_OCEAN, "ice_plains",
-                    ExtendedBiomeId.SNOWY_PLAINS, "ice_plains"
-                )),
-                StackedZoomLayer.modal("land", 1000, "land", 2),
-                new ModalZoomLayer("land", 1000, "land"),
-                AddLandLayer.forEarlyRelease("land", 3, "land", icePlains),
-                new ConditionalBiomeOverlayLayer("land", 0, "land",
-                    PredicateOverlayLayer.Target.MUSHROOM_SHORE.predicate(),
-                    ExtendedBiomeId.MUSHROOM_SHORE, ExtendedBiomeId.NULL),
-                StackedZoomLayer.modal("land", 1001, "land", 3 + biomeScale),
-                new SmoothLayer("land", 1000, "land"),
-                MixRiverLayer.forEarlyRelease("land", 0, "land", "river")
+        List<Layer> layers = new ArrayList<>(List.of(
+            new InitLandLayer("land", 1),
+            new FuzzyZoomLayer("land", 2000, "land"),
+            AddLandLayer.forIslandScale("land", 1, "land"),
+            new ModalZoomLayer("land", 2001, "land"),
+            AddLandLayer.forIslandScale("land", 2, "land"),
+            new WeightedBiomeLayer("snow", 2, Pool.<ExtendedBiomeId>builder()
+                .add(ExtendedBiomeId.SNOWY_PLAINS, 1)
+                .add(ExtendedBiomeId.NULL, 4)
+                .build()),
+            new BiomeToLayerOverlayLayer("land", 0, "land", Map.of(ExtendedBiomeId.PLAINS, "snow")),
+            new ModalZoomLayer("land", 2002, "land"),
+            AddLandLayer.forIslandScale("land", 3, "land"),
+            new ModalZoomLayer("land", 2003, "land"),
+            AddLandLayer.forIslandScale("land", 4, "land"),
+            new ConditionalBiomeOverlayLayer("land", 5, "land",
+                BiomePredicate.of(ExtendedBiomeId.OCEAN)
+                    .and(BiomePredicate.diagonalInterior())
+                    .and(BiomePredicate.oneIn(100)),
+                ExtendedBiomeId.MUSHROOM_ISLAND, ExtendedBiomeId.NULL
             ),
-            Map.of(ModernBetaBuiltInTypes.LayerOutput.BIOME.id, "land")
-        );
+            new InitRiverLayer("river", 100, "land"),
+            StackedZoomLayer.modal("river", 1000, "river", 6 + biomeScale),
+            new ComputeRiverLayer("river", 0, "river", true),
+            new SmoothLayer("river", 1000, "river"),
+            new RandomBiomeLayer("biome_pool", 200, ExtendedBiomeId.listOf(
+                "minecraft:desert",
+                "minecraft:forest",
+                "moderner_beta:late_beta_extreme_hills",
+                "moderner_beta:early_release_swampland",
+                "moderner_beta:late_beta_plains",
+                "moderner_beta:late_beta_taiga"
+            )),
+            new ConstantBiomeLayer("ice_plains", 0, icePlains),
+            new BiomeToLayerOverlayLayer("land", 0, "land", Map.of(
+                ExtendedBiomeId.PLAINS, "biome_pool",
+                ExtendedBiomeId.FROZEN_OCEAN, "ice_plains",
+                ExtendedBiomeId.SNOWY_PLAINS, "ice_plains"
+            )),
+            StackedZoomLayer.modal("land", 1000, "land", 2),
+            new ModalZoomLayer("land_0", 1000, "land"),
+            AddLandLayer.forEarlyRelease("land_0", 3, "land_0", icePlains),
+            new ConditionalBiomeOverlayLayer("land_0", 0, "land_0",
+                PredicateOverlayLayer.Target.MUSHROOM_SHORE.predicate(),
+                ExtendedBiomeId.MUSHROOM_SHORE, ExtendedBiomeId.NULL)
+        ));
+        for (int i = 0; i < 3 + biomeScale; i++) {
+            layers.add(new ModalZoomLayer("land_" + (1 + i), 1001 + i, "land_" + i));
+        }
+        layers.add(new SmoothLayer("land", 1000, "land_" + (3 + biomeScale)));
+        layers.add(MixRiverLayer.forEarlyRelease("land", 0, "land", "river"));
+
+        return new ConfiguredLayers(layers, earlyReleaseLayerOutputs(biomeScale));
     }
 
     private static ModernBetaSettingsPreset presetBeta19Pre3(int biomeScale) {
@@ -1371,7 +1389,7 @@ public final class ModernBetaSettingsPresets {
                 .add(CAVE_GENERATION, CaveGeneration.EARLY_RELEASE)
                 .addDefault(FORCED_BIOME_HEIGHT)
                 .build(),
-            ModernBetaSettings.fractalLayers(configuredLayers100Era(biomeScale, ExtendedBiomeId.of(ModernBetaBiomes.LATE_BETA_ICE_PLAINS))),
+            ModernBetaSettings.betaFractalLayers(configuredLayers100Era(biomeScale, ExtendedBiomeId.of(ModernBetaBiomes.LATE_BETA_ICE_PLAINS)), ClimateDistribution.RELEASE_1_0),
             DEFAULT_BETA.caveBiomeSettings()
         );
     }
@@ -1383,7 +1401,7 @@ public final class ModernBetaSettingsPresets {
                 .add(CAVE_GENERATION, CaveGeneration.EARLY_RELEASE)
                 .addDefault(FORCED_BIOME_HEIGHT)
                 .build(),
-            ModernBetaSettings.fractalLayers(configuredLayers100Era(biomeScale, ExtendedBiomeId.of(ModernBetaBiomes.EARLY_RELEASE_ICE_PLAINS))),
+            ModernBetaSettings.betaFractalLayers(configuredLayers100Era(biomeScale, ExtendedBiomeId.of(ModernBetaBiomes.EARLY_RELEASE_ICE_PLAINS)), ClimateDistribution.RELEASE_1_0),
             DEFAULT_BETA.caveBiomeSettings()
         );
     }
@@ -1445,7 +1463,7 @@ public final class ModernBetaSettingsPresets {
                 .toList())
             : new ConstantBiomeLayer("ice_plains", 0, icePlains);
 
-        List<Layer> layers = Arrays.asList(
+        List<Layer> layers = new ArrayList<>(Arrays.asList(
             new InitLandLayer("land", 1),
             new FuzzyZoomLayer("land", 2000, "land"),
             AddLandLayer.forIslandScale("land", 1, "land"),
@@ -1481,10 +1499,10 @@ public final class ModernBetaSettingsPresets {
             new SimpleBiomeReplacementLayer("hills", 0, "land", hillsVariants),
             new ConditionalLayerOverlayLayer("land", 1000, "land",
                 BiomePredicate.simpleHills(hillsVariants.keySet()), "hills", "land"),
-            new ModalZoomLayer("land", 1000, "land"),
-            AddLandLayer.forEarlyRelease("land", 3, "land", icePlains),
-            new ModalZoomLayer("land", 1001, "land"),
-            new PredicateOverlayLayer("land", 0, "land", List.of(
+            new ModalZoomLayer("land_0", 1000, "land"),
+            AddLandLayer.forEarlyRelease("land_0", 3, "land_0", icePlains),
+            new ModalZoomLayer("land_1", 1001, "land_0"),
+            new PredicateOverlayLayer("land_1", 0, "land_1", List.of(
                 PredicateOverlayLayer.Target.MUSHROOM_SHORE,
                 PredicateOverlayLayer.Target.inclusiveBeach(
                     ExtendedBiomeId.setOf(
@@ -1502,11 +1520,18 @@ public final class ModernBetaSettingsPresets {
                 )
             )),
             swampLakesLayer,
-            new PredicateOverlayLayer("land", 1000, "land", lakeOverlays),
-            StackedZoomLayer.modal("land", 1002, "land", 2 + biomeScale),
-            new SmoothLayer("land", 1000, "land"),
-            MixRiverLayer.forEarlyRelease("land", 0, "land", "river")
-        );
+            new PredicateOverlayLayer("land_1", 1000, "land_1", lakeOverlays)
+        ));
+        for (int i = 0; i < 2 + biomeScale; i++) {
+            layers.add(new ModalZoomLayer("land_" + (2 + i), 1001 + i, "land_" + (1 + i)));
+        }
+        layers.add(new SmoothLayer("land", 1000, "land_" + (3 + biomeScale)));
+        layers.add(MixRiverLayer.forEarlyRelease("land", 0, "land", "river"));
+
+        //StackedZoomLayer.modal("land", 1002, "land", 2 + biomeScale),
+        //    new SmoothLayer("land", 1000, "land"),
+        //    MixRiverLayer.forEarlyRelease("land", 0, "land", "river")
+
         if (addJungles) {
             Layer jungleLakesLayer = new WeightedBiomeLayer("jungle_lakes", 1000, Pool.<ExtendedBiomeId>builder()
                 .add(ExtendedBiomeId.RIVER, 1)
@@ -1517,7 +1542,7 @@ public final class ModernBetaSettingsPresets {
             layers.add(layers.lastIndexOf(swampLakesLayer), jungleLakesLayer);
         }
 
-        return new ConfiguredLayers(layers, Map.of(ModernBetaBuiltInTypes.LayerOutput.BIOME.id, "land"));
+        return new ConfiguredLayers(layers, earlyReleaseLayerOutputs(biomeScale));
     }
 
     private static ModernBetaSettingsPreset preset11(int biomeScale) {
@@ -1527,7 +1552,7 @@ public final class ModernBetaSettingsPresets {
                 .add(CAVE_GENERATION, CaveGeneration.EARLY_RELEASE)
                 .addDefault(FORCED_BIOME_HEIGHT)
                 .build(),
-            ModernBetaSettings.fractalLayers(configuredLayers11Era(biomeScale, false, false)),
+            ModernBetaSettings.betaFractalLayers(configuredLayers11Era(biomeScale, false, false), ClimateDistribution.RELEASE_1_1),
             DEFAULT_BETA.caveBiomeSettings()
         );
     }

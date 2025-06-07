@@ -21,6 +21,7 @@ public record LayerType<L extends Layer>(com.mojang.serialization.MapCodec<L> co
     public static LayerType<ModalZoomLayer> MODAL_ZOOM;
     public static LayerType<PointZoomLayer> POINT_ZOOM;
     public static LayerType<PredicateOverlayLayer> PREDICATE_OVERLAY;
+    public static LayerType<ProxyLayer> PROXY_LAYER;
     public static LayerType<PreSkipRandomLayer> PRE_SKIP_RANDOM;
     public static LayerType<RandomBiomeLayer> RANDOM_BIOME;
     public static LayerType<SimpleBiomeReplacementLayer> SIMPLE_BIOME_REPLACEMENT;

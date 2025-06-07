@@ -1,5 +1,8 @@
 package mod.bluestaggo.modernerbeta.api.world.biome.climate;
 
+import mod.bluestaggo.modernerbeta.settings.component.ClimateDistribution;
+import mod.bluestaggo.modernerbeta.world.feature.BetaFreezeTopLayerFeature;
+
 /**
  * Implemented by a climate sampler to provide temperatures and rainfall values,
  * for use by a biome provider or chunk provider.
@@ -41,5 +44,32 @@ public interface ClimateSampler {
      */
     default boolean useBiomeFeature() {
         return true;
+    }
+
+    /**
+     * Get the method of distributing climate. Includes fuzzy tall grass and smooth biome borders.
+     *
+     * @return The climate distribution method.
+     */
+    default ClimateDistribution getDistribution() {
+        return ClimateDistribution.DEFAULT;
+    }
+
+    /**
+     * Indicate the temperature level below which snow generates.
+     *
+     * @return The temperature level below which snow generates.
+     */
+    default double getSnowThreshold() {
+        return 0.5;
+    }
+
+    /**
+     * Indicate the formula to use for calculating temperature at different altitudes.
+     *
+     * @return The formula to use for calculating temperature at different altitudes.
+     */
+    default BetaFreezeTopLayerFeature.HeightType getHeightType() {
+        return BetaFreezeTopLayerFeature.HeightType.BETA;
     }
 }

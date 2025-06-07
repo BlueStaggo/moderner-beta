@@ -261,6 +261,12 @@ public class ModernBetaTagProviderBiome extends FabricTagProvider<Biome> {
             BiomeKeys.JUNGLE
         );
 
+        this.getOrCreateTagBuilder(HAS_EARLY_RELEASE_SWAMP_COLORS).add(
+            ModernBetaBiomes.EARLY_RELEASE_SWAMPLAND,
+            BiomeKeys.SWAMP,
+            BiomeKeys.MANGROVE_SWAMP
+        );
+
         /* Modern Beta Biome Structure Tags */
         
         this.getOrCreateTagBuilder(INDEV_STRONGHOLD_HAS_STRUCTURE)

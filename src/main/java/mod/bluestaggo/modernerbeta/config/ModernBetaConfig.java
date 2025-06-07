@@ -35,6 +35,18 @@ public class ModernBetaConfig implements ConfigData {
     @ConfigEntry.Gui.Tooltip(count = 3)
     public boolean usePEBetaWaterColor = false;
 
+    @ConfigEntry.Category(value = "betaFractalBiomeColor")
+    @ConfigEntry.Gui.Tooltip(count = 2)
+    public boolean useBetaFractalSkyColor = true;
+
+    @ConfigEntry.Category(value = "betaFractalBiomeColor")
+    @ConfigEntry.Gui.Tooltip(count = 3)
+    public boolean useBetaFractalBiomeColor = true;
+
+    @ConfigEntry.Category(value = "betaFractalBiomeColor")
+    @ConfigEntry.Gui.Tooltip(count = 3)
+    public boolean useBetaFractalWaterColor = false;
+
     @ConfigEntry.Category(value = "other")
     @ConfigEntry.Gui.Tooltip(count = 2)
     public boolean useOldFogColor = true;

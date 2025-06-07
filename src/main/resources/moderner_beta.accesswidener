@@ -1,6 +1,7 @@
 accessWidener v1 named
 
 accessible method net/minecraft/world/biome/OverworldBiomeCreator getSkyColor (F)I
+accessible class net/minecraft/world/biome/Biome$Weather
 
 accessible class net/minecraft/world/gen/surfacebuilder/MaterialRules$SequenceMaterialRule
 accessible class net/minecraft/world/gen/surfacebuilder/MaterialRules$MaterialRuleContext

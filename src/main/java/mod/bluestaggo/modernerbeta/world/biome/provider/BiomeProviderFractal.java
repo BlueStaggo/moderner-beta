@@ -19,16 +19,15 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.source.BiomeAccess;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 public class BiomeProviderFractal extends BiomeProvider implements BiomeResolverBlock, BiomeResolverExtendedIdStepped, BiomeAccess.Storage {
+	protected final ConfiguredLayers configuredLayers;
+	protected final List<Layer> pipeline;
+
 	private final Supplier<RegistryEntry<Biome>> baseBiome;
 	private final BiomeAccess biomeAccess;
 	private final List<RegistryEntry<Biome>> allBiomes;
-	private final List<Layer> allLayers;
 	private final Layer layer;
 
 	public BiomeProviderFractal(ModernBetaSettings settings, RegistryEntryLookup<Biome> biomeRegistry, long seed) {
@@ -37,9 +36,10 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 		this.baseBiome = Suppliers.memoize(() -> this.getBiomeEntry(this.settings.getOrDefault(SettingsComponentTypes.SINGLE_BIOME)).orElseThrow());
 		this.biomeAccess = new BiomeAccess(this, seed);
 
-		ConfiguredLayers fractalLayers = this.settings.getOrThrow(SettingsComponentTypes.FRACTAL_LAYERS);
-		this.allLayers = fractalLayers.getPipeline();
-		this.layer = fractalLayers.getOutputOrThrow(ModernBetaBuiltInTypes.LayerOutput.BIOME.id);
+		this.configuredLayers = this.settings.getOrThrow(SettingsComponentTypes.FRACTAL_LAYERS);
+		this.pipeline = this.configuredLayers.getPipeline();
+
+		this.layer = this.configuredLayers.getOutputOrThrow(ModernBetaBuiltInTypes.LayerOutput.BIOME.id);
 		this.layer.init(seed);
 
 		Set<ExtendedBiomeId> allExtendedBiomes = new HashSet<>();
@@ -60,7 +60,9 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 
 	@Override
 	public RegistryEntry<Biome> getBiome(int biomeX, int biomeY, int biomeZ) {
-		return this.getBiomeEntry(this.getExtendedBiomeId(biomeX, biomeY, biomeZ).baseId()).orElseGet(this.baseBiome);
+		Identifier baseId = this.getExtendedBiomeId(biomeX, biomeY, biomeZ).baseId();
+		return this.getBiomeEntry(baseId)
+			.orElseThrow(() -> new NoSuchElementException("Biome \"" + baseId + "\" does not exist."));
 	}
 
 	@Override
@@ -85,12 +87,14 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 
 	@Override
 	public RegistryEntry<Biome> getBiomeForStep(int biomeX, int biomeY, int biomeZ, int step) {
-		return this.getBiomeEntry(this.getExtendedBiomeIdForStep(biomeX, biomeY, biomeZ, step).baseId()).orElseThrow();
+		Identifier baseId = this.getExtendedBiomeIdForStep(biomeX, biomeY, biomeZ, step).baseId();
+		return this.getBiomeEntry(baseId)
+			.orElseThrow(() -> new NoSuchElementException("Biome \"" + baseId + "\" does not exist."));
 	}
 
 	@Override
 	public ExtendedBiomeId getExtendedBiomeIdForStep(int biomeX, int biomeY, int biomeZ, int step) {
-		return this.allLayers.get(step).sample(biomeX, biomeZ);
+		return this.pipeline.get(step).sample(biomeX, biomeZ);
 	}
 
 	@Override
@@ -119,11 +123,11 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 
 	@Override
 	public int getStepCount() {
-		return this.allLayers.size();
+		return this.pipeline.size();
 	}
 
 	@Override
 	public Text getStepName(int step) {
-		return Text.literal(this.allLayers.get(step).toString());
+		return Text.literal(this.pipeline.get(step).toString());
 	}
 }

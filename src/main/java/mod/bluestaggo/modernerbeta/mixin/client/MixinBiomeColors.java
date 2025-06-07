@@ -18,8 +18,7 @@ public abstract class MixinBiomeColors {
     @Inject(method = "getWaterColor", at = @At("HEAD"), cancellable = true)
     private static void injectGetWaterColor(BlockRenderView world, BlockPos pos, CallbackInfoReturnable<Integer> info) {
         if (BlockColorSampler.INSTANCE.useWaterColor()) {
-            Clime clime = BlockColorSampler.INSTANCE.getClimateSampler().get().sample(pos.getX(), pos.getZ());
-            
+            Clime clime = BlockColorSampler.INSTANCE.getClimateSampler().sample(pos.getX(), pos.getZ());
             info.setReturnValue(BlockColorSampler.INSTANCE.colormapWater.getColor(clime.temp(), clime.rain()));
         }
     }

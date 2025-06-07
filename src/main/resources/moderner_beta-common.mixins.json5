@@ -19,7 +19,8 @@
     "MixinStructure",
     "AccessorFoliagePlacerType",
     "MixinVanillaSurfaceRules",
-    "AccessorRegistryEntryReference"
+    "AccessorRegistryEntryReference",
+    "AccessorBiome"
   ],
   "client": [
     "client.AccessorTextWidget",
@@ -35,7 +36,8 @@
     "client.MixinLevelLoadingScreen",
     "client.MixinSimplePositioningWidget",
     "client.MixinThreePartsLayoutWidget",
-    "client.MixinWorldCreator"
+    "client.MixinWorldCreator",
+    "client.AccessorChunkRendererRegion"
   ],
   "injectors": {
     "defaultRequire": 1

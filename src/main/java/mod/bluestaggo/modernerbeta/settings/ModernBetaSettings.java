@@ -9,6 +9,7 @@ import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistryKeys;
+import mod.bluestaggo.modernerbeta.settings.component.ClimateDistribution;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ConfiguredLayers;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.Layer;
@@ -50,6 +51,22 @@ public class ModernBetaSettings implements Iterable<SettingsComponent<?>> {
     public static Builder builder(ModernBetaSettings settings) {
         return new Builder()
             .addAll(settings);
+    }
+
+    public static ModernBetaSettings betaFractalLayers(Map<Identifier, String> outputs, ClimateDistribution climateDistribution, Layer... pipeline) {
+        return betaFractalLayers(outputs, climateDistribution, Arrays.asList(pipeline));
+    }
+
+    public static ModernBetaSettings betaFractalLayers(Map<Identifier, String> outputs, ClimateDistribution climateDistribution, List<Layer> pipeline) {
+        return betaFractalLayers(new ConfiguredLayers(pipeline, outputs), climateDistribution);
+    }
+
+    public static ModernBetaSettings betaFractalLayers(ConfiguredLayers configuredLayers, ClimateDistribution climateDistribution) {
+        return new Builder()
+            .add(SettingsComponentTypes.PROVIDER, ModernBetaBuiltInTypes.Biome.BETA_FRACTAL.id)
+            .add(SettingsComponentTypes.FRACTAL_LAYERS, configuredLayers)
+            .add(SettingsComponentTypes.CLIMATE_DISTRIBUTION, climateDistribution)
+            .build();
     }
 
     public static ModernBetaSettings fractalLayers(Map<Identifier, String> outputs, Layer... pipeline) {

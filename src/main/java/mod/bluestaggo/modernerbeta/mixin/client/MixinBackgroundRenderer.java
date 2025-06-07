@@ -65,8 +65,7 @@ public abstract class MixinBackgroundRenderer {
             int x = (int)modernBeta_pos.getX();
             int z = (int)modernBeta_pos.getZ();
             
-            Clime clime = BlockColorSampler.INSTANCE.getClimateSampler().get().sample(x, z);
-            
+            Clime clime = BlockColorSampler.INSTANCE.getClimateSampler().sample(x, z);
             return BlockColorSampler.INSTANCE.colormapUnderwater.getColor(clime.temp(), clime.rain());
         }
 

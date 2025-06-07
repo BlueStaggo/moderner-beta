@@ -201,6 +201,7 @@
     "createWorld.customize.modern_beta.settings.provider.moderner_beta:single": "Single",
     "createWorld.customize.modern_beta.settings.provider.moderner_beta:voronoi": "Voronoi",
     "createWorld.customize.modern_beta.settings.provider.moderner_beta:fractal": "Fractal",
+    "createWorld.customize.modern_beta.settings.provider.moderner_beta:beta_fractal": "Beta Fractal",
     "createWorld.customize.modern_beta.settings.provider.moderner_beta:none": "None",
 
     "createWorld.customize.modern_beta.settings.deepslate_generation": "Deepslate",
@@ -326,6 +327,9 @@
     "createWorld.customize.modern_beta.settings.climate_mappings.swampland": "Swampland Mappings",
     "createWorld.customize.modern_beta.settings.climate_mappings.taiga": "Taiga Mappings",
     "createWorld.customize.modern_beta.settings.climate_mappings.tundra": "Tundra Mappings",
+    "createWorld.customize.modern_beta.settings.climate_distribution": "Climate Distribution",
+    "createWorld.customize.modern_beta.settings.climate_distribution.fuzzyGrass": "Fuzzy Short Grass",
+    "createWorld.customize.modern_beta.settings.climate_distribution.smoothBorders": "Smooth Biome Borders",
     "createWorld.customize.modern_beta.settings.voronoi_points": "Voronoi Points",
     "createWorld.customize.modern_beta.settings.voronoi_points.self": "Voronoi Points",
     "createWorld.customize.modern_beta.settings.fractal_layers": "Fractal Layers",
@@ -342,6 +346,7 @@
 
     "text.autoconfig.moderner_beta.category.betaBiomeColor": "Beta Biome Color Options",
     "text.autoconfig.moderner_beta.category.peBiomeColor": "PE Biome Color Options",
+    "text.autoconfig.moderner_beta.category.betaFractalBiomeColor": "Beta Fractal Biome Color Options",
     "text.autoconfig.moderner_beta.category.other": "Other Options",
     
     "text.autoconfig.moderner_beta.option.useBetaSkyColor": "Use Beta Sky Colors",
@@ -371,7 +376,21 @@
     "text.autoconfig.moderner_beta.option.usePEBetaWaterColor.@Tooltip[0]": "Use client-side temperature/humidity",
     "text.autoconfig.moderner_beta.option.usePEBetaWaterColor.@Tooltip[1]": "noise-based Beta water colors for PE worlds.",
     "text.autoconfig.moderner_beta.option.usePEBetaWaterColor.@Tooltip[2]": "(Requires world or texture reload, F3 + T)",
-    
+
+    "text.autoconfig.moderner_beta.option.useBetaFractalSkyColor": "Use Beta Fractal Sky Colors",
+    "text.autoconfig.moderner_beta.option.useBetaFractalSkyColor.@Tooltip[0]": "Use client-side temperature",
+    "text.autoconfig.moderner_beta.option.useBetaFractalSkyColor.@Tooltip[1]": "fractal-based pre-1.2 sky colors.",
+
+    "text.autoconfig.moderner_beta.option.useBetaFractalBiomeColor": "Use Beta Fractal Biome Colors",
+    "text.autoconfig.moderner_beta.option.useBetaFractalBiomeColor.@Tooltip[0]": "Use client-side temperature/humidity",
+    "text.autoconfig.moderner_beta.option.useBetaFractalBiomeColor.@Tooltip[1]": "fractal-based pre-1.2 biome colors.",
+    "text.autoconfig.moderner_beta.option.useBetaFractalBiomeColor.@Tooltip[2]": "(Requires world or texture reload, F3 + T)",
+
+    "text.autoconfig.moderner_beta.option.useBetaFractalWaterColor": "Use Beta Fractal Water Colors",
+    "text.autoconfig.moderner_beta.option.useBetaFractalWaterColor.@Tooltip[0]": "Use client-side temperature/humidity",
+    "text.autoconfig.moderner_beta.option.useBetaFractalWaterColor.@Tooltip[1]": "fractal-based pre-1.2 water colors.",
+    "text.autoconfig.moderner_beta.option.useBetaFractalWaterColor.@Tooltip[2]": "(Requires world or texture reload, F3 + T)",
+
     "text.autoconfig.moderner_beta.option.useOldFogColor": "Use Old Fog Color",
     "text.autoconfig.moderner_beta.option.useOldFogColor.@Tooltip[0]": "Use client-side fog color using old weighting formula,",
     "text.autoconfig.moderner_beta.option.useOldFogColor.@Tooltip[1]": "increasing sky color contribution with render distance.",

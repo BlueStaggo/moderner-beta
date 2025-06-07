@@ -289,6 +289,17 @@ public class ModernBetaClientBuiltInProviders {
         );
 
         registryHandler.register(
+            CLIMATE_DISTRIBUTION.id,
+            (screen, options) -> {
+                addAll(
+                    options,
+                    screen.booleanOption("fuzzyGrass"),
+                    screen.booleanOption("smoothBorders")
+                );
+            }
+        );
+
+        registryHandler.register(
             VORONOI_POINTS.id,
             (screen, options) -> {
                 options.addSingleOptionEntry(screen.listEditButton(

@@ -30,6 +30,7 @@ import net.minecraft.registry.tag.BiomeTags;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -225,6 +226,17 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                 context.drawText(textRenderer, stepName, this.getX() + 4, this.getY() + 4, 0xFFFFFFFF, false);
             }
 
+            if (this.renderThread.exception != null) {
+                context.drawCenteredTextWithShadow(
+                    textRenderer,
+                    Text.literal(this.renderThread.exception.getLocalizedMessage())
+                        .formatted(Formatting.RED),
+                    this.getX() + this.getWidth() / 2,
+                    this.getY() + this.getHeight() / 2 - 4,
+                    0xFFFFFFFF
+                );
+            }
+
             int offsetMouseX = mouseX - this.getX();
             int offsetMouseY = mouseY - this.getY();
             if (offsetMouseX >= 0 && offsetMouseY >= 0 && offsetMouseX < this.width && offsetMouseY < this.height) {
@@ -323,6 +335,8 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
             volatile boolean stop;
             volatile boolean uploadRequested;
 
+            volatile Exception exception;
+
             @Override
             public void run() {
                 int genX = -1;
@@ -331,98 +345,103 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                 Int2IntMap randColors = new Int2IntAVLTreeMap();
                 Random random = new Random();
 
-                while (!stop) {
-                    genX++;
-                    if (genX >= width) {
-                        genX = 0;
-                        genY++;
-                    }
-                    if (genY >= height) {
-                        genY = 0;
-                        if (full) {
-                            synchronized (BiomeDisplayWidget.this) {
-                                try {
-                                    BiomeDisplayWidget.this.wait();
-                                } catch (InterruptedException e) {
+                try {
+
+                    while (!stop) {
+                        genX++;
+                        if (genX >= width) {
+                            genX = 0;
+                            genY++;
+                        }
+                        if (genY >= height) {
+                            genY = 0;
+                            if (full) {
+                                synchronized (BiomeDisplayWidget.this) {
+                                    try {
+                                        BiomeDisplayWidget.this.wait();
+                                    } catch (InterruptedException e) {
+                                        break;
+                                    }
+                                }
+                                if (this.stop) {
                                     break;
                                 }
                             }
-                            if (this.stop) {
-                                break;
-                            }
+                            full = true;
                         }
-                        full = true;
-                    }
 
-                    int baseAlpha;
-                    synchronized (image) {
-                        baseAlpha = image.
-                            //? if >=1.21.2 {
-                            getColorArgb
-                            //?} else {
-                            /*getColor
-                            *///?}
-                            (genX, genY) >>> 24;
-                    }
-                    if (baseAlpha == 0xFF) {
-                        continue;
-                    }
-                    full = false;
+                        int baseAlpha;
+                        synchronized (image) {
+                            baseAlpha = image.
+                                //? if >=1.21.2 {
+                                getColorArgb
+                                //?} else {
+                                /*getColor
+                                *///?}
+                                (genX, genY) >>> 24;
+                        }
+                        if (baseAlpha == 0xFF) {
+                            continue;
+                        }
+                        full = false;
 
-                    int scale = zoom.get();
-                    @SuppressWarnings("IntegerDivisionInFloatingPointContext")
-                    int gridScale = (int)Math.pow(2, ((int)(Math.log(scale) / Math.log(2)) + 2) / 4 * 4);
-                    int intOffX = (int)Math.round(offsetX.get());
-                    int intOffY = (int)Math.round(offsetY.get());
-                    int sampleX = (genX + intOffX - width / 2) * scale;
-                    int sampleY = (genY + intOffY - height / 2) * scale;
+                        int scale = zoom.get();
+                        @SuppressWarnings("IntegerDivisionInFloatingPointContext")
+                        int gridScale = (int)Math.pow(2, ((int)(Math.log(scale) / Math.log(2)) + 2) / 4 * 4);
+                        int intOffX = (int)Math.round(offsetX.get());
+                        int intOffY = (int)Math.round(offsetY.get());
+                        int sampleX = (genX + intOffX - width / 2) * scale;
+                        int sampleY = (genY + intOffY - height / 2) * scale;
 
-                    int step = BiomeDisplayWidget.this.step.get();
-                    RegistryEntry<Biome> biome = biomeProvider instanceof BiomeResolverStepped resolverStepped
-                        ? resolverStepped.getBiomeForStep(sampleX, 64, sampleY, step)
-                        : biomeProvider.getBiome(sampleX, 64, sampleY);
-                    ExtendedBiomeId extendedBiome = biomeProvider instanceof BiomeResolverExtendedId resolverExtendedId
-                        ? resolverExtendedId instanceof BiomeResolverExtendedIdStepped resolverExtendedIdStepped
-                            ? resolverExtendedIdStepped.getExtendedBiomeIdForStep(sampleX, 64, sampleY, step)
-                            : resolverExtendedId.getExtendedBiomeId(sampleX, 64, sampleY)
-                        : ExtendedBiomeId.NULL;
+                        int step = BiomeDisplayWidget.this.step.get();
+                        RegistryEntry<Biome> biome = biomeProvider instanceof BiomeResolverStepped resolverStepped
+                            ? resolverStepped.getBiomeForStep(sampleX, 64, sampleY, step)
+                            : biomeProvider.getBiome(sampleX, 64, sampleY);
+                        ExtendedBiomeId extendedBiome = biomeProvider instanceof BiomeResolverExtendedId resolverExtendedId
+                            ? resolverExtendedId instanceof BiomeResolverExtendedIdStepped resolverExtendedIdStepped
+                                ? resolverExtendedIdStepped.getExtendedBiomeIdForStep(sampleX, 64, sampleY, step)
+                                : resolverExtendedId.getExtendedBiomeId(sampleX, 64, sampleY)
+                            : ExtendedBiomeId.NULL;
 
-                    int color = this.getBiomeColor(biome, extendedBiome.ext(), sampleX, sampleY, randColors, random);
+                        int color = this.getBiomeColor(biome, extendedBiome.ext(), sampleX, sampleY, randColors, random);
 
-                    if (sampleX % (64 * gridScale) == 0 || sampleY % (64 * gridScale) == 0) {
-                        int r = (color >> 16) & 0xFF;
+                        if (sampleX % (64 * gridScale) == 0 || sampleY % (64 * gridScale) == 0) {
+                            int r = (color >> 16) & 0xFF;
+                            int g = (color >> 8) & 0xFF;
+                            int b = color & 0xFF;
+                            r = MathHelper.lerp(0.5F, r, 0xFF);
+                            g = MathHelper.lerp(0.5F, g, 0xFF);
+                            b = MathHelper.lerp(0.5F, b, 0xFF);
+                            color = r << 16 | g << 8 | b;
+                        } else if (sampleX % (4 * gridScale) == 0 || sampleY % (4 * gridScale) == 0) {
+                            int r = (color >> 16) & 0xFF;
+                            int g = (color >> 8) & 0xFF;
+                            int b = color & 0xFF;
+                            r = MathHelper.lerp(0.1F, r, 0xFF);
+                            g = MathHelper.lerp(0.1F, g, 0xFF);
+                            b = MathHelper.lerp(0.1F, b, 0xFF);
+                            color = r << 16 | g << 8 | b;
+                        }
+
+                        //? if >=1.21.2 {
+                        color |= 0xFF000000;
+                        synchronized (image) {
+                            image.setColorArgb(genX, genY, color);
+                            this.uploadRequested = true;
+                        }
+                        //?} else {
+                        /*int r = (color >> 16) & 0xFF;
                         int g = (color >> 8) & 0xFF;
                         int b = color & 0xFF;
-                        r = MathHelper.lerp(0.5F, r, 0xFF);
-                        g = MathHelper.lerp(0.5F, g, 0xFF);
-                        b = MathHelper.lerp(0.5F, b, 0xFF);
-                        color = r << 16 | g << 8 | b;
-                    } else if (sampleX % (4 * gridScale) == 0 || sampleY % (4 * gridScale) == 0) {
-                        int r = (color >> 16) & 0xFF;
-                        int g = (color >> 8) & 0xFF;
-                        int b = color & 0xFF;
-                        r = MathHelper.lerp(0.1F, r, 0xFF);
-                        g = MathHelper.lerp(0.1F, g, 0xFF);
-                        b = MathHelper.lerp(0.1F, b, 0xFF);
-                        color = r << 16 | g << 8 | b;
+                        color = r | g << 8 | b << 16 | 0xFF << 24;
+                        synchronized (image) {
+                            image.setColor(genX, genY, color);
+                            this.uploadRequested = true;
+                        }
+                        *///?}
                     }
-
-                    //? if >=1.21.2 {
-                    color |= 0xFF000000;
-                    synchronized (image) {
-                        image.setColorArgb(genX, genY, color);
-                        this.uploadRequested = true;
-                    }
-                    //?} else {
-                    /*int r = (color >> 16) & 0xFF;
-                    int g = (color >> 8) & 0xFF;
-                    int b = color & 0xFF;
-                    color = r | g << 8 | b << 16 | 0xFF << 24;
-                    synchronized (image) {
-                        image.setColor(genX, genY, color);
-                        this.uploadRequested = true;
-                    }
-                    *///?}
+                } catch (Exception exception) {
+                    this.exception = exception;
                 }
             }
 

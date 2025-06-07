@@ -199,6 +199,11 @@ public class ModernBetaBuiltInProviders {
                 SettingsComponentTypes.FRACTAL_LAYERS
             )
         ));
+        registryHandler.register(ModernBetaBuiltInTypes.Biome.BETA_FRACTAL.id, new BiomeProviderType<>(
+            BiomeProviderBetaFractal::new, BiomeProviderBetaFractal.class, () -> List.of(
+                SettingsComponentTypes.FRACTAL_LAYERS
+            )
+        ));
     }
     
     // Register default cave biome providers

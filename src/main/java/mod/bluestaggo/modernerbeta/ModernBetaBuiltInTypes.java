@@ -25,6 +25,7 @@ public final class ModernBetaBuiltInTypes {
         SINGLE_BIOME("single_biome"),
         CLIMATE_SCALE("climate_scale"),
         CLIMATE_MAPPINGS("climate_mappings"),
+        CLIMATE_DISTRIBUTION("climate_distribution"),
         VORONOI_POINTS("voronoi_points"),
         FRACTAL_LAYERS("fractal_layers"),
         USE_OCEAN_BIOMES("use_ocean_biomes"),
@@ -66,6 +67,7 @@ public final class ModernBetaBuiltInTypes {
         PE("pe"),
         VORONOI("voronoi"),
         FRACTAL("fractal"),
+        BETA_FRACTAL("beta_fractal"),
         ;
 
         public final Identifier id;

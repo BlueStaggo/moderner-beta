@@ -40,6 +40,7 @@ public class SettingsComponentTypes {
     public static SettingsComponentType<Identifier> SINGLE_BIOME;
     public static SettingsComponentType<ClimateScale> CLIMATE_SCALE;
     public static SettingsComponentType<Map<String, ClimateMapping>> CLIMATE_MAPPINGS;
+    public static SettingsComponentType<ClimateDistribution> CLIMATE_DISTRIBUTION;
     public static SettingsComponentType<List<VoronoiPointBiome>> VORONOI_POINTS;
     public static SettingsComponentType<ConfiguredLayers> FRACTAL_LAYERS;
     public static SettingsComponentType<Boolean> USE_OCEAN_BIOMES;
@@ -139,6 +140,10 @@ public class SettingsComponentTypes {
             ModernBetaBuiltInTypes.SettingsComponentType.CLIMATE_MAPPINGS.id,
             ClimateMapping.MAP_CODEC,
             ClimateMapping.DEFAULT_MAPPINGS);
+        CLIMATE_DISTRIBUTION = register(
+            ModernBetaBuiltInTypes.SettingsComponentType.CLIMATE_DISTRIBUTION.id,
+            ClimateDistribution.CODEC,
+            ClimateDistribution.DEFAULT);
         VORONOI_POINTS = register(
             ModernBetaBuiltInTypes.SettingsComponentType.VORONOI_POINTS.id,
             VoronoiPointBiome.CODEC.listOf(),

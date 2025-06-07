@@ -18,7 +18,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public abstract class Layer {
-    private final static int CACHE_CAPACITY = 25;
+    public final static int CACHE_CAPACITY = 25;
     public static final Codec<Layer> TYPE_CODEC = ModernBetaRegistries.FRACTAL_LAYER.getCodec()
         .dispatch(Layer::getType, LayerType::codec);
 

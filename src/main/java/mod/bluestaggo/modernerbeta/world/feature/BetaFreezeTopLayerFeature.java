@@ -65,9 +65,9 @@ public class BetaFreezeTopLayerFeature extends Feature<DefaultFeatureConfig> {
                     modernBetaBiomeSource.getBiomeProvider() instanceof ClimateSampler climateSampler &&
                     climateSampler.useBiomeFeature()
                 ) {
-                    heightType = HeightType.BETA;
+                    heightType = climateSampler.getHeightType();
                     temp = climateSampler.sample(x, z).temp();
-                    coldThreshold = 0.5;
+                    coldThreshold = climateSampler.getSnowThreshold();
                 } else {
                     heightType = HeightType.NONE;
                     temp = world.getBiome(mutable).value().getTemperature();
@@ -164,7 +164,7 @@ public class BetaFreezeTopLayerFeature extends Feature<DefaultFeatureConfig> {
         return false;
     }
 
-    private enum HeightType {
+    public enum HeightType {
         BETA,
         MAJOR_RELEASE,
         NONE

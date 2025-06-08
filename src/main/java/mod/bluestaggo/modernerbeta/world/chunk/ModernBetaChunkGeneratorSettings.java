@@ -1,18 +1,18 @@
 package mod.bluestaggo.modernerbeta.world.chunk;
 
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
+import mod.bluestaggo.modernerbeta.mixin.AccessorDensityFunctions;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
-import net.minecraft.registry.Registerable;
-import net.minecraft.registry.RegistryEntryLookup;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.*;
 import net.minecraft.registry.entry.RegistryEntry.Reference;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.noise.DoublePerlinNoiseSampler;
 import net.minecraft.util.math.noise.DoublePerlinNoiseSampler.NoiseParameters;
 import net.minecraft.world.gen.chunk.ChunkGeneratorSettings;
 import net.minecraft.world.gen.chunk.GenerationShapeConfig;
 import net.minecraft.world.gen.densityfunction.DensityFunction;
 import net.minecraft.world.gen.densityfunction.DensityFunctionTypes;
+import net.minecraft.world.gen.densityfunction.DensityFunctions;
 import net.minecraft.world.gen.noise.NoiseParametersKeys;
 import net.minecraft.world.gen.noise.NoiseRouter;
 import net.minecraft.world.gen.surfacebuilder.MaterialRules;
@@ -64,6 +64,21 @@ public class ModernBetaChunkGeneratorSettings {
         DensityFunction functionAquiferFloodedness = DensityFunctionTypes.noise(aquiferFloodedness, 0.67);
         DensityFunction functionAquiferSpread = DensityFunctionTypes.noise(aquiferSpread, 0.7142857142857143);
         DensityFunction functionAquiferLava = DensityFunctionTypes.noise(aquiferLava);
+
+        DensityFunction functionSlopedCheeseEstimate = DensityFunctionTypes.yClampedGradient(-64, 64, 3.0, 1.0);
+        DensityFunction functionCaveEntrances = DensityFunctionTypes.min(
+            functionSlopedCheeseEstimate,
+            DensityFunctionTypes.mul(DensityFunctionTypes.constant(5.0),
+                new DensityFunctionTypes.RegistryEntryHolder(densityFunctionLookup.getOrThrow(AccessorDensityFunctions.getCavesEntrancesOverworldKey())))
+        );
+        DensityFunction functionCaves = DensityFunctionTypes.rangeChoice(
+            functionSlopedCheeseEstimate, -1000000.0, 1.5625, functionCaveEntrances,
+            AccessorDensityFunctions.invokeCreateCavesFunction(densityFunctionLookup, noiseParametersLookup, functionSlopedCheeseEstimate)
+        );
+        DensityFunction functionCavesWithNoodles = DensityFunctionTypes.min(
+            AccessorDensityFunctions.invokeApplyBlendDensity(AccessorDensityFunctions.invokeApplySurfaceSlides(false, functionCaves)),
+            new DensityFunctionTypes.RegistryEntryHolder(densityFunctionLookup.getOrThrow(AccessorDensityFunctions.getCavesNoodleOverworldKey()))
+        );
         
         return new NoiseRouter(
             functionAquiferBarrier,      // Barrier noise
@@ -76,8 +91,8 @@ public class ModernBetaChunkGeneratorSettings {
             DensityFunctionTypes.zero(), // Erosion
             DensityFunctionTypes.zero(), // Depth
             DensityFunctionTypes.zero(), // Ridges
-            DensityFunctionTypes.zero(), // Initial Density
-            DensityFunctionTypes.zero(), // Final Density
+            DensityFunctionTypes.zero(), // Initial density
+            functionCavesWithNoodles,    // Final density (used for noise caves post-processor)
             DensityFunctionTypes.zero(), // Vein Toggle
             DensityFunctionTypes.zero(), // Vein Ridged
             DensityFunctionTypes.zero()  // Vein Gap
@@ -94,7 +109,7 @@ public class ModernBetaChunkGeneratorSettings {
         RegistryEntryLookup<DoublePerlinNoiseSampler.NoiseParameters> noiseParametersLookup = settingsRegisterable.getRegistryLookup(RegistryKeys.NOISE_PARAMETERS);
 
         useModernBetaSurfaceRules = true;
-        MaterialRules.MaterialRule materialRule = VanillaSurfaceRules.createDefaultRule(false, false, true);
+        MaterialRules.MaterialRule materialRule = VanillaSurfaceRules.createOverworldSurfaceRule();
         useModernBetaSurfaceRules = false;
 
         return new ChunkGeneratorSettings(

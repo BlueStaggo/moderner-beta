@@ -234,12 +234,7 @@ public class ModernBetaBuiltInProviders {
             )
         ));
     }
-    
-    public static void registerNoisePostProcessors(IRegistryHandler<?> handler) {
-        IRegistryHandler<NoisePostProcessor> registryHandler = (IRegistryHandler<NoisePostProcessor>) handler;
-        registryHandler.register(ModernBetaBuiltInTypes.NoisePostProcessor.NONE.id, NoisePostProcessor.DEFAULT);
-    }
-    
+
     public static void registerSurfaceConfigs(IRegistryHandler<?> handler) {
         IRegistryHandler<SurfaceConfig> registryHandler = (IRegistryHandler<SurfaceConfig>) handler;
 

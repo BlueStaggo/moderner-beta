@@ -73,6 +73,7 @@ public class ModernBetaClientBuiltInProviders {
                     options,
                     screen.booleanOption("useCaves"),
                     screen.booleanOption("useFixedCaves"),
+                    screen.booleanOption("useNoiseCaves"),
                     screen.booleanOption("forceBetaCaves"),
                     screen.booleanOption("forceBetaRavines")
                 );

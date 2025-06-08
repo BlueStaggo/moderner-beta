@@ -722,7 +722,7 @@ public final class ModernBetaSettingsPresets {
         return new ModernBetaSettingsPreset(
             DEFAULT_BETA.chunkSettings().extend()
                 .add(USE_SURFACE_RULES, true)
-                .add(CAVE_GENERATION, CaveGeneration.EARLY_RELEASE)
+                .add(CAVE_GENERATION, CaveGeneration.MODERN_BETA)
                 .build(),
             ModernBetaSettings.builder()
                 .add(PROVIDER, ModernBetaBuiltInTypes.Biome.VORONOI.id)

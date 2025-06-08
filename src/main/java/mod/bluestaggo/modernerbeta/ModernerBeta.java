@@ -68,7 +68,6 @@ public class ModernerBeta {
             new Pair<>(ModernBetaRegistries.CAVE_BIOME, ModernBetaBuiltInProviders::registerCaveBiomeProviders),
             new Pair<>(ModernBetaRegistries.SURFACE_CONFIG, ModernBetaBuiltInProviders::registerSurfaceConfigs),
             new Pair<>(ModernBetaRegistries.HEIGHT_CONFIG, ModernBetaBuiltInProviders::registerHeightConfigs),
-            new Pair<>(ModernBetaRegistries.NOISE_POST_PROCESSOR, ModernBetaBuiltInProviders::registerNoisePostProcessors),
             new Pair<>(ModernBetaRegistries.BLOCKSOURCE, ModernBetaBuiltInProviders::registerBlockSources),
             new Pair<>(ModernBetaRegistries.FRACTAL_LAYER, LayerType::init),
             new Pair<>(ModernBetaRegistries.BIOME_PREDICATE, BiomePredicateType::init)

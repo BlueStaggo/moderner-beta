@@ -216,6 +216,7 @@
     "createWorld.customize.modern_beta.settings.cave_generation": "Caves",
     "createWorld.customize.modern_beta.settings.cave_generation.useCaves": "Enabled",
     "createWorld.customize.modern_beta.settings.cave_generation.useFixedCaves": "Fix Cave Borders",
+    "createWorld.customize.modern_beta.settings.cave_generation.useNoiseCaves": "Generate Noise Caves",
     "createWorld.customize.modern_beta.settings.cave_generation.forceBetaCaves": "Force Beta Caves",
     "createWorld.customize.modern_beta.settings.cave_generation.forceBetaRavines": "Force Beta Canyons",
     "createWorld.customize.modern_beta.settings.noise_scale": "Noise Scale",

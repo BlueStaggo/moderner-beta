@@ -22,7 +22,6 @@ public final class ModernBetaRegistries {
     public static Registry<ChunkProviderType<?>> CHUNK;
     public static Registry<BiomeProviderType<?>> BIOME;
     public static Registry<CaveBiomeProviderType<?>> CAVE_BIOME;
-    public static Registry<NoisePostProcessor> NOISE_POST_PROCESSOR;
     public static Registry<SurfaceConfig> SURFACE_CONFIG;
     public static Registry<HeightConfig> HEIGHT_CONFIG;
     public static Registry<BlockSourceCreator> BLOCKSOURCE;
@@ -44,7 +43,6 @@ public final class ModernBetaRegistries {
         CHUNK = registerDefaulted(ModernBetaRegistryKeys.CHUNK, ModernBetaBuiltInTypes.Chunk.BETA.id);
         BIOME = registerDefaulted(ModernBetaRegistryKeys.BIOME, ModernBetaBuiltInTypes.Biome.BETA.id);
         CAVE_BIOME = registerDefaulted(ModernBetaRegistryKeys.CAVE_BIOME, ModernBetaBuiltInTypes.CaveBiome.NONE.id);
-        NOISE_POST_PROCESSOR = register(ModernBetaRegistryKeys.NOISE_POST_PROCESSOR);
         SURFACE_CONFIG = register(ModernBetaRegistryKeys.SURFACE_CONFIG);
         HEIGHT_CONFIG = registerDefaulted(ModernBetaRegistryKeys.HEIGHT_CONFIG, ModernBetaBuiltInTypes.HeightConfig.HEIGHT_CONFIG_DEFAULT.id);
         BLOCKSOURCE = register(ModernBetaRegistryKeys.BLOCKSOURCE);

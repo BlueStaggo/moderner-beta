@@ -98,7 +98,7 @@ public class NoiseProviderBase extends NoiseProvider {
     }
     
     @FunctionalInterface
-    public static interface BaseColumnSampler {
-        public void sampleColumn(double[] primaryBuffer, double[] heightmapBuffer, int startNoiseX, int startNoiseZ, int localNoiseX, int localNoiseZ);
+    public interface BaseColumnSampler {
+        void sampleColumn(double[] primaryBuffer, double[] heightmapBuffer, int startNoiseX, int startNoiseZ, int localNoiseX, int localNoiseZ);
     }
 }

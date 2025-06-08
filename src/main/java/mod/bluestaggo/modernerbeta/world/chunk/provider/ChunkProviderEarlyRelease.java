@@ -222,7 +222,7 @@ public class ChunkProviderEarlyRelease extends ChunkProviderForcedHeight {
     }
     
     @Override
-    protected void sampleNoiseColumn(double[] primaryBuffer, double[] heightmapBuffer, int startNoiseX, int startNoiseZ, int localNoiseX, int localNoiseZ) {
+    protected void sampleNoiseColumn(double[] primaryBuffer, double[] heightmapBuffer, int startNoiseX, int startNoiseZ, int localNoiseX, int localNoiseZ, boolean postProcessNoise) {
         int noiseX = startNoiseX + localNoiseX;
         int noiseZ = startNoiseZ + localNoiseZ;
         
@@ -328,11 +328,13 @@ public class ChunkProviderEarlyRelease extends ChunkProviderForcedHeight {
             density -= densityOffset;
             density += islandOffset;
             
-            // Sample without noise caves
+            // Sample without post-processing
             heightmapDensity = density;
             
-            // Sample for noise caves
-            density = this.sampleNoisePostProcessor(density, noiseX, noiseY, noiseZ);
+            // Sample with post-processing
+            if (postProcessNoise) {
+                density = this.sampleNoisePostProcessor(density, noiseX, noiseY, noiseZ);
+            }
             
             // Apply slides
             density = this.applySlides(density, y);

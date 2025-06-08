@@ -1,6 +1,5 @@
 package mod.bluestaggo.modernerbeta.world.chunk.provider;
 
-import mod.bluestaggo.modernerbeta.api.world.biome.climate.TemperatureHeightScaling;
 import mod.bluestaggo.modernerbeta.api.world.chunk.ChunkProviderForcedHeight;
 import mod.bluestaggo.modernerbeta.api.world.spawn.SpawnLocator;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
@@ -107,7 +106,7 @@ public class ChunkProviderMajorRelease extends ChunkProviderForcedHeight {
     }
 
     @Override
-    protected void sampleNoiseColumn(double[] primaryBuffer, double[] heightmapBuffer, int startNoiseX, int startNoiseZ, int localNoiseX, int localNoiseZ) {
+    protected void sampleNoiseColumn(double[] primaryBuffer, double[] heightmapBuffer, int startNoiseX, int startNoiseZ, int localNoiseX, int localNoiseZ, boolean postProcessNoise) {
         int noiseX = startNoiseX + localNoiseX;
         int noiseZ = startNoiseZ + localNoiseZ;
         
@@ -213,11 +212,13 @@ public class ChunkProviderMajorRelease extends ChunkProviderForcedHeight {
             density -= densityOffset;
             density += islandOffset;
             
-            // Sample without noise caves
+            // Sample without post-processing
             heightmapDensity = density;
             
-            // Sample for noise caves
-            density = this.sampleNoisePostProcessor(density, noiseX, noiseY, noiseZ);
+            // Sample with post-processing
+            if (postProcessNoise) {
+                density = this.sampleNoisePostProcessor(density, noiseX, noiseY, noiseZ);
+            }
             
             // Apply slides
             density = this.applySlides(density, y);

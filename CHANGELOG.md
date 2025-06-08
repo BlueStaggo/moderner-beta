@@ -1,20 +1,21 @@
 **WARNING: OLD WORLDS FROM 2.X ARE INCOMPATIBLE!**
-However, they can be simply upgraded by replacing the "WorldGenSettings" compound in the level.dat file with a different "WorldGenSettings" compound from a newly generated world.
+However, they can be simply upgraded by replacing the "WorldGenSettings" compound in the level.dat file with a different "WorldGenSettings" compound from a newly generated world. Unmodified presets are now referred to by IDs so breaking changes should no longer have as much impact.
 
 A major number change means a big update. For this update, significant parts of the codebase have been refactored to ease development for not just people working on this mod but also for people working *with* Moderner Beta. Some changes have been made to make the mod more modular and to be more customizable, including entirely reworking the fractal layer system. Old worlds from 2.x releases are incompatible.
 
 ## Additions
+- Modern caves are back! Access them with the new "Generate Noise Caves" / "useNoiseCaves" setting.
 - Added "Snow ain't Snowier" preset for 1.17 biome generation with some modern biomes.
 - Added large biome variants for the "Release Hybrid" and "Snow ain't Snowier" presets.
 - Added networking code to send biome provider settings along with the world seed to allow for Beta biomes to have their true colours on multiplayer.
 - Added a biome previewer to preview the biomes that will be generated for a world.
 
 ## Changes
-- The mod now supports Minecraft 1.21.6
-- **BREAKING CHANGE**: Every single property has been moved
+- The mod now supports Minecraft 1.21.6.
+- **BREAKING CHANGE**: Every single property has been moved.
   - This is due to a more modular approach to configuration being implemented. This allows for addons to use the Moderner Beta API to add their own configuration options.
-  - This also affects how settings appear in graphical configuration menus. They should still be accessible, just in different positions.
-- **BREAKING CHANGE**: Reworked the fractal layer system:
+  - This also affects how settings appear in graphical configuration menus. They should still all be accessible, just in different positions.
+- **BREAKING CHANGE**: Reworked the fractal layer system.
   - All options for the fractal biome provider have been removed in place of a single option giving users control of every single layer in the pipeline through JSON.
   - The new system allows for much greater accuracy for the 1.12 and 1.17 presets as it can easily satisfy all sorts of edge cases without introducing too many individual options.
   - All fractal-based biome provider settings are incompatible for this release so they need to be adapted to the new format. This may be tedious for some users, but documentation may release some time soon.
@@ -24,6 +25,7 @@ A major number change means a big update. For this update, significant parts of 
   - This eliminates the chance of breaking changes affecting worlds that use built-in presets. Worlds using custom presets are still affected.
 - Improved accuracy of the 0.0.14a_08 preset.
 - Improved accuracy of Beta 1.8, 1.0.0 and 1.1 climate, providing the signature messy look as well as ice plains generating without snow on its edges.
+- Biomes with custom grass/foliage colors now display their colors in worlds with custom climate while blending in the climatic base color.
 - Removed dependency on Architectury API.
 - Made ocean biome injectors not be used if the biome provider already generates oceans.
 - (1.21+) Replaced use of `@Redirect` mixins with `@WrapOperation` mixins

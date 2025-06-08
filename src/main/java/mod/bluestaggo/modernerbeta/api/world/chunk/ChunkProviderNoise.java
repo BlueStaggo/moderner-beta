@@ -6,6 +6,7 @@ import mod.bluestaggo.modernerbeta.api.world.chunk.noise.NoisePostProcessor;
 import mod.bluestaggo.modernerbeta.api.world.chunk.noise.NoiseProvider;
 import mod.bluestaggo.modernerbeta.api.world.chunk.noise.NoiseProviderBase;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
+import mod.bluestaggo.modernerbeta.settings.component.CaveGeneration;
 import mod.bluestaggo.modernerbeta.settings.component.IslesProperties;
 import mod.bluestaggo.modernerbeta.settings.component.NoiseScale;
 import mod.bluestaggo.modernerbeta.settings.component.NoiseSlide;
@@ -60,16 +61,19 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
     protected final int noiseSizeY; // Number of vertical subchunks
     protected final int noiseMinY;  // Subchunk index of bottom of the world
     protected final int noiseTopY;  // Number of positive (y >= 0) vertical subchunks
-    
+
     private final ChunkCache<NoiseProviderBase> chunkCacheNoise;
+    private final ChunkCache<NoiseProviderBase> chunkCacheNoiseProcessed;
     private final ChunkCache<ChunkHeightmap> chunkCacheHeightmap;
     
-    private final NoisePostProcessor noisePostProcessor;
+    protected final List<NoisePostProcessor> noisePostProcessors = new ArrayList<>();
     private final SimplexNoise islandNoise;
 
     private final IslesProperties islesProperties;
     protected final NoiseScale noiseScale;
     private final NoiseSlide noiseSlide;
+
+    private final ThreadLocal<NoiseConfig> noiseConfig = new ThreadLocal<>();
 
     public ChunkProviderNoise(ModernBetaChunkGenerator chunkGenerator, long seed) {
         super(chunkGenerator, seed);
@@ -101,25 +105,16 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
         this.noiseMinY = MathHelper.floorDiv(this.worldMinY, this.noiseResolutionVertical);
         this.noiseTopY = MathHelper.floorDiv(this.worldMinY + this.worldHeight, this.noiseResolutionVertical);
 
-        this.chunkCacheNoise = new ChunkCache<>(
-            "base_noise",
-            (chunkX, chunkZ) -> {
-                NoiseProviderBase noiseProviderBase = new NoiseProviderBase(
-                    this.noiseSizeX,
-                    this.noiseSizeY,
-                    this.noiseSizeZ,
-                    this::sampleNoiseColumn
-                );
-                
-                noiseProviderBase.sampleInitialNoise(chunkX * this.noiseSizeX, chunkZ * this.noiseSizeZ);
-                
-                return noiseProviderBase;
-            }
-        );
+        this.chunkCacheNoise = this.createChunkNoiseCache("base_noise", false);
+        this.chunkCacheNoiseProcessed = this.createChunkNoiseCache("processed_noise", true);
         this.chunkCacheHeightmap = new ChunkCache<>("heightmap", this::sampleHeightmap);
-        
-        this.noisePostProcessor = NoisePostProcessor.DEFAULT;
+
         this.islandNoise = new SimplexNoise(new Random(this.seed));
+
+        CaveGeneration caveSettings = this.getChunkSettings().getOrDefault(SettingsComponentTypes.CAVE_GENERATION);
+        if (caveSettings.useNoiseCaves()) {
+            this.noisePostProcessors.add(NoisePostProcessor.NOISE_CAVES);
+        }
     }
 
     /**
@@ -132,6 +127,10 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
      */
     @Override
     public CompletableFuture<Chunk> provideChunk(Blender blender, StructureAccessor structureAccessor, Chunk chunk, NoiseConfig noiseConfig) {
+        if (this.noiseConfig.get() == null) {
+            this.noiseConfig.set(noiseConfig);
+        }
+
         GenerationShapeConfig shapeConfig = this.generatorSettings.value().generationShapeConfig();
         
         int minY = Math.max(shapeConfig.minimumY(), chunk.getBottomY());
@@ -237,13 +236,14 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
     
     /**
      * Generates noise for a column at startNoiseX + localNoiseX / startNoiseZ + localNoiseZ.
-     * 
-     * @param primaryBuffer Primary heightmap buffer, with noise caves.
-     * @param heightmapBuffer Heightmap buffer, identical to primaryBuffer sans noise caves.
-     * @param startNoiseX x-coordinate start of chunk in noise coordinates.
-     * @param startNoiseZ z-coordinate start of chunk in noise coordinates.
-     * @param localNoiseX Current subchunk index along x-axis.
-     * @param localNoiseZ Current subchunk index along z-axis.
+     *
+     * @param primaryBuffer    Primary heightmap buffer, with noise caves.
+     * @param heightmapBuffer  Heightmap buffer, identical to primaryBuffer sans noise caves.
+     * @param startNoiseX      x-coordinate start of chunk in noise coordinates.
+     * @param startNoiseZ      z-coordinate start of chunk in noise coordinates.
+     * @param localNoiseX      Current subchunk index along x-axis.
+     * @param localNoiseZ      Current subchunk index along z-axis.
+     * @param postProcessNoise
      */
     protected abstract void sampleNoiseColumn(
         double[] primaryBuffer,
@@ -251,7 +251,8 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
         int startNoiseX,
         int startNoiseZ,
         int localNoiseX,
-        int localNoiseZ
+        int localNoiseZ,
+        boolean postProcessNoise
     );
     
     /**
@@ -260,7 +261,7 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
      * @return Whether default noise post processor is being used.
      */
     protected boolean hasNoisePostProcessor() {
-        return this.noisePostProcessor != NoisePostProcessor.DEFAULT;
+        return !this.noisePostProcessors.isEmpty();
     }
     
     /**
@@ -274,7 +275,15 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
      * @return Modified noise density.
      */
     protected double sampleNoisePostProcessor(double noise, int noiseX, int noiseY, int noiseZ) {
-        return this.noisePostProcessor.sample(noise, noiseX, noiseY, noiseZ, this.generatorSettings.value(), this.chunkSettings);
+        NoiseConfig noiseConfig = this.noiseConfig.get();
+        if (!this.hasNoisePostProcessor() || noiseConfig == null) {
+            return noise;
+        }
+
+        for (NoisePostProcessor noisePostProcessor : this.noisePostProcessors) {
+            noise = noisePostProcessor.sample(noise, noiseX, noiseY, noiseZ, noiseConfig, this.generatorSettings.value(), this.chunkSettings);
+        }
+        return noise;
     }
 
     /**
@@ -403,9 +412,9 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
         // Create and populate noise providers
         List<NoiseProvider> noiseProviders = new ArrayList<>();
         
-        NoiseProvider baseNoiseProvider = this.chunkCacheNoise.get(chunkX, chunkZ);
+        NoiseProvider processedNoiseProvider = this.chunkCacheNoiseProcessed.get(chunkX, chunkZ);
         BlockSource baseBlockSource = this.getBaseBlockSource(
-            baseNoiseProvider,
+            processedNoiseProvider,
             structureWeightSampler,
             aquiferSampler,
             new SimpleNoisePos()
@@ -421,7 +430,7 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
         // Base noise should be added after this,
         // since base noise is sampled when fetched from cache.
         noiseProviders.forEach(noiseProvider -> noiseProvider.sampleInitialNoise(chunkX * this.noiseSizeX, chunkZ * this.noiseSizeZ));
-        noiseProviders.add(baseNoiseProvider);
+        noiseProviders.add(processedNoiseProvider);
         
         for (int subChunkX = 0; subChunkX < this.noiseSizeX; ++subChunkX) {
             int noiseX = subChunkX;
@@ -495,9 +504,9 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
         short minHeight = 32;
         short worldMinY = (short)this.worldMinY;
         short worldTopY = (short)this.worldTopY;
-        
+
         NoiseProviderBase baseNoiseProvider = this.chunkCacheNoise.get(chunkX, chunkZ);
-        
+
         short[] heightmapSurface = new short[256];
         short[] heightmapOcean = new short[256];
         short[] heightmapSurfaceFloor = new short[256];
@@ -594,6 +603,32 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
             
             return aquiferSampler.apply(noisePos, clampedDensity);
         };
+    }
+
+    /**
+     * Creates a cached noise provider
+     *
+     * @param name The name of the cache
+     * @param postProcess Whether to apply post-processing to the noise
+     *
+     * @return The per-chunk noise provider cache
+     */
+    private ChunkCache<NoiseProviderBase> createChunkNoiseCache(String name, boolean postProcess) {
+        return new ChunkCache<>(
+            name,
+            (chunkX, chunkZ) -> {
+                NoiseProviderBase noiseProviderBase = new NoiseProviderBase(
+                    this.noiseSizeX,
+                    this.noiseSizeY,
+                    this.noiseSizeZ,
+                    (primaryBuffer, heightmapBuffer, startNoiseX, startNoiseZ, localNoiseX, localNoiseZ)
+                        -> sampleNoiseColumn(primaryBuffer, heightmapBuffer, startNoiseX, startNoiseZ, localNoiseX, localNoiseZ, postProcess)
+                );
+
+                noiseProviderBase.sampleInitialNoise(chunkX * this.noiseSizeX, chunkZ * this.noiseSizeZ);
+                return noiseProviderBase;
+            }
+        );
     }
 }
 

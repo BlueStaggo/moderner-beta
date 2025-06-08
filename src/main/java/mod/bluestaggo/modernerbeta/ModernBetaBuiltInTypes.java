@@ -148,17 +148,6 @@ public final class ModernBetaBuiltInTypes {
         }
     }
     
-    public enum NoisePostProcessor {
-        NONE("none"),
-        ;
-        
-        public final Identifier id;
-        
-        NoisePostProcessor(String id) {
-            this.id = ModernerBeta.createId(id);
-        }
-    }
-    
     public enum BlockSource {
         DEEPSLATE("deepslate"),
         ;

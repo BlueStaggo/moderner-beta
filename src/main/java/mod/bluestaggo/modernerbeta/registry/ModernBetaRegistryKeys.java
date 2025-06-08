@@ -20,7 +20,6 @@ public final class ModernBetaRegistryKeys {
     public static final RegistryKey<Registry<ChunkProviderType<?>>> CHUNK = of("chunk_provider");
     public static final RegistryKey<Registry<BiomeProviderType<?>>> BIOME = of("biome_provider");
     public static final RegistryKey<Registry<CaveBiomeProviderType<?>>> CAVE_BIOME = of("cave_biome_provider");
-    public static final RegistryKey<Registry<NoisePostProcessor>> NOISE_POST_PROCESSOR = of("noise_post_processor");
     public static final RegistryKey<Registry<SurfaceConfig>> SURFACE_CONFIG = of("surface_config");
     public static final RegistryKey<Registry<HeightConfig>> HEIGHT_CONFIG = of("height_config");
     public static final RegistryKey<Registry<BlockSourceCreator>> BLOCKSOURCE = of("blocksource");

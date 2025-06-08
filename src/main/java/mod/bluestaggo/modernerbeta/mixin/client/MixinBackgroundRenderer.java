@@ -22,15 +22,15 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 //? if >=1.20.2 {
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+//?} else {
+/*import org.spongepowered.asm.mixin.injection.Redirect;
+*///?}
+
 //? if >=1.21.2 {
 import org.joml.Vector4f;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-//?}
 //?} else {
 /*import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-//}
-*///?} else {
-/*import org.spongepowered.asm.mixin.injection.Redirect;
 *///?}
 
 @Environment(EnvType.CLIENT)

@@ -178,7 +178,7 @@ public class ModEventsCommon {
                 );
                 //?} else {
                 /*Path resourcePath = ModList.get().getModFileById(ModernerBeta.MOD_ID).getFile().findResource("resourcepacks/" + pack);
-                ResourcePackProfile pack = ResourcePackProfile.create(
+                ResourcePackProfile packProfile = ResourcePackProfile.create(
                     "moderner_beta/" + pack,
                     title,
                     false,
@@ -188,7 +188,7 @@ public class ModEventsCommon {
                     source
                 );
 
-                event.addRepositorySource(consumer -> consumer.accept(pack));
+                event.addRepositorySource(consumer -> consumer.accept(packProfile));
                 *///?}
             }
         }

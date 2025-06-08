@@ -15,10 +15,13 @@ import net.minecraft.world.biome.source.SeedMixer;
 public abstract class IntLayer {
     private transient final long seed;
     private transient long saltedSeed;
-    private transient LayerRandom random;
-    private transient final Long2IntLinkedOpenHashMap cache = new Long2IntLinkedOpenHashMap(); {
-        this.cache.defaultReturnValue(Integer.MIN_VALUE);
-    }
+    private transient ThreadLocal<LayerRandom> random;
+    private transient final ThreadLocal<Long2IntLinkedOpenHashMap> cache
+        = ThreadLocal.withInitial(() -> {
+            Long2IntLinkedOpenHashMap map = new Long2IntLinkedOpenHashMap(Layer.CACHE_CAPACITY);
+            map.defaultReturnValue(Integer.MIN_VALUE);
+            return map;
+        });
 
     public IntLayer(long seed) {
         this.seed = seed;
@@ -32,25 +35,25 @@ public abstract class IntLayer {
 
     public abstract int generate(RegistryEntryLookup<Biome> biomeRegistry, int x, int z);
 
-    public synchronized int sample(RegistryEntryLookup<Biome> biomeRegistry, int x, int z) {
+    public int sample(RegistryEntryLookup<Biome> biomeRegistry, int x, int z) {
+        Long2IntLinkedOpenHashMap cache = this.cache.get();
+
         long coord = ChunkPos.toLong(x, z);
-        int value = this.cache.get(coord);
+        int value = cache.get(coord);
 
         if (value != Integer.MIN_VALUE) {
             return value;
         }
 
         value = this.generate(biomeRegistry, x, z);
-        if (this.cache.size() == Layer.CACHE_CAPACITY) {
-            this.cache.removeFirstInt();
+        if (cache.size() == Layer.CACHE_CAPACITY) {
+            cache.removeFirstInt();
         }
-        this.cache.put(coord, value);
+        cache.put(coord, value);
         return value;
     }
 
     public void init(long worldSeed) {
-        this.cache.clear();
-
         this.saltedSeed = this.seed;
         for (int i = 0; i < 3; i++) {
             this.saltedSeed = SeedMixer.mixSeed(this.saltedSeed, this.seed);
@@ -62,12 +65,13 @@ public abstract class IntLayer {
             this.saltedSeed = SeedMixer.mixSeed(this.saltedSeed, preWorldSeed);
         }
 
-        this.random = new LayerRandom(this.saltedSeed);
+        this.random = ThreadLocal.withInitial(() -> new LayerRandom(this.saltedSeed));
     }
 
     protected final LayerRandom getRandom(long x, long z) {
-        this.random.init(x, z);
-        return this.random;
+        LayerRandom random = this.random.get();
+        random.init(x, z);
+        return random;
     }
 
     protected static Biome getBiomeFromLayer(RegistryEntryLookup<Biome> biomeRegistry, Layer layer, int x, int z) {

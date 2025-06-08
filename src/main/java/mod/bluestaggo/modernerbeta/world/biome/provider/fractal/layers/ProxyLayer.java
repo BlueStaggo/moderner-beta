@@ -24,7 +24,7 @@ public class ProxyLayer extends SingleParentLayer {
     }
 
     @Override
-    public synchronized ExtendedBiomeId sample(int x, int z) {
+    public ExtendedBiomeId sample(int x, int z) {
         return this.parentLayer.sample(x, z);
     }
 }

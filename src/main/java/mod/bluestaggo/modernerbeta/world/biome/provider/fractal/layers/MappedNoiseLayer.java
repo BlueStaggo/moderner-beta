@@ -5,6 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import net.minecraft.util.math.noise.PerlinNoiseSampler;
 import net.minecraft.util.math.random.CheckedRandom;
+import net.minecraft.util.math.random.LocalRandom;
 
 import java.util.Comparator;
 import java.util.List;
@@ -67,13 +68,13 @@ public class MappedNoiseLayer extends Layer {
     public void init(long worldSeed) {
         super.init(worldSeed);
         long noiseSeed = this.useSaltedSeed ? this.getSaltedSeed() : worldSeed;
-        this.noiseSampler = new PerlinNoiseSampler(new CheckedRandom(noiseSeed));
+        this.noiseSampler = new PerlinNoiseSampler(new LocalRandom(noiseSeed));
     }
 
     @Override
     public void initUnsalted() {
         super.initUnsalted();
-        this.noiseSampler = new PerlinNoiseSampler(new CheckedRandom(0));
+        this.noiseSampler = new PerlinNoiseSampler(new LocalRandom(0));
     }
 
     @Override

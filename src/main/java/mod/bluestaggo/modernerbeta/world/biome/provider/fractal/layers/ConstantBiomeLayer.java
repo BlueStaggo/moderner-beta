@@ -30,7 +30,7 @@ public class ConstantBiomeLayer extends Layer {
     }
 
     @Override
-    public synchronized ExtendedBiomeId sample(int x, int z) {
+    public ExtendedBiomeId sample(int x, int z) {
         return this.biome;
     }
 

@@ -47,7 +47,7 @@ public abstract class LayerWrapperLayer extends Layer {
     }
 
     @Override
-    public synchronized ExtendedBiomeId sample(int x, int z) {
+    public ExtendedBiomeId sample(int x, int z) {
         return this.layer.sample(x, z);
     }
 

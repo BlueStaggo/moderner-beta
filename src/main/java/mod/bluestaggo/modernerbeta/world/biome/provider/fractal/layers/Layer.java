@@ -26,9 +26,10 @@ public abstract class Layer {
     public final long seed;
 
     private transient long saltedSeed;
-    private transient LayerRandom random;
+    private transient ThreadLocal<LayerRandom> random;
 
-    private transient final Long2ObjectLinkedOpenHashMap<ExtendedBiomeId> cache = new Long2ObjectLinkedOpenHashMap<>(CACHE_CAPACITY);
+    private transient final ThreadLocal<Long2ObjectLinkedOpenHashMap<ExtendedBiomeId>> cache
+        = ThreadLocal.withInitial(() -> new Long2ObjectLinkedOpenHashMap<>(CACHE_CAPACITY));
 
     protected static <L extends Layer> Products.P2<
         RecordCodecBuilder.Mu<L>,
@@ -70,7 +71,6 @@ public abstract class Layer {
         for (Layer parent : this.getParents()) {
             parent.init(worldSeed);
         }
-        this.cache.clear();
 
         this.saltedSeed = this.seed;
         for (int i = 0; i < 3; i++) {
@@ -83,36 +83,37 @@ public abstract class Layer {
             this.saltedSeed = SeedMixer.mixSeed(this.saltedSeed, preWorldSeed);
         }
 
-        this.random = new LayerRandom(this.saltedSeed);
+        this.random = ThreadLocal.withInitial(() -> new LayerRandom(this.saltedSeed));
     }
 
     public void initUnsalted() {
         for (Layer parent : this.getParents()) {
             parent.initUnsalted();
         }
-        this.cache.clear();
         this.saltedSeed = 0;
-        this.random = new LayerRandom(0);
+        this.random = ThreadLocal.withInitial(() -> new LayerRandom(0));
     }
 
-    public synchronized ExtendedBiomeId sample(int x, int z) {
+    public ExtendedBiomeId sample(int x, int z) {
+        Long2ObjectLinkedOpenHashMap<ExtendedBiomeId> cache = this.cache.get();
         long pos = ColumnPos.pack(x, z);
-        ExtendedBiomeId biome = this.cache.get(pos);
+        ExtendedBiomeId biome = cache.get(pos);
         if (biome != null) {
             return biome;
         }
 
         biome = this.generate(x, z);
-        if (this.cache.size() == CACHE_CAPACITY) {
-            this.cache.removeFirst();
+        if (cache.size() == CACHE_CAPACITY) {
+            cache.removeFirst();
         }
-        this.cache.put(pos, biome);
+        cache.put(pos, biome);
         return biome;
     }
 
     protected final LayerRandom getRandom(long x, long z) {
-        this.random.init(x, z);
-        return this.random;
+        LayerRandom random = this.random.get();
+        random.init(x, z);
+        return random;
     }
 
     protected final long getSaltedSeed() {

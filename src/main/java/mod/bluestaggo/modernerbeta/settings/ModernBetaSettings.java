@@ -123,7 +123,11 @@ public class ModernBetaSettings implements Iterable<SettingsComponent<?>> {
             return this;
         }
 
-        return settingsProvider.apply(preset.get().value());
+        return settingsProvider.apply(preset.get().value())
+            .extend()
+            .addAll(this)
+            .remove(SettingsComponentTypes.PRESET)
+            .build();
     }
 
     @SuppressWarnings("unchecked")
@@ -219,6 +223,11 @@ public class ModernBetaSettings implements Iterable<SettingsComponent<?>> {
 
         public Builder addAll(ModernBetaSettings settings) {
             settings.stream().forEach(component -> this.components.put(component.type(), component.value()));
+            return this;
+        }
+
+        public <T> Builder remove(SettingsComponentType<T> type) {
+            this.components.remove(type);
             return this;
         }
 

@@ -17,6 +17,7 @@ A major number change means a big update. For this update, significant parts of 
 - **BREAKING CHANGE**: Every single property has been moved.
   - This is due to a more modular approach to configuration being implemented. This allows for addons to use the Moderner Beta API to add their own configuration options.
   - This also affects how settings appear in graphical configuration menus. They should still all be accessible, just in different positions.
+  - All pre-3.0.0 presets are guaranteed to not work under the new system so they need to be recreated. To find out what values go where, look at the built-in presets which cover every single settings component.
 - **BREAKING CHANGE**: Reworked the fractal layer system.
   - All options for the fractal biome provider have been removed in place of a single option giving users control of every single layer in the pipeline through JSON.
   - The new system allows for much greater accuracy for the 1.12 and 1.17 presets as it can easily satisfy all sorts of edge cases without introducing too many individual options.
@@ -25,6 +26,16 @@ A major number change means a big update. For this update, significant parts of 
 - **BREAKING CHANGE**: Moderner Beta now uses the vanilla registry implementation instead of its own custom implementation.
 - Settings can now be referenced by their preset id.
   - This eliminates the chance of breaking changes affecting worlds that use built-in presets. Worlds using custom presets are still affected.
+  - However, preset ids can be combined with other settings components through JSON to provide better compatibility for custom presets. For example, to generate noise caves in a Beta 1.7.3 world, the chunk provider settings would look like this:
+    ```json
+    {
+      "moderner_beta:preset": "moderner_beta:beta",
+      "moderner_beta:cave_generation": {
+        "useNoiseCaves": true
+      }
+    }
+    ```
+    *Note that other values in `moderner_betea:cave_generation` default to beta values.*
 - Improved accuracy of the 0.0.14a_08 preset.
 - Improved accuracy of Beta 1.8, 1.0.0 and 1.1 climate, providing the signature messy look as well as ice plains generating without snow on its edges.
 - Biomes with custom grass/foliage colors now display their colors in worlds with custom climate while blending in the climatic base color.

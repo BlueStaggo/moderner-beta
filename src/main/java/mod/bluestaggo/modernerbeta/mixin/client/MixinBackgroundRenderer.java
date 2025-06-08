@@ -19,14 +19,18 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
-//? if >=1.21.2 {
+//? if >=1.20.2 {
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+//? if >=1.21.2 {
 import org.joml.Vector4f;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+//?}
 //?} else {
+/*import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+//}
+*///?} else {
 /*import org.spongepowered.asm.mixin.injection.Redirect;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 *///?}
 
 @Environment(EnvType.CLIENT)

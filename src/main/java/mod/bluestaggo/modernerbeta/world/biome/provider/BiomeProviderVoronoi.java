@@ -130,9 +130,12 @@ public class BiomeProviderVoronoi extends BiomeProvider implements BiomeResolver
             this.rainOctaveNoise = new SimplexOctaveNoise(new Random(seed * 39811L), 4);
             this.detailOctaveNoise = new SimplexOctaveNoise(new Random(seed * 543321L), 2);
             this.weirdOctaveNoise = new SimplexOctaveNoise(new Random(seed * 134714L), 2);
-
-            this.chunkCacheClimate = new ChunkCache<>((chunkX, chunkZ) -> new ChunkClimate(chunkX, chunkZ, this::sampleNoise));
-
+            
+            this.chunkCacheClimate = new ChunkCache<>(
+                "climate",
+                (chunkX, chunkZ) -> new ChunkClimate(chunkX, chunkZ, this::sampleNoise)
+            );
+            
             this.tempNoiseScale = tempNoiseScale;
             this.rainNoiseScale = rainNoiseScale;
             this.detailNoiseScale = detailNoiseScale;

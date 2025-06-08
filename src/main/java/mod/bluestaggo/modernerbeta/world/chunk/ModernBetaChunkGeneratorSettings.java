@@ -59,13 +59,21 @@ public class ModernBetaChunkGeneratorSettings {
         Reference<NoiseParameters> aquiferFloodedness = noiseParametersLookup.getOrThrow(NoiseParametersKeys.AQUIFER_FLUID_LEVEL_FLOODEDNESS);
         Reference<NoiseParameters> aquiferSpread = noiseParametersLookup.getOrThrow(NoiseParametersKeys.AQUIFER_FLUID_LEVEL_SPREAD);
         Reference<NoiseParameters> aquiferLava = noiseParametersLookup.getOrThrow(NoiseParametersKeys.AQUIFER_LAVA);
+        Reference<NoiseParameters> caveEntranceNoise = noiseParametersLookup.getOrThrow(NoiseParametersKeys.CAVE_ENTRANCE);
         
         DensityFunction functionAquiferBarrier = DensityFunctionTypes.noise(aquiferBarrier, 0.5);
         DensityFunction functionAquiferFloodedness = DensityFunctionTypes.noise(aquiferFloodedness, 0.67);
         DensityFunction functionAquiferSpread = DensityFunctionTypes.noise(aquiferSpread, 0.7142857142857143);
         DensityFunction functionAquiferLava = DensityFunctionTypes.noise(aquiferLava);
+        DensityFunction functionCaveEntranceNoise = DensityFunctionTypes.noise(caveEntranceNoise);
 
-        DensityFunction functionSlopedCheeseEstimate = DensityFunctionTypes.yClampedGradient(-64, 64, 3.0, 1.0);
+        DensityFunction functionSlopedCheeseEstimate = DensityFunctionTypes.add(
+            DensityFunctionTypes.yClampedGradient(0, 64, 3.0, 1.0),
+            DensityFunctionTypes.mul(
+                DensityFunctionTypes.constant(-0.5),
+                functionCaveEntranceNoise
+            )
+        );
         DensityFunction functionCaveEntrances = DensityFunctionTypes.min(
             functionSlopedCheeseEstimate,
             DensityFunctionTypes.mul(DensityFunctionTypes.constant(5.0),

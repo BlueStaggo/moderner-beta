@@ -260,7 +260,7 @@ public class ChunkProviderInfdev415 extends ChunkProviderNoise {
     }
     
     @Override
-    protected void sampleNoiseColumn(double[] primaryBuffer, double[] heightmapBuffer, int startNoiseX, int startNoiseZ, int localNoiseX, int localNoiseZ, boolean postProcessNoise) {
+    protected void sampleNoiseColumn(double[] primaryBuffer, double[] heightmapBuffer, int startNoiseX, int startNoiseZ, int localNoiseX, int localNoiseZ) {
         int noiseX = startNoiseX + localNoiseX;
         int noiseZ = startNoiseZ + localNoiseZ;
         
@@ -346,10 +346,8 @@ public class ChunkProviderInfdev415 extends ChunkProviderNoise {
             heightmapDensity = density;
             
             // Sample with post-processing
-            if (postProcessNoise) {
-                density = this.sampleNoisePostProcessor(density, noiseX, noiseY, noiseZ);
-            }
-            
+            density = this.sampleNoisePostProcessor(density, noiseX, noiseY, noiseZ);
+
             // Apply slides
             density = this.applySlides(density, y);
             heightmapDensity = this.applySlides(heightmapDensity, y);

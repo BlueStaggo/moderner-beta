@@ -140,10 +140,7 @@ public class BiomeProviderPE extends BiomeProvider implements ClimateSampler, Cl
             this.rainOctaveNoise = new PerlinOctaveNoise(new MTRandom(seed * 39811L), 4, true);
             this.detailOctaveNoise = new PerlinOctaveNoise(new MTRandom(seed * 543321L), 2, true);
             
-            this.chunkCacheClimate = new ChunkCache<>(
-                "climate",
-                (chunkX, chunkZ) -> new ChunkClimate(chunkX, chunkZ, this::sampleNoise)
-            );
+            this.chunkCacheClimate = new ChunkCache<>((chunkX, chunkZ) -> new ChunkClimate(chunkX, chunkZ, this::sampleNoise));
             
             this.tempNoiseScale = tempNoiseScale;
             this.rainNoiseScale = rainNoiseScale;

@@ -146,10 +146,7 @@ public class BiomeProviderBeta extends BiomeProvider implements ClimateSampler, 
             this.rainOctaveNoise = new SimplexOctaveNoise(new Random(seed * 39811L), 4);
             this.detailOctaveNoise = new SimplexOctaveNoise(new Random(seed * 543321L), 2);
             
-            this.chunkCacheClimate = new ChunkCache<>(
-                "climate",
-                (chunkX, chunkZ) -> new ChunkClimate(chunkX, chunkZ, this::sampleNoise)
-            );
+            this.chunkCacheClimate = new ChunkCache<>((chunkX, chunkZ) -> new ChunkClimate(chunkX, chunkZ, this::sampleNoise));
             
             this.tempNoiseScale = tempNoiseScale;
             this.rainNoiseScale = rainNoiseScale;
@@ -189,10 +186,7 @@ public class BiomeProviderBeta extends BiomeProvider implements ClimateSampler, 
         public BetaClimateSamplerSky(long seed, double tempNoiseScale) {
             this.tempOctaveNoise = new SimplexOctaveNoise(new Random(seed * 9871L), 4);
             
-            this.chunkCacheClimateSky = new ChunkCache<>(
-                "sky",
-                (chunkX, chunkZ) -> new ChunkClimateSky(chunkX, chunkZ, this::sampleNoise)
-            );
+            this.chunkCacheClimateSky = new ChunkCache<>((chunkX, chunkZ) -> new ChunkClimateSky(chunkX, chunkZ, this::sampleNoise));
             
             this.tempNoiseScale = tempNoiseScale;
         }

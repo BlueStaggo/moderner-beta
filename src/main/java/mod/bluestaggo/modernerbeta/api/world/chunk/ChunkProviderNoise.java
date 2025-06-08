@@ -104,22 +104,18 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
         this.noiseMinY = MathHelper.floorDiv(this.worldMinY, this.noiseResolutionVertical);
         this.noiseTopY = MathHelper.floorDiv(this.worldMinY + this.worldHeight, this.noiseResolutionVertical);
 
-        this.chunkCacheNoise = new ChunkCache<>(
-            "base_noise",
-            (chunkX, chunkZ) -> {
-                NoiseProviderBase noiseProviderBase = new NoiseProviderBase(
-                    this.noiseSizeX,
-                    this.noiseSizeY,
-                    this.noiseSizeZ,
-                    (primaryBuffer, heightmapBuffer, startNoiseX, startNoiseZ, localNoiseX, localNoiseZ)
-                        -> sampleNoiseColumn(primaryBuffer, heightmapBuffer, startNoiseX, startNoiseZ, localNoiseX, localNoiseZ)
-                );
+        this.chunkCacheNoise = new ChunkCache<>((chunkX, chunkZ) -> {
+            NoiseProviderBase noiseProviderBase = new NoiseProviderBase(
+                this.noiseSizeX,
+                this.noiseSizeY,
+                this.noiseSizeZ,
+                this::sampleNoiseColumn
+            );
 
-                noiseProviderBase.sampleInitialNoise(chunkX * this.noiseSizeX, chunkZ * this.noiseSizeZ);
-                return noiseProviderBase;
-            }
-        );
-        this.chunkCacheHeightmap = new ChunkCache<>("heightmap", this::sampleHeightmap);
+            noiseProviderBase.sampleInitialNoise(chunkX * this.noiseSizeX, chunkZ * this.noiseSizeZ);
+            return noiseProviderBase;
+        });
+        this.chunkCacheHeightmap = new ChunkCache<>(this::sampleHeightmap);
 
         this.islandNoise = new SimplexNoise(new Random(this.seed));
 
@@ -139,9 +135,7 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
      */
     @Override
     public CompletableFuture<Chunk> provideChunk(Blender blender, StructureAccessor structureAccessor, Chunk chunk, NoiseConfig noiseConfig) {
-        if (this.noiseConfig.get() == null) {
-            this.noiseConfig.set(noiseConfig);
-        }
+        this.noiseConfig.set(noiseConfig);
 
         GenerationShapeConfig shapeConfig = this.generatorSettings.value().generationShapeConfig();
         
@@ -614,6 +608,5 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
             return aquiferSampler.apply(noisePos, clampedDensity);
         };
     }
-
 }
 

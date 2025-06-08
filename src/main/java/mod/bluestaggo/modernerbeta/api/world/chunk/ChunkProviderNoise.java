@@ -111,8 +111,7 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
                     this.noiseSizeX,
                     this.noiseSizeY,
                     this.noiseSizeZ,
-                    (primaryBuffer, heightmapBuffer, startNoiseX, startNoiseZ, localNoiseX, localNoiseZ)
-                        -> sampleNoiseColumn(primaryBuffer, heightmapBuffer, startNoiseX, startNoiseZ, localNoiseX, localNoiseZ)
+                    this::sampleNoiseColumn
                 );
 
                 noiseProviderBase.sampleInitialNoise(chunkX * this.noiseSizeX, chunkZ * this.noiseSizeZ);

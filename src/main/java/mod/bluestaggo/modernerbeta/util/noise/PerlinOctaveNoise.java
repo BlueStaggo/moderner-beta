@@ -5,7 +5,7 @@ import net.minecraft.util.math.MathHelper;
 import java.util.Random;
 
 public class PerlinOctaveNoise {
-    private final PerlinNoise noises[];
+    private final PerlinNoise[] noises;
     private final int octaves;
     
     public PerlinOctaveNoise(Random random, int octaves, boolean useOffset) {

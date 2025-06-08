@@ -152,7 +152,6 @@ public class ModEventsCommon {
     @SubscribeEvent
     public static void addPackFinders(AddPackFindersEvent event) {
         if (event.getPackType() == ResourceType.SERVER_DATA) {
-            Text title = Text.of("Reduced Height"); //TODO: i18n perhaps?
             ResourcePackSource source = new ResourcePackSource() {
                 @Override
                 public Text decorate(Text packDisplayName) {
@@ -167,6 +166,7 @@ public class ModEventsCommon {
             };
 
             for (String pack : ModernerBeta.BUILT_IN_PACKS) {
+                Text title = Text.translatable("dataPack.moderner_beta." + pack + ".name");
                 //? if neoforge {
                 event.addPackFinders(
                     ModernerBeta.createId("resourcepacks/" + pack),

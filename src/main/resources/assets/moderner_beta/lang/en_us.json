@@ -349,6 +349,9 @@
     "createWorld.customize.modern_beta.settings.cave_biome_voronoi.depthMaxY": "Max Biome Y",
     "createWorld.customize.modern_beta.settings.cave_biome_voronoi.points": "Voronoi Points",
 
+    "dataPack.moderner_beta.reduced_height.name": "Reduced Height",
+    "dataPack.moderner_beta.deepslate_blobs.name": "Deepslate Blobs",
+
     "text.autoconfig.moderner_beta.title": "Moderner Beta Configuration",
 
     "text.autoconfig.moderner_beta.category.betaBiomeColor": "Beta Biome Color Options",

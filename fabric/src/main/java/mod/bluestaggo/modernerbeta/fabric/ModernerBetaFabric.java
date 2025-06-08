@@ -21,6 +21,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
+import net.minecraft.text.Text;
 import net.minecraft.util.Pair;
 
 public class ModernerBetaFabric implements ModInitializer {
@@ -33,7 +34,8 @@ public class ModernerBetaFabric implements ModInitializer {
 
         ModContainer modContainer = FabricLoader.getInstance().getModContainer(ModernerBeta.MOD_ID).orElseThrow();
         for (String pack : ModernerBeta.BUILT_IN_PACKS) {
-            ResourceManagerHelper.registerBuiltinResourcePack(ModernerBeta.createId(pack), modContainer, ResourcePackActivationType.NORMAL);
+            ResourceManagerHelper.registerBuiltinResourcePack(ModernerBeta.createId(pack), modContainer,
+                    Text.translatable("dataPack.moderner_beta." + pack + ".name"), ResourcePackActivationType.NORMAL);
         }
 
         ModernerBeta.init();

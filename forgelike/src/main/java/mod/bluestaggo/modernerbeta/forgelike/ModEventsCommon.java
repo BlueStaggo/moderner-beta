@@ -166,29 +166,31 @@ public class ModEventsCommon {
                 }
             };
 
-            //? if neoforge {
-            event.addPackFinders(
-            ModernerBeta.createId("resourcepacks/reduced_height"),
+            for (String pack : ModernerBeta.BUILT_IN_PACKS) {
+                //? if neoforge {
+                event.addPackFinders(
+                    ModernerBeta.createId("resourcepacks/" + pack),
                     ResourceType.SERVER_DATA,
                     title,
                     source,
                     false,
                     ResourcePackProfile.InsertionPosition.TOP
-            );
-            //?} else {
-            /*Path resourcePath = ModList.get().getModFileById(ModernerBeta.MOD_ID).getFile().findResource("resourcepacks/reduced_height");
-            ResourcePackProfile pack = ResourcePackProfile.create(
-                    "moderner_beta/reduced_height",
+                );
+                //?} else {
+                /*Path resourcePath = ModList.get().getModFileById(ModernerBeta.MOD_ID).getFile().findResource("resourcepacks/" + pack);
+                ResourcePackProfile pack = ResourcePackProfile.create(
+                    "moderner_beta/" + pack,
                     title,
                     false,
                     path -> new DirectoryResourcePack(path, resourcePath, false),
                     ResourceType.SERVER_DATA,
                     ResourcePackProfile.InsertionPosition.TOP,
                     source
-            );
+                );
 
-            event.addRepositorySource(consumer -> consumer.accept(pack));
-            *///?}
+                event.addRepositorySource(consumer -> consumer.accept(pack));
+                *///?}
+            }
         }
     }
 }

@@ -31,7 +31,11 @@ public class ModernerBetaFabric implements ModInitializer {
         ModernBetaRegistries.makeRegistries(new RegistryHelperImpl());
         ModernerBeta.setupCustomRegistryHandlers();
 
-        registerDataPacks();
+        ModContainer modContainer = FabricLoader.getInstance().getModContainer(ModernerBeta.MOD_ID).orElseThrow();
+        for (String pack : ModernerBeta.BUILT_IN_PACKS) {
+            ResourceManagerHelper.registerBuiltinResourcePack(ModernerBeta.createId(pack), modContainer, ResourcePackActivationType.NORMAL);
+        }
+
         ModernerBeta.init();
 
         ModernerBetaInitializer.setupRegistryHandlers(ModernerBeta.REGISTRY_HANDLERS);
@@ -55,10 +59,5 @@ public class ModernerBetaFabric implements ModInitializer {
         //? if >=1.20.2 {
         PayloadTypeRegistry.playS2C().register(BiomeProviderInfoPayload.ID, BiomeProviderInfoPayload.CODEC);
         //?}
-    }
-
-    private static void registerDataPacks() {
-        ModContainer modContainer = FabricLoader.getInstance().getModContainer(ModernerBeta.MOD_ID).orElseThrow();
-        ResourceManagerHelper.registerBuiltinResourcePack(ModernerBeta.createId("reduced_height"), modContainer, ResourcePackActivationType.NORMAL);
     }
 }

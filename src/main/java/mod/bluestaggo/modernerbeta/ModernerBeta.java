@@ -43,6 +43,11 @@ public class ModernerBeta {
     public static final ModernBetaConfig CONFIG = AutoConfig.register(ModernBetaConfig.class, GsonConfigSerializer::new).getConfig();
     private static final Logger LOGGER = LoggerFactory.getLogger(MOD_NAME);
 
+    public static final List<String> BUILT_IN_PACKS = List.of(
+        "reduced_height",
+        "deepslate_blobs"
+    );
+
     public static final List<Pair<Registry<?>, Consumer<IRegistryHandler<?>>>> REGISTRY_HANDLERS = List.of(
         new Pair<>(Registries.FOLIAGE_PLACER_TYPE, ModernBetaFoliagePlacers::register),
         new Pair<>(Registries.PLACEMENT_MODIFIER_TYPE, ModernBetaPlacementTypes::register),

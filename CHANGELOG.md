@@ -10,7 +10,8 @@ A major number change means a big update. For this update, significant parts of 
 - Added large biome variants for the "Release Hybrid" and "Snow ain't Snowier" presets.
 - Added networking code to send biome provider settings along with the world seed to allow for Beta biomes to have their true colours on multiplayer.
 - Added a biome previewer to preview the biomes that will be generated for a world.
-
+- Added Trial Chambers to Moderner Beta biomes.
+- 
 ## Changes
 - The mod now supports Minecraft 1.21.6.
 - **BREAKING CHANGE**: Every single property has been moved.

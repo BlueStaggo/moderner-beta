@@ -47,20 +47,29 @@ import java.util.regex.Pattern;
 public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
     private final BiomeProvider biomeProvider;
     private BiomeDisplayWidget biomeDisplay;
+    private volatile String exceptionMessage;
 
     public ModernBetaBiomePreviewScreen(Text title, Screen parent, GeneratorOptionsHolder generationOptions, ModernBetaSettings biomeSettings) {
         super(title, parent);
-        this.biomeProvider = ModernBetaRegistries.BIOME.get(biomeSettings.getProvider())
-            .apply(
-                biomeSettings,
-                generationOptions.getCombinedRegistryManager()
-                    //? if >=1.21.2 {
-                    .getOrThrow(RegistryKeys.BIOME),
-                    //?} else {
-                    /*.getWrapperOrThrow(RegistryKeys.BIOME),
-                    *///?}
-                generationOptions.generatorOptions().getSeed()
-            );
+
+        BiomeProvider biomeProvider = null;
+        try {
+            biomeProvider = ModernBetaRegistries.BIOME.get(biomeSettings.getProvider())
+                .apply(
+                    biomeSettings,
+                    generationOptions.getCombinedRegistryManager()
+                        //? if >=1.21.2 {
+                        .getOrThrow(RegistryKeys.BIOME),
+                        //?} else {
+                        /*.getWrapperOrThrow(RegistryKeys.BIOME),
+                        *///?}
+                    generationOptions.generatorOptions().getSeed()
+                );
+        } catch (Exception e) {
+            this.exceptionMessage = e.getLocalizedMessage();
+        }
+
+        this.biomeProvider = biomeProvider;
     }
 
     @Override
@@ -226,10 +235,10 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                 context.drawText(textRenderer, stepName, this.getX() + 4, this.getY() + 4, 0xFFFFFFFF, false);
             }
 
-            if (this.renderThread.exception != null) {
+            if (exceptionMessage != null) {
                 context.drawCenteredTextWithShadow(
                     textRenderer,
-                    Text.literal(this.renderThread.exception.getLocalizedMessage())
+                    Text.literal(exceptionMessage)
                         .formatted(Formatting.RED),
                     this.getX() + this.getWidth() / 2,
                     this.getY() + this.getHeight() / 2 - 4,
@@ -339,6 +348,10 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
 
             @Override
             public void run() {
+                if (biomeProvider == null) {
+                    return;
+                }
+
                 int genX = -1;
                 int genY = 0;
                 boolean full = true;
@@ -441,7 +454,7 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                         *///?}
                     }
                 } catch (Exception exception) {
-                    this.exception = exception;
+                    exceptionMessage = exception.getLocalizedMessage();
                 }
             }
 

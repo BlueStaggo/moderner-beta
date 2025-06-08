@@ -6,17 +6,34 @@ import net.minecraft.world.gen.surfacebuilder.VanillaSurfaceRules;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Constant;
-import org.spongepowered.asm.mixin.injection.ModifyConstant;
+
+//? if >=1.20.2 {
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+//?} else {
+/*import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.Redirect;
+ *///?}
 
 import static mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGeneratorSettings.useModernBetaSurfaceRules;
 
 @Mixin(VanillaSurfaceRules.class)
 public class MixinVanillaSurfaceRules {
-    @ModifyConstant(
+    //? if >=1.20.2 {
+    @ModifyExpressionValue(
+        method = "createDefaultRule",
+        at = @At(
+            value = "CONSTANT",
+            args = "intValue=97"
+        )
+    )
+    //?} else {
+    /*@ModifyConstant(
         method = "createDefaultRule",
         constant = @Constant(intValue = 97)
     )
+    *///?}
     private static int modifyWoodedBadlandsHeight(int constant) {
         if (useModernBetaSurfaceRules()) {
             return 86;
@@ -24,42 +41,24 @@ public class MixinVanillaSurfaceRules {
         return constant;
     }
 
-    @ModifyConstant(
+    //? if >=1.20.2 {
+    @ModifyExpressionValue(
+        method = "createDefaultRule",
+        at = @At(
+            value = "CONSTANT",
+            args = "intValue=74"
+        )
+    )
+    //?} else {
+    /*@ModifyConstant(
         method = "createDefaultRule",
         constant = @Constant(intValue = 74)
     )
+    *///?}
     private static int modifyTerracottaStripesHeight(int constant) {
         if (useModernBetaSurfaceRules()) {
             return 66;
         }
         return constant;
-    }
-
-    @Redirect(
-        method = "createDefaultRule",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/world/gen/surfacebuilder/MaterialRules;aboveYWithStoneDepth(Lnet/minecraft/world/gen/YOffset;I)Lnet/minecraft/world/gen/surfacebuilder/MaterialRules$MaterialCondition;"
-        )
-    )
-    private static MaterialRules.MaterialCondition modifyAboveYWithStoneDepth(YOffset anchor, int runDepthMultiplier) {
-        if (useModernBetaSurfaceRules()) {
-            return MaterialRules.aboveY(anchor, runDepthMultiplier);
-        }
-        return MaterialRules.aboveYWithStoneDepth(anchor, runDepthMultiplier);
-    }
-
-    @Redirect(
-        method = "createDefaultRule",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/world/gen/surfacebuilder/MaterialRules;waterWithStoneDepth(II)Lnet/minecraft/world/gen/surfacebuilder/MaterialRules$MaterialCondition;"
-        )
-    )
-    private static MaterialRules.MaterialCondition modifyWaterWithStoneDepth(int offset, int runDepthMultiplier) {
-        if (useModernBetaSurfaceRules()) {
-            return MaterialRules.water(offset, runDepthMultiplier);
-        }
-        return MaterialRules.waterWithStoneDepth(offset, runDepthMultiplier);
     }
 }

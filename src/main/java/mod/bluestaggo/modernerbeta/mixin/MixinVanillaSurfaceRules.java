@@ -2,12 +2,13 @@ package mod.bluestaggo.modernerbeta.mixin;
 
 import net.minecraft.world.gen.surfacebuilder.VanillaSurfaceRules;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
 
 //? if >=1.20.2 {
+import org.spongepowered.asm.mixin.injection.At;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 //?} else {
-/*import org.spongepowered.asm.mixin.injection.ModifyConstant;
+/*import org.spongepowered.asm.mixin.injection.Constant;
+import org.spongepowered.asm.mixin.injection.ModifyConstant;
 *///?}
 
 import static mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGeneratorSettings.useModernBetaSurfaceRules;

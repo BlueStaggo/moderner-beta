@@ -32,13 +32,10 @@ public class NoiseProviderBase extends NoiseProvider {
         for (int localNoiseX = 0; localNoiseX < this.noiseResX; ++localNoiseX) {
             for (int localNoiseZ = 0; localNoiseZ < this.noiseResZ; ++localNoiseZ) {
                 this.bufferSampler.sampleColumn(primaryBuffer, heightmapBuffer, startNoiseX, startNoiseZ, localNoiseX, localNoiseZ);
-                
-                for (int nY = 0; nY < this.noiseResY; ++nY) {
-                    noise[ndx] = primaryBuffer[nY];
-                    heightmapNoise[ndx] = heightmapBuffer[nY];
-                            
-                    ndx++;
-                }
+
+                System.arraycopy(primaryBuffer, 0, noise, ndx, this.noiseResY);
+                System.arraycopy(heightmapBuffer, 0, heightmapNoise, ndx, this.noiseResY);
+                ndx += this.noiseResY;
             }
         }
         

@@ -183,8 +183,13 @@ public class ChunkProviderEarlyRelease extends ChunkProviderForcedHeight {
         int chunkX = chunkPos.x;
         int chunkZ = chunkPos.z;
 
+        int startX = chunk.getPos().getStartX();
+        int startZ = chunk.getPos().getStartZ();
+
         Random rand = this.createSurfaceRandom(chunkX, chunkZ);
         BlockPos.Mutable pos = new BlockPos.Mutable();
+
+        ChunkHeightmap heightmapChunk = this.hasNoisePostProcessor() ? this.getChunkHeightmap(chunkX, chunkZ) : null;
 
         double[] surfaceNoise = surfaceOctaveNoise.sampleRelease(
             chunkX * 16, chunkZ * 16, 0.0D,
@@ -195,7 +200,12 @@ public class ChunkProviderEarlyRelease extends ChunkProviderForcedHeight {
         for (int localZ = 0; localZ < 16; localZ++) {
             for (int localX = 0; localX < 16; localX++) {
                 pos.set(localX, 0, localZ);
-                int surfaceTopY = chunk.getHeightmap(Heightmap.Type.OCEAN_FLOOR_WG).get(localX, localZ) - 1;
+
+                int x = startX + localX;
+                int z = startZ + localZ;
+                int surfaceTopY = heightmapChunk != null ?
+                    heightmapChunk.getHeight(x, z, ChunkHeightmap.Type.SURFACE_FLOOR) :
+                    chunk.getHeightmap(Heightmap.Type.WORLD_SURFACE_WG).get(localX, localZ) - 1;
                 int surfaceDepth = (int) (surfaceNoise[localZ + localX * 16] / 3D + 3D + rand.nextDouble() * 0.25D);
 
                 if (surfaceDepth <= 0) {

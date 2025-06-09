@@ -38,6 +38,7 @@ import net.minecraft.world.chunk.ProtoChunk;
 //? if <1.21.2
 /*import net.minecraft.world.gen.GenerationStep;*/
 import net.minecraft.world.gen.StructureAccessor;
+import net.minecraft.world.gen.StructureWeightSampler;
 import net.minecraft.world.gen.carver.CarverContext;
 import net.minecraft.world.gen.carver.CarvingMask;
 import net.minecraft.world.gen.carver.ConfiguredCarver;
@@ -316,6 +317,7 @@ public class ModernBetaChunkGenerator extends NoiseChunkGenerator {
     }
     
     public ChunkNoiseSampler createChunkNoiseSampler(Chunk chunk, StructureAccessor world, Blender blender, NoiseConfig noiseConfig) {
+        ///*
         return ModernBetaChunkNoiseSampler.create(
             chunk,
             noiseConfig,
@@ -323,6 +325,17 @@ public class ModernBetaChunkGenerator extends NoiseChunkGenerator {
             this.chunkProvider.getFluidLevelSampler(),
             this.chunkProvider
         );
+        //*/
+        /*
+        return ChunkNoiseSampler.create(
+            chunk,
+            noiseConfig,
+            StructureWeightSampler.createStructureWeightSampler(world, chunk.getPos()),
+            this.settings.value(),
+            this.chunkProvider.getFluidLevelSampler(),
+            blender
+        );
+        //*/
     }
 
     public RegistryEntry<ChunkGeneratorSettings> getGeneratorSettings() {

@@ -106,7 +106,7 @@ public class ChunkProviderAlpha extends ChunkProviderNoise {
                 int runDepth = -1;
                 
                 RegistryEntry<Biome> biome = biomeSource.getBiomeForSurfaceGen(region, pos.set(x, surfaceTopY, z));
-                
+
                 SurfaceConfig surfaceConfig = this.surfaceBuilder.getSurfaceConfig(biome);
                 BlockState topBlock = surfaceConfig.normal().topBlock();
                 BlockState fillerBlock = surfaceConfig.normal().fillerBlock();
@@ -199,6 +199,7 @@ public class ChunkProviderAlpha extends ChunkProviderNoise {
         int startZ = chunk.getPos().getStartZ();
 
         Random rand = this.createSurfaceRandom(chunkX, chunkZ);
+        ChunkHeightmap heightmapChunk = this.hasNoisePostProcessor() ? this.getChunkHeightmap(chunkX, chunkZ) : null;
         BlockPos.Mutable pos = new BlockPos.Mutable();
 
         double[] sandNoise = beachOctaveNoise.sampleAlpha(
@@ -220,9 +221,12 @@ public class ChunkProviderAlpha extends ChunkProviderNoise {
         for (int localZ = 0; localZ < 16; localZ++) {
             for (int localX = 0; localX < 16; localX++) {
                 pos.set(localX, 0, localZ);
+
                 int x = startX + localX;
                 int z = startZ + localZ;
-                int surfaceTopY = chunk.getHeightmap(Heightmap.Type.OCEAN_FLOOR_WG).get(localX, localZ) - 1;
+                int surfaceTopY = heightmapChunk != null ?
+                    heightmapChunk.getHeight(x, z, ChunkHeightmap.Type.SURFACE_FLOOR) :
+                    chunk.getHeightmap(Heightmap.Type.WORLD_SURFACE_WG).get(localX, localZ) - 1;
 
                 boolean genSandBeach = sandNoise[localZ + localX * 16] + rand.nextDouble() * 0.2D > 0.0D;
                 boolean genGravelBeach = gravelNoise[localZ + localX * 16] + rand.nextDouble() * 0.2D > 3D;

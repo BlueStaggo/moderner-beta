@@ -44,12 +44,8 @@ public class CategorizedNeighborBiomePredicate extends NeighborComparisonPredica
     }
 
     @Override
-    protected void prepareMatch(ExtendedBiomeId biome, Layer layer, Supplier<LayerRandom> randomSupplier, int x, int z) {
-        this.currentCategory = this.mapToCategories.computeIfAbsent(biome, Set::of);
-    }
-
-    @Override
     protected boolean neighborMatches(ExtendedBiomeId centre, ExtendedBiomeId neighbor, Layer layer, Supplier<LayerRandom> randomSupplier, int x, int z, int nx, int nz) {
-        return this.currentCategory.contains(neighbor);
+        Set<ExtendedBiomeId> category = this.mapToCategories.get(centre);
+        return category != null && category.contains(neighbor);
     }
 }

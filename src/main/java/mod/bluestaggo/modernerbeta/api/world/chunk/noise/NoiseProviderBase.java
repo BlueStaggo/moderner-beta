@@ -1,32 +1,10 @@
 package mod.bluestaggo.modernerbeta.api.world.chunk.noise;
 
-import net.minecraft.util.math.MathHelper;
-
 public class NoiseProviderBase extends NoiseProvider {
     private final BaseColumnSampler bufferSampler;
     
     protected double[] heightmapNoise;
 
-    private double heightmapLowerNW;
-    private double heightmapLowerSW;
-    private double heightmapLowerNE;
-    private double heightmapLowerSE;
-    
-    private double heightmapUpperNW; 
-    private double heightmapUpperSW;
-    private double heightmapUpperNE;
-    private double heightmapUpperSE;
-    
-    private double heightmapNW;
-    private double heightmapNE;
-    private double heightmapSW;
-    private double heightmapSE;
-    
-    private double heightmapN;
-    private double heightmapS;
-    
-    private double heightmapDensity;
-    
     public NoiseProviderBase(
         int noiseSizeX, 
         int noiseSizeY, 
@@ -36,6 +14,10 @@ public class NoiseProviderBase extends NoiseProvider {
         super(noiseSizeX, noiseSizeY, noiseSizeZ);
         
         this.bufferSampler = bufferSampler;
+    }
+
+    public NoiseSampler getSamplerForHeightmap() {
+        return new NoiseSampler(this.noiseSizeX, this.noiseSizeY, this.noiseSizeZ, this.heightmapNoise);
     }
 
     @Override
@@ -64,39 +46,7 @@ public class NoiseProviderBase extends NoiseProvider {
         
         return noise;
     }
-    
-    public void sampleNoiseCornersHeightmap(int subChunkX, int subChunkY, int subChunkZ) {
-        this.heightmapLowerNW = this.heightmapNoise[((subChunkX + 0) * this.noiseResX + (subChunkZ + 0)) * this.noiseResY + (subChunkY + 0)];
-        this.heightmapLowerSW = this.heightmapNoise[((subChunkX + 0) * this.noiseResX + (subChunkZ + 1)) * this.noiseResY + (subChunkY + 0)];
-        this.heightmapLowerNE = this.heightmapNoise[((subChunkX + 1) * this.noiseResX + (subChunkZ + 0)) * this.noiseResY + (subChunkY + 0)];
-        this.heightmapLowerSE = this.heightmapNoise[((subChunkX + 1) * this.noiseResX + (subChunkZ + 1)) * this.noiseResY + (subChunkY + 0)];
-        
-        this.heightmapUpperNW = this.heightmapNoise[((subChunkX + 0) * this.noiseResX + (subChunkZ + 0)) * this.noiseResY + (subChunkY + 1)]; 
-        this.heightmapUpperSW = this.heightmapNoise[((subChunkX + 0) * this.noiseResX + (subChunkZ + 1)) * this.noiseResY + (subChunkY + 1)];
-        this.heightmapUpperNE = this.heightmapNoise[((subChunkX + 1) * this.noiseResX + (subChunkZ + 0)) * this.noiseResY + (subChunkY + 1)];
-        this.heightmapUpperSE = this.heightmapNoise[((subChunkX + 1) * this.noiseResX + (subChunkZ + 1)) * this.noiseResY + (subChunkY + 1)];
-    }
-    
-    public void sampleNoiseYHeightmap(double deltaY) {
-        this.heightmapNW = MathHelper.lerp(deltaY, this.heightmapLowerNW, this.heightmapUpperNW);
-        this.heightmapSW = MathHelper.lerp(deltaY, this.heightmapLowerSW, this.heightmapUpperSW);
-        this.heightmapNE = MathHelper.lerp(deltaY, this.heightmapLowerNE, this.heightmapUpperNE);
-        this.heightmapSE = MathHelper.lerp(deltaY, this.heightmapLowerSE, this.heightmapUpperSE);
-    }
-    
-    public void sampleNoiseXHeightmap(double deltaX) {
-        this.heightmapN = MathHelper.lerp(deltaX, this.heightmapNW, this.heightmapNE);
-        this.heightmapS = MathHelper.lerp(deltaX, this.heightmapSW, this.heightmapSE);
-    }
-    
-    public void sampleNoiseZHeightmap(double deltaZ) {
-        this.heightmapDensity = MathHelper.lerp(deltaZ, this.heightmapN, this.heightmapS);
-    }
-    
-    public double sampleHeightmap() {
-        return this.heightmapDensity;
-    }
-    
+
     @FunctionalInterface
     public interface BaseColumnSampler {
         void sampleColumn(double[] primaryBuffer, double[] heightmapBuffer, int startNoiseX, int startNoiseZ, int localNoiseX, int localNoiseZ);

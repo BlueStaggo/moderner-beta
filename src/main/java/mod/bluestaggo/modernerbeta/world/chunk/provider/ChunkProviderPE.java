@@ -3,6 +3,7 @@ package mod.bluestaggo.modernerbeta.world.chunk.provider;
 import mod.bluestaggo.modernerbeta.api.world.biome.climate.ClimateSampler;
 import mod.bluestaggo.modernerbeta.api.world.biome.climate.Clime;
 import mod.bluestaggo.modernerbeta.api.world.chunk.ChunkProviderNoise;
+import mod.bluestaggo.modernerbeta.api.world.chunk.surface.SurfaceBlocks;
 import mod.bluestaggo.modernerbeta.api.world.chunk.surface.SurfaceConfig;
 import mod.bluestaggo.modernerbeta.api.world.spawn.SpawnLocator;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
@@ -208,6 +209,96 @@ public class ChunkProviderPE extends ChunkProviderNoise {
                     if (runDepth == 0 && fillerBlock.isOf(Blocks.RED_SAND)) {
                         runDepth = rand.nextInt(4);
                         fillerBlock = BlockStates.RED_SANDSTONE;
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    public void provideSurfaceExtra(ChunkRegion region, StructureAccessor structureAccessor, Chunk chunk, ModernBetaBiomeSource biomeSource, NoiseConfig noiseConfig) {
+        double scale = 0.03125;
+
+        ChunkPos chunkPos = chunk.getPos();
+        int chunkX = chunkPos.x;
+        int chunkZ = chunkPos.z;
+
+        int startX = chunk.getPos().getStartX();
+        int startZ = chunk.getPos().getStartZ();
+
+        Random rand = this.createSurfaceRandom(chunkX, chunkZ);
+        ChunkHeightmap heightmapChunk = this.hasNoisePostProcessor() ? this.getChunkHeightmap(chunkX, chunkZ) : null;
+        BlockPos.Mutable pos = new BlockPos.Mutable();
+
+        double[] sandNoise = beachOctaveNoise.sampleBeta(
+            chunkX * 16, chunkZ * 16, 0.0D,
+            16, 16, 1,
+            scale, scale, 1.0D);
+
+        double[] gravelNoise = beachOctaveNoise.sampleBeta(
+            chunkX * 16, 109.0134D, chunkZ * 16,
+            16, 1, 16,
+            scale, 1.0D, scale);
+
+        double[] surfaceNoise = surfaceOctaveNoise.sampleBeta(
+            chunkX * 16, chunkZ * 16, 0.0D,
+            16, 16, 1,
+            scale * 2D, scale * 2D, scale * 2D
+        );
+
+        for (int localZ = 0; localZ < 16; localZ++) {
+            for (int localX = 0; localX < 16; localX++) {
+                pos.set(localX, 0, localZ);
+
+                int x = startX + localX;
+                int z = startZ + localZ;
+                int surfaceTopY = heightmapChunk != null ?
+                    heightmapChunk.getHeight(x, z, ChunkHeightmap.Type.SURFACE_FLOOR) :
+                    chunk.getHeightmap(Heightmap.Type.WORLD_SURFACE_WG).get(localX, localZ) - 1;
+
+                boolean genSandBeach = sandNoise[localZ + localX * 16] + rand.nextDouble() * 0.2D > 0.0D;
+                boolean genGravelBeach = gravelNoise[localZ + localX * 16] + rand.nextDouble() * 0.2D > 3D;
+                int surfaceDepth = (int) (surfaceNoise[localZ + localX * 16] / 3D + 3D + rand.nextDouble() * 0.25D);
+
+                RegistryEntry<Biome> biome = biomeSource.getBiomeForSurfaceGen(region, pos.set(x, surfaceTopY, z));
+
+                SurfaceConfig surfaceConfig = this.surfaceBuilder.getSurfaceConfig(biome);
+
+                if (surfaceDepth <= 0) {
+                    int y = surfaceTopY;
+                    pos.setY(y);
+                    VersionCompat.setBlockState(chunk, pos, y < this.seaLevel ? BlockStates.WATER : BlockStates.AIR);
+                    pos.setY(--y);
+
+                    BlockState blockState;
+                    while (!(blockState = chunk.getBlockState(pos)).isAir() && !blockState.isOf(this.defaultBlock.getBlock())) {
+                        VersionCompat.setBlockState(chunk, pos, this.defaultBlock);
+                        pos.setY(--y);
+                    }
+                } else if (surfaceTopY >= this.seaLevel - 4 && surfaceTopY < this.seaLevel + 1) {
+                    SurfaceBlocks beach = genSandBeach ? surfaceConfig.beachSand() : genGravelBeach ? surfaceConfig.beachGravel() : null;
+                    if (beach != null) {
+                        int y = surfaceTopY;
+                        pos.setY(y);
+                        if (beach.topBlock().isAir() && y < this.seaLevel) {
+                            VersionCompat.setBlockState(chunk, pos, BlockStates.WATER);
+                        } else {
+                            VersionCompat.setBlockState(chunk, pos, beach.topBlock());
+                        }
+                        pos.setY(--y);
+
+                        BlockState blockState;
+                        while (!(blockState = chunk.getBlockState(pos)).isAir() && !blockState.isOf(this.defaultBlock.getBlock())) {
+                            VersionCompat.setBlockState(chunk, pos, beach.fillerBlock());
+                            pos.setY(--y);
+                        }
+                    }
+                }
+
+                for (int y = this.bedrockFloor; y < this.bedrockFloor + 5; y++) {
+                    if (y <= this.bedrockFloor + this.random.nextInt(5)) {
+                        pos.setY(y);
+                        VersionCompat.setBlockState(chunk, pos, BlockStates.BEDROCK);
                     }
                 }
             }

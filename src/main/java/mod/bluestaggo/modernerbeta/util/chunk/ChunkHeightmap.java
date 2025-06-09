@@ -23,9 +23,9 @@ public class ChunkHeightmap {
         OCEAN
     }
     
-    private final short heightmapSurface[];
-    private final short heightmapOcean[];
-    private final short heightmapSurfaceFloor[];
+    private final short[] heightmapSurface;
+    private final short[] heightmapOcean;
+    private final short[] heightmapSurfaceFloor;
 
     public ChunkHeightmap(short[] heightmapSurface, short[] heightmapOcean, short[] heightmapSurfaceFloor) {
         if (heightmapSurface.length != 256 || heightmapOcean.length != 256) 

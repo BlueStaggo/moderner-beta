@@ -5,6 +5,7 @@ import mod.bluestaggo.modernerbeta.api.world.blocksource.BlockSource;
 import mod.bluestaggo.modernerbeta.api.world.chunk.noise.NoisePostProcessor;
 import mod.bluestaggo.modernerbeta.api.world.chunk.noise.NoiseProvider;
 import mod.bluestaggo.modernerbeta.api.world.chunk.noise.NoiseProviderBase;
+import mod.bluestaggo.modernerbeta.api.world.chunk.noise.NoiseSampler;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.settings.component.CaveGeneration;
 import mod.bluestaggo.modernerbeta.settings.component.IslesProperties;
@@ -418,43 +419,29 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
         AquiferSampler aquiferSampler = this.getAquiferSampler(chunk, noiseConfig);
         BlockPos.Mutable mutable = new BlockPos.Mutable();
         
-        // Create and populate noise providers
-        List<NoiseProvider> noiseProviders = new ArrayList<>();
-        
-        NoiseProvider baseNoiseProvider = this.chunkCacheNoise.get(chunkX, chunkZ);
+        // Create and populate noise provider
+        NoiseProvider noiseProvider = this.chunkCacheNoise.get(chunkX, chunkZ);
+        NoiseSampler noiseSampler = noiseProvider.getSampler();
         BlockSource baseBlockSource = this.getBaseBlockSource(
-            baseNoiseProvider,
+            noiseSampler,
             structureWeightSampler,
-            aquiferSampler,
-            new SimpleNoisePos()
+            aquiferSampler
         );
-        
+
         // Create and populate block sources
         BlockSourceRules.Builder builder = new BlockSourceRules.Builder().add(baseBlockSource);
         this.blockSources.forEach(builder::add);
-        
+
         BlockSourceRules blockSources = builder.build(this.defaultBlock);
-        
-        // Sample initial noise.
-        // Base noise should be added after this,
-        // since base noise is sampled when fetched from cache.
-        noiseProviders.forEach(noiseProvider -> noiseProvider.sampleInitialNoise(chunkX * this.noiseSizeX, chunkZ * this.noiseSizeZ));
-        noiseProviders.add(baseNoiseProvider);
-        
+
         for (int subChunkX = 0; subChunkX < this.noiseSizeX; ++subChunkX) {
-            int noiseX = subChunkX;
-            
             for (int subChunkZ = 0; subChunkZ < this.noiseSizeZ; ++subChunkZ) {
-                int noiseZ = subChunkZ;
-                
                 int sections = chunk.countVerticalSections() - 1;
                 ChunkSection section = chunk.getSection(sections);
                 
                 for (int subChunkY = 0; subChunkY < this.noiseSizeY; ++subChunkY) {
-                    int noiseY = subChunkY;
-                    
-                    noiseProviders.forEach(noiseProvider -> noiseProvider.sampleNoiseCorners(noiseX, noiseY, noiseZ));
-                    
+                    noiseSampler.sampleNoiseCorners(subChunkX, subChunkY, subChunkZ);
+
                     for (int subY = 0; subY < this.noiseResolutionVertical; ++subY) {
                         int y = subY + (subChunkY + this.noiseMinY) * this.noiseResolutionVertical;
                         int localY = y & 0xF;
@@ -466,21 +453,21 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
                         }
                         
                         double deltaY = subY / (double)this.noiseResolutionVertical;
-                        noiseProviders.forEach(noiseProvider -> noiseProvider.sampleNoiseY(deltaY));
+                        noiseSampler.sampleNoiseY(deltaY);
                         
                         for (int subX = 0; subX < this.noiseResolutionHorizontal; ++subX) {
                             int localX = subX + subChunkX * this.noiseResolutionHorizontal;
                             int x = startX + localX;
                             
                             double deltaX = subX / (double)this.noiseResolutionHorizontal;
-                            noiseProviders.forEach(noiseProvider -> noiseProvider.sampleNoiseX(deltaX));
+                            noiseSampler.sampleNoiseX(deltaX);
                             
                             for (int subZ = 0; subZ < this.noiseResolutionHorizontal; ++subZ) {
                                 int localZ = subZ + subChunkZ * this.noiseResolutionHorizontal;
                                 int z = startZ + localZ;
                                 
                                 double deltaZ = subZ / (double)this.noiseResolutionHorizontal;
-                                noiseProviders.forEach(noiseProvider -> noiseProvider.sampleNoiseZ(deltaZ));
+                                noiseSampler.sampleNoiseZ(deltaZ);
                                 
                                 BlockState blockState = blockSources.apply(x, y, z);
                                 if (blockState.equals(BlockStates.AIR)) continue;
@@ -514,7 +501,15 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
         short worldMinY = (short)this.worldMinY;
         short worldTopY = (short)this.worldTopY;
 
-        NoiseProviderBase baseNoiseProvider = this.chunkCacheNoise.get(chunkX, chunkZ);
+        //NoiseProviderBase noiseProvider = this.chunkCacheNoise.get(chunkX, chunkZ);
+        NoiseProviderBase noiseProvider = new NoiseProviderBase(
+            this.noiseSizeX,
+            this.noiseSizeY,
+            this.noiseSizeZ,
+            this::sampleNoiseColumn
+        );
+        noiseProvider.sampleInitialNoise(chunkX * this.noiseSizeX, chunkZ * this.noiseSizeZ);
+        NoiseSampler noiseSampler = noiseProvider.getSamplerForHeightmap();
 
         short[] heightmapSurface = new short[256];
         short[] heightmapOcean = new short[256];
@@ -527,28 +522,28 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
         for (int subChunkX = 0; subChunkX < this.noiseSizeX; ++subChunkX) {
             for (int subChunkZ = 0; subChunkZ < this.noiseSizeZ; ++subChunkZ) {
                 for (int subChunkY = 0; subChunkY < this.noiseSizeY; ++subChunkY) {
-                    baseNoiseProvider.sampleNoiseCornersHeightmap(subChunkX, subChunkY, subChunkZ);
+                    noiseSampler.sampleNoiseCorners(subChunkX, subChunkY, subChunkZ);
                     
                     for (int subY = 0; subY < this.noiseResolutionVertical; ++subY) {
                         int y = subY + subChunkY * this.noiseResolutionVertical;
                         y += this.worldMinY;
                         
                         double deltaY = subY / (double)this.noiseResolutionVertical;
-                        baseNoiseProvider.sampleNoiseYHeightmap(deltaY);
+                        noiseSampler.sampleNoiseY(deltaY);
                         
                         for (int subX = 0; subX < this.noiseResolutionHorizontal; ++subX) {
                             int x = subX + subChunkX * this.noiseResolutionHorizontal;
                             
                             double deltaX = subX / (double)this.noiseResolutionHorizontal;
-                            baseNoiseProvider.sampleNoiseXHeightmap(deltaX);
+                            noiseSampler.sampleNoiseX(deltaX);
                             
                             for (int subZ = 0; subZ < this.noiseResolutionHorizontal; ++subZ) {
                                 int z = subZ + subChunkZ * this.noiseResolutionHorizontal;
                                 
                                 double deltaZ = subZ / (double)this.noiseResolutionHorizontal;
-                                baseNoiseProvider.sampleNoiseZHeightmap(deltaZ);
+                                noiseSampler.sampleNoiseZ(deltaZ);
                                 
-                                double density = baseNoiseProvider.sampleHeightmap();
+                                double density = noiseSampler.sample();
                                 boolean isSolid = density > 0.0;
                                 
                                 short height = (short)(y + 1);
@@ -590,26 +585,25 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
     /**
      * Creates block source to sample BlockState at block coordinates given base noise provider.
      * 
-     * @param baseNoiseProvider Primary noise provider to sample density noise.
+     * @param noiseSampler Primary noise sampler to sample density noise.
      * @param weightSampler Sampler used to add/subtract density if a structure start is at coordinate.
      * @param aquiferSampler Sampler used to adjust local water levels for noise caves.
-     * @param noisePos Coordinates that the noise is sampled from
      *
      * @return BlockSource to sample blockstate at x/y/z block coordinates.
      */
     private BlockSource getBaseBlockSource(
-        NoiseProvider baseNoiseProvider,
+        NoiseSampler noiseSampler,
         StructureWeightSampler weightSampler,
-        AquiferSampler aquiferSampler,
-        SimpleNoisePos noisePos
+        AquiferSampler aquiferSampler
     ) {
+        SimpleNoisePos noisePos = new SimpleNoisePos();
         return (x, y, z) -> {
-            double density = baseNoiseProvider.sample();
+            double density = noiseSampler.sample();
             double clampedDensity = MathHelper.clamp(density / 200.0, -1.0, 1.0);
             
             clampedDensity = clampedDensity / 2.0 - clampedDensity * clampedDensity * clampedDensity / 24.0;
             clampedDensity += weightSampler.sample(noisePos.set(x, y, z));
-            
+
             return aquiferSampler.apply(noisePos, clampedDensity);
         };
     }

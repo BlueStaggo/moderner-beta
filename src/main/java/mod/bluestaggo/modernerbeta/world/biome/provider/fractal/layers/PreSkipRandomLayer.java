@@ -24,14 +24,14 @@ public class PreSkipRandomLayer extends LayerWrapperLayer {
 
     @Override
     public void init(long worldSeed) {
-        this.layer.init(worldSeed);
-        this.layer.getRandom(0, 0).setInitialSkip(this.skipAmount);
+        super.init(worldSeed);
+        this.layer.setInitialSkip(this.skipAmount);
     }
 
     @Override
     public void initUnsalted() {
-        this.layer.initUnsalted();
-        this.layer.getRandom(0, 0).setInitialSkip(this.skipAmount);
+        super.initUnsalted();
+        this.layer.setInitialSkip(this.skipAmount);
     }
 
     @Override

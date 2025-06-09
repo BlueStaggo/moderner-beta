@@ -27,6 +27,7 @@ public abstract class Layer {
 
     private transient long saltedSeed;
     private transient ThreadLocal<LayerRandom> random;
+    private transient int initialSkip;
 
     private transient final ThreadLocal<Long2ObjectLinkedOpenHashMap<ExtendedBiomeId>> cache
         = ThreadLocal.withInitial(() -> new Long2ObjectLinkedOpenHashMap<>(CACHE_CAPACITY));
@@ -58,6 +59,10 @@ public abstract class Layer {
     protected abstract ExtendedBiomeId generate(int x, int z);
 
     public void configure(Function<String, Layer> layerMap) {
+    }
+
+    protected void setInitialSkip(int initialSkip) {
+        this.initialSkip = initialSkip;
     }
 
     protected void addPossibleBiomes(Set<ExtendedBiomeId> biomes) {
@@ -113,6 +118,9 @@ public abstract class Layer {
     protected final LayerRandom getRandom(long x, long z) {
         LayerRandom random = this.random.get();
         random.init(x, z);
+        if (this.initialSkip > 0) {
+            random.skip(this.initialSkip);
+        }
         return random;
     }
 

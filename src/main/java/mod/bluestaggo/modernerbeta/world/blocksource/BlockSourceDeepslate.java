@@ -21,9 +21,10 @@ public class BlockSourceDeepslate implements BlockSource {
     
     public BlockSourceDeepslate(ModernBetaSettings chunkSettings, RandomSplitter randomSplitter) {
         DeepslateGeneration deepslateGeneration = chunkSettings.getOrDefault(SettingsComponentTypes.DEEPSLATE_GENERATION);
+        boolean surfaceRules = chunkSettings.getOrDefault(SettingsComponentTypes.USE_SURFACE_RULES);
         this.minY = deepslateGeneration.minY();
         this.maxY = deepslateGeneration.maxY();
-        this.useDeepslate = deepslateGeneration.enabled();
+        this.useDeepslate = !surfaceRules && deepslateGeneration.enabled();
         this.deepslateBlock = Registries.BLOCK.getOrThrow(RegistryKey.of(RegistryKeys.BLOCK, deepslateGeneration.block()))
             //? if >=1.21.2
             .value()

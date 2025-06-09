@@ -1,9 +1,11 @@
 package mod.bluestaggo.modernerbeta.world.chunk.provider;
 
 import mod.bluestaggo.modernerbeta.api.world.chunk.ChunkProviderNoise;
+import mod.bluestaggo.modernerbeta.api.world.chunk.surface.SurfaceBlocks;
 import mod.bluestaggo.modernerbeta.api.world.chunk.surface.SurfaceConfig;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
+import mod.bluestaggo.modernerbeta.util.chunk.ChunkHeightmap;
 import mod.bluestaggo.modernerbeta.util.noise.PerlinOctaveNoise;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
@@ -126,6 +128,55 @@ public class ChunkProviderSky extends ChunkProviderNoise {
                     if (runDepth == 0 && fillerBlock.isOf(Blocks.RED_SAND)) {
                         runDepth = rand.nextInt(4);
                         fillerBlock = BlockStates.RED_SANDSTONE;
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    public void provideSurfaceExtra(ChunkRegion region, StructureAccessor structureAccessor, Chunk chunk, ModernBetaBiomeSource biomeSource, NoiseConfig noiseConfig) {
+        double scale = 0.03125;
+
+        ChunkPos chunkPos = chunk.getPos();
+        int chunkX = chunkPos.x;
+        int chunkZ = chunkPos.z;
+
+        int startX = chunk.getPos().getStartX();
+        int startZ = chunk.getPos().getStartZ();
+
+        Random rand = this.createSurfaceRandom(chunkX, chunkZ);
+        ChunkHeightmap heightmapChunk = this.hasNoisePostProcessor() ? this.getChunkHeightmap(chunkX, chunkZ) : null;
+        BlockPos.Mutable pos = new BlockPos.Mutable();
+
+        double[] surfaceNoise = surfaceOctaveNoise.sampleBeta(
+            chunkX * 16, chunkZ * 16, 0.0D,
+            16, 16, 1,
+            scale * 2D, scale * 2D, scale * 2D
+        );
+
+        for (int localZ = 0; localZ < 16; localZ++) {
+            for (int localX = 0; localX < 16; localX++) {
+                pos.set(localX, 0, localZ);
+
+                int x = startX + localX;
+                int z = startZ + localZ;
+                int surfaceTopY = heightmapChunk != null ?
+                    heightmapChunk.getHeight(x, z, ChunkHeightmap.Type.SURFACE_FLOOR) :
+                    chunk.getHeightmap(Heightmap.Type.WORLD_SURFACE_WG).get(localX, localZ) - 1;
+
+                int surfaceDepth = (int) (surfaceNoise[localZ + localX * 16] / 3D + 3D + rand.nextDouble() * 0.25D);
+
+                if (surfaceDepth <= 0) {
+                    int y = surfaceTopY;
+                    pos.setY(y);
+                    VersionCompat.setBlockState(chunk, pos, y < this.seaLevel ? BlockStates.WATER : BlockStates.AIR);
+                    pos.setY(--y);
+
+                    BlockState blockState;
+                    while (!(blockState = chunk.getBlockState(pos)).isAir() && !blockState.isOf(this.defaultBlock.getBlock())) {
+                        VersionCompat.setBlockState(chunk, pos, this.defaultBlock);
+                        pos.setY(--y);
                     }
                 }
             }

@@ -42,6 +42,7 @@ A major number change means a big update. For this update, significant parts of 
 - Removed dependency on Architectury API.
 - Made ocean biome injectors not be used if the biome provider already generates oceans.
 - Moved deepslate and tuff blobs from the reduced height data pack into a separate data pack.
+- Major release worlds can now be generated without surface rules.
 - (1.21+) Replaced use of `@Redirect` mixins with `@WrapOperation` mixins.
 - (1.21 only) Bumped NeoForge to 21.0.110-beta to fix crashes when entering the mod config screen.
 
@@ -56,5 +57,5 @@ A major number change means a big update. For this update, significant parts of 
 - Fixed Tall Grass and Large Fern blocks not having consistent colouring between the two halves.
 - Fixed buried treasure not generating in worlds without beaches.
 - Main noise scale now affects Indev worlds.
-- Terracotta stripes no longer generate in underground badlands.
+- Fixed terracotta stripes generating in underground badlands and other surface rule related bugs.
 - Snowfall now occurs in the right places in worlds.

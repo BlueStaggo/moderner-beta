@@ -13,7 +13,7 @@ import net.minecraft.world.gen.densityfunction.DensityFunctionTypes;
 import net.minecraft.world.gen.noise.NoiseConfig;
 
 public class ModernBetaChunkNoiseSampler extends ChunkNoiseSampler {
-    private static final int OCEAN_HEIGHT_OFFSET = -8;
+    private static final int HEIGHT_OFFSET = -8;
     
     private final ChunkProvider chunkProvider;
     
@@ -85,10 +85,6 @@ public class ModernBetaChunkNoiseSampler extends ChunkNoiseSampler {
         int height = (this.chunkProvider instanceof ChunkProviderNoise noiseChunkProvider) ?
             noiseChunkProvider.getHeight(x, z, ChunkHeightmap.Type.SURFACE_FLOOR) :
             this.chunkProvider.getHeight(x, z, Heightmap.Type.OCEAN_FLOOR_WG);
-
-        int seaLevel = this.chunkProvider.getSeaLevel();
-
-        // Fudge deeper oceans when at a body of water
-        return (height < seaLevel) ? height + OCEAN_HEIGHT_OFFSET : height;
+        return height + HEIGHT_OFFSET;
     }
 }

@@ -11,7 +11,6 @@ public class LayerRandom implements Random {
     private final long baseSeed;
     private long seed;
     private GaussianGenerator gaussianGenerator;
-    private int initialSkip;
 
     public LayerRandom(long seed) {
         this.baseSeed = seed;
@@ -22,9 +21,6 @@ public class LayerRandom implements Random {
         for (int i = 0; i < 2; i++) {
             this.seed = SeedMixer.mixSeed(this.seed, x);
             this.seed = SeedMixer.mixSeed(this.seed, z);
-        }
-        if (this.initialSkip > 0) {
-            this.skip(this.initialSkip);
         }
     }
 
@@ -43,10 +39,6 @@ public class LayerRandom implements Random {
     @Override
     public void setSeed(long seed) {
         this.seed = seed;
-    }
-
-    protected void setInitialSkip(int initialSkip) {
-        this.initialSkip = initialSkip;
     }
 
     @Override

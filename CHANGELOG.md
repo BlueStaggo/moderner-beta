@@ -5,7 +5,6 @@ A major number change means a big update. For this update, significant parts of 
 
 ## Additions
 - Modern caves are back! Access them with the new "Generate Noise Caves" / "useNoiseCaves" setting.
-- Added modern caves to the "Beta Vanilla" preset.
 - Added "Snow ain't Snowier" preset for 1.17 biome generation with some modern biomes.
 - Added large biome variants for the "Release Hybrid" and "Snow ain't Snowier" presets.
 - Added networking code to send biome provider settings along with the world seed to allow for Beta biomes to have their true colours on multiplayer.

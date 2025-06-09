@@ -26,7 +26,7 @@ public abstract class Layer {
     public final long seed;
 
     private transient long saltedSeed;
-    private transient ThreadLocal<LayerRandom> random;
+    private transient ThreadLocal<LayerRandom> random = ThreadLocal.withInitial(() -> new LayerRandom(0));
     private transient int initialSkip;
 
     private transient final ThreadLocal<Long2ObjectLinkedOpenHashMap<ExtendedBiomeId>> cache

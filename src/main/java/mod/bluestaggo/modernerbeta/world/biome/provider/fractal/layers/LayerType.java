@@ -8,10 +8,9 @@ public record LayerType<L extends Layer>(com.mojang.serialization.MapCodec<L> co
 
     public static LayerType<AddLandLayer> ADD_LAND;
     public static LayerType<ApplyOceanClimateLayer> APPLY_OCEAN_CLIMATE;
-    public static LayerType<BiomeToLayerOverlayLayer> BIOME_TO_LAYER_OVERLAY;
+    public static LayerType<BiomeReplacementLayer> BIOME_REPLACEMENT;
     public static LayerType<ComputeRiverLayer> COMPUTE_RIVER;
-    public static LayerType<ConditionalBiomeOverlayLayer> CONDITIONAL_BIOME_OVERLAY;
-    public static LayerType<ConditionalLayerOverlayLayer> CONDITIONAL_LAYER_OVERLAY;
+    public static LayerType<ConditionalOverlayLayer> CONDITIONAL_OVERLAY;
     public static LayerType<ConstantBiomeLayer> CONSTANT_BIOME;
     public static LayerType<FuzzyZoomLayer> FUZZY_ZOOM;
     public static LayerType<InitLandLayer> INIT_LAND;
@@ -29,8 +28,7 @@ public record LayerType<L extends Layer>(com.mojang.serialization.MapCodec<L> co
     public static LayerType<StackedZoomLayer> STACKED_ZOOM;
     public static LayerType<SupplyRandomLayer> SUPPLY_RANDOM;
     public static LayerType<UnsaltedLayer> UNSALTED;
-    public static LayerType<WeightedBiomeLayer> WEIGHTED_BIOME;
-    public static LayerType<WeightedLayerLayer> WEIGHTED_LAYER;
+    public static LayerType<WeightedPoolLayer> WEIGHTED_POOL;
 
     private static <L extends Layer> LayerType<L> register(String id, com.mojang.serialization.MapCodec<L> codec) {
         LayerType<L> layerType = new LayerType<>(codec);
@@ -43,10 +41,9 @@ public record LayerType<L extends Layer>(com.mojang.serialization.MapCodec<L> co
 
         ADD_LAND = register("add_land", AddLandLayer.CODEC);
         APPLY_OCEAN_CLIMATE = register("apply_ocean_climate", ApplyOceanClimateLayer.CODEC);
-        BIOME_TO_LAYER_OVERLAY = register("biome_to_layer_overlay", BiomeToLayerOverlayLayer.CODEC);
+        BIOME_REPLACEMENT = register("biome_to_layer_overlay", BiomeReplacementLayer.CODEC);
         COMPUTE_RIVER = register("compute_river", ComputeRiverLayer.CODEC);
-        CONDITIONAL_BIOME_OVERLAY = register("conditional_biome_overlay", ConditionalBiomeOverlayLayer.CODEC);
-        CONDITIONAL_LAYER_OVERLAY = register("conditional_layer_overlay", ConditionalLayerOverlayLayer.CODEC);
+        CONDITIONAL_OVERLAY = register("conditional_overlay", ConditionalOverlayLayer.CODEC);
         CONSTANT_BIOME = register("constant_biome", ConstantBiomeLayer.CODEC);
         FUZZY_ZOOM = register("fuzzy_zoom", FuzzyZoomLayer.CODEC);
         INIT_LAND = register("init_land", InitLandLayer.CODEC);
@@ -63,8 +60,7 @@ public record LayerType<L extends Layer>(com.mojang.serialization.MapCodec<L> co
         STACKED_ZOOM = register("stacked_zoom", StackedZoomLayer.CODEC);
         SUPPLY_RANDOM = register("supply_random", SupplyRandomLayer.CODEC);
         UNSALTED = register("unsalted", UnsaltedLayer.CODEC);
-        WEIGHTED_BIOME = register("weighted_biome", WeightedBiomeLayer.CODEC);
-        WEIGHTED_LAYER = register("weighted_layer", WeightedLayerLayer.CODEC);
+        WEIGHTED_POOL = register("weighted_pool", WeightedPoolLayer.CODEC);
     }
 
     @Override

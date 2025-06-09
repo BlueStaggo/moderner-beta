@@ -7,6 +7,7 @@ import net.minecraft.registry.RegistryKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeKeys;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -141,7 +142,7 @@ public record ExtendedBiomeId(Identifier baseId, String ext, boolean weak) {
     }
 
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         String name = this.baseId.toString();
         if (this.ext != null && !this.ext.isEmpty()) {
             name += "*" + this.ext;

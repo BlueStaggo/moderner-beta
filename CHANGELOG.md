@@ -10,7 +10,7 @@ A major number change means a big update. For this update, significant parts of 
 - Added networking code to send biome provider settings along with the world seed to allow for Beta biomes to have their true colours on multiplayer.
 - Added a biome previewer to preview the biomes that will be generated for a world.
 - Added Trial Chambers to Moderner Beta biomes.
-- 
+
 ## Changes
 - The mod now supports Minecraft 1.21.6.
 - **BREAKING CHANGE**: Every single property has been moved.
@@ -34,7 +34,7 @@ A major number change means a big update. For this update, significant parts of 
       }
     }
     ```
-    *Note that other values in `moderner_betea:cave_generation` default to beta values.*
+    *Note that other values in `moderner_beta:cave_generation` default to beta values.*
 - Improved accuracy of the 0.0.14a_08 preset.
 - Improved accuracy of Beta 1.8, 1.0.0 and 1.1 climate, providing the signature messy look as well as ice plains generating without snow on its edges.
 - Biomes with custom grass/foliage colors now display their colors in worlds with custom climate while blending in the climatic base color.

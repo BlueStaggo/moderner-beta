@@ -40,6 +40,7 @@ import net.minecraft.world.gen.noise.NoiseConfig;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
 public abstract class ChunkProviderNoise extends ChunkProvider {
@@ -73,7 +74,7 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
     protected final NoiseScale noiseScale;
     private final NoiseSlide noiseSlide;
 
-    private final ThreadLocal<NoiseConfig> noiseConfig = new ThreadLocal<>();
+    private final AtomicReference<NoiseConfig> noiseConfig = new AtomicReference<>();
 
     public ChunkProviderNoise(ModernBetaChunkGenerator chunkGenerator, long seed) {
         super(chunkGenerator, seed);
@@ -139,9 +140,7 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
      */
     @Override
     public CompletableFuture<Chunk> provideChunk(Blender blender, StructureAccessor structureAccessor, Chunk chunk, NoiseConfig noiseConfig) {
-        if (this.noiseConfig.get() == null) {
-            this.noiseConfig.set(noiseConfig);
-        }
+        this.setNoiseConfig(noiseConfig);
 
         GenerationShapeConfig shapeConfig = this.generatorSettings.value().generationShapeConfig();
         
@@ -244,6 +243,10 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
         );
         
         return aquiferSamplerProvider.provideAquiferSampler(chunk);
+    }
+
+    public void setNoiseConfig(NoiseConfig noiseConfig) {
+        this.noiseConfig.set(noiseConfig);
     }
     
     /**
@@ -607,6 +610,5 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
             return aquiferSampler.apply(noisePos, clampedDensity);
         };
     }
-
 }
 

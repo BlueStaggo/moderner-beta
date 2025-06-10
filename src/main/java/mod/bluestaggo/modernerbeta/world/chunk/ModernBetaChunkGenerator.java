@@ -315,9 +315,9 @@ public class ModernBetaChunkGenerator extends NoiseChunkGenerator {
     public int getSeaLevel() {
         return this.chunkProvider.getSeaLevel();
     }
-    
-    public ChunkNoiseSampler createChunkNoiseSampler(Chunk chunk, StructureAccessor world, Blender blender, NoiseConfig noiseConfig) {
-        ///*
+
+    @Override
+    protected ChunkNoiseSampler createChunkNoiseSampler(Chunk chunk, StructureAccessor world, Blender blender, NoiseConfig noiseConfig) {
         return ModernBetaChunkNoiseSampler.create(
             chunk,
             noiseConfig,
@@ -325,17 +325,6 @@ public class ModernBetaChunkGenerator extends NoiseChunkGenerator {
             this.chunkProvider.getFluidLevelSampler(),
             this.chunkProvider
         );
-        //*/
-        /*
-        return ChunkNoiseSampler.create(
-            chunk,
-            noiseConfig,
-            StructureWeightSampler.createStructureWeightSampler(world, chunk.getPos()),
-            this.settings.value(),
-            this.chunkProvider.getFluidLevelSampler(),
-            blender
-        );
-        //*/
     }
 
     public RegistryEntry<ChunkGeneratorSettings> getGeneratorSettings() {

@@ -402,6 +402,18 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
     }
 
     /**
+     * Check if a block state is valid for extra surface features to be placed over.
+     * The condition is that the block is opaque and it is not the base block (typically stone).
+     *
+     * @param blockState The block state to check.
+     *
+     * @return If the block state is valid for placing extra surface features over.
+     */
+    protected boolean isBlockSuitableForSurface(BlockState blockState) {
+        return blockState.isOpaque() && !blockState.isOf(this.defaultBlock.getBlock());
+    }
+
+    /**
      * Generates the base terrain for a given chunk.
      * 
      * @param chunk

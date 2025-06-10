@@ -205,26 +205,24 @@ public class ChunkProviderEarlyRelease extends ChunkProviderForcedHeight {
                 int z = startZ + localZ;
                 int surfaceTopY = heightmapChunk != null ?
                     heightmapChunk.getHeight(x, z, ChunkHeightmap.Type.SURFACE_FLOOR) :
-                    chunk.getHeightmap(Heightmap.Type.OCEAN_FLOOR_WG).get(localX, localZ) - 1;
+                    chunk.getHeightmap(Heightmap.Type.OCEAN_FLOOR_WG).get(localX, localZ);
+                surfaceTopY--;
                 int surfaceDepth = (int) (surfaceNoise[localZ + localX * 16] / 3D + 3D + rand.nextDouble() * 0.25D);
 
                 if (surfaceDepth <= 0) {
                     int y = surfaceTopY;
                     pos.setY(y);
-                    VersionCompat.setBlockState(chunk, pos, y < this.seaLevel ? BlockStates.WATER : BlockStates.AIR);
+
+                    if (!this.isBlockSuitableForSurface(chunk.getBlockState(pos))) {
+                        continue;
+                    }
+
+                    VersionCompat.setBlockState(chunk, pos, y < this.seaLevel ? this.defaultBlock : BlockStates.AIR);
                     pos.setY(--y);
 
-                    BlockState blockState;
-                    while (!(blockState = chunk.getBlockState(pos)).isAir() && !blockState.isOf(this.defaultBlock.getBlock())) {
+                    while (this.isBlockSuitableForSurface(chunk.getBlockState(pos))) {
                         VersionCompat.setBlockState(chunk, pos, this.defaultBlock);
                         pos.setY(--y);
-                    }
-                }
-
-                for (int y = this.bedrockFloor; y < this.bedrockFloor + 5; y++) {
-                    if (y <= this.bedrockFloor + this.random.nextInt(5)) {
-                        pos.setY(y);
-                        VersionCompat.setBlockState(chunk, pos, BlockStates.BEDROCK);
                     }
                 }
             }

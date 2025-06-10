@@ -199,7 +199,8 @@ public class ChunkProviderInfdev415 extends ChunkProviderNoise {
                 int z = startZ + localZ;
                 int surfaceTopY = heightmapChunk != null ?
                     heightmapChunk.getHeight(x, z, ChunkHeightmap.Type.SURFACE_FLOOR) :
-                    chunk.getHeightmap(Heightmap.Type.OCEAN_FLOOR_WG).get(localX, localZ) - 1;
+                    chunk.getHeightmap(Heightmap.Type.OCEAN_FLOOR_WG).get(localX, localZ);
+                surfaceTopY--;
 
                 boolean genSandBeach = this.beachOctaveNoise.sample(
                     x * scale,
@@ -222,41 +223,35 @@ public class ChunkProviderInfdev415 extends ChunkProviderNoise {
 
                 SurfaceConfig surfaceConfig = this.surfaceBuilder.getSurfaceConfig(biome);
 
+                int y = surfaceTopY;
+                pos.setY(y);
+
+                if (!this.isBlockSuitableForSurface(chunk.getBlockState(pos))) {
+                    continue;
+                }
+
                 if (surfaceDepth <= 0) {
-                    int y = surfaceTopY;
-                    pos.setY(y);
-                    VersionCompat.setBlockState(chunk, pos, y < this.seaLevel ? BlockStates.WATER : BlockStates.AIR);
+                    VersionCompat.setBlockState(chunk, pos, y < this.seaLevel ? this.defaultFluid : BlockStates.AIR);
                     pos.setY(--y);
 
-                    BlockState blockState;
-                    while (!(blockState = chunk.getBlockState(pos)).isAir() && !blockState.isOf(this.defaultBlock.getBlock())) {
+                    while (this.isBlockSuitableForSurface(chunk.getBlockState(pos))) {
                         VersionCompat.setBlockState(chunk, pos, this.defaultBlock);
                         pos.setY(--y);
                     }
                 } else if (surfaceTopY >= this.seaLevel - 4 && surfaceTopY < this.seaLevel + 1) {
                     SurfaceBlocks beach = genSandBeach ? surfaceConfig.beachSand() : genGravelBeach ? surfaceConfig.beachGravel() : null;
                     if (beach != null) {
-                        int y = surfaceTopY;
-                        pos.setY(y);
                         if (beach.topBlock().isAir() && y < this.seaLevel) {
-                            VersionCompat.setBlockState(chunk, pos, BlockStates.WATER);
+                            VersionCompat.setBlockState(chunk, pos, this.defaultFluid);
                         } else {
                             VersionCompat.setBlockState(chunk, pos, beach.topBlock());
                         }
                         pos.setY(--y);
 
-                        BlockState blockState;
-                        while (!(blockState = chunk.getBlockState(pos)).isAir() && !blockState.isOf(this.defaultBlock.getBlock())) {
+                        while (this.isBlockSuitableForSurface(chunk.getBlockState(pos))) {
                             VersionCompat.setBlockState(chunk, pos, beach.fillerBlock());
                             pos.setY(--y);
                         }
-                    }
-                }
-
-                for (int y = this.bedrockFloor; y < this.bedrockFloor + 5; y++) {
-                    if (y <= this.bedrockFloor + this.random.nextInt(5)) {
-                        pos.setY(y);
-                        VersionCompat.setBlockState(chunk, pos, BlockStates.BEDROCK);
                     }
                 }
             }

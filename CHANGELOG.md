@@ -10,6 +10,7 @@ A major number change means a big update. For this update, significant parts of 
 - Added networking code to send biome provider settings along with the world seed to allow for Beta biomes to have their true colours on multiplayer.
 - Added a biome previewer to preview the biomes that will be generated for a world.
 - Added Trial Chambers to Moderner Beta biomes.
+- Added a toggle for farlands. Now farlands can be made to generate in release worlds and stop generating in beta worlds.
 
 ## Changes
 - The mod now supports Minecraft 1.21.6.

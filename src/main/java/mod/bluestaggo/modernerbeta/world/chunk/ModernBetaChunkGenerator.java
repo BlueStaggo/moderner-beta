@@ -25,7 +25,6 @@ import net.minecraft.util.Util;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.random.CheckedRandom;
 import net.minecraft.util.math.random.ChunkRandom;
-import net.minecraft.util.math.random.LocalRandom;
 import net.minecraft.util.math.random.RandomSeed;
 import net.minecraft.world.ChunkRegion;
 import net.minecraft.world.HeightLimitView;
@@ -41,7 +40,6 @@ import net.minecraft.world.chunk.ProtoChunk;
 //? if <1.21.2
 /*import net.minecraft.world.gen.GenerationStep;*/
 import net.minecraft.world.gen.StructureAccessor;
-import net.minecraft.world.gen.StructureWeightSampler;
 import net.minecraft.world.gen.carver.CarverContext;
 import net.minecraft.world.gen.carver.CarvingMask;
 import net.minecraft.world.gen.carver.ConfiguredCarver;
@@ -111,8 +109,8 @@ public class ModernBetaChunkGenerator extends NoiseChunkGenerator {
 
         CaveGeneration caveSettings = chunkSettings.getOrDefault(SettingsComponentTypes.CAVE_GENERATION);
         this.forceBetaCaves = caveSettings.forceBetaCaves();
-        this.forceBetaRavines = caveSettings.forceBetaRavines();
-        this.useFixedCaves = caveSettings.useFixedCaves();
+        this.forceBetaRavines = caveSettings.forceBetaCanyons();
+        this.useFixedCaves = caveSettings.fixCaveBorders();
     }
 
     @Override

@@ -224,6 +224,12 @@ public class PerlinOctaveNoise {
         return total;
     }
 
+    public final double sampleXZ(double x, double z, double scaleX, double scaleZ, boolean wrapped) {
+        return wrapped
+            ? this.sampleXZWrapped(x, z, scaleX, scaleZ)
+            : this.sampleXZ(x, z, scaleX, scaleZ);
+    }
+
     /*
      * Release 3D noise sampler. This noise sampler does not overflow horizontally.
      */
@@ -277,5 +283,11 @@ public class PerlinOctaveNoise {
         }
 
         return total;
+    }
+
+    public final double sample(double x, double y, double z, double scaleX, double scaleY, double scaleZ, boolean wrapped) {
+        return wrapped
+            ? this.sampleWrapped(x, y, z, scaleX, scaleY, scaleZ)
+            : this.sample(x, y, z, scaleX, scaleY, scaleZ);
     }
 }

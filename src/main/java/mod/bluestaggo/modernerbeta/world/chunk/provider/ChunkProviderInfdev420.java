@@ -275,6 +275,8 @@ public class ChunkProviderInfdev420 extends ChunkProviderNoise {
         double baseSize = this.noiseScale.baseSize();
         double heightStretch = this.noiseScale.stretchY();
 
+        boolean wrapped = !this.noiseScale.farlands();
+
         for (int y = 0; y < primaryBuffer.length; ++y) {
             int noiseY = y + this.noiseMinY;
             
@@ -287,7 +289,8 @@ public class ChunkProviderInfdev420 extends ChunkProviderNoise {
                 noiseX, noiseY, noiseZ,
                 coordinateScale / mainNoiseScaleX, 
                 heightScale / mainNoiseScaleY, 
-                coordinateScale / mainNoiseScaleZ
+                coordinateScale / mainNoiseScaleZ,
+                wrapped
             ) / 10D + 1.0D) / 2D;
             
             if (mainNoise < 0.0D) {
@@ -295,7 +298,8 @@ public class ChunkProviderInfdev420 extends ChunkProviderNoise {
                     noiseX, noiseY, noiseZ,
                     coordinateScale, 
                     heightScale, 
-                    coordinateScale
+                    coordinateScale,
+                    wrapped
                 ) / lowerLimitScale;
                 
             } else if (mainNoise > 1.0D) {
@@ -303,7 +307,8 @@ public class ChunkProviderInfdev420 extends ChunkProviderNoise {
                     noiseX, noiseY, noiseZ,
                     coordinateScale, 
                     heightScale, 
-                    coordinateScale
+                    coordinateScale,
+                    wrapped
                 ) / upperLimitScale;
                 
             } else {
@@ -311,14 +316,16 @@ public class ChunkProviderInfdev420 extends ChunkProviderNoise {
                     noiseX, noiseY, noiseZ,
                     coordinateScale, 
                     heightScale, 
-                    coordinateScale
+                    coordinateScale,
+                    wrapped
                 ) / lowerLimitScale;
                 
                 double maxLimitNoise = this.maxLimitOctaveNoise.sample(
                     noiseX, noiseY, noiseZ,
                     coordinateScale, 
                     heightScale, 
-                    coordinateScale
+                    coordinateScale,
+                    wrapped
                 ) / upperLimitScale;
                 
                 density = minLimitNoise + (maxLimitNoise - minLimitNoise) * mainNoise;

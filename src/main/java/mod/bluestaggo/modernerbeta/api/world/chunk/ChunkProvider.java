@@ -82,7 +82,7 @@ public abstract class ChunkProvider {
             .toList();
         
         this.surfaceBuilder = new SurfaceBuilder(this.chunkGenerator.getBiomeSource());
-        this.skipCarvers = !this.chunkSettings.getOrDefault(SettingsComponentTypes.CAVE_GENERATION).useCaves();
+        this.skipCarvers = !this.chunkSettings.getOrDefault(SettingsComponentTypes.CAVE_GENERATION).useCarvers();
     }
     
     /**

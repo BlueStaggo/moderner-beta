@@ -15,7 +15,8 @@ public record NoiseScale(
     float mainNoiseY,
     float mainNoiseZ,
     float baseSize,
-    float stretchY
+    float stretchY,
+    boolean farlands
 ) {
     public static final Codec<NoiseScale> CODEC = RecordCodecBuilder.create(
         instance -> instance.group(
@@ -29,8 +30,24 @@ public record NoiseScale(
             Codec.FLOAT.fieldOf("mainNoiseY").orElse(160f).forGetter(NoiseScale::mainNoiseY),
             Codec.FLOAT.fieldOf("mainNoiseZ").orElse(80f).forGetter(NoiseScale::mainNoiseZ),
             Codec.FLOAT.fieldOf("baseSize").orElse(8.5f).forGetter(NoiseScale::baseSize),
-            Codec.FLOAT.fieldOf("stretchY").orElse(12.0f).forGetter(NoiseScale::stretchY)
+            Codec.FLOAT.fieldOf("stretchY").orElse(12.0f).forGetter(NoiseScale::stretchY),
+            Codec.BOOL.fieldOf("farlands").orElse(true).forGetter(NoiseScale::farlands)
         ).apply(instance, NoiseScale::new)
     );
     public static final NoiseScale DEFAULT = CodecUtil.getDefaultByMap(CODEC);
+
+    public static final NoiseScale WITHOUT_FARLANDS = new NoiseScale(
+        684.412f,
+        684.412f,
+        512f,
+        512f,
+        200f,
+        200f,
+        80f,
+        160f,
+        80f,
+        8.5f,
+        12.0f,
+        false
+    );
 }

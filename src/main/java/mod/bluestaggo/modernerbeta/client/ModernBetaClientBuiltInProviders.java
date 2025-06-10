@@ -71,11 +71,11 @@ public class ModernBetaClientBuiltInProviders {
             (screen, options) -> {
                 addAll(
                     options,
-                    screen.booleanOption("useCaves"),
-                    screen.booleanOption("useFixedCaves"),
+                    screen.booleanOption("useCarvers"),
                     screen.booleanOption("useNoiseCaves"),
+                    screen.booleanOption("fixCaveBorders"),
                     screen.booleanOption("forceBetaCaves"),
-                    screen.booleanOption("forceBetaRavines")
+                    screen.booleanOption("forceBetaCanyons")
                 );
             }
         );
@@ -95,7 +95,8 @@ public class ModernBetaClientBuiltInProviders {
                     screen.floatRangeOption("height", 1.0f, 6000.0f),
                     screen.floatRangeOption("stretchY", 0.01f, 50.0f),
                     screen.floatRangeOption("upperLimit", 1.0f, 5000.0f),
-                    screen.floatRangeOption("lowerLimit", 1.0f, 5000.0f)
+                    screen.floatRangeOption("lowerLimit", 1.0f, 5000.0f),
+                    screen.booleanOption("farlands")
                 );
             }
         );
@@ -170,7 +171,7 @@ public class ModernBetaClientBuiltInProviders {
             (screen, options) -> {
                 addAll(
                     options,
-                    screen.booleanOption("useCaves"),
+                    screen.booleanOption("useCarvers"),
                     screen.booleanOption("use14aCaves"),
                     screen.intRangeOption("rarity", 1024, 40960, 1024),
                     screen.floatRangeOption("radius", 0.01f, 5.0f),

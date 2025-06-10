@@ -252,7 +252,9 @@ public class ChunkProviderEarlyRelease extends ChunkProviderForcedHeight {
         double baseSize = this.noiseScale.baseSize();
         double heightStretch = this.noiseScale.stretchY();
 
-        double depth = this.depthOctaveNoise.sampleXZWrapped(noiseX, noiseZ, depthNoiseScaleX, depthNoiseScaleZ);
+        boolean wrapped = !this.noiseScale.farlands();
+
+        double depth = this.depthOctaveNoise.sampleXZ(noiseX, noiseZ, depthNoiseScaleX, depthNoiseScaleZ, wrapped);
 
         HeightConfig heightConfig = this.getHeightConfigAt(noiseX, noiseZ);
 
@@ -292,42 +294,47 @@ public class ChunkProviderEarlyRelease extends ChunkProviderForcedHeight {
             
             double densityOffset = this.getOffset(noiseY, heightStretch, depth, heightConfig.scale());
                        
-            double mainNoise = (this.mainOctaveNoise.sampleWrapped(
+            double mainNoise = (this.mainOctaveNoise.sample(
                 noiseX, noiseY, noiseZ,
                 coordinateScale / mainNoiseScaleX, 
                 heightScale / mainNoiseScaleY, 
-                coordinateScale / mainNoiseScaleZ
+                coordinateScale / mainNoiseScaleZ,
+                wrapped
             ) / 10D + 1.0D) / 2D;
             
             if (mainNoise < 0.0D) {
-                density = this.minLimitOctaveNoise.sampleWrapped(
+                density = this.minLimitOctaveNoise.sample(
                     noiseX, noiseY, noiseZ,
                     coordinateScale, 
                     heightScale, 
-                    coordinateScale
+                    coordinateScale,
+                    wrapped
                 ) / lowerLimitScale;
                 
             } else if (mainNoise > 1.0D) {
-                density = this.maxLimitOctaveNoise.sampleWrapped(
+                density = this.maxLimitOctaveNoise.sample(
                     noiseX, noiseY, noiseZ,
                     coordinateScale, 
                     heightScale, 
-                    coordinateScale
+                    coordinateScale,
+                    wrapped
                 ) / upperLimitScale;
                 
             } else {
-                double minLimitNoise = this.minLimitOctaveNoise.sampleWrapped(
+                double minLimitNoise = this.minLimitOctaveNoise.sample(
                     noiseX, noiseY, noiseZ,
                     coordinateScale, 
                     heightScale, 
-                    coordinateScale
+                    coordinateScale,
+                    wrapped
                 ) / lowerLimitScale;
                 
-                double maxLimitNoise = this.maxLimitOctaveNoise.sampleWrapped(
+                double maxLimitNoise = this.maxLimitOctaveNoise.sample(
                     noiseX, noiseY, noiseZ,
                     coordinateScale, 
                     heightScale, 
-                    coordinateScale
+                    coordinateScale,
+                    wrapped
                 ) / upperLimitScale;
                 
                 density = minLimitNoise + (maxLimitNoise - minLimitNoise) * mainNoise;

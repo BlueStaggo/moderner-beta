@@ -185,7 +185,8 @@ public final class ModernBetaSettingsPresets {
                     160f,
                     80f,
                     8.5f,
-                    12.0f
+                    12.0f,
+                    true
                 ))
                 .addDefault(USE_SURFACE_RULES, SEA_LEVEL_OFFSET, CAVE_GENERATION, NOISE_SLIDE)
                 .build(),
@@ -210,7 +211,8 @@ public final class ModernBetaSettingsPresets {
                     160f,
                     80f,
                     8.5f,
-                    12.0f
+                    12.0f,
+                    true
                 ))
                 .add(NOISE_SLIDE, new NoiseSlide(
                     -30,
@@ -244,7 +246,8 @@ public final class ModernBetaSettingsPresets {
                     400f,
                     80f,
                     8.5f,
-                    12.0f
+                    12.0f,
+                    true
                 ))
                 .add(NOISE_SLIDE, NoiseSlide.DISABLED)
                 .addDefault(USE_SURFACE_RULES, SEA_LEVEL_OFFSET)
@@ -271,7 +274,8 @@ public final class ModernBetaSettingsPresets {
                     160f,
                     80f,
                     8.5f,
-                    12.0f
+                    12.0f,
+                    true
                 ))
                 .add(NOISE_SLIDE, NoiseSlide.DISABLED)
                 .addDefault(USE_SURFACE_RULES, SEA_LEVEL_OFFSET)
@@ -298,7 +302,8 @@ public final class ModernBetaSettingsPresets {
                     160f,
                     80f,
                     8.5f,
-                    12.0f
+                    12.0f,
+                    true
                 ))
                 .add(NOISE_SLIDE, NoiseSlide.DISABLED)
                 .addDefault(USE_SURFACE_RULES, SEA_LEVEL_OFFSET)
@@ -511,7 +516,8 @@ public final class ModernBetaSettingsPresets {
                     1000.0f,
                     5000.0f,
                     base.baseSize(),
-                    8.0f
+                    8.0f,
+                    base.farlands()
                 ))
                 .replace(FORCED_BIOME_HEIGHT, base -> new ForcedBiomeHeight(
                     base.heightOverrides(),
@@ -540,7 +546,8 @@ public final class ModernBetaSettingsPresets {
                     base.mainNoiseY(),
                     base.mainNoiseZ(),
                     base.baseSize(),
-                    10.0f
+                    10.0f,
+                    base.farlands()
                 ))
                 .build(),
             initial.biomeSettings(),
@@ -563,7 +570,8 @@ public final class ModernBetaSettingsPresets {
                     1000.0f,
                     5000.0f,
                     base.baseSize(),
-                    5.0f
+                    5.0f,
+                    base.farlands()
                 ))
                 .replace(FORCED_BIOME_HEIGHT, base -> new ForcedBiomeHeight(
                     base.heightOverrides(),
@@ -592,7 +600,8 @@ public final class ModernBetaSettingsPresets {
                     745.5343f,
                     1183.464f,
                     modifyBaseSize ? 1.8758626f : base.baseSize(),
-                    1.7137525f
+                    1.7137525f,
+                    base.farlands()
                 ))
                 .replace(FORCED_BIOME_HEIGHT, base -> new ForcedBiomeHeight(
                     base.heightOverrides(),
@@ -622,7 +631,8 @@ public final class ModernBetaSettingsPresets {
                     3000.0f,
                     1000.0f,
                     base.baseSize(),
-                    10.0f
+                    10.0f,
+                    base.farlands()
                 ))
                 .build(),
             initial.biomeSettings(),
@@ -645,7 +655,8 @@ public final class ModernBetaSettingsPresets {
                     base.mainNoiseY(),
                     base.mainNoiseZ(),
                     base.baseSize(),
-                    8.0f
+                    8.0f,
+                    base.farlands()
                 ))
                 .build(),
             initial.biomeSettings(),
@@ -1321,6 +1332,7 @@ public final class ModernBetaSettingsPresets {
         return new ModernBetaSettingsPreset(
             DEFAULT_BETA.chunkSettings().extend()
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.EARLY_RELEASE.id)
+                .add(NOISE_SCALE, NoiseScale.WITHOUT_FARLANDS)
                 .add(CAVE_GENERATION, CaveGeneration.EARLY_RELEASE)
                 .add(FORCED_BIOME_HEIGHT, ForcedBiomeHeight.overridesOnly(Map.of(
                     ExtendedBiomeId.OCEAN, new HeightConfig(-1.0f, 0.5f)
@@ -1389,6 +1401,7 @@ public final class ModernBetaSettingsPresets {
         return new ModernBetaSettingsPreset(
             DEFAULT_BETA.chunkSettings().extend()
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.EARLY_RELEASE.id)
+                .add(NOISE_SCALE, NoiseScale.WITHOUT_FARLANDS)
                 .add(CAVE_GENERATION, CaveGeneration.EARLY_RELEASE)
                 .addDefault(FORCED_BIOME_HEIGHT)
                 .build(),
@@ -1403,6 +1416,7 @@ public final class ModernBetaSettingsPresets {
         return new ModernBetaSettingsPreset(
             DEFAULT_BETA.chunkSettings().extend()
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.EARLY_RELEASE.id)
+                .add(NOISE_SCALE, NoiseScale.WITHOUT_FARLANDS)
                 .add(CAVE_GENERATION, CaveGeneration.EARLY_RELEASE)
                 .addDefault(FORCED_BIOME_HEIGHT)
                 .build(),
@@ -1554,6 +1568,7 @@ public final class ModernBetaSettingsPresets {
         return new ModernBetaSettingsPreset(
             DEFAULT_BETA.chunkSettings().extend()
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.EARLY_RELEASE.id)
+                .add(NOISE_SCALE, NoiseScale.WITHOUT_FARLANDS)
                 .add(CAVE_GENERATION, CaveGeneration.EARLY_RELEASE)
                 .addDefault(FORCED_BIOME_HEIGHT)
                 .build(),
@@ -1568,6 +1583,7 @@ public final class ModernBetaSettingsPresets {
         return new ModernBetaSettingsPreset(
             DEFAULT_BETA.chunkSettings().extend()
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.EARLY_RELEASE.id)
+                .add(NOISE_SCALE, NoiseScale.WITHOUT_FARLANDS)
                 .add(CAVE_GENERATION, CaveGeneration.EARLY_RELEASE)
                 .addDefault(FORCED_BIOME_HEIGHT)
                 .build(),
@@ -1582,6 +1598,7 @@ public final class ModernBetaSettingsPresets {
         return new ModernBetaSettingsPreset(
             DEFAULT_BETA.chunkSettings().extend()
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.EARLY_RELEASE.id)
+                .add(NOISE_SCALE, NoiseScale.WITHOUT_FARLANDS)
                 .add(CAVE_GENERATION, CaveGeneration.EARLY_RELEASE)
                 .add(FORCED_BIOME_HEIGHT, ForcedBiomeHeight.overridesOnly(Map.of(
                     ExtendedBiomeId.of("minecraft:desert*hills"), new HeightConfig(0.3f, 0.8f),
@@ -2086,6 +2103,7 @@ public final class ModernBetaSettingsPresets {
         return new ModernBetaSettingsPreset(
             DEFAULT_BETA.chunkSettings().extend()
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.MAJOR_RELEASE.id)
+                .add(NOISE_SCALE, NoiseScale.WITHOUT_FARLANDS)
                 .add(USE_SURFACE_RULES, true)
                 .add(CAVE_GENERATION, CaveGeneration.MAJOR_RELEASE)
                 .add(FORCED_BIOME_HEIGHT, ForcedBiomeHeight.overridesOnly(HeightConfig.MAJOR_RELEASE_CONFIGS))
@@ -2101,6 +2119,7 @@ public final class ModernBetaSettingsPresets {
         return new ModernBetaSettingsPreset(
             DEFAULT_BETA.chunkSettings().extend()
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.MAJOR_RELEASE.id)
+                .add(NOISE_SCALE, NoiseScale.WITHOUT_FARLANDS)
                 .add(USE_SURFACE_RULES, true)
                 .add(CAVE_GENERATION, CaveGeneration.MAJOR_RELEASE)
                 .add(FORCED_BIOME_HEIGHT, ForcedBiomeHeight.overridesOnly(HeightConfig.MAJOR_RELEASE_CONFIGS))
@@ -2116,6 +2135,7 @@ public final class ModernBetaSettingsPresets {
         return new ModernBetaSettingsPreset(
             DEFAULT_BETA.chunkSettings().extend()
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.MAJOR_RELEASE.id)
+                .add(NOISE_SCALE, NoiseScale.WITHOUT_FARLANDS)
                 .add(USE_SURFACE_RULES, true)
                 .add(CAVE_GENERATION, CaveGeneration.MAJOR_RELEASE)
                 .add(FORCED_BIOME_HEIGHT, ForcedBiomeHeight.overridesOnly(HeightConfig.MAJOR_RELEASE_CONFIGS))
@@ -2170,6 +2190,7 @@ public final class ModernBetaSettingsPresets {
         return new ModernBetaSettingsPreset(
             DEFAULT_BETA.chunkSettings().extend()
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.EARLY_RELEASE.id)
+                .add(NOISE_SCALE, NoiseScale.WITHOUT_FARLANDS)
                 .add(USE_SURFACE_RULES, true)
                 .add(CAVE_GENERATION, CaveGeneration.EARLY_RELEASE)
                 .add(FORCED_BIOME_HEIGHT, ForcedBiomeHeight.overridesOnly(

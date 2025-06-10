@@ -282,7 +282,9 @@ public class ChunkProviderInfdev611 extends ChunkProviderNoise {
 
         double scale = this.scaleOctaveNoise.sample(noiseX, 0, noiseZ, 1.0D, 0.0, 1.0);
         double depth = this.depthOctaveNoise.sample(noiseX, 0, noiseZ, depthNoiseScaleX, 0.0, depthNoiseScaleZ);
-        
+
+        boolean wrapped = !this.noiseScale.farlands();
+
         scale = (scale + 256D) / 512D;
         
         if (scale > 1.0D) {
@@ -331,7 +333,8 @@ public class ChunkProviderInfdev611 extends ChunkProviderNoise {
                 noiseX, noiseY, noiseZ,
                 coordinateScale / mainNoiseScaleX, 
                 heightScale / mainNoiseScaleY, 
-                coordinateScale / mainNoiseScaleZ
+                coordinateScale / mainNoiseScaleZ,
+                wrapped
             ) / 10D + 1.0D) / 2D;
             
             if (mainNoise < 0.0D) {
@@ -339,7 +342,8 @@ public class ChunkProviderInfdev611 extends ChunkProviderNoise {
                     noiseX, noiseY, noiseZ,
                     coordinateScale, 
                     heightScale, 
-                    coordinateScale
+                    coordinateScale,
+                    wrapped
                 ) / lowerLimitScale;
                 
             } else if (mainNoise > 1.0D) {
@@ -347,7 +351,8 @@ public class ChunkProviderInfdev611 extends ChunkProviderNoise {
                     noiseX, noiseY, noiseZ,
                     coordinateScale, 
                     heightScale, 
-                    coordinateScale
+                    coordinateScale,
+                    wrapped
                 ) / upperLimitScale;
                 
             } else {
@@ -355,14 +360,16 @@ public class ChunkProviderInfdev611 extends ChunkProviderNoise {
                     noiseX, noiseY, noiseZ,
                     coordinateScale, 
                     heightScale, 
-                    coordinateScale
+                    coordinateScale,
+                    wrapped
                 ) / lowerLimitScale;
                 
                 double maxLimitNoise = this.maxLimitOctaveNoise.sample(
                     noiseX, noiseY, noiseZ,
                     coordinateScale, 
                     heightScale, 
-                    coordinateScale
+                    coordinateScale,
+                    wrapped
                 ) / upperLimitScale;
                 
                 density = minLimitNoise + (maxLimitNoise - minLimitNoise) * mainNoise;

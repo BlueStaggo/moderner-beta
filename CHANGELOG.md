@@ -44,14 +44,14 @@ A major number change means a big update. For this update, significant parts of 
 - Major release worlds can now be generated without surface rules.
 - Removed carver seed parity with beta worlds as it resulted in identical caves appearing above each other. The RNG used for carvers now matches modern vanilla world generation.
 - (1.21+) Replaced use of `@Redirect` mixins with `@WrapOperation` mixins.
-- (1.21 only) Bumped NeoForge to 21.0.110-beta to fix crashes when entering the mod config screen.
+- (1.21 only) Mod is now built using NeoForge to 21.1.173 to fix crashes when entering the mod config screen on NeoForge 21.0.110-beta or newer.
 
 ## Removals
 - Removed fixed seed options, as it has been made redundant by the addition of the networking code for biome provider settings and world seed.
 - Removed biome tags relating to fractal biome generation (this does not include height config tags).
 
 ## Fixes
-- Fixed Beta water colours not working on NeoForge.
+- Fixed Beta water colours not working on Forge/NeoForge.
 - Fixed Mangrove Leaves not having Beta leaf colouring.
 - Fixed Bush, Pink Petal and Wildflower blocks not having Beta grass colouring.
 - Fixed Tall Grass and Large Fern blocks not having consistent colouring between the two halves.

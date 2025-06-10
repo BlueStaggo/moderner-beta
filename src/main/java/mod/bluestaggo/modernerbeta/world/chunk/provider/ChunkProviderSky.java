@@ -163,7 +163,7 @@ public class ChunkProviderSky extends ChunkProviderNoise {
                 int z = startZ + localZ;
                 int surfaceTopY = heightmapChunk != null ?
                     heightmapChunk.getHeight(x, z, ChunkHeightmap.Type.SURFACE_FLOOR) :
-                    chunk.getHeightmap(Heightmap.Type.WORLD_SURFACE_WG).get(localX, localZ) - 1;
+                    chunk.getHeightmap(Heightmap.Type.OCEAN_FLOOR_WG).get(localX, localZ) - 1;
 
                 int surfaceDepth = (int) (surfaceNoise[localZ + localX * 16] / 3D + 3D + rand.nextDouble() * 0.25D);
 

@@ -226,7 +226,7 @@ public class ChunkProviderAlpha extends ChunkProviderNoise {
                 int z = startZ + localZ;
                 int surfaceTopY = heightmapChunk != null ?
                     heightmapChunk.getHeight(x, z, ChunkHeightmap.Type.SURFACE_FLOOR) :
-                    chunk.getHeightmap(Heightmap.Type.WORLD_SURFACE_WG).get(localX, localZ) - 1;
+                    chunk.getHeightmap(Heightmap.Type.OCEAN_FLOOR_WG).get(localX, localZ) - 1;
 
                 boolean genSandBeach = sandNoise[localZ + localX * 16] + rand.nextDouble() * 0.2D > 0.0D;
                 boolean genGravelBeach = gravelNoise[localZ + localX * 16] + rand.nextDouble() * 0.2D > 3D;

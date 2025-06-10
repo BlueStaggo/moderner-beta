@@ -199,7 +199,7 @@ public class ChunkProviderInfdev415 extends ChunkProviderNoise {
                 int z = startZ + localZ;
                 int surfaceTopY = heightmapChunk != null ?
                     heightmapChunk.getHeight(x, z, ChunkHeightmap.Type.SURFACE_FLOOR) :
-                    chunk.getHeightmap(Heightmap.Type.WORLD_SURFACE_WG).get(localX, localZ) - 1;
+                    chunk.getHeightmap(Heightmap.Type.OCEAN_FLOOR_WG).get(localX, localZ) - 1;
 
                 boolean genSandBeach = this.beachOctaveNoise.sample(
                     x * scale,

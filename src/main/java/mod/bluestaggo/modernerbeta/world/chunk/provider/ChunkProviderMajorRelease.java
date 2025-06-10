@@ -205,7 +205,7 @@ public class ChunkProviderMajorRelease extends ChunkProviderForcedHeight {
                 int z = startZ + localZ;
                 int surfaceTopY = heightmapChunk != null ?
                     heightmapChunk.getHeight(x, z, ChunkHeightmap.Type.SURFACE_FLOOR) :
-                    chunk.getHeightmap(Heightmap.Type.WORLD_SURFACE_WG).get(localX, localZ) - 1;
+                    chunk.getHeightmap(Heightmap.Type.OCEAN_FLOOR_WG).get(localX, localZ) - 1;
                 int surfaceDepth = (int)
                     (this.surfaceOctaveNoise.sample((chunkX * 16 + localX) * scale * 2D, (chunkZ * 16 + localZ) * scale * 2D, 1.5D, 1.0D)
                     / 3D + 3D + rand.nextDouble() * 0.25D);

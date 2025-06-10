@@ -23,7 +23,10 @@ import net.minecraft.registry.*;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.math.random.CheckedRandom;
+import net.minecraft.util.math.random.ChunkRandom;
 import net.minecraft.util.math.random.LocalRandom;
+import net.minecraft.util.math.random.RandomSeed;
 import net.minecraft.world.ChunkRegion;
 import net.minecraft.world.HeightLimitView;
 import net.minecraft.world.Heightmap;
@@ -183,11 +186,8 @@ public class ModernBetaChunkGenerator extends NoiseChunkGenerator {
             //? if <1.21.2
             /*carverStep*/
         );
-        
-        LocalRandom random = new LocalRandom(seed);
-        long l = (random.nextLong() / 2L) * 2L + 1L;
-        long l1 = (random.nextLong() / 2L) * 2L + 1L;
 
+        ChunkRandom random = new ChunkRandom(new CheckedRandom(RandomSeed.getSeed()));
         for (int chunkX = mainChunkX - 8; chunkX <= mainChunkX + 8; ++chunkX) {
             for (int chunkZ = mainChunkZ - 8; chunkZ <= mainChunkZ + 8; ++chunkZ) {
                 ChunkPos carverPos = new ChunkPos(chunkX, chunkZ);
@@ -202,9 +202,10 @@ public class ModernBetaChunkGenerator extends NoiseChunkGenerator {
                     /*carverStep*/
                 );
 
+                int l = 0;
                 for(RegistryEntry<ConfiguredCarver<?>> carverEntry : carverList) {
                     ConfiguredCarver<?> configuredCarver = carverEntry.value();
-                    random.setSeed((long) chunkX * l + (long) chunkZ * l1 ^ seed);
+                    random.setCarverSeed(seed + (long) l, chunkX, chunkZ);
 
                     if (this.forceBetaCaves || this.forceBetaRavines) {
                         RegistryKey<ConfiguredCarver<?>> carverKey = carverEntry.getKey().orElse(null);
@@ -234,6 +235,7 @@ public class ModernBetaChunkGenerator extends NoiseChunkGenerator {
 
                         configuredCarver.carve(carverContext, chunk, biomeAccessWithSource::getBiome, random, aquiferSampler, carverPos, carvingMask);
                     }
+                    ++l;
                 }
             }
         }

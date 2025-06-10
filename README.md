@@ -11,7 +11,10 @@
     <hr/>
 </center>
 
-Moderner Beta is the successor to [b3spectacled](https://github.com/b3spectacled)'s [Modern Beta](https://github.com/b3spectacled/modern-beta-fabric). It originally started as a pull request for the original Modern Beta to add in world generation from Beta 1.8 to 1.6.4, however due to b3spectacled's inactivity it has become its own project. The mod is currently supported for 1.20.1, 1.21.1, 1.21.4, 1.21.5 and 1.21.6.
+Moderner Beta is the successor to [b3spectacled](https://github.com/b3spectacled)'s [Modern Beta](https://github.com/b3spectacled/modern-beta-fabric).
+It originally started as a pull request for the original Modern Beta to add in world generation from Beta 1.8 to 1.6.4,
+however due to b3spectacled's inactivity it has become its own project.
+The mod is currently supported for 1.20.1, 1.21.1, 1.21.4, 1.21.5 and 1.21.6.
 
 ## Features
 What Modern Beta offered:
@@ -21,10 +24,11 @@ What Modern Beta offered:
 What Moderner Beta offers:
 - Support for NeoForge in addition to Fabric
 - Graphical settings menu for simple options
-- World generation from Beta 1.8 up to Release 1.6.4 and near-accurate biome generation from 1.7 to 1.17.1
+- World generation from Beta 1.8 all the way up to Release 1.17.1 with accurate biome distribution
 - Additional world generation from Infdev 20100325, Classic 0.0.14a_08 and Beta 1.1
-- Fixed surface rules for Beta Vanilla and 1.12.2 presets
+- Re-introduced noise caves and surface rules
 - Extremely customizable biome fractal layer pipeline for Beta 1.8+ versions
+- A modular approach to configuration that gives greater control to addons
 
 ## Setup
 

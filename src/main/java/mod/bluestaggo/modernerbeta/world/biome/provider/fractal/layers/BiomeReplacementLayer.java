@@ -77,6 +77,11 @@ public class BiomeReplacementLayer extends SingleParentLayer {
 
     @Override
     protected void addPossibleBiomes(Set<ExtendedBiomeId> biomes) {
-        biomes.addAll(this.targets.keySet());
+        for (LayerTarget.Configured target : this.configuredTargets.values()) {
+            if (target instanceof LayerTarget.Configured.OfLayer) {
+                continue;
+            }
+            target.addPossibleBiomes(biomes);
+        }
     }
 }

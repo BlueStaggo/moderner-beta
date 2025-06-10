@@ -8,6 +8,7 @@ import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.LayerTarget;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.predicates.BiomePredicate;
 
 import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
 
 public class ConditionalOverlayLayer extends SingleParentLayer {
@@ -75,6 +76,16 @@ public class ConditionalOverlayLayer extends SingleParentLayer {
             this.otherwiseConfigured.asLayer().ifPresent(parents::add);
         }
         return parents.build();
+    }
+
+    @Override
+    protected void addPossibleBiomes(Set<ExtendedBiomeId> biomes) {
+        if (this.onMatchConfigured != null && !(this.onMatchConfigured instanceof LayerTarget.Configured.OfLayer)) {
+            this.onMatchConfigured.addPossibleBiomes(biomes);
+        }
+        if (this.otherwiseConfigured != null && !(this.otherwiseConfigured instanceof LayerTarget.Configured.OfLayer)) {
+            this.otherwiseConfigured.addPossibleBiomes(biomes);
+        }
     }
 
     @Override

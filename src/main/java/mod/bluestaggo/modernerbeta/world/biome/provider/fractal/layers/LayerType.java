@@ -23,7 +23,6 @@ public record LayerType<L extends Layer>(com.mojang.serialization.MapCodec<L> co
     public static LayerType<ProxyLayer> PROXY_LAYER;
     public static LayerType<PreSkipRandomLayer> PRE_SKIP_RANDOM;
     public static LayerType<RandomBiomeLayer> RANDOM_BIOME;
-    public static LayerType<SimpleBiomeReplacementLayer> SIMPLE_BIOME_REPLACEMENT;
     public static LayerType<SmoothLayer> SMOOTH;
     public static LayerType<StackedZoomLayer> STACKED_ZOOM;
     public static LayerType<SupplyRandomLayer> SUPPLY_RANDOM;
@@ -55,7 +54,6 @@ public record LayerType<L extends Layer>(com.mojang.serialization.MapCodec<L> co
         PREDICATE_OVERLAY = register("predicate_overlay", PredicateOverlayLayer.CODEC);
         PRE_SKIP_RANDOM = register("pre_skip_random", PreSkipRandomLayer.CODEC);
         RANDOM_BIOME = register("random_biome", RandomBiomeLayer.CODEC);
-        SIMPLE_BIOME_REPLACEMENT = register("simple_biome_replacement", SimpleBiomeReplacementLayer.CODEC);
         SMOOTH = register("smooth", SmoothLayer.CODEC);
         STACKED_ZOOM = register("stacked_zoom", StackedZoomLayer.CODEC);
         SUPPLY_RANDOM = register("supply_random", SupplyRandomLayer.CODEC);

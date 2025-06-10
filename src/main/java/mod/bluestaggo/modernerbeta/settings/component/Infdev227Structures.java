@@ -15,6 +15,4 @@ public record Infdev227Structures(
         ).apply(instance, Infdev227Structures::new)
     );
     public static final Infdev227Structures DEFAULT = CodecUtil.getDefaultByMap(CODEC);
-
-    public static final Infdev227Structures DISABLED = new Infdev227Structures(false, false);
 }

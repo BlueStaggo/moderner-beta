@@ -74,7 +74,7 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
         this.defaultBlock = generatorSettings.defaultBlock();
         this.defaultFluid = generatorSettings.defaultFluid();
 
-        Infdev227Structures structures = this.chunkSettings.getOrElse(SettingsComponentTypes.INFDEV_227_STRUCTURES, Infdev227Structures.DISABLED);
+        Infdev227Structures structures = this.chunkSettings.getOrDefault(SettingsComponentTypes.INFDEV_227_STRUCTURES);
         this.infdevUsePyramid = structures.brickPyramids();
         this.infdevUseWall = structures.obsidianWalls();
         

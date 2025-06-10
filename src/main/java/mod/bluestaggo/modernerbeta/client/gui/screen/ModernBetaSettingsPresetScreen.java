@@ -171,12 +171,18 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
             ModernBetaSettingsPresetScreen.this.updateSelectButton(entry instanceof PresetEntry);
         }
 
+        private static final int SCROLLBAR_X_OFFSET = 30;
         //? if >=1.20.5 {
         @Override
         protected int getScrollbarX() {
-            return super.getScrollbarX() + 30;
+            return super.getScrollbarX() + SCROLLBAR_X_OFFSET;
         }
-        //?}
+        //?} else {
+        /*@Override
+        protected int getScrollbarPositionX() {
+            return super.getScrollbarPositionX() + SCROLLBAR_X_OFFSET;
+        }
+        *///?}
 
         @Override
         public int getRowWidth() {

@@ -19,7 +19,6 @@ accessible field net/minecraft/world/gen/carver/CaveCarverConfig floorLevel Lnet
 
 accessible method net/minecraft/world/gen/stateprovider/SimpleBlockStateProvider <init>  (Lnet/minecraft/block/BlockState;)V
 accessible method net/minecraft/world/gen/chunk/ChunkNoiseSampler createMultiNoiseSampler (Lnet/minecraft/world/gen/noise/NoiseRouter;Ljava/util/List;)Lnet/minecraft/world/biome/source/util/MultiNoiseUtil$MultiNoiseSampler;
-accessible method net/minecraft/world/gen/surfacebuilder/MaterialRules$SequenceMaterial <init> (Ljava/util/List;)V
 
 accessible field net/minecraft/client/gui/widget/EditBoxWidget editBox Lnet/minecraft/client/gui/EditBox;
 

@@ -7,7 +7,6 @@ import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.LayerTarget;
 import net.minecraft.util.collection.Pool;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
@@ -38,7 +37,7 @@ public class WeightedPoolLayer extends Layer {
         this.configuredTargets = this.targets.transform(target -> target.configure(layerMap));
         //?} else {
         /*Pool.Builder<LayerTarget.Configured> poolBuilder = Pool.builder();
-        for (Weighted.Present<LayerTarget> entry : this.layers.getEntries()) {
+        for (net.minecraft.util.collection.Weighted.Present<LayerTarget> entry : this.targets.getEntries()) {
             poolBuilder.add(
                 VersionCompat.getWeightedValue(entry).configure(layerMap),
                 entry.getWeight().getValue()

@@ -10,7 +10,7 @@ public record Infdev227Structures(
 ) {
     public static final Codec<Infdev227Structures> CODEC = RecordCodecBuilder.create(
         instance -> instance.group(
-            Codec.BOOL.fieldOf("brickPyramids").orElse(true).forGetter(Infdev227Structures::brickPyramids),
+            Codec.BOOL.fieldOf("brickPyramids").orElse(false).forGetter(Infdev227Structures::brickPyramids),
             Codec.BOOL.fieldOf("obsidianWalls").orElse(false).forGetter(Infdev227Structures::obsidianWalls)
         ).apply(instance, Infdev227Structures::new)
     );

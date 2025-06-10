@@ -1753,19 +1753,20 @@ public final class ModernBetaSettingsPresets {
             biomeCategories.get("desert"),
             biomeCategories.get("windswept_hills"),
             biomeCategories.get("jungle"),
-            biomeCategories.get("badlands_all")
+            biomeCategories.get("badlands"),
+            biomeCategories.get("badlands_plateau")
         );
 
         BiomePredicate hillPredicate;
-//        hillPredicates.add(BiomePredicate.inSet(biomeCategories.get("badlands_plateau"))
-//            .and(BiomePredicate.neighborsMatch(
-//                BiomePredicate.inSet(biomeCategories.get("badlands_all")), 3)));
 
         Set<ExtendedBiomeId> hillTargetBiomeSet = hillyCategories.stream()
             .flatMap(Set::stream)
             .collect(Collectors.toSet());
         hillPredicate = BiomePredicate.inSet(hillTargetBiomeSet)
             .and(BiomePredicate.neighborsMatch(hillyCategories, 3));
+        hillPredicate = hillPredicate.or(BiomePredicate.inSet(biomeCategories.get("badlands_plateau"))
+            .and(BiomePredicate.neighborsMatch(
+                BiomePredicate.inSet(biomeCategories.get("badlands_all")), 3)));
 
         List<Layer> layers = Stream.of(
             new InitLandLayer("land", 1),

@@ -29,8 +29,7 @@ public abstract class Layer {
     private transient ThreadLocal<LayerRandom> random = ThreadLocal.withInitial(() -> new LayerRandom(0));
     private transient int initialSkip;
 
-    private transient final ThreadLocal<Long2ObjectLinkedOpenHashMap<ExtendedBiomeId>> cache
-        = ThreadLocal.withInitial(() -> new Long2ObjectLinkedOpenHashMap<>(CACHE_CAPACITY));
+    private transient ThreadLocal<Long2ObjectLinkedOpenHashMap<ExtendedBiomeId>> cache = createCache();
 
     protected static <L extends Layer> Products.P2<
         RecordCodecBuilder.Mu<L>,
@@ -76,6 +75,7 @@ public abstract class Layer {
         for (Layer parent : this.getParents()) {
             parent.init(worldSeed);
         }
+        this.cache = createCache();
 
         this.saltedSeed = this.seed;
         for (int i = 0; i < 3; i++) {
@@ -95,6 +95,8 @@ public abstract class Layer {
         for (Layer parent : this.getParents()) {
             parent.initUnsalted();
         }
+        this.cache = createCache();
+
         this.saltedSeed = 0;
         this.random = ThreadLocal.withInitial(() -> new LayerRandom(0));
     }
@@ -196,5 +198,9 @@ public abstract class Layer {
 
     public static boolean neighborsContain(ExtendedBiomeId[] neighbors, ExtendedBiomeId i) {
         return neighbors[0].equals(i) || neighbors[1].equals(i) || neighbors[2].equals(i) || neighbors[3].equals(i);
+    }
+
+    private static ThreadLocal<Long2ObjectLinkedOpenHashMap<ExtendedBiomeId>> createCache() {
+        return ThreadLocal.withInitial(() -> new Long2ObjectLinkedOpenHashMap<>(CACHE_CAPACITY));
     }
 }

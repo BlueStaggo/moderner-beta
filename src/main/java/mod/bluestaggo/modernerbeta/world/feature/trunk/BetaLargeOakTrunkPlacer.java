@@ -2,7 +2,6 @@ package mod.bluestaggo.modernerbeta.world.feature.trunk;
 
 import com.google.common.collect.Lists;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.world.feature.ModernBetaTrunkPlacers;
 import net.minecraft.block.BlockState;
@@ -22,7 +21,7 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 
 public class BetaLargeOakTrunkPlacer extends TrunkPlacer {
-    public static final MapCodec<BetaLargeOakTrunkPlacer> CODEC = RecordCodecBuilder.mapCodec(instance -> fillTrunkPlacerFields(instance)
+    public static final com.mojang.serialization.MapCodec<BetaLargeOakTrunkPlacer> CODEC = RecordCodecBuilder.mapCodec(instance -> fillTrunkPlacerFields(instance)
             .and(Codec.BOOL.fieldOf("rotate_logs").forGetter(p -> p.rotateLogs))
             .apply(instance, BetaLargeOakTrunkPlacer::new));
 

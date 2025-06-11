@@ -9,7 +9,6 @@ import net.minecraft.world.gen.feature.OreFeatureConfig;
 public class ModernBetaFeatures {
     private static IRegistryHandler<Feature<?>> registryHandler;
     public static BetaFreezeTopLayerFeature FREEZE_TOP_LAYER;
-    public static BetaFancyOakFeature OLD_FANCY_OAK;
     public static BetaOreClayFeature ORE_CLAY;
     public static CaveInfdev325Feature CAVE_INFDEV_325;
 
@@ -22,10 +21,6 @@ public class ModernBetaFeatures {
         registryHandler = (IRegistryHandler<Feature<?>>) handler;
         FREEZE_TOP_LAYER = register(
                 ModernBetaFeatureTags.FREEZE_TOP_LAYER, new BetaFreezeTopLayerFeature(DefaultFeatureConfig.CODEC)
-        );
-
-        OLD_FANCY_OAK = register(
-                ModernBetaFeatureTags.FANCY_OAK, new BetaFancyOakFeature(DefaultFeatureConfig.CODEC)
         );
 
         ORE_CLAY = register(

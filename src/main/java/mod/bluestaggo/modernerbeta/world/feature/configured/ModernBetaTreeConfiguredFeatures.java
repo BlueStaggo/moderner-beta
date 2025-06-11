@@ -1,7 +1,6 @@
 package mod.bluestaggo.modernerbeta.world.feature.configured;
 
 import mod.bluestaggo.modernerbeta.world.feature.ModernBetaFeatureTags;
-import mod.bluestaggo.modernerbeta.world.feature.ModernBetaFeatures;
 import mod.bluestaggo.modernerbeta.world.feature.foliage.BetaLargeOakFoliagePlacer;
 import mod.bluestaggo.modernerbeta.world.feature.foliage.Oak14a08FoliagePlacer;
 import mod.bluestaggo.modernerbeta.world.feature.trunk.BetaLargeOakTrunkPlacer;
@@ -11,7 +10,6 @@ import net.minecraft.registry.RegistryKey;
 import net.minecraft.util.math.intprovider.ConstantIntProvider;
 import net.minecraft.world.gen.feature.*;
 import net.minecraft.world.gen.feature.size.TwoLayersFeatureSize;
-import net.minecraft.world.gen.foliage.LargeOakFoliagePlacer;
 import net.minecraft.world.gen.stateprovider.BlockStateProvider;
 import net.minecraft.world.gen.treedecorator.BeehiveTreeDecorator;
 import net.minecraft.world.gen.trunk.StraightTrunkPlacer;
@@ -27,7 +25,7 @@ public class ModernBetaTreeConfiguredFeatures {
     @SuppressWarnings("unchecked")
     public static void bootstrap(Registerable<?> registerable) {
         Registerable<ConfiguredFeature<?, ?>> featureRegisterable = (Registerable<ConfiguredFeature<?, ?>>)registerable;
-        
+
         ConfiguredFeatures.register(featureRegisterable, FANCY_OAK, Feature.TREE, getOldFancyTreeConfig());
         ConfiguredFeatures.register(featureRegisterable, OAK_14A_08, Feature.TREE, getOak14a08Config(false));
         ConfiguredFeatures.register(featureRegisterable, OAK_14A_08_BEES_0002, Feature.TREE, getOak14a08Config(true));
@@ -55,7 +53,7 @@ public class ModernBetaTreeConfiguredFeatures {
                 new BetaLargeOakTrunkPlacer(5, 11, 0, false),
                 BlockStateProvider.of(Blocks.OAK_LEAVES),
                 new BetaLargeOakFoliagePlacer(ConstantIntProvider.create(2), ConstantIntProvider.create(4), 4),
-                new TwoLayersFeatureSize(0, 0, 0, OptionalInt.of(4))
+                new TwoLayersFeatureSize(0, 0, 0, OptionalInt.of(8))
         );
 
         return builder.build();

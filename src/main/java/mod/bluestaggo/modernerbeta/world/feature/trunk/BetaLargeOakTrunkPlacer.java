@@ -62,7 +62,7 @@ public class BetaLargeOakTrunkPlacer extends TrunkPlacer {
         int treeRelY = foliageBaseY - basePos.getY();
 
         List<BranchPosition> list = Lists.newArrayList();
-        list.add(new BranchPosition(basePos.up(treeRelY), treeTopY));
+        list.add(new BranchPosition(basePos.withY(foliageBaseY), treeTopY));
 
         --foliageBaseY;
 
@@ -76,8 +76,8 @@ public class BetaLargeOakTrunkPlacer extends TrunkPlacer {
                     double randRadius = branchDensity * foliageDistance * (random.nextFloat() + BRANCH_LENGTH);
                     double randAngle = random.nextFloat() * 2.0F * Math.PI;
 
-                    int randX = (int) (randRadius * Math.sin(randAngle) + 0.5D);
-                    int randZ = (int) (randRadius * Math.cos(randAngle) + 0.5D);
+                    int randX = MathHelper.floor(randRadius * Math.sin(randAngle) + 0.5D);
+                    int randZ = MathHelper.floor(randRadius * Math.cos(randAngle) + 0.5D);
 
                     BlockPos startPos = basePos.add(randX, treeRelY - 1, randZ);
                     BlockPos endPos = startPos.up(foliageHeight);
@@ -131,7 +131,7 @@ public class BetaLargeOakTrunkPlacer extends TrunkPlacer {
         float zM = (float)startMinus.getZ() / longestSide;
 
         for (int i = 0; i <= longestSide; i++) {
-            BlockPos offset = startPos.add(MathHelper.floor(0.5F + i * xM), MathHelper.floor(0.5F + i * yM), MathHelper.floor(0.5F + i * zM));
+            BlockPos offset = startPos.add(MathHelper.floor(i * xM), MathHelper.floor(i * yM), MathHelper.floor(i * zM));
             if (make) {
                 this.getAndSetState(world, replacer, random, offset, config, state ->
                         rotateLogs ? state.withIfExists(PillarBlock.AXIS, this.getLogAxis(startPos, offset)) : state);

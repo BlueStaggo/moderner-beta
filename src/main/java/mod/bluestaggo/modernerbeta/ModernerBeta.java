@@ -21,6 +21,7 @@ import mod.bluestaggo.modernerbeta.world.carver.ModernBetaCarvers;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
 import mod.bluestaggo.modernerbeta.world.feature.ModernBetaFeatures;
 import mod.bluestaggo.modernerbeta.world.feature.ModernBetaFoliagePlacers;
+import mod.bluestaggo.modernerbeta.world.feature.ModernBetaTrunkPlacers;
 import mod.bluestaggo.modernerbeta.world.feature.placement.ModernBetaPlacementTypes;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
@@ -50,6 +51,7 @@ public class ModernerBeta {
 
     public static final List<Pair<Registry<?>, Consumer<IRegistryHandler<?>>>> REGISTRY_HANDLERS = List.of(
         new Pair<>(Registries.FOLIAGE_PLACER_TYPE, ModernBetaFoliagePlacers::register),
+        new Pair<>(Registries.TRUNK_PLACER_TYPE, ModernBetaTrunkPlacers::register),
         new Pair<>(Registries.PLACEMENT_MODIFIER_TYPE, ModernBetaPlacementTypes::register),
         new Pair<>(Registries.FEATURE, ModernBetaFeatures::register),
         new Pair<>(Registries.CARVER, ModernBetaCarvers::register),

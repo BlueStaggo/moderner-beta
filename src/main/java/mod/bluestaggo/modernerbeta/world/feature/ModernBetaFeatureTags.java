@@ -75,4 +75,7 @@ public class ModernBetaFeatureTags {
     public static final String TREES_CLASSIC_14A_08_BEES = "trees_classic_14a_08_bees";
 
     public static final String OAK_14A_08_FOLIAGE_PLACER = "oak_14a_08_foliage_placer";
+    public static final String BETA_LARGE_OAK_FOLIAGE_PLACER = "beta_large_oak_foliage_placer";
+
+    public static final String BETA_LARGE_OAK_TRUNK_PLACER = "beta_large_oak_trunk_placer";
 }

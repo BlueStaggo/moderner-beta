@@ -24,7 +24,8 @@
     "MixinServerWorld",
     "MixinBiome",
     "MixinWorld",
-    "AccessorDensityFunctions"
+    "AccessorDensityFunctions",
+    "AccessorTrunkPlacerType"
   ],
   "client": [
     "client.AccessorTextWidget",

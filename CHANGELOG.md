@@ -45,6 +45,7 @@ A major number change means a big update. For this update, significant parts of 
 - Major release worlds can now be generated without surface rules.
 - Removed carver seed parity with beta worlds as it resulted in identical caves appearing above each other. The RNG used for carvers now matches modern vanilla world generation.
 - The Drought preset no longer has gravel ocean beds.
+- The /locate command no longer identifies the location of injected biome including ocean biomes in beta worlds as well as cave biomes. Biome injectors heavily slowed down the biome location process.
 - (1.21+) Replaced use of `@Redirect` mixins with `@WrapOperation` mixins.
 - (1.21 only) Mod is now built using NeoForge 21.1.173 to fix crashes when entering the mod config screen on NeoForge 21.0.110-beta or newer.
 

@@ -133,7 +133,7 @@ public class ModernBetaBiomeSource extends BiomeSource {
         MultiNoiseUtil.MultiNoiseSampler noiseSampler,
         WorldView world
     ) {
-        if (this.chunkGenerator == null) {
+        if (this.chunkGenerator == null || true) {
             return super.locateBiome(
                 origin,
                 radius,
@@ -172,7 +172,7 @@ public class ModernBetaBiomeSource extends BiomeSource {
                 RegistryEntry<Biome> biome = this.chunkGenerator
                     .getBiomeInjector()
                     .getBiome(biomeX, biomeY, biomeZ, noiseSampler, BiomeInjectionStep.ALL);
-                
+
                 if (!biomeSet.contains(biome)) continue;
                 
                 return Pair.of(new BlockPos(x, y, z), biome);

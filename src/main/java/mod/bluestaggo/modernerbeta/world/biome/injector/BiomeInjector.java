@@ -149,11 +149,15 @@ public class BiomeInjector {
     }
     
     public RegistryEntry<Biome> getBiome(int biomeX, int biomeY, int biomeZ, MultiNoiseSampler noiseSampler, BiomeInjectionStep step) {
+        if (this.rulesAll.isEmpty()) {
+            return this.modernBetaBiomeSource.getBiome(biomeX, biomeY, biomeZ, noiseSampler);
+        }
+
         BiomeInjectionContext context = this.createContext(biomeX, biomeY, biomeZ);
 
         return this
             .getBiome(context, biomeX, biomeY, biomeZ, noiseSampler, step)
-            .orElse(this.modernBetaBiomeSource.getBiome(biomeX, biomeY, biomeZ, noiseSampler));
+            .orElseGet(() -> this.modernBetaBiomeSource.getBiome(biomeX, biomeY, biomeZ, noiseSampler));
     }
     
     public Optional<RegistryEntry<Biome>> getOptionalBiome(int biomeX, int biomeY, int biomeZ, MultiNoiseSampler noiseSampler, BiomeInjectionStep step) {

@@ -9,6 +9,7 @@ import mod.bluestaggo.modernerbeta.api.world.biome.climate.ClimateSamplerSky;
 import mod.bluestaggo.modernerbeta.api.world.biome.climate.Clime;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
+import mod.bluestaggo.modernerbeta.settings.component.ClimateDistribution;
 import mod.bluestaggo.modernerbeta.settings.component.ClimateScale;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkCache;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkClimate;
@@ -31,7 +32,8 @@ public class BiomeProviderBeta extends BiomeProvider implements ClimateSampler, 
     private final ClimateMap climateMap;
     private final BetaClimateSampler climateSampler;
     private final BetaClimateSamplerSky climateSamplerSky;
-    
+    private final ClimateDistribution distribution;
+
     public BiomeProviderBeta(ModernBetaSettings settings, RegistryEntryLookup<Biome> biomeRegistry, long seed) {
         super(settings, biomeRegistry, seed);
 
@@ -49,6 +51,8 @@ public class BiomeProviderBeta extends BiomeProvider implements ClimateSampler, 
             this.seed,
             climateScale.temp()
         );
+
+        this.distribution = settings.getOrDefault(SettingsComponentTypes.CLIMATE_DISTRIBUTION);
     }
 
     @Override
@@ -129,7 +133,12 @@ public class BiomeProviderBeta extends BiomeProvider implements ClimateSampler, 
     public boolean useWaterColor() {
         return ModernerBeta.CONFIG.useBetaWaterColor;
     }
-    
+
+    @Override
+    public ClimateDistribution getDistribution() {
+        return this.distribution;
+    }
+
     private static class BetaClimateSampler {
         private final SimplexOctaveNoise tempOctaveNoise;
         private final SimplexOctaveNoise rainOctaveNoise;
@@ -178,7 +187,7 @@ public class BiomeProviderBeta extends BiomeProvider implements ClimateSampler, 
             return new Clime(MathHelper.clamp(temp, 0.0, 1.0), MathHelper.clamp(rain, 0.0, 1.0));
         }
     }
-    
+
     private static class BetaClimateSamplerSky {
         private final SimplexOctaveNoise tempOctaveNoise;
         

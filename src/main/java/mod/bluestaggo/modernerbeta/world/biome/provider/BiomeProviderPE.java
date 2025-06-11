@@ -9,6 +9,7 @@ import mod.bluestaggo.modernerbeta.api.world.biome.climate.ClimateSamplerSky;
 import mod.bluestaggo.modernerbeta.api.world.biome.climate.Clime;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
+import mod.bluestaggo.modernerbeta.settings.component.ClimateDistribution;
 import mod.bluestaggo.modernerbeta.settings.component.ClimateScale;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkCache;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkClimate;
@@ -29,7 +30,8 @@ import java.util.stream.Collectors;
 public class BiomeProviderPE extends BiomeProvider implements ClimateSampler, ClimateSamplerSky, BiomeResolverBlock, BiomeResolverOcean {
     private final ClimateMap climateMap;
     private final PEClimateSampler climateSampler;
-    
+    private final ClimateDistribution distribution;
+
     public BiomeProviderPE(ModernBetaSettings settings, RegistryEntryLookup<Biome> biomeRegistry, long seed) {
         super(settings, biomeRegistry, seed);
 
@@ -43,6 +45,8 @@ public class BiomeProviderPE extends BiomeProvider implements ClimateSampler, Cl
             climateScale.rain(),
             climateScale.detail()
         );
+
+        this.distribution = settings.getOrDefault(SettingsComponentTypes.CLIMATE_DISTRIBUTION);
     }
     
     @Override
@@ -122,6 +126,11 @@ public class BiomeProviderPE extends BiomeProvider implements ClimateSampler, Cl
     @Override
     public boolean useWaterColor() {
         return ModernerBeta.CONFIG.usePEBetaWaterColor;
+    }
+
+    @Override
+    public ClimateDistribution getDistribution() {
+        return this.distribution;
     }
     
     private static class PEClimateSampler {

@@ -79,7 +79,7 @@ public class BetaLargeOakTrunkPlacer extends TrunkPlacer {
                     int randX = (int) (randRadius * Math.sin(randAngle) + 0.5D);
                     int randZ = (int) (randRadius * Math.cos(randAngle) + 0.5D);
 
-                    BlockPos startPos = basePos.add(randX, treeRelY, randZ);
+                    BlockPos startPos = basePos.add(randX, treeRelY - 1, randZ);
                     BlockPos endPos = startPos.up(foliageHeight);
 
                     if (this.makeOrCheckBranch(world, replacer, random, startPos, endPos, false, config)) {

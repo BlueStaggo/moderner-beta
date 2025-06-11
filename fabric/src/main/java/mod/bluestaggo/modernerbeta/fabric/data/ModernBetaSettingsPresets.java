@@ -7,6 +7,7 @@ import mod.bluestaggo.modernerbeta.api.world.biome.climate.TemperatureHeightScal
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistryKeys;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
+import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.settings.component.*;
 import mod.bluestaggo.modernerbeta.world.biome.HeightConfig;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomes;
@@ -37,6 +38,9 @@ public final class ModernBetaSettingsPresets {
     public static final ModernBetaSettingsPreset DEFAULT_MAJOR = preset1122(0);
 
     public static void bootstrap(Registerable<ModernBetaSettingsPreset> presetRegisterable) {
+        Identifier betaId = ModernerBeta.createId("beta");
+        Identifier majorId = ModernerBeta.createId("release_1_12_2");
+
         presetRegisterable.register(keyOf("beta"), DEFAULT_BETA);
         presetRegisterable.register(keyOf("beta_1_1_02"), presetBeta(true));
         presetRegisterable.register(keyOf("alpha"), presetAlpha());
@@ -59,13 +63,13 @@ public final class ModernBetaSettingsPresets {
         presetRegisterable.register(keyOf("release_1_12_2"), DEFAULT_MAJOR);
         presetRegisterable.register(keyOf("release_1_17_1"), preset1171(0));
         presetRegisterable.register(keyOf("beta_skylands"), presetBetaSkylands());
-        presetRegisterable.register(keyOf("beta_isles"), presetIsles(DEFAULT_BETA));
-        presetRegisterable.register(keyOf("beta_water_world"), presetWaterWorld(DEFAULT_BETA));
-        presetRegisterable.register(keyOf("beta_isle_land"), presetIsleLand(DEFAULT_BETA));
-        presetRegisterable.register(keyOf("beta_cave_delight"), presetCaveDelight(DEFAULT_BETA));
-        presetRegisterable.register(keyOf("beta_mountain_madness"), presetMountainMadness(DEFAULT_BETA, false));
-        presetRegisterable.register(keyOf("beta_drought"), presetDrought(DEFAULT_BETA));
-        presetRegisterable.register(keyOf("beta_cave_chaos"), presetCaveChaos(DEFAULT_BETA));
+        presetRegisterable.register(keyOf("beta_isles"), presetIsles(DEFAULT_BETA, betaId));
+        presetRegisterable.register(keyOf("beta_water_world"), presetWaterWorld(DEFAULT_BETA, betaId));
+        presetRegisterable.register(keyOf("beta_isle_land"), presetIsleLand(DEFAULT_BETA, betaId));
+        presetRegisterable.register(keyOf("beta_cave_delight"), presetCaveDelight(DEFAULT_BETA, betaId));
+        presetRegisterable.register(keyOf("beta_mountain_madness"), presetMountainMadness(DEFAULT_BETA, betaId, false));
+        presetRegisterable.register(keyOf("beta_drought"), presetDrought(DEFAULT_BETA, betaId));
+        presetRegisterable.register(keyOf("beta_cave_chaos"), presetCaveChaos(DEFAULT_BETA, betaId));
         presetRegisterable.register(keyOf("beta_large_biomes"), presetBetaLargeBiomes());
         presetRegisterable.register(keyOf("beta_xbox_legacy"), presetBetaXboxLegacy());
         presetRegisterable.register(keyOf("beta_survival_island"), presetBetaSurvivalIsland());
@@ -76,12 +80,12 @@ public final class ModernBetaSettingsPresets {
         presetRegisterable.register(keyOf("indev_paradise"), presetIndevParadise());
         presetRegisterable.register(keyOf("indev_woods"), presetIndevWoods());
         presetRegisterable.register(keyOf("indev_hell"), presetIndevHell());
-        presetRegisterable.register(keyOf("water_world"), presetWaterWorld(DEFAULT_MAJOR));
-        presetRegisterable.register(keyOf("isle_land"), presetIsleLand(DEFAULT_MAJOR));
-        presetRegisterable.register(keyOf("cave_delight"), presetCaveDelight(DEFAULT_MAJOR));
-        presetRegisterable.register(keyOf("mountain_madness"), presetMountainMadness(DEFAULT_MAJOR, true));
-        presetRegisterable.register(keyOf("drought"), presetDrought(DEFAULT_MAJOR));
-        presetRegisterable.register(keyOf("cave_chaos"), presetCaveChaos(DEFAULT_MAJOR));
+        presetRegisterable.register(keyOf("water_world"), presetWaterWorld(DEFAULT_MAJOR, majorId));
+        presetRegisterable.register(keyOf("isle_land"), presetIsleLand(DEFAULT_MAJOR, majorId));
+        presetRegisterable.register(keyOf("cave_delight"), presetCaveDelight(DEFAULT_MAJOR, majorId));
+        presetRegisterable.register(keyOf("mountain_madness"), presetMountainMadness(DEFAULT_MAJOR, majorId, true));
+        presetRegisterable.register(keyOf("drought"), presetDrought(DEFAULT_MAJOR, majorId));
+        presetRegisterable.register(keyOf("cave_chaos"), presetCaveChaos(DEFAULT_MAJOR, majorId));
         presetRegisterable.register(keyOf("beta_1_8_1_large_biomes"), presetBeta181(2));
         presetRegisterable.register(keyOf("beta_1_9_pre_3_large_biomes"), presetBeta19Pre3(2));
         presetRegisterable.register(keyOf("release_1_0_0_large_biomes"), preset100(2));
@@ -491,105 +495,137 @@ public final class ModernBetaSettingsPresets {
         );
     }
     
-    private static ModernBetaSettingsPreset presetIsles(ModernBetaSettingsPreset initial) {
+    private static ModernBetaSettingsPreset presetIsles(ModernBetaSettingsPreset initialSettings, Identifier initialId) {
         return new ModernBetaSettingsPreset(
-            initial.chunkSettings().extend()
+            ModernBetaSettings.builder()
+                .add(PRESET, initialId)
                 .add(ISLES_PROPERTIES, IslesProperties.ENABLED)
                 .build(),
-            initial.biomeSettings(),
-            initial.caveBiomeSettings()
+            ModernBetaSettings.builder()
+                .add(PRESET, initialId)
+                .build(),
+            ModernBetaSettings.builder()
+                .add(PRESET, initialId)
+                .build()
         );
     }
 
-    private static ModernBetaSettingsPreset presetWaterWorld(ModernBetaSettingsPreset initial) {
+    private static ModernBetaSettingsPreset presetWaterWorld(ModernBetaSettingsPreset initialSettings, Identifier initialId) {
+        NoiseScale baseNoiseScale = initialSettings.chunkSettings().getOrDefault(NOISE_SCALE);
+        Map<ExtendedBiomeId, HeightConfig> baseHeightOverrides = initialSettings.chunkSettings().getOrDefault(FORCED_BIOME_HEIGHT).heightOverrides();
+
         return new ModernBetaSettingsPreset(
-            initial.chunkSettings().extend()
+            ModernBetaSettings.builder()
+                .add(PRESET, initialId)
                 .add(SEA_LEVEL_OFFSET, 192)
-                .replace(NOISE_SCALE, base -> new NoiseScale(
-                    base.coordinate(),
-                    base.height(),
-                    base.upperLimit(),
-                    base.lowerLimit(),
-                    base.depthNoiseX(),
-                    base.depthNoiseZ(),
+                .add(NOISE_SCALE, new NoiseScale(
+                    baseNoiseScale.coordinate(),
+                    baseNoiseScale.height(),
+                    baseNoiseScale.upperLimit(),
+                    baseNoiseScale.lowerLimit(),
+                    baseNoiseScale.depthNoiseX(),
+                    baseNoiseScale.depthNoiseZ(),
                     5000.0f,
                     1000.0f,
                     5000.0f,
-                    base.baseSize(),
+                    baseNoiseScale.baseSize(),
                     8.0f,
-                    base.farlands()
+                    baseNoiseScale.farlands()
                 ))
-                .replace(FORCED_BIOME_HEIGHT, base -> new ForcedBiomeHeight(
-                    base.heightOverrides(),
+                .add(FORCED_BIOME_HEIGHT, new ForcedBiomeHeight(
+                    baseHeightOverrides,
                     2.0f,
                     0.5f,
                     2.0f,
                     0.375f
                 ))
                 .build(),
-            initial.biomeSettings(),
-            initial.caveBiomeSettings()
+            ModernBetaSettings.builder()
+                .add(PRESET, initialId)
+                .build(),
+            ModernBetaSettings.builder()
+                .add(PRESET, initialId)
+                .build()
         );
     }
 
-    private static ModernBetaSettingsPreset presetIsleLand(ModernBetaSettingsPreset initial) {
+    private static ModernBetaSettingsPreset presetIsleLand(ModernBetaSettingsPreset initialSettings, Identifier initialId) {
+        NoiseScale baseNoiseScale = initialSettings.chunkSettings().getOrDefault(NOISE_SCALE);
+
         return new ModernBetaSettingsPreset(
-            initial.chunkSettings().extend()
-                .replace(NOISE_SCALE, base -> new NoiseScale(
+            ModernBetaSettings.builder()
+                .add(PRESET, initialId)
+                .add(NOISE_SCALE, new NoiseScale(
                     3000.0f,
                     6000.0f,
                     250.0f,
                     512.0f,
-                    base.depthNoiseX(),
-                    base.depthNoiseZ(),
-                    base.mainNoiseX(),
-                    base.mainNoiseY(),
-                    base.mainNoiseZ(),
-                    base.baseSize(),
+                    baseNoiseScale.depthNoiseX(),
+                    baseNoiseScale.depthNoiseZ(),
+                    baseNoiseScale.mainNoiseX(),
+                    baseNoiseScale.mainNoiseY(),
+                    baseNoiseScale.mainNoiseZ(),
+                    baseNoiseScale.baseSize(),
                     10.0f,
-                    base.farlands()
+                    baseNoiseScale.farlands()
                 ))
                 .build(),
-            initial.biomeSettings(),
-            initial.caveBiomeSettings()
+            ModernBetaSettings.builder()
+                .add(PRESET, initialId)
+                .build(),
+            ModernBetaSettings.builder()
+                .add(PRESET, initialId)
+                .build()
         );
     }
     
 
-    private static ModernBetaSettingsPreset presetCaveDelight(ModernBetaSettingsPreset initial) {
+    private static ModernBetaSettingsPreset presetCaveDelight(ModernBetaSettingsPreset initialSettings, Identifier initialId) {
+        NoiseScale baseNoiseScale = initialSettings.chunkSettings().getOrDefault(NOISE_SCALE);
+        Map<ExtendedBiomeId, HeightConfig> baseHeightOverrides = initialSettings.chunkSettings().getOrDefault(FORCED_BIOME_HEIGHT).heightOverrides();
+
         return new ModernBetaSettingsPreset(
-            initial.chunkSettings().extend()
-                .replace(NOISE_SCALE, base -> new NoiseScale(
-                    base.coordinate(),
-                    base.height(),
-                    base.upperLimit(),
-                    base.lowerLimit(),
-                    base.depthNoiseX(),
-                    base.depthNoiseZ(),
+            ModernBetaSettings.builder()
+                .add(PRESET, initialId)
+                .add(NOISE_SCALE, new NoiseScale(
+                    baseNoiseScale.coordinate(),
+                    baseNoiseScale.height(),
+                    baseNoiseScale.upperLimit(),
+                    baseNoiseScale.lowerLimit(),
+                    baseNoiseScale.depthNoiseX(),
+                    baseNoiseScale.depthNoiseZ(),
                     5000.0f,
                     1000.0f,
                     5000.0f,
-                    base.baseSize(),
+                    baseNoiseScale.baseSize(),
                     5.0f,
-                    base.farlands()
+                    baseNoiseScale.farlands()
                 ))
-                .replace(FORCED_BIOME_HEIGHT, base -> new ForcedBiomeHeight(
-                    base.heightOverrides(),
+                .add(FORCED_BIOME_HEIGHT, new ForcedBiomeHeight(
+                    baseHeightOverrides,
                     2.0f,
                     1.0f,
                     4.0f,
                     1.0f
                 ))
                 .build(),
-            initial.biomeSettings(),
-            initial.caveBiomeSettings()
+            ModernBetaSettings.builder()
+                .add(PRESET, initialId)
+                 .build(),
+            ModernBetaSettings.builder()
+                .add(PRESET, initialId)
+                .build()
         );
     }
 
-    private static ModernBetaSettingsPreset presetMountainMadness(ModernBetaSettingsPreset initial, boolean modifyBaseSize) {
+    private static ModernBetaSettingsPreset presetMountainMadness(ModernBetaSettingsPreset initialSettings, Identifier initialId, boolean modifyBaseSize) {
+        NoiseScale baseNoiseScale = initialSettings.chunkSettings().getOrDefault(NOISE_SCALE);
+        Map<ExtendedBiomeId, HeightConfig> baseHeightOverrides = initialSettings.chunkSettings().getOrDefault(FORCED_BIOME_HEIGHT).heightOverrides();
+
         return new ModernBetaSettingsPreset(
-            initial.chunkSettings().extend()
-                .replace(NOISE_SCALE, base -> new NoiseScale(
+            ModernBetaSettings.builder()
+                .add(PRESET, initialId)
+                .add(NOISE_SCALE, new NoiseScale(
                     738.41864f,
                     157.69133f,
                     801.4267f,
@@ -599,68 +635,86 @@ public final class ModernBetaSettingsPresets {
                     1355.9908f,
                     745.5343f,
                     1183.464f,
-                    modifyBaseSize ? 1.8758626f : base.baseSize(),
+                    modifyBaseSize ? 1.8758626f : baseNoiseScale.baseSize(),
                     1.7137525f,
-                    base.farlands()
+                    baseNoiseScale.farlands()
                 ))
-                .replace(FORCED_BIOME_HEIGHT, base -> new ForcedBiomeHeight(
-                    base.heightOverrides(),
+                .add(FORCED_BIOME_HEIGHT, new ForcedBiomeHeight(
+                    baseHeightOverrides,
                     1.7553768f,
                     3.4701107f,
                     1.0f,
                     2.535211f
                 ))
                 .build(),
-            initial.biomeSettings(),
-            initial.caveBiomeSettings()
+            ModernBetaSettings.builder()
+                .add(PRESET, initialId)
+                .build(),
+            ModernBetaSettings.builder()
+                .add(PRESET, initialId)
+                .build()
         );
     }
 
-    private static ModernBetaSettingsPreset presetDrought(ModernBetaSettingsPreset initial) {
+    private static ModernBetaSettingsPreset presetDrought(ModernBetaSettingsPreset initialSettings, Identifier initialId) {
+        NoiseScale baseNoiseScale = initialSettings.chunkSettings().getOrDefault(NOISE_SCALE);
+
         return new ModernBetaSettingsPreset(
-            initial.chunkSettings().extend()
+            ModernBetaSettings.builder()
+                .add(PRESET, initialId)
                 .add(SEA_LEVEL_OFFSET, -43)
-                .replace(NOISE_SCALE, base -> new NoiseScale(
-                    base.coordinate(),
-                    base.height(),
-                    base.upperLimit(),
-                    base.lowerLimit(),
-                    base.depthNoiseX(),
-                    base.depthNoiseZ(),
+                .add(NOISE_SCALE, new NoiseScale(
+                    baseNoiseScale.coordinate(),
+                    baseNoiseScale.height(),
+                    baseNoiseScale.upperLimit(),
+                    baseNoiseScale.lowerLimit(),
+                    baseNoiseScale.depthNoiseX(),
+                    baseNoiseScale.depthNoiseZ(),
                     1000.0f,
                     3000.0f,
                     1000.0f,
-                    base.baseSize(),
+                    baseNoiseScale.baseSize(),
                     10.0f,
-                    base.farlands()
+                    baseNoiseScale.farlands()
                 ))
                 .build(),
-            initial.biomeSettings(),
-            initial.caveBiomeSettings()
+            ModernBetaSettings.builder()
+                .add(PRESET, initialId)
+                .build(),
+            ModernBetaSettings.builder()
+                .add(PRESET, initialId)
+                .build()
         );
     }
 
-    private static ModernBetaSettingsPreset presetCaveChaos(ModernBetaSettingsPreset initial) {
+    private static ModernBetaSettingsPreset presetCaveChaos(ModernBetaSettingsPreset initialSettings, Identifier initialId) {
+        NoiseScale baseNoiseScale = initialSettings.chunkSettings().getOrDefault(NOISE_SCALE);
+
         return new ModernBetaSettingsPreset(
-            initial.chunkSettings().extend()
+            ModernBetaSettings.builder()
+                .add(PRESET, initialId)
                 .add(SEA_LEVEL_OFFSET, -57)
-                .replace(NOISE_SCALE, base -> new NoiseScale(
-                    base.coordinate(),
-                    base.height(),
+                .add(NOISE_SCALE, new NoiseScale(
+                    baseNoiseScale.coordinate(),
+                    baseNoiseScale.height(),
                     2.0f,
                     64.0f,
-                    base.depthNoiseX(),
-                    base.depthNoiseZ(),
-                    base.mainNoiseX(),
-                    base.mainNoiseY(),
-                    base.mainNoiseZ(),
-                    base.baseSize(),
+                    baseNoiseScale.depthNoiseX(),
+                    baseNoiseScale.depthNoiseZ(),
+                    baseNoiseScale.mainNoiseX(),
+                    baseNoiseScale.mainNoiseY(),
+                    baseNoiseScale.mainNoiseZ(),
+                    baseNoiseScale.baseSize(),
                     8.0f,
-                    base.farlands()
+                    baseNoiseScale.farlands()
                 ))
                 .build(),
-            initial.biomeSettings(),
-            initial.caveBiomeSettings()
+            ModernBetaSettings.builder()
+                .add(PRESET, initialId)
+                .build(),
+            ModernBetaSettings.builder()
+                .add(PRESET, initialId)
+                .build()
         );
     }
     

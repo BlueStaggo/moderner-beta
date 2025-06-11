@@ -108,26 +108,30 @@ public class ModernBetaSettings implements Iterable<SettingsComponent<?>> {
     }
 
     public ModernBetaSettings mapPreset(RegistryEntryLookup<ModernBetaSettingsPreset> presetRegistry, Function<ModernBetaSettingsPreset, ModernBetaSettings> settingsProvider) {
-        Identifier presetId = this.get(SettingsComponentTypes.PRESET);
-        if (presetId == null) {
-            return this;
-        }
+        ModernBetaSettings settings = this;
 
-        if (presetId.equals(DEFAULT_PRESET_ID)) {
-            presetId = VersionCompat.id(ModernerBeta.CONFIG.defaultSettingsPreset);
-        }
+        while (true) {
+            Identifier presetId = settings.get(SettingsComponentTypes.PRESET);
+            if (presetId == null) {
+                return settings;
+            }
 
-        Optional<RegistryEntry.Reference<ModernBetaSettingsPreset>> preset = presetRegistry.getOptional(RegistryKey.of(ModernBetaRegistryKeys.SETTINGS_PRESET, presetId));
-        if (preset.isEmpty()) {
-            ModernerBeta.log(Level.WARN, "Modern beta settings reference preset \"" + presetId + "\" which is not registered.");
-            return this;
-        }
+            if (presetId.equals(DEFAULT_PRESET_ID)) {
+                presetId = VersionCompat.id(ModernerBeta.CONFIG.defaultSettingsPreset);
+            }
 
-        return settingsProvider.apply(preset.get().value())
-            .extend()
-            .addAll(this)
-            .remove(SettingsComponentTypes.PRESET)
-            .build();
+            Optional<RegistryEntry.Reference<ModernBetaSettingsPreset>> preset = presetRegistry.getOptional(RegistryKey.of(ModernBetaRegistryKeys.SETTINGS_PRESET, presetId));
+            if (preset.isEmpty()) {
+                ModernerBeta.log(Level.WARN, "Modern beta settings reference preset \"" + presetId + "\" which is not registered.");
+                return settings;
+            }
+
+            settings = settingsProvider.apply(preset.get().value())
+                .extend()
+                .addAll(settings.extend()
+                    .remove(SettingsComponentTypes.PRESET))
+                .build();
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -223,6 +227,11 @@ public class ModernBetaSettings implements Iterable<SettingsComponent<?>> {
 
         public Builder addAll(ModernBetaSettings settings) {
             settings.stream().forEach(component -> this.components.put(component.type(), component.value()));
+            return this;
+        }
+
+        public Builder addAll(ModernBetaSettings.Builder builder) {
+            this.components.putAll(builder.components);
             return this;
         }
 

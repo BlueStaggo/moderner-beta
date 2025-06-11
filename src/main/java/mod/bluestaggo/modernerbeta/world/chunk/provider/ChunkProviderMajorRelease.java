@@ -53,12 +53,6 @@ public class ChunkProviderMajorRelease extends ChunkProviderForcedHeight {
         return new SpawnLocatorRelease(this, new Random(this.seed));
     }
 
-    //@Override
-    //public void provideSurface(ChunkRegion region, StructureAccessor structureAccessor, Chunk chunk, ModernBetaBiomeSource biomeSource, NoiseConfig noiseConfig) {
-    //    this.chunkGenerator.buildDefaultSurface(region, structureAccessor, noiseConfig, chunk);
-    //    this.provideSurfaceExtra(region, structureAccessor, chunk, biomeSource, noiseConfig);
-    //}
-
     @Override
     public void provideSurface(ChunkRegion region, StructureAccessor structureAccessor, Chunk chunk, ModernBetaBiomeSource biomeSource, NoiseConfig noiseConfig) {
         double scale = 0.03125;
@@ -175,56 +169,6 @@ public class ChunkProviderMajorRelease extends ChunkProviderForcedHeight {
                     if (runDepth == 0 && fillerBlock.isOf(Blocks.RED_SAND)) {
                         runDepth = rand.nextInt(4);
                         fillerBlock = BlockStates.RED_SANDSTONE;
-                    }
-                }
-            }
-        }
-    }
-
-    @Override
-    public void provideSurfaceExtra(ChunkRegion region, StructureAccessor structureAccessor, Chunk chunk, ModernBetaBiomeSource biomeSource, NoiseConfig noiseConfig) {
-        double scale = 0.03125;
-
-        ChunkPos chunkPos = chunk.getPos();
-        int chunkX = chunkPos.x;
-        int chunkZ = chunkPos.z;
-
-        int startX = chunk.getPos().getStartX();
-        int startZ = chunk.getPos().getStartZ();
-
-        Random rand = this.createSurfaceRandom(chunkX, chunkZ);
-        BlockPos.Mutable pos = new BlockPos.Mutable();
-
-        ChunkHeightmap heightmapChunk = this.hasNoisePostProcessor() ? this.getChunkHeightmap(chunkX, chunkZ) : null;
-
-        for (int localZ = 0; localZ < 16; localZ++) {
-            for (int localX = 0; localX < 16; localX++) {
-                pos.set(localX, 0, localZ);
-
-                int x = startX + localX;
-                int z = startZ + localZ;
-                int surfaceTopY = heightmapChunk != null ?
-                    heightmapChunk.getHeight(x, z, ChunkHeightmap.Type.SURFACE_FLOOR) :
-                    chunk.getHeightmap(Heightmap.Type.OCEAN_FLOOR_WG).get(localX, localZ);
-                surfaceTopY--;
-                int surfaceDepth = (int)
-                    (this.surfaceOctaveNoise.sample((chunkX * 16 + localX) * scale * 2D, (chunkZ * 16 + localZ) * scale * 2D, 1.5D, 1.0D)
-                    / 3D + 3D + rand.nextDouble() * 0.25D);
-
-                if (surfaceTopY < this.seaLevel - 7 - surfaceDepth) {
-                    int y = surfaceTopY;
-                    pos.setY(y);
-
-                    if (!this.isBlockSuitableForSurface(chunk.getBlockState(pos))) {
-                        continue;
-                    }
-
-                    VersionCompat.setBlockState(chunk, pos, BlockStates.GRAVEL);
-                    pos.setY(--y);
-
-                    while (this.isBlockSuitableForSurface(chunk.getBlockState(pos))) {
-                        VersionCompat.setBlockState(chunk, pos, this.defaultBlock);
-                        pos.setY(--y);
                     }
                 }
             }

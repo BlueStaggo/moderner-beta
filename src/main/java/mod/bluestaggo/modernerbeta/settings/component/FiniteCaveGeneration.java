@@ -13,7 +13,7 @@ public record FiniteCaveGeneration(
 ) {
     public static final Codec<FiniteCaveGeneration> CODEC = RecordCodecBuilder.create(
         instance -> instance.group(
-            Codec.BOOL.fieldOf("useCarvers").orElse(true).forGetter(FiniteCaveGeneration::useCaves),
+            Codec.BOOL.fieldOf("useCaves").orElse(true).forGetter(FiniteCaveGeneration::useCaves),
             Codec.BOOL.fieldOf("use14aCaves").orElse(false).forGetter(FiniteCaveGeneration::use14aCaves),
             Codec.INT.fieldOf("rarity").orElse(8192).forGetter(FiniteCaveGeneration::rarity),
             Codec.FLOAT.fieldOf("radius").orElse(1.0f).forGetter(FiniteCaveGeneration::radius),

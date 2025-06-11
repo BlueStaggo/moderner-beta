@@ -9,8 +9,8 @@ A major number change means a big update. For this update, significant parts of 
 - Added large biome variants for the "Release Hybrid" and "Snow ain't Snowier" presets.
 - Added networking code to send biome provider settings along with the world seed to allow for Beta biomes to have their true colours on multiplayer.
 - Added a biome previewer to preview the biomes that will be generated for a world.
-- Added Trial Chambers to Moderner Beta biomes.
 - Added a toggle for farlands. Now farlands can be made to generate in release worlds and stop generating in beta worlds.
+- (1.21+) Added Trial Chambers to Moderner Beta biomes.
 
 ## Changes
 - The mod now supports Minecraft 1.21.6.
@@ -45,7 +45,7 @@ A major number change means a big update. For this update, significant parts of 
 - Major release worlds can now be generated without surface rules.
 - Removed carver seed parity with beta worlds as it resulted in identical caves appearing above each other. The RNG used for carvers now matches modern vanilla world generation.
 - (1.21+) Replaced use of `@Redirect` mixins with `@WrapOperation` mixins.
-- (1.21 only) Mod is now built using NeoForge to 21.1.173 to fix crashes when entering the mod config screen on NeoForge 21.0.110-beta or newer.
+- (1.21 only) Mod is now built using NeoForge 21.1.173 to fix crashes when entering the mod config screen on NeoForge 21.0.110-beta or newer.
 
 ## Removals
 - Removed fixed seed options, as it has been made redundant by the addition of the networking code for biome provider settings and world seed.

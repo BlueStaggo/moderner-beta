@@ -164,9 +164,7 @@ public abstract class ModernBetaGraphicalSettingsScreen<T extends NbtElement> ex
     //? if <1.21 {
     /*@Override
     public void render(DrawContext context, int mouseX, int mouseY, float tickDelta) {
-        super.renderBackground(context);
-        this.body.render(context, mouseX, mouseY, tickDelta);
-        super.render(context, mouseX, mouseY, tickDelta);
+        this.render(context, this.body, mouseX, mouseY, tickDelta);
     }
     *///?}
 

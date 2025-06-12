@@ -40,7 +40,7 @@ public record LayerType<L extends Layer>(com.mojang.serialization.MapCodec<L> co
 
         ADD_LAND = register("add_land", AddLandLayer.CODEC);
         APPLY_OCEAN_CLIMATE = register("apply_ocean_climate", ApplyOceanClimateLayer.CODEC);
-        BIOME_REPLACEMENT = register("biome_to_layer_overlay", BiomeReplacementLayer.CODEC);
+        BIOME_REPLACEMENT = register("biome_replacement", BiomeReplacementLayer.CODEC);
         COMPUTE_RIVER = register("compute_river", ComputeRiverLayer.CODEC);
         CONDITIONAL_OVERLAY = register("conditional_overlay", ConditionalOverlayLayer.CODEC);
         CONSTANT_BIOME = register("constant_biome", ConstantBiomeLayer.CODEC);

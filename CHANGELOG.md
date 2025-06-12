@@ -43,7 +43,7 @@ A major number change means a big update. For this update, significant parts of 
 - Made ocean biome injectors not be used if the biome provider already generates oceans.
 - Moved deepslate and tuff blobs from the reduced height data pack into a separate data pack.
 - Major release worlds can now be generated without surface rules.
-- Removed carver seed parity with beta worlds as it resulted in identical caves appearing above each other. The RNG used for carvers now matches modern vanilla world generation.
+- Carvers in Beta 1.8+ now have the same seeds.
 - The Drought preset no longer has gravel ocean beds.
 - The /locate command no longer identifies the location of injected biome including ocean biomes in beta worlds as well as cave biomes. Biome injectors heavily slowed down the biome location process.
 - (1.21+) Replaced use of `@Redirect` mixins with `@WrapOperation` mixins.

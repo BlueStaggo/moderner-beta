@@ -23,9 +23,7 @@ import net.minecraft.registry.*;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.random.CheckedRandom;
-import net.minecraft.util.math.random.ChunkRandom;
-import net.minecraft.util.math.random.RandomSeed;
+import net.minecraft.util.math.random.*;
 import net.minecraft.world.ChunkRegion;
 import net.minecraft.world.HeightLimitView;
 import net.minecraft.world.Heightmap;
@@ -69,9 +67,7 @@ public class ModernBetaChunkGenerator extends NoiseChunkGenerator {
     private final Supplier<BiomeInjector> biomeInjector;
 
     private boolean useSurfaceRules;
-    private boolean forceBetaCaves;
-    private boolean forceBetaRavines;
-    private boolean useFixedCaves;
+    private CaveGeneration caveSettings = CaveGeneration.DEFAULT;
 
     private ChunkProvider chunkProvider;
 
@@ -107,10 +103,7 @@ public class ModernBetaChunkGenerator extends NoiseChunkGenerator {
 
         this.useSurfaceRules = chunkSettings.getOrDefault(SettingsComponentTypes.USE_SURFACE_RULES);
 
-        CaveGeneration caveSettings = chunkSettings.getOrDefault(SettingsComponentTypes.CAVE_GENERATION);
-        this.forceBetaCaves = caveSettings.forceBetaCaves();
-        this.forceBetaRavines = caveSettings.forceBetaCanyons();
-        this.useFixedCaves = caveSettings.fixCaveBorders();
+        this.caveSettings = chunkSettings.getOrDefault(SettingsComponentTypes.CAVE_GENERATION);
     }
 
     @Override
@@ -185,7 +178,23 @@ public class ModernBetaChunkGenerator extends NoiseChunkGenerator {
             /*carverStep*/
         );
 
-        ChunkRandom random = new ChunkRandom(new CheckedRandom(RandomSeed.getSeed()));
+        CaveGeneration.SeedMethod seedMethod = this.caveSettings.seedMethod();
+
+        Random random = seedMethod == CaveGeneration.SeedMethod.MODERN
+            ? new ChunkRandom(new CheckedRandom(RandomSeed.getSeed()))
+            : new LocalRandom(seed);
+
+        long saltX = switch (seedMethod) {
+            case BETA -> (random.nextLong() / 2L) * 2L + 1L;
+            case EARLY_RELEASE -> random.nextLong();
+            case MODERN -> 0;
+        };
+        long saltZ = switch (seedMethod) {
+            case BETA -> (random.nextLong() / 2L) * 2L + 1L;
+            case EARLY_RELEASE -> random.nextLong();
+            case MODERN -> 0;
+        };
+
         for (int chunkX = mainChunkX - 8; chunkX <= mainChunkX + 8; ++chunkX) {
             for (int chunkZ = mainChunkZ - 8; chunkZ <= mainChunkZ + 8; ++chunkZ) {
                 ChunkPos carverPos = new ChunkPos(chunkX, chunkZ);
@@ -200,23 +209,27 @@ public class ModernBetaChunkGenerator extends NoiseChunkGenerator {
                     /*carverStep*/
                 );
 
-                int l = 0;
+                int modernSalt = 0;
                 for(RegistryEntry<ConfiguredCarver<?>> carverEntry : carverList) {
                     ConfiguredCarver<?> configuredCarver = carverEntry.value();
-                    random.setCarverSeed(seed + (long) l, chunkX, chunkZ);
+                    if (seedMethod == CaveGeneration.SeedMethod.MODERN) {
+                        ((ChunkRandom)random).setCarverSeed(seed + modernSalt, chunkX, chunkZ);
+                    } else {
+                        random.setSeed((long) chunkX * saltX + (long) chunkZ * saltZ ^ seed);
+                    }
 
-                    if (this.forceBetaCaves || this.forceBetaRavines) {
+                    if (this.caveSettings.forceBetaCaves() || this.caveSettings.forceBetaCanyons()) {
                         RegistryKey<ConfiguredCarver<?>> carverKey = carverEntry.getKey().orElse(null);
                         if (carverKey != null) {
                             ConfiguredCarver<?> replacementCarver = null;
-                            if (this.forceBetaCaves) {
+                            if (this.caveSettings.forceBetaCaves()) {
                                 if (carverKey.equals(ConfiguredCarvers.CAVE)) {
                                     replacementCarver = configuredCarverRegistry.get(ModernBetaConfiguredCarvers.BETA_CAVE);
                                 } else if (carverKey.equals(ConfiguredCarvers.CAVE_EXTRA_UNDERGROUND)) {
                                     replacementCarver = configuredCarverRegistry.get(ModernBetaConfiguredCarvers.BETA_CAVE_DEEP);
                                 }
                             }
-                            if (this.forceBetaRavines && carverKey.equals(ConfiguredCarvers.CANYON)) {
+                            if (this.caveSettings.forceBetaCanyons() && carverKey.equals(ConfiguredCarvers.CANYON)) {
                                 replacementCarver = configuredCarverRegistry.get(ModernBetaConfiguredCarvers.BETA_CANYON);
                             }
 
@@ -228,17 +241,17 @@ public class ModernBetaChunkGenerator extends NoiseChunkGenerator {
 
                     if (configuredCarver.shouldCarve(random)) {
                         if (configuredCarver.config() instanceof BetaCaveCarverConfig betaCaveCarverConfig) {
-                            betaCaveCarverConfig.useFixedCaves = Optional.of(this.useFixedCaves);
+                            betaCaveCarverConfig.useFixedCaves = Optional.of(this.caveSettings.fixCaveBorders());
                         }
 
                         configuredCarver.carve(carverContext, chunk, biomeAccessWithSource::getBiome, random, aquiferSampler, carverPos, carvingMask);
                     }
-                    ++l;
+                    ++modernSalt;
                 }
             }
         }
     }
-    
+
     @Override
     public void generateFeatures(StructureWorldAccess world, Chunk chunk, StructureAccessor structureAccessor) {
         ChunkPos pos = chunk.getPos();

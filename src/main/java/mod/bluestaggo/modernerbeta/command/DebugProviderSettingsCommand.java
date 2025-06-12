@@ -23,21 +23,18 @@ public class DebugProviderSettingsCommand {
         if (source.getWorld().getChunkManager().getChunkGenerator() instanceof ModernBetaChunkGenerator modernBetaChunkGenerator) {
             validWorld = true;
             
-            ModernBetaSettings chunkSettings = ModernBetaSettings.fromCompound(modernBetaChunkGenerator.getChunkSettings());
             source.sendFeedback(() -> Text.literal("Chunk Provider Settings:").formatted(Formatting.YELLOW), false);
-            source.sendFeedback(() -> Text.literal(chunkSettings.toString()), false);
+            source.sendFeedback(() -> Text.literal(modernBetaChunkGenerator.getChunkSettings().toString()), false);
         }
         
         if (source.getWorld().getChunkManager().getChunkGenerator().getBiomeSource() instanceof ModernBetaBiomeSource modernBetaBiomeSource) {
             validWorld = true;
 
-            ModernBetaSettings biomeSettings = ModernBetaSettings.fromCompound(modernBetaBiomeSource.getBiomeSettings());
             source.sendFeedback(() -> Text.literal("Biome Provider Settings:").formatted(Formatting.YELLOW), false);
-            source.sendFeedback(() -> Text.literal(biomeSettings.toString()), false);
+            source.sendFeedback(() -> Text.literal(modernBetaBiomeSource.getBiomeSettings().toString()), false);
             
-            ModernBetaSettings caveBiomeSettings = ModernBetaSettings.fromCompound(modernBetaBiomeSource.getCaveBiomeSettings());
             source.sendFeedback(() -> Text.literal("Cave Biome Provider Settings:").formatted(Formatting.YELLOW), false);
-            source.sendFeedback(() -> Text.literal(caveBiomeSettings.toString()), false);
+            source.sendFeedback(() -> Text.literal(modernBetaBiomeSource.getCaveBiomeSettings().toString()), false);
         }
 
         if (validWorld) {

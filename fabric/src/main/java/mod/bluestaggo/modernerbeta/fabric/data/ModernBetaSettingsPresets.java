@@ -7,7 +7,6 @@ import mod.bluestaggo.modernerbeta.api.world.biome.climate.TemperatureHeightScal
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistryKeys;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
-import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.settings.component.*;
 import mod.bluestaggo.modernerbeta.world.biome.HeightConfig;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomes;
@@ -110,7 +109,8 @@ public final class ModernBetaSettingsPresets {
         return new ModernBetaSettingsPreset(
             ModernBetaSettings.builder()
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.BETA.id)
-                .addDefault(DEEPSLATE_GENERATION, USE_SURFACE_RULES, SEA_LEVEL_OFFSET, CAVE_GENERATION, NOISE_SCALE, NOISE_SLIDE)
+                .add(CAVE_GENERATION, CaveGeneration.BETA)
+                .addDefault(DEEPSLATE_GENERATION, USE_SURFACE_RULES, SEA_LEVEL_OFFSET, NOISE_SCALE, NOISE_SLIDE)
                 .build(),
             ModernBetaSettings.builder()
                 .add(PROVIDER, ModernBetaBuiltInTypes.Biome.BETA.id)
@@ -204,6 +204,7 @@ public final class ModernBetaSettingsPresets {
             ModernBetaSettings.builder()
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.SKYLANDS.id)
                 .add(DEEPSLATE_GENERATION, DeepslateGeneration.DISABLED)
+                .add(CAVE_GENERATION, CaveGeneration.BETA)
                 .add(NOISE_SCALE, new NoiseScale(
                     1368.824f,
                     684.412f,
@@ -226,7 +227,7 @@ public final class ModernBetaSettingsPresets {
                     7,
                     1
                 ))
-                .addDefault(USE_SURFACE_RULES, CAVE_GENERATION)
+                .addDefault(USE_SURFACE_RULES)
                 .build(),
             ModernBetaSettings.singleBiome(ModernBetaBiomes.BETA_SKY),
             ModernBetaSettings.noCaveBiomes()
@@ -2159,7 +2160,7 @@ public final class ModernBetaSettingsPresets {
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.MAJOR_RELEASE.id)
                 .add(NOISE_SCALE, NoiseScale.WITHOUT_FARLANDS)
                 .add(USE_SURFACE_RULES, true)
-                .add(CAVE_GENERATION, CaveGeneration.MAJOR_RELEASE)
+                .add(CAVE_GENERATION, CaveGeneration.RELEASE_1_12_2)
                 .add(FORCED_BIOME_HEIGHT, ForcedBiomeHeight.overridesOnly(HeightConfig.MAJOR_RELEASE_CONFIGS))
                 .build(),
             ModernBetaSettings.fractalLayers(configuredLayers1710Era(biomeScale, false, false, false, false))
@@ -2175,7 +2176,7 @@ public final class ModernBetaSettingsPresets {
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.MAJOR_RELEASE.id)
                 .add(NOISE_SCALE, NoiseScale.WITHOUT_FARLANDS)
                 .add(USE_SURFACE_RULES, true)
-                .add(CAVE_GENERATION, CaveGeneration.MAJOR_RELEASE)
+                .add(CAVE_GENERATION, CaveGeneration.RELEASE_1_17_1)
                 .add(FORCED_BIOME_HEIGHT, ForcedBiomeHeight.overridesOnly(HeightConfig.MAJOR_RELEASE_CONFIGS))
                 .build(),
             ModernBetaSettings.fractalLayers(configuredLayers1710Era(biomeScale, true, true, true, false))
@@ -2191,7 +2192,7 @@ public final class ModernBetaSettingsPresets {
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.MAJOR_RELEASE.id)
                 .add(NOISE_SCALE, NoiseScale.WITHOUT_FARLANDS)
                 .add(USE_SURFACE_RULES, true)
-                .add(CAVE_GENERATION, CaveGeneration.MAJOR_RELEASE)
+                .add(CAVE_GENERATION, CaveGeneration.RELEASE_1_17_1)
                 .add(FORCED_BIOME_HEIGHT, ForcedBiomeHeight.overridesOnly(HeightConfig.MAJOR_RELEASE_CONFIGS))
                 .build(),
             ModernBetaSettings.fractalLayers(configuredLayers1710Era(biomeScale, true, true, true, true))

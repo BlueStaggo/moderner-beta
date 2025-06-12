@@ -44,10 +44,11 @@
     "client.MixinWorldCreator",
     "client.AccessorChunkRendererRegion",
     //? if >=1.21.2 {
-    "client.MixinWeatherRendering"
+    "client.MixinWeatherRendering",
     //?} else {
-    /*"client.MixinWorldRenderer"
-    *///?}
+    /*"client.MixinWorldRenderer",
+    *///?},
+    "client.AccessorScreenshotRecorder"
   ],
   "injectors": {
     "defaultRequire": 1

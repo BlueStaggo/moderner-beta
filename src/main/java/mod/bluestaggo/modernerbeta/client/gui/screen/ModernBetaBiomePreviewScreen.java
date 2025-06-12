@@ -4,6 +4,7 @@ import com.google.common.util.concurrent.AtomicDouble;
 import it.unimi.dsi.fastutil.ints.Int2IntAVLTreeMap;
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
+import mod.bluestaggo.modernerbeta.mixin.client.AccessorScreenshotRecorder;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.api.world.biome.BiomeProvider;
 import mod.bluestaggo.modernerbeta.api.world.biome.BiomeResolverExtendedId;
@@ -32,11 +33,14 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.biome.Biome;
+import org.slf4j.event.Level;
 
 import java.awt.*;
+import java.io.File;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -89,6 +93,9 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
         ButtonWidget buttonZoomIn = ButtonWidget.builder(Text.literal("+"), button ->
             this.biomeDisplay.zoomIn()
         ).dimensions(0, 0, 20, 20).build();
+        ButtonWidget buttonScreenshot = ButtonWidget.builder(Text.translatable("createWorld.customize.modern_beta.settings.screenshot"), button ->
+            this.biomeDisplay.saveScreenshot()
+        ).dimensions(0, 0, 100, 20).build();
         ButtonWidget buttonBack = ButtonWidget.builder(ScreenTexts.BACK, button ->
             this.client.setScreen(this.parent)
         ).dimensions(0, 0, 100, 20).build();
@@ -98,7 +105,7 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
         gridWidgetMain.getMainPositioner().alignHorizontalCenter().alignVerticalCenter();
 
         GridWidget.Adder gridAdderMain = gridWidgetMain.createAdder(1);
-        GridWidget.Adder gridAdderButtons = gridWidgetButtons.createAdder(hasSteps ? 5 : 3);
+        GridWidget.Adder gridAdderButtons = gridWidgetButtons.createAdder(hasSteps ? 6 : 4);
 
         gridAdderMain.add(this.biomeDisplay);
         gridAdderMain.add(gridWidgetButtons);
@@ -124,6 +131,7 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
             gridAdderButtons.add(buttonNextStep);
         }
 
+        gridAdderButtons.add(buttonScreenshot);
         gridAdderButtons.add(buttonBack);
 
         gridWidgetMain.refreshPositions();
@@ -197,6 +205,21 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
 
         void startRenderThread() {
             this.renderThread.start();
+        }
+
+        void saveScreenshot() {
+            assert client != null;
+            File screenshotDirectory = new File(client.runDirectory, "screenshots");
+            screenshotDirectory.mkdir();
+            File screenshotPath = AccessorScreenshotRecorder.invokeGetScreenshotFilename(screenshotDirectory);
+
+            Util.getIoWorkerExecutor().execute(() -> {
+                try {
+                    image.writeTo(screenshotPath);
+                } catch (Exception exception) {
+                    ModernerBeta.log(Level.WARN, "Couldn't save screenshot: " + exception);
+                }
+            });
         }
 
         @Override
@@ -343,8 +366,6 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
 
             volatile boolean stop;
             volatile boolean uploadRequested;
-
-            volatile Exception exception;
 
             @Override
             public void run() {

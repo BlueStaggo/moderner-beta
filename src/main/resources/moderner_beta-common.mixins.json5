@@ -47,7 +47,7 @@
     "client.MixinWeatherRendering",
     //?} else {
     /*"client.MixinWorldRenderer",
-    *///?},
+    *///?}
     "client.AccessorScreenshotRecorder"
   ],
   "injectors": {

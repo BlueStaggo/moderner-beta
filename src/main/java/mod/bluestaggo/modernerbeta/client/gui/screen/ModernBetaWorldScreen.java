@@ -8,6 +8,7 @@ import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPresetCategory;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
+import mod.bluestaggo.modernerbeta.tags.ModernBetaSettingsPresetCategoryTags;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
@@ -22,6 +23,8 @@ import net.minecraft.client.world.GeneratorOptionsHolder;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryEntryLookup;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
@@ -31,6 +34,7 @@ import net.minecraft.util.Pair;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import org.apache.logging.log4j.util.TriConsumer;
 
+import java.util.Optional;
 import java.util.Random;
 
 @Environment(EnvType.CLIENT)
@@ -127,7 +131,7 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
         Identifier presetKey = this.getPresetKey();
         presetText.append(presetKey == null ?
             Text.translatable(TEXT_PRESET_CUSTOM).formatted(Formatting.AQUA) :
-            Text.translatable(TEXT_PRESET_NAME + "." + presetKey.getPath()).formatted(Formatting.YELLOW)
+            Text.translatable(TEXT_PRESET_NAME + "." + presetKey.toTranslationKey()).formatted(Formatting.YELLOW)
         );
 
         this.buttonPreset = ButtonWidget.builder(
@@ -136,7 +140,18 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
                 this,
                 this.presetRegistry,
                 this.presetCategoryRegistry,
-                this.presetCategoryRegistry.getIds().stream().sorted().toList(),
+                this.presetCategoryRegistry
+                    //? if >=1.21.2 {
+                    .getOrThrow
+                    //?} else {
+                    /*.getOrCreateEntryList
+                    *///?}
+                    (ModernBetaSettingsPresetCategoryTags.SELECTABLE)
+                    .stream()
+                    .map(RegistryEntry::getKey)
+                    .flatMap(Optional::stream)
+                    .map(RegistryKey::getValue)
+                    .toList(),
                 this.preset,
                 true
             ))

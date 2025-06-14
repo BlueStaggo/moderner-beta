@@ -26,7 +26,7 @@ public class MappedNoiseLayer extends Layer {
                             layer.upperBiomes.stream()
                         )
                     ).toList()),
-                Codec.DOUBLE.fieldOf("scale").forGetter(layer -> layer.scale),
+                Codec.DOUBLE.fieldOf("scale").orElse(1.0).forGetter(layer -> layer.scale),
                 Codec.BOOL.fieldOf("useSaltedSeed").orElse(true).forGetter(layer -> layer.useSaltedSeed)
             ))
             .apply(instance, MappedNoiseLayer::new)

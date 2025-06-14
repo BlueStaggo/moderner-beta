@@ -34,7 +34,7 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
     private static final String TEXT_PRESET_CATEGORY_NAME = "createWorld.customize.modern_beta.preset_category.name";
     private static final String TEXT_PRESET_CATEGORY_DESC = "createWorld.customize.modern_beta.preset_category.desc";
     
-    private static final Identifier TEXTURE_PRESET_CUSTOM = createTextureId("custom");
+    private static final Identifier TEXTURE_PRESET_CUSTOM = createTextureId(ModernerBeta.createId("custom"));
     
     private final ModernBetaWorldScreen worldScreen;
     private final List<Identifier> presets;
@@ -116,11 +116,11 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
         this.selectPresetButton.active = hasSelected;
     }
     
-    private static Identifier createTextureId(String id) {
-        return ModernerBeta.createId("textures/gui/preset_" + id + ".png");
+    private static Identifier createTextureId(Identifier id) {
+        return id.withPath("textures/gui/moderner_beta_settings_preset/" + id.getPath() + ".png");
     }
 
-    private static Identifier createPresetTextureId(String id) {
+    private static Identifier createPresetTextureId(Identifier id) {
         Identifier idObj = createTextureId(id);
         return MinecraftClient.getInstance().getResourceManager().getResource(idObj).isPresent()
             ? idObj : TEXTURE_PRESET_CUSTOM;
@@ -209,10 +209,9 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
             private long time;
             
             public AbstractPresetEntry(Identifier presetName) {
-                String path = presetName.getPath();
                 this.presetTexture = this.getPresetTexture(presetName);
-                this.presetName = this.getPresetName(path);
-                this.presetDesc = this.getPresetDesc(path);
+                this.presetName = this.getPresetName(presetName);
+                this.presetDesc = this.getPresetDesc(presetName);
             }
 
             protected abstract void setPreset();
@@ -220,15 +219,15 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
             protected abstract void selectPreset();
 
             protected Identifier getPresetTexture(Identifier presetName) {
-                return createPresetTextureId(presetName.getPath());
+                return createPresetTextureId(presetName);
             }
 
-            protected MutableText getPresetName(String presetName) {
-                return Text.translatable(TEXT_PRESET_NAME + "." + presetName);
+            protected MutableText getPresetName(Identifier presetName) {
+                return Text.translatable(TEXT_PRESET_NAME + "." + presetName.toTranslationKey());
             }
 
-            protected MutableText getPresetDesc(String presetName) {
-                return Text.translatable(TEXT_PRESET_DESC + "." + presetName);
+            protected MutableText getPresetDesc(Identifier presetName) {
+                return Text.translatable(TEXT_PRESET_DESC + "." + presetName.toTranslationKey());
             }
 
             protected Formatting getTextFormatting() {
@@ -383,13 +382,13 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
             }
 
             @Override
-            protected MutableText getPresetName(String presetName) {
-                return Text.translatable(TEXT_PRESET_CATEGORY_NAME + "." + presetName);
+            protected MutableText getPresetName(Identifier presetName) {
+                return Text.translatable(TEXT_PRESET_CATEGORY_NAME + "." + presetName.toTranslationKey());
             }
 
             @Override
-            protected MutableText getPresetDesc(String presetName) {
-                return Text.translatable(TEXT_PRESET_CATEGORY_DESC + "." + presetName);
+            protected MutableText getPresetDesc(Identifier presetName) {
+                return Text.translatable(TEXT_PRESET_CATEGORY_DESC + "." + presetName.toTranslationKey());
             }
 
             @Override

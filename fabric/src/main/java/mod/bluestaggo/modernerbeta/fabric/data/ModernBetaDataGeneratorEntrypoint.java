@@ -24,6 +24,7 @@ public class ModernBetaDataGeneratorEntrypoint implements DataGeneratorEntrypoin
         pack.addProvider(ModernBetaTagProviderStructure::new);
         pack.addProvider(ModernBetaTagProviderBlock::new);
         pack.addProvider(ModernBetaTagProviderWorldPreset::new);
+        pack.addProvider(ModernBetaTagProviderSettingsPresetCategory::new);
     }
     
     @Override

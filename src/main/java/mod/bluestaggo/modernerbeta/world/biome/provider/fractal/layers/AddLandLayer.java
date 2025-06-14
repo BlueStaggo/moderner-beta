@@ -18,7 +18,7 @@ public class AddLandLayer extends SingleParentLayer {
                 Codec.BOOL.fieldOf("betaShape").orElse(false).forGetter(layer -> layer.betaShape),
                 ExtendedBiomeId.CODEC.fieldOf("ocean").orElse(OCEAN).forGetter(layer -> layer.ocean),
                 ExtendedBiomeId.CODEC.fieldOf("land").orElse(PLAINS).forGetter(layer -> layer.land),
-                Codec.unboundedMap(ExtendedBiomeId.CODEC, ExtendedBiomeId.CODEC).fieldOf("biomeSpecificOceans").forGetter(layer -> layer.biomeSpecificOceans)
+                Codec.unboundedMap(ExtendedBiomeId.CODEC, ExtendedBiomeId.CODEC).fieldOf("biomeSpecificOceans").orElse(Map.of()).forGetter(layer -> layer.biomeSpecificOceans)
             ))
             .apply(instance, AddLandLayer::new)
     );

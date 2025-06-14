@@ -10,8 +10,17 @@ import net.minecraft.registry.RegistryKey;
 import java.util.List;
 
 public final class ModernBetaSettingsPresetCategories {
+    public static final RegistryKey<ModernBetaSettingsPresetCategory> BETA = keyOf("beta");
+    public static final RegistryKey<ModernBetaSettingsPresetCategory> ALPHA_INFDEV = keyOf("alpha_infdev");
+    public static final RegistryKey<ModernBetaSettingsPresetCategory> FINITE = keyOf("finite");
+    public static final RegistryKey<ModernBetaSettingsPresetCategory> EARLY_RELEASE = keyOf("early_release");
+    public static final RegistryKey<ModernBetaSettingsPresetCategory> EARLY_RELEASE_LARGE_BIOMES = keyOf("early_release_large_biomes");
+    public static final RegistryKey<ModernBetaSettingsPresetCategory> MAJOR_RELEASE = keyOf("major_release");
+    public static final RegistryKey<ModernBetaSettingsPresetCategory> BETA_CUSTOM = keyOf("beta_custom");
+    public static final RegistryKey<ModernBetaSettingsPresetCategory> RELEASE_CUSTOM = keyOf("release_custom");
+
     public static void bootstrap(Registerable<ModernBetaSettingsPresetCategory> categoryRegisterable) {
-        categoryRegisterable.register(keyOf("beta"), new ModernBetaSettingsPresetCategory(
+        categoryRegisterable.register(BETA, new ModernBetaSettingsPresetCategory(
             ModernBetaBuiltInTypes.Preset.BETA_1_7_3.id,
             List.of(
                 ModernBetaBuiltInTypes.Preset.BETA_1_7_3.id,
@@ -20,7 +29,7 @@ public final class ModernBetaSettingsPresetCategories {
                 ModernBetaBuiltInTypes.Preset.PE.id
             )
         ));
-        categoryRegisterable.register(keyOf("alpha_infdev"), new ModernBetaSettingsPresetCategory(
+        categoryRegisterable.register(ALPHA_INFDEV, new ModernBetaSettingsPresetCategory(
             ModernBetaBuiltInTypes.Preset.ALPHA_1_1_2_01.id,
             List.of(
                 ModernBetaBuiltInTypes.Preset.ALPHA_1_1_2_01.id,
@@ -32,7 +41,7 @@ public final class ModernBetaSettingsPresetCategories {
                 ModernBetaBuiltInTypes.Preset.INFDEV_227.id
             )
         ));
-        categoryRegisterable.register(keyOf("finite"), new ModernBetaSettingsPresetCategory(
+        categoryRegisterable.register(FINITE, new ModernBetaSettingsPresetCategory(
             ModernBetaBuiltInTypes.Preset.INDEV.id,
             List.of(
                 ModernBetaBuiltInTypes.Preset.INDEV.id,
@@ -43,7 +52,7 @@ public final class ModernBetaSettingsPresetCategories {
                 ModernBetaBuiltInTypes.Preset.CLASSIC_0_0_14A_08.id
             )
         ));
-        categoryRegisterable.register(keyOf("early_release"), new ModernBetaSettingsPresetCategory(
+        categoryRegisterable.register(EARLY_RELEASE, new ModernBetaSettingsPresetCategory(
             ModernBetaBuiltInTypes.Preset.RELEASE_1_6_4.id,
             List.of(
                 ModernBetaBuiltInTypes.Preset.BETA_1_8_1.id,
@@ -54,7 +63,7 @@ public final class ModernBetaSettingsPresetCategories {
                 ModernBetaBuiltInTypes.Preset.RELEASE_1_6_4.id
             )
         ));
-        categoryRegisterable.register(keyOf("early_release_large_biomes"), new ModernBetaSettingsPresetCategory(
+        categoryRegisterable.register(EARLY_RELEASE_LARGE_BIOMES, new ModernBetaSettingsPresetCategory(
             ModernBetaBuiltInTypes.Preset.RELEASE_1_1_LARGE_BIOMES.id,
             List.of(
                 ModernBetaBuiltInTypes.Preset.BETA_1_8_1_LARGE_BIOMES.id,
@@ -65,7 +74,7 @@ public final class ModernBetaSettingsPresetCategories {
                 ModernBetaBuiltInTypes.Preset.RELEASE_1_6_4_LARGE_BIOMES.id
             )
         ));
-        categoryRegisterable.register(keyOf("major_release"), new ModernBetaSettingsPresetCategory(
+        categoryRegisterable.register(MAJOR_RELEASE, new ModernBetaSettingsPresetCategory(
             ModernBetaBuiltInTypes.Preset.RELEASE_1_12_2.id,
             List.of(
                 ModernBetaBuiltInTypes.Preset.RELEASE_1_12_2.id,
@@ -74,7 +83,7 @@ public final class ModernBetaSettingsPresetCategories {
                 ModernBetaBuiltInTypes.Preset.RELEASE_1_17_1_LARGE_BIOMES.id
             )
         ));
-        categoryRegisterable.register(keyOf("beta_custom"), new ModernBetaSettingsPresetCategory(
+        categoryRegisterable.register(BETA_CUSTOM, new ModernBetaSettingsPresetCategory(
             ModernBetaBuiltInTypes.Preset.BETA_SKYLANDS.id,
             List.of(
                 ModernBetaBuiltInTypes.Preset.BETA_SKYLANDS.id,
@@ -91,7 +100,7 @@ public final class ModernBetaSettingsPresetCategories {
                 ModernBetaBuiltInTypes.Preset.BETA_VANILLA.id
             )
         ));
-        categoryRegisterable.register(keyOf("release_custom"), new ModernBetaSettingsPresetCategory(
+        categoryRegisterable.register(RELEASE_CUSTOM, new ModernBetaSettingsPresetCategory(
             ModernBetaBuiltInTypes.Preset.ISLE_LAND.id,
             List.of(
                 ModernBetaBuiltInTypes.Preset.SNOW_AINT_SNOWIER.id,

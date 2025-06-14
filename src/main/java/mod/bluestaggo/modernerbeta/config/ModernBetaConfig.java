@@ -136,7 +136,7 @@ public class ModernBetaConfig implements ConfigData {
         biomePreviewColors.put("minecraft:windswept_gravelly_hills", 0x888888);
         biomePreviewColors.put("minecraft:flower_forest", 0x2d8e49);
         biomePreviewColors.put("minecraft:taiga*mountains", 0x339287);
-        biomePreviewColors.put("minecraft:swamp_hills", 0x2fffda);
+        biomePreviewColors.put("minecraft:swamp*hills", 0x2fffda);
         biomePreviewColors.put("minecraft:ice_spikes", 0xb4dcdc);
         biomePreviewColors.put("minecraft:jungle*modified", 0x78a332);
         biomePreviewColors.put("minecraft:sparse_jungle*modified", 0x88bb37);

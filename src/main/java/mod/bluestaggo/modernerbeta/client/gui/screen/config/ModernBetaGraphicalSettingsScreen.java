@@ -96,9 +96,13 @@ public abstract class ModernBetaGraphicalSettingsScreen<T extends NbtElement> ex
         ((ModernBetaClearableWidget)this.layout).modernBeta$clear();
     }
 
-    protected void initHeader() {
+    //? if <1.20.5 {
+    /*protected void initHeader() {
     }
+    *///?}
 
+    //? if >=1.20.5
+    @Override
     protected void initBody() {
         this.body =
             //? if >=1.20.5 {
@@ -141,6 +145,8 @@ public abstract class ModernBetaGraphicalSettingsScreen<T extends NbtElement> ex
         *///?}
     }
 
+    //? if >=1.20.5
+    @Override
     protected void initFooter() {
         GridWidget gridWidget = new GridWidget().setColumnSpacing(8);
         GridWidget.Adder gridWidgetAdder = gridWidget.createAdder(2);

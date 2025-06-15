@@ -4,7 +4,8 @@ plugins {
 	id "maven-publish"
 }
 
-var mc = stonecutter.current.version
+var mc = project.minecraft_version_override != "N/A" ?
+		project.minecraft_version_override : stonecutter.current.version
 version = project.mod_version + "+" + mc
 group = project.maven_group
 

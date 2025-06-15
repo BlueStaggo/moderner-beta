@@ -2,29 +2,30 @@ pluginManagement {
     repositories {
         maven {
             name = "Fabric"
-            url = "https://maven.fabricmc.net/"
+            url = uri("https://maven.fabricmc.net/")
         }
         maven {
             name = "Architectury"
-            url = "https://maven.architectury.dev/"
+            url = uri("https://maven.architectury.dev/")
         }
         maven {
             name = "NeoForged"
-            url = "https://maven.neoforged.net/releases"
+            url = uri("https://maven.neoforged.net/releases")
         }
         maven {
-            url = "https://maven.kikugie.dev/releases"
+            url = uri("https://maven.kikugie.dev/releases")
         }
         maven {
-            url = "https://maven.kikugie.dev/snapshots"
+            url = uri("https://maven.kikugie.dev/snapshots")
         }
         gradlePluginPortal()
     }
 
+    val loom_version: String by extra
     resolutionStrategy {
         eachPlugin {
-            if (it.requested.id.id == "dev.architectury.loom") {
-                it.useVersion("${loom_version}")
+            if (requested.id.id == "dev.architectury.loom") {
+                useVersion("${loom_version}")
             }
         }
     }
@@ -39,9 +40,9 @@ stonecutter {
     centralScript = "build.gradle"
 
     create(getRootProject()) {
-        versions "1.20.1", "1.21.1", "1.21.4", "1.21.5"
+        versions("1.20.1", "1.21.1", "1.21.4", "1.21.5", "1.21.6")
         branch("fabric")
-        branch("forgelike")
+        branch("forgelike") { versions("1.20.1", "1.21.1", "1.21.4", "1.21.5") }
 
         vcsVersion = "1.21.5"
     }

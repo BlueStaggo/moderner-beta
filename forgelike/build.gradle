@@ -4,13 +4,14 @@ plugins {
     id "com.modrinth.minotaur" version "2.+"
 }
 
-var mc = stonecutter.current.version
-var neoforge = stonecutter.eval(mc, ">=1.20.2")
+var neoforge = stonecutter.eval(stonecutter.current.version, ">=1.20.2")
 var commonPr = stonecutter.node.sibling("").project
-
 if (commonPr == null) {
     throw new Exception("No common project for $project")
 }
+
+var mc = commonPr.minecraft_version_override != "N/A" ?
+        commonPr.minecraft_version_override : stonecutter.current.version
 
 var loader = neoforge ? "neoforge" : "forge"
 project.ext["loom.platform"] = loader

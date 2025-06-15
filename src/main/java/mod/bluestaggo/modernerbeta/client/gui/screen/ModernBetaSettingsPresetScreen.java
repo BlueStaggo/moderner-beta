@@ -266,8 +266,8 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
                     Identifier texture = isMouseHovering ? TEXTURE_JOIN_HIGHLIGHTED : TEXTURE_JOIN;
                     context.drawGuiTexture(
                         //? if >=1.21.6 {
-                        /*net.minecraft.client.gl.RenderPipelines.GUI_TEXTURED,*/
-                        //?} else if >=1.21.2 {
+                        /*net.minecraft.client.gl.RenderPipelines.GUI_TEXTURED,
+                        *///?} else if >=1.21.2 {
                         net.minecraft.client.render.RenderLayer::getGuiTextured,
                         //?}
                         texture,
@@ -319,8 +319,8 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
             private void draw(DrawContext context, int x, int y, Identifier textureId) {
                 context.drawTexture(
                     //? if >= 1.21.6 {
-                    /*net.minecraft.client.gl.RenderPipelines.GUI_TEXTURED,*/
-                    //?} else if >=1.21.2 {
+                    /*net.minecraft.client.gl.RenderPipelines.GUI_TEXTURED,
+                    *///?} else if >=1.21.2 {
                     net.minecraft.client.render.RenderLayer::getGuiTextured,
                     //?}
                     textureId,

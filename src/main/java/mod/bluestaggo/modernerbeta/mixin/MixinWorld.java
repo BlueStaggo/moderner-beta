@@ -135,7 +135,11 @@ public abstract class MixinWorld implements ModernBetaWorld {
     //?} else {
     /*@Redirect(
     *///?}
+        //? if >=1.21.6 {
+        /*method = "getPrecipitation",
+        *///?} else {
         method = "hasRain",
+        //?}
         at = @At(
             value = "INVOKE",
             target = VersionCompat.BIOME_GET_PRECIPITATION_TARGET

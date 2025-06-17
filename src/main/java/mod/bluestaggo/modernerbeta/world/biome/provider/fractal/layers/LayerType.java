@@ -27,6 +27,7 @@ public record LayerType<L extends Layer>(com.mojang.serialization.MapCodec<L> co
     public static LayerType<StackedZoomLayer> STACKED_ZOOM;
     public static LayerType<SupplyRandomLayer> SUPPLY_RANDOM;
     public static LayerType<UnsaltedLayer> UNSALTED;
+    public static LayerType<VoronoiZoomLayer> VORONOI_ZOOM;
     public static LayerType<WeightedPoolLayer> WEIGHTED_POOL;
 
     private static <L extends Layer> LayerType<L> register(String id, com.mojang.serialization.MapCodec<L> codec) {
@@ -58,6 +59,7 @@ public record LayerType<L extends Layer>(com.mojang.serialization.MapCodec<L> co
         STACKED_ZOOM = register("stacked_zoom", StackedZoomLayer.CODEC);
         SUPPLY_RANDOM = register("supply_random", SupplyRandomLayer.CODEC);
         UNSALTED = register("unsalted", UnsaltedLayer.CODEC);
+        VORONOI_ZOOM = register("voronoi_zoom", VoronoiZoomLayer.CODEC);
         WEIGHTED_POOL = register("weighted_pool", WeightedPoolLayer.CODEC);
     }
 

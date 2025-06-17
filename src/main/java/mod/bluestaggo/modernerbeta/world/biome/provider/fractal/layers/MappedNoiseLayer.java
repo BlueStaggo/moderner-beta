@@ -2,7 +2,10 @@ package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import it.unimi.dsi.fastutil.doubles.DoubleImmutableList;
+import it.unimi.dsi.fastutil.doubles.DoubleList;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
+import net.minecraft.util.math.noise.OctavePerlinNoiseSampler;
 import net.minecraft.util.math.noise.PerlinNoiseSampler;
 import net.minecraft.util.math.random.CheckedRandom;
 import net.minecraft.util.math.random.LocalRandom;
@@ -27,6 +30,7 @@ public class MappedNoiseLayer extends Layer {
                         )
                     ).toList()),
                 Codec.DOUBLE.fieldOf("scale").orElse(1.0).forGetter(layer -> layer.scale),
+                Codec.DOUBLE.listOf().fieldOf("amplitudes").orElse(List.of(1.0)).forGetter(layer -> layer.amplitudes),
                 Codec.BOOL.fieldOf("useSaltedSeed").orElse(true).forGetter(layer -> layer.useSaltedSeed)
             ))
             .apply(instance, MappedNoiseLayer::new)
@@ -36,10 +40,15 @@ public class MappedNoiseLayer extends Layer {
     private final List<Entry> upperBiomes;
     private final ExtendedBiomeId middleBiome;
     private final double scale;
+    private final DoubleList amplitudes;
     private final boolean useSaltedSeed;
-    private transient PerlinNoiseSampler noiseSampler;
+    private transient OctavePerlinNoiseSampler noiseSampler;
 
-    public MappedNoiseLayer(String id, long seed, List<Entry> values, double scale, boolean useSaltedSeed) {
+    public MappedNoiseLayer(String id, long seed, List<Entry> values, double scale, List<Double> amplitudes, boolean useSaltedSeed) {
+        this(id, seed, values, scale, new DoubleImmutableList(amplitudes), useSaltedSeed);
+    }
+
+    public MappedNoiseLayer(String id, long seed, List<Entry> values, double scale, DoubleList amplitudes, boolean useSaltedSeed) {
         super(id, seed);
         this.middleBiome = values.stream()
             .filter(pair -> pair.value == 0.0)
@@ -52,10 +61,10 @@ public class MappedNoiseLayer extends Layer {
             .toList();
         this.upperBiomes = values.stream()
             .filter(pair -> pair.value > 0.0)
-            // I don't know why I needed to specify that but I had to
             .sorted(Comparator.comparingDouble(Entry::value).reversed())
             .toList();
         this.scale = scale;
+        this.amplitudes = amplitudes;
         this.useSaltedSeed = useSaltedSeed;
     }
 
@@ -65,16 +74,18 @@ public class MappedNoiseLayer extends Layer {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void init(long worldSeed) {
         super.init(worldSeed);
         long noiseSeed = this.useSaltedSeed ? this.getSaltedSeed() : worldSeed;
-        this.noiseSampler = new PerlinNoiseSampler(new LocalRandom(noiseSeed));
+        this.noiseSampler = OctavePerlinNoiseSampler.createLegacy(new LocalRandom(noiseSeed), 0, amplitudes);
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void initUnsalted() {
         super.initUnsalted();
-        this.noiseSampler = new PerlinNoiseSampler(new LocalRandom(0));
+        this.noiseSampler = OctavePerlinNoiseSampler.createLegacy(new LocalRandom(0), 0, amplitudes);
     }
 
     @Override
@@ -108,8 +119,7 @@ public class MappedNoiseLayer extends Layer {
             instance -> instance.group(
                 Codec.DOUBLE.fieldOf("value").forGetter(Entry::value),
                 ExtendedBiomeId.CODEC.fieldOf("biome").forGetter(Entry::biome)
-            )
-                .apply(instance, Entry::new)
+            ).apply(instance, Entry::new)
         );
     }
 }

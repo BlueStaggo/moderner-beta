@@ -1,6 +1,10 @@
 **WARNING: OLD WORLDS FROM 2.X ARE INCOMPATIBLE!**
 However, they can be simply upgraded by replacing the "WorldGenSettings" compound in the level.dat file with a different "WorldGenSettings" compound from a newly generated world. Unmodified presets are now referred to by IDs so breaking changes should no longer have as much impact.
 
+1. Create a new world with the latest version of Moderner Beta with the same seed and preset as the old world.
+2. Open the level.dat file of the new world in an NBT editor and copy the "WorldGenSettings" tag.
+3. In the same editor, open the level.dat file of the old world, paste over the existing "WorldGenSettings" tag and save.
+
 A major number change means a big update. For this update, significant parts of the codebase have been refactored to ease development for not just people working on this mod but also for people working *with* Moderner Beta. Some changes have been made to make the mod more modular and to be more customizable, including entirely reworking the fractal layer system. Old worlds from 2.x releases are incompatible.
 
 ## Additions
@@ -26,8 +30,7 @@ A major number change means a big update. For this update, significant parts of 
 - **BREAKING CHANGE**: Moderner Beta now uses the vanilla registry implementation instead of its own custom implementation.
 - Settings can now be referenced by their preset id.
   - This eliminates the chance of breaking changes affecting worlds that use built-in presets. Worlds using custom presets are still affected.
-  - However, preset ids can be combined with other settings components through JSON to provide better compatibility for custom presets. For example, to generate noise caves in a Beta 1.7.3 world, the chunk provider settings would look like this:
-    ```json
+  - However, preset ids can be combined with other settings components through JSON to provide better compatibility for custom presets. For example, topresets
     {
       "moderner_beta:preset": "moderner_beta:beta",
       "moderner_beta:cave_generation": {

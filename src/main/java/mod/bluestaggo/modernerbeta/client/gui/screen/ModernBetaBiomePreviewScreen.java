@@ -71,8 +71,9 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                         *///?}
                     generationOptions.generatorOptions().getSeed()
                 );
-        } catch (Exception e) {
-            this.exceptionMessage = e.getLocalizedMessage();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            this.exceptionMessage = exception.getLocalizedMessage();
         }
 
         this.biomeProvider = biomeProvider;
@@ -285,7 +286,7 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
 
             int offsetMouseX = mouseX - this.getX();
             int offsetMouseY = mouseY - this.getY();
-            if (offsetMouseX >= 0 && offsetMouseY >= 0 && offsetMouseX < this.width && offsetMouseY < this.height) {
+            if (biomeProvider != null && offsetMouseX >= 0 && offsetMouseY >= 0 && offsetMouseX < this.width && offsetMouseY < this.height) {
                 int sampleX = (offsetMouseX + (int)Math.round(offsetX.get()) - this.width / 2) * this.zoomOut.get();
                 int sampleY = (offsetMouseY + (int)Math.round(offsetY.get()) - this.height / 2) * this.zoomOut.get();
                 Text biomeName = biomeProvider instanceof BiomeResolverStepped resolverStepped
@@ -530,6 +531,7 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                         *///?}
                     }
                 } catch (Exception exception) {
+                    exception.printStackTrace();
                     exceptionMessage = exception.getLocalizedMessage();
                 }
             }

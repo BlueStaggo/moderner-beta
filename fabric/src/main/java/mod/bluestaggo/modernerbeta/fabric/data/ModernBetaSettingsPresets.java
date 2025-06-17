@@ -1,6 +1,7 @@
 package mod.bluestaggo.modernerbeta.fabric.data;
 
 import com.google.common.collect.ImmutableMap;
+import it.unimi.dsi.fastutil.doubles.DoubleList;
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.api.world.biome.climate.TemperatureHeightScaling;
@@ -1671,7 +1672,7 @@ public final class ModernBetaSettingsPresets {
         );
     }
 
-    private static ConfiguredLayers configuredLayers1710Era(int biomeScale, boolean saltedMutation, boolean climaticOceans, boolean bambooJungles, boolean modernBiomes) {
+    private static ConfiguredLayers configuredLayers1710Era(int biomeScale, boolean saltedMutation, boolean climaticOceans, boolean bambooJungles, boolean strongBadlandsCategories, boolean modernBiomes) {
         Set<ExtendedBiomeId> oceans = ExtendedBiomeId.setOf("minecraft:ocean", "minecraft:deep_ocean");
         BiomePredicate oceansPredicate = BiomePredicate.inSet(oceans);
 
@@ -1836,9 +1837,11 @@ public final class ModernBetaSettingsPresets {
             .collect(Collectors.toSet());
         hillPredicate = BiomePredicate.inSet(hillTargetBiomeSet)
             .and(BiomePredicate.neighborsMatch(hillyCategories, 3));
-        hillPredicate = hillPredicate.or(BiomePredicate.inSet(biomeCategories.get("badlands_plateau"))
-            .and(BiomePredicate.neighborsMatch(
-                BiomePredicate.inSet(biomeCategories.get("badlands_all")), 3)));
+        if (!strongBadlandsCategories) {
+            hillPredicate = hillPredicate.or(BiomePredicate.inSet(biomeCategories.get("badlands_plateau"))
+                .and(BiomePredicate.neighborsMatch(
+                    BiomePredicate.inSet(biomeCategories.get("badlands_all")), 3)));
+        }
 
         List<Layer> layers = Stream.of(
             new InitLandLayer("land", 1),
@@ -2146,7 +2149,7 @@ public final class ModernBetaSettingsPresets {
                 new MappedNoiseLayer.Entry(0.0, ExtendedBiomeId.OCEAN),
                 new MappedNoiseLayer.Entry(-0.2, ExtendedBiomeId.COLD_OCEAN),
                 new MappedNoiseLayer.Entry(-0.4, ExtendedBiomeId.FROZEN_OCEAN)
-            ), 8.0, false) : null,
+            ), 8.0, DoubleList.of(1), false) : null,
             climaticOceans ? StackedZoomLayer.modal("ocean_climate", 2001, "ocean_climate", 6) : null,
             climaticOceans ? new ApplyOceanClimateLayer("land", 0, "land", "ocean_climate") : null
         ).filter(Objects::nonNull).toList();
@@ -2163,7 +2166,7 @@ public final class ModernBetaSettingsPresets {
                 .add(CAVE_GENERATION, CaveGeneration.RELEASE_1_12_2)
                 .add(FORCED_BIOME_HEIGHT, ForcedBiomeHeight.overridesOnly(HeightConfig.MAJOR_RELEASE_CONFIGS))
                 .build(),
-            ModernBetaSettings.fractalLayers(configuredLayers1710Era(biomeScale, false, false, false, false))
+            ModernBetaSettings.fractalLayers(configuredLayers1710Era(biomeScale, false, false, false, false, false))
                 .add(TEMPERATURE_HEIGHT_SCALING, TemperatureHeightScaling.MAJOR_RELEASE)
                 .build(),
             DEFAULT_BETA.caveBiomeSettings()
@@ -2179,7 +2182,7 @@ public final class ModernBetaSettingsPresets {
                 .add(CAVE_GENERATION, CaveGeneration.RELEASE_1_17_1)
                 .add(FORCED_BIOME_HEIGHT, ForcedBiomeHeight.overridesOnly(HeightConfig.MAJOR_RELEASE_CONFIGS))
                 .build(),
-            ModernBetaSettings.fractalLayers(configuredLayers1710Era(biomeScale, true, true, true, false))
+            ModernBetaSettings.fractalLayers(configuredLayers1710Era(biomeScale, true, true, true, true, false))
                 .add(TEMPERATURE_HEIGHT_SCALING, TemperatureHeightScaling.MAJOR_RELEASE)
                 .build(),
             DEFAULT_BETA.caveBiomeSettings()
@@ -2195,7 +2198,7 @@ public final class ModernBetaSettingsPresets {
                 .add(CAVE_GENERATION, CaveGeneration.RELEASE_1_17_1)
                 .add(FORCED_BIOME_HEIGHT, ForcedBiomeHeight.overridesOnly(HeightConfig.MAJOR_RELEASE_CONFIGS))
                 .build(),
-            ModernBetaSettings.fractalLayers(configuredLayers1710Era(biomeScale, true, true, true, true))
+            ModernBetaSettings.fractalLayers(configuredLayers1710Era(biomeScale, true, true, true, true, true))
                 .add(TEMPERATURE_HEIGHT_SCALING, TemperatureHeightScaling.MAJOR_RELEASE)
                 .build(),
             DEFAULT_BETA.caveBiomeSettings()
@@ -2381,7 +2384,7 @@ public final class ModernBetaSettingsPresets {
                 new MappedNoiseLayer("mutation", 7, List.of(
                     new MappedNoiseLayer.Entry(-1.0 / 3.0, ExtendedBiomeId.of("minecraft:the_void*mutation")),
                     new MappedNoiseLayer.Entry(0.0, ExtendedBiomeId.NULL)
-                ), 2, true),
+                ), 2, DoubleList.of(1), true),
                 StackedZoomLayer.modal("mutation", 2005, "mutation", 2),
                 new ConditionalOverlayLayer(
                     "land", 1000, "mutation",
@@ -2442,7 +2445,7 @@ public final class ModernBetaSettingsPresets {
                     new MappedNoiseLayer.Entry(0.0, ExtendedBiomeId.OCEAN),
                     new MappedNoiseLayer.Entry(-0.2, ExtendedBiomeId.COLD_OCEAN),
                     new MappedNoiseLayer.Entry(-0.4, ExtendedBiomeId.FROZEN_OCEAN)
-                ), 8.0, false),
+                ), 8.0, DoubleList.of(1), false),
                 StackedZoomLayer.modal("ocean_climate", 2001, "ocean_climate", 6),
                 new ApplyOceanClimateLayer("land", 0, "land", "ocean_climate")
             )

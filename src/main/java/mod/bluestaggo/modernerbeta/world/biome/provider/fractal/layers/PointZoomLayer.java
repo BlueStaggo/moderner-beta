@@ -7,15 +7,15 @@ import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 public class PointZoomLayer extends SingleParentLayer {
     public static final com.mojang.serialization.MapCodec<PointZoomLayer> CODEC = RecordCodecBuilder.mapCodec(
         instance -> fillSingleParentLayerFields(instance)
-            .and(Codec.INT.fieldOf("level").orElse(1).forGetter(layer -> layer.level))
+            .and(Codec.INT.fieldOf("scale").orElse(1).forGetter(layer -> layer.scale))
             .apply(instance, PointZoomLayer::new)
     );
 
-    private final int level;
+    private final int scale;
 
-    public PointZoomLayer(String id, long seed, String parent, int level) {
+    public PointZoomLayer(String id, long seed, String parent, int scale) {
         super(id, seed, parent);
-        this.level = level;
+        this.scale = scale;
     }
 
     @Override
@@ -25,6 +25,6 @@ public class PointZoomLayer extends SingleParentLayer {
 
     @Override
     protected ExtendedBiomeId generate(int x, int z) {
-        return this.parentLayer.sample(x * this.level, z * this.level);
+        return this.parentLayer.sample(x * this.scale, z * this.scale);
     }
 }

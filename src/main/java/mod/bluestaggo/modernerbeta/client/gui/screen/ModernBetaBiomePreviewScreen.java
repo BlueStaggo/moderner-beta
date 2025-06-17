@@ -13,6 +13,7 @@ import mod.bluestaggo.modernerbeta.api.world.biome.BiomeResolverStepped;
 import mod.bluestaggo.modernerbeta.api.world.chunk.surface.SurfaceConfig;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
+import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.LayerRandom;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
@@ -36,6 +37,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.random.RandomSeed;
 import net.minecraft.world.biome.Biome;
 import org.slf4j.event.Level;
 
@@ -154,7 +156,8 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
         final NativeImage image;
         final NativeImageBackedTexture texture;
         final BiomeRenderThread renderThread;
-        final AtomicInteger zoom = new AtomicInteger(1);
+        final AtomicInteger zoomOut = new AtomicInteger(1);
+        final AtomicInteger zoomIn = new AtomicInteger(1);
         final AtomicInteger step = new AtomicInteger();
 
         int prevMouseX, prevMouseY;
@@ -188,16 +191,27 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
         }
 
         void zoomOut() {
-            if (this.zoom.get() >= 0x4000_0000) return;
-            this.zoom.getAndUpdate(i -> i * 2);
+            if (this.zoomIn.get() > 1) {
+                this.zoomIn.getAndUpdate(i -> i / 2);
+            } else if (this.zoomOut.get() < 0x2000_0000) {
+                this.zoomOut.getAndUpdate(i -> i * 2);
+            } else {
+                return;
+            }
+
             this.offsetX.getAndUpdate(i -> i / 2);
             this.offsetY.getAndUpdate(i -> i / 2);
             this.clear();
         }
 
         void zoomIn() {
-            if (this.zoom.get() <= 1) return;
-            this.zoom.getAndUpdate(i -> i / 2);
+            if (this.zoomOut.get() <= 1) {
+                if (this.zoomIn.get() >= 0x2000_0000) return;
+                this.zoomIn.getAndUpdate(i -> i * 2);
+            } else {
+                this.zoomOut.getAndUpdate(i -> i / 2);
+            }
+
             this.offsetX.getAndUpdate(i -> i * 2);
             this.offsetY.getAndUpdate(i -> i * 2);
             this.clear();
@@ -272,8 +286,8 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
             int offsetMouseX = mouseX - this.getX();
             int offsetMouseY = mouseY - this.getY();
             if (offsetMouseX >= 0 && offsetMouseY >= 0 && offsetMouseX < this.width && offsetMouseY < this.height) {
-                int sampleX = (offsetMouseX + (int)Math.round(offsetX.get()) - this.width / 2) * this.zoom.get();
-                int sampleY = (offsetMouseY + (int)Math.round(offsetY.get()) - this.height / 2) * this.zoom.get();
+                int sampleX = (offsetMouseX + (int)Math.round(offsetX.get()) - this.width / 2) * this.zoomOut.get();
+                int sampleY = (offsetMouseY + (int)Math.round(offsetY.get()) - this.height / 2) * this.zoomOut.get();
                 Text biomeName = biomeProvider instanceof BiomeResolverStepped resolverStepped
                     ? resolverStepped.getBiomeNameForStep(sampleX, 64, sampleY, step)
                     : biomeProvider.getBiomeName(sampleX, 64, sampleY);
@@ -378,9 +392,9 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                 boolean full = true;
                 Int2IntMap randColors = new Int2IntAVLTreeMap();
                 Random random = new Random();
+                LayerRandom voronoiRandom = new LayerRandom(RandomSeed.getSeed());
 
                 try {
-
                     while (!stop) {
                         genX++;
                         if (genX >= width) {
@@ -419,13 +433,54 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                         }
                         full = false;
 
-                        int scale = zoom.get();
+                        int scale = zoomOut.get();
+                        int voronoiZoom = zoomIn.get();
                         @SuppressWarnings("IntegerDivisionInFloatingPointContext")
                         int gridScale = (int)Math.pow(2, ((int)(Math.log(scale) / Math.log(2)) + 2) / 4 * 4);
                         int intOffX = (int)Math.round(offsetX.get());
                         int intOffY = (int)Math.round(offsetY.get());
                         int sampleX = (genX + intOffX - width / 2) * scale;
                         int sampleY = (genY + intOffY - height / 2) * scale;
+
+                        if (voronoiZoom > 1) {
+                            float voronoiFactor = voronoiZoom * 0.9F;
+
+                            int scaledSampleX = Math.floorDiv(sampleX, voronoiZoom);
+                            int scaledSampleY = Math.floorDiv(sampleY, voronoiZoom);
+
+                            int subSampleX = Math.floorMod(sampleX, voronoiZoom);
+                            int subSampleY = Math.floorMod(sampleY, voronoiZoom);
+
+                            voronoiRandom.init(scaledSampleX, scaledSampleY);
+                            float n00x = (voronoiRandom.nextInt(1024) / 1024.0F - 0.5F) * voronoiFactor;
+                            float n00y = (voronoiRandom.nextInt(1024) / 1024.0F - 0.5F) * voronoiFactor;
+                            voronoiRandom.init(scaledSampleX + 1, scaledSampleY);
+                            float n10x = (voronoiRandom.nextInt(1024) / 1024.0F - 0.5F) * voronoiFactor + voronoiZoom;
+                            float n10y = (voronoiRandom.nextInt(1024) / 1024.0F - 0.5F) * voronoiFactor;
+                            voronoiRandom.init(scaledSampleX, scaledSampleY + 1);
+                            float n01x = (voronoiRandom.nextInt(1024) / 1024.0F - 0.5F) * voronoiFactor;
+                            float n01y = (voronoiRandom.nextInt(1024) / 1024.0F - 0.5F) * voronoiFactor + voronoiZoom;
+                            voronoiRandom.init(scaledSampleX + 1, scaledSampleY + 1);
+                            float n11x = (voronoiRandom.nextInt(1024) / 1024.0F - 0.5F) * voronoiFactor + voronoiZoom;
+                            float n11y = (voronoiRandom.nextInt(1024) / 1024.0F - 0.5F) * voronoiFactor + voronoiZoom;
+
+                            sampleX = scaledSampleX;
+                            sampleY = scaledSampleY;
+
+                            float dist00 = MathHelper.square(subSampleX - n00x) + MathHelper.square(subSampleY - n00y);
+                            float dist10 = MathHelper.square(subSampleX - n10x) + MathHelper.square(subSampleY - n10y);
+                            float dist01 = MathHelper.square(subSampleX - n01x) + MathHelper.square(subSampleY - n01y);
+                            float dist11 = MathHelper.square(subSampleX - n11x) + MathHelper.square(subSampleY - n11y);
+
+                            if (dist11 < dist10 && dist11 < dist01 && dist11 < dist00) {
+                                sampleX++;
+                                sampleY++;
+                            } else if (dist10 < dist00 && dist10 < dist01 && dist10 < dist11) {
+                                sampleX++;
+                            } else if (dist01 < dist00 && dist01 < dist10 && dist01 < dist11) {
+                                sampleY++;
+                            }
+                        }
 
                         int step = BiomeDisplayWidget.this.step.get();
                         RegistryEntry<Biome> biome = biomeProvider instanceof BiomeResolverStepped resolverStepped
@@ -443,9 +498,9 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                             int r = (color >> 16) & 0xFF;
                             int g = (color >> 8) & 0xFF;
                             int b = color & 0xFF;
-                            r = MathHelper.lerp(0.5F, r, 0xFF);
-                            g = MathHelper.lerp(0.5F, g, 0xFF);
-                            b = MathHelper.lerp(0.5F, b, 0xFF);
+                            r = MathHelper.lerp(1.0F / 3.0F, r, 0xFF);
+                            g = MathHelper.lerp(1.0F / 3.0F, g, 0xFF);
+                            b = MathHelper.lerp(1.0F / 3.0F, b, 0xFF);
                             color = r << 16 | g << 8 | b;
                         } else if (sampleX % (4 * gridScale) == 0 || sampleY % (4 * gridScale) == 0) {
                             int r = (color >> 16) & 0xFF;

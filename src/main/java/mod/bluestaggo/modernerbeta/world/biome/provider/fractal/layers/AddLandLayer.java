@@ -13,27 +13,38 @@ import static mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedB
 
 public class AddLandLayer extends SingleParentLayer {
     public static final com.mojang.serialization.MapCodec<AddLandLayer> CODEC = RecordCodecBuilder.mapCodec(
-        instance -> fillSingleParentLayerFields(instance)
-            .and(instance.group(
-                Codec.BOOL.fieldOf("betaShape").orElse(false).forGetter(layer -> layer.betaShape),
-                ExtendedBiomeId.CODEC.fieldOf("ocean").orElse(OCEAN).forGetter(layer -> layer.ocean),
-                ExtendedBiomeId.CODEC.fieldOf("land").orElse(PLAINS).forGetter(layer -> layer.land),
-                Codec.unboundedMap(ExtendedBiomeId.CODEC, ExtendedBiomeId.CODEC).fieldOf("biomeSpecificOceans").orElse(Map.of()).forGetter(layer -> layer.biomeSpecificOceans)
-            ))
-            .apply(instance, AddLandLayer::new)
+        instance ->instance.group(
+            Codec.STRING.fieldOf("id").forGetter(layer -> layer.id),
+            Codec.LONG.fieldOf("seed").orElse(0L).forGetter(layer -> layer.seed),
+            Codec.STRING.fieldOf("parent").forGetter(layer -> layer.parent),
+            Codec.BOOL.fieldOf("betaShape").orElse(false).forGetter(layer -> layer.betaShape),
+            ExtendedBiomeId.CODEC.fieldOf("ocean").orElse(OCEAN).forGetter(layer -> layer.ocean),
+            ExtendedBiomeId.CODEC.fieldOf("land").orElse(PLAINS).forGetter(layer -> layer.land),
+            Codec.unboundedMap(ExtendedBiomeId.CODEC, ExtendedBiomeId.CODEC).fieldOf("biomeSpecificOceans").orElse(Map.of()).forGetter(layer -> layer.biomeSpecificOceans),
+            Codec.INT.fieldOf("landChance").orElse(3).forGetter(layer -> layer.landChance),
+            Codec.INT.fieldOf("oceanChance").orElse(5).forGetter(layer -> layer.oceanChance)
+        ).apply(instance, AddLandLayer::new)
     );
 
     private final boolean betaShape;
     private final ExtendedBiomeId ocean;
     private final ExtendedBiomeId land;
     private final Map<ExtendedBiomeId, ExtendedBiomeId> biomeSpecificOceans;
+    private final int landChance;
+    private final int oceanChance;
 
     public AddLandLayer(String id, long seed, String parent, boolean betaShape, ExtendedBiomeId ocean, ExtendedBiomeId land, Map<ExtendedBiomeId, ExtendedBiomeId> biomeSpecificOceans) {
+        this(id, seed, parent, betaShape, ocean, land, biomeSpecificOceans, 3, 5);
+    }
+
+    public AddLandLayer(String id, long seed, String parent, boolean betaShape, ExtendedBiomeId ocean, ExtendedBiomeId land, Map<ExtendedBiomeId, ExtendedBiomeId> biomeSpecificOceans, int landChance, int oceanChance) {
         super(id, seed, parent);
         this.betaShape = betaShape;
         this.ocean = ocean;
         this.land = land;
         this.biomeSpecificOceans = biomeSpecificOceans;
+        this.landChance = landChance;
+        this.oceanChance = oceanChance;
     }
 
     public static AddLandLayer forIslandScaleBeta(String id, long seed, String parent) {
@@ -79,24 +90,25 @@ public class AddLandLayer extends SingleParentLayer {
             ExtendedBiomeId sampledLand = this.land;
             LayerRandom random = this.getRandom(x, z);
 
-            boolean addLand = false;
+            boolean addLand;
             if (this.betaShape) {
-                addLand = random.nextInt(3) == 2;
-            }
-
-            for (ExtendedBiomeId neighbor : neighbors) {
-                if (!neighbor.equals(this.ocean) && random.nextInt(landSampleChance++) == 0) {
-                    sampledLand = neighbor;
+                addLand = random.nextInt(this.landChance) == this.landChance - 1;
+            } else {
+                for (ExtendedBiomeId neighbor : neighbors) {
+                    if (!neighbor.equals(this.ocean) && random.nextInt(landSampleChance++) == 0) {
+                        sampledLand = neighbor;
+                    }
                 }
+                addLand = random.nextInt(this.landChance) == 0;
             }
 
-            if (!this.betaShape) {
-                addLand = random.nextInt(3) == 0;
-            }
             return addLand ? sampledLand : this.biomeSpecificOceans.getOrDefault(sampledLand, this.ocean);
-        } else if (!base.equals(this.ocean) && neighborsContain(neighbors, this.ocean)) {
+        } else if (this.betaShape
+            ? base.equals(this.land) && !allNeighborsEqual(neighbors, this.land)
+            : !base.equals(this.ocean) && neighborsContain(neighbors, this.ocean)
+        ) {
             LayerRandom random = this.getRandom(x, z);
-            if (random.nextInt(5) == (this.betaShape ? 4 : 0)) {
+            if (random.nextInt(this.oceanChance) == (this.betaShape ? this.oceanChance - 1 : 0)) {
                 return this.biomeSpecificOceans.getOrDefault(base, this.ocean);
             }
         }

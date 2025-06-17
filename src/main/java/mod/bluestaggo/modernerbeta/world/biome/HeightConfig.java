@@ -123,6 +123,9 @@ public record HeightConfig(float depth, float scale, String type) {
 			ExtendedBiomeId.of("minecraft:deep_ocean"),
 			new HeightConfig(-1.8f, 0.2f));
 		majorReleaseHeightConfigs.put(
+			ExtendedBiomeId.of("minecraft:warm_ocean*deep"),
+			new HeightConfig(-1.0f, 0.2f));
+		majorReleaseHeightConfigs.put(
 			ExtendedBiomeId.of("minecraft:deep_lukewarm_ocean"),
 			new HeightConfig(-1.8f, 0.2f));
 		majorReleaseHeightConfigs.put(

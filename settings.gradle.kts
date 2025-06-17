@@ -21,11 +21,12 @@ pluginManagement {
         gradlePluginPortal()
     }
 
+    @Suppress("LocalVariableName")
     val loom_version: String by extra
     resolutionStrategy {
         eachPlugin {
             if (requested.id.id == "dev.architectury.loom") {
-                useVersion("${loom_version}")
+                useVersion(loom_version)
             }
         }
     }

@@ -13,7 +13,7 @@ import static mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedB
 
 public class AddLandLayer extends SingleParentLayer {
     public static final com.mojang.serialization.MapCodec<AddLandLayer> CODEC = RecordCodecBuilder.mapCodec(
-        instance ->instance.group(
+        instance -> instance.group(
             Codec.STRING.fieldOf("id").forGetter(layer -> layer.id),
             Codec.LONG.fieldOf("seed").orElse(0L).forGetter(layer -> layer.seed),
             Codec.STRING.fieldOf("parent").forGetter(layer -> layer.parent),

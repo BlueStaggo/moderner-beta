@@ -17,6 +17,7 @@ public class ApplyOceanClimateLayer extends SingleParentLayer {
     );
     private static final Set<ExtendedBiomeId> BASE_OCEANS = Set.of(ExtendedBiomeId.OCEAN, ExtendedBiomeId.DEEP_OCEAN);
     private static final Map<ExtendedBiomeId, ExtendedBiomeId> DEEP_MAP = Map.of(
+        ExtendedBiomeId.WARM_OCEAN, ExtendedBiomeId.WARM_OCEAN.withExt("deep"),
         ExtendedBiomeId.LUKEWARM_OCEAN, ExtendedBiomeId.DEEP_LUKEWARM_OCEAN,
         ExtendedBiomeId.OCEAN, ExtendedBiomeId.DEEP_OCEAN,
         ExtendedBiomeId.COLD_OCEAN, ExtendedBiomeId.DEEP_COLD_OCEAN,

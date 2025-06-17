@@ -287,8 +287,8 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
             int offsetMouseX = mouseX - this.getX();
             int offsetMouseY = mouseY - this.getY();
             if (biomeProvider != null && offsetMouseX >= 0 && offsetMouseY >= 0 && offsetMouseX < this.width && offsetMouseY < this.height) {
-                int sampleX = (offsetMouseX + (int)Math.round(offsetX.get()) - this.width / 2) * this.zoomOut.get();
-                int sampleY = (offsetMouseY + (int)Math.round(offsetY.get()) - this.height / 2) * this.zoomOut.get();
+                int sampleX = (offsetMouseX + (int)Math.round(offsetX.get()) - this.width / 2) * this.zoomOut.get() / this.zoomIn.get();
+                int sampleY = (offsetMouseY + (int)Math.round(offsetY.get()) - this.height / 2) * this.zoomOut.get() / this.zoomIn.get();
                 Text biomeName = biomeProvider instanceof BiomeResolverStepped resolverStepped
                     ? resolverStepped.getBiomeNameForStep(sampleX, 64, sampleY, step)
                     : biomeProvider.getBiomeName(sampleX, 64, sampleY);
@@ -437,11 +437,13 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                         int scale = zoomOut.get();
                         int voronoiZoom = zoomIn.get();
                         @SuppressWarnings("IntegerDivisionInFloatingPointContext")
-                        int gridScale = (int)Math.pow(2, ((int)(Math.log(scale) / Math.log(2)) + 2) / 4 * 4);
+                        int gridScale = (int)Math.pow(2, ((int)(Math.log(scale) / Math.log(2)) + 2) / 4 * 4) * voronoiZoom;
                         int intOffX = (int)Math.round(offsetX.get());
                         int intOffY = (int)Math.round(offsetY.get());
                         int sampleX = (genX + intOffX - width / 2) * scale;
                         int sampleY = (genY + intOffY - height / 2) * scale;
+                        int gridSampleX = sampleX;
+                        int gridSampleY = sampleY;
 
                         if (voronoiZoom > 1) {
                             float voronoiFactor = voronoiZoom * 0.9F;
@@ -495,7 +497,7 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
 
                         int color = this.getBiomeColor(biome, extendedBiome.ext(), sampleX, sampleY, randColors, random);
 
-                        if (sampleX % (64 * gridScale) == 0 || sampleY % (64 * gridScale) == 0) {
+                        if (gridSampleX % (64 * gridScale) == 0 || gridSampleY % (64 * gridScale) == 0) {
                             int r = (color >> 16) & 0xFF;
                             int g = (color >> 8) & 0xFF;
                             int b = color & 0xFF;
@@ -503,7 +505,7 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                             g = MathHelper.lerp(1.0F / 3.0F, g, 0xFF);
                             b = MathHelper.lerp(1.0F / 3.0F, b, 0xFF);
                             color = r << 16 | g << 8 | b;
-                        } else if (sampleX % (4 * gridScale) == 0 || sampleY % (4 * gridScale) == 0) {
+                        } else if (gridSampleX % (4 * gridScale) == 0 || gridSampleY % (4 * gridScale) == 0) {
                             int r = (color >> 16) & 0xFF;
                             int g = (color >> 8) & 0xFF;
                             int b = color & 0xFF;

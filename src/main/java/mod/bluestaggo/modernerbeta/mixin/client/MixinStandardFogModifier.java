@@ -1,5 +1,5 @@
 //? if >=1.21.6 {
-/*package mod.bluestaggo.modernerbeta.mixin.client;
+package mod.bluestaggo.modernerbeta.mixin.client;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.client.FogUtils;
@@ -51,4 +51,4 @@ public abstract class MixinStandardFogModifier {
         return modernBeta_isModernBetaWorld && ModernerBeta.CONFIG.useOldFogColor ? modernBeta_fogWeight : weight;
     }
 }
-*///?}
+//?}

@@ -30,11 +30,11 @@
   "client": [
     "client.AccessorTextWidget",
     //? if >=1.21.6 {
-    /*"client.MixinStandardFogModifier",
+    "client.MixinStandardFogModifier",
     "client.MixinWaterFogModifier",
-    *///?} else {
-    "client.MixinBackgroundRenderer",
-    //?}
+    //?} else {
+    /*"client.MixinBackgroundRenderer",
+    *///?}
     "client.MixinBiomeColors",
     "client.MixinClientWorld",
     "client.MixinDebugHud",

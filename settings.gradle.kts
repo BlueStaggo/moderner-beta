@@ -45,6 +45,6 @@ stonecutter {
         branch("fabric")
         branch("forgelike")
 
-        vcsVersion = "1.21.5"
+        vcsVersion = "1.21.6"
     }
 }

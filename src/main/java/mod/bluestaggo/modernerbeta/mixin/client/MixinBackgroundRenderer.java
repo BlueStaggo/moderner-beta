@@ -1,5 +1,5 @@
 //? if <1.21.6 {
-package mod.bluestaggo.modernerbeta.mixin.client;
+/*package mod.bluestaggo.modernerbeta.mixin.client;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.api.world.biome.climate.Clime;
@@ -23,15 +23,15 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 //?} else {
-/*import org.spongepowered.asm.mixin.injection.Redirect;
-*///?}
+/^import org.spongepowered.asm.mixin.injection.Redirect;
+^///?}
 
 //? if >=1.21.2 {
 import org.joml.Vector4f;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 //?} else {
-/*import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-*///?}
+/^import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+^///?}
 
 @Environment(EnvType.CLIENT)
 @Mixin(BackgroundRenderer.class)
@@ -40,8 +40,8 @@ public abstract class MixinBackgroundRenderer {
         //? if >=1.21.2 {
         "getFogColor";
         //?} else {
-        /*"render";
-        *///?}
+        /^"render";
+        ^///?}
 
     @Unique private static Vec3d modernBeta_pos;
     @Unique private static int modernBeta_renderDistance = 16;
@@ -51,8 +51,8 @@ public abstract class MixinBackgroundRenderer {
     //? if >=1.20.2 {
     @WrapOperation(
     //?} else {
-    /*@Redirect(
-    *///?}
+    /^@Redirect(
+    ^///?}
         method = GET_FOG_COLOR_METHOD,
         at = @At(
             value = "INVOKE",
@@ -74,8 +74,8 @@ public abstract class MixinBackgroundRenderer {
         //? if >=1.20.2 {
         return original.call(instance);
         //?} else {
-        /*return instance.getWaterFogColor();
-        *///?}
+        /^return instance.getWaterFogColor();
+        ^///?}
     }
     
     @Inject(method = GET_FOG_COLOR_METHOD, at = @At("HEAD"))
@@ -83,8 +83,8 @@ public abstract class MixinBackgroundRenderer {
                                     //? if >=1.21.2 {
                                     CallbackInfoReturnable<Vector4f> cir
                                     //?} else {
-                                    /*CallbackInfo ci
-                                    *///?}
+                                    /^CallbackInfo ci
+                                    ^///?}
     ) {
         modernBeta_pos = camera.getPos();
 
@@ -105,13 +105,13 @@ public abstract class MixinBackgroundRenderer {
             //? if >=1.21.2 {
             target = "Lnet/minecraft/client/world/ClientWorld;getSkyColor(Lnet/minecraft/util/math/Vec3d;F)I"
             //?} else {
-            /*target = "Lnet/minecraft/client/world/ClientWorld;getSkyColor(Lnet/minecraft/util/math/Vec3d;F)Lnet/minecraft/util/math/Vec3d;"
-            *///?}
+            /^target = "Lnet/minecraft/client/world/ClientWorld;getSkyColor(Lnet/minecraft/util/math/Vec3d;F)Lnet/minecraft/util/math/Vec3d;"
+            ^///?}
         ),
-        index = /*? if >=1.21.2 {*/10/*?} else {*/ /*7 *//*?}*/
+        index = /^? if >=1.21.2 {^/10/^?} else {^/ /^7 ^//^?}^/
     )
     private static float modifyFogWeighting(float weight) {
         return modernBeta_isModernBetaWorld && ModernerBeta.CONFIG.useOldFogColor ? modernBeta_fogWeight : weight;
     }
 }
-//?}
+*///?}

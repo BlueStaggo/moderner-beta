@@ -4,7 +4,7 @@ plugins {
 }
 
 plugins.apply("dev.kikugie.stonecutter")
-stonecutter.active("1.21.5")
+stonecutter.active("1.21.6")
 
 stonecutter.parameters {
     replacements {

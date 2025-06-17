@@ -6,6 +6,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.noise.OctaveSimplexNoiseSampler;
 import net.minecraft.util.math.random.CheckedRandom;
 import net.minecraft.util.math.random.ChunkRandom;
+import net.minecraft.world.biome.Biome;
 
 public enum TemperatureHeightScaling implements StringIdentifiable {
     BETA("beta") {
@@ -21,6 +22,11 @@ public enum TemperatureHeightScaling implements StringIdentifiable {
             double g = TEMPERATURE_NOISE.sample((float)blockPos.getX() / 8.0f, (float)blockPos.getZ() / 8.0f, false) * 4.0;
             return temp - (g + (float)blockPos.getY() - 64.0) * 0.05 / 30.0;
         }
+
+        @Override
+        public boolean supportsModifier(Biome.TemperatureModifier temperatureModifier) {
+            return temperatureModifier != Biome.TemperatureModifier.NONE;
+        }
     },
     CAVES_AND_CLIFFS("caves_and_cliffs") {
         @Override
@@ -28,6 +34,11 @@ public enum TemperatureHeightScaling implements StringIdentifiable {
             if (blockPos.getY() <= 80) return temp;
             double g = TEMPERATURE_NOISE.sample((float)blockPos.getX() / 8.0f, (float)blockPos.getZ() / 8.0f, false) * 8.0;
             return temp - (g + (float)blockPos.getY() - 80.0) * 0.05 / 40.0;
+        }
+
+        @Override
+        public boolean supportsModifier(Biome.TemperatureModifier temperatureModifier) {
+            return temperatureModifier != Biome.TemperatureModifier.NONE;
         }
     },
     NONE("none") {
@@ -46,6 +57,10 @@ public enum TemperatureHeightScaling implements StringIdentifiable {
     }
 
     public abstract double modifyTemperature(BlockPos blockPos, double temp);
+
+    public boolean supportsModifier(Biome.TemperatureModifier temperatureModifier) {
+        return false;
+    }
 
     @Override
     public String asString() {

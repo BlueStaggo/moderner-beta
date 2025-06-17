@@ -17,7 +17,7 @@ public class ModernBetaTagProviderSettingsPresetCategory extends FabricTagProvid
 
     @Override
     protected void configure(WrapperLookup lookup) {
-        this.getOrCreateTagBuilder(SELECTABLE).add(
+        this.builder(SELECTABLE).add(
             ModernBetaSettingsPresetCategories.BETA,
             ModernBetaSettingsPresetCategories.ALPHA_INFDEV,
             ModernBetaSettingsPresetCategories.FINITE,

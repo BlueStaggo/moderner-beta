@@ -255,10 +255,10 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
 
             context.drawTexture(
                 //? if >= 1.21.6 {
-                /*net.minecraft.client.gl.RenderPipelines.GUI_TEXTURED,
-                *///?} else if >=1.21.2 {
-                net.minecraft.client.render.RenderLayer::getGuiTextured,
-                //?}
+                net.minecraft.client.gl.RenderPipelines.GUI_TEXTURED,
+                //?} else if >=1.21.2 {
+                /*net.minecraft.client.render.RenderLayer::getGuiTextured,
+                *///?}
                 TEXTURE_ID,
                 this.getX(), this.getY(),
                 0.0F, 0.0F,

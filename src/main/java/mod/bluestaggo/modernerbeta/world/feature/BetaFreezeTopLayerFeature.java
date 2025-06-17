@@ -63,7 +63,7 @@ public class BetaFreezeTopLayerFeature extends Feature<DefaultFeatureConfig> {
                         && climateSampler.useBiomeFeature()) {
                         temp = climateSampler.sampleModifiedTemperature(mutable, temperatureModifier);
                         coldThreshold = climateSampler.getSnowThreshold();
-                    } else if (temperatureModifier != Biome.TemperatureModifier.NONE) {
+                    } else if (heightType.supportsModifier(temperatureModifier)) {
                         temp = temperatureModifier.getModifiedTemperature(mutable, (float)temp);
                     }
                 }

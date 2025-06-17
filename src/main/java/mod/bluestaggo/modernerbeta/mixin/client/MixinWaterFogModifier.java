@@ -1,5 +1,5 @@
 //? if >=1.21.6 {
-/*package mod.bluestaggo.modernerbeta.mixin.client;
+package mod.bluestaggo.modernerbeta.mixin.client;
 
 import mod.bluestaggo.modernerbeta.api.world.biome.climate.Clime;
 import mod.bluestaggo.modernerbeta.client.color.BlockColorSampler;
@@ -48,4 +48,4 @@ public abstract class MixinWaterFogModifier {
         modernBeta_pos = camera.getPos();
     }
 }
-*///?}
+//?}

@@ -61,16 +61,16 @@ public class ModernBetaSettingsScreen extends ModernBetaScreen {
         int editBoxHeight = this.height - 96;
 
         //? if >=1.21.6 {
-        /*this.widgetSettings = EditBoxWidget.builder().build(
-        *///?} else {
-        this.widgetSettings = new EditBoxWidget(
-        //?}
+        this.widgetSettings = EditBoxWidget.builder().build(
+        //?} else {
+        /*this.widgetSettings = new EditBoxWidget(
+        *///?}
                 this.textRenderer,
                 //? if <1.21.6
-                0, 0,
+                /*0, 0,*/
                 editBoxWidth, editBoxHeight,
                 //? if <1.21.6
-                Text.of(""),
+                /*Text.of(""),*/
                 Text.translatable(TEXT_SETTINGS)
         );
         this.widgetSettings.setText(this.settingsString);

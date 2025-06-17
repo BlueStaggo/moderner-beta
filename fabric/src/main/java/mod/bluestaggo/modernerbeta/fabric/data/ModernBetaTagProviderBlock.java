@@ -14,22 +14,22 @@ import java.util.concurrent.CompletableFuture;
 public class ModernBetaTagProviderBlock
         extends
         //? if >=1.21.6 {
-        /*FabricTagProvider.BlockTagProvider
-        *///?} else {
-        FabricTagProvider<Block>
-        //?}
+        FabricTagProvider.BlockTagProvider
+        //?} else {
+        /*FabricTagProvider<Block>
+        *///?}
 {
     public ModernBetaTagProviderBlock(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
-        super(output, /*? <1.21.6 {*/ RegistryKeys.BLOCK, /*?}*/ registriesFuture);
+        super(output, /*? <1.21.6 {*/ /*RegistryKeys.BLOCK, *//*?}*/ registriesFuture);
     }
 
     @Override
     protected void configure(WrapperLookup lookup) {
         //? if >=1.21.6 {
-        /*this.valueLookupBuilder(
-        *///?} else {
-        this.getOrCreateTagBuilder(
-        //?}
+        this.valueLookupBuilder(
+        //?} else {
+        /*this.builder(
+        *///?}
                 ModernBetaBlockTags.OVERWORLD_CARVER_REPLACEABLES
         ).add(
             Blocks.STONE,

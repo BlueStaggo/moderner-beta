@@ -103,7 +103,7 @@ public abstract class MixinWorld implements ModernBetaWorld {
         }
 
         Biome.TemperatureModifier temperatureModifier = biomeAccessor.getWeather().temperatureModifier();
-        if (temperatureModifier != Biome.TemperatureModifier.NONE) {
+        if (temperatureHeightScaling.supportsModifier(temperatureModifier)) {
             temperature = temperatureModifier.getModifiedTemperature(pos, (float)temperature);
         }
 
@@ -136,10 +136,10 @@ public abstract class MixinWorld implements ModernBetaWorld {
     /*@Redirect(
     *///?}
         //? if >=1.21.6 {
-        /*method = "getPrecipitation",
-        *///?} else {
-        method = "hasRain",
-        //?}
+        method = "getPrecipitation",
+        //?} else {
+        /*method = "hasRain",
+        *///?}
         at = @At(
             value = "INVOKE",
             target = VersionCompat.BIOME_GET_PRECIPITATION_TARGET

@@ -31,19 +31,10 @@ public interface ClimateSampler {
      */
     default double sampleModifiedTemperature(BlockPos blockPos, Biome.TemperatureModifier modifier) {
         double temp = this.sample(blockPos.getX(), blockPos.getZ()).temp();
-        if (modifier != Biome.TemperatureModifier.NONE) {
+        if (this.getHeightType().supportsModifier(modifier)) {
             temp = modifier.getModifiedTemperature(blockPos, (float)temp);
         }
         return temp;
-    }
-
-    default Biome.Precipitation samplePrecipitation(Biome biome, BlockPos blockPos) {
-        if (!biome.hasPrecipitation()) {
-            return Biome.Precipitation.NONE;
-        }
-        double temperature = this.sampleModifiedTemperature(blockPos,
-            ((AccessorBiome)(Object)biome).getWeather().temperatureModifier());
-        return temperature < this.getSnowThreshold() ? Biome.Precipitation.SNOW : Biome.Precipitation.RAIN;
     }
 
     /**

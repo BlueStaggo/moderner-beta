@@ -30,7 +30,8 @@ A major number change means a big update. For this update, significant parts of 
 - **BREAKING CHANGE**: Moderner Beta now uses the vanilla registry implementation instead of its own custom implementation.
 - Settings can now be referenced by their preset id.
   - This eliminates the chance of breaking changes affecting worlds that use built-in presets. Worlds using custom presets are still affected.
-  - However, preset ids can be combined with other settings components through JSON to provide better compatibility for custom presets. For example, topresets
+  - However, preset ids can be combined with other settings components through JSON to provide better compatibility for custom presets. For example, to create a beta world with noise caves:
+    ```json
     {
       "moderner_beta:preset": "moderner_beta:beta",
       "moderner_beta:cave_generation": {

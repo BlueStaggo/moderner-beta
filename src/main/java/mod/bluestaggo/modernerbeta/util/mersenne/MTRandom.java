@@ -2,7 +2,6 @@ package mod.bluestaggo.modernerbeta.util.mersenne;
 
 import java.util.Random;
 
-@SuppressWarnings("serial")
 public class MTRandom extends Random {
     private static final double MAX_UINT_32 = 4294967296D;
     

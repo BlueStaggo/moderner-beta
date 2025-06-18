@@ -166,6 +166,18 @@ public class ModernBetaBuiltInProviders {
                 SettingsComponentTypes.ISLES_PROPERTIES
             )
         ));
+        registryHandler.register(ModernBetaBuiltInTypes.Chunk.EARLY_BEDROCK.id, new ChunkProviderType<>(
+            ChunkProviderEarlyBedrock::new, () -> List.of(
+                SettingsComponentTypes.DEEPSLATE_GENERATION,
+                SettingsComponentTypes.USE_SURFACE_RULES,
+                SettingsComponentTypes.SEA_LEVEL_OFFSET,
+                SettingsComponentTypes.CAVE_GENERATION,
+                SettingsComponentTypes.NOISE_SCALE,
+                SettingsComponentTypes.NOISE_SLIDE,
+                SettingsComponentTypes.FORCED_BIOME_HEIGHT,
+                SettingsComponentTypes.ISLES_PROPERTIES
+            )
+        ));
     }
     
     // Register default biome providers

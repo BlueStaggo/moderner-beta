@@ -35,7 +35,7 @@ import static mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes.*;
 
 public final class ModernBetaSettingsPresets {
     public static final ModernBetaSettingsPreset DEFAULT_BETA = presetBeta(false);
-    public static final ModernBetaSettingsPreset DEFAULT_MAJOR = preset1122(0);
+    public static final ModernBetaSettingsPreset DEFAULT_MAJOR = preset1122(0, false);
 
     public static void bootstrap(Registerable<ModernBetaSettingsPreset> presetRegisterable) {
         Identifier betaId = ModernerBeta.createId("beta");
@@ -61,7 +61,9 @@ public final class ModernBetaSettingsPresets {
         presetRegisterable.register(keyOf("release_1_2_5"), preset125(0));
         presetRegisterable.register(keyOf("release_1_6_4"), preset164(0));
         presetRegisterable.register(keyOf("release_1_12_2"), DEFAULT_MAJOR);
-        presetRegisterable.register(keyOf("release_1_17_1"), preset1171(0));
+        presetRegisterable.register(keyOf("release_1_17_1"), preset1171(0, false));
+        presetRegisterable.register(keyOf("bedrock_1_2"), preset1122(0, true));
+        presetRegisterable.register(keyOf("bedrock_1_17"), preset1171(0, true));
         presetRegisterable.register(keyOf("beta_skylands"), presetBetaSkylands());
         presetRegisterable.register(keyOf("beta_isles"), presetIsles(DEFAULT_BETA, betaId));
         presetRegisterable.register(keyOf("beta_water_world"), presetWaterWorld(DEFAULT_BETA, betaId));
@@ -92,8 +94,8 @@ public final class ModernBetaSettingsPresets {
         presetRegisterable.register(keyOf("release_1_1_large_biomes"), preset11(2));
         presetRegisterable.register(keyOf("release_1_2_5_large_biomes"), preset125(2));
         presetRegisterable.register(keyOf("release_1_6_4_large_biomes"), preset164(2));
-        presetRegisterable.register(keyOf("release_1_12_2_large_biomes"), preset1122(2));
-        presetRegisterable.register(keyOf("release_1_17_1_large_biomes"), preset1171(2));
+        presetRegisterable.register(keyOf("release_1_12_2_large_biomes"), preset1122(2, false));
+        presetRegisterable.register(keyOf("release_1_17_1_large_biomes"), preset1171(2, false));
         presetRegisterable.register(keyOf("release_hybrid_large_biomes"), presetReleaseHybrid(2));
         presetRegisterable.register(keyOf("snow_aint_snowier_large_biomes"), presetSnowAintSnowier(2));
     }
@@ -1672,7 +1674,12 @@ public final class ModernBetaSettingsPresets {
         );
     }
 
-    private static ConfiguredLayers configuredLayers1710Era(int biomeScale, boolean saltedMutation, boolean climaticOceans, boolean bambooJungles, boolean strongBadlandsCategories, boolean modernBiomes) {
+    private static ConfiguredLayers configuredLayers1710Era(int biomeScale, boolean bedrock, boolean saltedMutation, boolean climaticOceans, boolean bambooJungles, boolean strongBadlandsCategories, boolean modernBiomes) {
+        if (bedrock) {
+            saltedMutation = true;
+            strongBadlandsCategories = false;
+        }
+
         Set<ExtendedBiomeId> oceans = ExtendedBiomeId.setOf("minecraft:ocean", "minecraft:deep_ocean");
         BiomePredicate oceansPredicate = BiomePredicate.inSet(oceans);
 
@@ -1925,8 +1932,8 @@ public final class ModernBetaSettingsPresets {
                 "mutation", 0, "land", BiomePredicate.of(ExtendedBiomeId.OCEAN),
                 LayerTarget.none(), LayerTarget.layer("mutation")
             ),
-            StackedZoomLayer.modal("river", 1000, "mutation", 2),
-            StackedZoomLayer.modal("river", 1000, "river", 4 + biomeScale),
+            bedrock ? StackedZoomLayer.modal("river", 1001, "mutation", 2, 0) : StackedZoomLayer.modal("river", 1000, "mutation", 2),
+            bedrock ? StackedZoomLayer.modal("river", 1001, "river", 4 + biomeScale, 0) : StackedZoomLayer.modal("river", 1000, "river", 4 + biomeScale),
             saltedMutation
                 ? StackedZoomLayer.modal("mutation", 1000, "mutation", 2)
                 : StackedZoomLayer.modal("mutation", 1000, "mutation", 2).unsalted(),
@@ -1946,14 +1953,27 @@ public final class ModernBetaSettingsPresets {
                 "minecraft:wooded_badlands",
                 "minecraft:wooded_badlands"
             )),
-            new RandomBiomeLayer("biome_pool_temperate", 200, ExtendedBiomeId.listOf(
-                "minecraft:forest",
-                "minecraft:dark_forest",
-                "minecraft:windswept_hills",
-                "minecraft:plains",
-                "minecraft:birch_forest",
-                "minecraft:swamp"
-            )),
+            new RandomBiomeLayer("biome_pool_temperate", 200,
+                bedrock
+                    ? ExtendedBiomeId.listOf(
+                        "minecraft:forest",
+                        "minecraft:dark_forest",
+                        "minecraft:windswept_hills",
+                        "minecraft:plains",
+                        "minecraft:plains",
+                        "minecraft:plains",
+                        "minecraft:birch_forest",
+                        "minecraft:swamp"
+                    )
+                    : ExtendedBiomeId.listOf(
+                        "minecraft:forest",
+                        "minecraft:dark_forest",
+                        "minecraft:windswept_hills",
+                        "minecraft:plains",
+                        "minecraft:birch_forest",
+                        "minecraft:swamp"
+                    )
+            ),
             new ConstantBiomeLayer("biome_pool_temperate_rare", 200, ExtendedBiomeId.of("minecraft:jungle")),
             new RandomBiomeLayer("biome_pool_cool", 200, ExtendedBiomeId.listOf(
                 "minecraft:forest",
@@ -1990,7 +2010,7 @@ public final class ModernBetaSettingsPresets {
                     .and(BiomePredicate.oneIn(10)),
                 LayerTarget.biome("minecraft:bamboo_jungle"), LayerTarget.none()
             ) : null,
-            StackedZoomLayer.modal("land", 1000, "land", 2),
+            bedrock ? StackedZoomLayer.modal("land", 1001, "land", 2, 0) : StackedZoomLayer.modal("land", 1000, "land", 2),
             // BiomeTransitionLayer
             new PredicateOverlayLayer("land", 0, "land", Stream.of(
                 // Mountain edge has been omitted because it ends up just not generating at all
@@ -2146,46 +2166,70 @@ public final class ModernBetaSettingsPresets {
             StackedZoomLayer.modal("land", 1002, "land", 2 + biomeScale),
             new SmoothLayer("land", 1000, "land"),
             MixRiverLayer.forMajorRelease("land", 0, "land", "river"),
-            climaticOceans ? new MappedNoiseLayer("ocean_climate", 2, List.of(
-                new MappedNoiseLayer.Entry(0.4, ExtendedBiomeId.WARM_OCEAN),
-                new MappedNoiseLayer.Entry(0.2, ExtendedBiomeId.LUKEWARM_OCEAN),
-                new MappedNoiseLayer.Entry(0.0, ExtendedBiomeId.OCEAN),
-                new MappedNoiseLayer.Entry(-0.2, ExtendedBiomeId.COLD_OCEAN),
-                new MappedNoiseLayer.Entry(-0.4, ExtendedBiomeId.FROZEN_OCEAN)
-            ), 8.0, DoubleList.of(1), false) : null,
-            climaticOceans ? StackedZoomLayer.modal("ocean_climate", 2001, "ocean_climate", 6) : null,
-            climaticOceans ? new ApplyOceanClimateLayer("land", 0, "land", "ocean_climate") : null
+            climaticOceans
+                ? bedrock
+                    ? new WeightedPoolLayer("ocean_climate", 2, Pool.<LayerTarget>builder()
+                        .add(LayerTarget.biome(ExtendedBiomeId.WARM_OCEAN), 8)
+                        .add(LayerTarget.biome(ExtendedBiomeId.LUKEWARM_OCEAN), 32)
+                        .add(LayerTarget.biome(ExtendedBiomeId.OCEAN), 28)
+                        .add(LayerTarget.biome(ExtendedBiomeId.COLD_OCEAN), 27)
+                        .add(LayerTarget.biome(ExtendedBiomeId.FROZEN_OCEAN), 5)
+                        .build())
+                    : new MappedNoiseLayer("ocean_climate", 2, List.of(
+                        new MappedNoiseLayer.Entry(0.4, ExtendedBiomeId.WARM_OCEAN),
+                        new MappedNoiseLayer.Entry(0.2, ExtendedBiomeId.LUKEWARM_OCEAN),
+                        new MappedNoiseLayer.Entry(0.0, ExtendedBiomeId.OCEAN),
+                        new MappedNoiseLayer.Entry(-0.2, ExtendedBiomeId.COLD_OCEAN),
+                        new MappedNoiseLayer.Entry(-0.4, ExtendedBiomeId.FROZEN_OCEAN)
+                    ), 8.0, DoubleList.of(1), false)
+                : null,
+            climaticOceans && bedrock ? new ConditionalOverlayLayer("ocean_climate", 2, "ocean_climate",
+                BiomePredicate.anyOf(
+                    BiomePredicate.of(ExtendedBiomeId.WARM_OCEAN)
+                        .and(BiomePredicate.neighborsMatch(ExtendedBiomeId.FROZEN_OCEAN, 1)),
+                    BiomePredicate.of(ExtendedBiomeId.FROZEN_OCEAN)
+                        .and(BiomePredicate.neighborsMatch(ExtendedBiomeId.WARM_OCEAN, 1))
+                ),
+                LayerTarget.biome(ExtendedBiomeId.OCEAN),
+                LayerTarget.none()
+            ) : null,
+            climaticOceans
+                ? bedrock
+                    ? StackedZoomLayer.modal("ocean_climate", 2002, "ocean_climate", 6, 0)
+                    : StackedZoomLayer.modal("ocean_climate", 2001, "ocean_climate", 6)
+                : null,
+            climaticOceans ? new ApplyOceanClimateLayer("land", 0, "land", "ocean_climate", !bedrock) : null
         ).filter(Objects::nonNull).toList();
 
         return new ConfiguredLayers(layers, Map.of(ModernBetaBuiltInTypes.LayerOutput.BIOME.id, "land"));
     }
 
-    private static ModernBetaSettingsPreset preset1122(int biomeScale) {
+    private static ModernBetaSettingsPreset preset1122(int biomeScale, boolean bedrock) {
         return new ModernBetaSettingsPreset(
             DEFAULT_BETA.chunkSettings().extend()
-                .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.MAJOR_RELEASE.id)
+                .add(PROVIDER, bedrock ? ModernBetaBuiltInTypes.Chunk.EARLY_BEDROCK.id : ModernBetaBuiltInTypes.Chunk.MAJOR_RELEASE.id)
                 .add(NOISE_SCALE, NoiseScale.WITHOUT_FARLANDS)
                 .add(USE_SURFACE_RULES, true)
                 .add(CAVE_GENERATION, CaveGeneration.RELEASE_1_12_2)
                 .add(FORCED_BIOME_HEIGHT, ForcedBiomeHeight.overridesOnly(HeightConfig.MAJOR_RELEASE_CONFIGS))
                 .build(),
-            ModernBetaSettings.fractalLayers(configuredLayers1710Era(biomeScale, false, false, false, false, false))
+            ModernBetaSettings.fractalLayers(configuredLayers1710Era(biomeScale, bedrock, false, false, false, false, false))
                 .add(TEMPERATURE_HEIGHT_SCALING, TemperatureHeightScaling.MAJOR_RELEASE)
                 .build(),
             DEFAULT_BETA.caveBiomeSettings()
         );
     }
 
-    private static ModernBetaSettingsPreset preset1171(int biomeScale) {
+    private static ModernBetaSettingsPreset preset1171(int biomeScale, boolean bedrock) {
         return new ModernBetaSettingsPreset(
             DEFAULT_BETA.chunkSettings().extend()
-                .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.MAJOR_RELEASE.id)
+                .add(PROVIDER, bedrock ? ModernBetaBuiltInTypes.Chunk.EARLY_BEDROCK.id : ModernBetaBuiltInTypes.Chunk.MAJOR_RELEASE.id)
                 .add(NOISE_SCALE, NoiseScale.WITHOUT_FARLANDS)
                 .add(USE_SURFACE_RULES, true)
                 .add(CAVE_GENERATION, CaveGeneration.RELEASE_1_17_1)
                 .add(FORCED_BIOME_HEIGHT, ForcedBiomeHeight.overridesOnly(HeightConfig.MAJOR_RELEASE_CONFIGS))
                 .build(),
-            ModernBetaSettings.fractalLayers(configuredLayers1710Era(biomeScale, true, true, true, true, false))
+            ModernBetaSettings.fractalLayers(configuredLayers1710Era(biomeScale, bedrock, true, true, true, true, false))
                 .add(TEMPERATURE_HEIGHT_SCALING, TemperatureHeightScaling.MAJOR_RELEASE)
                 .build(),
             DEFAULT_BETA.caveBiomeSettings()
@@ -2201,7 +2245,7 @@ public final class ModernBetaSettingsPresets {
                 .add(CAVE_GENERATION, CaveGeneration.RELEASE_1_17_1)
                 .add(FORCED_BIOME_HEIGHT, ForcedBiomeHeight.overridesOnly(HeightConfig.MAJOR_RELEASE_CONFIGS))
                 .build(),
-            ModernBetaSettings.fractalLayers(configuredLayers1710Era(biomeScale, true, true, true, true, true))
+            ModernBetaSettings.fractalLayers(configuredLayers1710Era(biomeScale, false, true, true, true, true, true))
                 .add(TEMPERATURE_HEIGHT_SCALING, TemperatureHeightScaling.MAJOR_RELEASE)
                 .build(),
             DEFAULT_BETA.caveBiomeSettings()
@@ -2450,7 +2494,7 @@ public final class ModernBetaSettingsPresets {
                     new MappedNoiseLayer.Entry(-0.4, ExtendedBiomeId.FROZEN_OCEAN)
                 ), 8.0, DoubleList.of(1), false),
                 StackedZoomLayer.modal("ocean_climate", 2001, "ocean_climate", 6),
-                new ApplyOceanClimateLayer("land", 0, "land", "ocean_climate")
+                new ApplyOceanClimateLayer("land", 0, "land", "ocean_climate", true)
             )
                 .add(TEMPERATURE_HEIGHT_SCALING, TemperatureHeightScaling.MAJOR_RELEASE)
                 .build(),

@@ -39,13 +39,14 @@ public class ChunkProviderMajorRelease extends ChunkProviderForcedHeight {
     public ChunkProviderMajorRelease(ModernBetaChunkGenerator chunkGenerator, long seed) {
         super(chunkGenerator, seed);
 
-        this.minLimitOctaveNoise = new PerlinOctaveNoise(this.random, 16, true);
-        this.maxLimitOctaveNoise = new PerlinOctaveNoise(this.random, 16, true);
-        this.mainOctaveNoise = new PerlinOctaveNoise(this.random, 8, true);
-        this.surfaceOctaveNoise = new SimplexOctaveNoise(this.random, 4);
-        new PerlinOctaveNoise(this.random, 10, true);
-        this.depthOctaveNoise = new PerlinOctaveNoise(this.random, 16, true);
-        this.forestOctaveNoise = new PerlinOctaveNoise(this.random, 8, true);
+        Random random = this.getRandom(seed);
+        this.minLimitOctaveNoise = new PerlinOctaveNoise(random, 16, true);
+        this.maxLimitOctaveNoise = new PerlinOctaveNoise(random, 16, true);
+        this.mainOctaveNoise = new PerlinOctaveNoise(random, 8, true);
+        this.surfaceOctaveNoise = new SimplexOctaveNoise(random, 4);
+        new PerlinOctaveNoise(random, 10, true);
+        this.depthOctaveNoise = new PerlinOctaveNoise(random, 16, true);
+        this.forestOctaveNoise = new PerlinOctaveNoise(random, 8, true);
     }
     
     @Override
@@ -307,6 +308,10 @@ public class ChunkProviderMajorRelease extends ChunkProviderForcedHeight {
     @Override
     protected PerlinOctaveNoise getForestOctaveNoise() {
         return this.forestOctaveNoise;
+    }
+
+    protected Random getRandom(long seed) {
+        return this.random;
     }
     
     private double getOffset(int noiseY, double heightStretch, double depth, double scale) {

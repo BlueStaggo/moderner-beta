@@ -79,8 +79,10 @@ public final class ModernBetaSettingsPresetCategories {
             List.of(
                 ModernBetaBuiltInTypes.Preset.RELEASE_1_12_2.id,
                 ModernBetaBuiltInTypes.Preset.RELEASE_1_12_2_LARGE_BIOMES.id,
+                ModernBetaBuiltInTypes.Preset.BEDROCK_1_2.id,
                 ModernBetaBuiltInTypes.Preset.RELEASE_1_17_1.id,
-                ModernBetaBuiltInTypes.Preset.RELEASE_1_17_1_LARGE_BIOMES.id
+                ModernBetaBuiltInTypes.Preset.RELEASE_1_17_1_LARGE_BIOMES.id,
+                ModernBetaBuiltInTypes.Preset.BEDROCK_1_17.id
             )
         ));
         categoryRegisterable.register(BETA_CUSTOM, new ModernBetaSettingsPresetCategory(

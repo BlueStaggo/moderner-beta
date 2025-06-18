@@ -5,14 +5,12 @@ import mod.bluestaggo.modernerbeta.mixin.AccessorDensityFunctions;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
 import net.minecraft.registry.*;
 import net.minecraft.registry.entry.RegistryEntry.Reference;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.noise.DoublePerlinNoiseSampler;
 import net.minecraft.util.math.noise.DoublePerlinNoiseSampler.NoiseParameters;
 import net.minecraft.world.gen.chunk.ChunkGeneratorSettings;
 import net.minecraft.world.gen.chunk.GenerationShapeConfig;
 import net.minecraft.world.gen.densityfunction.DensityFunction;
 import net.minecraft.world.gen.densityfunction.DensityFunctionTypes;
-import net.minecraft.world.gen.densityfunction.DensityFunctions;
 import net.minecraft.world.gen.noise.NoiseParametersKeys;
 import net.minecraft.world.gen.noise.NoiseRouter;
 import net.minecraft.world.gen.surfacebuilder.MaterialRules;
@@ -35,6 +33,7 @@ public class ModernBetaChunkGeneratorSettings {
     public static final RegistryKey<ChunkGeneratorSettings> PE;
     public static final RegistryKey<ChunkGeneratorSettings> EARLY_RELEASE;
     public static final RegistryKey<ChunkGeneratorSettings> MAJOR_RELEASE;
+    public static final RegistryKey<ChunkGeneratorSettings> EARLY_BEDROCK;
 
     public static void bootstrap(Registerable<ChunkGeneratorSettings> settingsRegisterable) {
         settingsRegisterable.register(BETA, createGeneratorSettings(settingsRegisterable, ModernBetaShapeConfigs.BETA, 64, true));
@@ -49,6 +48,7 @@ public class ModernBetaChunkGeneratorSettings {
         settingsRegisterable.register(PE, createGeneratorSettings(settingsRegisterable, ModernBetaShapeConfigs.PE, 64, true));
         settingsRegisterable.register(EARLY_RELEASE, createGeneratorSettings(settingsRegisterable, ModernBetaShapeConfigs.EARLY_RELEASE, 63, true));
         settingsRegisterable.register(MAJOR_RELEASE, createGeneratorSettings(settingsRegisterable, ModernBetaShapeConfigs.MAJOR_RELEASE, 63, true));
+        settingsRegisterable.register(EARLY_BEDROCK, createGeneratorSettings(settingsRegisterable, ModernBetaShapeConfigs.EARLY_BEDROCK, 63, true));
     }
     
     private static NoiseRouter createDensityFunctions(
@@ -152,5 +152,6 @@ public class ModernBetaChunkGeneratorSettings {
         PE = RegistryKey.of(RegistryKeys.CHUNK_GENERATOR_SETTINGS, ModernBetaBuiltInTypes.Chunk.PE.id);
         EARLY_RELEASE = RegistryKey.of(RegistryKeys.CHUNK_GENERATOR_SETTINGS, ModernBetaBuiltInTypes.Chunk.EARLY_RELEASE.id);
         MAJOR_RELEASE = RegistryKey.of(RegistryKeys.CHUNK_GENERATOR_SETTINGS, ModernBetaBuiltInTypes.Chunk.MAJOR_RELEASE.id);
+        EARLY_BEDROCK = RegistryKey.of(RegistryKeys.CHUNK_GENERATOR_SETTINGS, ModernBetaBuiltInTypes.Chunk.EARLY_BEDROCK.id);
     }
 }

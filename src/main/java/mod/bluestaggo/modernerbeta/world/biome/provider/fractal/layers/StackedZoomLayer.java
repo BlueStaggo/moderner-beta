@@ -14,18 +14,21 @@ public class StackedZoomLayer extends SingleParentLayer {
         instance -> fillSingleParentLayerFields(instance)
             .and(instance.group(
                 Codec.INT.fieldOf("level").orElse(1).forGetter(layer -> layer.level),
+                Codec.INT.fieldOf("seedModifier").orElse(1).forGetter(layer -> layer.seedModifier),
                 StringIdentifiable.createCodec(Type::values).fieldOf("zoomType").orElse(Type.MODAL).forGetter(layer -> layer.zoomType)
             ))
             .apply(instance, StackedZoomLayer::new)
     );
 
     private final int level;
+    private final int seedModifier;
     private final Type zoomType;
     private transient Layer stackedLayer;
 
-    public StackedZoomLayer(String id, long seed, String parent, int level, Type zoomType) {
+    public StackedZoomLayer(String id, long seed, String parent, int level, int seedModifier, Type zoomType) {
         super(id, seed, parent);
         this.level = level;
+        this.seedModifier = seedModifier;
         this.zoomType = zoomType;
     }
 
@@ -35,7 +38,7 @@ public class StackedZoomLayer extends SingleParentLayer {
         Layer layer = this.parentLayer;
         for (int i = 0; i < this.level; i++) {
             Layer zoomParent = layer;
-            Layer zoomLayer = this.zoomType.constructor.apply(this.seed + i);
+            Layer zoomLayer = this.zoomType.constructor.apply(this.seed + i * this.seedModifier);
             zoomLayer.configure(key -> zoomParent);
             layer = zoomLayer;
         }
@@ -68,11 +71,19 @@ public class StackedZoomLayer extends SingleParentLayer {
     }
 
     public static StackedZoomLayer modal(String id, long seed, String parent, int level) {
-        return new StackedZoomLayer(id, seed, parent, level, Type.MODAL);
+        return modal(id, seed, parent, level, 1);
+    }
+
+    public static StackedZoomLayer modal(String id, long seed, String parent, int level, int seedModifier) {
+        return new StackedZoomLayer(id, seed, parent, level, seedModifier, Type.MODAL);
     }
 
     public static StackedZoomLayer fuzzy(String id, long seed, String parent, int level) {
-        return new StackedZoomLayer(id, seed, parent, level, Type.FUZZY);
+        return fuzzy(id, seed, parent, level, 1);
+    }
+
+    public static StackedZoomLayer fuzzy(String id, long seed, String parent, int level, int seedModifier) {
+        return new StackedZoomLayer(id, seed, parent, level, seedModifier, Type.FUZZY);
     }
 
     public enum Type implements StringIdentifiable {

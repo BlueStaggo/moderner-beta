@@ -58,6 +58,7 @@ public final class ModernBetaBuiltInTypes {
         PE("pe"),
         EARLY_RELEASE("early_release"),
         MAJOR_RELEASE("major_release"),
+        EARLY_BEDROCK("early_bedrock")
         ;
 
         public final Identifier id;
@@ -186,6 +187,8 @@ public final class ModernBetaBuiltInTypes {
         RELEASE_1_6_4("release_1_6_4"),
         RELEASE_1_12_2("release_1_12_2"),
         RELEASE_1_17_1("release_1_17_1"),
+        BEDROCK_1_2("bedrock_1_2"),
+        BEDROCK_1_17("bedrock_1_17"),
         BETA_SKYLANDS("beta_skylands"),
         BETA_ISLES("beta_isles"),
         BETA_WATER_WORLD("beta_water_world"),

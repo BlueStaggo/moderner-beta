@@ -15,6 +15,7 @@ public class ModernBetaShapeConfigs {
     public static final GenerationShapeConfig PE;
     public static final GenerationShapeConfig EARLY_RELEASE;
     public static final GenerationShapeConfig MAJOR_RELEASE;
+    public static final GenerationShapeConfig EARLY_BEDROCK;
 
     static {
         BETA = GenerationShapeConfig.create(-64, 192, 1, 2);
@@ -29,5 +30,6 @@ public class ModernBetaShapeConfigs {
         PE = GenerationShapeConfig.create(-64, 192, 1, 2);
         EARLY_RELEASE = GenerationShapeConfig.create(-64, 192, 1, 2);
         MAJOR_RELEASE = GenerationShapeConfig.create(-64, 320, 1, 2);
+        EARLY_BEDROCK = GenerationShapeConfig.create(-64, 192, 1, 2);
     }
 }

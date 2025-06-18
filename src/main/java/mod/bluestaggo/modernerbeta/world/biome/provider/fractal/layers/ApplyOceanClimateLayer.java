@@ -12,7 +12,10 @@ import java.util.function.Function;
 public class ApplyOceanClimateLayer extends SingleParentLayer {
     public static final com.mojang.serialization.MapCodec<ApplyOceanClimateLayer> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> fillSingleParentLayerFields(instance)
-            .and(Codec.STRING.fieldOf("oceanClimate").forGetter(layer -> layer.oceanClimate))
+            .and(instance.group(
+                Codec.STRING.fieldOf("oceanClimate").forGetter(layer -> layer.oceanClimate),
+                Codec.BOOL.fieldOf("applyCoasts").orElse(true).forGetter(layer -> layer.applyCoasts)
+            ))
             .apply(instance, ApplyOceanClimateLayer::new)
     );
     private static final Set<ExtendedBiomeId> BASE_OCEANS = Set.of(ExtendedBiomeId.OCEAN, ExtendedBiomeId.DEEP_OCEAN);
@@ -25,11 +28,13 @@ public class ApplyOceanClimateLayer extends SingleParentLayer {
     );
 
     private final String oceanClimate;
+    private final boolean applyCoasts;
     private transient Layer oceanClimateLayer;
 
-    public ApplyOceanClimateLayer(String id, long seed, String parent, String oceanClimate) {
+    public ApplyOceanClimateLayer(String id, long seed, String parent, String oceanClimate, boolean applyCoasts) {
         super(id, seed, parent);
         this.oceanClimate = oceanClimate;
+        this.applyCoasts = applyCoasts;
     }
 
     @Override
@@ -56,13 +61,16 @@ public class ApplyOceanClimateLayer extends SingleParentLayer {
         }
 
         ExtendedBiomeId ocean = this.oceanClimateLayer.sample(x, z);
-        boolean isWarm = ExtendedBiomeId.WARM_OCEAN.equals(ocean);
-        if (isWarm || ExtendedBiomeId.FROZEN_OCEAN.equals(ocean)) {
-            for (int ox = -8; ox <= 8; ox += 4) {
-                for (int oz = -8; oz <= 8; oz += 4) {
-                    ExtendedBiomeId nearBiome = this.parentLayer.sample(x + ox, z + oz);
-                    if (!BASE_OCEANS.contains(nearBiome)) {
-                        return isWarm ? ExtendedBiomeId.LUKEWARM_OCEAN : ExtendedBiomeId.COLD_OCEAN;
+
+        if (this.applyCoasts) {
+            boolean isWarm = ExtendedBiomeId.WARM_OCEAN.equals(ocean);
+            if (isWarm || ExtendedBiomeId.FROZEN_OCEAN.equals(ocean)) {
+                for (int ox = -8; ox <= 8; ox += 4) {
+                    for (int oz = -8; oz <= 8; oz += 4) {
+                        ExtendedBiomeId nearBiome = this.parentLayer.sample(x + ox, z + oz);
+                        if (!BASE_OCEANS.contains(nearBiome)) {
+                            return isWarm ? ExtendedBiomeId.LUKEWARM_OCEAN : ExtendedBiomeId.COLD_OCEAN;
+                        }
                     }
                 }
             }

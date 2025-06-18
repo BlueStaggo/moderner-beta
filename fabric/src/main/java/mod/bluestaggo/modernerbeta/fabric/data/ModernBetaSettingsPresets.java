@@ -1994,14 +1994,12 @@ public final class ModernBetaSettingsPresets {
             // BiomeTransitionLayer
             new PredicateOverlayLayer("land", 0, "land", Stream.of(
                 // Mountain edge has been omitted because it ends up just not generating at all
-                PredicateOverlayLayer.Target.borderTransition(
-                    ExtendedBiomeId.of("minecraft:wooded_badlands"),
-                    biomeCategories.get("badlands_all"),
-                    ExtendedBiomeId.of("minecraft:badlands")
-                ),
-                PredicateOverlayLayer.Target.borderTransition(
-                    ExtendedBiomeId.of("minecraft:badlands*plateau"),
-                    biomeCategories.get("badlands_all"),
+                PredicateOverlayLayer.Target.biome(
+                    BiomePredicate.inSet(
+                        ExtendedBiomeId.of("minecraft:wooded_badlands"),
+                        ExtendedBiomeId.of("minecraft:badlands*plateau")
+                    ).and(BiomePredicate.neighborsMatch(
+                        BiomePredicate.inSet(biomeCategories.get("badlands_all")), 4).invert()),
                     ExtendedBiomeId.of("minecraft:badlands")
                 ),
                 PredicateOverlayLayer.Target.borderTransition(
@@ -2021,8 +2019,13 @@ public final class ModernBetaSettingsPresets {
                 ),
                 PredicateOverlayLayer.Target.biome(
                     BiomePredicate.of(ExtendedBiomeId.of("minecraft:swamp"))
-                        .and(BiomePredicate.neighborsMatch(ExtendedBiomeId.of("minecraft:jungle"), 1)),
-                    ExtendedBiomeId.of("minecraft:sparse_jungle")
+                        .and(BiomePredicate.neighborsMatch(
+                            BiomePredicate.inSet(
+                                ExtendedBiomeId.of("minecraft:desert"),
+                                ExtendedBiomeId.of("minecraft:snowy_taiga"),
+                                ExtendedBiomeId.of("minecraft:snowy_plains")
+                            ), 1)),
+                    ExtendedBiomeId.of("minecraft:plains")
                 ),
                 modernBiomes ? PredicateOverlayLayer.Target.biome(
                     BiomePredicate.of(ExtendedBiomeId.of("minecraft:pale_garden"))

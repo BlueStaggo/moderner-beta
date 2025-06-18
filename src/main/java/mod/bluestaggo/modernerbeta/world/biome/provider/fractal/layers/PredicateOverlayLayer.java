@@ -3,6 +3,7 @@ package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers;
 import com.google.common.base.Suppliers;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.predicates.BiomePredicate;
 import net.minecraft.util.StringIdentifiable;
@@ -15,7 +16,7 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 public class PredicateOverlayLayer extends SingleParentLayer {
-    public static final com.mojang.serialization.MapCodec<PredicateOverlayLayer> CODEC = RecordCodecBuilder.mapCodec(
+    public static final com.mojang.serialization.MapCodec<PredicateOverlayLayer> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> fillSingleParentLayerFields(instance)
             .and(Target.CODEC.listOf().fieldOf("targets").forGetter(layer -> layer.targets))
             .apply(instance, PredicateOverlayLayer::new)

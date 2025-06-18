@@ -1,6 +1,5 @@
 package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers;
 
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.LayerTarget;
@@ -12,7 +11,7 @@ import java.util.Set;
 import java.util.function.Function;
 
 public class WeightedPoolLayer extends Layer {
-    public static final com.mojang.serialization.MapCodec<WeightedPoolLayer> CODEC = RecordCodecBuilder.mapCodec(
+    public static final com.mojang.serialization.MapCodec<WeightedPoolLayer> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> fillLayerFields(instance)
             .and(Pool.createCodec(LayerTarget.CODEC).fieldOf("targets").forGetter(layer -> layer.targets))
             .apply(instance, WeightedPoolLayer::new)

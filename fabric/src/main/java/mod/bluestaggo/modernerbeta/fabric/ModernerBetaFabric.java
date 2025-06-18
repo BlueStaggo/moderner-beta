@@ -39,9 +39,9 @@ public class ModernerBetaFabric implements ModInitializer {
         }
 
         ModernerBeta.init();
-
         ModernerBetaInitializer.setupRegistryHandlers(ModernerBeta.REGISTRY_HANDLERS);
         ModernerBetaInitializer.setupRegistryHandlers(ModernerBeta.CUSTOM_REGISTRY_HANDLERS);
+        ModernerBeta.loadConfig(FabricLoader.getInstance().getConfigDir());
 
         ModernerBeta.setupCustomDynamicRegistries();
         for (Pair<RegistryKey<?>, Codec<?>> dynamicRegistry : ModernerBeta.CUSTOM_DYNAMIC_REGISTRIES) {

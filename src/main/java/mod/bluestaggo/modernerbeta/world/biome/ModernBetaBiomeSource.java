@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class ModernBetaBiomeSource extends BiomeSource {
-    public static final com.mojang.serialization.MapCodec<ModernBetaBiomeSource> CODEC = RecordCodecBuilder.mapCodec(
+    public static final com.mojang.serialization.MapCodec<ModernBetaBiomeSource> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> instance.group(
             RegistryOps.getEntryLookupCodec(RegistryKeys.BIOME),
             RegistryOps.getEntryLookupCodec(ModernBetaRegistryKeys.SETTINGS_PRESET),

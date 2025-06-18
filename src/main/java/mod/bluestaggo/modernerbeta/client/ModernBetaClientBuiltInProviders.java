@@ -363,5 +363,63 @@ public class ModernBetaClientBuiltInProviders {
                 ));
             }
         );
+
+        // I know, duplicate code sucks. If I store the repeated function in a variable, Minecraft throws up about it.
+        registryHandler.register(
+            CONFIG_BETA_CLIMATIC_COLORS.id,
+            (screen, options) -> {
+                addAll(
+                    options,
+                    screen.booleanOption("sky"),
+                    screen.booleanOption("vegetation"),
+                    screen.booleanOption("water")
+                );
+            }
+        );
+        registryHandler.register(
+            CONFIG_PE_CLIMATIC_COLORS.id,
+            (screen, options) -> {
+                addAll(
+                    options,
+                    screen.booleanOption("sky"),
+                    screen.booleanOption("vegetation"),
+                    screen.booleanOption("water")
+                );
+            }
+        );
+        registryHandler.register(
+            CONFIG_BETA_FRACTAL_CLIMATIC_COLORS.id,
+            (screen, options) -> {
+                addAll(
+                    options,
+                    screen.booleanOption("sky"),
+                    screen.booleanOption("vegetation"),
+                    screen.booleanOption("water")
+                );
+            }
+        );
+
+        registryHandler.register(
+            CONFIG_BIOME_PREVIEW_COLORS.id,
+            (screen, options) -> {
+                options.addSingleOptionEntry(screen.mapEditButton(
+                    screen.getText("self"),
+                    "self",
+                    ExtendedBiomeIdToColorMapScreen::new
+                ));
+            }
+        );
+
+        registryHandler.register(
+            CONFIG_MISCELLANEOUS.id,
+            (screen, options) -> {
+                options.addSingleOptionEntry(screen.booleanOption("oldFogColorWeighting"));
+                addAll(
+                    options,
+                    screen.headerOption(screen.getText("defaultSettingsPreset")),
+                    screen.extendedBiomeIdOption("defaultSettingsPreset")
+                );
+            }
+        );
     }
 }

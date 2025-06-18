@@ -1,7 +1,6 @@
 package mod.bluestaggo.modernerbeta.world.chunk;
 
 import com.google.common.base.Suppliers;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.api.world.chunk.ChunkProvider;
@@ -12,6 +11,7 @@ import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.settings.component.CaveGeneration;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
+import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.world.biome.injector.BiomeInjector;
 import mod.bluestaggo.modernerbeta.world.biome.injector.BiomeInjector.BiomeInjectionStep;
@@ -52,7 +52,7 @@ import java.util.function.Supplier;
 /*import java.util.concurrent.Executor;*/
 
 public class ModernBetaChunkGenerator extends NoiseChunkGenerator {
-    public static final com.mojang.serialization.MapCodec<ModernBetaChunkGenerator> CODEC = RecordCodecBuilder.mapCodec(
+    public static final com.mojang.serialization.MapCodec<ModernBetaChunkGenerator> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> instance.group(
             BiomeSource.CODEC.fieldOf("biome_source").forGetter(generator -> generator.biomeSource),
             RegistryOps.getEntryLookupCodec(ModernBetaRegistryKeys.SETTINGS_PRESET),

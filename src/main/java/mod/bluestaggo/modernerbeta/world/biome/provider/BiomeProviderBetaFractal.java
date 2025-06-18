@@ -71,17 +71,17 @@ public class BiomeProviderBetaFractal extends BiomeProviderFractal implements Cl
 
     @Override
     public boolean useBiomeColor() {
-        return ModernerBeta.CONFIG.useBetaFractalBiomeColor;
+        return ModernerBeta.config.getOrDefault(SettingsComponentTypes.CONFIG_BETA_FRACTAL_CLIMATIC_COLORS).vegetation();
     }
 
     @Override
     public boolean useSkyColor() {
-        return ModernerBeta.CONFIG.useBetaFractalSkyColor;
+        return ModernerBeta.config.getOrDefault(SettingsComponentTypes.CONFIG_BETA_FRACTAL_CLIMATIC_COLORS).sky();
     }
 
     @Override
     public boolean useWaterColor() {
-        return ModernerBeta.CONFIG.useBetaFractalWaterColor;
+        return ModernerBeta.config.getOrDefault(SettingsComponentTypes.CONFIG_BETA_FRACTAL_CLIMATIC_COLORS).water();
     }
 
     @Override

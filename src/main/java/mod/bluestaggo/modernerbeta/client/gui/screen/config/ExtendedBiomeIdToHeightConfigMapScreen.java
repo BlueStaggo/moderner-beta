@@ -28,7 +28,7 @@ public class ExtendedBiomeIdToHeightConfigMapScreen extends ModernBetaGraphicalM
         ArrayList<SimpleOption<?>> options = new ArrayList<>();
         options.add(this.headerOption(Text.translatable(this.getTextKey("item"), i).formatted(Formatting.BOLD)));
         options.add(null);
-        options.addAll(this.extendedBiomeIdOption(KEY + i));
+        options.add(this.extendedBiomeIdOption(KEY + i));
         options.addAll(this.heightConfigOption(VALUE + i));
         return options;
     }

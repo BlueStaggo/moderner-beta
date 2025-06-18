@@ -21,7 +21,9 @@ import mod.bluestaggo.modernerbeta.registry.VanillaRegistryHandler;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLConstructModEvent;
+import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.neoforged.fml.loading.FMLLoader;
+import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
@@ -39,7 +41,9 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLConstructModEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.loading.FMLLoader;
+import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.registries.DataPackRegistryEvent;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -47,11 +51,8 @@ import net.minecraftforge.registries.NewRegistryEvent;
 import net.minecraftforge.registries.RegisterEvent;
 
 import java.nio.file.Path;
-*///?}
-
-import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Consumer;
+*///?}
 
 //? if neoforge {
 @EventBusSubscriber(
@@ -99,6 +100,11 @@ public class ModEventsCommon {
             Optional.of(NetworkDirection.PLAY_TO_CLIENT)
         );
         *///?}
+    }
+
+    @SubscribeEvent
+    public static void postInit(FMLLoadCompleteEvent event) {
+        ModernerBeta.loadConfig(FMLPaths.CONFIGDIR.get());
     }
 
     @SubscribeEvent

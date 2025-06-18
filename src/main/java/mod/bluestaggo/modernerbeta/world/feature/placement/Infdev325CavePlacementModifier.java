@@ -2,6 +2,7 @@ package mod.bluestaggo.modernerbeta.world.feature.placement;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.util.noise.PerlinOctaveNoise;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
@@ -15,7 +16,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class Infdev325CavePlacementModifier extends PlacementModifier {
-    public static final com.mojang.serialization.MapCodec<Infdev325CavePlacementModifier> MODIFIER_CODEC = RecordCodecBuilder.mapCodec(
+    public static final com.mojang.serialization.MapCodec<Infdev325CavePlacementModifier> MODIFIER_CODEC = VersionCompat.createMaybeMapCodec(
         instance -> instance.group(
             Codec.INT.fieldOf("min_section").forGetter(i -> i.minSection),
             Codec.INT.fieldOf("max_section").forGetter(i -> i.maxSection)

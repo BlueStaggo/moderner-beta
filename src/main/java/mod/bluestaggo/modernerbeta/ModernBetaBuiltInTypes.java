@@ -31,6 +31,11 @@ public final class ModernBetaBuiltInTypes {
         USE_OCEAN_BIOMES("use_ocean_biomes"),
         TEMPERATURE_HEIGHT_SCALING("temperature_height_scaling"),
         CAVE_BIOME_VORONOI("cave_biome_voronoi"),
+        CONFIG_BETA_CLIMATIC_COLORS("config/beta_climatic_colors"),
+        CONFIG_PE_CLIMATIC_COLORS("config/pe_climatic_colors"),
+        CONFIG_BETA_FRACTAL_CLIMATIC_COLORS("config/beta_fractal_climatic_colors"),
+        CONFIG_BIOME_PREVIEW_COLORS("config/biome_preview_colors"),
+        CONFIG_MISCELLANEOUS("config/miscellaneous"),
         ;
 
         public final Identifier id;

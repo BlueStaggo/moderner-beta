@@ -1,12 +1,12 @@
 package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers;
 
-import com.mojang.serialization.codecs.RecordCodecBuilder;
+import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 
 import static mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId.*;
 
 public class InitRiverLayer extends SingleParentLayer {
-    public static final com.mojang.serialization.MapCodec<InitRiverLayer> CODEC = RecordCodecBuilder.mapCodec(
+    public static final com.mojang.serialization.MapCodec<InitRiverLayer> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> fillSingleParentLayerFields(instance)
             .apply(instance, InitRiverLayer::new)
     );

@@ -1,11 +1,11 @@
 package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
+import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 
 public class PointZoomLayer extends SingleParentLayer {
-    public static final com.mojang.serialization.MapCodec<PointZoomLayer> CODEC = RecordCodecBuilder.mapCodec(
+    public static final com.mojang.serialization.MapCodec<PointZoomLayer> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> fillSingleParentLayerFields(instance)
             .and(Codec.INT.fieldOf("scale").orElse(2).forGetter(layer -> layer.scale))
             .apply(instance, PointZoomLayer::new)

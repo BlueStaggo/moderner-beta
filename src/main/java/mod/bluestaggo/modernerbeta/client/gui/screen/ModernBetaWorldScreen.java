@@ -302,7 +302,7 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
         for (ModernBetaSettings settings : this.preset.asList()) {
             Identifier subPresetKey = settings.get(SettingsComponentTypes.PRESET);
             if (ModernBetaSettings.DEFAULT_PRESET_ID.equals(subPresetKey)) {
-                subPresetKey = VersionCompat.id(ModernerBeta.CONFIG.defaultSettingsPreset);
+                subPresetKey = ModernerBeta.config.getOrDefault(SettingsComponentTypes.CONFIG_MISCELLANEOUS).defaultSettingsPreset();
             }
 
             if (subPresetKey == null || presetKey != null && !presetKey.equals(subPresetKey)) {

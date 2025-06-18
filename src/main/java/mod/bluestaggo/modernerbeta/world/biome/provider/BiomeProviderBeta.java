@@ -121,17 +121,17 @@ public class BiomeProviderBeta extends BiomeProvider implements ClimateSampler, 
     
     @Override
     public boolean useBiomeColor() {
-        return ModernerBeta.CONFIG.useBetaBiomeColor;
+        return ModernerBeta.config.getOrDefault(SettingsComponentTypes.CONFIG_BETA_CLIMATIC_COLORS).vegetation();
     }
     
     @Override
     public boolean useSkyColor() {
-        return ModernerBeta.CONFIG.useBetaSkyColor;
+        return ModernerBeta.config.getOrDefault(SettingsComponentTypes.CONFIG_BETA_CLIMATIC_COLORS).sky();
     }
     
     @Override
     public boolean useWaterColor() {
-        return ModernerBeta.CONFIG.useBetaWaterColor;
+        return ModernerBeta.config.getOrDefault(SettingsComponentTypes.CONFIG_BETA_CLIMATIC_COLORS).water();
     }
 
     @Override

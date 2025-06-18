@@ -66,10 +66,6 @@ dependencies {
     modApi "net.fabricmc.fabric-api:fabric-api:${commonPr.fabric_api_version}"
 
     // Configuration
-    modApi("me.shedaniel.cloth:cloth-config-fabric:${commonPr.cloth_config_version}") {
-        exclude(group: "net.fabricmc.fabric-api")
-    }
-
     modImplementation("com.terraformersmc:modmenu:${commonPr.mod_menu_version}")
 
     //Fixes https://github.com/architectury/architectury-loom/issues/189 which is something we need for CI

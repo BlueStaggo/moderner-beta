@@ -1,7 +1,7 @@
 package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
+import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.Set;
 import java.util.function.Function;
 
 public class ApplyOceanClimateLayer extends SingleParentLayer {
-    public static final com.mojang.serialization.MapCodec<ApplyOceanClimateLayer> CODEC = RecordCodecBuilder.mapCodec(
+    public static final com.mojang.serialization.MapCodec<ApplyOceanClimateLayer> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> fillSingleParentLayerFields(instance)
             .and(Codec.STRING.fieldOf("oceanClimate").forGetter(layer -> layer.oceanClimate))
             .apply(instance, ApplyOceanClimateLayer::new)

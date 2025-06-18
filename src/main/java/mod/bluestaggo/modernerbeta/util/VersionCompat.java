@@ -1,7 +1,8 @@
 package mod.bluestaggo.modernerbeta.util;
 
+import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.DataResult;
-import mod.bluestaggo.modernerbeta.api.world.biome.climate.ClimateSampler;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -13,12 +14,18 @@ import net.minecraft.util.collection.Weighted;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.HeightLimitView;
-import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.SpawnSettings;
 import net.minecraft.world.chunk.Chunk;
 
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Function;
+
+//? if >=1.20.5 {
+import com.mojang.serialization.MapCodec;
+//?} else {
+/*import com.mojang.serialization.Codec;
+*///?}
 
 public final class VersionCompat {
     public static final Block SHORT_GRASS =
@@ -139,4 +146,14 @@ public final class VersionCompat {
         /*return new Identifier(string);
         *///?}
     }
+
+    //? if >=1.20.5 {
+    public static <O> MapCodec<O> createMaybeMapCodec(final Function<RecordCodecBuilder.Instance<O>, ? extends App<RecordCodecBuilder.Mu<O>, O>> builder) {
+        return RecordCodecBuilder.mapCodec(builder);
+    }
+    //?} else {
+    /*public static <O> Codec<O> createMaybeMapCodec(final Function<RecordCodecBuilder.Instance<O>, ? extends App<RecordCodecBuilder.Mu<O>, O>> builder) {
+        return RecordCodecBuilder.create(builder);
+    }
+    *///?}
 }

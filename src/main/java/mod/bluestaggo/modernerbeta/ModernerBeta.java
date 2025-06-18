@@ -1,14 +1,16 @@
 package mod.bluestaggo.modernerbeta;
 
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
-import me.shedaniel.autoconfig.AutoConfig;
-import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
-import mod.bluestaggo.modernerbeta.config.ModernBetaConfig;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.JsonOps;
 import mod.bluestaggo.modernerbeta.network.INetworkHelper;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistryKeys;
+import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPresetCategory;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
@@ -32,6 +34,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.event.Level;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -41,7 +50,6 @@ public class ModernerBeta {
 
     public static boolean DEV_ENV;
 
-    public static final ModernBetaConfig CONFIG = AutoConfig.register(ModernBetaConfig.class, GsonConfigSerializer::new).getConfig();
     private static final Logger LOGGER = LoggerFactory.getLogger(MOD_NAME);
 
     public static final List<String> BUILT_IN_PACKS = List.of(
@@ -62,6 +70,7 @@ public class ModernerBeta {
     public static List<Pair<Registry<?>, Consumer<IRegistryHandler<?>>>> CUSTOM_REGISTRY_HANDLERS;
     public static List<Pair<RegistryKey<?>, Codec<?>>> CUSTOM_DYNAMIC_REGISTRIES;
     public static INetworkHelper networkHelper;
+    public static ModernBetaSettings config;
 
     public static void init() {
         ModernerBeta.log(Level.INFO, "Initializing Moderner Beta...");
@@ -105,5 +114,51 @@ public class ModernerBeta {
         CodecUtil.registerTypeAdapter(gson, ConfiguredLayers.class, ConfiguredLayers.CODEC);
         CodecUtil.registerTypeAdapter(gson, Identifier.class, Identifier.CODEC);
         return gson;
+    }
+
+    public static void loadConfig(Path configDir) {
+        Path configFile = configDir.resolve(MOD_ID + ".json");
+        try (BufferedReader reader = Files.newBufferedReader(configFile)) {
+            config = ModernBetaSettings.CODEC.decode(
+                JsonOps.INSTANCE,
+                getSettingsGson().create().fromJson(reader, JsonElement.class)
+            )
+                .result()
+                .orElseGet(() -> com.mojang.datafixers.util.Pair.of(ModernBetaSettings.empty(), null))
+                .getFirst();
+        } catch (NoSuchFileException exception) {
+            config = ModernBetaSettings.builder()
+                .addDefault(
+                    SettingsComponentTypes.CONFIG_BETA_CLIMATIC_COLORS,
+                    SettingsComponentTypes.CONFIG_PE_CLIMATIC_COLORS,
+                    SettingsComponentTypes.CONFIG_BETA_FRACTAL_CLIMATIC_COLORS,
+                    SettingsComponentTypes.CONFIG_BIOME_PREVIEW_COLORS,
+                    SettingsComponentTypes.CONFIG_MISCELLANEOUS
+                )
+                .build();
+            saveConfig(configDir);
+        } catch (IOException exception) {
+            exception.printStackTrace();
+            config = ModernBetaSettings.empty();
+        }
+    }
+
+    public static void saveConfig(Path configDir) {
+        Path configFile = configDir.resolve(MOD_ID + ".json");
+
+        DataResult<JsonElement> encodedConfig = ModernBetaSettings.CODEC.encode(config, JsonOps.INSTANCE, new JsonObject());
+        if (encodedConfig.result().isEmpty()) {
+            log(Level.WARN, "Failed to serialize config to JSON: " + encodedConfig);
+            return;
+        }
+
+        try {
+            Files.createDirectories(configDir);
+            try (BufferedWriter writer = Files.newBufferedWriter(configFile)) {
+                getSettingsGson().setPrettyPrinting().create().toJson(encodedConfig.result().get(), writer);
+            }
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
     }
 }

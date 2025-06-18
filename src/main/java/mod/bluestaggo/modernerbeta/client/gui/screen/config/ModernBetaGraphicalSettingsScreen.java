@@ -21,6 +21,7 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Language;
 
 import java.util.function.Consumer;
 
@@ -196,6 +197,14 @@ public abstract class ModernBetaGraphicalSettingsScreen<T extends NbtElement> ex
 
     protected String getTextKey(String key, Identifier subKey) {
         return getTextKey(key, subKey != null ? subKey.getPath() : null);
+    }
+
+    protected static <T> SimpleOption.TooltipFactory<T> getTooltip(String key) {
+        key += ".desc";
+        if (!Language.getInstance().hasTranslation(key)) {
+            return SimpleOption.emptyTooltip();
+        }
+        return SimpleOption.constantTooltip(Text.translatable(key));
     }
 
     public MutableText getText(String key) {

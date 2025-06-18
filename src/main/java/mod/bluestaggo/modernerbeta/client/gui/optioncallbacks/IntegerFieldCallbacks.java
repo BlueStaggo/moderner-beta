@@ -13,9 +13,11 @@ import net.minecraft.text.Text;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.IntFunction;
+import java.util.function.ToIntFunction;
 
 @Environment(EnvType.CLIENT)
-public record IntegerFieldCallbacks(String prefix) implements SimpleOption.Callbacks<Integer> {
+public record IntegerFieldCallbacks(String prefix, IntFunction<String> serializer, ToIntFunction<String> deserializer) implements SimpleOption.Callbacks<Integer> {
     @Override
     public Function<SimpleOption<Integer>, ClickableWidget> getWidgetCreator(SimpleOption.TooltipFactory<Integer> tooltipFactory, GameOptions gameOptions, int x, int y, int width, Consumer<Integer> changeCallback) {
         return option -> {
@@ -30,14 +32,24 @@ public record IntegerFieldCallbacks(String prefix) implements SimpleOption.Callb
                     option.setValue(0);
                 } else {
                     try {
-                        option.setValue(Integer.parseInt(value.substring(this.prefix.length())));
+                        option.setValue(this.deserializer.applyAsInt(value.substring(this.prefix.length())));
                     } catch (NumberFormatException ignored) {
                     }
                 }
             });
-            widget.setTextPredicate(string ->
-                string.startsWith(this.prefix) && string.substring(this.prefix.length()).matches("-?[0-9]*"));
-            widget.setText(this.prefix + option.getValue());
+            widget.setTextPredicate(string -> {
+               if (!string.startsWith(this.prefix)) {
+                   return false;
+               }
+
+               try {
+                   this.deserializer.applyAsInt(string.substring(this.prefix.length()));
+                   return true;
+               } catch (NumberFormatException exception) {
+                   return false;
+               }
+            });
+            widget.setText(this.prefix + this.serializer.apply(option.getValue()));
             return widget;
         };
     }

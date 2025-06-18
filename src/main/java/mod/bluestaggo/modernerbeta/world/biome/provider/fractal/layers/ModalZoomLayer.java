@@ -1,10 +1,10 @@
 package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers;
 
-import com.mojang.serialization.codecs.RecordCodecBuilder;
+import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 
 public class ModalZoomLayer extends FuzzyZoomLayer {
-    public static final com.mojang.serialization.MapCodec<ModalZoomLayer> CODEC = RecordCodecBuilder.mapCodec(
+    public static final com.mojang.serialization.MapCodec<ModalZoomLayer> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> fillSingleParentLayerFields(instance)
             .apply(instance, ModalZoomLayer::new)
     );

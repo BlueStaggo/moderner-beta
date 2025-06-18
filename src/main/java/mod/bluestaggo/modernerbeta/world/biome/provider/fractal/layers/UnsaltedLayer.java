@@ -1,9 +1,9 @@
 package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers;
 
-import com.mojang.serialization.codecs.RecordCodecBuilder;
+import mod.bluestaggo.modernerbeta.util.VersionCompat;
 
 public class UnsaltedLayer extends LayerWrapperLayer {
-    public static final com.mojang.serialization.MapCodec<UnsaltedLayer> CODEC = RecordCodecBuilder.mapCodec(
+    public static final com.mojang.serialization.MapCodec<UnsaltedLayer> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> fillLayerWrapperFields(instance)
             .apply(instance, UnsaltedLayer::new)
     );

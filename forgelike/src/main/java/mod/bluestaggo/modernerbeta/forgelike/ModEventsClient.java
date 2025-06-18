@@ -1,13 +1,12 @@
 package mod.bluestaggo.modernerbeta.forgelike;
 
-import me.shedaniel.autoconfig.AutoConfig;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.client.ModernerBetaClient;
 import mod.bluestaggo.modernerbeta.client.color.BlockColorSampler;
 import mod.bluestaggo.modernerbeta.client.color.BlockColors;
+import mod.bluestaggo.modernerbeta.client.gui.screen.config.ModernBetaGraphicalConfigSettingsScreen;
 import mod.bluestaggo.modernerbeta.client.registry.ModernBetaClientRegistries;
 import mod.bluestaggo.modernerbeta.client.resource.ModernBetaColormapResource;
-import mod.bluestaggo.modernerbeta.config.ModernBetaConfig;
 import mod.bluestaggo.modernerbeta.forgelike.registry.RegistryHelperImpl;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHelper;
@@ -21,6 +20,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.fml.loading.FMLPaths;
 //? if >=1.21.4 {
 import net.neoforged.neoforge.client.event.AddClientReloadListenersEvent;
 //?} else if >=1.21.2 {
@@ -42,6 +42,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.registries.NewRegistryEvent;
 import net.minecraftforge.registries.RegisterEvent;
 *///?}
@@ -73,7 +74,7 @@ public class ModEventsClient {
                 /*ConfigScreenHandler.ConfigScreenFactory.class,
                 () -> new ConfigScreenHandler.ConfigScreenFactory
                 *///?}
-                ((mc, screen) -> AutoConfig.getConfigScreen(ModernBetaConfig.class, screen).get())
+                ((mc, parent) -> new ModernBetaGraphicalConfigSettingsScreen(parent, FMLPaths.CONFIGDIR.get()))
         );
     }
 

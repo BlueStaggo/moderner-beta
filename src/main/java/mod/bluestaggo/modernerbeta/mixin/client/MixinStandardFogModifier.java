@@ -4,6 +4,7 @@ package mod.bluestaggo.modernerbeta.mixin.client;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.client.FogUtils;
 import mod.bluestaggo.modernerbeta.imixin.ModernBetaWorld;
+import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.Camera;
@@ -48,7 +49,7 @@ public abstract class MixinStandardFogModifier {
             index = 16
     )
     private float modifyFogWeighting(float weight) {
-        return modernBeta_isModernBetaWorld && ModernerBeta.CONFIG.useOldFogColor ? modernBeta_fogWeight : weight;
+        return modernBeta_isModernBetaWorld && ModernerBeta.config.getOrDefault(SettingsComponentTypes.CONFIG_MISCELLANEOUS).oldFogColorWeighting() ? modernBeta_fogWeight : weight;
     }
 }
 //?}

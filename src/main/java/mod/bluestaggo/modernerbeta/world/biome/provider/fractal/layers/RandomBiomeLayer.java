@@ -1,13 +1,13 @@
 package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers;
 
-import com.mojang.serialization.codecs.RecordCodecBuilder;
+import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 
 import java.util.List;
 import java.util.Set;
 
 public class RandomBiomeLayer extends Layer {
-    public static final com.mojang.serialization.MapCodec<RandomBiomeLayer> CODEC = RecordCodecBuilder.mapCodec(
+    public static final com.mojang.serialization.MapCodec<RandomBiomeLayer> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> fillLayerFields(instance)
             .and(ExtendedBiomeId.CODEC.listOf().fieldOf("biomes").forGetter(layer -> layer.biomes))
             .apply(instance, RandomBiomeLayer::new)

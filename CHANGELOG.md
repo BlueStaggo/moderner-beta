@@ -43,6 +43,7 @@ A major number change means a big update. For this update, significant parts of 
 - Improved accuracy of Beta 1.8, 1.0.0 and 1.1 climate, providing the signature messy look as well as ice plains generating without snow on its edges.
 - Biomes with custom grass/foliage colors now display their colors in worlds with custom climate while blending in the climatic base color.
 - Removed dependency on Architectury API.
+- Removed dependency on Cloth Config, thus changing how the configuration screen looks to be more consistent with the world customization screen.
 - Made ocean biome injectors not be used if the biome provider already generates oceans.
 - Moved deepslate and tuff blobs from the reduced height data pack into a separate data pack.
 - Major release worlds can now be generated without surface rules.

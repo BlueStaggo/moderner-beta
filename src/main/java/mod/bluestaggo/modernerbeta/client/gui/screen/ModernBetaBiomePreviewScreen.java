@@ -12,6 +12,7 @@ import mod.bluestaggo.modernerbeta.api.world.biome.BiomeResolverExtendedIdSteppe
 import mod.bluestaggo.modernerbeta.api.world.biome.BiomeResolverStepped;
 import mod.bluestaggo.modernerbeta.api.world.chunk.surface.SurfaceConfig;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
+import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.LayerRandom;
 import net.fabricmc.api.EnvType;
@@ -542,7 +543,7 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                 String id = biomeEntry.getKey().map(key -> key.getValue().toString()).orElse("[unregistered]");
                 if (ext != null && !ext.isEmpty()) {
                     String extId = id + "*" + ext;
-                    Integer registeredExtColor = ModernerBeta.CONFIG.biomePreviewColors.get(extId);
+                    Integer registeredExtColor = ModernerBeta.config.getOrDefault(SettingsComponentTypes.CONFIG_BIOME_PREVIEW_COLORS).get(extId);
                     if (registeredExtColor != null) {
                         return registeredExtColor;
                     }
@@ -560,7 +561,7 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                     }
                 }
 
-                Integer registeredColor = ModernerBeta.CONFIG.biomePreviewColors.get(id);
+                Integer registeredColor = ModernerBeta.config.getOrDefault(SettingsComponentTypes.CONFIG_BIOME_PREVIEW_COLORS).get(id);
                 if (registeredColor != null) {
                     return registeredColor;
                 }

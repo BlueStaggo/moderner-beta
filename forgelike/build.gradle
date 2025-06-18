@@ -100,10 +100,6 @@ dependencies {
         forge "net.minecraftforge:forge:${commonPr.forge_version}"
     }
 
-    var clothConfig = neoforge ? "me.shedaniel.cloth:cloth-config-neoforge" :
-            "me.shedaniel.cloth:cloth-config-forge"
-    modApi "${clothConfig}:${commonPr.cloth_config_version}"
-
     common(project(path: commonPr.path, configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: commonPr.path, configuration: neoforge ? "transformProductionNeoForge" : "transformProductionForge")) { transitive false }
 }

@@ -6,6 +6,7 @@ import mod.bluestaggo.modernerbeta.api.world.biome.climate.Clime;
 import mod.bluestaggo.modernerbeta.client.FogUtils;
 import mod.bluestaggo.modernerbeta.client.color.BlockColorSampler;
 import mod.bluestaggo.modernerbeta.imixin.ModernBetaWorld;
+import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.BackgroundRenderer;
@@ -111,7 +112,7 @@ public abstract class MixinBackgroundRenderer {
         index = /^? if >=1.21.2 {^/10/^?} else {^/ /^7 ^//^?}^/
     )
     private static float modifyFogWeighting(float weight) {
-        return modernBeta_isModernBetaWorld && ModernerBeta.CONFIG.useOldFogColor ? modernBeta_fogWeight : weight;
+        return modernBeta_isModernBetaWorld && ModernerBeta.config.getOrDefault(SettingsComponentTypes.CONFIG_MISCELLANEOUS).oldFogColorWeighting() ? modernBeta_fogWeight : weight;
     }
 }
 *///?}

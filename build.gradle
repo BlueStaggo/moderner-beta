@@ -25,7 +25,6 @@ dependencies {
 	minecraft "net.minecraft:minecraft:$mc"
 	mappings "net.fabricmc:yarn:${property("yarn_mappings")}:v2"
 	modImplementation("net.fabricmc:fabric-loader:$fabric_loader_version")
-	modApi "me.shedaniel.cloth:cloth-config:$cloth_config_version"
 }
 
 loom {

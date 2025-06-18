@@ -4,10 +4,9 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.doubles.DoubleImmutableList;
 import it.unimi.dsi.fastutil.doubles.DoubleList;
+import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import net.minecraft.util.math.noise.OctavePerlinNoiseSampler;
-import net.minecraft.util.math.noise.PerlinNoiseSampler;
-import net.minecraft.util.math.random.CheckedRandom;
 import net.minecraft.util.math.random.LocalRandom;
 
 import java.util.Comparator;
@@ -16,7 +15,7 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 public class MappedNoiseLayer extends Layer {
-    public static final com.mojang.serialization.MapCodec<MappedNoiseLayer> CODEC = RecordCodecBuilder.mapCodec(
+    public static final com.mojang.serialization.MapCodec<MappedNoiseLayer> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> fillLayerFields(instance)
             .and(instance.group(
                 Entry.CODEC

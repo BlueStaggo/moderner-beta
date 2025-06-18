@@ -1,7 +1,7 @@
 package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.predicates;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
+import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.Layer;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.LayerRandom;
@@ -9,7 +9,7 @@ import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.LayerRand
 import java.util.function.Supplier;
 
 public class RandomChanceBiomePredicate extends BiomePredicate {
-    public static final com.mojang.serialization.MapCodec<RandomChanceBiomePredicate> CODEC = RecordCodecBuilder.mapCodec(
+    public static final com.mojang.serialization.MapCodec<RandomChanceBiomePredicate> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> instance
             .group(
                 Codec.INT.fieldOf("numerator").orElse(1).forGetter(predicate -> predicate.numerator),

@@ -117,7 +117,7 @@ public class ModernBetaSettings implements Iterable<SettingsComponent<?>> {
             }
 
             if (presetId.equals(DEFAULT_PRESET_ID)) {
-                presetId = VersionCompat.id(ModernerBeta.CONFIG.defaultSettingsPreset);
+                presetId = ModernerBeta.config.getOrDefault(SettingsComponentTypes.CONFIG_MISCELLANEOUS).defaultSettingsPreset();
             }
 
             Optional<RegistryEntry.Reference<ModernBetaSettingsPreset>> preset = presetRegistry.getOptional(RegistryKey.of(ModernBetaRegistryKeys.SETTINGS_PRESET, presetId));

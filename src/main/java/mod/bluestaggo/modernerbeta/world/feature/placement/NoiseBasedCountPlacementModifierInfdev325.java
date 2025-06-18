@@ -1,13 +1,13 @@
 package mod.bluestaggo.modernerbeta.world.feature.placement;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
+import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.util.noise.PerlinOctaveNoise;
 import mod.bluestaggo.modernerbeta.world.feature.placement.noise.NoiseBasedCountInfdev325;
 import net.minecraft.world.gen.placementmodifier.PlacementModifierType;
 
 public class NoiseBasedCountPlacementModifierInfdev325 extends NoiseBasedCountPlacementModifier {
-    public static final com.mojang.serialization.MapCodec<NoiseBasedCountPlacementModifierInfdev325> MODIFIER_CODEC = RecordCodecBuilder.mapCodec(
+    public static final com.mojang.serialization.MapCodec<NoiseBasedCountPlacementModifierInfdev325> MODIFIER_CODEC = VersionCompat.createMaybeMapCodec(
         instance -> instance.group(
             Codec.INT.fieldOf("count").forGetter(arg -> arg.count),
             Codec.DOUBLE.fieldOf("extra_chance").forGetter(arg -> arg.extraChance),

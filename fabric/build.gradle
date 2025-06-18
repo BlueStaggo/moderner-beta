@@ -147,6 +147,5 @@ modrinth {
     uploadFile = tasks.remapJar
     dependencies {
         required.project "fabric-api"
-        required.project "cloth-config"
     }
 }

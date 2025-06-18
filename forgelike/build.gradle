@@ -184,7 +184,4 @@ modrinth {
     changelog = rootProject.file("CHANGELOG.md").text
     loaders = [neoforge ? "neoforge" : "forge"]
     uploadFile = tasks.remapJar
-    dependencies {
-        required.project "cloth-config"
-    }
 }

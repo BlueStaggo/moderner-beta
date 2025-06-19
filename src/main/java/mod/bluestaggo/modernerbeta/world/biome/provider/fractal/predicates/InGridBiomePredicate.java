@@ -11,8 +11,8 @@ import java.util.function.Supplier;
 public record InGridBiomePredicate(int size, int spacing, int offset) implements BiomePredicate {
     public static final com.mojang.serialization.MapCodec<InGridBiomePredicate> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> instance.group(
-            Codec.INT.fieldOf("size").orElse(0).forGetter(InGridBiomePredicate::size),
-            Codec.INT.fieldOf("spacing").orElse(0).forGetter(InGridBiomePredicate::spacing),
+            Codec.INT.fieldOf("size").forGetter(InGridBiomePredicate::size),
+            Codec.INT.fieldOf("spacing").forGetter(InGridBiomePredicate::spacing),
             Codec.INT.fieldOf("offset").forGetter(InGridBiomePredicate::offset)
         ).apply(instance, InGridBiomePredicate::new)
     );

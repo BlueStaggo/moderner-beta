@@ -7,20 +7,12 @@ import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.LayerRand
 
 import java.util.function.Supplier;
 
-public class InvertedBiomePredicate extends BiomePredicate {
+public record InvertedBiomePredicate(BiomePredicate term) implements BiomePredicate {
     public static final com.mojang.serialization.MapCodec<InvertedBiomePredicate> CODEC = VersionCompat.createMaybeMapCodec(
-        instance -> instance
-            .group(
-                BiomePredicate.BASE_CODEC.fieldOf("term").forGetter(predicate -> predicate.term)
-            )
-            .apply(instance, InvertedBiomePredicate::new)
+        instance -> instance.group(
+            BiomePredicate.BASE_CODEC.fieldOf("term").forGetter(predicate -> predicate.term)
+        ).apply(instance, InvertedBiomePredicate::new)
     );
-
-    private final BiomePredicate term;
-
-    public InvertedBiomePredicate(BiomePredicate term) {
-        this.term = term;
-    }
 
     @Override
     public BiomePredicateType<?> getType() {

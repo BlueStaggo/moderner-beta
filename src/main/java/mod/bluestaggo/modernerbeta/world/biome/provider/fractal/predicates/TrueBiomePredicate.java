@@ -6,7 +6,7 @@ import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.LayerRand
 
 import java.util.function.Supplier;
 
-public class TrueBiomePredicate extends BiomePredicate {
+public final class TrueBiomePredicate implements BiomePredicate {
     public static final TrueBiomePredicate INSTANCE = new TrueBiomePredicate();
     public static final com.mojang.serialization.MapCodec<TrueBiomePredicate> CODEC = com.mojang.serialization.MapCodec.unit(INSTANCE);
 

@@ -8,23 +8,13 @@ import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.LayerRand
 
 import java.util.function.Supplier;
 
-public class RandomChanceBiomePredicate extends BiomePredicate {
+public record RandomChanceBiomePredicate(int numerator, int denominator) implements BiomePredicate {
     public static final com.mojang.serialization.MapCodec<RandomChanceBiomePredicate> CODEC = VersionCompat.createMaybeMapCodec(
-        instance -> instance
-            .group(
-                Codec.INT.fieldOf("numerator").orElse(1).forGetter(predicate -> predicate.numerator),
-                Codec.INT.fieldOf("denominator").forGetter(predicate -> predicate.denominator)
-            )
-            .apply(instance, RandomChanceBiomePredicate::new)
+        instance -> instance.group(
+            Codec.INT.fieldOf("numerator").orElse(1).forGetter(predicate -> predicate.numerator),
+            Codec.INT.fieldOf("denominator").forGetter(predicate -> predicate.denominator)
+        ).apply(instance, RandomChanceBiomePredicate::new)
     );
-
-    private final int numerator;
-    private final int denominator;
-
-    public RandomChanceBiomePredicate(int numerator, int denominator) {
-        this.numerator = numerator;
-        this.denominator = denominator;
-    }
 
     @Override
     public BiomePredicateType<?> getType() {

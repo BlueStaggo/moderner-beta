@@ -9,7 +9,7 @@ import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.LayerRand
 
 import java.util.function.Supplier;
 
-public abstract class NeighborComparisonPredicate extends BiomePredicate {
+public abstract class NeighborComparisonPredicate implements BiomePredicate {
     private static final int[] NEIGHBOR_X_COORDS = {-1, 1, 0, 0};
     private static final int[] NEIGHBOR_Z_COORDS = {0, 0, -1, 1};
     private static final int[] DIAGONAL_NEIGHBOR_X_COORDS = {-1, 1, -1, 1};

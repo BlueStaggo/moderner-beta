@@ -9,20 +9,12 @@ import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.LayerRand
 import java.util.Set;
 import java.util.function.Supplier;
 
-public class InSetBiomePredicate extends BiomePredicate {
+public record InSetBiomePredicate(Set<ExtendedBiomeId> biomes) implements BiomePredicate {
     public static final com.mojang.serialization.MapCodec<InSetBiomePredicate> CODEC = VersionCompat.createMaybeMapCodec(
-        instance -> instance
-            .group(
-                CodecUtil.set(ExtendedBiomeId.CODEC).fieldOf("biomes").forGetter(predicate -> predicate.biomes)
-            )
-            .apply(instance, InSetBiomePredicate::new)
+        instance -> instance.group(
+            CodecUtil.set(ExtendedBiomeId.CODEC).fieldOf("biomes").forGetter(predicate -> predicate.biomes)
+        ).apply(instance, InSetBiomePredicate::new)
     );
-
-    private final Set<ExtendedBiomeId> biomes;
-
-    public InSetBiomePredicate(Set<ExtendedBiomeId> biomes) {
-        this.biomes = biomes;
-    }
 
     @Override
     public BiomePredicateType<?> getType() {

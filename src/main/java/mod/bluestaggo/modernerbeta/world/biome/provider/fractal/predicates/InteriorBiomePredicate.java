@@ -8,20 +8,12 @@ import net.minecraft.util.StringIdentifiable;
 
 import java.util.function.Supplier;
 
-public class InteriorBiomePredicate extends BiomePredicate {
+public record InteriorBiomePredicate(Type type) implements BiomePredicate {
     public static final com.mojang.serialization.MapCodec<InteriorBiomePredicate> CODEC = VersionCompat.createMaybeMapCodec(
-        instance -> instance
-            .group(
-                StringIdentifiable.createCodec(Type::values).fieldOf("type").orElse(Type.INTERIOR).forGetter(predicate -> predicate.type)
-            )
-            .apply(instance, InteriorBiomePredicate::new)
+        instance -> instance.group(
+            StringIdentifiable.createCodec(Type::values).fieldOf("type").orElse(Type.INTERIOR).forGetter(predicate -> predicate.type)
+        ).apply(instance, InteriorBiomePredicate::new)
     );
-
-    private final Type type;
-
-    public InteriorBiomePredicate(Type type) {
-        this.type = type;
-    }
 
     @Override
     public BiomePredicateType<?> getType() {

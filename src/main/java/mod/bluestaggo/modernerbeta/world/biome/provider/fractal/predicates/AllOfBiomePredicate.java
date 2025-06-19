@@ -9,21 +9,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class AllOfBiomePredicate extends BiomePredicate {
+public record AllOfBiomePredicate(List<BiomePredicate> terms) implements BiomePredicate {
     public static final com.mojang.serialization.MapCodec<AllOfBiomePredicate> CODEC = VersionCompat.createMaybeMapCodec(
-        instance -> instance
-            .group(
-                BiomePredicate.BASE_CODEC.listOf().fieldOf("terms").forGetter(predicate -> predicate.terms)
-            )
-            .apply(instance, AllOfBiomePredicate::new)
+        instance -> instance.group(
+            BiomePredicate.BASE_CODEC.listOf().fieldOf("terms").forGetter(AllOfBiomePredicate::terms)
+        ).apply(instance, AllOfBiomePredicate::new)
     );
 
-    private final List<BiomePredicate> terms;
-
-    public AllOfBiomePredicate(List<BiomePredicate> terms) {
-        this.terms = terms;
-    }
-
+    @Override
     public BiomePredicate and(BiomePredicate other) {
         List<BiomePredicate> terms = new ArrayList<>(this.terms);
         terms.add(other);

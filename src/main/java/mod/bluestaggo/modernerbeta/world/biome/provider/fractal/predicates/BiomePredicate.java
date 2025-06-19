@@ -10,133 +10,137 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
 
-public abstract class BiomePredicate {
-    public static final Codec<BiomePredicate> BASE_CODEC = ModernBetaRegistries.BIOME_PREDICATE.getCodec()
+public interface BiomePredicate {
+    Codec<BiomePredicate> BASE_CODEC = ModernBetaRegistries.BIOME_PREDICATE.getCodec()
         .dispatch("condition", BiomePredicate::getType, BiomePredicateType::codec);
 
-    public static BiomePredicate allOf(BiomePredicate... predicates) {
+    static BiomePredicate allOf(BiomePredicate... predicates) {
         return new AllOfBiomePredicate(List.of(predicates));
     }
 
-    public static BiomePredicate anyOf(BiomePredicate... predicates) {
+    static BiomePredicate anyOf(BiomePredicate... predicates) {
         return new AnyOfBiomePredicate(List.of(predicates));
     }
 
-    public static BiomePredicate anyOf(List<BiomePredicate> predicates) {
+    static BiomePredicate anyOf(List<BiomePredicate> predicates) {
         return new AnyOfBiomePredicate(predicates);
     }
 
-    public static BiomePredicate border() {
+    static BiomePredicate border() {
         return new UniqueNeighborBiomePredicate(1, false);
     }
 
-    public static BiomePredicate diagonalBorder() {
+    static BiomePredicate diagonalBorder() {
         return new UniqueNeighborBiomePredicate(1, true);
     }
 
-    public static BiomePredicate diagonalInterior() {
+    static BiomePredicate diagonalInterior() {
         return new IdenticalNeighborBiomePredicate(4, true);
     }
 
-    public static BiomePredicate diagonalNeighborsMatch(BiomePredicate predicate, int neighborCount) {
+    static BiomePredicate diagonalNeighborsMatch(BiomePredicate predicate, int neighborCount) {
         return new NeighborMatchBiomePredicate(neighborCount, true, predicate);
     }
 
-    public static BiomePredicate diagonalNeighborsMatch(ExtendedBiomeId biome, int neighborCount) {
+    static BiomePredicate diagonalNeighborsMatch(ExtendedBiomeId biome, int neighborCount) {
         return diagonalNeighborsMatch(of(biome), neighborCount);
     }
 
-    public static BiomePredicate diagonalNeighborsMatch(List<Set<ExtendedBiomeId>> categories, int neighborCount) {
+    static BiomePredicate diagonalNeighborsMatch(List<Set<ExtendedBiomeId>> categories, int neighborCount) {
         return new CategorizedNeighborBiomePredicate(neighborCount, true, categories);
     }
 
-    public static BiomePredicate identicalNeighbors(int count, boolean diagonal) {
+    static BiomePredicate identicalNeighbors(int count, boolean diagonal) {
         return new IdenticalNeighborBiomePredicate(count, diagonal);
     }
 
-    public static BiomePredicate inSet(ExtendedBiomeId... biomes) {
+    static BiomePredicate inRange(int centerX, int centerZ, int width, int length, boolean evenSize, InRangeBiomePredicate.Shape shape) {
+        return new InRangeBiomePredicate(centerX, centerZ, width, length, evenSize, shape);
+    }
+
+    static BiomePredicate inSet(ExtendedBiomeId... biomes) {
         return new InSetBiomePredicate(Set.of(biomes));
     }
 
-    public static BiomePredicate inSet(Set<ExtendedBiomeId> biomes) {
+    static BiomePredicate inSet(Set<ExtendedBiomeId> biomes) {
         return new InSetBiomePredicate(biomes);
     }
 
-    public static BiomePredicate interior() {
+    static BiomePredicate interior() {
         return new IdenticalNeighborBiomePredicate(4, false);
     }
 
-    public static BiomePredicate neighborsMatch(BiomePredicate predicate, int neighborCount) {
+    static BiomePredicate neighborsMatch(BiomePredicate predicate, int neighborCount) {
         return new NeighborMatchBiomePredicate(neighborCount, false, predicate);
     }
 
-    public static BiomePredicate neighborsMatch(ExtendedBiomeId biome, int neighborCount) {
+    static BiomePredicate neighborsMatch(ExtendedBiomeId biome, int neighborCount) {
         return neighborsMatch(of(biome), neighborCount);
     }
 
-    public static BiomePredicate neighborsMatch(List<Set<ExtendedBiomeId>> categories, int neighborCount) {
+    static BiomePredicate neighborsMatch(List<Set<ExtendedBiomeId>> categories, int neighborCount) {
         return new CategorizedNeighborBiomePredicate(neighborCount, false, categories);
     }
 
-    public static BiomePredicate noneOf(BiomePredicate... predicates) {
+    static BiomePredicate noneOf(BiomePredicate... predicates) {
         return anyOf(predicates).invert();
     }
 
-    public static BiomePredicate noneOf(List<BiomePredicate> predicates) {
+    static BiomePredicate noneOf(List<BiomePredicate> predicates) {
         return anyOf(predicates).invert();
     }
 
-    public static BiomePredicate noneInSet(ExtendedBiomeId... biomes) {
+    static BiomePredicate noneInSet(ExtendedBiomeId... biomes) {
         return inSet(biomes).invert();
     }
 
-    public static BiomePredicate noneInSet(Set<ExtendedBiomeId> biomes) {
+    static BiomePredicate noneInSet(Set<ExtendedBiomeId> biomes) {
         return inSet(biomes).invert();
     }
 
-    public static BiomePredicate of(ExtendedBiomeId biome) {
+    static BiomePredicate of(ExtendedBiomeId biome) {
         return new SingleMatchBiomePredicate(biome);
     }
 
-    public static BiomePredicate ofTrue() {
+    static BiomePredicate ofTrue() {
         return TrueBiomePredicate.INSTANCE;
     }
 
-    public static BiomePredicate oneIn(int chance) {
+    static BiomePredicate oneIn(int chance) {
         return new RandomChanceBiomePredicate(1, chance);
     }
 
-    public static BiomePredicate randomChance(int numerator, int denominator) {
+    static BiomePredicate randomChance(int numerator, int denominator) {
         return new RandomChanceBiomePredicate(numerator, denominator);
     }
 
-    public static BiomePredicate simpleHills(Set<ExtendedBiomeId> affectedBiomes) {
+    static BiomePredicate simpleHills(Set<ExtendedBiomeId> affectedBiomes) {
         return BiomePredicate.inSet(affectedBiomes)
             .and(BiomePredicate.interior())
             .and(BiomePredicate.oneIn(3));
     }
 
-    public static BiomePredicate uniqueNeighbors(int count, boolean diagonal) {
+    static BiomePredicate uniqueNeighbors(int count, boolean diagonal) {
         return new UniqueNeighborBiomePredicate(count, diagonal);
     }
 
-    public static BiomePredicate wrappedIntMatch(int range, int match) {
+    static BiomePredicate wrappedIntMatch(int range, int match) {
         return new WrappedIntMatchBiomePredicate(range, match);
     }
 
-    public BiomePredicate and(BiomePredicate other) {
+    default BiomePredicate and(BiomePredicate other) {
         return new AllOfBiomePredicate(List.of(this, other));
     }
 
-    public BiomePredicate or(BiomePredicate other) {
+    default BiomePredicate or(BiomePredicate other) {
         return new AnyOfBiomePredicate(List.of(this, other));
     }
 
-    public BiomePredicate invert() {
+    default BiomePredicate invert() {
         return new InvertedBiomePredicate(this);
     }
 
-    public abstract BiomePredicateType<?> getType();
+    BiomePredicateType<?> getType();
 
-    public abstract boolean matches(ExtendedBiomeId biome, Layer layer, Supplier<LayerRandom> randomSupplier, int x, int z);
+    boolean matches(ExtendedBiomeId biome, Layer layer, Supplier<LayerRandom> randomSupplier, int x, int z);
 }

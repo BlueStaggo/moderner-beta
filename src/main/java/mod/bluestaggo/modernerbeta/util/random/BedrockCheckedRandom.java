@@ -165,10 +165,12 @@ public class BedrockCheckedRandom extends CheckedRandom {
             return new BedrockCheckedRandom(i ^ this.seed);
         }
 
+        //? if >=1.21 {
         @Override
         public Random split(long seed) {
             return new BedrockCheckedRandom((int) seed);
         }
+        //?}
 
         @VisibleForTesting
         @Override

@@ -31,4 +31,9 @@ public class ChunkProviderEarlyBedrock extends ChunkProviderMajorRelease {
 
         return new MTRandom(seed);
     }
+
+    @Override
+    protected int getHeightSampleRadius() {
+        return 1;
+    }
 }

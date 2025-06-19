@@ -1676,7 +1676,7 @@ public final class ModernBetaSettingsPresets {
 
     private static ConfiguredLayers configuredLayers1710Era(int biomeScale, boolean bedrock, boolean saltedMutation, boolean climaticOceans, boolean bambooJungles, boolean strongBadlandsCategories, boolean modernBiomes) {
         if (bedrock) {
-            saltedMutation = true;
+            saltedMutation = false;
             strongBadlandsCategories = false;
         }
 
@@ -2205,13 +2205,19 @@ public final class ModernBetaSettingsPresets {
     }
 
     private static ModernBetaSettingsPreset preset1122(int biomeScale, boolean bedrock) {
+        Map<ExtendedBiomeId, HeightConfig> heightOverrides = HeightConfig.MAJOR_RELEASE_CONFIGS;
+        if (bedrock) {
+            heightOverrides = new HashMap<>(heightOverrides);
+            heightOverrides.put(ExtendedBiomeId.of("minecraft:wooded_badlands"), heightOverrides.get(ExtendedBiomeId.of("minecraft:badlands")));
+        }
+
         return new ModernBetaSettingsPreset(
             DEFAULT_BETA.chunkSettings().extend()
                 .add(PROVIDER, bedrock ? ModernBetaBuiltInTypes.Chunk.EARLY_BEDROCK.id : ModernBetaBuiltInTypes.Chunk.MAJOR_RELEASE.id)
                 .add(NOISE_SCALE, NoiseScale.WITHOUT_FARLANDS)
                 .add(USE_SURFACE_RULES, true)
                 .add(CAVE_GENERATION, bedrock ? CaveGeneration.BEDROCK : CaveGeneration.RELEASE_1_12_2)
-                .add(FORCED_BIOME_HEIGHT, ForcedBiomeHeight.overridesOnly(HeightConfig.MAJOR_RELEASE_CONFIGS))
+                .add(FORCED_BIOME_HEIGHT, ForcedBiomeHeight.overridesOnly(heightOverrides))
                 .build(),
             ModernBetaSettings.fractalLayers(configuredLayers1710Era(biomeScale, bedrock, false, false, false, false, false))
                 .add(TEMPERATURE_HEIGHT_SCALING, TemperatureHeightScaling.MAJOR_RELEASE)

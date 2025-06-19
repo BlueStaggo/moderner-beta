@@ -12,6 +12,8 @@ import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.settings.component.CaveGeneration;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
+import mod.bluestaggo.modernerbeta.util.random.BedrockCheckedRandom;
+import mod.bluestaggo.modernerbeta.util.random.BedrockChunkRandom;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.world.biome.injector.BiomeInjector;
 import mod.bluestaggo.modernerbeta.world.biome.injector.BiomeInjector.BiomeInjectionStep;
@@ -180,19 +182,21 @@ public class ModernBetaChunkGenerator extends NoiseChunkGenerator {
 
         CaveGeneration.SeedMethod seedMethod = this.caveSettings.seedMethod();
 
-        Random random = seedMethod == CaveGeneration.SeedMethod.MODERN
-            ? new ChunkRandom(new CheckedRandom(RandomSeed.getSeed()))
-            : new LocalRandom(seed);
+        Random random = seedMethod == CaveGeneration.SeedMethod.BEDROCK ?
+            new BedrockChunkRandom(new BedrockCheckedRandom((int) RandomSeed.getSeed())) :
+            (seedMethod == CaveGeneration.SeedMethod.MODERN
+                ? new ChunkRandom(new CheckedRandom(RandomSeed.getSeed()))
+                : new LocalRandom(seed));
 
         long saltX = switch (seedMethod) {
             case BETA -> (random.nextLong() / 2L) * 2L + 1L;
             case EARLY_RELEASE -> random.nextLong();
-            case MODERN -> 0;
+            case MODERN, BEDROCK -> 0;
         };
         long saltZ = switch (seedMethod) {
             case BETA -> (random.nextLong() / 2L) * 2L + 1L;
             case EARLY_RELEASE -> random.nextLong();
-            case MODERN -> 0;
+            case MODERN, BEDROCK -> 0;
         };
 
         for (int chunkX = mainChunkX - 8; chunkX <= mainChunkX + 8; ++chunkX) {
@@ -212,7 +216,7 @@ public class ModernBetaChunkGenerator extends NoiseChunkGenerator {
                 int modernSalt = 0;
                 for(RegistryEntry<ConfiguredCarver<?>> carverEntry : carverList) {
                     ConfiguredCarver<?> configuredCarver = carverEntry.value();
-                    if (seedMethod == CaveGeneration.SeedMethod.MODERN) {
+                    if (seedMethod == CaveGeneration.SeedMethod.MODERN || seedMethod == CaveGeneration.SeedMethod.BEDROCK) {
                         ((ChunkRandom)random).setCarverSeed(seed + modernSalt, chunkX, chunkZ);
                     } else {
                         random.setSeed((long) chunkX * saltX + (long) chunkZ * saltZ ^ seed);

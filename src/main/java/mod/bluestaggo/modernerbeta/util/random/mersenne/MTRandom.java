@@ -1,4 +1,4 @@
-package mod.bluestaggo.modernerbeta.util.mersenne;
+package mod.bluestaggo.modernerbeta.util.random.mersenne;
 
 import java.util.Random;
 

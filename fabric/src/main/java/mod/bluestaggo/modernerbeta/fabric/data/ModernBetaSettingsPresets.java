@@ -2210,7 +2210,7 @@ public final class ModernBetaSettingsPresets {
                 .add(PROVIDER, bedrock ? ModernBetaBuiltInTypes.Chunk.EARLY_BEDROCK.id : ModernBetaBuiltInTypes.Chunk.MAJOR_RELEASE.id)
                 .add(NOISE_SCALE, NoiseScale.WITHOUT_FARLANDS)
                 .add(USE_SURFACE_RULES, true)
-                .add(CAVE_GENERATION, CaveGeneration.RELEASE_1_12_2)
+                .add(CAVE_GENERATION, bedrock ? CaveGeneration.BEDROCK : CaveGeneration.RELEASE_1_12_2)
                 .add(FORCED_BIOME_HEIGHT, ForcedBiomeHeight.overridesOnly(HeightConfig.MAJOR_RELEASE_CONFIGS))
                 .build(),
             ModernBetaSettings.fractalLayers(configuredLayers1710Era(biomeScale, bedrock, false, false, false, false, false))
@@ -2226,7 +2226,7 @@ public final class ModernBetaSettingsPresets {
                 .add(PROVIDER, bedrock ? ModernBetaBuiltInTypes.Chunk.EARLY_BEDROCK.id : ModernBetaBuiltInTypes.Chunk.MAJOR_RELEASE.id)
                 .add(NOISE_SCALE, NoiseScale.WITHOUT_FARLANDS)
                 .add(USE_SURFACE_RULES, true)
-                .add(CAVE_GENERATION, CaveGeneration.RELEASE_1_17_1)
+                .add(CAVE_GENERATION, bedrock ? CaveGeneration.BEDROCK : CaveGeneration.RELEASE_1_17_1)
                 .add(FORCED_BIOME_HEIGHT, ForcedBiomeHeight.overridesOnly(HeightConfig.MAJOR_RELEASE_CONFIGS))
                 .build(),
             ModernBetaSettings.fractalLayers(configuredLayers1710Era(biomeScale, bedrock, true, true, true, true, false))

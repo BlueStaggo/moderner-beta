@@ -3,4 +3,4 @@
 - Added the Early Bedrock chunk provider to allow for the use of Mersenne Twister RNG and the 128 block height limit for forced height worlds.
 
 ## Fixes
-- Fixed plains borders between swamps and deserts, snowy taigas and snowy plains in 1.7+ presets being missing. 
+- Fixed plains borders between swamps and deserts, snowy taigas and snowy plains in 1.7+ presets being missing.

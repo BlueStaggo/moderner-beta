@@ -1,7 +1,7 @@
 package mod.bluestaggo.modernerbeta.world.chunk.provider;
 
 import mod.bluestaggo.modernerbeta.api.world.spawn.SpawnLocator;
-import mod.bluestaggo.modernerbeta.util.mersenne.MTRandom;
+import mod.bluestaggo.modernerbeta.util.random.mersenne.MTRandom;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
 import mod.bluestaggo.modernerbeta.world.spawn.SpawnLocatorRelease;
 

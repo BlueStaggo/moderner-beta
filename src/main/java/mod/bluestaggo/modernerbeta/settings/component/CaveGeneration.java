@@ -30,12 +30,14 @@ public record CaveGeneration(
     public static final CaveGeneration EARLY_RELEASE = new CaveGeneration(true, false, true, true, true, SeedMethod.EARLY_RELEASE);
     public static final CaveGeneration RELEASE_1_12_2 = new CaveGeneration(true, false, true, false, false, SeedMethod.MODERN);
     public static final CaveGeneration RELEASE_1_17_1 = new CaveGeneration(true, false, true, false, false, SeedMethod.MODERN);
+    public static final CaveGeneration BEDROCK = new CaveGeneration(true, false, true, false, false, SeedMethod.BEDROCK);
     public static final CaveGeneration MODERN_BETA = new CaveGeneration(true, true, true, true, true, SeedMethod.MODERN);
 
     public enum SeedMethod implements StringIdentifiable {
         BETA("beta"),
         EARLY_RELEASE("early_release"),
         MODERN("modern"),
+        BEDROCK("bedrock"),
         ;
 
         public final String id;

@@ -13,7 +13,7 @@ import mod.bluestaggo.modernerbeta.settings.component.ClimateDistribution;
 import mod.bluestaggo.modernerbeta.settings.component.ClimateScale;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkCache;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkClimate;
-import mod.bluestaggo.modernerbeta.util.mersenne.MTRandom;
+import mod.bluestaggo.modernerbeta.util.random.mersenne.MTRandom;
 import mod.bluestaggo.modernerbeta.util.noise.PerlinOctaveNoise;
 import mod.bluestaggo.modernerbeta.world.biome.provider.climate.ClimateMap;
 import mod.bluestaggo.modernerbeta.world.biome.provider.climate.ClimateMapping;

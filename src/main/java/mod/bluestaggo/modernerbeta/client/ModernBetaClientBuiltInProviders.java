@@ -3,6 +3,7 @@ package mod.bluestaggo.modernerbeta.client;
 import mod.bluestaggo.modernerbeta.api.world.biome.climate.TemperatureHeightScaling;
 import mod.bluestaggo.modernerbeta.client.gui.screen.config.*;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
+import mod.bluestaggo.modernerbeta.settings.component.CaveGeneration;
 import mod.bluestaggo.modernerbeta.world.chunk.provider.indev.IndevTheme;
 import mod.bluestaggo.modernerbeta.world.chunk.provider.indev.IndevType;
 import mod.bluestaggo.modernerbeta.world.chunk.provider.island.IslandShape;
@@ -75,7 +76,8 @@ public class ModernBetaClientBuiltInProviders {
                     screen.booleanOption("useNoiseCaves"),
                     screen.booleanOption("fixCaveBorders"),
                     screen.booleanOption("forceBetaCaves"),
-                    screen.booleanOption("forceBetaCanyons")
+                    screen.booleanOption("forceBetaCanyons"),
+                    screen.selectionOption("seedMethod", CaveGeneration.SeedMethod::values)
                 );
             }
         );

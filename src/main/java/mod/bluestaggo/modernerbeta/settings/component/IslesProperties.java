@@ -35,4 +35,19 @@ public record IslesProperties(
     public static final IslesProperties DEFAULT = CodecUtil.getDefaultByMap(CODEC);
 
     public static final IslesProperties ENABLED = new IslesProperties(true, true, -200.0f, IslandShape.CIRCLE, 16, 8, 64, 16, 300.0f, 0.25f);
+
+    public static IslesProperties xboxLegacy(int size) {
+        return new IslesProperties(
+            true,
+            false,
+            -200.0f,
+            IslandShape.SQUARE,
+            size / 32 - 2,
+            2,
+            64,
+            16,
+            300.0f,
+            0.25f
+        );
+    }
 }

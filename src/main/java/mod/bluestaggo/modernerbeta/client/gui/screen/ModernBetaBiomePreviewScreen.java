@@ -195,7 +195,7 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
         void zoomOut() {
             if (this.zoomIn.get() > 1) {
                 this.zoomIn.getAndUpdate(i -> i / 2);
-            } else if (this.zoomOut.get() < 0x2000_0000) {
+            } else if (this.zoomOut.get() < 0x1_00_00_00) {
                 this.zoomOut.getAndUpdate(i -> i * 2);
             } else {
                 return;
@@ -208,7 +208,7 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
 
         void zoomIn() {
             if (this.zoomOut.get() <= 1) {
-                if (this.zoomIn.get() >= 0x2000_0000) return;
+                if (this.zoomIn.get() >= 0x1_00_00_00) return;
                 this.zoomIn.getAndUpdate(i -> i * 2);
             } else {
                 this.zoomOut.getAndUpdate(i -> i / 2);
@@ -273,6 +273,12 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                 context.fill(this.getX(), this.getY(), this.getX() + textRenderer.getWidth(stepName) + 8, this.getY() + 16, 0xAA000000);
                 context.drawText(textRenderer, stepName, this.getX() + 4, this.getY() + 4, 0xFFFFFFFF, false);
             }
+
+            double zoomLevel = (double)this.zoomOut.get() * 4.0 / (double)this.zoomIn.get();
+            Text zoomLabel = Text.literal("1:" + (zoomLevel % 1.0 == 0.0 ? Integer.toString((int)zoomLevel) : Double.toString(zoomLevel)));
+            int zoomLabelWidth = textRenderer.getWidth(zoomLabel);
+            context.fill(this.getX() + this.getWidth() - zoomLabelWidth - 8, this.getY(), this.getX() + this.getWidth(), this.getY() + 16, 0xAA000000);
+            context.drawText(textRenderer, zoomLabel, this.getX() + this.getWidth() - zoomLabelWidth - 4, this.getY() + 4, 0xFFFFFFFF, false);
 
             if (exceptionMessage != null) {
                 context.drawCenteredTextWithShadow(

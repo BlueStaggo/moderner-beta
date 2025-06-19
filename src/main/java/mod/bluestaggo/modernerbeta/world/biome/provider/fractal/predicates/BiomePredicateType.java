@@ -10,6 +10,7 @@ public record BiomePredicateType<P extends BiomePredicate>(com.mojang.serializat
     public static BiomePredicateType<AnyOfBiomePredicate> ANY_OF;
     public static BiomePredicateType<CategorizedNeighborBiomePredicate> CATEGORIZED_NEIGHBOR;
     public static BiomePredicateType<IdenticalNeighborBiomePredicate> IDENTICAL_NEIGHBOR;
+    public static BiomePredicateType<InGridBiomePredicate> IN_GRID;
     public static BiomePredicateType<InRangeBiomePredicate> IN_RANGE;
     public static BiomePredicateType<InSetBiomePredicate> IN_SET;
     public static BiomePredicateType<InteriorBiomePredicate> INTERIOR;
@@ -34,6 +35,7 @@ public record BiomePredicateType<P extends BiomePredicate>(com.mojang.serializat
         ANY_OF = register("any_of", AnyOfBiomePredicate.CODEC);
         CATEGORIZED_NEIGHBOR = register("categorized_neighbor", CategorizedNeighborBiomePredicate.CODEC);
         IDENTICAL_NEIGHBOR = register("identical_neighbor", IdenticalNeighborBiomePredicate.CODEC);
+        IN_GRID = register("in_grid", InGridBiomePredicate.CODEC);
         IN_RANGE = register("in_range", InRangeBiomePredicate.CODEC);
         IN_SET = register("in_set", InSetBiomePredicate.CODEC);
         INTERIOR = register("interior", InteriorBiomePredicate.CODEC);

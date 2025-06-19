@@ -182,11 +182,11 @@ public class ModernBetaChunkGenerator extends NoiseChunkGenerator {
 
         CaveGeneration.SeedMethod seedMethod = this.caveSettings.seedMethod();
 
-        Random random = seedMethod == CaveGeneration.SeedMethod.BEDROCK ?
-            new BedrockChunkRandom(new BedrockCheckedRandom((int) RandomSeed.getSeed())) :
-            (seedMethod == CaveGeneration.SeedMethod.MODERN
-                ? new ChunkRandom(new CheckedRandom(RandomSeed.getSeed()))
-                : new LocalRandom(seed));
+        Random random = switch (seedMethod) {
+            case MODERN -> new ChunkRandom(new CheckedRandom(RandomSeed.getSeed()));
+            case BEDROCK -> new BedrockChunkRandom(new BedrockCheckedRandom((int) RandomSeed.getSeed()));
+            default -> new LocalRandom(seed);
+        };
 
         long saltX = switch (seedMethod) {
             case BETA -> (random.nextLong() / 2L) * 2L + 1L;
@@ -213,11 +213,11 @@ public class ModernBetaChunkGenerator extends NoiseChunkGenerator {
                     /*carverStep*/
                 );
 
-                int modernSalt = 0;
+                int salt = 0;
                 for(RegistryEntry<ConfiguredCarver<?>> carverEntry : carverList) {
                     ConfiguredCarver<?> configuredCarver = carverEntry.value();
-                    if (seedMethod == CaveGeneration.SeedMethod.MODERN || seedMethod == CaveGeneration.SeedMethod.BEDROCK) {
-                        ((ChunkRandom)random).setCarverSeed(seed + modernSalt, chunkX, chunkZ);
+                    if (random instanceof ChunkRandom chunkRandom) {
+                        chunkRandom.setCarverSeed(seed + salt, chunkX, chunkZ);
                     } else {
                         random.setSeed((long) chunkX * saltX + (long) chunkZ * saltZ ^ seed);
                     }
@@ -250,7 +250,10 @@ public class ModernBetaChunkGenerator extends NoiseChunkGenerator {
 
                         configuredCarver.carve(carverContext, chunk, biomeAccessWithSource::getBiome, random, aquiferSampler, carverPos, carvingMask);
                     }
-                    ++modernSalt;
+
+                    if (seedMethod != CaveGeneration.SeedMethod.BEDROCK) {
+                        ++salt;
+                    }
                 }
             }
         }

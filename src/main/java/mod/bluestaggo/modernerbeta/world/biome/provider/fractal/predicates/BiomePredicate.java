@@ -54,6 +54,10 @@ public interface BiomePredicate {
         return new IdenticalNeighborBiomePredicate(count, diagonal);
     }
 
+    static BiomePredicate inGrid(int size, int spacing, int offset) {
+        return new InGridBiomePredicate(size, spacing, offset);
+    }
+
     static BiomePredicate inRange(int centerX, int centerZ, int width, int length, boolean evenSize, InRangeBiomePredicate.Shape shape) {
         return new InRangeBiomePredicate(centerX, centerZ, width, length, evenSize, shape);
     }

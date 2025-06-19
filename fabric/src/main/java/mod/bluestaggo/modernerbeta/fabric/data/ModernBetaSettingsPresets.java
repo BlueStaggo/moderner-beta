@@ -17,6 +17,7 @@ import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.LayerTarget;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.*;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.predicates.BiomePredicate;
+import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.predicates.InRangeBiomePredicate;
 import mod.bluestaggo.modernerbeta.world.biome.voronoi.VoronoiPointBiome;
 import mod.bluestaggo.modernerbeta.world.chunk.provider.indev.IndevTheme;
 import mod.bluestaggo.modernerbeta.world.chunk.provider.indev.IndevType;
@@ -76,6 +77,10 @@ public final class ModernBetaSettingsPresets {
         presetRegisterable.register(keyOf("beta_xbox_legacy"), presetBetaXboxLegacy());
         presetRegisterable.register(keyOf("beta_survival_island"), presetBetaSurvivalIsland());
         presetRegisterable.register(keyOf("beta_vanilla"), presetBetaVanilla());
+        presetRegisterable.register(keyOf("legacy_console_classic"), presetReleaseXboxLegacy(864));
+        presetRegisterable.register(keyOf("legacy_console_small"), presetReleaseXboxLegacy(1024));
+        presetRegisterable.register(keyOf("legacy_console_medium"), presetReleaseXboxLegacy(3072));
+        presetRegisterable.register(keyOf("legacy_console_large"), presetReleaseXboxLegacy(5120));
         presetRegisterable.register(keyOf("release_hybrid"), presetReleaseHybrid(0));
         presetRegisterable.register(keyOf("snow_aint_snowier"), presetSnowAintSnowier(0));
         presetRegisterable.register(keyOf("alpha_winter"), presetAlphaWinter());
@@ -749,18 +754,7 @@ public final class ModernBetaSettingsPresets {
     private static ModernBetaSettingsPreset presetBetaXboxLegacy() {
         return new ModernBetaSettingsPreset(
             DEFAULT_BETA.chunkSettings().extend()
-                .add(ISLES_PROPERTIES, new IslesProperties(
-                    true,
-                    false,
-                    -200.0f,
-                    IslandShape.SQUARE,
-                    25,
-                    2,
-                    64,
-                    16,
-                    300.0f,
-                    0.25f
-                ))
+                .add(ISLES_PROPERTIES, IslesProperties.xboxLegacy(864))
                 .build(),
             DEFAULT_BETA.biomeSettings(),
             DEFAULT_BETA.caveBiomeSettings()
@@ -1674,7 +1668,7 @@ public final class ModernBetaSettingsPresets {
         );
     }
 
-    private static ConfiguredLayers configuredLayers1710Era(int biomeScale, boolean bedrock, boolean saltedMutation, boolean climaticOceans, boolean bambooJungles, boolean strongBadlandsCategories, boolean modernBiomes) {
+    private static ConfiguredLayers configuredLayers1710Era(int biomeScale, int finiteSize, boolean bedrock, boolean saltedMutation, boolean climaticOceans, boolean bambooJungles, boolean strongBadlandsCategories, boolean modernBiomes) {
         if (bedrock) {
             saltedMutation = false;
             strongBadlandsCategories = false;
@@ -2010,7 +2004,8 @@ public final class ModernBetaSettingsPresets {
                     .and(BiomePredicate.oneIn(10)),
                 LayerTarget.biome("minecraft:bamboo_jungle"), LayerTarget.none()
             ) : null,
-            bedrock ? StackedZoomLayer.modal("land", 1001, "land", 2, 0) : StackedZoomLayer.modal("land", 1000, "land", 2),
+            bedrock ? StackedZoomLayer.modal("land", 1001, "land", 2, 0)
+                : StackedZoomLayer.modal("land", 1000, "land", finiteSize <= 0 || finiteSize >= 5120 ? 2 : finiteSize >= 3072 ? 1 : 0),
             // BiomeTransitionLayer
             new PredicateOverlayLayer("land", 0, "land", Stream.of(
                 // Mountain edge has been omitted because it ends up just not generating at all
@@ -2198,7 +2193,12 @@ public final class ModernBetaSettingsPresets {
                     ? StackedZoomLayer.modal("ocean_climate", 2002, "ocean_climate", 6, 0)
                     : StackedZoomLayer.modal("ocean_climate", 2001, "ocean_climate", 6)
                 : null,
-            climaticOceans ? new ApplyOceanClimateLayer("land", 0, "land", "ocean_climate", !bedrock) : null
+            climaticOceans ? new ApplyOceanClimateLayer("land", 0, "land", "ocean_climate", !bedrock) : null,
+            finiteSize > 0
+                ? new ConditionalOverlayLayer("land", 0, "land",
+                    BiomePredicate.inRange(0, 0, finiteSize / 8, finiteSize / 8, true, InRangeBiomePredicate.Shape.RECTANGLE),
+                    LayerTarget.none(), LayerTarget.biome(ExtendedBiomeId.OCEAN))
+                : null
         ).filter(Objects::nonNull).toList();
 
         return new ConfiguredLayers(layers, Map.of(ModernBetaBuiltInTypes.LayerOutput.BIOME.id, "land"));
@@ -2219,7 +2219,7 @@ public final class ModernBetaSettingsPresets {
                 .add(CAVE_GENERATION, bedrock ? CaveGeneration.BEDROCK : CaveGeneration.RELEASE_1_12_2)
                 .add(FORCED_BIOME_HEIGHT, ForcedBiomeHeight.overridesOnly(heightOverrides))
                 .build(),
-            ModernBetaSettings.fractalLayers(configuredLayers1710Era(biomeScale, bedrock, false, false, false, false, false))
+            ModernBetaSettings.fractalLayers(configuredLayers1710Era(biomeScale, 0, bedrock, false, false, false, false, false))
                 .add(TEMPERATURE_HEIGHT_SCALING, TemperatureHeightScaling.MAJOR_RELEASE)
                 .build(),
             DEFAULT_BETA.caveBiomeSettings()
@@ -2235,7 +2235,24 @@ public final class ModernBetaSettingsPresets {
                 .add(CAVE_GENERATION, bedrock ? CaveGeneration.BEDROCK : CaveGeneration.RELEASE_1_17_1)
                 .add(FORCED_BIOME_HEIGHT, ForcedBiomeHeight.overridesOnly(HeightConfig.MAJOR_RELEASE_CONFIGS))
                 .build(),
-            ModernBetaSettings.fractalLayers(configuredLayers1710Era(biomeScale, bedrock, true, true, true, true, false))
+            ModernBetaSettings.fractalLayers(configuredLayers1710Era(biomeScale, 0, bedrock, true, true, true, true, false))
+                .add(TEMPERATURE_HEIGHT_SCALING, TemperatureHeightScaling.MAJOR_RELEASE)
+                .build(),
+            DEFAULT_BETA.caveBiomeSettings()
+        );
+    }
+
+    private static ModernBetaSettingsPreset presetReleaseXboxLegacy(int finiteSize) {
+        return new ModernBetaSettingsPreset(
+            DEFAULT_BETA.chunkSettings().extend()
+                .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.MAJOR_RELEASE.id)
+                .add(NOISE_SCALE, NoiseScale.WITHOUT_FARLANDS)
+                .add(USE_SURFACE_RULES, true)
+                .add(CAVE_GENERATION, CaveGeneration.RELEASE_1_12_2)
+                .add(FORCED_BIOME_HEIGHT, ForcedBiomeHeight.overridesOnly(HeightConfig.MAJOR_RELEASE_CONFIGS))
+                .add(ISLES_PROPERTIES, IslesProperties.xboxLegacy(finiteSize))
+                .build(),
+            ModernBetaSettings.fractalLayers(configuredLayers1710Era(0, finiteSize, false, false, false, false, false, false))
                 .add(TEMPERATURE_HEIGHT_SCALING, TemperatureHeightScaling.MAJOR_RELEASE)
                 .build(),
             DEFAULT_BETA.caveBiomeSettings()
@@ -2251,7 +2268,7 @@ public final class ModernBetaSettingsPresets {
                 .add(CAVE_GENERATION, CaveGeneration.RELEASE_1_17_1)
                 .add(FORCED_BIOME_HEIGHT, ForcedBiomeHeight.overridesOnly(HeightConfig.MAJOR_RELEASE_CONFIGS))
                 .build(),
-            ModernBetaSettings.fractalLayers(configuredLayers1710Era(biomeScale, false, true, true, true, true, true))
+            ModernBetaSettings.fractalLayers(configuredLayers1710Era(biomeScale, 0, false, true, true, true, true, true))
                 .add(TEMPERATURE_HEIGHT_SCALING, TemperatureHeightScaling.MAJOR_RELEASE)
                 .build(),
             DEFAULT_BETA.caveBiomeSettings()

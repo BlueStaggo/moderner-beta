@@ -114,7 +114,11 @@ public final class ModernBetaSettingsPresetCategories {
                 ModernBetaBuiltInTypes.Preset.CAVE_DELIGHT.id,
                 ModernBetaBuiltInTypes.Preset.MOUNTAIN_MADNESS.id,
                 ModernBetaBuiltInTypes.Preset.DROUGHT.id,
-                ModernBetaBuiltInTypes.Preset.CAVE_CHAOS.id
+                ModernBetaBuiltInTypes.Preset.CAVE_CHAOS.id,
+                ModernBetaBuiltInTypes.Preset.LEGACY_CONSOLE_CLASSIC.id,
+                ModernBetaBuiltInTypes.Preset.LEGACY_CONSOLE_SMALL.id,
+                ModernBetaBuiltInTypes.Preset.LEGACY_CONSOLE_MEDIUM.id,
+                ModernBetaBuiltInTypes.Preset.LEGACY_CONSOLE_LARGE.id
             )
         ));
     }

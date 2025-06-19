@@ -18,6 +18,7 @@ public record LayerType<L extends Layer>(com.mojang.serialization.MapCodec<L> co
     public static LayerType<MappedNoiseLayer> MAPPED_NOISE;
     public static LayerType<MixRiverLayer> MIX_RIVER;
     public static LayerType<ModalZoomLayer> MODAL_ZOOM;
+    public static LayerType<PerlinZoomLayer> PERLIN_ZOOM;
     public static LayerType<PointZoomLayer> POINT_ZOOM;
     public static LayerType<PredicateOverlayLayer> PREDICATE_OVERLAY;
     public static LayerType<ProxyLayer> PROXY_LAYER;
@@ -51,6 +52,7 @@ public record LayerType<L extends Layer>(com.mojang.serialization.MapCodec<L> co
         MAPPED_NOISE = register("mapped_noise", MappedNoiseLayer.CODEC);
         MIX_RIVER = register("mix_river", MixRiverLayer.CODEC);
         MODAL_ZOOM = register("modal_zoom", ModalZoomLayer.CODEC);
+        PERLIN_ZOOM = register("perlin_zoom", PerlinZoomLayer.CODEC);
         POINT_ZOOM = register("point_zoom", PointZoomLayer.CODEC);
         PREDICATE_OVERLAY = register("predicate_overlay", PredicateOverlayLayer.CODEC);
         PRE_SKIP_RANDOM = register("pre_skip_random", PreSkipRandomLayer.CODEC);

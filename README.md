@@ -26,6 +26,7 @@ What Moderner Beta offers:
 - Graphical settings menu for simple options
 - World generation from Beta 1.8 all the way up to Release 1.17.1 with accurate biome distribution
 - Additional world generation from Infdev 20100325, Classic 0.0.14a_08 and Beta 1.1
+- Experimental world generation from Bedrock Edition 1.2 and 1.17
 - Re-introduced noise caves and surface rules
 - Extremely customizable biome fractal layer pipeline for Beta 1.8+ versions
 - A modular approach to configuration that gives greater control to addons

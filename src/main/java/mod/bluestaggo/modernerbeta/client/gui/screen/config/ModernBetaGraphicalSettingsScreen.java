@@ -111,11 +111,11 @@ public abstract class ModernBetaGraphicalSettingsScreen<T extends NbtElement> ex
                 //? if >=1.21 {
                 new OptionListWidget(this.client, this.width, this)
                 //?} else {
-                /*new OptionListWidget(this.client, this.radiusX, 0, this)
+                /*new OptionListWidget(this.client, this.width, 0, this)
                 *///?}
             );
             //?} else {
-            /*new OptionListWidget(this.client, this.radiusX, this.height, 32, this.height - 32, 25);
+            /*new OptionListWidget(this.client, this.width, this.height, 32, this.height - 32, 25);
             *///?}
         this.addOptions(this.body);
         //? if <1.21
@@ -137,12 +137,12 @@ public abstract class ModernBetaGraphicalSettingsScreen<T extends NbtElement> ex
                 this.onDone.accept(this.getResult());
                 this.client.setScreen(this.parent);
             }
-        ).dimensions(this.radiusX / 2 - 155, this.height - 28, 150, 20).build());
+        ).dimensions(this.width / 2 - 155, this.height - 28, 150, 20).build());
 
         this.addDrawableChild(ButtonWidget.builder(
             ScreenTexts.CANCEL,
             onPress -> this.client.setScreen(this.parent)
-        ).dimensions(this.radiusX / 2 + 5, this.height - 28, 150, 20).build());
+        ).dimensions(this.width / 2 + 5, this.height - 28, 150, 20).build());
         *///?}
     }
 

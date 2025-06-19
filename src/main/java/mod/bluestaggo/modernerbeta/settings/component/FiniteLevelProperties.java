@@ -18,7 +18,7 @@ public record FiniteLevelProperties(
         instance -> instance.group(
             StringIdentifiable.createCodec(IndevType::values).fieldOf("type").orElse(IndevType.ISLAND).forGetter(FiniteLevelProperties::type),
             StringIdentifiable.createCodec(IndevTheme::values).fieldOf("theme").orElse(IndevTheme.NORMAL).forGetter(FiniteLevelProperties::theme),
-            Codec.INT.fieldOf("radiusX").orElse(256).forGetter(FiniteLevelProperties::width),
+            Codec.INT.fieldOf("width").orElse(256).forGetter(FiniteLevelProperties::width),
             Codec.INT.fieldOf("length").orElse(256).forGetter(FiniteLevelProperties::length),
             Codec.INT.fieldOf("height").orElse(128).forGetter(FiniteLevelProperties::height)
         ).apply(instance, FiniteLevelProperties::new)

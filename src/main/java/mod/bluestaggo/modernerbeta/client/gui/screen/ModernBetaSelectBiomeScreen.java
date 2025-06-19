@@ -114,7 +114,7 @@ public class ModernBetaSelectBiomeScreen extends Screen {
             //? if >=1.20.2 {
             super(ModernBetaSelectBiomeScreen.this.client, ModernBetaSelectBiomeScreen.this.width, ModernBetaSelectBiomeScreen.this.height - 77, 40, 16);
             //?} else {
-            /*super(ModernBetaSelectBiomeScreen.this.client, ModernBetaSelectBiomeScreen.this.radiusX, ModernBetaSelectBiomeScreen.this.height, 37, ModernBetaSelectBiomeScreen.this.height - 37, 16);
+            /*super(ModernBetaSelectBiomeScreen.this.client, ModernBetaSelectBiomeScreen.this.width, ModernBetaSelectBiomeScreen.this.height, 37, ModernBetaSelectBiomeScreen.this.height - 37, 16);
             *///?}
             Collator collator = Collator.getInstance(Locale.getDefault());
             if (ModernBetaSelectBiomeScreen.this.allowNone)

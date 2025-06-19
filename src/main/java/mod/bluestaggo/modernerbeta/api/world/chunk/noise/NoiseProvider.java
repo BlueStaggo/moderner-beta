@@ -37,7 +37,7 @@ public abstract class NoiseProvider {
         this.noise = this.sampleNoise(startNoiseX, startNoiseZ);
         
         if (this.noise.length != this.noiseSize)
-            throw new IllegalStateException("[Modern Beta] Noise array radiusZ is invalid!");
+            throw new IllegalStateException("[Modern Beta] Noise array length is invalid!");
     }
     
     protected abstract double[] sampleNoise(int startNoiseX, int startNoiseZ);

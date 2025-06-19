@@ -159,7 +159,7 @@ public class ModernBetaClientBuiltInProviders {
                     options,
                     screen.selectionOption("type", IndevType::values),
                     screen.selectionOption("theme", IndevTheme::values),
-                    screen.intRangeOption("radiusX", 64, 1024, 64),
+                    screen.intRangeOption("width", 64, 1024, 64),
                     screen.intRangeOption("length", 64, 1024, 64),
                     screen.intRangeOption("height", 64, maxY - minY, 64)
                 );

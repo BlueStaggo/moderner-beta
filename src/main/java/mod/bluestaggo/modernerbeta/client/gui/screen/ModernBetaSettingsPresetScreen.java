@@ -142,7 +142,7 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
             //?} else {
             /*super(
                 ModernBetaSettingsPresetScreen.this.client,
-                ModernBetaSettingsPresetScreen.this.radiusX,
+                ModernBetaSettingsPresetScreen.this.width,
                 ModernBetaSettingsPresetScreen.this.height,
                 32,
                 ModernBetaSettingsPresetScreen.this.height - 32,

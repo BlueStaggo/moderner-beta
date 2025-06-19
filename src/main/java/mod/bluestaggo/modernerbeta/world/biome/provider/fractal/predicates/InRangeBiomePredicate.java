@@ -17,7 +17,7 @@ public record InRangeBiomePredicate(int centerX, int centerZ, int radiusX, int r
             Codec.INT.fieldOf("radiusX").forGetter(InRangeBiomePredicate::radiusX),
             Codec.INT.fieldOf("radiusZ").forGetter(InRangeBiomePredicate::radiusZ),
             Codec.BOOL.fieldOf("evenSize").orElse(false).forGetter(InRangeBiomePredicate::evenSize),
-            StringIdentifiable.createBasicCodec(Shape::values).fieldOf("shape").forGetter(InRangeBiomePredicate::shape)
+            StringIdentifiable.createCodec(Shape::values).fieldOf("shape").forGetter(InRangeBiomePredicate::shape)
         ).apply(instance, InRangeBiomePredicate::new)
     );
 

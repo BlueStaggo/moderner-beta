@@ -36,4 +36,9 @@ public class ChunkProviderEarlyBedrock extends ChunkProviderMajorRelease {
     protected int getHeightSampleRadius() {
         return 1;
     }
+
+    @Override
+    protected float calculateBiomeHeightWeight(int x, int z) {
+        return super.calculateBiomeHeightWeight(-1, z);
+    }
 }

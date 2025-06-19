@@ -51,8 +51,7 @@ public abstract class ChunkProviderForcedHeight extends ChunkProviderNoise {
 
         for (int x = -hsr; x <= hsr; x++) {
             for (int z = -hsr; z <= hsr; z++) {
-                float value = 10.0F / MathHelper.sqrt((float)(x * x + z * z) + 0.2F);
-                this.biomeHeightWeights[x + hsr + (z + hsr) * hsd] = value;
+                this.biomeHeightWeights[x + hsr + (z + hsr) * hsd] = this.calculateBiomeHeightWeight(x, z);
             }
         }
     }
@@ -85,13 +84,18 @@ public abstract class ChunkProviderForcedHeight extends ChunkProviderNoise {
         int hsd = 2 * this.heightSampleRadius + 1;
         for (int biomeX = -hsr; biomeX <= hsr; biomeX++) {
             for (int biomeZ = -hsr; biomeZ <= hsr; biomeZ++) {
+                float weight = biomeHeightWeights[biomeX + hsr + (biomeZ + hsr) * hsd];
+                if (weight <= 0.0F) {
+                    continue;
+                }
+
                 biome = this.getExtendedBiomeId(noiseX + biomeX, noiseZ + biomeZ);
                 HeightConfig heightConfig = this.getHeightConfigOfBiome(biome);
 
                 float thisScale = this.forcedBiomeHeight.scaleOffset() + heightConfig.scale() * this.forcedBiomeHeight.scaleWeight();
                 float thisDepth = this.forcedBiomeHeight.depthOffset() + heightConfig.depth() * this.forcedBiomeHeight.depthWeight();
 
-                float weight = biomeHeightWeights[biomeX + hsr + (biomeZ + hsr) * hsd] / Math.max(thisDepth + 2.0F, 0.01F);
+                weight /= Math.max(thisDepth + 2.0F, 0.01F);
                 if (heightConfig.depth() > minSurfaceHeight) {
                     weight /= 2.0F;
                 }
@@ -112,5 +116,9 @@ public abstract class ChunkProviderForcedHeight extends ChunkProviderNoise {
 
     protected int getHeightSampleRadius() {
         return 2;
+    }
+
+    protected float calculateBiomeHeightWeight(int x, int z) {
+        return 10.0F / MathHelper.sqrt((float)(x * x + z * z) + 0.2F);
     }
 }

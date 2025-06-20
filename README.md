@@ -17,6 +17,7 @@ however due to b3spectacled's inactivity it has become its own project.
 The mod is currently supported for 1.20.1, 1.21.1, 1.21.4, 1.21.5 and 1.21.6.
 
 ## Features
+
 What Modern Beta offered:
 - World generation for various old versions of Minecraft ranging from Classic to Beta 1.7.3
 - A range of custom options to modify terrain shape and biome distribution
@@ -30,6 +31,10 @@ What Moderner Beta offers:
 - Re-introduced noise caves and surface rules
 - Extremely customizable biome fractal layer pipeline for Beta 1.8+ versions
 - A modular approach to configuration that gives greater control to addons
+
+## Documentation
+
+To learn about all of Moderner Beta's configuration options as well as find some answers to some frequently asked questions, go to the official wiki at https://moderner.nostalgica.net/docs.
 
 ## Setup
 

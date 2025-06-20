@@ -8,6 +8,7 @@ import it.unimi.dsi.fastutil.objects.Reference2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
+import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistryKeys;
 import mod.bluestaggo.modernerbeta.settings.component.ClimateDistribution;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
@@ -152,7 +153,8 @@ public class ModernBetaSettings implements Iterable<SettingsComponent<?>> {
     public <T> T getOrThrow(SettingsComponentType<T> type) {
         T value = this.get(type);
         if (value == null) {
-            throw new IllegalArgumentException("Could not find component \"" + type + "\"");
+            Identifier id = ModernBetaRegistries.SETTINGS_COMPONENT_TYPE.getId(type);
+            throw new IllegalArgumentException("Component of type \"" + id + "\" supplied a null value!");
         }
         return value;
     }

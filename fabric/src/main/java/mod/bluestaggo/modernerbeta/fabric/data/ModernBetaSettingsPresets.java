@@ -52,8 +52,8 @@ public final class ModernBetaSettingsPresets {
         presetRegisterable.register(keyOf("infdev_325"), presetInfdev325());
         presetRegisterable.register(keyOf("infdev_227"), presetInfdev227());
         presetRegisterable.register(keyOf("indev"), presetIndev());
-        presetRegisterable.register(keyOf("classic"), presetClassic());
-        presetRegisterable.register(keyOf("classic_14a_08"), presetClassic14a08());
+        presetRegisterable.register(keyOf("classic_0_30"), presetClassic());
+        presetRegisterable.register(keyOf("classic_0_0_14a_08"), presetClassic14a08());
         presetRegisterable.register(keyOf("pe"), presetPE());
         presetRegisterable.register(keyOf("beta_1_8_1"), presetBeta181(0));
         presetRegisterable.register(keyOf("beta_1_9_pre_3"), presetBeta19Pre3(0));

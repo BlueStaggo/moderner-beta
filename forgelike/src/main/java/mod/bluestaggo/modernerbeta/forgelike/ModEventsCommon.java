@@ -60,11 +60,11 @@ import java.util.Optional;
 /*@Mod(ModernerBeta.MOD_ID)
 @Mod.EventBusSubscriber(
 *///?}
-        modid = ModernerBeta.MOD_ID,
-        //? if neoforge {
-        bus = EventBusSubscriber.Bus.MOD
-        //?} else {
-        /*bus = Mod.EventBusSubscriber.Bus.MOD
+        modid = ModernerBeta.MOD_ID
+        //? if neoforge && <1.21.6 {
+        /*, bus = EventBusSubscriber.Bus.MOD
+        *///?} else if forge {
+        /*, bus = Mod.EventBusSubscriber.Bus.MOD
         *///?}
 )
 public class ModEventsCommon {

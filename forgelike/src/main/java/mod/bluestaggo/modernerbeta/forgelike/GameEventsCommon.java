@@ -24,11 +24,11 @@ import net.minecraftforge.fml.loading.FMLLoader;
 //?} else {
 /*@Mod.EventBusSubscriber(
 *///?}
-        modid = ModernerBeta.MOD_ID,
-        //? if neoforge {
-        bus = EventBusSubscriber.Bus.GAME
-        //?} else {
-        /*bus = Mod.EventBusSubscriber.Bus.FORGE
+        modid = ModernerBeta.MOD_ID
+        //? if neoforge && <1.21.6 {
+        /*, bus = EventBusSubscriber.Bus.GAME
+        *///?} else if forge {
+        /*, bus = Mod.EventBusSubscriber.Bus.FORGE
         *///?}
 )
 public class GameEventsCommon {

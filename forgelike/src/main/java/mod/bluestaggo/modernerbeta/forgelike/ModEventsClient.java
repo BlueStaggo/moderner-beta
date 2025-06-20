@@ -56,9 +56,9 @@ import java.util.function.Consumer;
 /*@Mod.EventBusSubscriber(
 *///?}
         modid = ModernerBeta.MOD_ID,
-        //? if neoforge {
-        bus = EventBusSubscriber.Bus.MOD,
-        //?} else {
+        //? if neoforge && <1.21.6 {
+        /*bus = EventBusSubscriber.Bus.MOD,
+        *///?} else if forge {
         /*bus = Mod.EventBusSubscriber.Bus.MOD,
         *///?}
         value = Dist.CLIENT

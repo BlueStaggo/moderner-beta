@@ -51,7 +51,7 @@ loom {
 
     if (!neoforge) {
         forge {
-            mixinConfig "moderner_beta-common.mixins.json"
+            mixinConfigs = ["moderner_beta-common.mixins.json", "moderner_beta-forgelike.mixins.json"]
             convertAccessWideners = true
         }
     }
@@ -126,14 +126,18 @@ processResources {
         }
     }
 
+    filesMatching("moderner_beta-forgelike.mixins.json") {
+        expand "java_version": stonecutter.eval(mc, ">=1.20.5") ? 21 : 17
+    }
+
     from(commonPr.file("src/main/generated")) {
         include "**/**"
         exclude ".cache"
     }
 
-    from(rootProject.file("src/main/resources")) {
+    from(commonPr.file("src/main/resources")) {
         include "**/**"
-        exclude "moderner_beta-common.mixins.json"
+        exclude "moderner_beta-common.mixins.json5"
         exclude "assets/moderner_beta/icon.png"
     }
 }

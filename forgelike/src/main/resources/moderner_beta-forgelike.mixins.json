@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "mod.bluestaggo.modernerbeta.forgelike.mixin",
+  "plugin": "mod.bluestaggo.modernerbeta.forgelike.mixin.ModernerBetaForgeLikeMixinPlugin",
+  "compatibilityLevel": "JAVA_${java_version}",
+  "mixins": [
+    "compat.blueprint.MixinModdedBiomeSlicesManager",
+    "AccessorChunkGenerator"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

@@ -6,6 +6,9 @@ license = "MIT"
 [[mixins]]
 config = "moderner_beta-common.mixins.json"
 
+[[mixins]]
+config = "moderner_beta-forgelike.mixins.json"
+
 [[mods]]
 modId = "moderner_beta"
 version = "${version}"

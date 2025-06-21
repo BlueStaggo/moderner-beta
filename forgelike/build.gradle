@@ -135,7 +135,7 @@ processResources {
         exclude ".cache"
     }
 
-    from(commonPr.file("src/main/resources")) {
+    from(rootProject.file("src/main/resources")) {
         include "**/**"
         exclude "moderner_beta-common.mixins.json5"
         exclude "assets/moderner_beta/icon.png"

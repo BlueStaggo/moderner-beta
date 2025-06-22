@@ -66,7 +66,6 @@ public final class BlockColorSampler {
 
         for (Pair<String, String> target : potentialTargets) {
             try {
-                // Sodium 0.5 names
                 sodiumLevelSliceClass = Class.forName(target.getLeft());
                 sodiumLevelSliceLevelField = sodiumLevelSliceClass.getDeclaredField(target.getRight());
                 sodiumLevelSliceLevelField.setAccessible(true);

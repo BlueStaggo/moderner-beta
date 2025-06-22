@@ -15,6 +15,7 @@ import net.minecraft.block.enums.DoubleBlockHalf;
 import net.minecraft.client.color.world.BiomeColors;
 import net.minecraft.client.render.chunk.ChunkRendererRegion;
 import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.util.Pair;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
@@ -30,12 +31,16 @@ import net.minecraft.world.biome.GrassColors;
 import net.minecraft.client.color.world.GrassColors;
 *///?}
 
+import java.lang.reflect.Field;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
 @Environment(EnvType.CLIENT)
 public final class BlockColorSampler {
     private static final int CLIME_CACHE_CAPACITY = 128;
+    private static final Class<?> SODIUM_LEVEL_SLICE_CLASS;
+    private static final Field SODIUM_LEVEL_SLICE_LEVEL_FIELD;
 
     public static final BlockColorSampler INSTANCE = new BlockColorSampler();
 
@@ -47,7 +52,33 @@ public final class BlockColorSampler {
     private ClimateSampler climateSampler;
 
     private final Long2ObjectLinkedOpenHashMap<Clime> climeCache = new Long2ObjectLinkedOpenHashMap<>(CLIME_CACHE_CAPACITY);
-    
+
+    static {
+        Class<?> sodiumLevelSliceClass = null;
+        Field sodiumLevelSliceLevelField = null;
+
+        List<Pair<String, String>> potentialTargets = List.of(
+            new Pair<>("net.caffeinemc.mods.sodium.client.world.LevelSlice", "level"), // Sodium 0.6
+            new Pair<>("net.caffeinemc.mods.sodium.client.world.WorldSlice", "world"), // Sodium 0.6 (Pre-merge)
+            new Pair<>("me.jellysquid.mods.sodium.client.world.WorldSlice", "world"), // Sodium 0.5 / Embeddium 0.3
+            new Pair<>("org.embeddedt.embeddium.impl.world.WorldSlice", "world") // Embeddium 1.0
+        );
+
+        for (Pair<String, String> target : potentialTargets) {
+            try {
+                // Sodium 0.5 names
+                sodiumLevelSliceClass = Class.forName(target.getLeft());
+                sodiumLevelSliceLevelField = sodiumLevelSliceClass.getDeclaredField(target.getRight());
+                sodiumLevelSliceLevelField.setAccessible(true);
+            } catch (ClassNotFoundException | NoSuchFieldException ignored) {
+                // If the class or field doesn't exist then the target mod and version probably isn't loaded. Try a different target.
+            }
+        }
+
+        SODIUM_LEVEL_SLICE_CLASS = sodiumLevelSliceClass;
+        SODIUM_LEVEL_SLICE_LEVEL_FIELD = sodiumLevelSliceLevelField;
+    }
+
     private BlockColorSampler() {
         this.colormapGrass = new BlockColormap();
         this.colormapFoliage = new BlockColormap();
@@ -94,9 +125,10 @@ public final class BlockColorSampler {
         }
 
         if (this.useBiomeColor()) {
-            if (view instanceof ChunkRendererRegion) {
+            World world = getWorldFromView(view);
+            if (world != null) {
                 return this.sampleModifiedColorMaybeLerped(
-                    ((AccessorChunkRendererRegion)view).getWorld(),
+                    world,
                     pos,
                     BiomeEffects::getGrassColor,
                     BiomeEffects::getGrassColorModifier,
@@ -142,9 +174,10 @@ public final class BlockColorSampler {
                 );
             }
 
-            if (view instanceof ChunkRendererRegion) {
+            World world = getWorldFromView(view);
+            if (world != null) {
                 return this.sampleModifiedColorMaybeLerped(
-                    ((AccessorChunkRendererRegion)view).getWorld(),
+                    world,
                     pos,
                     BiomeEffects::getGrassColor,
                     BiomeEffects::getGrassColorModifier,
@@ -165,9 +198,10 @@ public final class BlockColorSampler {
         }
         
         if (this.useBiomeColor()) {
-            if (view instanceof ChunkRendererRegion) {
+            World world = getWorldFromView(view);
+            if (world != null) {
                 return this.sampleModifiedColorMaybeLerped(
-                    ((AccessorChunkRendererRegion)view).getWorld(),
+                    world,
                     pos,
                     BiomeEffects::getFoliageColor,
                     effects -> BiomeEffects.GrassColorModifier.NONE,
@@ -299,6 +333,26 @@ public final class BlockColorSampler {
         }
 
         return finalColor;
+    }
+
+    private static World getWorldFromView(BlockRenderView view) {
+        if (view instanceof World world) {
+            return world;
+        }
+
+        if (view instanceof ChunkRendererRegion) {
+            return ((AccessorChunkRendererRegion)view).getWorld();
+        }
+
+        if (SODIUM_LEVEL_SLICE_CLASS != null && SODIUM_LEVEL_SLICE_CLASS.isInstance(view)) {
+            try {
+                return (World) SODIUM_LEVEL_SLICE_LEVEL_FIELD.get(view);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        return null;
     }
 
     @FunctionalInterface

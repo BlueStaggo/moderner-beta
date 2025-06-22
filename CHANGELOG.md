@@ -1,2 +1,3 @@
 ## Fixes
-- Fixed Classic 0.30 and 0.0.14a_08 presets not working and causing a crash.
+- Fixed issues with the Blueprint mod.
+- Fixed biome color overrides not appearing for climatic biome providers when Sodium is enabled. 

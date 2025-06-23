@@ -33,8 +33,8 @@ import net.minecraft.world.biome.GrassColors;
 /*import net.minecraft.client.color.world.FoliageColors;
 import net.minecraft.client.color.world.GrassColors;
 *///?}
-import org.jetbrains.annotations.NotNull;
 import net.minecraft.world.biome.source.BiomeAccess;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;

@@ -1,6 +1,5 @@
 package mod.bluestaggo.modernerbeta.client.color;
 
-import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -30,12 +29,12 @@ import net.minecraft.world.biome.BiomeEffects;
 //? if >=1.21 {
 import net.minecraft.world.biome.FoliageColors;
 import net.minecraft.world.biome.GrassColors;
-import net.minecraft.world.biome.source.BiomeAccess;
-import org.jetbrains.annotations.NotNull;
 //?} else {
 /*import net.minecraft.client.color.world.FoliageColors;
 import net.minecraft.client.color.world.GrassColors;
 *///?}
+import org.jetbrains.annotations.NotNull;
+import net.minecraft.world.biome.source.BiomeAccess;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;

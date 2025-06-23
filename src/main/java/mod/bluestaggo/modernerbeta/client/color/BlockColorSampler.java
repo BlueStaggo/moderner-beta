@@ -1,5 +1,9 @@
 package mod.bluestaggo.modernerbeta.client.color;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import it.unimi.dsi.fastutil.longs.Long2ObjectLinkedOpenHashMap;
 import mod.bluestaggo.modernerbeta.api.world.biome.climate.ClimateSampler;
 import mod.bluestaggo.modernerbeta.api.world.biome.climate.Clime;
@@ -15,32 +19,33 @@ import net.minecraft.block.enums.DoubleBlockHalf;
 import net.minecraft.client.color.world.BiomeColors;
 import net.minecraft.client.render.chunk.ChunkRendererRegion;
 import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.util.Pair;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.BlockRenderView;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldView;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeEffects;
 //? if >=1.21 {
 import net.minecraft.world.biome.FoliageColors;
 import net.minecraft.world.biome.GrassColors;
+import net.minecraft.world.biome.source.BiomeAccess;
+import org.jetbrains.annotations.NotNull;
 //?} else {
 /*import net.minecraft.client.color.world.FoliageColors;
 import net.minecraft.client.color.world.GrassColors;
 *///?}
 
 import java.lang.reflect.Field;
-import java.util.List;
-import java.util.Optional;
+import java.lang.reflect.Modifier;
+import java.util.*;
+import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
 
 @Environment(EnvType.CLIENT)
 public final class BlockColorSampler {
     private static final int CLIME_CACHE_CAPACITY = 128;
-    private static final Class<?> SODIUM_LEVEL_SLICE_CLASS;
-    private static final Field SODIUM_LEVEL_SLICE_LEVEL_FIELD;
 
     public static final BlockColorSampler INSTANCE = new BlockColorSampler();
 
@@ -52,31 +57,36 @@ public final class BlockColorSampler {
     private ClimateSampler climateSampler;
 
     private final Long2ObjectLinkedOpenHashMap<Clime> climeCache = new Long2ObjectLinkedOpenHashMap<>(CLIME_CACHE_CAPACITY);
+    private final LoadingCache<Class<?>, Optional<Field>> viewLevelFieldCache = CacheBuilder.newBuilder()
+        .build(new CacheLoader<>() {
+            private static final Set<String> PRIORITY_LEVEL_FIELD_NAMES = Set.of("level", "world");
 
-    static {
-        Class<?> sodiumLevelSliceClass = null;
-        Field sodiumLevelSliceLevelField = null;
+            @Override
+            public @NotNull Optional<Field> load(@NotNull Class<?> clazz) {
+                List<Field> potentialFields = Arrays.stream(clazz.getDeclaredFields())
+                    .filter(field -> WorldView.class.isAssignableFrom(field.getType()))
+                    .toList();
 
-        List<Pair<String, String>> potentialTargets = List.of(
-            new Pair<>("net.caffeinemc.mods.sodium.client.world.LevelSlice", "level"), // Sodium 0.6
-            new Pair<>("net.caffeinemc.mods.sodium.client.world.WorldSlice", "world"), // Sodium 0.6 (Pre-merge)
-            new Pair<>("me.jellysquid.mods.sodium.client.world.WorldSlice", "world"), // Sodium 0.5 / Embeddium 0.3
-            new Pair<>("org.embeddedt.embeddium.impl.world.WorldSlice", "world") // Embeddium 1.0
-        );
+                if (potentialFields.isEmpty()) {
+                    return Optional.empty();
+                }
 
-        for (Pair<String, String> target : potentialTargets) {
-            try {
-                sodiumLevelSliceClass = Class.forName(target.getLeft());
-                sodiumLevelSliceLevelField = sodiumLevelSliceClass.getDeclaredField(target.getRight());
-                sodiumLevelSliceLevelField.setAccessible(true);
-            } catch (ClassNotFoundException | NoSuchFieldException ignored) {
-                // If the class or field doesn't exist then the target mod and version probably isn't loaded. Try a different target.
+                Field field = potentialFields.get(0);
+                if (potentialFields.size() > 1) {
+                    field = potentialFields.stream()
+                        .filter(f -> PRIORITY_LEVEL_FIELD_NAMES.contains(f.getName()))
+                        .findFirst()
+                        .orElse(field);
+                }
+
+                if (!Modifier.isPublic(field.getModifiers()) && !field.trySetAccessible()) {
+                    return Optional.empty();
+                }
+
+                return Optional.of(field);
             }
-        }
+        });
 
-        SODIUM_LEVEL_SLICE_CLASS = sodiumLevelSliceClass;
-        SODIUM_LEVEL_SLICE_LEVEL_FIELD = sodiumLevelSliceLevelField;
-    }
 
     private BlockColorSampler() {
         this.colormapGrass = new BlockColormap();
@@ -124,10 +134,10 @@ public final class BlockColorSampler {
         }
 
         if (this.useBiomeColor()) {
-            World world = getWorldFromView(view);
-            if (world != null) {
+            BiomeAccess biomeAccess = getBiomeAccessFromView(view);
+            if (biomeAccess != null) {
                 return this.sampleModifiedColorMaybeLerped(
-                    world,
+                    biomeAccess,
                     pos,
                     BiomeEffects::getGrassColor,
                     BiomeEffects::getGrassColorModifier,
@@ -173,10 +183,10 @@ public final class BlockColorSampler {
                 );
             }
 
-            World world = getWorldFromView(view);
-            if (world != null) {
+            BiomeAccess biomeAccess = getBiomeAccessFromView(view);
+            if (biomeAccess != null) {
                 return this.sampleModifiedColorMaybeLerped(
-                    world,
+                    biomeAccess,
                     pos,
                     BiomeEffects::getGrassColor,
                     BiomeEffects::getGrassColorModifier,
@@ -197,10 +207,10 @@ public final class BlockColorSampler {
         }
         
         if (this.useBiomeColor()) {
-            World world = getWorldFromView(view);
-            if (world != null) {
+            BiomeAccess biomeAccess = getBiomeAccessFromView(view);
+            if (biomeAccess != null) {
                 return this.sampleModifiedColorMaybeLerped(
-                    world,
+                    biomeAccess,
                     pos,
                     BiomeEffects::getFoliageColor,
                     effects -> BiomeEffects.GrassColorModifier.NONE,
@@ -255,18 +265,18 @@ public final class BlockColorSampler {
         return this.climateSampler.getDistribution();
     }
 
-    private int sampleModifiedColorMaybeLerped(World world, BlockPos pos,
+    private int sampleModifiedColorMaybeLerped(BiomeAccess biomeAccess, BlockPos pos,
                                                Function<BiomeEffects, Optional<Integer>> customColorAccessor,
                                                Function<BiomeEffects, BiomeEffects.GrassColorModifier> grassColorModifierAccessor,
                                                ClimateToColorOperator baseColorAccessor) {
         if (this.getClimateDistribution().smoothBorders()) {
-            return this.sampleModifiedColorLerped(world, pos, customColorAccessor, grassColorModifierAccessor, baseColorAccessor);
+            return this.sampleModifiedColorLerped(biomeAccess, pos, customColorAccessor, grassColorModifierAccessor, baseColorAccessor);
         } else {
-            return this.sampleModifiedColor(world, pos, customColorAccessor, grassColorModifierAccessor, baseColorAccessor);
+            return this.sampleModifiedColor(biomeAccess, pos, customColorAccessor, grassColorModifierAccessor, baseColorAccessor);
         }
     }
 
-    private int sampleModifiedColorLerped(World world, BlockPos pos,
+    private int sampleModifiedColorLerped(BiomeAccess biomeAccess, BlockPos pos,
                                           Function<BiomeEffects, Optional<Integer>> customColorAccessor,
                                           Function<BiomeEffects, BiomeEffects.GrassColorModifier> grassColorModifierAccessor,
                                           ClimateToColorOperator baseColorAccessor) {
@@ -277,7 +287,7 @@ public final class BlockColorSampler {
         for (int x = -1; x <= 1; x++) {
             for (int y = -1; y <= 1; y++) {
                 for (int z = -1; z <= 1; z++) {
-                    int color = this.sampleModifiedColor(world, pos.add(x, y, z), customColorAccessor, grassColorModifierAccessor, baseColorAccessor);
+                    int color = this.sampleModifiedColor(biomeAccess, pos.add(x, y, z), customColorAccessor, grassColorModifierAccessor, baseColorAccessor);
                     r += (color >> 16) & 255;
                     g += (color >> 8) & 255;
                     b += color & 255;
@@ -288,14 +298,14 @@ public final class BlockColorSampler {
         return (r / 27) << 16 | (g / 27) << 8 | (b / 27);
     }
 
-    private int sampleModifiedColor(World world, BlockPos pos,
+    private int sampleModifiedColor(BiomeAccess biomeAccess, BlockPos pos,
                                     Function<BiomeEffects, Optional<Integer>> customColorAccessor,
                                     Function<BiomeEffects, BiomeEffects.GrassColorModifier> grassColorModifierAccessor,
                                     ClimateToColorOperator baseColorAccessor) {
         Clime clime = this.sampleClime(pos);
         int climateColor = baseColorAccessor.apply(clime.temp(), clime.rain());
 
-        RegistryEntry<Biome> biomeEntry = world.getBiome(pos);
+        RegistryEntry<Biome> biomeEntry = biomeAccess.getBiome(pos);
 
         int finalColor = climateColor;
 
@@ -334,20 +344,34 @@ public final class BlockColorSampler {
         return finalColor;
     }
 
-    private static World getWorldFromView(BlockRenderView view) {
+    private BiomeAccess getBiomeAccessFromView(BlockRenderView view) {
         if (view instanceof World world) {
-            return world;
+            return world.getBiomeAccess();
+        }
+
+        if (view instanceof WorldView worldView) {
+            return worldView.getBiomeAccess();
         }
 
         if (view instanceof ChunkRendererRegion) {
-            return ((AccessorChunkRendererRegion)view).getWorld();
+            return ((AccessorChunkRendererRegion)view).getWorld().getBiomeAccess();
         }
 
-        if (SODIUM_LEVEL_SLICE_CLASS != null && SODIUM_LEVEL_SLICE_CLASS.isInstance(view)) {
+        Optional<Field> levelField;
+        try {
+            levelField = this.viewLevelFieldCache.get(view.getClass());
+        } catch (ExecutionException e) {
+            this.viewLevelFieldCache.put(view.getClass(), Optional.empty());
+            e.printStackTrace();
+            return null;
+        }
+
+        if (levelField.isPresent()) {
             try {
-                return (World) SODIUM_LEVEL_SLICE_LEVEL_FIELD.get(view);
+                return ((WorldView)levelField.get().get(view)).getBiomeAccess();
             } catch (IllegalAccessException e) {
-                throw new RuntimeException(e);
+                this.viewLevelFieldCache.put(view.getClass(), Optional.empty());
+                e.printStackTrace();
             }
         }
 

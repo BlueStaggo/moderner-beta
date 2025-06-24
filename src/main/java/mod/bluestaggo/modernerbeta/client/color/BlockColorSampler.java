@@ -320,7 +320,10 @@ public final class BlockColorSampler {
                 int customColor = optionalCustomColor.get();
 
                 Biome.Weather weather = ((AccessorBiome)(Object)biome).getWeather();
-                int baseColor = baseColorAccessor.apply(weather.temperature(), weather.downfall());
+
+                float temperature = MathHelper.clamp(weather.temperature(), 0.0F, 1.0F);
+                float downfall = MathHelper.clamp(weather.downfall(), 0.0F, 1.0F);
+                int baseColor = baseColorAccessor.apply(temperature, downfall);
 
                 // customR = baseR * modR / 255
                 // customR * 255 / baseR = modR

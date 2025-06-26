@@ -2,6 +2,6 @@
     "pack": {
         "description": "Min Y = 0, pre-1.18 ore gen",
         "pack_format": 15,
-        "supported_formats": [15, 80]
+        "supported_formats": [15, 81]
     }
 }

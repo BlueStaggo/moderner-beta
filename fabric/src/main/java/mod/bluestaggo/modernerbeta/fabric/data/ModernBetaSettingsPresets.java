@@ -790,6 +790,7 @@ public final class ModernBetaSettingsPresets {
                 .build(),
             ModernBetaSettings.builder()
                 .add(PROVIDER, ModernBetaBuiltInTypes.Biome.VORONOI.id)
+                .add(USE_OCEAN_BIOMES, true)
                 .add(CLIMATE_SCALE, new ClimateScale(
                     0.025f / 3.0f,
                     0.05f / 3.0f,

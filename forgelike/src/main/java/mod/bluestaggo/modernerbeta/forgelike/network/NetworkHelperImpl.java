@@ -1,6 +1,5 @@
 package mod.bluestaggo.modernerbeta.forgelike.network;
 
-import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.network.INetworkHelper;
 import mod.bluestaggo.modernerbeta.util.ModernBetaPayload;
 import net.minecraft.server.MinecraftServer;
@@ -10,7 +9,8 @@ import net.minecraft.util.math.ChunkPos;
 //? if neoforge {
 import net.neoforged.neoforge.network.PacketDistributor;
 //?} else {
-/*import net.minecraftforge.network.NetworkDirection;
+/*import mod.bluestaggo.modernerbeta.ModernerBeta;
+import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
@@ -20,7 +20,11 @@ public class NetworkHelperImpl implements INetworkHelper {
     //? if neoforge {
     @Override
     public void sendToServer(ModernBetaPayload payload) {
+        //? if >=1.21.7 {
+        /*net.neoforged.neoforge.network.ClientPacketDistributor.sendToServer(payload);
+        *///?} else {
         PacketDistributor.sendToServer(payload);
+        //?}
     }
 
     @Override

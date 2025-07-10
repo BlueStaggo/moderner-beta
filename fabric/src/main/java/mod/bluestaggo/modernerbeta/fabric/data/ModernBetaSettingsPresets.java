@@ -1721,9 +1721,8 @@ public final class ModernBetaSettingsPresets {
             ExtendedBiomeId.of("minecraft:windswept_forest").mapTo("minecraft:windswept_gravelly_hills")
         );
         var modernVariants = Map.ofEntries(
-            //? if >=1.21.4 {
+            //? if >=1.21.4
             ExtendedBiomeId.of("minecraft:dark_forest").mapTo("minecraft:pale_garden"),
-            //?}
             ExtendedBiomeId.of("minecraft:windswept_hills").mapTo("minecraft:meadow"),
             ExtendedBiomeId.of("minecraft:taiga").mapTo("minecraft:cherry_grove"),
             ExtendedBiomeId.of("minecraft:swamp").mapTo("minecraft:mangrove_swamp")
@@ -1749,6 +1748,7 @@ public final class ModernBetaSettingsPresets {
                 "~minecraft:flower_forest",
                 "~minecraft:forest",
                 "~minecraft:old_growth_birch_forest",
+                //? if >=1.21.4
                 "~minecraft:pale_garden",
                 "~minecraft:cherry_grove"
             )),
@@ -2042,12 +2042,14 @@ public final class ModernBetaSettingsPresets {
                                 ExtendedBiomeId.of("minecraft:snowy_plains")
                             ), 1)),
                     ExtendedBiomeId.of("minecraft:plains")
-                ),
-                modernBiomes ? PredicateOverlayLayer.Target.biome(
+                )
+                //? if >=1.21.4 {
+                , modernBiomes ? PredicateOverlayLayer.Target.biome(
                     BiomePredicate.of(ExtendedBiomeId.of("minecraft:pale_garden"))
                         .and(BiomePredicate.border()),
                     ExtendedBiomeId.of("minecraft:dark_forest*hills")
                 ) : null
+                //?}
             ).filter(Objects::nonNull).toList()),
             // region RegionHillsLayer
             BiomeReplacementLayer.toBiomes("hills", 0, "land", hillVariants),
@@ -2307,8 +2309,10 @@ public final class ModernBetaSettingsPresets {
             ExtendedBiomeId.of("minecraft:badlands*plateau").mapTo("minecraft:wooded_badlands"),
             ExtendedBiomeId.of("minecraft:birch_forest").mapTo("minecraft:old_growth_birch_forest"),
             ExtendedBiomeId.of("minecraft:birch_forest*hills").mapTo("minecraft:old_growth_birch_forest*hills"),
+            //? if >=1.21.4 {
             ExtendedBiomeId.of("minecraft:dark_forest").mapTo("minecraft:pale_garden"),
             ExtendedBiomeId.of("minecraft:dark_forest*hills").mapTo("minecraft:pale_garden*hills"),
+            //?}
             ExtendedBiomeId.of("minecraft:old_growth_pine_taiga").mapTo("minecraft:old_growth_spruce_taiga"),
             ExtendedBiomeId.of("minecraft:old_growth_pine_taiga*hills").mapTo("minecraft:old_growth_spruce_taiga*hills"),
             ExtendedBiomeId.of("minecraft:windswept_hills").mapTo("minecraft:windswept_gravelly_hills"),
@@ -2328,6 +2332,7 @@ public final class ModernBetaSettingsPresets {
                         Map.entry(ExtendedBiomeId.of("minecraft:forest*hills"), new HeightConfig(0.3f, 0.7f)),
                         Map.entry(ExtendedBiomeId.of("minecraft:taiga*hills"), new HeightConfig(0.3f, 0.8f)),
                         Map.entry(ExtendedBiomeId.of("minecraft:dark_forest*hills"), new HeightConfig(0.3f, 0.7f)),
+                        //? if >=1.21.4
                         Map.entry(ExtendedBiomeId.of("minecraft:pale_garden*hills"), new HeightConfig(0.3f, 0.7f)),
                         Map.entry(ExtendedBiomeId.of("minecraft:birch_forest*hills"), new HeightConfig(0.3f, 0.7f)),
                         Map.entry(ExtendedBiomeId.of("minecraft:old_growth_birch_forest"), new HeightConfig(0.1f, 0.8f)),

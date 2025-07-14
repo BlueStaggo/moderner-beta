@@ -150,9 +150,9 @@ public abstract class ModernBetaGraphicalListSettingsScreen extends ModernBetaGr
             this.headerOption(Text.translatable(STRING_PREFIX + "climate_mappings.biome")),
             this.biomeSubOption(i, "biome", false),
             this.headerOption(Text.translatable(STRING_PREFIX + "climate_mappings.oceanBiome")),
-            this.biomeSubOption(i, "ocean", false),
+            this.biomeSubOption(i, "oceanBiome", false),
             this.headerOption(Text.translatable(STRING_PREFIX + "climate_mappings.deepOceanBiome")),
-            this.biomeSubOption(i, "deepOcean", false),
+            this.biomeSubOption(i, "deepOceanBiome", false),
             this.floatRangeSubOption(i, "temp", 0.0F, 1.0F),
             this.floatRangeSubOption(i, "rain", 0.0F, 1.0F),
             this.floatRangeSubOption(i, "weird", 0.0F, 1.0F)

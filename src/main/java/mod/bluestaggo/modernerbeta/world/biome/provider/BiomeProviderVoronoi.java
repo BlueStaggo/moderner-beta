@@ -70,10 +70,12 @@ public class BiomeProviderVoronoi extends BiomeProvider implements BiomeResolver
     @Override
     public List<RegistryEntry<Biome>> getBiomes() {
         List<Identifier> biomes = new ArrayList<>();
-        
-        this.rules.getItems().forEach(key -> biomes.add(key.biome()));
-        this.rules.getItems().forEach(key -> biomes.add(key.oceanBiome()));
-        this.rules.getItems().forEach(key -> biomes.add(key.deepOceanBiome()));
+
+        this.rules.getItems().forEach(key -> {
+            biomes.add(key.biome());
+            biomes.add(key.oceanBiome());
+            biomes.add(key.deepOceanBiome());
+        });
         
         return biomes
             .stream()

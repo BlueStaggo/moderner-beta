@@ -14,10 +14,11 @@ body:
     attributes:
       label: To reproduce
       description: "Steps to reproduce the behavior:"
-      placeholder: """1. Go to '...'
-      2. Click on '....'
-      3. Scroll down to '....'
-      4. See error"""
+      placeholder: |
+        1. Go to '...'
+        2. Click on '....'
+        3. Scroll down to '....'
+        4. See error
   - type: textarea
     id: expected
     attributes:

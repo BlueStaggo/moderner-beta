@@ -1,8 +1,8 @@
 name: Report Bug or Crash
 about: Create a report about a bug or game crash.
 title: "[BUG]"
-labels: bug
-assignees: ''
+labels: ["bug"]
+assignees: [""]
 body:
   - type: textarea
     id: describe

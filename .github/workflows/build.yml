@@ -4,11 +4,21 @@ on:
   push:
     branches:
       - '**'
+    paths:
+      - '*.java'
+      - '*.gradle'
+      - '*.kts'
+      - '*.json'
     tags:
       - '!**'
   pull_request:
     branches:
       - '**'
+    paths:
+      - '*.java'
+      - '*.gradle'
+      - '*.kts'
+      - '*.json'
 
 jobs:
   build:

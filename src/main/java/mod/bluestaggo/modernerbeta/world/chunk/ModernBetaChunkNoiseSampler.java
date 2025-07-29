@@ -12,12 +12,12 @@ import net.minecraft.world.gen.chunk.AquiferSampler.FluidLevelSampler;
 import net.minecraft.world.gen.densityfunction.DensityFunctionTypes;
 import net.minecraft.world.gen.noise.NoiseConfig;
 
-public class ModernBetaChunkNoiseSampler extends ChunkNoiseSampler {
+public class ModernBetaChunkNoiseSampler {
     private static final int HEIGHT_OFFSET = -8;
     
     private final ChunkProvider chunkProvider;
     
-    public static ModernBetaChunkNoiseSampler create(
+    public static ChunkNoiseSampler create(
         Chunk chunk,
         NoiseConfig noiseConfig,
         ChunkGeneratorSettings chunkGeneratorSettings,
@@ -29,7 +29,7 @@ public class ModernBetaChunkNoiseSampler extends ChunkNoiseSampler {
         
         int horizontalSize = 16 / shapeConfig.horizontalCellBlockCount();
         
-        return new ModernBetaChunkNoiseSampler(
+        return new ModernBetaChunkNoiseSampler(chunkProvider).createSampler(
             horizontalSize,
             noiseConfig,
             chunkPos.getStartX(),
@@ -38,53 +38,80 @@ public class ModernBetaChunkNoiseSampler extends ChunkNoiseSampler {
             SimpleDensityFunction.INSTANCE,
             chunkGeneratorSettings,
             fluidLevelSampler,
-            Blender.getNoBlending(),
-            chunkProvider
+            Blender.getNoBlending()
         );
     }
-    
-    private ModernBetaChunkNoiseSampler(
+
+    private ModernBetaChunkNoiseSampler(ChunkProvider chunkProvider) {
+        this.chunkProvider = chunkProvider;
+    }
+
+    private SamplerImpl createSampler(
         int horizontalSize,
-        NoiseConfig noiseConfig, 
+        NoiseConfig noiseConfig,
         int startX,
         int startZ,
         GenerationShapeConfig shapeConfig,
         DensityFunctionTypes.Beardifying beardifying,
         ChunkGeneratorSettings settings,
         FluidLevelSampler fluidLevelSampler,
-        Blender blender,
-        ChunkProvider chunkProvider
+        Blender blender
     ) {
-        super(
+        return new SamplerImpl(
             horizontalSize,
             noiseConfig,
             startX,
             startZ,
-            shapeConfig, 
+            shapeConfig,
             beardifying,
             settings,
             fluidLevelSampler,
             blender
         );
-        
-        this.chunkProvider = chunkProvider;
     }
 
-    /*
-     * Simulates a general y height at x/z block coordinates.
-     * Replace vanilla noise implementation with plain height sampling.
-     * 
-     * Used to determine whether an aquifer should use sea level or local water level.
-     * Also used in SurfaceBuilder to determine min surface y.
-     * 
-     * Reference: https://twitter.com/henrikkniberg/status/1432615996880310274
-     * 
-     */
-    @Override
-    public int estimateSurfaceHeight(int x, int z) {
-        int height = (this.chunkProvider instanceof ChunkProviderNoise noiseChunkProvider) ?
-            noiseChunkProvider.getHeight(x, z, ChunkHeightmap.Type.SURFACE_FLOOR) :
-            this.chunkProvider.getHeight(x, z, Heightmap.Type.OCEAN_FLOOR_WG);
-        return height + HEIGHT_OFFSET;
+    private class SamplerImpl extends ChunkNoiseSampler {
+        private SamplerImpl(
+            int horizontalSize,
+            NoiseConfig noiseConfig,
+            int startX,
+            int startZ,
+            GenerationShapeConfig shapeConfig,
+            DensityFunctionTypes.Beardifying beardifying,
+            ChunkGeneratorSettings settings,
+            FluidLevelSampler fluidLevelSampler,
+            Blender blender
+        ) {
+            super(
+                horizontalSize,
+                noiseConfig,
+                startX,
+                startZ,
+                shapeConfig,
+                beardifying,
+                settings,
+                fluidLevelSampler,
+                blender
+            );
+        }
+
+
+        /*
+         * Simulates a general y height at x/z block coordinates.
+         * Replace vanilla noise implementation with plain height sampling.
+         *
+         * Used to determine whether an aquifer should use sea level or local water level.
+         * Also used in SurfaceBuilder to determine min surface y.
+         *
+         * Reference: https://twitter.com/henrikkniberg/status/1432615996880310274
+         *
+         */
+        @Override
+        public int estimateSurfaceHeight(int x, int z) {
+            int height = (chunkProvider instanceof ChunkProviderNoise noiseChunkProvider) ?
+                    noiseChunkProvider.getHeight(x, z, ChunkHeightmap.Type.SURFACE_FLOOR) :
+                    chunkProvider.getHeight(x, z, Heightmap.Type.OCEAN_FLOOR_WG);
+            return height + HEIGHT_OFFSET;
+        }
     }
 }

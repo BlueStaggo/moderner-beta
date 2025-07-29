@@ -32,10 +32,7 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkSection;
 import net.minecraft.world.gen.StructureAccessor;
 import net.minecraft.world.gen.StructureWeightSampler;
-import net.minecraft.world.gen.chunk.AquiferSampler;
-import net.minecraft.world.gen.chunk.Blender;
-import net.minecraft.world.gen.chunk.ChunkGeneratorSettings;
-import net.minecraft.world.gen.chunk.GenerationShapeConfig;
+import net.minecraft.world.gen.chunk.*;
 import net.minecraft.world.gen.noise.NoiseConfig;
 
 import java.util.*;
@@ -221,7 +218,7 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
     @Override
     public AquiferSampler getAquiferSampler(Chunk chunk, NoiseConfig noiseConfig) {
         RandomSplitter randomDeriver = this.randomProvider.create(this.seed).nextSplitter();
-        ModernBetaChunkNoiseSampler noiseSampler = ModernBetaChunkNoiseSampler.create(
+        ChunkNoiseSampler noiseSampler = ModernBetaChunkNoiseSampler.create(
             chunk,
             noiseConfig,
             this.generatorSettings.value(),

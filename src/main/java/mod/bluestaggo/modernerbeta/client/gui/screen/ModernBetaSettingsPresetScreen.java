@@ -206,6 +206,7 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
             private final MutableText presetName;
             private final MutableText presetDesc;
 
+            //? if <1.21.9
             private long time;
             
             public AbstractPresetEntry(Identifier presetName) {
@@ -296,7 +297,7 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
             }
             
             @Override
-            public boolean mouseClicked(double mouseX, double mouseY, int button) {
+            public boolean mouseClicked(double mouseX, double mouseY, int button /*? >=1.21.9 {*//*, boolean doubleClick *//*?}*/) {
                 if (button != 0) {
                     return false;
                 }
@@ -307,10 +308,11 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
                     this.selectPreset();
                 }
                 
-                if (Util.getMeasuringTimeMs() - this.time < 250L) {
+                if (/*? >=1.21.9 {*/ /*doubleClick *//*?} else {*/ Util.getMeasuringTimeMs() - this.time < 250L /*?}*/) {
                     this.selectPreset();
                 }
-                
+
+                //? if <1.21.9
                 this.time = Util.getMeasuringTimeMs();
                 
                 return true;

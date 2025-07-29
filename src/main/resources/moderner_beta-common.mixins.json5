@@ -33,6 +33,7 @@
     *///?}
     "client.MixinBiomeColors",
     "client.MixinClientWorld",
+    //? if <1.21.9
     "client.MixinDebugHud",
     "client.MixinLevelLoadingScreen",
     "client.MixinSimplePositioningWidget",
@@ -44,6 +45,8 @@
     //?} else {
     /*"client.MixinWorldRenderer",
     *///?}
+    //? if >=1.21.9
+    /*"client.Accessorclass_11631",*/
     "client.AccessorScreenshotRecorder"
   ],
   "injectors": {

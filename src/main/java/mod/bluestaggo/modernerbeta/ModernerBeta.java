@@ -74,6 +74,9 @@ public class ModernerBeta {
 
     public static void init() {
         ModernerBeta.log(Level.INFO, "Initializing Moderner Beta...");
+
+        //? if >=1.21.9
+        /*mod.bluestaggo.modernerbeta.client.debug.ModernBetaDebugTexts.register();*/
     }
 
     public static void setupCustomRegistryHandlers() {

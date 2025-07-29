@@ -166,9 +166,9 @@ public class ModernBetaSelectBiomeScreen extends Screen {
             }
 
             @Override
-            public boolean mouseClicked(double mouseX, double mouseY, int button) {
+            public boolean mouseClicked(double mouseX, double mouseY, int button /*? >=1.21.9 {*//*, boolean doubleClick *//*?}*/) {
                 ModernBetaSelectBiomeScreen.BiomeListWidget.this.setSelected(this);
-                return super.mouseClicked(mouseX, mouseY, button);
+                return super.mouseClicked(mouseX, mouseY, button /*? >=1.21.9 {*//*, doubleClick *//*?}*/);
             }
         }
     }

@@ -66,6 +66,8 @@ import java.util.function.Consumer;
 public class ModEventsClient {
     @SubscribeEvent
     public static void clientInit(FMLClientSetupEvent event) {
+        ModernerBetaClient.init();
+
         ModLoadingContext.get().registerExtensionPoint(
                 //? if neoforge {
                 IConfigScreenFactory.class,

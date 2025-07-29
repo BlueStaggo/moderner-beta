@@ -14,6 +14,11 @@ import java.util.function.Consumer;
 public class ModernerBetaClient {
     public static List<Pair<Registry<?>, Consumer<IRegistryHandler<?>>>> CUSTOM_REGISTRY_HANDLERS;
 
+    public static void init() {
+        //? if >=1.21.9
+        /*mod.bluestaggo.modernerbeta.client.debug.ModernBetaDebugTexts.register();*/
+    }
+
     public static void setupCustomRegistryHandlers() {
         CUSTOM_REGISTRY_HANDLERS = List.of(
             new Pair<>(ModernBetaClientRegistries.SETTINGS_COMPONENT_TYPE_GUI, ModernBetaClientBuiltInProviders::registerSettingsComponentTypeGuis)

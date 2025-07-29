@@ -22,6 +22,7 @@ import net.minecraft.resource.ResourceType;
 public class ModernerBetaFabricClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
+        ModernerBetaClient.init();
         ModernBetaClientRegistries.makeRegistries(new RegistryHelperImpl());
         ModernerBetaClient.setupCustomRegistryHandlers();
 

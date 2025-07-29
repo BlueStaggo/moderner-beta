@@ -1,7 +1,9 @@
 {
     "pack": {
         "description": "Place above reduced height, add deepslate and tuff blobs",
-        "pack_format": 15,
-        "supported_formats": [15, 81]
+        "pack_format": 16,
+        "supported_formats": [16, 82],
+        "min_format": 16,
+        "max_format": 82
     }
 }

@@ -1,7 +1,9 @@
 {
     "pack": {
         "description": "Min Y = 0, pre-1.18 ore gen",
-        "pack_format": 15,
-        "supported_formats": [15, 81]
+        "pack_format": 16,
+        "supported_formats": [16, 82],
+        "min_format": 16,
+        "max_format": 82
     }
 }

@@ -5,20 +5,20 @@ on:
     branches:
       - '**'
     paths:
-      - '*.java'
-      - '*.gradle'
-      - '*.kts'
-      - '*.json'
+      - '**/*.java'
+      - '**/*.gradle'
+      - '**/*.kts'
+      - '**/*.json'
     tags:
       - '!**'
   pull_request:
     branches:
       - '**'
     paths:
-      - '*.java'
-      - '*.gradle'
-      - '*.kts'
-      - '*.json'
+      - '**/*.java'
+      - '**/*.gradle'
+      - '**/*.kts'
+      - '**/*.json'
 
 jobs:
   build:

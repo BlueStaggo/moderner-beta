@@ -1,6 +1,8 @@
 package mod.bluestaggo.modernerbeta.api.world.cavebiome.climate;
 
-public interface CaveClimateSampler {
+import mod.bluestaggo.modernerbeta.client.debug.DebugTextProvider3D;
+
+public interface CaveClimateSampler extends DebugTextProvider3D {
     /**
      * Sample temperature/rainfall values in range [-1.0, 1.0] given block coordinates.
      * 

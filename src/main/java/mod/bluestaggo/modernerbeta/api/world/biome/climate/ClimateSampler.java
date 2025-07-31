@@ -1,6 +1,6 @@
 package mod.bluestaggo.modernerbeta.api.world.biome.climate;
 
-import mod.bluestaggo.modernerbeta.mixin.AccessorBiome;
+import mod.bluestaggo.modernerbeta.client.debug.DebugTextProvider2D;
 import mod.bluestaggo.modernerbeta.settings.component.ClimateDistribution;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
@@ -10,7 +10,7 @@ import net.minecraft.world.biome.Biome;
  * for use by a biome provider or chunk provider.
  *
  */
-public interface ClimateSampler {
+public interface ClimateSampler extends DebugTextProvider2D {
     /**
      * Sample temperature/rainfall values in range [0.0, 1.0] given block coordinates.
      * 

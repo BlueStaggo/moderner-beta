@@ -3,6 +3,7 @@ package mod.bluestaggo.modernerbeta.world.biome.provider;
 import mod.bluestaggo.modernerbeta.api.world.biome.BiomeProvider;
 import mod.bluestaggo.modernerbeta.api.world.biome.BiomeResolverOcean;
 import mod.bluestaggo.modernerbeta.api.world.biome.climate.Clime;
+import mod.bluestaggo.modernerbeta.client.debug.DebugTextProvider2D;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.settings.component.ClimateScale;
@@ -26,7 +27,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-public class BiomeProviderVoronoi extends BiomeProvider implements BiomeResolverOcean {
+public class BiomeProviderVoronoi extends BiomeProvider implements BiomeResolverOcean, DebugTextProvider2D {
     private final VoronoiClimateSampler climateSampler;
     private final VoronoiPointRules<ClimateMapping, Clime> rules;
     
@@ -113,7 +114,12 @@ public class BiomeProviderVoronoi extends BiomeProvider implements BiomeResolver
         
         return builder.build();
     }
-    
+
+    @Override
+    public String getDebugText(int x, int z) {
+        return this.climateSampler.getDebugText(x, z);
+    }
+
     private static class VoronoiClimateSampler {
         private final SimplexOctaveNoise tempOctaveNoise;
         private final SimplexOctaveNoise rainOctaveNoise;
@@ -170,6 +176,15 @@ public class BiomeProviderVoronoi extends BiomeProvider implements BiomeResolver
             weird = MathHelper.clamp(weird, 0.0, 1.0);
             
             return new Clime(temp, rain, weird);
+        }
+
+        private String getDebugText(int x, int z) {
+            Clime clime = this.sample(x, z);
+            double temp = clime.temp();
+            double rain = clime.rain();
+            double weird = clime.weird();
+
+            return String.format("Climate Temp: %.3f Rainfall: %.3f Weirdness: %.3f", temp, rain, weird);
         }
     }
 }

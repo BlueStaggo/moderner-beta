@@ -1,9 +1,7 @@
 package mod.bluestaggo.modernerbeta.client.debug.hudentry;
 
-import mod.bluestaggo.modernerbeta.api.world.biome.climate.ClimateSampler;
-import mod.bluestaggo.modernerbeta.api.world.biome.climate.Clime;
-import mod.bluestaggo.modernerbeta.api.world.cavebiome.climate.CaveClimateSampler;
-import mod.bluestaggo.modernerbeta.api.world.cavebiome.climate.CaveClime;
+import mod.bluestaggo.modernerbeta.client.debug.DebugTextProvider2D;
+import mod.bluestaggo.modernerbeta.client.debug.DebugTextProvider3D;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
 //? if >=1.21.9 {
 /*import mod.bluestaggo.modernerbeta.ModernerBeta;
@@ -55,32 +53,12 @@ public class ClimateDebugHudEntry /*? >=1.21.9 {*/ /*implements DebugHudEntry */
 
         List<String> lines = new ArrayList<>();
         if (biomeSource instanceof ModernBetaBiomeSource modernBetaBiomeSource) {
-            if (modernBetaBiomeSource.getBiomeProvider() instanceof ClimateSampler climateSampler) {
-                Clime clime = climateSampler.sample(x, z);
-                double temp = clime.temp();
-                double rain = clime.rain();
-
-                lines.add(
-                        String.format(
-                                "[Modern Beta] Climate Temp: %.3f Rainfall: %.3f",
-                                temp,
-                                rain
-                        )
-                );
+            if (modernBetaBiomeSource.getBiomeProvider() instanceof DebugTextProvider2D provider2D) {
+                lines.add("[Modern Beta] " + provider2D.getDebugText(x, z));
             }
 
-            if (modernBetaBiomeSource.getCaveBiomeProvider() instanceof CaveClimateSampler climateSampler) {
-                CaveClime clime = climateSampler.sample(x >> 2, y >> 2, z >> 2);
-                double temp = clime.temp();
-                double rain = clime.rain();
-
-                lines.add(
-                        String.format(
-                                "[Modern Beta] Cave Climate Temp: %.3f Rainfall: %.3f",
-                                temp,
-                                rain
-                        )
-                );
+            if (modernBetaBiomeSource.getCaveBiomeProvider() instanceof DebugTextProvider3D provider3D) {
+                lines.add("[Modern Beta] " + provider3D.getDebugText(x, y, z));
             }
         }
 

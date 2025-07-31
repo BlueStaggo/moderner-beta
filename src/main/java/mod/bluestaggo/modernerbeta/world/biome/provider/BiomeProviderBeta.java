@@ -139,6 +139,11 @@ public class BiomeProviderBeta extends BiomeProvider implements ClimateSampler, 
         return this.distribution;
     }
 
+    @Override
+    public String getDebugText(int x, int z) {
+        return climateSampler.getDebugText(x, z);
+    }
+
     private static class BetaClimateSampler {
         private final SimplexOctaveNoise tempOctaveNoise;
         private final SimplexOctaveNoise rainOctaveNoise;
@@ -185,6 +190,14 @@ public class BiomeProviderBeta extends BiomeProvider implements ClimateSampler, 
             temp = 1.0D - (1.0D - temp) * (1.0D - temp);
             
             return new Clime(MathHelper.clamp(temp, 0.0, 1.0), MathHelper.clamp(rain, 0.0, 1.0));
+        }
+
+        private String getDebugText(int x, int z) {
+            Clime clime = this.sample(x, z);
+            double temp = clime.temp();
+            double rain = clime.rain();
+
+            return String.format("Climate Temp: %.3f Rainfall: %.3f", temp, rain);
         }
     }
 

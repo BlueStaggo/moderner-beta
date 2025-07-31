@@ -73,6 +73,11 @@ public class CaveBiomeProviderVoronoi extends CaveBiomeProvider implements CaveC
         return builder.build();
     }
 
+    @Override
+    public String getDebugText(int x, int y, int z) {
+        return this.climateSampler.getDebugText(x >> 2, y >> 2, z >> 2);
+    }
+
     private static class VoronoiCaveClimateSampler {
         private final PerlinOctaveNoise tempOctaveNoise;
         private final PerlinOctaveNoise rainOctaveNoise;
@@ -140,6 +145,14 @@ public class CaveBiomeProviderVoronoi extends CaveBiomeProvider implements CaveC
                 MathHelper.clamp(rainNoise, 0.0, 1.0),
                 MathHelper.clamp(depth, 0.0, 1.0)
             );
+        }
+
+        private String getDebugText(int x, int y, int z) {
+            CaveClime clime = this.sample(x, y, z);
+            double temp = clime.temp();
+            double rain = clime.rain();
+
+            return String.format("Cave Climate Temp: %.3f Rainfall: %.3f", temp, rain);
         }
     }
 }

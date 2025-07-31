@@ -103,4 +103,13 @@ public class BiomeProviderBetaFractal extends BiomeProviderFractal implements Cl
     public TemperatureHeightScaling getHeightType() {
         return TemperatureHeightScaling.NONE;
     }
+
+    @Override
+    public String getDebugText(int x, int z) {
+        Clime clime = this.sample(x, z);
+        double temp = clime.temp();
+        double rain = clime.rain();
+
+        return String.format("Climate Temp: %.3f Rainfall: %.3f", temp, rain);
+    }
 }

@@ -83,6 +83,8 @@ repositories {
 }
 
 processResources {
+    dependsOn commonPr.processResources
+
     var toExpand = [
         "version": commonPr.version,
         "minecraft_version_range": commonPr.fabric_version_range
@@ -97,9 +99,9 @@ processResources {
         exclude ".cache"
     }
 
-    from(rootProject.file("src/main/resources")) {
+    from(commonPr.file("build/resources/main")) {
         include "**/**"
-        exclude "moderner_beta-common.mixins.json5"
+        exclude "moderner_beta-common.mixins.json"
         exclude "assets/moderner_beta/banner.png"
     }
 }

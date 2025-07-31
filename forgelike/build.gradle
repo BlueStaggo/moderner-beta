@@ -1,4 +1,7 @@
 plugins {
+    id "org.jetbrains.kotlin.jvm" version "2.2.0"
+    id "com.google.devtools.ksp" version "2.2.0-2.0.2"
+    id "dev.kikugie.fletching-table" version "0.1.0-alpha.13"
     id "architectury-plugin" version "3.4.+"
     id "com.github.johnrengelman.shadow" version "8.1.1"
     id "com.modrinth.minotaur" version "2.+"
@@ -57,6 +60,12 @@ loom {
     }
 }
 
+fletchingTable {
+    mixins.create("main") {
+        mixin("default", "moderner_beta-forgelike.mixins.json")
+    }
+}
+
 configurations {
     common
     shadowCommon // Don't use shadow from the shadow plugin because we don't want IDEA to index this.
@@ -110,6 +119,8 @@ repositories {
 }
 
 processResources {
+    dependsOn commonPr.processResources
+
     var toExpand = [
         "version": commonPr.version,
         "loader_version_range": neoforge ? commonPr.neoforge_version_range : commonPr.forge_version_range,
@@ -135,9 +146,9 @@ processResources {
         exclude ".cache"
     }
 
-    from(rootProject.file("src/main/resources")) {
+    from(commonPr.file("build/resources/main")) {
         include "**/**"
-        exclude "moderner_beta-common.mixins.json5"
+        exclude "moderner_beta-common.mixins.json"
         exclude "assets/moderner_beta/icon.png"
     }
 }

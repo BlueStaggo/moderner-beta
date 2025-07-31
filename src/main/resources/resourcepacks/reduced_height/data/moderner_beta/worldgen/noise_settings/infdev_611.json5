@@ -235,6 +235,7 @@
       "xz_scale": 1.0,
       "y_scale": 0.7142857142857143
     },
+    //? if <1.21.9
     "initial_density_without_jaggedness": 0.0,
     "lava": {
       "type": "minecraft:noise",
@@ -242,7 +243,8 @@
       "xz_scale": 1.0,
       "y_scale": 1.0
     },
-    "preliminary_surface_level": 0.0,
+    //? if >=1.21.9
+    /*"preliminary_surface_level": 0.0,*/
     "ridges": 0.0,
     "temperature": 0.0,
     "vegetation": 0.0,
@@ -251,7 +253,7 @@
     "vein_toggle": 0.0
   },
   "ore_veins_enabled": false,
-  "sea_level": 63,
+  "sea_level": 64,
   "spawn_target": [],
   "surface_rule": {
     "type": "minecraft:sequence",
@@ -2390,11 +2392,11 @@
         "if_true": {
           "type": "minecraft:vertical_gradient",
           "false_at_and_above": {
-            "absolute": 16
+            "absolute": 8
           },
           "random_name": "minecraft:deepslate",
           "true_at_and_below": {
-            "absolute": 12
+            "absolute": 0
           }
         },
         "then_run": {

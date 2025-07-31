@@ -235,6 +235,7 @@
       "xz_scale": 1.0,
       "y_scale": 0.7142857142857143
     },
+    //? if <1.21.9
     "initial_density_without_jaggedness": 0.0,
     "lava": {
       "type": "minecraft:noise",
@@ -242,7 +243,8 @@
       "xz_scale": 1.0,
       "y_scale": 1.0
     },
-    "preliminary_surface_level": 0.0,
+    //? if >=1.21.9
+    /*"preliminary_surface_level": 0.0,*/
     "ridges": 0.0,
     "temperature": 0.0,
     "vegetation": 0.0,

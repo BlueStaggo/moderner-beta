@@ -1,4 +1,5 @@
-package mod.bluestaggo.modernerbeta.mixin;
+//? if forge {
+/*package mod.bluestaggo.modernerbeta.forgelike.mixin;
 
 import net.minecraft.registry.entry.RegistryEntry;
 import org.spongepowered.asm.mixin.Mixin;
@@ -9,3 +10,4 @@ public interface AccessorRegistryEntryReference<T> {
     @Invoker
     void invokeSetValue(T value);
 }
+*///?}

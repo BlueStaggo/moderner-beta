@@ -3,10 +3,6 @@ accessWidener v1 named
 accessible method net/minecraft/world/biome/OverworldBiomeCreator getSkyColor (F)I
 accessible class net/minecraft/world/biome/Biome$Weather
 
-accessible class net/minecraft/world/gen/surfacebuilder/MaterialRules$SequenceMaterialRule
-accessible class net/minecraft/world/gen/surfacebuilder/MaterialRules$MaterialRuleContext
-accessible class net/minecraft/world/gen/surfacebuilder/MaterialRules$BooleanSupplier
-
 extendable class net/minecraft/world/gen/chunk/NoiseChunkGenerator
 extendable class net/minecraft/world/gen/chunk/ChunkGenerator
 extendable method net/minecraft/world/gen/chunk/NoiseChunkGenerator createChunkNoiseSampler (Lnet/minecraft/world/chunk/Chunk;Lnet/minecraft/world/gen/StructureAccessor;Lnet/minecraft/world/gen/chunk/Blender;Lnet/minecraft/world/gen/noise/NoiseConfig;)Lnet/minecraft/world/gen/chunk/ChunkNoiseSampler;
@@ -17,11 +13,4 @@ extendable class net/minecraft/client/option/SimpleOption$IntSliderCallbacks
 
 accessible field net/minecraft/world/gen/carver/CaveCarverConfig floorLevel Lnet/minecraft/util/math/floatprovider/FloatProvider;
 
-accessible method net/minecraft/world/gen/stateprovider/SimpleBlockStateProvider <init>  (Lnet/minecraft/block/BlockState;)V
 accessible method net/minecraft/world/gen/chunk/ChunkNoiseSampler createMultiNoiseSampler (Lnet/minecraft/world/gen/noise/NoiseRouter;Ljava/util/List;)Lnet/minecraft/world/biome/source/util/MultiNoiseUtil$MultiNoiseSampler;
-
-accessible field net/minecraft/client/gui/widget/EditBoxWidget editBox Lnet/minecraft/client/gui/EditBox;
-
-accessible field net/minecraft/client/gui/EditBox cursor I
-accessible field net/minecraft/client/gui/EditBox selectionEnd I
-accessible method net/minecraft/client/gui/EditBox onChange ()V

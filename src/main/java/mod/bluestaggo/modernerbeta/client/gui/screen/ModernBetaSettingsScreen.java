@@ -6,6 +6,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import com.mojang.serialization.JsonOps;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
+import mod.bluestaggo.modernerbeta.mixin.client.AccessorEditBoxWidget;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import net.fabricmc.api.EnvType;
@@ -13,6 +14,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.EditBox;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.*;
+import net.minecraft.client.input.CursorMovement;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -97,9 +99,8 @@ public class ModernBetaSettingsScreen extends ModernBetaScreen {
         gridWidget.forEachChild(this::addDrawableChild);
         
         // Set cursor to beginning of edit box
-        EditBox editBox = this.widgetSettings.editBox;
-        editBox.cursor = editBox.selectionEnd = 0;
-        editBox.onChange();
+        EditBox editBox = ((AccessorEditBoxWidget) this.widgetSettings).getEditBox();
+        editBox.moveCursor(CursorMovement.ABSOLUTE, 0);
         
         this.onChange();
     }

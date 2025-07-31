@@ -1,13 +1,12 @@
 package mod.bluestaggo.modernerbeta.world.carver;
 
-import com.mojang.datafixers.Products;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.registry.entry.RegistryEntryList;
 import net.minecraft.util.math.floatprovider.FloatProvider;
 import net.minecraft.world.gen.YOffset;
-import net.minecraft.world.gen.carver.CarverConfig;
 import net.minecraft.world.gen.carver.CarverDebugConfig;
 import net.minecraft.world.gen.carver.CaveCarverConfig;
 import net.minecraft.world.gen.heightprovider.HeightProvider;
@@ -16,9 +15,10 @@ import java.util.Optional;
 
 public class BetaCaveCarverConfig extends CaveCarverConfig {
     public static final Codec<BetaCaveCarverConfig> CAVE_CODEC = RecordCodecBuilder.create(instance -> 
-        fillConfigFields(instance).and(instance.group(
+        instance.group(
+            ((MapCodec.MapCodecCodec<CaveCarverConfig>) CaveCarverConfig.CAVE_CODEC).codec().forGetter(config -> config),
             Codec.BOOL.optionalFieldOf("use_fixed_caves").forGetter(config -> config.useFixedCaves),
-            Codec.BOOL.optionalFieldOf("use_aquifers").forGetter(config -> config.useAquifers))
+            Codec.BOOL.optionalFieldOf("use_aquifers").forGetter(config -> config.useAquifers)
         ).apply(instance, BetaCaveCarverConfig::new));
     
     public Optional<Boolean> useFixedCaves;
@@ -54,10 +54,7 @@ public class BetaCaveCarverConfig extends CaveCarverConfig {
     }
     
     public BetaCaveCarverConfig(
-        CarverConfig config,
-        FloatProvider horizontalRadiusMultiplier,
-        FloatProvider verticalRadiusMultiplier,
-        FloatProvider floorLevel,
+        CaveCarverConfig config,
         Optional<Boolean> useFixedCaves,
         Optional<Boolean> useAquifers
     ) {
@@ -68,20 +65,11 @@ public class BetaCaveCarverConfig extends CaveCarverConfig {
             config.lavaLevel,
             config.debugConfig,
             config.replaceable,
-            horizontalRadiusMultiplier,
-            verticalRadiusMultiplier,
-            floorLevel,
+            config.horizontalRadiusMultiplier,
+            config.verticalRadiusMultiplier,
+            config.floorLevel,
             useFixedCaves,
             useAquifers
-        );
-    }
-
-private static <P extends CaveCarverConfig> Products.P4<RecordCodecBuilder.Mu<P>, CarverConfig, FloatProvider, FloatProvider, FloatProvider> fillConfigFields(RecordCodecBuilder.Instance<P> instance) {
-        return instance.group(
-            CarverConfig.CONFIG_CODEC.forGetter(config -> config),
-            FloatProvider.VALUE_CODEC.fieldOf("horizontal_radius_multiplier").forGetter(config -> config.horizontalRadiusMultiplier),
-            FloatProvider.VALUE_CODEC.fieldOf("vertical_radius_multiplier").forGetter(config -> config.verticalRadiusMultiplier),
-            FloatProvider.createValidatedCodec(-1.0f, 1.0f).fieldOf("floor_level").forGetter(config -> config.floorLevel)
         );
     }
 }

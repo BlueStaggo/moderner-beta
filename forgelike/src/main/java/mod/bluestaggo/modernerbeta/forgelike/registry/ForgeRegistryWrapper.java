@@ -3,7 +3,7 @@
 
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Lifecycle;
-import mod.bluestaggo.modernerbeta.mixin.AccessorRegistryEntryReference;
+import mod.bluestaggo.modernerbeta.forgelike.mixin.AccessorRegistryEntryReference;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryWrapper;

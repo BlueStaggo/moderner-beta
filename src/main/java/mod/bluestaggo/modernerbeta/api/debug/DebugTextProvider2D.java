@@ -1,4 +1,4 @@
-package mod.bluestaggo.modernerbeta.client.debug;
+package mod.bluestaggo.modernerbeta.api.debug;
 
 @FunctionalInterface
 public interface DebugTextProvider2D {

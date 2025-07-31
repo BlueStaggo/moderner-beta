@@ -1,6 +1,6 @@
 package mod.bluestaggo.modernerbeta.api.world.cavebiome.climate;
 
-import mod.bluestaggo.modernerbeta.client.debug.DebugTextProvider3D;
+import mod.bluestaggo.modernerbeta.api.debug.DebugTextProvider3D;
 
 public interface CaveClimateSampler extends DebugTextProvider3D {
     /**

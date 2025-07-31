@@ -1,7 +1,7 @@
 package mod.bluestaggo.modernerbeta.client.debug.hudentry;
 
-import mod.bluestaggo.modernerbeta.client.debug.DebugTextProvider2D;
-import mod.bluestaggo.modernerbeta.client.debug.DebugTextProvider3D;
+import mod.bluestaggo.modernerbeta.api.debug.DebugTextProvider2D;
+import mod.bluestaggo.modernerbeta.api.debug.DebugTextProvider3D;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
 //? if >=1.21.9 {
 /*import mod.bluestaggo.modernerbeta.ModernerBeta;
@@ -14,6 +14,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
 *///?}
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.source.BiomeSource;
@@ -23,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+@Environment(EnvType.CLIENT)
 public class ClimateDebugHudEntry /*? >=1.21.9 {*/ /*implements DebugHudEntry *//*?}*/ {
     //? if >=1.21.9 {
     /*private static final Identifier SECTION_ID = ModernerBeta.createId("climate");

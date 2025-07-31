@@ -3,7 +3,7 @@ package mod.bluestaggo.modernerbeta.world.biome.provider;
 import mod.bluestaggo.modernerbeta.api.world.biome.BiomeProvider;
 import mod.bluestaggo.modernerbeta.api.world.biome.BiomeResolverOcean;
 import mod.bluestaggo.modernerbeta.api.world.biome.climate.Clime;
-import mod.bluestaggo.modernerbeta.client.debug.DebugTextProvider2D;
+import mod.bluestaggo.modernerbeta.api.debug.DebugTextProvider2D;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.settings.component.ClimateScale;

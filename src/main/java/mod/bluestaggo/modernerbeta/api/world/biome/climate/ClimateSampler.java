@@ -1,6 +1,6 @@
 package mod.bluestaggo.modernerbeta.api.world.biome.climate;
 
-import mod.bluestaggo.modernerbeta.client.debug.DebugTextProvider2D;
+import mod.bluestaggo.modernerbeta.api.debug.DebugTextProvider2D;
 import mod.bluestaggo.modernerbeta.settings.component.ClimateDistribution;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;

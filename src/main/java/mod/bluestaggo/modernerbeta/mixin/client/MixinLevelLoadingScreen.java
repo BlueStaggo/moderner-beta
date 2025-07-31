@@ -26,7 +26,7 @@ public abstract class MixinLevelLoadingScreen extends Screen {
     @Inject(
         method =
             //? if >=1.21.9 {
-            /*" <init>(Lnet/minecraft/class_11653;Lnet/minecraft/client/gui/screen/world/LevelLoadingScreen$WorldEntryReason;)V",
+            /*" <init>(Lnet/minecraft/client/world/ClientChunkLoadProgress;Lnet/minecraft/client/gui/screen/world/LevelLoadingScreen$WorldEntryReason;)V",
             *///?} else if >=1.20.3 {
             " <init>(Lnet/minecraft/server/WorldGenerationProgressTracker;)V",
             //?} else {

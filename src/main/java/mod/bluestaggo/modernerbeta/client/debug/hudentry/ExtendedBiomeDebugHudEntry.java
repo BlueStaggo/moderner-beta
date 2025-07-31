@@ -1,12 +1,12 @@
-package mod.bluestaggo.modernerbeta.client.debug.text;
+package mod.bluestaggo.modernerbeta.client.debug.hudentry;
 
 import mod.bluestaggo.modernerbeta.api.world.chunk.ChunkProvider;
 import mod.bluestaggo.modernerbeta.api.world.chunk.ChunkProviderForcedHeight;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
 //? if >=1.21.9 {
-/*import net.minecraft.class_11630;
-import net.minecraft.class_11632;
+/*import net.minecraft.client.gui.hud.debug.DebugHudEntry;
+import net.minecraft.client.gui.hud.debug.DebugHudLines;
 import net.minecraft.world.chunk.WorldChunk;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
@@ -17,10 +17,10 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 
-public class ExtendedBiomeDebugText /*? >=1.21.9 {*/ /*implements class_11632 *//*?}*/ {
+public class ExtendedBiomeDebugHudEntry /*? >=1.21.9 {*/ /*implements DebugHudEntry *//*?}*/ {
     //? if >=1.21.9 {
     /*@Override
-    public void method_72751(class_11630 arg, @Nullable World world, @Nullable WorldChunk worldChunk, @Nullable WorldChunk worldChunk2) {
+    public void render(DebugHudLines lines, @Nullable World world, @Nullable WorldChunk clientChunk, @Nullable WorldChunk chunk) {
         MinecraftClient client = MinecraftClient.getInstance();
         Entity entity = client.getCameraEntity();
         if (entity == null)
@@ -33,7 +33,7 @@ public class ExtendedBiomeDebugText /*? >=1.21.9 {*/ /*implements class_11632 */
 
         String line = getLine(world, x, z);
         if (!line.isEmpty())
-            arg.method_72747(line);
+            lines.addLine(line);
     }
     *///?}
 

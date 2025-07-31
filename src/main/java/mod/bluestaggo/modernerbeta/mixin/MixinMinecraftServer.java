@@ -31,7 +31,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 @Mixin(MinecraftServer.class)
 public abstract class MixinMinecraftServer {
     @Inject(method = "setupSpawn", at = @At("RETURN"))
-    private static void injectSetupSpawn(ServerWorld world, ServerWorldProperties worldProperties, boolean bonusChest, boolean debugWorld, /*? >=1.21.9 {*/ /*net.minecraft.class_11545 arg, *//*?}*/ CallbackInfo ci) {
+    private static void injectSetupSpawn(ServerWorld world, ServerWorldProperties worldProperties, boolean bonusChest, boolean debugWorld, /*? >=1.21.9 {*/ /*net.minecraft.world.chunk.ChunkLoadProgress arg, *//*?}*/ CallbackInfo ci) {
         ChunkGenerator chunkGenerator = world.getChunkManager().getChunkGenerator();
 
         // Set old spawn angle (doesn't seem to work?)

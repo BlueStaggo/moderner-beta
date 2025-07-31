@@ -46,7 +46,7 @@
     /*"client.MixinWorldRenderer",
     *///?}
     //? if >=1.21.9
-    /*"client.Accessorclass_11631",*/
+    /*"client.AccessorDebugHudEntries",*/
     "client.AccessorScreenshotRecorder"
   ],
   "injectors": {

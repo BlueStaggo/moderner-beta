@@ -1,4 +1,4 @@
-package mod.bluestaggo.modernerbeta.client.debug.text;
+package mod.bluestaggo.modernerbeta.client.debug.hudentry;
 
 import mod.bluestaggo.modernerbeta.api.world.chunk.ChunkProvider;
 import mod.bluestaggo.modernerbeta.api.world.chunk.ChunkProviderNoise;
@@ -6,8 +6,8 @@ import mod.bluestaggo.modernerbeta.util.chunk.ChunkHeightmap;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
 //? if >=1.21.9 {
 /*import mod.bluestaggo.modernerbeta.ModernerBeta;
-import net.minecraft.class_11630;
-import net.minecraft.class_11632;
+import net.minecraft.client.gui.hud.debug.DebugHudEntry;
+import net.minecraft.client.gui.hud.debug.DebugHudLines;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.chunk.WorldChunk;
 import net.minecraft.client.MinecraftClient;
@@ -24,12 +24,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class HeightmapDebugText /*? >=1.21.9 {*/ /*implements class_11632 *//*?}*/ {
+public class HeightmapDebugHudEntry /*? >=1.21.9 {*/ /*implements DebugHudEntry *//*?}*/ {
     //? if >=1.21.9 {
-    /*private static final Identifier TEXT_ID = ModernerBeta.createId("heightmap");
+    /*private static final Identifier SECTION_ID = ModernerBeta.createId("heightmap");
 
     @Override
-    public void method_72751(class_11630 arg, @Nullable World world, @Nullable WorldChunk worldChunk, @Nullable WorldChunk worldChunk2) {
+    public void render(DebugHudLines lines, @Nullable World world, @Nullable WorldChunk clientChunk, @Nullable WorldChunk chunk) {
         MinecraftClient client = MinecraftClient.getInstance();
         Entity entity = client.getCameraEntity();
         if (entity == null)
@@ -40,7 +40,7 @@ public class HeightmapDebugText /*? >=1.21.9 {*/ /*implements class_11632 *//*?}
         int x = pos.getX();
         int z = pos.getZ();
 
-        arg.method_72744(TEXT_ID, getLines(world, x, z));
+        lines.addLinesToSection(SECTION_ID, getLines(world, x, z));
     }
     *///?}
 

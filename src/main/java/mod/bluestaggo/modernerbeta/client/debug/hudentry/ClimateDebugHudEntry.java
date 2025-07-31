@@ -1,4 +1,4 @@
-package mod.bluestaggo.modernerbeta.client.debug.text;
+package mod.bluestaggo.modernerbeta.client.debug.hudentry;
 
 import mod.bluestaggo.modernerbeta.api.world.biome.climate.ClimateSampler;
 import mod.bluestaggo.modernerbeta.api.world.biome.climate.Clime;
@@ -7,8 +7,8 @@ import mod.bluestaggo.modernerbeta.api.world.cavebiome.climate.CaveClime;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
 //? if >=1.21.9 {
 /*import mod.bluestaggo.modernerbeta.ModernerBeta;
-import net.minecraft.class_11630;
-import net.minecraft.class_11632;
+import net.minecraft.client.gui.hud.debug.DebugHudEntry;
+import net.minecraft.client.gui.hud.debug.DebugHudLines;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.chunk.WorldChunk;
 import net.minecraft.client.MinecraftClient;
@@ -25,12 +25,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class ClimateDebugText /*? >=1.21.9 {*/ /*implements class_11632 *//*?}*/ {
+public class ClimateDebugHudEntry /*? >=1.21.9 {*/ /*implements DebugHudEntry *//*?}*/ {
     //? if >=1.21.9 {
-    /*private static final Identifier TEXT_ID = ModernerBeta.createId("climate");
+    /*private static final Identifier SECTION_ID = ModernerBeta.createId("climate");
 
     @Override
-    public void method_72751(class_11630 arg, @Nullable World world, @Nullable WorldChunk worldChunk, @Nullable WorldChunk worldChunk2) {
+    public void render(DebugHudLines lines, @Nullable World world, @Nullable WorldChunk clientChunk, @Nullable WorldChunk chunk) {
         MinecraftClient client = MinecraftClient.getInstance();
         Entity entity = client.getCameraEntity();
         if (entity == null)
@@ -42,7 +42,7 @@ public class ClimateDebugText /*? >=1.21.9 {*/ /*implements class_11632 *//*?}*/
         int y = pos.getY();
         int z = pos.getZ();
 
-        arg.method_72744(TEXT_ID, getLines(world, x, y, z));
+        lines.addLinesToSection(SECTION_ID, getLines(world, x, y, z));
     }
     *///?}
 

@@ -2,7 +2,7 @@
 package mod.bluestaggo.modernerbeta.mixin.client;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;
-import mod.bluestaggo.modernerbeta.client.debug.text.*;
+import mod.bluestaggo.modernerbeta.client.debug.hudentry.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -41,13 +41,13 @@ public abstract class MixinDebugHud {
 
         List<String> lines = info.getReturnValue();
         if (serverWorld != null) {
-            moderner_beta$addIfNotEmpty(lines, ExtendedBiomeDebugText.getLine(serverWorld, x, z));
+            moderner_beta$addIfNotEmpty(lines, ExtendedBiomeDebugHudEntry.getLine(serverWorld, x, z));
 
             if (ModernerBeta.DEV_ENV) {
-                lines.addAll(ClimateDebugText.getLines(serverWorld, x, y, z));
-                lines.addAll(HeightmapDebugText.getLines(serverWorld, x, z));
-                moderner_beta$addIfNotEmpty(lines, ForcedHeightDebugText.getLine(serverWorld, x, z));
-                moderner_beta$addIfNotEmpty(lines, InjectedBiomeDebugText.getLine(serverWorld, x, y, z));
+                lines.addAll(ClimateDebugHudEntry.getLines(serverWorld, x, y, z));
+                lines.addAll(HeightmapDebugHudEntry.getLines(serverWorld, x, z));
+                moderner_beta$addIfNotEmpty(lines, ForcedHeightDebugHudEntry.getLine(serverWorld, x, z));
+                moderner_beta$addIfNotEmpty(lines, InjectedBiomeDebugHudEntry.getLine(serverWorld, x, y, z));
             }
         }
     }

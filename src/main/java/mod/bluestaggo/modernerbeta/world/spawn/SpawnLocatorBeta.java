@@ -10,7 +10,6 @@ import mod.bluestaggo.modernerbeta.util.noise.PerlinOctaveNoise;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.HeightLimitView;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.biome.Biome;
 import org.slf4j.event.Level;
@@ -43,7 +42,7 @@ public class SpawnLocatorBeta implements SpawnLocator {
         int z = 0;
         int attempts = 0;
         
-        while(!this.isSandAt(x, z, null)) {
+        while(!this.isSandAt(x, z)) {
             if (attempts > 10000) {
                 ModernerBeta.log(Level.INFO, "Exceeded spawn attempts, spawning anyway at 0,0..");
                 
@@ -65,7 +64,7 @@ public class SpawnLocatorBeta implements SpawnLocator {
         return Optional.of(new BlockPos(x, y, z));
     }
 
-    private boolean isSandAt(int x, int z, HeightLimitView world) {
+    private boolean isSandAt(int x, int z) {
         double eighth = 0.03125D;
         int seaLevel = this.chunkProvider.getSeaLevel();
         

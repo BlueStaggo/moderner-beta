@@ -366,40 +366,9 @@ public class ModernBetaClientBuiltInProviders {
             }
         );
 
-        // I know, duplicate code sucks. If I store the repeated function in a variable, Minecraft throws up about it.
-        registryHandler.register(
-            CONFIG_BETA_CLIMATIC_COLORS.id,
-            (screen, options) -> {
-                addAll(
-                    options,
-                    screen.booleanOption("sky"),
-                    screen.booleanOption("vegetation"),
-                    screen.booleanOption("water")
-                );
-            }
-        );
-        registryHandler.register(
-            CONFIG_PE_CLIMATIC_COLORS.id,
-            (screen, options) -> {
-                addAll(
-                    options,
-                    screen.booleanOption("sky"),
-                    screen.booleanOption("vegetation"),
-                    screen.booleanOption("water")
-                );
-            }
-        );
-        registryHandler.register(
-            CONFIG_BETA_FRACTAL_CLIMATIC_COLORS.id,
-            (screen, options) -> {
-                addAll(
-                    options,
-                    screen.booleanOption("sky"),
-                    screen.booleanOption("vegetation"),
-                    screen.booleanOption("water")
-                );
-            }
-        );
+        registryHandler.register(CONFIG_BETA_CLIMATIC_COLORS.id, ModernBetaClientBuiltInProviders::addClimaticColorOptions);
+        registryHandler.register(CONFIG_PE_CLIMATIC_COLORS.id, ModernBetaClientBuiltInProviders::addClimaticColorOptions);
+        registryHandler.register(CONFIG_BETA_FRACTAL_CLIMATIC_COLORS.id, ModernBetaClientBuiltInProviders::addClimaticColorOptions);
 
         registryHandler.register(
             CONFIG_BIOME_PREVIEW_COLORS.id,
@@ -422,6 +391,15 @@ public class ModernBetaClientBuiltInProviders {
                     screen.extendedBiomeIdOption("defaultSettingsPreset")
                 );
             }
+        );
+    }
+
+    private static void addClimaticColorOptions(ModernBetaGraphicalCompoundSettingsScreen screen, OptionListWidget options) {
+        addAll(
+            options,
+            screen.booleanOption("sky"),
+            screen.booleanOption("vegetation"),
+            screen.booleanOption("water")
         );
     }
 }

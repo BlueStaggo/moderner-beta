@@ -12,7 +12,6 @@ import mod.bluestaggo.modernerbeta.settings.component.IslesProperties;
 import mod.bluestaggo.modernerbeta.settings.component.NoiseScale;
 import mod.bluestaggo.modernerbeta.settings.component.NoiseSlide;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
-import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkCache;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkHeightmap;
 import mod.bluestaggo.modernerbeta.util.noise.SimpleNoisePos;
@@ -139,47 +138,42 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
     public CompletableFuture<Chunk> provideChunk(Blender blender, StructureAccessor structureAccessor, Chunk chunk, NoiseConfig noiseConfig) {
         this.setNoiseConfig(noiseConfig);
 
-        GenerationShapeConfig shapeConfig = this.generatorSettings.value().generationShapeConfig();
-        
-        int minY = Math.max(shapeConfig.minimumY(), chunk.getBottomY());
-        int topY = Math.min(shapeConfig.minimumY() + shapeConfig.height(), VersionCompat.getTopYExclusive(chunk));
-        
-        @SuppressWarnings("unused")
-        int noiseMinY = MathHelper.floorDiv(minY, this.noiseResolutionVertical);
-        int noiseTopY = MathHelper.floorDiv(topY - minY, this.noiseResolutionVertical);
-        
-        if (noiseTopY <= 0) {
-            return CompletableFuture.completedFuture(chunk);
-        }
-        
-        int sectionTopY = chunk.getSectionIndex(noiseTopY * this.noiseResolutionVertical - 1 + minY);
-        int sectionMinY = chunk.getSectionIndex(minY);
-        
-        HashSet<ChunkSection> sections = Sets.newHashSet();
-        for (int sectionNdx = sectionTopY; sectionNdx >= sectionMinY; --sectionNdx) {
-            ChunkSection section = chunk.getSection(sectionNdx);
-            
-            section.lock();
-            sections.add(section);
-        }
-        
-        this.generateTerrain(chunk, structureAccessor, noiseConfig);
-        
-        return CompletableFuture.supplyAsync(() -> chunk, Util.getMainWorkerExecutor())
-            .whenCompleteAsync((arg, throwable) -> {
+        GenerationShapeConfig shapeConfig = this.generatorSettings.value().generationShapeConfig().trimHeight(chunk.getHeightLimitView());
+        int minY = shapeConfig.minimumY();
+        int minimumCellY = MathHelper.floorDiv(minY, shapeConfig.verticalCellBlockCount());
+        int cellHeight = MathHelper.floorDiv(shapeConfig.height(), shapeConfig.verticalCellBlockCount());
+
+        return cellHeight <= 0 ? CompletableFuture.completedFuture(chunk) : CompletableFuture.supplyAsync(() -> {
+            int sectionTopY = chunk.getSectionIndex(cellHeight * shapeConfig.verticalCellBlockCount() - 1 + minY);
+            int sectionMinY = chunk.getSectionIndex(minY);
+
+            HashSet<ChunkSection> sections = Sets.newHashSet();
+            for (int sectionNdx = sectionTopY; sectionNdx >= sectionMinY; --sectionNdx) {
+                ChunkSection section = chunk.getSection(sectionNdx);
+
+                section.lock();
+                sections.add(section);
+            }
+
+            try {
+                this.generateTerrain(chunk, structureAccessor, noiseConfig, minimumCellY, cellHeight);
+            } finally {
                 for (ChunkSection section : sections) {
                     section.unlock();
                 }
-            }, Util.getMainWorkerExecutor());
+            }
+
+            return chunk;
+        }, Util.getMainWorkerExecutor());
     }
     
     /**
-     * Sample height at given x/z coordinate. Initially generates heightmap for entire chunk, 
+     * Sample height at given x/z coordinate. Initially generates heightmap for entire chunk,
      * if chunk containing x/z coordinates has never been sampled.
      *
-     * @param x x-coordinate in block coordinates.
-     * @param z z-coordinate in block coordinates.
-     * @param type Vanilla heightmap type.
+     * @param x     x-coordinate in block coordinates.
+     * @param z     z-coordinate in block coordinates.
+     * @param type  Vanilla heightmap type.
      * @return The y-coordinate of top block at x/z.
      */
     @Override
@@ -417,7 +411,7 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
      * @param structureAccessor Collects structures within the chunk, so that terrain can be modified to accommodate them.
      * @param noiseConfig NoiseConfig
      */
-    private void generateTerrain(Chunk chunk, StructureAccessor structureAccessor, NoiseConfig noiseConfig) {
+    private void generateTerrain(Chunk chunk, StructureAccessor structureAccessor, NoiseConfig noiseConfig, int minimumCellY, int cellHeight) {
         ChunkPos chunkPos = chunk.getPos();
         int chunkX = chunkPos.x;
         int chunkZ = chunkPos.z;
@@ -451,11 +445,11 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
                 int sections = chunk.countVerticalSections() - 1;
                 ChunkSection section = chunk.getSection(sections);
                 
-                for (int subChunkY = 0; subChunkY < this.noiseSizeY; ++subChunkY) {
+                for (int subChunkY = cellHeight - 1; subChunkY >= 0; --subChunkY) {
                     noiseSampler.sampleNoiseCorners(subChunkX, subChunkY, subChunkZ);
 
-                    for (int subY = 0; subY < this.noiseResolutionVertical; ++subY) {
-                        int y = subY + (subChunkY + this.noiseMinY) * this.noiseResolutionVertical;
+                    for (int subY = this.noiseResolutionVertical - 1; subY >= 0; --subY) {
+                        int y = subY + (subChunkY + minimumCellY) * this.noiseResolutionVertical;
                         int localY = y & 0xF;
                         
                         int sectionNdx = chunk.getSectionIndex(y);
@@ -510,6 +504,7 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
      */
     private ChunkHeightmap sampleHeightmap(int chunkX, int chunkZ) {
         short minHeight = 32;
+        //FIXME: ChunkCache needs to be refactored to take a HeightLimitView instance so that we can clamp these values for the world's dimension type.
         short worldMinY = (short)this.worldMinY;
         short worldTopY = (short)this.worldTopY;
 

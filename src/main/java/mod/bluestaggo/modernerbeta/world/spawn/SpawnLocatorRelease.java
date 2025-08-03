@@ -8,7 +8,6 @@ import mod.bluestaggo.modernerbeta.tags.ModernBetaBiomeTags;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkHeightmap;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.HeightLimitView;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.source.BiomeSource;
@@ -50,7 +49,7 @@ public class SpawnLocatorRelease implements SpawnLocator {
             ModernerBeta.log(Level.INFO, "Unable to find spawn biome");
         }
         
-        while(!this.isGrassAt(x, z, null)) {
+        while(!this.isGrassAt(x, z)) {
             if (attempts > 10000) {
                 ModernerBeta.log(Level.INFO, "Exceeded spawn attempts, spawning anyway at 0,0..");
                 
@@ -96,7 +95,7 @@ public class SpawnLocatorRelease implements SpawnLocator {
         return position;
     }
 
-    private boolean isGrassAt(int x, int z, HeightLimitView world) {
+    private boolean isGrassAt(int x, int z) {
         int seaLevel = this.chunkProvider.getSeaLevel();
 
         int y = (this.chunkProvider instanceof ChunkProviderNoise noiseChunkProvider) ?

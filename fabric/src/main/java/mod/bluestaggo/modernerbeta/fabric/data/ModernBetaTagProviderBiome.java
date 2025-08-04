@@ -271,6 +271,9 @@ public class ModernBetaTagProviderBiome extends FabricTagProvider<Biome> {
         
         this.builder(INDEV_STRONGHOLD_HAS_STRUCTURE)
             .addTag(IS_INDEV);
+
+        this.builder(OCEAN_SHRINE_HAS_STRUCTURE)
+            .addTag(IS_OCEAN);
         
         /* Modern Beta Surface Config Tags */
         

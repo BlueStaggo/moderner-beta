@@ -1,3 +1,4 @@
+//~datapool
 package mod.bluestaggo.modernerbeta.world.feature.configured;
 
 import mod.bluestaggo.modernerbeta.util.BlockStates;

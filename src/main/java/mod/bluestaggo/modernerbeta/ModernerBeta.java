@@ -25,6 +25,8 @@ import mod.bluestaggo.modernerbeta.world.feature.ModernBetaFeatures;
 import mod.bluestaggo.modernerbeta.world.feature.ModernBetaFoliagePlacers;
 import mod.bluestaggo.modernerbeta.world.feature.ModernBetaTrunkPlacers;
 import mod.bluestaggo.modernerbeta.world.feature.placement.ModernBetaPlacementTypes;
+import mod.bluestaggo.modernerbeta.world.structure.ModernBetaStructurePieceTypes;
+import mod.bluestaggo.modernerbeta.world.structure.ModernBetaStructureTypes;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
@@ -60,6 +62,8 @@ public class ModernerBeta {
         new Pair<>(Registries.FOLIAGE_PLACER_TYPE, ModernBetaFoliagePlacers::register),
         new Pair<>(Registries.TRUNK_PLACER_TYPE, ModernBetaTrunkPlacers::register),
         new Pair<>(Registries.PLACEMENT_MODIFIER_TYPE, ModernBetaPlacementTypes::register),
+        new Pair<>(Registries.STRUCTURE_TYPE, ModernBetaStructureTypes::register),
+        new Pair<>(Registries.STRUCTURE_PIECE, ModernBetaStructurePieceTypes::register),
         new Pair<>(Registries.FEATURE, ModernBetaFeatures::register),
         new Pair<>(Registries.CARVER, ModernBetaCarvers::register),
         new Pair<>(Registries.BIOME_SOURCE, ModernBetaBiomeSource::register),

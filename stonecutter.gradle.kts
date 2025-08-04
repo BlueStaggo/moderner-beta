@@ -8,7 +8,7 @@ stonecutter.active("1.21.6")
 
 stonecutter.parameters {
     replacements {
-        regex {
+        regex("datapool") {
             direction = eval(metadata.version, "<1.21.5")
             replace("""\bPool\b""", "DataPool")
             reverse("""\bDataPool\b""", "Pool")

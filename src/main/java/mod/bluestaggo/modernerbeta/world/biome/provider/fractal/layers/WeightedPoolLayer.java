@@ -1,3 +1,4 @@
+//~datapool
 package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers;
 
 import mod.bluestaggo.modernerbeta.util.VersionCompat;

@@ -14,11 +14,17 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.minecraft.registry.RegistryBuilder;
 import net.minecraft.registry.RegistryKeys;
 
+import java.nio.file.Path;
+import java.util.List;
+
 public class ModernBetaDataGeneratorEntrypoint implements DataGeneratorEntrypoint {
     @Override
     public void onInitializeDataGenerator(FabricDataGenerator fabricDataGenerator) {
         FabricDataGenerator.Pack pack = fabricDataGenerator.createPack();
+        List<Path> inputs = fabricDataGenerator.getModContainer().getRootPaths();
         
+        pack.addProvider((FabricDataGenerator.Pack.Factory<ModernBetaStructureDatafixApplier>)
+                outputx -> new ModernBetaStructureDatafixApplier(outputx, inputs));
         pack.addProvider(ModernBetaWorldGenProvider::new);
         pack.addProvider(ModernBetaTagProviderBiome::new);
         pack.addProvider(ModernBetaTagProviderStructure::new);

@@ -101,6 +101,10 @@ processResources {
 
     from(commonPr.file("build/resources/main")) {
         include "**/**"
+        filesMatching("**/*.nbt") {
+            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+        }
+
         exclude "moderner_beta-common.mixins.json"
         exclude "assets/moderner_beta/banner.png"
     }
@@ -109,6 +113,7 @@ processResources {
 var outDir = rootProject.layout.buildDirectory.dir("libs/fabric")
 shadowJar {
     exclude "architectury.common.json"
+    exclude "assets/moderner_beta/banner.png"
 
     configurations = [project.configurations.shadowCommon]
     archiveClassifier = "dev-shadow"
@@ -133,7 +138,7 @@ jar {
 java {
     withSourcesJar()
 
-    var javaVer = stonecutter.eval(mc, ">=1.20.5") ? JavaVersion.VERSION_21 : JavaVersion.VERSION_17
+    var javaVer = stonecutter.eval(stonecutter.current.version, ">=1.20.5") ? JavaVersion.VERSION_21 : JavaVersion.VERSION_17
     sourceCompatibility = javaVer
     targetCompatibility = javaVer
 }

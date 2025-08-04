@@ -132,13 +132,13 @@ processResources {
     filesMatching("META-INF/mods.toml") {
         expand toExpand
 
-        if (neoforge && stonecutter.eval(mc, ">=1.20.5")) {
+        if (neoforge && stonecutter.eval(stonecutter.current.version, ">=1.20.5")) {
             it.name = "neoforge.mods.toml"
         }
     }
 
     filesMatching("moderner_beta-forgelike.mixins.json") {
-        expand "java_version": stonecutter.eval(mc, ">=1.20.5") ? 21 : 17
+        expand "java_version": stonecutter.eval(stonecutter.current.version, ">=1.20.5") ? 21 : 17
     }
 
     from(commonPr.file("src/main/generated")) {
@@ -148,6 +148,10 @@ processResources {
 
     from(commonPr.file("build/resources/main")) {
         include "**/**"
+        filesMatching("**/*.nbt") {
+            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+        }
+
         exclude "moderner_beta-common.mixins.json"
         exclude "assets/moderner_beta/icon.png"
     }
@@ -157,6 +161,7 @@ var outDir = rootProject.layout.buildDirectory.dir("libs/$loader")
 shadowJar {
     exclude "fabric.mod.json"
     exclude "architectury.common.json"
+    exclude "assets/moderner_beta/icon.png"
 
     configurations = [project.configurations.shadowCommon]
     archiveClassifier = "dev-shadow"
@@ -185,7 +190,7 @@ jar {
 java {
     withSourcesJar()
 
-    var javaVer = stonecutter.eval(mc, ">=1.20.5") ? JavaVersion.VERSION_21 : JavaVersion.VERSION_17
+    var javaVer = stonecutter.eval(stonecutter.current.version, ">=1.20.5") ? JavaVersion.VERSION_21 : JavaVersion.VERSION_17
     sourceCompatibility = javaVer
     targetCompatibility = javaVer
 }

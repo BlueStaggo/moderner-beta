@@ -55,7 +55,7 @@ public class ModernBetaStructureDatafixApplier implements DataProvider {
                                     datafixNBTFile(writer, p, getLocation(path, p), output), Util.getIoWorkerExecutor()))
                             .toArray(CompletableFuture[]::new));
                 } catch (IOException e) {
-                    LOGGER.error("Failed to read structure input directory", e);
+                    LOGGER.error("Failed to read input directory", e);
                     return CompletableFuture.completedFuture(null);
                 }
             }, Util.getMainWorkerExecutor()).thenCompose(future -> future));
@@ -75,7 +75,7 @@ public class ModernBetaStructureDatafixApplier implements DataProvider {
     @Nullable
     public static Path datafixNBTFile(DataWriter writer, Path inputPath, String filename, Path outputPath) {
         try {
-            try (InputStream is = new FixedBufferInputStream (Files.newInputStream(inputPath))) {
+            try (InputStream is = new FixedBufferInputStream(Files.newInputStream(inputPath))) {
                 NbtCompound read = NbtIo.readCompressed(is /*? if >=1.20.4 {*/, NbtSizeTracker.ofUnlimitedBytes() /*?}*/);
 
                 StructureTemplate structureTemplate = new StructureTemplate();

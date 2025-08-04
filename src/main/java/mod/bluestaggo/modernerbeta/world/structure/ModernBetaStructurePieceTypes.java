@@ -28,6 +28,6 @@ public class ModernBetaStructurePieceTypes {
     public static void register(IRegistryHandler<?> handler) {
         registryHandler = (IRegistryHandler<StructurePieceType>) handler;
 
-        OCEAN_SHRINE = register(OceanShrineGenerator.Piece::new, "OShrine");
+        OCEAN_SHRINE = register(OceanShrineStructurePiece::new, "OShrine");
     }
 }

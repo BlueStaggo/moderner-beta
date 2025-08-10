@@ -109,8 +109,8 @@ public class ModernBetaChunkNoiseSampler {
         @Override
         public int estimateSurfaceHeight(int x, int z) {
             int height = (chunkProvider instanceof ChunkProviderNoise noiseChunkProvider) ?
-                    noiseChunkProvider.getHeight(x, z, ChunkHeightmap.Type.SURFACE_FLOOR) :
-                    chunkProvider.getHeight(x, z, Heightmap.Type.OCEAN_FLOOR_WG);
+                    noiseChunkProvider.getHeight(null, x, z, ChunkHeightmap.Type.SURFACE_FLOOR) :
+                    chunkProvider.getHeight(null, x, z, Heightmap.Type.OCEAN_FLOOR_WG);
             return height + HEIGHT_OFFSET;
         }
     }

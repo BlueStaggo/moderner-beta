@@ -6,6 +6,7 @@ import mod.bluestaggo.modernerbeta.api.world.spawn.SpawnLocator;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.HeightLimitView;
 import net.minecraft.world.Heightmap;
 import org.slf4j.event.Level;
 
@@ -25,7 +26,7 @@ public class SpawnLocatorIndev implements SpawnLocator {
 
     
     @Override
-    public Optional<BlockPos> locateSpawn() {
+    public Optional<BlockPos> locateSpawn(HeightLimitView world) {
         Random random = new Random();
         
         int spawnX;
@@ -43,7 +44,7 @@ public class SpawnLocatorIndev implements SpawnLocator {
             spawnX = random.nextInt(width / 2) + width / 4;
             spawnZ = random.nextInt(length / 2) + length / 4;
             //spawnY = this.chunkProvider.getLevelHighestBlock(spawnX, spawnZ) + 1;
-            spawnY = this.chunkProvider.getHeight(spawnX - width / 2, spawnZ - length / 2, Heightmap.Type.OCEAN_FLOOR_WG) + 1;
+            spawnY = this.chunkProvider.getHeight(world, spawnX - width / 2, spawnZ - length / 2, Heightmap.Type.OCEAN_FLOOR_WG) + 1;
             
             if (attempts >= 1000000) {
                 ModernerBeta.log(Level.INFO, "[Indev] Exceeded spawn attempts, spawning anyway..");

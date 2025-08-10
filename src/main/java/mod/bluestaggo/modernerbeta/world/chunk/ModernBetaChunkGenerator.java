@@ -281,16 +281,16 @@ public class ModernBetaChunkGenerator extends NoiseChunkGenerator {
     
     @Override
     public int getHeight(int x, int z, Heightmap.Type type, HeightLimitView world, NoiseConfig noiseConfig) {
-        return this.chunkProvider.getHeight(x, z, type);
+        return this.chunkProvider.getHeight(world, x, z, type);
     }
     
-    public int getHeight(int x, int z, Heightmap.Type type) {
-        return this.chunkProvider.getHeight(x, z, type);
+    public int getHeight(int x, int z, Heightmap.Type type, HeightLimitView world) {
+        return this.chunkProvider.getHeight(world, x, z, type);
     }
   
     @Override
     public VerticalBlockSample getColumnSample(int x, int z, HeightLimitView world, NoiseConfig noiseConfig) {
-        int height = this.chunkProvider.getHeight(x, z, Heightmap.Type.OCEAN_FLOOR_WG);
+        int height = this.chunkProvider.getHeight(world, x, z, Heightmap.Type.OCEAN_FLOOR_WG);
         int worldHeight = this.chunkProvider.getWorldHeight();
         int minY = this.chunkProvider.getWorldMinY();
         

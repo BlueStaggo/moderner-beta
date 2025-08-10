@@ -60,8 +60,8 @@ public class HeightmapDebugHudEntry /*? >=1.21.9 {*/ /*implements DebugHudEntry 
             lines.add(
                     String.format(
                             "[Modern Beta] Chunk Provider WS height: %d OF height: %d Sea level: %d",
-                            chunkProvider.getHeight(x, z, Heightmap.Type.WORLD_SURFACE_WG),
-                            chunkProvider.getHeight(x, z, Heightmap.Type.OCEAN_FLOOR),
+                            chunkProvider.getHeight(world, x, z, Heightmap.Type.WORLD_SURFACE_WG),
+                            chunkProvider.getHeight(world, x, z, Heightmap.Type.OCEAN_FLOOR),
                             chunkProvider.getSeaLevel()
                     )
             );
@@ -70,7 +70,7 @@ public class HeightmapDebugHudEntry /*? >=1.21.9 {*/ /*implements DebugHudEntry 
                 lines.add(
                         String.format(
                                 "[Modern Beta] Noise Chunk Provider WSF height: %d",
-                                noiseChunkProvider.getHeight(x, z, ChunkHeightmap.Type.SURFACE_FLOOR)
+                                noiseChunkProvider.getHeight(world, x, z, ChunkHeightmap.Type.SURFACE_FLOOR)
                         )
                 );
             }

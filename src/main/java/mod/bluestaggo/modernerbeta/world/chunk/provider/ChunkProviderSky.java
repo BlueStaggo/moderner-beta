@@ -1,7 +1,6 @@
 package mod.bluestaggo.modernerbeta.world.chunk.provider;
 
 import mod.bluestaggo.modernerbeta.api.world.chunk.ChunkProviderNoise;
-import mod.bluestaggo.modernerbeta.api.world.chunk.surface.SurfaceBlocks;
 import mod.bluestaggo.modernerbeta.api.world.chunk.surface.SurfaceConfig;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
@@ -146,7 +145,7 @@ public class ChunkProviderSky extends ChunkProviderNoise {
         int startZ = chunk.getPos().getStartZ();
 
         Random rand = this.createSurfaceRandom(chunkX, chunkZ);
-        ChunkHeightmap heightmapChunk = this.hasNoisePostProcessor() ? this.getChunkHeightmap(chunkX, chunkZ) : null;
+        ChunkHeightmap heightmapChunk = this.hasNoisePostProcessor() ? this.getChunkHeightmap(region, chunkX, chunkZ) : null;
         BlockPos.Mutable pos = new BlockPos.Mutable();
 
         double[] surfaceNoise = surfaceOctaveNoise.sampleBeta(

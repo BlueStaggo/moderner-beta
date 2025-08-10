@@ -22,6 +22,7 @@ public abstract class MixinStructure {
         if (context.chunkGenerator() instanceof ModernBetaChunkGenerator chunkGenerator) {
             if (chunkGenerator.getBiomeInjector() != null) {
                 RegistryEntry<Biome> biome = chunkGenerator.getBiomeInjector().getBiomeAtBlock(
+                    context.world(),
                     blockPos.getX(),
                     blockPos.getY(),
                     blockPos.getZ(),

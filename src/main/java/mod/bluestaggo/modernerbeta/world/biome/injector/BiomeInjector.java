@@ -11,7 +11,6 @@ import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.world.biome.injector.BiomeInjectionRules.BiomeInjectionContext;
 import mod.bluestaggo.modernerbeta.world.cavebiome.provider.CaveBiomeProviderNone;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
-import net.minecraft.registry.RegistryEntryLookup;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.math.ChunkPos;
@@ -119,7 +118,7 @@ public class BiomeInjector {
                         int biomeY = localBiomeY + sectionY << 2;
                         
                         RegistryEntry<Biome> initialBiome = readableContainer.get(localBiomeX, localBiomeY, localBiomeZ);
-                        RegistryEntry<Biome> replacementBiome = this.getOptionalBiome(biomeX, biomeY, biomeZ, noiseSampler, step).orElse(initialBiome);
+                        RegistryEntry<Biome> replacementBiome = this.getOptionalBiome(view, biomeX, biomeY, biomeZ, noiseSampler, step).orElse(initialBiome);
                         
                         palettedContainer.set(localBiomeX, localBiomeY, localBiomeZ, replacementBiome);
                     }   
@@ -130,38 +129,38 @@ public class BiomeInjector {
         }
     }
     
-    public RegistryEntry<Biome> getBiomeAtBlock(int x, int y, int z, MultiNoiseSampler noiseSampler, BiomeInjectionStep step) {
+    public RegistryEntry<Biome> getBiomeAtBlock(HeightLimitView world, int x, int y, int z, MultiNoiseSampler noiseSampler, BiomeInjectionStep step) {
         int biomeX = x >> 2;
         int biomeY = y >> 2;
         int biomeZ = z >> 2;
         
-        return this.getBiome(biomeX, biomeY, biomeZ, noiseSampler, step);
+        return this.getBiome(world, biomeX, biomeY, biomeZ, noiseSampler, step);
     }
 
-    public String getBiomeNameAtBlock(int x, int y, int z, MultiNoiseSampler noiseSampler, BiomeInjectionStep step) {
+    public String getBiomeNameAtBlock(HeightLimitView world, int x, int y, int z, MultiNoiseSampler noiseSampler, BiomeInjectionStep step) {
         int biomeX = x >> 2;
         int biomeY = y >> 2;
         int biomeZ = z >> 2;
 
-        RegistryKey<Biome> key = this.getBiome(biomeX, biomeY, biomeZ, noiseSampler, step).getKey().orElse(null);
+        RegistryKey<Biome> key = this.getBiome(world, biomeX, biomeY, biomeZ, noiseSampler, step).getKey().orElse(null);
         if (key == null) return "???";
         return key.getValue().toString();
     }
     
-    public RegistryEntry<Biome> getBiome(int biomeX, int biomeY, int biomeZ, MultiNoiseSampler noiseSampler, BiomeInjectionStep step) {
+    public RegistryEntry<Biome> getBiome(HeightLimitView world, int biomeX, int biomeY, int biomeZ, MultiNoiseSampler noiseSampler, BiomeInjectionStep step) {
         if (this.rulesAll.isEmpty()) {
             return this.modernBetaBiomeSource.getBiome(biomeX, biomeY, biomeZ, noiseSampler);
         }
 
-        BiomeInjectionContext context = this.createContext(biomeX, biomeY, biomeZ);
+        BiomeInjectionContext context = this.createContext(world, biomeX, biomeY, biomeZ);
 
         return this
             .getBiome(context, biomeX, biomeY, biomeZ, noiseSampler, step)
             .orElseGet(() -> this.modernBetaBiomeSource.getBiome(biomeX, biomeY, biomeZ, noiseSampler));
     }
     
-    public Optional<RegistryEntry<Biome>> getOptionalBiome(int biomeX, int biomeY, int biomeZ, MultiNoiseSampler noiseSampler, BiomeInjectionStep step) {
-        BiomeInjectionContext context = this.createContext(biomeX, biomeY, biomeZ);
+    public Optional<RegistryEntry<Biome>> getOptionalBiome(HeightLimitView world, int biomeX, int biomeY, int biomeZ, MultiNoiseSampler noiseSampler, BiomeInjectionStep step) {
+        BiomeInjectionContext context = this.createContext(world, biomeX, biomeY, biomeZ);
 
         return this.getBiome(context, biomeX, biomeY, biomeZ, noiseSampler, step);
     }
@@ -176,35 +175,35 @@ public class BiomeInjector {
         return Optional.ofNullable(biome);
     }
     
-    private BiomeInjectionContext createContext(int biomeX, int biomeY, int biomeZ) {
+    private BiomeInjectionContext createContext(HeightLimitView world, int biomeX, int biomeY, int biomeZ) {
         int y = biomeY << 2;
         
         int worldMinY = this.modernBetaChunkGenerator.getMinimumY();
-        int topHeight = this.sampleTopHeight(biomeX, biomeZ);
-        int minHeight = this.sampleMinHeight(biomeX, biomeZ);
+        int topHeight = this.sampleTopHeight(world, biomeX, biomeZ);
+        int minHeight = this.sampleMinHeight(world, biomeX, biomeZ);
 
         return new BiomeInjectionContext(worldMinY, topHeight, minHeight).setY(y);
     }
     
-    private int sampleTopHeight(int biomeX, int biomeZ) {
+    private int sampleTopHeight(HeightLimitView world, int biomeX, int biomeZ) {
         int x = (biomeX << 2) + 2;
         int z = (biomeZ << 2) + 2;
         
-        return this.modernBetaChunkGenerator.getHeight(x, z, Heightmap.Type.OCEAN_FLOOR_WG);
+        return this.modernBetaChunkGenerator.getHeight(x, z, Heightmap.Type.OCEAN_FLOOR_WG, world);
     }
     
-    private int sampleFloorHeight(int biomeX, int biomeZ) {
+    private int sampleFloorHeight(HeightLimitView world, int biomeX, int biomeZ) {
         int x = (biomeX << 2) + 2;
         int z = (biomeZ << 2) + 2;
         
         ChunkProvider chunkProvider = this.modernBetaChunkGenerator.getChunkProvider();
         
         return chunkProvider instanceof ChunkProviderNoise chunkProviderNoise ?
-            chunkProviderNoise.getHeight(x, z, ChunkHeightmap.Type.SURFACE_FLOOR) :
-            chunkProvider.getHeight(x, z, Heightmap.Type.OCEAN_FLOOR_WG);
+            chunkProviderNoise.getHeight(world, x, z, ChunkHeightmap.Type.SURFACE_FLOOR) :
+            chunkProvider.getHeight(world, x, z, Heightmap.Type.OCEAN_FLOOR_WG);
     }
     
-    private int sampleMinHeight(int centerBiomeX, int centerBiomeZ) {
+    private int sampleMinHeight(HeightLimitView world, int centerBiomeX, int centerBiomeZ) {
         int minHeight = Integer.MAX_VALUE;
         
         for (int localBiomeX = -1; localBiomeX <= 1; ++localBiomeX) {
@@ -212,7 +211,7 @@ public class BiomeInjector {
                 int biomeX = centerBiomeX + localBiomeX;
                 int biomeZ = centerBiomeZ + localBiomeZ;
                 
-                minHeight = Math.min(minHeight, this.sampleFloorHeight(biomeX, biomeZ));
+                minHeight = Math.min(minHeight, this.sampleFloorHeight(world, biomeX, biomeZ));
             }
         }
         

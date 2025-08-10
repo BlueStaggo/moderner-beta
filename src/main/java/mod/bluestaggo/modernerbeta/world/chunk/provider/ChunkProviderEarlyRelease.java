@@ -67,7 +67,7 @@ public class ChunkProviderEarlyRelease extends ChunkProviderForcedHeight {
         BlockPos.Mutable pos = new BlockPos.Mutable();
         
         AquiferSampler aquiferSampler = this.getAquiferSampler(chunk, noiseConfig);
-        ChunkHeightmap heightmapChunk = this.getChunkHeightmap(chunkX, chunkZ);
+        ChunkHeightmap heightmapChunk = this.getChunkHeightmap(region, chunkX, chunkZ);
         SimpleNoisePos noisePos = new SimpleNoisePos();
 
         double[] surfaceNoise = surfaceOctaveNoise.sampleRelease(
@@ -189,7 +189,7 @@ public class ChunkProviderEarlyRelease extends ChunkProviderForcedHeight {
         Random rand = this.createSurfaceRandom(chunkX, chunkZ);
         BlockPos.Mutable pos = new BlockPos.Mutable();
 
-        ChunkHeightmap heightmapChunk = this.hasNoisePostProcessor() ? this.getChunkHeightmap(chunkX, chunkZ) : null;
+        ChunkHeightmap heightmapChunk = this.hasNoisePostProcessor() ? this.getChunkHeightmap(region, chunkX, chunkZ) : null;
 
         double[] surfaceNoise = surfaceOctaveNoise.sampleRelease(
             chunkX * 16, chunkZ * 16, 0.0D,

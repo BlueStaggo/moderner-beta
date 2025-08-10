@@ -47,7 +47,7 @@ public class InjectedBiomeDebugHudEntry /*? >=1.21.9 {*/ /*implements DebugHudEn
 
         if (chunkGenerator instanceof ModernBetaChunkGenerator modernBetaChunkGenerator &&
                 modernBetaChunkGenerator.getBiomeInjector() != null) {
-            String biome = modernBetaChunkGenerator.getBiomeInjector().getBiomeNameAtBlock(x, y, z, null, BiomeInjector.BiomeInjectionStep.ALL);
+            String biome = modernBetaChunkGenerator.getBiomeInjector().getBiomeNameAtBlock(world, x, y, z, null, BiomeInjector.BiomeInjectionStep.ALL);
             return String.format("[Modern Beta] Injected biome: %s", biome);
         }
 

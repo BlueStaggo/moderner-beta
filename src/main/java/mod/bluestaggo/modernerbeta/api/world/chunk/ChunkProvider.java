@@ -20,6 +20,7 @@ import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.math.random.ChunkRandom;
 import net.minecraft.util.math.random.RandomSplitter;
 import net.minecraft.world.ChunkRegion;
+import net.minecraft.world.HeightLimitView;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.source.util.MultiNoiseUtil;
@@ -120,16 +121,16 @@ public abstract class ChunkProvider {
     }
 
     /**
-     * Sample height at given x/z coordinate. Initially generates heightmap for entire chunk, 
+     * Sample height at given x/z coordinate. Initially generates heightmap for entire chunk,
      * if chunk containing x/z coordinates has never been sampled.
      *
-     * @param x x-coordinate in block coordinates.
-     * @param z z-coordinate in block coordinates.
+     * @param world
+     * @param x         x-coordinate in block coordinates.
+     * @param z         z-coordinate in block coordinates.
      * @param heightmap Vanilla heightmap type.
-     * 
      * @return The y-coordinate of top block at x/z.
      */
-    public abstract int getHeight(int x, int z, Heightmap.Type heightmap);
+    public abstract int getHeight(HeightLimitView world, int x, int z, Heightmap.Type heightmap);
     
     /**
      * Determines whether to skip the chunk for some chunk generation step, depending on the x/z chunk coordinates.

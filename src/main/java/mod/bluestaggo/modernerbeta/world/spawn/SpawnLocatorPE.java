@@ -11,6 +11,7 @@ import mod.bluestaggo.modernerbeta.util.noise.PerlinOctaveNoise;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.HeightLimitView;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.biome.Biome;
 import org.slf4j.event.Level;
@@ -36,14 +37,14 @@ public class SpawnLocatorPE implements SpawnLocator {
     }
     
     @Override
-    public Optional<BlockPos> locateSpawn() {
+    public Optional<BlockPos> locateSpawn(HeightLimitView world) {
         ModernerBeta.log(Level.INFO, "Setting a PE beach spawn..");
         
         int x = 0;
         int z = 0;
         int attempts = 0;
         
-        while(!this.isSandAt(x, z)) {
+        while(!this.isSandAt(world, x, z)) {
             if (attempts > 10000) {
                 ModernerBeta.log(Level.INFO, "Exceeded spawn attempts, spawning anyway at 128,128..");
                 
@@ -66,19 +67,19 @@ public class SpawnLocatorPE implements SpawnLocator {
         }
         
         int y = (this.chunkProvider instanceof ChunkProviderNoise noiseChunkProvider) ?
-            noiseChunkProvider.getHeight(x, z, ChunkHeightmap.Type.SURFACE_FLOOR) :
-            this.chunkProvider.getHeight(x, z, Heightmap.Type.WORLD_SURFACE_WG);
+            noiseChunkProvider.getHeight(world, x, z, ChunkHeightmap.Type.SURFACE_FLOOR) :
+            this.chunkProvider.getHeight(world, x, z, Heightmap.Type.WORLD_SURFACE_WG);
         
         return Optional.of(new BlockPos(x, y, z));
     }
 
-    private boolean isSandAt(int x, int z) {
+    private boolean isSandAt(HeightLimitView world, int x, int z) {
         double eighth = 0.03125D;
         int seaLevel = this.chunkProvider.getSeaLevel();
         
         int y = (this.chunkProvider instanceof ChunkProviderNoise noiseChunkProvider) ?
-            noiseChunkProvider.getHeight(x, z, ChunkHeightmap.Type.SURFACE_FLOOR) :
-            this.chunkProvider.getHeight(x, z, Heightmap.Type.OCEAN_FLOOR_WG);
+            noiseChunkProvider.getHeight(world, x, z, ChunkHeightmap.Type.SURFACE_FLOOR) :
+            this.chunkProvider.getHeight(world, x, z, Heightmap.Type.OCEAN_FLOOR_WG);
         
         RegistryEntry<Biome> biome = (this.chunkProvider.getChunkGenerator().getBiomeSource() instanceof ModernBetaBiomeSource oldBiomeSource) ? 
             oldBiomeSource.getBiomeForSpawn(x, y, z) :

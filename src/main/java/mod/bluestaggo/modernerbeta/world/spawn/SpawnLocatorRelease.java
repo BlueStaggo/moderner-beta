@@ -8,6 +8,7 @@ import mod.bluestaggo.modernerbeta.tags.ModernBetaBiomeTags;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkHeightmap;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.HeightLimitView;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.source.BiomeSource;
@@ -34,7 +35,7 @@ public class SpawnLocatorRelease implements SpawnLocator {
     }
 
     @Override
-    public Optional<BlockPos> locateSpawn() {
+    public Optional<BlockPos> locateSpawn(HeightLimitView world) {
         ModernerBeta.log(Level.INFO, "Setting a grass spawn..");
 
         int x = 0;
@@ -49,7 +50,7 @@ public class SpawnLocatorRelease implements SpawnLocator {
             ModernerBeta.log(Level.INFO, "Unable to find spawn biome");
         }
         
-        while(!this.isGrassAt(x, z)) {
+        while(!this.isGrassAt(world, x, z)) {
             if (attempts > 10000) {
                 ModernerBeta.log(Level.INFO, "Exceeded spawn attempts, spawning anyway at 0,0..");
                 
@@ -65,8 +66,8 @@ public class SpawnLocatorRelease implements SpawnLocator {
         }
         
         int y = (this.chunkProvider instanceof ChunkProviderNoise noiseChunkProvider) ?
-            noiseChunkProvider.getHeight(x, z, ChunkHeightmap.Type.SURFACE_FLOOR) :
-            this.chunkProvider.getHeight(x, z, Heightmap.Type.WORLD_SURFACE_WG);
+            noiseChunkProvider.getHeight(world, x, z, ChunkHeightmap.Type.SURFACE_FLOOR) :
+            this.chunkProvider.getHeight(world, x, z, Heightmap.Type.WORLD_SURFACE_WG);
         
         return Optional.of(new BlockPos(x, y, z));
     }
@@ -95,12 +96,12 @@ public class SpawnLocatorRelease implements SpawnLocator {
         return position;
     }
 
-    private boolean isGrassAt(int x, int z) {
+    private boolean isGrassAt(HeightLimitView world, int x, int z) {
         int seaLevel = this.chunkProvider.getSeaLevel();
 
         int y = (this.chunkProvider instanceof ChunkProviderNoise noiseChunkProvider) ?
-            noiseChunkProvider.getHeight(x, z, ChunkHeightmap.Type.SURFACE_FLOOR) :
-            this.chunkProvider.getHeight(x, z, Heightmap.Type.OCEAN_FLOOR_WG);
+            noiseChunkProvider.getHeight(world, x, z, ChunkHeightmap.Type.SURFACE_FLOOR) :
+            this.chunkProvider.getHeight(world, x, z, Heightmap.Type.OCEAN_FLOOR_WG);
 
         return y >= seaLevel;
     }

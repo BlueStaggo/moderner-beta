@@ -21,6 +21,7 @@ import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.ChunkRegion;
+import net.minecraft.world.HeightLimitView;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.Heightmap.Type;
 import net.minecraft.world.biome.Biome;
@@ -161,7 +162,7 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
     }
 
     @Override
-    public int getHeight(int x, int z, Type type) {
+    public int getHeight(HeightLimitView world, int x, int z, Type type) {
         int chunkX = x >> 4;
         int chunkZ = z >> 4;
         

@@ -69,7 +69,7 @@ public class ChunkProviderMajorRelease extends ChunkProviderForcedHeight {
         BlockPos.Mutable pos = new BlockPos.Mutable();
 
         AquiferSampler aquiferSampler = this.getAquiferSampler(chunk, noiseConfig);
-        ChunkHeightmap heightmapChunk = this.getChunkHeightmap(chunkX, chunkZ);
+        ChunkHeightmap heightmapChunk = this.getChunkHeightmap(region, chunkX, chunkZ);
         SimpleNoisePos noisePos = new SimpleNoisePos();
 
         for (int localZ = 0; localZ < 16; localZ++) {

@@ -81,7 +81,7 @@ public class ChunkProviderBeta extends ChunkProviderNoise {
         BlockPos.Mutable pos = new BlockPos.Mutable();
         
         AquiferSampler aquiferSampler = this.getAquiferSampler(chunk, noiseConfig);
-        ChunkHeightmap heightmapChunk = this.hasNoisePostProcessor() ? this.getChunkHeightmap(chunkX, chunkZ) : null;
+        ChunkHeightmap heightmapChunk = this.hasNoisePostProcessor() ? this.getChunkHeightmap(region, chunkX, chunkZ) : null;
         SimpleNoisePos noisePos = new SimpleNoisePos();
         
         double[] sandNoise = beachOctaveNoise.sampleBeta(
@@ -223,7 +223,7 @@ public class ChunkProviderBeta extends ChunkProviderNoise {
         int startZ = chunk.getPos().getStartZ();
 
         Random rand = this.createSurfaceRandom(chunkX, chunkZ);
-        ChunkHeightmap heightmapChunk = this.hasNoisePostProcessor() ? this.getChunkHeightmap(chunkX, chunkZ) : null;
+        ChunkHeightmap heightmapChunk = this.hasNoisePostProcessor() ? this.getChunkHeightmap(region, chunkX, chunkZ) : null;
         BlockPos.Mutable pos = new BlockPos.Mutable();
 
         double[] sandNoise = beachOctaveNoise.sampleBeta(

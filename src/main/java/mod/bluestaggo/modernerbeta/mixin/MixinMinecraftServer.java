@@ -75,7 +75,7 @@ public abstract class MixinMinecraftServer {
             
             world.getGameRules().get(GameRules.SPAWN_RADIUS).set(0, world.getServer()); // Ensure a centered spawn
             //? if >=1.20.2 {
-            BlockPos spawnPos = chunkProvider.getSpawnLocator().locateSpawn().orElseGet(() -> original.call(world, chunkPos));
+            BlockPos spawnPos = chunkProvider.getSpawnLocator().locateSpawn(world).orElseGet(() -> original.call(world, chunkPos));
             //?} else {
             /*spawnPos = chunkProvider.getSpawnLocator().locateSpawn().orElse(spawnPos);
             *///?}

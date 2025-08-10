@@ -14,6 +14,7 @@ import mod.bluestaggo.modernerbeta.settings.component.NoiseSlide;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkCache;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkHeightmap;
+import mod.bluestaggo.modernerbeta.util.chunk.WorldChunkCache;
 import mod.bluestaggo.modernerbeta.util.noise.SimpleNoisePos;
 import mod.bluestaggo.modernerbeta.util.noise.SimplexNoise;
 import mod.bluestaggo.modernerbeta.world.blocksource.BlockSourceRules;
@@ -26,6 +27,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.random.RandomSplitter;
+import net.minecraft.world.HeightLimitView;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkSection;
@@ -61,7 +63,7 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
     protected final int noiseTopY;  // Number of positive (y >= 0) vertical subchunks
 
     private final ChunkCache<NoiseProviderBase> chunkCacheNoise;
-    private final ChunkCache<ChunkHeightmap> chunkCacheHeightmap;
+    private final WorldChunkCache<ChunkHeightmap> chunkCacheHeightmap;
     
     protected final List<NoisePostProcessor> noisePostProcessors = new ArrayList<>();
     private final SimplexNoise islandNoise;
@@ -116,7 +118,7 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
                 return noiseProviderBase;
             }
         );
-        this.chunkCacheHeightmap = new ChunkCache<>("heightmap", this::sampleHeightmap);
+        this.chunkCacheHeightmap = new WorldChunkCache<>("heightmap", this::sampleHeightmap);
 
         this.islandNoise = new SimplexNoise(new Random(this.seed));
 
@@ -171,34 +173,35 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
      * Sample height at given x/z coordinate. Initially generates heightmap for entire chunk,
      * if chunk containing x/z coordinates has never been sampled.
      *
+     * @param world a world context to clamp heights to.
      * @param x     x-coordinate in block coordinates.
      * @param z     z-coordinate in block coordinates.
      * @param type  Vanilla heightmap type.
      * @return The y-coordinate of top block at x/z.
      */
     @Override
-    public int getHeight(int x, int z, Heightmap.Type type) {
+    public int getHeight(HeightLimitView world, int x, int z, Heightmap.Type type) {
         int chunkX = x >> 4;
         int chunkZ = z >> 4;
         
-        return this.chunkCacheHeightmap.get(chunkX, chunkZ).getHeight(x, z, type);
+        return this.chunkCacheHeightmap.get(world, chunkX, chunkZ).getHeight(x, z, type);
     }
     
     /**
-     * Sample height at given x/z coordinate. Initially generates heightmap for entire chunk, 
+     * Sample height at given x/z coordinate. Initially generates heightmap for entire chunk,
      * if chunk containing x/z coordinates has never been sampled.
      *
-     * @param x x-coordinate in block coordinates.
-     * @param z z-coordinate in block coordinates.
-     * @param type HeightmapChunk heightmap type.
-     * 
+     * @param world a world context to clamp heights to.
+     * @param x     x-coordinate in block coordinates.
+     * @param z     z-coordinate in block coordinates.
+     * @param type  HeightmapChunk heightmap type.
      * @return The y-coordinate of top block at x/z.
      */
-    public int getHeight(int x, int z, ChunkHeightmap.Type type) {
+    public int getHeight(HeightLimitView world, int x, int z, ChunkHeightmap.Type type) {
         int chunkX = x >> 4;
         int chunkZ = z >> 4;
         
-        return this.chunkCacheHeightmap.get(chunkX, chunkZ).getHeight(x, z, type);
+        return this.chunkCacheHeightmap.get(world, chunkX, chunkZ).getHeight(x, z, type);
     }
     
     /**
@@ -382,14 +385,14 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
 
     /**
      * Gets heightmap for given set of chunk coordinates.
-     * 
+     *
+     * @param world
      * @param chunkX
      * @param chunkZ
-     * 
      * @return Heightmap for chunk.
      */
-    protected ChunkHeightmap getChunkHeightmap(int chunkX, int chunkZ) {
-        return this.chunkCacheHeightmap.get(chunkX, chunkZ);
+    protected ChunkHeightmap getChunkHeightmap(HeightLimitView world, int chunkX, int chunkZ) {
+        return this.chunkCacheHeightmap.get(world, chunkX, chunkZ);
     }
 
     /**
@@ -494,19 +497,27 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
     
     /**
      * Generates a heightmap for the chunk containing the given x/z coordinates
-     * and returns to {@link #getHeight(int, int, net.minecraft.world.Heightmap.Type)} 
+     * and returns to {@link ChunkProvider#getHeight(HeightLimitView, int, int, Heightmap.Type)}
      * to cache and return the height.
-     * 
+     *
+     * @param world  a world context to clamp heights to.
      * @param chunkX x-coordinate in chunk coordinates to sample all y-values for.
      * @param chunkZ z-coordinate in chunk coordinates to sample all y-values for.
      * 
      * @return A HeightmapChunk, containing an array of ints containing the heights for the entire chunk.
      */
-    private ChunkHeightmap sampleHeightmap(int chunkX, int chunkZ) {
+    private ChunkHeightmap sampleHeightmap(HeightLimitView world, int chunkX, int chunkZ) {
+        GenerationShapeConfig shapeConfig = this.generatorSettings.value().generationShapeConfig();
+
+        if (world != null)
+            shapeConfig = shapeConfig.trimHeight(world);
+
         short minHeight = 32;
-        //FIXME: ChunkCache needs to be refactored to take a HeightLimitView instance so that we can clamp these values for the world's dimension type.
-        short worldMinY = (short)this.worldMinY;
-        short worldTopY = (short)this.worldTopY;
+        short worldMinY = (short) shapeConfig.minimumY();
+        short worldTopY = (short) (shapeConfig.height() + worldMinY);
+
+        int minimumCellY = MathHelper.floorDiv(worldMinY, shapeConfig.verticalCellBlockCount());
+        int cellHeight = MathHelper.floorDiv(shapeConfig.height(), shapeConfig.verticalCellBlockCount());
 
         //NoiseProviderBase noiseProvider = this.chunkCacheNoise.get(chunkX, chunkZ);
         NoiseProviderBase noiseProvider = new NoiseProviderBase(
@@ -528,12 +539,11 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
         
         for (int subChunkX = 0; subChunkX < this.noiseSizeX; ++subChunkX) {
             for (int subChunkZ = 0; subChunkZ < this.noiseSizeZ; ++subChunkZ) {
-                for (int subChunkY = 0; subChunkY < this.noiseSizeY; ++subChunkY) {
+                for (int subChunkY = cellHeight - 1; subChunkY >= 0; --subChunkY) {
                     noiseSampler.sampleNoiseCorners(subChunkX, subChunkY, subChunkZ);
                     
                     for (int subY = 0; subY < this.noiseResolutionVertical; ++subY) {
-                        int y = subY + subChunkY * this.noiseResolutionVertical;
-                        y += this.worldMinY;
+                        int y = subY + (subChunkY + minimumCellY) * this.noiseResolutionVertical;
                         
                         double deltaY = subY / (double)this.noiseResolutionVertical;
                         noiseSampler.sampleNoiseY(deltaY);

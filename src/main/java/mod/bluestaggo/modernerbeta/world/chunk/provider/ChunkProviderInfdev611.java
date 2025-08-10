@@ -67,7 +67,7 @@ public class ChunkProviderInfdev611 extends ChunkProviderNoise {
         BlockPos.Mutable pos = new BlockPos.Mutable();
 
         AquiferSampler aquiferSampler = this.getAquiferSampler(chunk, noiseConfig);
-        ChunkHeightmap heightmapChunk = this.getChunkHeightmap(chunkX, chunkZ);
+        ChunkHeightmap heightmapChunk = this.getChunkHeightmap(region, chunkX, chunkZ);
         SimpleNoisePos noisePos = new SimpleNoisePos();
 
         // Accurate beach/terrain patterns depend on z iterating before x,
@@ -188,7 +188,7 @@ public class ChunkProviderInfdev611 extends ChunkProviderNoise {
         Random rand = this.createSurfaceRandom(chunkX, chunkZ);
         BlockPos.Mutable pos = new BlockPos.Mutable();
 
-        ChunkHeightmap heightmapChunk = this.hasNoisePostProcessor() ? this.getChunkHeightmap(chunkX, chunkZ) : null;
+        ChunkHeightmap heightmapChunk = this.hasNoisePostProcessor() ? this.getChunkHeightmap(region, chunkX, chunkZ) : null;
 
         for (int localZ = 0; localZ < 16; localZ++) {
             for (int localX = 0; localX < 16; localX++) {

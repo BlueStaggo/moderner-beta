@@ -2,7 +2,6 @@ package mod.bluestaggo.modernerbeta.world.biome;
 
 import com.google.common.collect.Sets;
 import com.mojang.datafixers.util.Pair;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.api.world.biome.*;
@@ -114,9 +113,9 @@ public class ModernBetaBiomeSource extends BiomeSource {
                 
                 int x = biomeX << 2;
                 int z = biomeZ << 2;
-                int y = this.chunkGenerator.getHeight(x, z, Heightmap.Type.OCEAN_FLOOR_WG);
+                int y = this.chunkGenerator.getHeight(x, z, Heightmap.Type.OCEAN_FLOOR_WG, null);
                 
-                set.add(this.chunkGenerator.getBiomeInjector().getBiomeAtBlock(x, y, z, noiseSampler, BiomeInjectionStep.ALL));
+                set.add(this.chunkGenerator.getBiomeInjector().getBiomeAtBlock(null, x, y, z, noiseSampler, BiomeInjectionStep.ALL));
             }
         }
         
@@ -171,7 +170,7 @@ public class ModernBetaBiomeSource extends BiomeSource {
                 
                 RegistryEntry<Biome> biome = this.chunkGenerator
                     .getBiomeInjector()
-                    .getBiome(biomeX, biomeY, biomeZ, noiseSampler, BiomeInjectionStep.ALL);
+                    .getBiome(world, biomeX, biomeY, biomeZ, noiseSampler, BiomeInjectionStep.ALL);
 
                 if (!biomeSet.contains(biome)) continue;
                 

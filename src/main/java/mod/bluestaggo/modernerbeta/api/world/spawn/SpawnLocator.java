@@ -1,16 +1,12 @@
 package mod.bluestaggo.modernerbeta.api.world.spawn;
 
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.HeightLimitView;
 
 import java.util.Optional;
 
 public interface SpawnLocator {
-    Optional<BlockPos> locateSpawn();
+    Optional<BlockPos> locateSpawn(HeightLimitView world);
     
-    public static final SpawnLocator DEFAULT = new SpawnLocator() {
-        @Override
-        public Optional<BlockPos> locateSpawn() {
-            return Optional.empty();
-        }
-    };
+    SpawnLocator DEFAULT = world -> Optional.empty();
 }

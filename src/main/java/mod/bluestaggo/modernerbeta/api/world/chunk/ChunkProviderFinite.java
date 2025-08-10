@@ -26,6 +26,7 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.ChunkRegion;
+import net.minecraft.world.HeightLimitView;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.Heightmap.Type;
 import net.minecraft.world.biome.Biome;
@@ -168,7 +169,7 @@ public abstract class ChunkProviderFinite extends ChunkProvider implements Chunk
     }
     
     @Override
-    public int getHeight(int x, int z, Type type) {
+    public int getHeight(HeightLimitView world, int x, int z, Type type) {
         int seaLevel = this.getSeaLevel();
         
         x += this.levelWidth / 2;
@@ -306,7 +307,7 @@ public abstract class ChunkProviderFinite extends ChunkProvider implements Chunk
                 
                 int x = localX + (chunkX << 4);
                 int z = localZ + (chunkZ << 4);
-                int topY = this.getHeight(x, z, Heightmap.Type.OCEAN_FLOOR_WG);
+                int topY = this.getHeight(null, x, z, Type.OCEAN_FLOOR_WG);
                 
                 TerrainState terrainState = new TerrainState();
                 

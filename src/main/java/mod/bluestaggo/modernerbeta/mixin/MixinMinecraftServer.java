@@ -77,7 +77,7 @@ public abstract class MixinMinecraftServer {
             //? if >=1.20.2 {
             BlockPos spawnPos = chunkProvider.getSpawnLocator().locateSpawn(world).orElseGet(() -> original.call(world, chunkPos));
             //?} else {
-            /*spawnPos = chunkProvider.getSpawnLocator().locateSpawn().orElse(spawnPos);
+            /*spawnPos = chunkProvider.getSpawnLocator().locateSpawn(world).orElse(spawnPos);
             *///?}
             
             if (spawnPos != null && ModernerBeta.DEV_ENV) {

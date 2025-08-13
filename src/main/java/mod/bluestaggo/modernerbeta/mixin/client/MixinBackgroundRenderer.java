@@ -1,6 +1,8 @@
 //? if <1.21.6 {
 /*package mod.bluestaggo.modernerbeta.mixin.client;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.api.world.biome.climate.Clime;
 import mod.bluestaggo.modernerbeta.client.FogUtils;
@@ -19,13 +21,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
-
-//? if >=1.20.2 {
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-//?} else {
-/^import org.spongepowered.asm.mixin.injection.Redirect;
-^///?}
 
 //? if >=1.21.2 {
 import org.joml.Vector4f;
@@ -49,21 +44,14 @@ public abstract class MixinBackgroundRenderer {
     @Unique private static float modernBeta_fogWeight = FogUtils.calculateFogWeight(16);
     @Unique private static boolean modernBeta_isModernBetaWorld = false;
 
-    //? if >=1.20.2 {
     @WrapOperation(
-    //?} else {
-    /^@Redirect(
-    ^///?}
         method = GET_FOG_COLOR_METHOD,
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/biome/Biome;getWaterFogColor()I"
         )
     )
-    private static int modifyWaterFogColor(Biome instance
-            //? if >=1.20.2
-            , Operation<Integer> original
-    ) {
+    private static int modifyWaterFogColor(Biome instance, Operation<Integer> original) {
         if (BlockColorSampler.INSTANCE.useWaterColor()) {
             int x = (int)modernBeta_pos.getX();
             int z = (int)modernBeta_pos.getZ();
@@ -72,11 +60,7 @@ public abstract class MixinBackgroundRenderer {
             return BlockColorSampler.INSTANCE.colormapUnderwater.getColor(clime.temp(), clime.rain());
         }
 
-        //? if >=1.20.2 {
         return original.call(instance);
-        //?} else {
-        /^return instance.getWaterFogColor();
-        ^///?}
     }
     
     @Inject(method = GET_FOG_COLOR_METHOD, at = @At("HEAD"))

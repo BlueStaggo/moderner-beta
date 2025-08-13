@@ -539,7 +539,7 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
         
         for (int subChunkX = 0; subChunkX < this.noiseSizeX; ++subChunkX) {
             for (int subChunkZ = 0; subChunkZ < this.noiseSizeZ; ++subChunkZ) {
-                for (int subChunkY = cellHeight - 1; subChunkY >= 0; --subChunkY) {
+                for (int subChunkY = 0; subChunkY < cellHeight; ++subChunkY) {
                     noiseSampler.sampleNoiseCorners(subChunkX, subChunkY, subChunkZ);
                     
                     for (int subY = 0; subY < this.noiseResolutionVertical; ++subY) {

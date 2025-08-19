@@ -241,7 +241,15 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
             }
 
             @Override
-            public void render(DrawContext context,int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
+            public void render(DrawContext context,
+                //? if <1.21.9
+                int index, int y, int x, int entryWidth, int entryHeight,
+                int mouseX, int mouseY, boolean hovered, float tickDelta) {
+                //? if >=1.21.9 {
+                /*int x = this.method_73380();
+                int y = this.method_73382();
+                *///?}
+
                 MutableText presetNameText = this.presetName.formatted(this.getTextFormatting());
                 
                 List<OrderedText> presetDescTexts = this.splitText(textRenderer, this.presetDesc);

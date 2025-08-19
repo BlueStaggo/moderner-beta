@@ -1,12 +1,11 @@
 package mod.bluestaggo.modernerbeta.client.gui.optioncallbacks;
 
 import com.mojang.serialization.Codec;
-import mod.bluestaggo.modernerbeta.mixin.client.AccessorTextWidget;
+import mod.bluestaggo.modernerbeta.client.gui.widget.AlignedTextWidget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.gui.widget.TextWidget;
 import net.minecraft.client.option.GameOptions;
 import net.minecraft.client.option.SimpleOption;
 import net.minecraft.text.Text;
@@ -24,8 +23,8 @@ public record TextLabelCallbacks(Text text, float alignment) implements SimpleOp
     @Override
     public Function<SimpleOption<Void>, ClickableWidget> getWidgetCreator(SimpleOption.TooltipFactory<Void> tooltipFactory, GameOptions gameOptions, int x, int y, int width, Consumer<Void> changeCallback) {
         return option -> {
-            TextWidget textWidget = new TextWidget(x, y, width, 20, text, MinecraftClient.getInstance().advanceValidatingTextRenderer);
-            ((AccessorTextWidget)textWidget).invokeAlign(alignment);
+            AlignedTextWidget textWidget = new AlignedTextWidget(x, y, width, 20, text, MinecraftClient.getInstance().advanceValidatingTextRenderer);
+            textWidget.align(alignment);
             return textWidget;
         };
     }

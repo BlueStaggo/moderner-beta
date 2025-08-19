@@ -52,7 +52,13 @@ public class AlignedTextWidget extends AbstractTextWidget {
     }
 
     @Override
-    public void renderWidget(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
+    public void
+    //? if >=1.20.3 {
+    renderWidget
+    //?} else {
+    /*renderButton
+     *///?}
+        (DrawContext context, int mouseX, int mouseY, float deltaTicks) {
         Text message = this.getMessage();
         TextRenderer textRenderer = this.getTextRenderer();
 

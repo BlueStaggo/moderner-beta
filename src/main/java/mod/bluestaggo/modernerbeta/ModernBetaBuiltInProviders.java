@@ -187,6 +187,7 @@ public class ModernBetaBuiltInProviders {
         registryHandler.register(ModernBetaBuiltInTypes.Biome.BETA.id, new BiomeProviderType<>(
             BiomeProviderBeta::new, BiomeProviderBeta.class, () -> List.of(
                 SettingsComponentTypes.TEMPERATURE_HEIGHT_SCALING,
+                SettingsComponentTypes.USE_OCEAN_BIOMES,
                 SettingsComponentTypes.CLIMATE_DISTRIBUTION,
                 SettingsComponentTypes.CLIMATE_SCALE,
                 SettingsComponentTypes.CLIMATE_MAPPINGS
@@ -201,6 +202,7 @@ public class ModernBetaBuiltInProviders {
         registryHandler.register(ModernBetaBuiltInTypes.Biome.PE.id, new BiomeProviderType<>(
             BiomeProviderPE::new, BiomeProviderPE.class, () -> List.of(
                 SettingsComponentTypes.TEMPERATURE_HEIGHT_SCALING,
+                SettingsComponentTypes.USE_OCEAN_BIOMES,
                 SettingsComponentTypes.CLIMATE_DISTRIBUTION,
                 SettingsComponentTypes.CLIMATE_SCALE,
                 SettingsComponentTypes.CLIMATE_MAPPINGS
@@ -209,6 +211,7 @@ public class ModernBetaBuiltInProviders {
         registryHandler.register(ModernBetaBuiltInTypes.Biome.VORONOI.id, new BiomeProviderType<>(
             BiomeProviderVoronoi::new, BiomeProviderVoronoi.class, () -> List.of(
                 SettingsComponentTypes.TEMPERATURE_HEIGHT_SCALING,
+                SettingsComponentTypes.USE_OCEAN_BIOMES,
                 SettingsComponentTypes.VORONOI_POINTS
             )
         ));

@@ -49,6 +49,7 @@ public class SettingsComponentTypes {
     public static SettingsComponentType<ClimateDistribution> CLIMATE_DISTRIBUTION;
     public static SettingsComponentType<List<VoronoiPointBiome>> VORONOI_POINTS;
     public static SettingsComponentType<ConfiguredLayers> FRACTAL_LAYERS;
+    public static SettingsComponentType<Boolean> USE_32BIT_LAYER_SEED;
     public static SettingsComponentType<Boolean> USE_OCEAN_BIOMES;
     public static SettingsComponentType<TemperatureHeightScaling> TEMPERATURE_HEIGHT_SCALING;
 
@@ -166,6 +167,10 @@ public class SettingsComponentTypes {
             ModernBetaBuiltInTypes.SettingsComponentType.FRACTAL_LAYERS.id,
             ConfiguredLayers.CODEC,
             ConfiguredLayers.DEFAULT);
+        USE_32BIT_LAYER_SEED = register(
+            ModernBetaBuiltInTypes.SettingsComponentType.USE_32BIT_LAYER_SEED.id,
+            Codec.BOOL,
+            false);
         USE_OCEAN_BIOMES = register(
             ModernBetaBuiltInTypes.SettingsComponentType.USE_OCEAN_BIOMES.id,
             Codec.BOOL,

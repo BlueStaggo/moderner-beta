@@ -2225,6 +2225,7 @@ public final class ModernBetaSettingsPresets {
                 .build(),
             ModernBetaSettings.fractalLayers(configuredLayers1710Era(biomeScale, 0, bedrock, false, false, false, false, false))
                 .add(TEMPERATURE_HEIGHT_SCALING, TemperatureHeightScaling.MAJOR_RELEASE)
+                .add(USE_32BIT_LAYER_SEED, bedrock)
                 .build(),
             DEFAULT_BETA.caveBiomeSettings()
         );
@@ -2241,6 +2242,7 @@ public final class ModernBetaSettingsPresets {
                 .build(),
             ModernBetaSettings.fractalLayers(configuredLayers1710Era(biomeScale, 0, bedrock, true, true, true, true, false))
                 .add(TEMPERATURE_HEIGHT_SCALING, TemperatureHeightScaling.MAJOR_RELEASE)
+                .add(USE_32BIT_LAYER_SEED, bedrock)
                 .build(),
             DEFAULT_BETA.caveBiomeSettings()
         );

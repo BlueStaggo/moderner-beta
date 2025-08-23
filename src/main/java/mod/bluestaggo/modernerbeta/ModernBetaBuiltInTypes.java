@@ -28,6 +28,7 @@ public final class ModernBetaBuiltInTypes {
         CLIMATE_DISTRIBUTION("climate_distribution"),
         VORONOI_POINTS("voronoi_points"),
         FRACTAL_LAYERS("fractal_layers"),
+        USE_32BIT_LAYER_SEED("use_32bit_layer_seed"),
         USE_OCEAN_BIOMES("use_ocean_biomes"),
         TEMPERATURE_HEIGHT_SCALING("temperature_height_scaling"),
         CAVE_BIOME_VORONOI("cave_biome_voronoi"),

@@ -327,6 +327,8 @@
 
     "createWorld.customize.modern_beta.settings.single_biome": "Single Biome",
     "createWorld.customize.modern_beta.settings.single_biome.self": "Biome",
+    "createWorld.customize.modern_beta.settings.use_32bit_layer_seed": "32-bit Layer Seeds",
+    "createWorld.customize.modern_beta.settings.use_32bit_layer_seed.self": "Enabled",
     "createWorld.customize.modern_beta.settings.use_ocean_biomes": "Injected Ocean Biomes",
     "createWorld.customize.modern_beta.settings.use_ocean_biomes.self": "Enabled",
     "createWorld.customize.modern_beta.settings.climate_scale": "Climate Scale",

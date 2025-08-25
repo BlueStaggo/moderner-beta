@@ -39,7 +39,7 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 		this.configuredLayers = this.settings.getOrThrow(SettingsComponentTypes.FRACTAL_LAYERS);
 		this.pipeline = this.configuredLayers.getPipeline();
 
-		boolean use32BitSeed = this.settings.getOrThrow(SettingsComponentTypes.USE_32BIT_LAYER_SEED);
+		boolean use32BitSeed = this.settings.getOrDefault(SettingsComponentTypes.USE_32BIT_LAYER_SEED);
 		if (use32BitSeed)
 			seed &= 0xFFFFFFFFL;
 

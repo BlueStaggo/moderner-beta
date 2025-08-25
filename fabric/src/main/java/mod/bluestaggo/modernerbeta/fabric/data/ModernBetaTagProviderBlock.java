@@ -3,9 +3,7 @@ package mod.bluestaggo.modernerbeta.fabric.data;
 import mod.bluestaggo.modernerbeta.tags.ModernBetaBlockTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
-import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
-import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.RegistryWrapper.WrapperLookup;
 
@@ -16,11 +14,11 @@ public class ModernBetaTagProviderBlock
         //? if >=1.21.6 {
         FabricTagProvider.BlockTagProvider
         //?} else {
-        /*FabricTagProvider<Block>
+        /*FabricTagProvider<net.minecraft.block.Block>
         *///?}
 {
     public ModernBetaTagProviderBlock(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
-        super(output, /*? <1.21.6 {*/ /*RegistryKeys.BLOCK, *//*?}*/ registriesFuture);
+        super(output, /*? <1.21.6 {*/ /*net.minecraft.registry.RegistryKeys.BLOCK, *//*?}*/ registriesFuture);
     }
 
     @Override

@@ -19,6 +19,7 @@ import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.LayerTarget;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.*;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.predicates.BiomePredicate;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.predicates.InRangeBiomePredicate;
+import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.predicates.NeighborMatchBiomePredicate;
 import mod.bluestaggo.modernerbeta.world.biome.voronoi.VoronoiPointBiome;
 import mod.bluestaggo.modernerbeta.world.chunk.provider.indev.IndevTheme;
 import mod.bluestaggo.modernerbeta.world.chunk.provider.indev.IndevType;
@@ -2108,6 +2109,13 @@ public final class ModernBetaSettingsPresets {
             new ModalZoomLayer("land", 1000, "land"),
             AddLandLayer.forMajorRelease("land", 3, "land"),
             new ModalZoomLayer("land", 1001, "land"),
+            // GrowMushroomIslandLayer (LCE)
+            finiteSize > 0 && finiteSize < 3072 ? new ConditionalOverlayLayer(
+                "land", 0, "land",
+                BiomePredicate.diagonalNeighborsMatch(ExtendedBiomeId.MUSHROOM_ISLAND, 1),
+                LayerTarget.biome(ExtendedBiomeId.MUSHROOM_ISLAND),
+                LayerTarget.none()
+            ) : null,
             // ShoreLayer
             new PredicateOverlayLayer("land", 0, "land", List.of(
                 PredicateOverlayLayer.Target.MUSHROOM_SHORE,

@@ -1847,6 +1847,8 @@ public final class ModernBetaSettingsPresets {
                     BiomePredicate.inSet(biomeCategories.get("badlands_all")), 3)));
         }
 
+        boolean usesBiomeScale = finiteSize <= 0 || finiteSize >= 3072;
+
         List<Layer> layers = Stream.of(
             new InitLandLayer("land", 1),
             new FuzzyZoomLayer("land", 2000, "land"),
@@ -1917,7 +1919,7 @@ public final class ModernBetaSettingsPresets {
             new ModalZoomLayer("land", 2002, "land"),
             new ModalZoomLayer("land", 2003, "land"),
             AddLandLayer.forIslandScaleMajor("land", 4, "land"),
-            ConditionalOverlayLayer.mushroomIslands(),
+            usesBiomeScale ? ConditionalOverlayLayer.mushroomIslands() : null,
             new ConditionalOverlayLayer(
                 "land", 0, "land",
                 BiomePredicate.of(ExtendedBiomeId.OCEAN)
@@ -2108,9 +2110,10 @@ public final class ModernBetaSettingsPresets {
             ),
             new ModalZoomLayer("land", 1000, "land"),
             AddLandLayer.forMajorRelease("land", 3, "land"),
+            !usesBiomeScale ? ConditionalOverlayLayer.mushroomIslands() : null,
             new ModalZoomLayer("land", 1001, "land"),
             // GrowMushroomIslandLayer (LCE)
-            finiteSize > 0 && finiteSize < 3072 ? new ConditionalOverlayLayer(
+            !usesBiomeScale ? new ConditionalOverlayLayer(
                 "land", 0, "land",
                 BiomePredicate.diagonalNeighborsMatch(ExtendedBiomeId.MUSHROOM_ISLAND, 1),
                 LayerTarget.biome(ExtendedBiomeId.MUSHROOM_ISLAND),

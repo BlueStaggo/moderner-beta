@@ -308,6 +308,9 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                     mouseX,
                     mouseY
                 );
+
+                //? if >=1.21.9
+                /*context.method_74037(net.minecraft.class_11876.field_62458);*/
             }
 
             this.prevMouseX = mouseX;

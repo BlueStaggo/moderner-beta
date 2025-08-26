@@ -166,8 +166,8 @@ public class ModernBetaSelectBiomeScreen extends Screen {
                 int index, int y, int x, int entryWidth, int entryHeight,
                 int mouseX, int mouseY, boolean hovered, float tickDelta) {
                 //? if >=1.21.9 {
-                /*int x = this.method_73380();
-                int y = this.method_73382();
+                /*int x = this.getContentX();
+                int y = this.getContentY();
                 *///?}
 
                 context.drawTextWithShadow(ModernBetaSelectBiomeScreen.this.textRenderer, this.text, x + 5, y + 2, 0xFFFFFFFF);

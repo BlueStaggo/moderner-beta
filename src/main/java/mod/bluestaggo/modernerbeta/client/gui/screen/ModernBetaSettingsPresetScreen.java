@@ -246,8 +246,8 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
                 int index, int y, int x, int entryWidth, int entryHeight,
                 int mouseX, int mouseY, boolean hovered, float tickDelta) {
                 //? if >=1.21.9 {
-                /*int x = this.method_73380();
-                int y = this.method_73382();
+                /*int x = this.getContentX();
+                int y = this.getContentY();
                 *///?}
 
                 MutableText presetNameText = this.presetName.formatted(this.getTextFormatting());

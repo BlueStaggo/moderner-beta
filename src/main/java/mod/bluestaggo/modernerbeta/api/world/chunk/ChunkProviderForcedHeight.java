@@ -92,8 +92,13 @@ public abstract class ChunkProviderForcedHeight extends ChunkProviderNoise {
                 biome = this.getExtendedBiomeId(noiseX + biomeX, noiseZ + biomeZ);
                 HeightConfig heightConfig = this.getHeightConfigOfBiome(biome);
 
-                float thisScale = this.forcedBiomeHeight.scaleOffset() + heightConfig.scale() * this.forcedBiomeHeight.scaleWeight();
-                float thisDepth = this.forcedBiomeHeight.depthOffset() + heightConfig.depth() * this.forcedBiomeHeight.depthWeight();
+                float thisScale = heightConfig.scale();
+                float thisDepth = heightConfig.depth();
+
+                if (!this.forcedBiomeHeight.modifyOnlyPositiveDepth() || thisDepth > 0.0F) {
+                    thisScale = this.forcedBiomeHeight.scaleOffset() + thisScale * this.forcedBiomeHeight.scaleWeight();
+                    thisDepth = this.forcedBiomeHeight.depthOffset() + thisDepth * this.forcedBiomeHeight.depthWeight();
+                }
 
                 weight /= Math.max(thisDepth + 2.0F, 0.01F);
                 if (heightConfig.depth() > minSurfaceHeight) {

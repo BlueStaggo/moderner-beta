@@ -23,6 +23,7 @@ public class ModernBetaTagProviderSettingsPresetCategory extends FabricTagProvid
             ModernBetaSettingsPresetCategories.FINITE,
             ModernBetaSettingsPresetCategories.EARLY_RELEASE,
             ModernBetaSettingsPresetCategories.EARLY_RELEASE_LARGE_BIOMES,
+            ModernBetaSettingsPresetCategories.EARLY_RELEASE_AMPLIFIED,
             ModernBetaSettingsPresetCategories.MAJOR_RELEASE,
             ModernBetaSettingsPresetCategories.BETA_CUSTOM,
             ModernBetaSettingsPresetCategories.RELEASE_CUSTOM

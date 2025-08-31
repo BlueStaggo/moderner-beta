@@ -228,6 +228,16 @@ public final class ModernBetaBuiltInTypes {
         RELEASE_1_17_1_LARGE_BIOMES("release_1_17_1_large_biomes"),
         RELEASE_HYBRID_LARGE_BIOMES("release_hybrid_large_biomes"),
         SNOW_AINT_SNOWIER_LARGE_BIOMES("snow_aint_snowier_large_biomes"),
+        BETA_1_8_1_AMPLIFIED("beta_1_8_1_amplified"),
+        BETA_1_9_PRE_3_AMPLIFIED("beta_1_9_pre_3_amplified"),
+        RELEASE_1_0_0_AMPLIFIED("release_1_0_0_amplified"),
+        RELEASE_1_1_AMPLIFIED("release_1_1_amplified"),
+        RELEASE_1_2_5_AMPLIFIED("release_1_2_5_amplified"),
+        RELEASE_1_6_4_AMPLIFIED("release_1_6_4_amplified"),
+        RELEASE_1_12_2_AMPLIFIED("release_1_12_2_amplified"),
+        RELEASE_1_17_1_AMPLIFIED("release_1_17_1_amplified"),
+        RELEASE_HYBRID_AMPLIFIED("release_hybrid_amplified"),
+        SNOW_AINT_SNOWIER_AMPLIFIED("snow_aint_snowier_amplified"),
         ;
         
         public final Identifier id;

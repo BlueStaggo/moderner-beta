@@ -5,7 +5,6 @@ import mod.bluestaggo.modernerbeta.api.world.provider.BiomeProviderType;
 import mod.bluestaggo.modernerbeta.api.world.provider.CaveBiomeProviderType;
 import mod.bluestaggo.modernerbeta.api.world.provider.ChunkProviderType;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
-import mod.bluestaggo.modernerbeta.api.world.chunk.noise.NoisePostProcessor;
 import mod.bluestaggo.modernerbeta.api.world.chunk.surface.SurfaceConfig;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.world.biome.HeightConfig;

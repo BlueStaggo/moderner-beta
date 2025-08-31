@@ -15,6 +15,7 @@ public final class ModernBetaSettingsPresetCategories {
     public static final RegistryKey<ModernBetaSettingsPresetCategory> FINITE = keyOf("finite");
     public static final RegistryKey<ModernBetaSettingsPresetCategory> EARLY_RELEASE = keyOf("early_release");
     public static final RegistryKey<ModernBetaSettingsPresetCategory> EARLY_RELEASE_LARGE_BIOMES = keyOf("early_release_large_biomes");
+    public static final RegistryKey<ModernBetaSettingsPresetCategory> EARLY_RELEASE_AMPLIFIED = keyOf("early_release_amplified");
     public static final RegistryKey<ModernBetaSettingsPresetCategory> MAJOR_RELEASE = keyOf("major_release");
     public static final RegistryKey<ModernBetaSettingsPresetCategory> BETA_CUSTOM = keyOf("beta_custom");
     public static final RegistryKey<ModernBetaSettingsPresetCategory> RELEASE_CUSTOM = keyOf("release_custom");
@@ -74,14 +75,27 @@ public final class ModernBetaSettingsPresetCategories {
                 ModernBetaBuiltInTypes.Preset.RELEASE_1_6_4_LARGE_BIOMES.id
             )
         ));
+        categoryRegisterable.register(EARLY_RELEASE_AMPLIFIED, new ModernBetaSettingsPresetCategory(
+            ModernBetaBuiltInTypes.Preset.RELEASE_1_1_AMPLIFIED.id,
+            List.of(
+                ModernBetaBuiltInTypes.Preset.BETA_1_8_1_AMPLIFIED.id,
+                ModernBetaBuiltInTypes.Preset.BETA_1_9_PRE_3_AMPLIFIED.id,
+                ModernBetaBuiltInTypes.Preset.RELEASE_1_0_0_AMPLIFIED.id,
+                ModernBetaBuiltInTypes.Preset.RELEASE_1_1_AMPLIFIED.id,
+                ModernBetaBuiltInTypes.Preset.RELEASE_1_2_5_AMPLIFIED.id,
+                ModernBetaBuiltInTypes.Preset.RELEASE_1_6_4_AMPLIFIED.id
+            )
+        ));
         categoryRegisterable.register(MAJOR_RELEASE, new ModernBetaSettingsPresetCategory(
             ModernBetaBuiltInTypes.Preset.RELEASE_1_12_2.id,
             List.of(
                 ModernBetaBuiltInTypes.Preset.RELEASE_1_12_2.id,
                 ModernBetaBuiltInTypes.Preset.RELEASE_1_12_2_LARGE_BIOMES.id,
+                ModernBetaBuiltInTypes.Preset.RELEASE_1_12_2_AMPLIFIED.id,
                 ModernBetaBuiltInTypes.Preset.BEDROCK_1_2.id,
                 ModernBetaBuiltInTypes.Preset.RELEASE_1_17_1.id,
                 ModernBetaBuiltInTypes.Preset.RELEASE_1_17_1_LARGE_BIOMES.id,
+                ModernBetaBuiltInTypes.Preset.RELEASE_1_17_1_AMPLIFIED.id,
                 ModernBetaBuiltInTypes.Preset.BEDROCK_1_17.id
             )
         ));
@@ -107,8 +121,10 @@ public final class ModernBetaSettingsPresetCategories {
             List.of(
                 ModernBetaBuiltInTypes.Preset.SNOW_AINT_SNOWIER.id,
                 ModernBetaBuiltInTypes.Preset.SNOW_AINT_SNOWIER_LARGE_BIOMES.id,
+                ModernBetaBuiltInTypes.Preset.SNOW_AINT_SNOWIER_AMPLIFIED.id,
                 ModernBetaBuiltInTypes.Preset.RELEASE_HYBRID.id,
                 ModernBetaBuiltInTypes.Preset.RELEASE_HYBRID_LARGE_BIOMES.id,
+                ModernBetaBuiltInTypes.Preset.RELEASE_HYBRID_AMPLIFIED.id,
                 ModernBetaBuiltInTypes.Preset.WATER_WORLD.id,
                 ModernBetaBuiltInTypes.Preset.ISLE_LAND.id,
                 ModernBetaBuiltInTypes.Preset.CAVE_DELIGHT.id,

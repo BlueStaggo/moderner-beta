@@ -131,7 +131,8 @@ public class ModernBetaClientBuiltInProviders {
                     screen.floatRangeOption("depthWeight", 1.0f, 20.0f),
                     screen.floatRangeOption("depthOffset", 0.0f, 20.0f),
                     screen.floatRangeOption("scaleWeight", 1.0f, 20.0f),
-                    screen.floatRangeOption("scaleOffset", 0.0f, 20.0f)
+                    screen.floatRangeOption("scaleOffset", 0.0f, 20.0f),
+                    screen.booleanOption("modifyOnlyPositiveDepth")
                 );
             }
         );

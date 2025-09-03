@@ -310,7 +310,7 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                 );
 
                 //? if >=1.21.9
-                /*context.method_74037(net.minecraft.class_11876.field_62458);*/
+                /*context.setCursor(net.minecraft.client.gui.cursor.StandardCursors.RESIZE_ALL);*/
             }
 
             this.prevMouseX = mouseX;
@@ -318,7 +318,7 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
         }
 
         @Override
-        protected void onDrag(double mouseX, double mouseY, double deltaX, double deltaY) {
+        protected void onDrag(/*? if <1.21.9 {*/ double mouseX, double mouseY, /*?} else {*/ /*net.minecraft.client.gui.Click click, *//*?}*/ double deltaX, double deltaY) {
             assert client != null;
             double prevOffsetX = this.offsetX.getAndAdd(-deltaX);
             double prevOffsetY = this.offsetY.getAndAdd(-deltaY);

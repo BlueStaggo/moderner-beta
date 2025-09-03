@@ -22,6 +22,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Colors;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
+//? if <1.21.9
 import net.minecraft.util.Util;
 
 import java.util.List;
@@ -305,7 +306,14 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
             }
             
             @Override
-            public boolean mouseClicked(double mouseX, double mouseY, int button /*? >=1.21.9 {*//*, boolean doubleClick *//*?}*/) {
+            public boolean mouseClicked(/*? if <1.21.9 {*/ double mouseX, double mouseY, int button /*?} else {*/ /*net.minecraft.client.gui.Click click, boolean doubleClick *//*?}*/) {
+                //? if >=1.21.9 {
+                /*double mouseX = click.x();
+                double mouseY = click.y();
+
+                int button = click.keycode();
+                *///?}
+
                 if (button != 0) {
                     return false;
                 }

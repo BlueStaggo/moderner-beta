@@ -174,9 +174,9 @@ public class ModernBetaSelectBiomeScreen extends Screen {
             }
 
             @Override
-            public boolean mouseClicked(double mouseX, double mouseY, int button /*? >=1.21.9 {*//*, boolean doubleClick *//*?}*/) {
+            public boolean mouseClicked(/*? if <1.21.9 {*/ double mouseX, double mouseY, int button /*?} else {*/ /*net.minecraft.client.gui.Click click, boolean doubleClick *//*?}*/) {
                 ModernBetaSelectBiomeScreen.BiomeListWidget.this.setSelected(this);
-                return super.mouseClicked(mouseX, mouseY, button /*? >=1.21.9 {*//*, doubleClick *//*?}*/);
+                return super.mouseClicked(/*? if <1.21.9 {*/ mouseX, mouseY, button /*?} else {*/ /*click, doubleClick *//*?}*/);
             }
         }
     }

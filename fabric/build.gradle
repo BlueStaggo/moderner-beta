@@ -66,7 +66,7 @@ dependencies {
     modApi "net.fabricmc.fabric-api:fabric-api:${commonPr.fabric_api_version}"
 
     // Configuration
-    modImplementation("com.terraformersmc:modmenu:${commonPr.mod_menu_version}")
+    modCompileOnly("com.terraformersmc:modmenu:${commonPr.mod_menu_version}")
 
     //Fixes https://github.com/architectury/architectury-loom/issues/189 which is something we need for CI
     modLocalRuntime "com.github.jab125.architectury-data-generation-fix:architectury-data-generation-fix-fabric:${commonPr.arch_datagen_fix_version}"

@@ -311,7 +311,7 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
                 /*double mouseX = click.x();
                 double mouseY = click.y();
 
-                int button = click.keycode();
+                int button = click.button();
                 *///?}
 
                 if (button != 0) {

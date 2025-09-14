@@ -9,6 +9,8 @@ body:
     attributes:
       label: Describe the bug
       description: A clear and concise description of what the bug is.
+    validations:
+      required: true
   - type: textarea
     id: reproduce
     attributes:
@@ -19,11 +21,15 @@ body:
         2. Click on '....'
         3. Scroll down to '....'
         4. See error
+    validations:
+      required: true
   - type: textarea
     id: expected
     attributes:
       label: Expected behavior
       description: A clear and concise description of what you expected to happen.
+    validations:
+      required: true
   - type: textarea
     id: screenshots
     attributes:
@@ -34,6 +40,8 @@ body:
     attributes:
       label: Mod Version
       description: The version of the mod you are using to reproduce the bug.
+    validations:
+      required: true
   - type: dropdown
     id: minecraft-version
     attributes:
@@ -45,6 +53,8 @@ body:
         - 1.21.4
         - 1.21.5
         - 1.21.6
+    validations:
+        required: true
   - type: textarea
     id: context
     attributes:

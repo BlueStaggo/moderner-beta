@@ -211,7 +211,8 @@ public class ModernBetaBuiltInProviders {
             BiomeProviderVoronoi::new, BiomeProviderVoronoi.class, () -> List.of(
                 SettingsComponentTypes.TEMPERATURE_HEIGHT_SCALING,
                 SettingsComponentTypes.USE_OCEAN_BIOMES,
-                SettingsComponentTypes.VORONOI_POINTS
+                SettingsComponentTypes.VORONOI_POINTS,
+                SettingsComponentTypes.CLIMATE_SCALE
             )
         ));
         registryHandler.register(ModernBetaBuiltInTypes.Biome.FRACTAL.id, new BiomeProviderType<>(

@@ -71,7 +71,7 @@ public class ModEventsCommon {
     public static void commonInit(FMLConstructModEvent event) {
         ModernerBeta.init();
 
-        if (!FMLLoader.isProduction())
+        if (!FMLLoader/*? >=1.21.9 {*//*.getCurrent()*//*?}*/.isProduction())
             ModernerBeta.DEV_ENV = true;
 
         //? if forge {
@@ -148,7 +148,8 @@ public class ModEventsCommon {
                 BiomeProviderInfoPayload.ID,
                 BiomeProviderInfoPayload.CODEC,
                 (payload, context) -> {
-                    S2CPacketHandlers.onBiomeProviderInfo(context.player().getWorld(), payload);
+                    S2CPacketHandlers.onBiomeProviderInfo(context.player()
+                            /*? >=1.21.9 {*//*.getEntityWorld()*//*?} else {*/.getWorld()/*?}*/, payload);
                 }
         );
     }

@@ -8,6 +8,6 @@ import net.neoforged.fml.loading.FMLLoader;
 
 public class ModernerBetaForgeLike {
     public static boolean isModPresent(String mod) {
-        return FMLLoader.getLoadingModList().getModFileById(mod) != null;
+        return FMLLoader/*? >=1.21.9 {*//*.getCurrent()*//*?}*/.getLoadingModList().getModFileById(mod) != null;
     }
 }

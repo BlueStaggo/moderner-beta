@@ -34,7 +34,7 @@ import net.minecraftforge.fml.loading.FMLLoader;
 public class GameEventsCommon {
     @SubscribeEvent
     public static void registerCommands(RegisterCommandsEvent event) {
-        if (FMLLoader.isProduction()) return;
+        if (FMLLoader/*? >=1.21.9 {*//*.getCurrent()*//*?}*/.isProduction()) return;
 
         DebugProviderSettingsCommand.register(event.getDispatcher(), event.getBuildContext(), event.getCommandSelection());
     }

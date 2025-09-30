@@ -72,7 +72,7 @@ public abstract class ChunkProviderFinite extends ChunkProvider implements Chunk
     private final Block[][][] blockArr;
     
     private boolean pregenerated;
-    
+
     public ChunkProviderFinite(ModernBetaChunkGenerator chunkGenerator, long seed) {
         super(chunkGenerator, seed);
 
@@ -167,7 +167,7 @@ public abstract class ChunkProviderFinite extends ChunkProvider implements Chunk
             }
         }
     }
-    
+
     @Override
     public int getHeight(HeightLimitView world, int x, int z, Type type) {
         int seaLevel = this.getSeaLevel();
@@ -182,6 +182,14 @@ public abstract class ChunkProviderFinite extends ChunkProvider implements Chunk
         int height = this.getLevelHighestBlock(x, z, type);
          
         return height;
+    }
+
+    /**
+     * @return World sea level in block coordinates.
+     */
+    @Override
+    public int getSeaLevel() {
+        return this.seaLevel;
     }
     
     @Override

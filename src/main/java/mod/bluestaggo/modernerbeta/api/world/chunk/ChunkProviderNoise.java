@@ -186,7 +186,15 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
         
         return this.chunkCacheHeightmap.get(world, chunkX, chunkZ).getHeight(x, z, type);
     }
-    
+
+    /**
+     * @return World sea level in block coordinates.
+     */
+    @Override
+    public int getSeaLevel() {
+        return this.seaLevel;
+    }
+
     /**
      * Sample height at given x/z coordinate. Initially generates heightmap for entire chunk,
      * if chunk containing x/z coordinates has never been sampled.

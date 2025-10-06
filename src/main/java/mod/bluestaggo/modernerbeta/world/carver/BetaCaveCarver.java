@@ -10,6 +10,7 @@ import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.random.LocalRandom;
 import net.minecraft.util.math.random.Random;
@@ -21,6 +22,7 @@ import net.minecraft.world.gen.carver.CarverContext;
 import net.minecraft.world.gen.carver.CarvingMask;
 import net.minecraft.world.gen.chunk.AquiferSampler;
 import net.minecraft.world.gen.densityfunction.DensityFunction;
+import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import java.util.function.Function;
 
@@ -73,6 +75,7 @@ public class BetaCaveCarver extends Carver<BetaCaveCarverConfig> {
                     context,
                     config,
                     mainChunk,
+                    posToBiome,
                     random,
                     mainChunk.getPos().x,
                     mainChunk.getPos().z,
@@ -94,7 +97,8 @@ public class BetaCaveCarver extends Carver<BetaCaveCarverConfig> {
                 this.carveTunnels(
                     context, 
                     config, 
-                    mainChunk, 
+                    mainChunk,
+                    posToBiome,
                     random, 
                     mainChunk.getPos().x, mainChunk.getPos().z, 
                     x, y, z, 
@@ -115,7 +119,8 @@ public class BetaCaveCarver extends Carver<BetaCaveCarverConfig> {
     private void carveCave(
         CarverContext context, 
         BetaCaveCarverConfig config, 
-        Chunk chunk, 
+        Chunk chunk,
+        Function<BlockPos, RegistryEntry<Biome>> posToBiome,
         Random random,
         int mainChunkX, 
         int mainChunkZ, 
@@ -132,6 +137,7 @@ public class BetaCaveCarver extends Carver<BetaCaveCarverConfig> {
             context,
             config,
             chunk,
+            posToBiome,
             random,
             mainChunkX,
             mainChunkZ,
@@ -151,6 +157,7 @@ public class BetaCaveCarver extends Carver<BetaCaveCarverConfig> {
         CarverContext context,
         BetaCaveCarverConfig config,
         Chunk chunk,
+        Function<BlockPos, RegistryEntry<Biome>> posToBiome,
         Random initialRandom,
         int mainChunkX,
         int mainChunkZ,
@@ -217,6 +224,7 @@ public class BetaCaveCarver extends Carver<BetaCaveCarverConfig> {
                     context,
                     config,
                     chunk,
+                    posToBiome,
                     useFixedCaves ? random : initialRandom,
                     mainChunkX, mainChunkZ,
                     x, y, z,
@@ -233,6 +241,7 @@ public class BetaCaveCarver extends Carver<BetaCaveCarverConfig> {
                     context,
                     config,
                     chunk,
+                    posToBiome,
                     useFixedCaves ? random : initialRandom,
                     mainChunkX, mainChunkZ,
                     x, y, z,
@@ -259,7 +268,8 @@ public class BetaCaveCarver extends Carver<BetaCaveCarverConfig> {
             this.carveRegion(
                 context, 
                 config, 
-                chunk, 
+                chunk,
+                posToBiome,
                 mainChunkX, mainChunkZ, 
                 x, y, z, 
                 tunnelHorizontalScale * horizontalScale, 
@@ -280,6 +290,7 @@ public class BetaCaveCarver extends Carver<BetaCaveCarverConfig> {
         CarverContext context,
         BetaCaveCarverConfig config,
         Chunk chunk,
+        Function<BlockPos, RegistryEntry<Biome>> posToBiome,
         int mainChunkX, 
         int mainChunkZ, 
         double x, 
@@ -295,6 +306,7 @@ public class BetaCaveCarver extends Carver<BetaCaveCarverConfig> {
         double ctrZ = mainChunkZ * 16 + 8;
 
         BlockPos.Mutable pos = new BlockPos.Mutable();
+        BlockPos.Mutable tmp = new BlockPos.Mutable();
 
         if ( // Check for valid tunnel starts, I guess? Or to prevent overlap?
         x < ctrX - 16D - horizontalScale * 2D || z < ctrZ - 16D - horizontalScale * 2D || x > ctrX + 16D + horizontalScale * 2D
@@ -340,12 +352,15 @@ public class BetaCaveCarver extends Carver<BetaCaveCarverConfig> {
             return false;
         }
 
+        boolean carved = false;
         for (int localX = minX; localX < maxX; localX++) {
+            int offsetX = chunk.getPos().getOffsetX(localX);
             double scaledRelX = (((double) (localX + mainChunkX * 16) + 0.5D) - x) / horizontalScale;
 
             for (int localZ = minZ; localZ < maxZ; localZ++) {
+                int offsetZ = chunk.getPos().getOffsetZ(localZ);
                 double scaledRelZ = (((double) (localZ + mainChunkZ * 16) + 0.5D) - z) / horizontalScale;
-                boolean isGrassBlock = false;
+                MutableBoolean replacedGrassy = new MutableBoolean(false);
 
                 for (int localY = maxY; localY > minY; localY--) {
                     double scaledRelY = (((double) (localY - 1) + 0.5D) - y) / verticalScale;
@@ -355,64 +370,90 @@ public class BetaCaveCarver extends Carver<BetaCaveCarverConfig> {
                         continue;
 
                     carvingMask.set(localX, localY, localZ);
-                    pos.set(localX, localY, localZ);
+                    pos.set(offsetX, localY, offsetZ);
                     
-                    BlockState state = chunk.getBlockState(pos);
-
-                    if (state.isOf(Blocks.GRASS_BLOCK)) {
-                        isGrassBlock = true;
-                    }
-
-                    // Don't use canCarveBlock for accuracy, for now.
-                    if (state.isIn(config.replaceable)) {
-                        int offsetX = chunk.getPos().getOffsetX(localX);
-                        int offsetZ = chunk.getPos().getOffsetZ(localZ);
-                        BlockPos carverPos = new BlockPos(offsetX, localY, offsetZ);
-                        
-                        BlockState carverState = this.getBlockState(context, config, carverPos, aquiferSampler);
-                        
-                        if (carverState != null) {
-                            VersionCompat.setBlockState(chunk, carverPos, carverState);
-                            
-                            if (aquiferSampler.needsFluidTick() && !carverState.getFluidState().isEmpty()) {
-                                chunk.markBlockForPostProcessing(carverPos);
-                            }
-                            
-                            // Replaces carved-out dirt with grass, if block that was removed was grass.
-                            if (isGrassBlock && chunk.getBlockState(carverPos.down()).getBlock() == Blocks.DIRT) {
-                                VersionCompat.setBlockState(chunk, carverPos.down(), BlockStates.GRASS_BLOCK);
-                            }
-                        }
-                    }
+                    carved |= this.carveAtPoint(context, config, chunk, posToBiome, carvingMask, pos, tmp, aquiferSampler, replacedGrassy);
                 }
             }
         }
 
-        return true;
+        return carved;
     }
-    
-    private BlockState getBlockState(CarverContext context, BetaCaveCarverConfig config, BlockPos pos, AquiferSampler aquiferSampler) {
+
+    @Override
+    protected boolean carveAtPoint(
+            CarverContext context,
+            BetaCaveCarverConfig config,
+            Chunk chunk,
+            Function<BlockPos, RegistryEntry<Biome>> posToBiome,
+            CarvingMask carvingMask,
+            BlockPos.Mutable pos,
+            BlockPos.Mutable tmp,
+            AquiferSampler aquiferSampler,
+            MutableBoolean replacedGrassy
+    ) {
+        boolean useSurfaceRules = config.useSurfaceRules.orElse(false);
+        if (useSurfaceRules) {
+            return super.carveAtPoint(context, config, chunk, posToBiome, carvingMask, pos, tmp, aquiferSampler, replacedGrassy);
+        }
+
+        BlockState state = chunk.getBlockState(pos);
+
+        boolean replacedGrass = false;
+        if (state.isOf(Blocks.GRASS_BLOCK) || state.isOf(Blocks.MYCELIUM)) {
+            replacedGrass = true;
+        }
+
+        // Don't use canCarveBlock for accuracy, for now.
+        if (state.isIn(config.replaceable)) {
+            BlockState carverState = this.getState(context, config, pos, aquiferSampler);
+
+            if (carverState == null)
+                return false;
+
+            VersionCompat.setBlockState(chunk, pos, carverState);
+
+            if (aquiferSampler.needsFluidTick() && !carverState.getFluidState().isEmpty()) {
+                chunk.markBlockForPostProcessing(pos);
+            }
+
+            // Replaces carved-out dirt with grass, if block that was removed was grass.
+            if (replacedGrass) {
+                tmp.set(pos, Direction.DOWN);
+                if (chunk.getBlockState(tmp).isOf(Blocks.DIRT)) {
+                    VersionCompat.setBlockState(chunk, tmp, BlockStates.GRASS_BLOCK);
+                }
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override
+    public BlockState getState(CarverContext context, BetaCaveCarverConfig config, BlockPos pos, AquiferSampler aquiferSampler) {
         if (pos.getY() <= config.lavaLevel.getY(context)) {
             return BlockStates.LAVA;
         }
-        
+
         boolean useAquifers = config.useAquifers.orElse(false);
-        
+
         if (!useAquifers) {
             return BlockStates.AIR;
         }
-        
+
         // TODO: Produces too many flooded caves, re-visit this later.
-         
+
         int x = pos.getX();
         int y = pos.getY();
         int z = pos.getZ();
         BlockState state = aquiferSampler.apply(new DensityFunction.UnblendedNoisePos(x, y, z), 0.0);
-        
+
         if (state == null) {
             return isDebug(config) ? config.debugConfig.getBarrierState() : null;
         }
-        
+
         return isDebug(config) ? getDebugState(config, state) : state;
     }
 

@@ -18,12 +18,14 @@ public class BetaCaveCarverConfig extends CaveCarverConfig {
         instance.group(
             ((MapCodec.MapCodecCodec<CaveCarverConfig>) CaveCarverConfig.CAVE_CODEC).codec().forGetter(config -> config),
             Codec.BOOL.optionalFieldOf("use_fixed_caves").forGetter(config -> config.useFixedCaves),
-            Codec.BOOL.optionalFieldOf("use_aquifers").forGetter(config -> config.useAquifers)
+            Codec.BOOL.optionalFieldOf("use_aquifers").forGetter(config -> config.useAquifers),
+            Codec.BOOL.optionalFieldOf("use_surface_rules").forGetter(config -> config.useSurfaceRules)
         ).apply(instance, BetaCaveCarverConfig::new));
     
     public Optional<Boolean> useFixedCaves;
     public Optional<Boolean> useAquifers;
-    
+    public Optional<Boolean> useSurfaceRules;
+
     public BetaCaveCarverConfig(
         float probability,
         HeightProvider y,
@@ -35,7 +37,8 @@ public class BetaCaveCarverConfig extends CaveCarverConfig {
         FloatProvider verticalRadiusMultiplier,
         FloatProvider floorLevel,
         Optional<Boolean> useFixedCaves,
-        Optional<Boolean> useAquifers
+        Optional<Boolean> useAquifers,
+        Optional<Boolean> useSurfaceRules
     ) {
         super(
             probability,
@@ -51,12 +54,14 @@ public class BetaCaveCarverConfig extends CaveCarverConfig {
         
         this.useFixedCaves = useFixedCaves;
         this.useAquifers = useAquifers;
+        this.useSurfaceRules = useSurfaceRules;
     }
     
     public BetaCaveCarverConfig(
         CaveCarverConfig config,
         Optional<Boolean> useFixedCaves,
-        Optional<Boolean> useAquifers
+        Optional<Boolean> useAquifers,
+        Optional<Boolean> useSurfaceRules
     ) {
         this(
             config.probability,
@@ -69,7 +74,8 @@ public class BetaCaveCarverConfig extends CaveCarverConfig {
             config.verticalRadiusMultiplier,
             config.floorLevel,
             useFixedCaves,
-            useAquifers
+            useAquifers,
+            useSurfaceRules
         );
     }
 }

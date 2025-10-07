@@ -43,7 +43,8 @@
     ]
   },
   "mixins": [
-    "moderner_beta-common.mixins.json"
+    "moderner_beta-common.mixins.json",
+    "moderner_beta-fabric.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.15.0",

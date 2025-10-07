@@ -106,7 +106,7 @@ public class ModernBetaChunkGeneratorSettings {
             DensityFunctionTypes.zero()  // Vein Gap
         );
     }
-    
+
     private static ChunkGeneratorSettings createGeneratorSettings(
         Registerable<ChunkGeneratorSettings> settingsRegisterable,
         GenerationShapeConfig shapeConfig,
@@ -116,6 +116,28 @@ public class ModernBetaChunkGeneratorSettings {
         RegistryEntryLookup<DensityFunction> densityFunctionLookup = settingsRegisterable.getRegistryLookup(RegistryKeys.DENSITY_FUNCTION);
         RegistryEntryLookup<DoublePerlinNoiseSampler.NoiseParameters> noiseParametersLookup = settingsRegisterable.getRegistryLookup(RegistryKeys.NOISE_PARAMETERS);
 
+        return createGeneratorSettings(densityFunctionLookup, noiseParametersLookup, shapeConfig, seaLevel, useAquifers);
+    }
+
+    public static ChunkGeneratorSettings createGeneratorSettings(
+        RegistryWrapper.WrapperLookup lookup,
+        GenerationShapeConfig shapeConfig,
+        int seaLevel,
+        boolean useAquifers
+    ) {
+        RegistryEntryLookup<DensityFunction> densityFunctionLookup = lookup.getOrThrow(RegistryKeys.DENSITY_FUNCTION);
+        RegistryEntryLookup<DoublePerlinNoiseSampler.NoiseParameters> noiseParametersLookup = lookup.getOrThrow(RegistryKeys.NOISE_PARAMETERS);
+
+        return createGeneratorSettings(densityFunctionLookup, noiseParametersLookup, shapeConfig, seaLevel, useAquifers);
+    }
+    
+    private static ChunkGeneratorSettings createGeneratorSettings(
+        RegistryEntryLookup<DensityFunction> densityFunctionLookup,
+        RegistryEntryLookup<DoublePerlinNoiseSampler.NoiseParameters> noiseParametersLookup,
+        GenerationShapeConfig shapeConfig,
+        int seaLevel,
+        boolean useAquifers
+    ) {
         useModernBetaSurfaceRules = true;
         MaterialRules.MaterialRule materialRule = VanillaSurfaceRules.createOverworldSurfaceRule();
         useModernBetaSurfaceRules = false;

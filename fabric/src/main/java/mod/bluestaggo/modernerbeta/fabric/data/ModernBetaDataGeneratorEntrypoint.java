@@ -1,5 +1,8 @@
 package mod.bluestaggo.modernerbeta.fabric.data;
 
+import mod.bluestaggo.modernerbeta.ModernerBeta;
+import mod.bluestaggo.modernerbeta.fabric.data.reduced_height.ModernBetaDeepslateBlobsDataProvider;
+import mod.bluestaggo.modernerbeta.fabric.data.reduced_height.ModernBetaReducedHeightDataProvider;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistryKeys;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomes;
 import mod.bluestaggo.modernerbeta.world.carver.configured.ModernBetaConfiguredCarvers;
@@ -11,8 +14,10 @@ import mod.bluestaggo.modernerbeta.world.structure.ModernBetaStructureSets;
 import mod.bluestaggo.modernerbeta.world.structure.ModernBetaStructures;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
+import net.minecraft.data.MetadataProvider;
 import net.minecraft.registry.RegistryBuilder;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.text.Text;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -31,6 +36,16 @@ public class ModernBetaDataGeneratorEntrypoint implements DataGeneratorEntrypoin
         pack.addProvider(ModernBetaTagProviderBlock::new);
         pack.addProvider(ModernBetaTagProviderWorldPreset::new);
         pack.addProvider(ModernBetaTagProviderSettingsPresetCategory::new);
+
+        FabricDataGenerator.Pack reducedHeightPack = fabricDataGenerator.createBuiltinResourcePack(ModernerBeta.createId("reduced_height"));
+        reducedHeightPack.addProvider(ModernBetaReducedHeightDataProvider::new);
+        reducedHeightPack.addProvider((FabricDataGenerator.Pack.Factory<MetadataProvider>) output -> MetadataProvider.create(
+                output, Text.translatable("dataPack.moderner_beta.reduced_height.name")));
+
+        FabricDataGenerator.Pack deepslateBlobsPack = fabricDataGenerator.createBuiltinResourcePack(ModernerBeta.createId("deepslate_blobs"));
+        deepslateBlobsPack.addProvider(ModernBetaDeepslateBlobsDataProvider::new);
+        deepslateBlobsPack.addProvider((FabricDataGenerator.Pack.Factory<MetadataProvider>) output -> MetadataProvider.create(
+                output, Text.translatable("dataPack.moderner_beta.deepslate_blobs.name")));
     }
     
     @Override

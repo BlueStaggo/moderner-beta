@@ -1,4 +1,7 @@
 plugins {
+    id "org.jetbrains.kotlin.jvm" version "2.2.0"
+    id "com.google.devtools.ksp" version "2.2.0-2.0.2"
+    id "dev.kikugie.fletching-table" version "0.1.0-alpha.13"
     id "architectury-plugin" version "3.4.+"
     id "com.gradleup.shadow" version "9.0.0-rc2"
     id "com.modrinth.minotaur" version "2.+"
@@ -46,6 +49,12 @@ loom {
             vmArg "-Dfabric-api.datagen.output-dir=${commonPr.file("src/main/generated")}"
             vmArg "-Dfabric-api.datagen.modid=moderner_beta"
         }
+    }
+}
+
+fletchingTable {
+    mixins.create("main") {
+        mixin("default", "moderner_beta-fabric.mixins.json")
     }
 }
 
@@ -97,6 +106,10 @@ processResources {
 
     filesMatching("fabric.mod.json") {
         expand toExpand
+    }
+
+    filesMatching("moderner_beta-fabric.mixins.json") {
+        expand "java_version": stonecutter.eval(stonecutter.current.version, ">=1.20.5") ? 21 : 17
     }
 
     from(commonPr.file("src/main/generated")) {

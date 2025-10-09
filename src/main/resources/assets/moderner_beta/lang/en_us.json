@@ -396,7 +396,9 @@
     "createWorld.customize.modern_beta.settings.cave_biome_voronoi.points": "Voronoi Points",
 
     "dataPack.moderner_beta.reduced_height.name": "Reduced Height",
+    "dataPack.moderner_beta.reduced_height.desc": "Min Y = 0, pre-1.18 ore gen",
     "dataPack.moderner_beta.deepslate_blobs.name": "Deepslate Blobs",
+    "dataPack.moderner_beta.deepslate_blobs.desc": "Place above reduced height, add deepslate and tuff blobs",
 
     "text.autoconfig.moderner_beta.title": "Moderner Beta Configuration",
 

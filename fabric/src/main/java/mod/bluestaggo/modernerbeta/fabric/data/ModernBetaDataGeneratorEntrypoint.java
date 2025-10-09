@@ -39,13 +39,15 @@ public class ModernBetaDataGeneratorEntrypoint implements DataGeneratorEntrypoin
 
         FabricDataGenerator.Pack reducedHeightPack = fabricDataGenerator.createBuiltinResourcePack(ModernerBeta.createId("reduced_height"));
         reducedHeightPack.addProvider(ModernBetaReducedHeightDataProvider::new);
+        //? if <1.21
+        /*reducedHeightPack.addProvider(mod.bluestaggo.modernerbeta.fabric.data.reduced_height.ModernBetaReducedHeightTagProviderBlock::new);*/
         reducedHeightPack.addProvider((FabricDataGenerator.Pack.Factory<MetadataProvider>) output -> MetadataProvider.create(
-                output, Text.translatable("dataPack.moderner_beta.reduced_height.name")));
+                output, Text.translatable("dataPack.moderner_beta.reduced_height.desc")));
 
         FabricDataGenerator.Pack deepslateBlobsPack = fabricDataGenerator.createBuiltinResourcePack(ModernerBeta.createId("deepslate_blobs"));
         deepslateBlobsPack.addProvider(ModernBetaDeepslateBlobsDataProvider::new);
         deepslateBlobsPack.addProvider((FabricDataGenerator.Pack.Factory<MetadataProvider>) output -> MetadataProvider.create(
-                output, Text.translatable("dataPack.moderner_beta.deepslate_blobs.name")));
+                output, Text.translatable("dataPack.moderner_beta.deepslate_blobs.desc")));
     }
     
     @Override

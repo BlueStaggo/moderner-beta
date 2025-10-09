@@ -4,10 +4,9 @@ import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistryKeys;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPresetCategory;
+import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.RegistryWrapper.WrapperLookup;
@@ -29,16 +28,16 @@ public class ModernBetaWorldGenProvider extends FabricDynamicRegistryProvider {
 
     @Override
     protected void configure(RegistryWrapper.WrapperLookup registries, Entries entries) {
-        RegistryWrapper.Impl<Biome> registryBiome = getRegistryWrapper(registries, RegistryKeys.BIOME);
-        RegistryWrapper.Impl<ConfiguredFeature<?, ?>> registryConfiguredFeature = getRegistryWrapper(registries, RegistryKeys.CONFIGURED_FEATURE);
-        RegistryWrapper.Impl<PlacedFeature> registryPlacedFeature = getRegistryWrapper(registries, RegistryKeys.PLACED_FEATURE);
-        RegistryWrapper.Impl<ConfiguredCarver<?>> registryConfiguredCarver = getRegistryWrapper(registries, RegistryKeys.CONFIGURED_CARVER);
-        RegistryWrapper.Impl<ChunkGeneratorSettings> registrySettings = getRegistryWrapper(registries, RegistryKeys.CHUNK_GENERATOR_SETTINGS);
-        RegistryWrapper.Impl<Structure> registryStructure = getRegistryWrapper(registries, RegistryKeys.STRUCTURE);
-        RegistryWrapper.Impl<StructureSet> registryStructureSet = getRegistryWrapper(registries, RegistryKeys.STRUCTURE_SET);
-        RegistryWrapper.Impl<WorldPreset> registryWorldPreset = getRegistryWrapper(registries, RegistryKeys.WORLD_PRESET);
-        RegistryWrapper.Impl<ModernBetaSettingsPreset> registrySettingsPreset = getRegistryWrapper(registries, ModernBetaRegistryKeys.SETTINGS_PRESET);
-        RegistryWrapper.Impl<ModernBetaSettingsPresetCategory> registrySettingsPresetCategory= getRegistryWrapper(registries, ModernBetaRegistryKeys.SETTINGS_PRESET_CATEGORY);
+        RegistryWrapper.Impl<Biome> registryBiome = VersionCompat.getRegistryWrapper(registries, RegistryKeys.BIOME);
+        RegistryWrapper.Impl<ConfiguredFeature<?, ?>> registryConfiguredFeature = VersionCompat.getRegistryWrapper(registries, RegistryKeys.CONFIGURED_FEATURE);
+        RegistryWrapper.Impl<PlacedFeature> registryPlacedFeature = VersionCompat.getRegistryWrapper(registries, RegistryKeys.PLACED_FEATURE);
+        RegistryWrapper.Impl<ConfiguredCarver<?>> registryConfiguredCarver = VersionCompat.getRegistryWrapper(registries, RegistryKeys.CONFIGURED_CARVER);
+        RegistryWrapper.Impl<ChunkGeneratorSettings> registrySettings = VersionCompat.getRegistryWrapper(registries, RegistryKeys.CHUNK_GENERATOR_SETTINGS);
+        RegistryWrapper.Impl<Structure> registryStructure = VersionCompat.getRegistryWrapper(registries, RegistryKeys.STRUCTURE);
+        RegistryWrapper.Impl<StructureSet> registryStructureSet = VersionCompat.getRegistryWrapper(registries, RegistryKeys.STRUCTURE_SET);
+        RegistryWrapper.Impl<WorldPreset> registryWorldPreset = VersionCompat.getRegistryWrapper(registries, RegistryKeys.WORLD_PRESET);
+        RegistryWrapper.Impl<ModernBetaSettingsPreset> registrySettingsPreset = VersionCompat.getRegistryWrapper(registries, ModernBetaRegistryKeys.SETTINGS_PRESET);
+        RegistryWrapper.Impl<ModernBetaSettingsPresetCategory> registrySettingsPresetCategory= VersionCompat.getRegistryWrapper(registries, ModernBetaRegistryKeys.SETTINGS_PRESET_CATEGORY);
 
         entries.addAll(registryBiome);
         entries.addAll(registryConfiguredFeature);
@@ -50,16 +49,6 @@ public class ModernBetaWorldGenProvider extends FabricDynamicRegistryProvider {
         entries.addAll(registryWorldPreset);
         entries.addAll(registrySettingsPreset);
         entries.addAll(registrySettingsPresetCategory);
-    }
-
-    private static <T> RegistryWrapper.Impl<T> getRegistryWrapper(WrapperLookup registries, RegistryKey<Registry<T>> registryKey) {
-        return registries.
-        //? if >=1.21.2 {
-        getOrThrow
-        //?} else {
-        /*getWrapperOrThrow
-        *///?}
-            (registryKey);
     }
 
     @Override

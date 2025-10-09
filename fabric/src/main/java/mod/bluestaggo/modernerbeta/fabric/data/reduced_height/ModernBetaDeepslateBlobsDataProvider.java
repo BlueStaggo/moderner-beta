@@ -1,5 +1,6 @@
 package mod.bluestaggo.modernerbeta.fabric.data.reduced_height;
 
+import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;
 import net.minecraft.registry.RegistryKeys;
@@ -14,6 +15,7 @@ import net.minecraft.world.gen.placementmodifier.HeightRangePlacementModifier;
 
 import java.util.concurrent.CompletableFuture;
 
+import static mod.bluestaggo.modernerbeta.fabric.data.reduced_height.ModernBetaReducedHeightDataProvider.alwaysOwnedRegistryEntry;
 import static mod.bluestaggo.modernerbeta.fabric.data.reduced_height.ModernBetaReducedHeightDataProvider.modifiersWithCount;
 
 public class ModernBetaDeepslateBlobsDataProvider extends FabricDynamicRegistryProvider {
@@ -23,8 +25,8 @@ public class ModernBetaDeepslateBlobsDataProvider extends FabricDynamicRegistryP
 
     @Override
     protected void configure(RegistryWrapper.WrapperLookup registries, Entries entries) {
-        RegistryWrapper.Impl<ConfiguredFeature<?, ?>> registryConfiguredFeature = registries.getOrThrow(RegistryKeys.CONFIGURED_FEATURE);
-        RegistryEntry<ConfiguredFeature<?, ?>> deepslate = entries.ref(ModernBetaReducedHeightDataProvider.ORE_DEEPSLATE_OLD);
+        RegistryWrapper.Impl<ConfiguredFeature<?, ?>> registryConfiguredFeature = VersionCompat.getRegistryWrapper(registries, RegistryKeys.CONFIGURED_FEATURE);
+        RegistryEntry<ConfiguredFeature<?, ?>> deepslate = alwaysOwnedRegistryEntry(entries.ref(ModernBetaReducedHeightDataProvider.ORE_DEEPSLATE_OLD));
         RegistryEntry<ConfiguredFeature<?, ?>> tuff = registryConfiguredFeature.getOrThrow(OreConfiguredFeatures.ORE_TUFF);
 
         entries.add(OrePlacedFeatures.ORE_COAL_UPPER, new PlacedFeature(deepslate,

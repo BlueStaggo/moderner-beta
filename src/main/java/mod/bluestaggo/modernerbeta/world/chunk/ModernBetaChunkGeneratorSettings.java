@@ -3,6 +3,7 @@ package mod.bluestaggo.modernerbeta.world.chunk;
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
 import mod.bluestaggo.modernerbeta.mixin.AccessorDensityFunctions;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
+import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import net.minecraft.registry.*;
 import net.minecraft.registry.entry.RegistryEntry.Reference;
 import net.minecraft.util.math.noise.DoublePerlinNoiseSampler;
@@ -125,8 +126,8 @@ public class ModernBetaChunkGeneratorSettings {
         int seaLevel,
         boolean useAquifers
     ) {
-        RegistryEntryLookup<DensityFunction> densityFunctionLookup = lookup.getOrThrow(RegistryKeys.DENSITY_FUNCTION);
-        RegistryEntryLookup<DoublePerlinNoiseSampler.NoiseParameters> noiseParametersLookup = lookup.getOrThrow(RegistryKeys.NOISE_PARAMETERS);
+        RegistryEntryLookup<DensityFunction> densityFunctionLookup = VersionCompat.getRegistryWrapper(lookup, RegistryKeys.DENSITY_FUNCTION);
+        RegistryEntryLookup<DoublePerlinNoiseSampler.NoiseParameters> noiseParametersLookup = VersionCompat.getRegistryWrapper(lookup, RegistryKeys.NOISE_PARAMETERS);
 
         return createGeneratorSettings(densityFunctionLookup, noiseParametersLookup, shapeConfig, seaLevel, useAquifers);
     }

@@ -34,7 +34,8 @@ public class ModernerBetaFabric implements ModInitializer {
 
         ModContainer modContainer = FabricLoader.getInstance().getModContainer(ModernerBeta.MOD_ID).orElseThrow();
         for (String pack : ModernerBeta.BUILT_IN_PACKS) {
-            ResourceManagerHelper.registerBuiltinResourcePack(ModernerBeta.createId(pack), modContainer, ResourcePackActivationType.NORMAL);
+            ResourceManagerHelper.registerBuiltinResourcePack(ModernerBeta.createId(pack), modContainer,
+                    Text.translatable("dataPack.moderner_beta." + pack + ".name"), ResourcePackActivationType.NORMAL);
         }
 
         ModernerBeta.init();

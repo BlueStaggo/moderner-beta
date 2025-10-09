@@ -1,7 +1,9 @@
 package mod.bluestaggo.modernerbeta.fabric.data.reduced_height;
 
+import com.mojang.datafixers.util.Either;
 import mod.bluestaggo.modernerbeta.fabric.mixin.AccessorDensityFunctionsFabric;
 import mod.bluestaggo.modernerbeta.mixin.AccessorDensityFunctions;
+import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.world.carver.configured.ModernBetaConfiguredCarvers;
 import mod.bluestaggo.modernerbeta.world.feature.configured.ModernBetaConfiguredFeatures;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -11,9 +13,12 @@ import net.minecraft.block.Blocks;
 import net.minecraft.registry.*;
 import net.minecraft.registry.RegistryWrapper.WrapperLookup;
 import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.registry.entry.RegistryEntryOwner;
 import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.structure.rule.RuleTest;
 import net.minecraft.structure.rule.TagMatchRuleTest;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.floatprovider.ConstantFloatProvider;
 import net.minecraft.util.math.intprovider.UniformIntProvider;
 import net.minecraft.util.math.noise.DoublePerlinNoiseSampler;
@@ -37,6 +42,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.OptionalLong;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import static mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGeneratorSettings.*;
 
@@ -72,20 +79,26 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
                 BlockTags.INFINIBURN_OVERWORLD,
                 DimensionTypes.OVERWORLD_ID,
                 0.0F,
+                //? if >=1.21.6
                 Optional.empty(),
                 new DimensionType.MonsterSettings(false, true, UniformIntProvider.create(0, 7), 0)
             )
         );
 
         //Configured carvers
-        RegistryEntryLookup<Block> registryBlock = registries.getOrThrow(RegistryKeys.BLOCK);
+        RegistryWrapper.Impl<Block> registryBlock = VersionCompat.getRegistryWrapper(registries, RegistryKeys.BLOCK);
         CaveCarverConfig configCaveDeep = new CaveCarverConfig(
             0.0f,
             ConstantHeightProvider.create(YOffset.fixed(-2032)),
             ConstantFloatProvider.create(0.0f),
             YOffset.fixed(-2032),
             CarverDebugConfig.create(false, Blocks.CRIMSON_BUTTON.getDefaultState()),
+            //? if >=1.21 {
             registryBlock.getOrThrow(BlockTags.AIR),
+            //?} else {
+            /*net.minecraft.registry.entry.RegistryEntryList.of(registryBlock,
+                net.minecraft.registry.tag.TagKey.of(RegistryKeys.BLOCK, mod.bluestaggo.modernerbeta.ModernerBeta.createId("air"))),
+            *///?}
             ConstantFloatProvider.create(0.0f),
             ConstantFloatProvider.create(0.0f),
             ConstantFloatProvider.create(0.0f)
@@ -105,8 +118,8 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
         entries.add(ORE_DIAMOND_OLD, new ConfiguredFeature<>(Feature.ORE,
             new OreFeatureConfig(
                 List.of(
-                        OreFeatureConfig.createTarget(overworldStone, Blocks.DIAMOND_ORE.getDefaultState()),
-                        OreFeatureConfig.createTarget(deepslateReplacers, Blocks.DEEPSLATE_DIAMOND_ORE.getDefaultState())
+                    OreFeatureConfig.createTarget(overworldStone, Blocks.DIAMOND_ORE.getDefaultState()),
+                    OreFeatureConfig.createTarget(deepslateReplacers, Blocks.DEEPSLATE_DIAMOND_ORE.getDefaultState())
                 ), 8
             )
         ));
@@ -132,15 +145,15 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
         entries.add(EARLY_BEDROCK, createGeneratorSettings(registries, ModernBetaShapeReducedHeightConfigs.EARLY_BEDROCK, 63, true));
 
         //Density functions
-        RegistryEntryLookup<DensityFunction> densityFunctionLookup = registries.getOrThrow(RegistryKeys.DENSITY_FUNCTION);
-        RegistryEntryLookup<DoublePerlinNoiseSampler.NoiseParameters> noiseParametersLookup = registries.getOrThrow(RegistryKeys.NOISE_PARAMETERS);
+        RegistryEntryLookup<DensityFunction> densityFunctionLookup = VersionCompat.getRegistryWrapper(registries, RegistryKeys.DENSITY_FUNCTION);
+        RegistryEntryLookup<DoublePerlinNoiseSampler.NoiseParameters> noiseParametersLookup = VersionCompat.getRegistryWrapper(registries, RegistryKeys.NOISE_PARAMETERS);
 
         entries.add(AccessorDensityFunctionsFabric.getCavesSpaghetti2d(), createCavesSpaghetti2dOverworldFunction(densityFunctionLookup, noiseParametersLookup));
         entries.add(AccessorDensityFunctions.getCavesEntrancesOverworldKey(), createCavesEntrancesOverworldFunction(densityFunctionLookup, noiseParametersLookup));
         entries.add(AccessorDensityFunctions.getCavesNoodleOverworldKey(), createCavesNoodleOverworldFunction(densityFunctionLookup, noiseParametersLookup));
 
         //Placed features
-        RegistryEntryLookup<ConfiguredFeature<?, ?>> registryConfiguredFeature = registries.getOrThrow(RegistryKeys.CONFIGURED_FEATURE);
+        RegistryEntryLookup<ConfiguredFeature<?, ?>> registryConfiguredFeature = VersionCompat.getRegistryWrapper(registries, RegistryKeys.CONFIGURED_FEATURE);
         RegistryEntry<ConfiguredFeature<?, ?>> noOp = new RegistryEntry.Direct<>(new ConfiguredFeature<>(Feature.NO_OP, DefaultFeatureConfig.DEFAULT));
         RegistryEntry<ConfiguredFeature<?, ?>> dirt = registryConfiguredFeature.getOrThrow(OreConfiguredFeatures.ORE_DIRT);
         RegistryEntry<ConfiguredFeature<?, ?>> gravel = registryConfiguredFeature.getOrThrow(OreConfiguredFeatures.ORE_GRAVEL);
@@ -151,7 +164,7 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
         RegistryEntry<ConfiguredFeature<?, ?>> iron = registryConfiguredFeature.getOrThrow(OreConfiguredFeatures.ORE_IRON);
         RegistryEntry<ConfiguredFeature<?, ?>> gold = registryConfiguredFeature.getOrThrow(OreConfiguredFeatures.ORE_GOLD);
         RegistryEntry<ConfiguredFeature<?, ?>> redstone = registryConfiguredFeature.getOrThrow(OreConfiguredFeatures.ORE_REDSTONE);
-        RegistryEntry<ConfiguredFeature<?, ?>> diamond = entries.ref(ORE_DIAMOND_OLD);
+        RegistryEntry<ConfiguredFeature<?, ?>> diamond = alwaysOwnedRegistryEntry(entries.ref(ORE_DIAMOND_OLD));
         RegistryEntry<ConfiguredFeature<?, ?>> lapis = registryConfiguredFeature.getOrThrow(OreConfiguredFeatures.ORE_LAPIS);
         RegistryEntry<ConfiguredFeature<?, ?>> copperSmall = registryConfiguredFeature.getOrThrow(OreConfiguredFeatures.ORE_COPPER_SMALL);
 
@@ -166,6 +179,7 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
         entries.add(OrePlacedFeatures.ORE_COPPER_LARGE, new PlacedFeature(noOp, List.of(CountPlacementModifier.of(0))));
         entries.add(OrePlacedFeatures.ORE_DIAMOND, new PlacedFeature(diamond,
                 modifiersWithCount(1, HeightRangePlacementModifier.uniform(YOffset.aboveBottom(0), YOffset.aboveBottom(15)))));
+        //? if >=1.20.2
         entries.add(OrePlacedFeatures.ORE_DIAMOND_MEDIUM, new PlacedFeature(noOp, List.of(CountPlacementModifier.of(0))));
         entries.add(OrePlacedFeatures.ORE_DIAMOND_LARGE, new PlacedFeature(noOp, List.of(CountPlacementModifier.of(0))));
         entries.add(OrePlacedFeatures.ORE_DIAMOND_BURIED, new PlacedFeature(noOp, List.of(CountPlacementModifier.of(0))));
@@ -203,8 +217,8 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
             ModernBetaShapeReducedHeightConfigs.VANILLA_SURFACE,
             Blocks.STONE.getDefaultState(),
             Blocks.WATER.getDefaultState(),
-            AccessorDensityFunctionsFabric.invokeCreateSurfaceNoiseRouter(lookup.getOrThrow(RegistryKeys.DENSITY_FUNCTION),
-                lookup.getOrThrow(RegistryKeys.NOISE_PARAMETERS), largeBiomes, amplified),
+            AccessorDensityFunctionsFabric.invokeCreateSurfaceNoiseRouter(VersionCompat.getRegistryWrapper(lookup, RegistryKeys.DENSITY_FUNCTION),
+                VersionCompat.getRegistryWrapper(lookup, RegistryKeys.NOISE_PARAMETERS), largeBiomes, amplified),
             VanillaSurfaceRules.createOverworldSurfaceRule(),
             (new VanillaBiomeParameters()).getSpawnSuitabilityNoises(),
             63,
@@ -220,8 +234,8 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
             ModernBetaShapeReducedHeightConfigs.VANILLA_CAVES,
             Blocks.STONE.getDefaultState(),
             Blocks.WATER.getDefaultState(),
-            AccessorDensityFunctionsFabric.invokeCreateNetherNoiseRouter(lookup.getOrThrow(RegistryKeys.DENSITY_FUNCTION),
-                lookup.getOrThrow(RegistryKeys.NOISE_PARAMETERS)),
+            AccessorDensityFunctionsFabric.invokeCreateNetherNoiseRouter(VersionCompat.getRegistryWrapper(lookup, RegistryKeys.DENSITY_FUNCTION),
+                VersionCompat.getRegistryWrapper(lookup, RegistryKeys.NOISE_PARAMETERS)),
             VanillaSurfaceRules.createDefaultRule(false, true, true),
             List.of(),
             32,
@@ -317,6 +331,73 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
 
     protected static List<PlacementModifier> modifiersWithCount(int count, PlacementModifier heightModifier) {
         return modifiers(CountPlacementModifier.of(count), heightModifier);
+    }
+
+    protected static <T> RegistryEntry<T> alwaysOwnedRegistryEntry(RegistryEntry<T> entry) {
+        return new RegistryEntry<>() {
+            @Override
+            public T value() {
+                return entry.value();
+            }
+
+            @Override
+            public boolean hasKeyAndValue() {
+                return entry.hasKeyAndValue();
+            }
+
+            @Override
+            public boolean matchesId(Identifier id) {
+                return entry.matchesId(id);
+            }
+
+            @Override
+            public boolean matchesKey(RegistryKey<T> key) {
+                return entry.matchesKey(key);
+            }
+
+            @Override
+            public boolean matches(Predicate<RegistryKey<T>> predicate) {
+                return entry.matches(predicate);
+            }
+
+            @Override
+            public boolean isIn(TagKey<T> tag) {
+                return entry.isIn(tag);
+            }
+
+            //? if >=1.21 {
+            @SuppressWarnings("deprecation")
+            @Override
+            public boolean matches(RegistryEntry<T> entry) {
+                return entry.matches(entry);
+            }
+            //?}
+
+            @Override
+            public Stream<TagKey<T>> streamTags() {
+                return entry.streamTags();
+            }
+
+            @Override
+            public Either<RegistryKey<T>, T> getKeyOrValue() {
+                return entry.getKeyOrValue();
+            }
+
+            @Override
+            public Optional<RegistryKey<T>> getKey() {
+                return entry.getKey();
+            }
+
+            @Override
+            public Type getType() {
+                return entry.getType();
+            }
+
+            @Override
+            public boolean ownerEquals(RegistryEntryOwner<T> owner) {
+                return true;
+            }
+        };
     }
 
     public static boolean isGeneratingData() {

@@ -9,6 +9,9 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
+import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.Pool;
 import net.minecraft.util.collection.Weighted;
@@ -42,6 +45,16 @@ public final class VersionCompat {
         //?} else {
         /*"Lnet/minecraft/world/biome/Biome;getPrecipitation(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/world/biome/Biome$Precipitation;";
         *///?}
+
+    public static <T> RegistryWrapper.Impl<T> getRegistryWrapper(RegistryWrapper.WrapperLookup registries, RegistryKey<Registry<T>> registryKey) {
+        return registries.
+        //? if >=1.21.2 {
+        getOrThrow
+         //?} else {
+        /*getWrapperOrThrow
+        *///?}
+            (registryKey);
+    }
 
     public static <T> T accessPool(Pool<T> pool, Random random) {
         //? if >=1.21.5 {

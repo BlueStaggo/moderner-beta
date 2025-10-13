@@ -2,14 +2,14 @@ package mod.bluestaggo.modernerbeta.fabric.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import mod.bluestaggo.modernerbeta.fabric.data.reduced_height.ModernBetaReducedHeightDataProvider;
-import net.minecraft.world.gen.densityfunction.DensityFunctions;
+import net.minecraft.world.level.levelgen.NoiseRouterData;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(DensityFunctions.class)
+@Mixin(NoiseRouterData.class)
 public class MixinDensityFunctions {
     @ModifyExpressionValue(
-        method = "applySurfaceSlides",
+        method = "slideOverworld",
         at = @At(
             value = "CONSTANT",
             args = "intValue=-64"
@@ -23,7 +23,7 @@ public class MixinDensityFunctions {
     }
 
     @ModifyExpressionValue(
-        method = "applySurfaceSlides",
+        method = "slideOverworld",
         at = @At(
             value = "CONSTANT",
             args = "intValue=384"

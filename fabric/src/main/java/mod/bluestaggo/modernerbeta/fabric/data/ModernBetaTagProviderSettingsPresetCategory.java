@@ -4,19 +4,19 @@ import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistryKeys;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPresetCategory;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
-import net.minecraft.registry.RegistryWrapper.WrapperLookup;
+import net.minecraft.core.HolderLookup.Provider;
 
 import java.util.concurrent.CompletableFuture;
 
 import static mod.bluestaggo.modernerbeta.tags.ModernBetaSettingsPresetCategoryTags.SELECTABLE;
 
 public class ModernBetaTagProviderSettingsPresetCategory extends FabricTagProvider<ModernBetaSettingsPresetCategory> {
-    public ModernBetaTagProviderSettingsPresetCategory(FabricDataOutput output, CompletableFuture<WrapperLookup> registriesFuture) {
+    public ModernBetaTagProviderSettingsPresetCategory(FabricDataOutput output, CompletableFuture<Provider> registriesFuture) {
         super(output, ModernBetaRegistryKeys.SETTINGS_PRESET_CATEGORY, registriesFuture);
     }
 
     @Override
-    protected void configure(WrapperLookup lookup) {
+    protected void addTags(Provider provider) {
         this.builder(SELECTABLE).add(
             ModernBetaSettingsPresetCategories.BETA,
             ModernBetaSettingsPresetCategories.ALPHA_INFDEV,

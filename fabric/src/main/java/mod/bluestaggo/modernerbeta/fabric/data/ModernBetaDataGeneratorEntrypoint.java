@@ -14,10 +14,10 @@ import mod.bluestaggo.modernerbeta.world.structure.ModernBetaStructureSets;
 import mod.bluestaggo.modernerbeta.world.structure.ModernBetaStructures;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
-import net.minecraft.data.MetadataProvider;
-import net.minecraft.registry.RegistryBuilder;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.text.Text;
+import net.minecraft.core.RegistrySetBuilder;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.metadata.PackMetadataGenerator;
+import net.minecraft.network.chat.Component;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -41,26 +41,26 @@ public class ModernBetaDataGeneratorEntrypoint implements DataGeneratorEntrypoin
         reducedHeightPack.addProvider(ModernBetaReducedHeightDataProvider::new);
         //? if <1.21
         /*reducedHeightPack.addProvider(mod.bluestaggo.modernerbeta.fabric.data.reduced_height.ModernBetaReducedHeightTagProviderBlock::new);*/
-        reducedHeightPack.addProvider((FabricDataGenerator.Pack.Factory<MetadataProvider>) output -> MetadataProvider.create(
-                output, Text.translatable("dataPack.moderner_beta.reduced_height.desc")));
+        reducedHeightPack.addProvider((FabricDataGenerator.Pack.Factory<PackMetadataGenerator>) output -> PackMetadataGenerator.forFeaturePack(
+                output, Component.translatable("dataPack.moderner_beta.reduced_height.desc")));
 
         FabricDataGenerator.Pack deepslateBlobsPack = fabricDataGenerator.createBuiltinResourcePack(ModernerBeta.createId("deepslate_blobs"));
         deepslateBlobsPack.addProvider(ModernBetaDeepslateBlobsDataProvider::new);
-        deepslateBlobsPack.addProvider((FabricDataGenerator.Pack.Factory<MetadataProvider>) output -> MetadataProvider.create(
-                output, Text.translatable("dataPack.moderner_beta.deepslate_blobs.desc")));
+        deepslateBlobsPack.addProvider((FabricDataGenerator.Pack.Factory<PackMetadataGenerator>) output -> PackMetadataGenerator.forFeaturePack(
+                output, Component.translatable("dataPack.moderner_beta.deepslate_blobs.desc")));
     }
     
     @Override
-    public void buildRegistry(RegistryBuilder registryBuilder) {
-        registryBuilder.addRegistry(RegistryKeys.PLACED_FEATURE, ModernBetaPlacedFeatures::bootstrap);
-        registryBuilder.addRegistry(RegistryKeys.CONFIGURED_FEATURE, ModernBetaConfiguredFeatures::bootstrap);
-        registryBuilder.addRegistry(RegistryKeys.CONFIGURED_CARVER, ModernBetaConfiguredCarvers::bootstrap);
-        registryBuilder.addRegistry(RegistryKeys.BIOME, ModernBetaBiomes::bootstrap);
-        registryBuilder.addRegistry(RegistryKeys.CHUNK_GENERATOR_SETTINGS, ModernBetaChunkGeneratorSettings::bootstrap);
-        registryBuilder.addRegistry(RegistryKeys.STRUCTURE, ModernBetaStructures::bootstrap);
-        registryBuilder.addRegistry(RegistryKeys.STRUCTURE_SET, ModernBetaStructureSets::bootstrap);
-        registryBuilder.addRegistry(RegistryKeys.WORLD_PRESET, ModernBetaWorldPresets::bootstrap);
-        registryBuilder.addRegistry(ModernBetaRegistryKeys.SETTINGS_PRESET, ModernBetaSettingsPresets::bootstrap);
-        registryBuilder.addRegistry(ModernBetaRegistryKeys.SETTINGS_PRESET_CATEGORY, ModernBetaSettingsPresetCategories::bootstrap);
+    public void buildRegistry(RegistrySetBuilder registryBuilder) {
+        registryBuilder.add(Registries.PLACED_FEATURE, ModernBetaPlacedFeatures::bootstrap);
+        registryBuilder.add(Registries.CONFIGURED_FEATURE, ModernBetaConfiguredFeatures::bootstrap);
+        registryBuilder.add(Registries.CONFIGURED_CARVER, ModernBetaConfiguredCarvers::bootstrap);
+        registryBuilder.add(Registries.BIOME, ModernBetaBiomes::bootstrap);
+        registryBuilder.add(Registries.NOISE_SETTINGS, ModernBetaChunkGeneratorSettings::bootstrap);
+        registryBuilder.add(Registries.STRUCTURE, ModernBetaStructures::bootstrap);
+        registryBuilder.add(Registries.STRUCTURE_SET, ModernBetaStructureSets::bootstrap);
+        registryBuilder.add(Registries.WORLD_PRESET, ModernBetaWorldPresets::bootstrap);
+        registryBuilder.add(ModernBetaRegistryKeys.SETTINGS_PRESET, ModernBetaSettingsPresets::bootstrap);
+        registryBuilder.add(ModernBetaRegistryKeys.SETTINGS_PRESET_CATEGORY, ModernBetaSettingsPresetCategories::bootstrap);
     }
 }

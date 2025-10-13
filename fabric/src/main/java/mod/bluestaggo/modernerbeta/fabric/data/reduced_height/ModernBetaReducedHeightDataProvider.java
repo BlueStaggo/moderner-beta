@@ -8,35 +8,39 @@ import mod.bluestaggo.modernerbeta.world.carver.configured.ModernBetaConfiguredC
 import mod.bluestaggo.modernerbeta.world.feature.configured.ModernBetaConfiguredFeatures;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.registry.*;
-import net.minecraft.registry.RegistryWrapper.WrapperLookup;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.registry.entry.RegistryEntryOwner;
-import net.minecraft.registry.tag.BlockTags;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.structure.rule.RuleTest;
-import net.minecraft.structure.rule.TagMatchRuleTest;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.floatprovider.ConstantFloatProvider;
-import net.minecraft.util.math.intprovider.UniformIntProvider;
-import net.minecraft.util.math.noise.DoublePerlinNoiseSampler;
-import net.minecraft.world.biome.source.util.VanillaBiomeParameters;
-import net.minecraft.world.dimension.DimensionType;
-import net.minecraft.world.dimension.DimensionTypes;
-import net.minecraft.world.gen.YOffset;
-import net.minecraft.world.gen.carver.Carver;
-import net.minecraft.world.gen.carver.CarverDebugConfig;
-import net.minecraft.world.gen.carver.CaveCarverConfig;
-import net.minecraft.world.gen.chunk.ChunkGeneratorSettings;
-import net.minecraft.world.gen.densityfunction.DensityFunction;
-import net.minecraft.world.gen.densityfunction.DensityFunctionTypes;
-import net.minecraft.world.gen.feature.*;
-import net.minecraft.world.gen.heightprovider.ConstantHeightProvider;
-import net.minecraft.world.gen.noise.NoiseParametersKeys;
-import net.minecraft.world.gen.placementmodifier.*;
-import net.minecraft.world.gen.surfacebuilder.VanillaSurfaceRules;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderGetter;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.HolderLookup.Provider;
+import net.minecraft.core.HolderOwner;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.worldgen.SurfaceRuleData;
+import net.minecraft.data.worldgen.features.OreFeatures;
+import net.minecraft.data.worldgen.placement.OrePlacements;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.TagKey;
+import net.minecraft.util.valueproviders.ConstantFloat;
+import net.minecraft.util.valueproviders.UniformInt;
+import net.minecraft.world.level.biome.OverworldBiomeBuilder;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
+import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.world.level.levelgen.*;
+import net.minecraft.world.level.levelgen.carver.CarverDebugSettings;
+import net.minecraft.world.level.levelgen.carver.CaveCarverConfiguration;
+import net.minecraft.world.level.levelgen.carver.WorldCarver;
+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
+import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration;
+import net.minecraft.world.level.levelgen.heightproviders.ConstantHeight;
+import net.minecraft.world.level.levelgen.placement.*;
+import net.minecraft.world.level.levelgen.structure.templatesystem.RuleTest;
+import net.minecraft.world.level.levelgen.structure.templatesystem.TagMatchTest;
+import net.minecraft.world.level.levelgen.synth.NormalNoise;
 
 import java.util.List;
 import java.util.Optional;
@@ -48,22 +52,22 @@ import java.util.stream.Stream;
 import static mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGeneratorSettings.*;
 
 public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryProvider {
-    public static final RegistryKey<ConfiguredFeature<?, ?>> ORE_DEEPSLATE_OLD = ModernBetaConfiguredFeatures.of("ore_deepslate_old");
-    public static final RegistryKey<ConfiguredFeature<?, ?>> ORE_DIAMOND_OLD = ModernBetaConfiguredFeatures.of("ore_diamond_old");
+    public static final ResourceKey<ConfiguredFeature<?, ?>> ORE_DEEPSLATE_OLD = ModernBetaConfiguredFeatures.of("ore_deepslate_old");
+    public static final ResourceKey<ConfiguredFeature<?, ?>> ORE_DIAMOND_OLD = ModernBetaConfiguredFeatures.of("ore_diamond_old");
 
     private static boolean isGeneratingData;
 
-    public ModernBetaReducedHeightDataProvider(FabricDataOutput output, CompletableFuture<WrapperLookup> registriesFuture) {
+    public ModernBetaReducedHeightDataProvider(FabricDataOutput output, CompletableFuture<Provider> registriesFuture) {
         super(output, registriesFuture);
     }
 
     @Override
-    protected void configure(WrapperLookup registries, Entries entries) {
+    protected void configure(Provider registries, Entries entries) {
         isGeneratingData = true;
 
         //Dimension types
         entries.add(
-            DimensionTypes.OVERWORLD,
+            BuiltinDimensionTypes.OVERWORLD,
             new DimensionType(
                 OptionalLong.empty(),
                 true,
@@ -77,58 +81,58 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
                 320,
                 320,
                 BlockTags.INFINIBURN_OVERWORLD,
-                DimensionTypes.OVERWORLD_ID,
+                BuiltinDimensionTypes.OVERWORLD_EFFECTS,
                 0.0F,
                 //? if >=1.21.6
                 Optional.empty(),
-                new DimensionType.MonsterSettings(false, true, UniformIntProvider.create(0, 7), 0)
+                new DimensionType.MonsterSettings(false, true, UniformInt.of(0, 7), 0)
             )
         );
 
         //Configured carvers
-        RegistryWrapper.Impl<Block> registryBlock = VersionCompat.getRegistryWrapper(registries, RegistryKeys.BLOCK);
-        CaveCarverConfig configCaveDeep = new CaveCarverConfig(
+        HolderLookup.RegistryLookup<Block> registryBlock = VersionCompat.getRegistryWrapper(registries, Registries.BLOCK);
+        CaveCarverConfiguration configCaveDeep = new CaveCarverConfiguration(
             0.0f,
-            ConstantHeightProvider.create(YOffset.fixed(-2032)),
-            ConstantFloatProvider.create(0.0f),
-            YOffset.fixed(-2032),
-            CarverDebugConfig.create(false, Blocks.CRIMSON_BUTTON.getDefaultState()),
+            ConstantHeight.of(VerticalAnchor.absolute(-2032)),
+            ConstantFloat.of(0.0f),
+            VerticalAnchor.absolute(-2032),
+            CarverDebugSettings.of(false, Blocks.CRIMSON_BUTTON.defaultBlockState()),
             //? if >=1.21 {
             registryBlock.getOrThrow(BlockTags.AIR),
             //?} else {
             /*net.minecraft.registry.entry.RegistryEntryList.of(registryBlock,
                 net.minecraft.registry.tag.TagKey.of(RegistryKeys.BLOCK, mod.bluestaggo.modernerbeta.ModernerBeta.createId("air"))),
             *///?}
-            ConstantFloatProvider.create(0.0f),
-            ConstantFloatProvider.create(0.0f),
-            ConstantFloatProvider.create(0.0f)
+            ConstantFloat.of(0.0f),
+            ConstantFloat.of(0.0f),
+            ConstantFloat.of(0.0f)
         );
-        entries.add(ModernBetaConfiguredCarvers.BETA_CAVE_DEEP, Carver.CAVE.configure(configCaveDeep));
+        entries.add(ModernBetaConfiguredCarvers.BETA_CAVE_DEEP, WorldCarver.CAVE.configured(configCaveDeep));
 
         //Configured features
-        RuleTest overworldStone = new TagMatchRuleTest(BlockTags.BASE_STONE_OVERWORLD);
-        RuleTest deepslateReplacers = new TagMatchRuleTest(BlockTags.DEEPSLATE_ORE_REPLACEABLES);
+        RuleTest overworldStone = new TagMatchTest(BlockTags.BASE_STONE_OVERWORLD);
+        RuleTest deepslateReplacers = new TagMatchTest(BlockTags.DEEPSLATE_ORE_REPLACEABLES);
 
-        entries.add(OreConfiguredFeatures.ORE_GRANITE, new ConfiguredFeature<>(Feature.ORE, new OreFeatureConfig(overworldStone, Blocks.GRANITE.getDefaultState(), 33)));
-        entries.add(OreConfiguredFeatures.ORE_DIORITE, new ConfiguredFeature<>(Feature.ORE, new OreFeatureConfig(overworldStone, Blocks.DIORITE.getDefaultState(), 33)));
-        entries.add(OreConfiguredFeatures.ORE_ANDESITE, new ConfiguredFeature<>(Feature.ORE, new OreFeatureConfig(overworldStone, Blocks.ANDESITE.getDefaultState(), 33)));
-        entries.add(OreConfiguredFeatures.ORE_TUFF, new ConfiguredFeature<>(Feature.ORE, new OreFeatureConfig(overworldStone, Blocks.TUFF.getDefaultState(), 33)));
+        entries.add(OreFeatures.ORE_GRANITE, new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(overworldStone, Blocks.GRANITE.defaultBlockState(), 33)));
+        entries.add(OreFeatures.ORE_DIORITE, new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(overworldStone, Blocks.DIORITE.defaultBlockState(), 33)));
+        entries.add(OreFeatures.ORE_ANDESITE, new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(overworldStone, Blocks.ANDESITE.defaultBlockState(), 33)));
+        entries.add(OreFeatures.ORE_TUFF, new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(overworldStone, Blocks.TUFF.defaultBlockState(), 33)));
 
-        entries.add(ORE_DEEPSLATE_OLD, new ConfiguredFeature<>(Feature.ORE, new OreFeatureConfig(overworldStone, Blocks.DEEPSLATE.getDefaultState(), 64)));
+        entries.add(ORE_DEEPSLATE_OLD, new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(overworldStone, Blocks.DEEPSLATE.defaultBlockState(), 64)));
         entries.add(ORE_DIAMOND_OLD, new ConfiguredFeature<>(Feature.ORE,
-            new OreFeatureConfig(
+            new OreConfiguration(
                 List.of(
-                    OreFeatureConfig.createTarget(overworldStone, Blocks.DIAMOND_ORE.getDefaultState()),
-                    OreFeatureConfig.createTarget(deepslateReplacers, Blocks.DEEPSLATE_DIAMOND_ORE.getDefaultState())
+                    OreConfiguration.target(overworldStone, Blocks.DIAMOND_ORE.defaultBlockState()),
+                    OreConfiguration.target(deepslateReplacers, Blocks.DEEPSLATE_DIAMOND_ORE.defaultBlockState())
                 ), 8
             )
         ));
 
         //Chunk generator settings
-        entries.add(ChunkGeneratorSettings.OVERWORLD, createVanillaSurfaceSettings(registries, false, false));
-        entries.add(ChunkGeneratorSettings.LARGE_BIOMES, createVanillaSurfaceSettings(registries, false, true));
-        entries.add(ChunkGeneratorSettings.AMPLIFIED, createVanillaSurfaceSettings(registries, true, false));
-        entries.add(ChunkGeneratorSettings.CAVES, createVanillaCavesSettings(registries));
+        entries.add(NoiseGeneratorSettings.OVERWORLD, createVanillaSurfaceSettings(registries, false, false));
+        entries.add(NoiseGeneratorSettings.LARGE_BIOMES, createVanillaSurfaceSettings(registries, false, true));
+        entries.add(NoiseGeneratorSettings.AMPLIFIED, createVanillaSurfaceSettings(registries, true, false));
+        entries.add(NoiseGeneratorSettings.CAVES, createVanillaCavesSettings(registries));
 
         entries.add(BETA, createGeneratorSettings(registries, ModernBetaShapeReducedHeightConfigs.BETA, 64, true));
         entries.add(ALPHA, createGeneratorSettings(registries, ModernBetaShapeReducedHeightConfigs.ALPHA, 64, true));
@@ -145,82 +149,82 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
         entries.add(EARLY_BEDROCK, createGeneratorSettings(registries, ModernBetaShapeReducedHeightConfigs.EARLY_BEDROCK, 63, true));
 
         //Density functions
-        RegistryEntryLookup<DensityFunction> densityFunctionLookup = VersionCompat.getRegistryWrapper(registries, RegistryKeys.DENSITY_FUNCTION);
-        RegistryEntryLookup<DoublePerlinNoiseSampler.NoiseParameters> noiseParametersLookup = VersionCompat.getRegistryWrapper(registries, RegistryKeys.NOISE_PARAMETERS);
+        HolderGetter<DensityFunction> densityFunctionLookup = VersionCompat.getRegistryWrapper(registries, Registries.DENSITY_FUNCTION);
+        HolderGetter<NormalNoise.NoiseParameters> noiseParametersLookup = VersionCompat.getRegistryWrapper(registries, Registries.NOISE);
 
-        entries.add(AccessorDensityFunctionsFabric.getCavesSpaghetti2d(), createCavesSpaghetti2dOverworldFunction(densityFunctionLookup, noiseParametersLookup));
+        entries.add(AccessorDensityFunctionsFabric.getSpaghetti2d(), createCavesSpaghetti2dOverworldFunction(densityFunctionLookup, noiseParametersLookup));
         entries.add(AccessorDensityFunctions.getCavesEntrancesOverworldKey(), createCavesEntrancesOverworldFunction(densityFunctionLookup, noiseParametersLookup));
         entries.add(AccessorDensityFunctions.getCavesNoodleOverworldKey(), createCavesNoodleOverworldFunction(densityFunctionLookup, noiseParametersLookup));
 
         //Placed features
-        RegistryEntryLookup<ConfiguredFeature<?, ?>> registryConfiguredFeature = VersionCompat.getRegistryWrapper(registries, RegistryKeys.CONFIGURED_FEATURE);
-        RegistryEntry<ConfiguredFeature<?, ?>> noOp = new RegistryEntry.Direct<>(new ConfiguredFeature<>(Feature.NO_OP, DefaultFeatureConfig.DEFAULT));
-        RegistryEntry<ConfiguredFeature<?, ?>> dirt = registryConfiguredFeature.getOrThrow(OreConfiguredFeatures.ORE_DIRT);
-        RegistryEntry<ConfiguredFeature<?, ?>> gravel = registryConfiguredFeature.getOrThrow(OreConfiguredFeatures.ORE_GRAVEL);
-        RegistryEntry<ConfiguredFeature<?, ?>> granite = registryConfiguredFeature.getOrThrow(OreConfiguredFeatures.ORE_GRANITE);
-        RegistryEntry<ConfiguredFeature<?, ?>> diorite = registryConfiguredFeature.getOrThrow(OreConfiguredFeatures.ORE_DIORITE);
-        RegistryEntry<ConfiguredFeature<?, ?>> andesite = registryConfiguredFeature.getOrThrow(OreConfiguredFeatures.ORE_ANDESITE);
-        RegistryEntry<ConfiguredFeature<?, ?>> coal = registryConfiguredFeature.getOrThrow(OreConfiguredFeatures.ORE_COAL);
-        RegistryEntry<ConfiguredFeature<?, ?>> iron = registryConfiguredFeature.getOrThrow(OreConfiguredFeatures.ORE_IRON);
-        RegistryEntry<ConfiguredFeature<?, ?>> gold = registryConfiguredFeature.getOrThrow(OreConfiguredFeatures.ORE_GOLD);
-        RegistryEntry<ConfiguredFeature<?, ?>> redstone = registryConfiguredFeature.getOrThrow(OreConfiguredFeatures.ORE_REDSTONE);
-        RegistryEntry<ConfiguredFeature<?, ?>> diamond = alwaysOwnedRegistryEntry(entries.ref(ORE_DIAMOND_OLD));
-        RegistryEntry<ConfiguredFeature<?, ?>> lapis = registryConfiguredFeature.getOrThrow(OreConfiguredFeatures.ORE_LAPIS);
-        RegistryEntry<ConfiguredFeature<?, ?>> copperSmall = registryConfiguredFeature.getOrThrow(OreConfiguredFeatures.ORE_COPPER_SMALL);
+        HolderGetter<ConfiguredFeature<?, ?>> registryConfiguredFeature = VersionCompat.getRegistryWrapper(registries, Registries.CONFIGURED_FEATURE);
+        Holder<ConfiguredFeature<?, ?>> noOp = new Holder.Direct<>(new ConfiguredFeature<>(Feature.NO_OP, NoneFeatureConfiguration.NONE));
+        Holder<ConfiguredFeature<?, ?>> dirt = registryConfiguredFeature.getOrThrow(OreFeatures.ORE_DIRT);
+        Holder<ConfiguredFeature<?, ?>> gravel = registryConfiguredFeature.getOrThrow(OreFeatures.ORE_GRAVEL);
+        Holder<ConfiguredFeature<?, ?>> granite = registryConfiguredFeature.getOrThrow(OreFeatures.ORE_GRANITE);
+        Holder<ConfiguredFeature<?, ?>> diorite = registryConfiguredFeature.getOrThrow(OreFeatures.ORE_DIORITE);
+        Holder<ConfiguredFeature<?, ?>> andesite = registryConfiguredFeature.getOrThrow(OreFeatures.ORE_ANDESITE);
+        Holder<ConfiguredFeature<?, ?>> coal = registryConfiguredFeature.getOrThrow(OreFeatures.ORE_COAL);
+        Holder<ConfiguredFeature<?, ?>> iron = registryConfiguredFeature.getOrThrow(OreFeatures.ORE_IRON);
+        Holder<ConfiguredFeature<?, ?>> gold = registryConfiguredFeature.getOrThrow(OreFeatures.ORE_GOLD);
+        Holder<ConfiguredFeature<?, ?>> redstone = registryConfiguredFeature.getOrThrow(OreFeatures.ORE_REDSTONE);
+        Holder<ConfiguredFeature<?, ?>> diamond = alwaysSerializableHolder(entries.ref(ORE_DIAMOND_OLD));
+        Holder<ConfiguredFeature<?, ?>> lapis = registryConfiguredFeature.getOrThrow(OreFeatures.ORE_LAPIS);
+        Holder<ConfiguredFeature<?, ?>> copperSmall = registryConfiguredFeature.getOrThrow(OreFeatures.ORE_COPPPER_SMALL);
 
-        entries.add(OrePlacedFeatures.ORE_ANDESITE_UPPER, new PlacedFeature(noOp, List.of(CountPlacementModifier.of(0))));
-        entries.add(OrePlacedFeatures.ORE_ANDESITE_LOWER, new PlacedFeature(andesite,
-                modifiersWithCount(10, HeightRangePlacementModifier.uniform(YOffset.aboveBottom(0), YOffset.aboveBottom(79)))));
-        entries.add(OrePlacedFeatures.ORE_COAL_UPPER, new PlacedFeature(noOp, List.of(CountPlacementModifier.of(0))));
-        entries.add(OrePlacedFeatures.ORE_COAL_LOWER, new PlacedFeature(coal,
-                modifiersWithCount(20, HeightRangePlacementModifier.uniform(YOffset.aboveBottom(0), YOffset.aboveBottom(127)))));
-        entries.add(OrePlacedFeatures.ORE_COPPER, new PlacedFeature(copperSmall,
-                modifiersWithCount(6, HeightRangePlacementModifier.uniform(YOffset.aboveBottom(0), YOffset.aboveBottom(96)))));
-        entries.add(OrePlacedFeatures.ORE_COPPER_LARGE, new PlacedFeature(noOp, List.of(CountPlacementModifier.of(0))));
-        entries.add(OrePlacedFeatures.ORE_DIAMOND, new PlacedFeature(diamond,
-                modifiersWithCount(1, HeightRangePlacementModifier.uniform(YOffset.aboveBottom(0), YOffset.aboveBottom(15)))));
+        entries.add(OrePlacements.ORE_ANDESITE_UPPER, new PlacedFeature(noOp, List.of(CountPlacement.of(0))));
+        entries.add(OrePlacements.ORE_ANDESITE_LOWER, new PlacedFeature(andesite,
+                modifiersWithCount(10, HeightRangePlacement.uniform(VerticalAnchor.aboveBottom(0), VerticalAnchor.aboveBottom(79)))));
+        entries.add(OrePlacements.ORE_COAL_UPPER, new PlacedFeature(noOp, List.of(CountPlacement.of(0))));
+        entries.add(OrePlacements.ORE_COAL_LOWER, new PlacedFeature(coal,
+                modifiersWithCount(20, HeightRangePlacement.uniform(VerticalAnchor.aboveBottom(0), VerticalAnchor.aboveBottom(127)))));
+        entries.add(OrePlacements.ORE_COPPER, new PlacedFeature(copperSmall,
+                modifiersWithCount(6, HeightRangePlacement.uniform(VerticalAnchor.aboveBottom(0), VerticalAnchor.aboveBottom(96)))));
+        entries.add(OrePlacements.ORE_COPPER_LARGE, new PlacedFeature(noOp, List.of(CountPlacement.of(0))));
+        entries.add(OrePlacements.ORE_DIAMOND, new PlacedFeature(diamond,
+                modifiersWithCount(1, HeightRangePlacement.uniform(VerticalAnchor.aboveBottom(0), VerticalAnchor.aboveBottom(15)))));
         //? if >=1.20.2
-        entries.add(OrePlacedFeatures.ORE_DIAMOND_MEDIUM, new PlacedFeature(noOp, List.of(CountPlacementModifier.of(0))));
-        entries.add(OrePlacedFeatures.ORE_DIAMOND_LARGE, new PlacedFeature(noOp, List.of(CountPlacementModifier.of(0))));
-        entries.add(OrePlacedFeatures.ORE_DIAMOND_BURIED, new PlacedFeature(noOp, List.of(CountPlacementModifier.of(0))));
-        entries.add(OrePlacedFeatures.ORE_DIORITE_UPPER, new PlacedFeature(noOp, List.of(CountPlacementModifier.of(0))));
-        entries.add(OrePlacedFeatures.ORE_DIORITE_LOWER, new PlacedFeature(diorite,
-                modifiersWithCount(10, HeightRangePlacementModifier.uniform(YOffset.aboveBottom(0), YOffset.aboveBottom(79)))));
-        entries.add(OrePlacedFeatures.ORE_DIRT, new PlacedFeature(dirt,
-                modifiersWithCount(10, HeightRangePlacementModifier.uniform(YOffset.aboveBottom(0), YOffset.aboveBottom(255)))));
-        entries.add(OrePlacedFeatures.ORE_GOLD_EXTRA, new PlacedFeature(noOp, List.of(CountPlacementModifier.of(0))));
-        entries.add(OrePlacedFeatures.ORE_GOLD, new PlacedFeature(gold,
-                modifiersWithCount(2, HeightRangePlacementModifier.uniform(YOffset.aboveBottom(0), YOffset.aboveBottom(31)))));
-        entries.add(OrePlacedFeatures.ORE_GOLD_LOWER, new PlacedFeature(noOp, List.of(CountPlacementModifier.of(0))));
-        entries.add(OrePlacedFeatures.ORE_GRANITE_UPPER, new PlacedFeature(noOp, List.of(CountPlacementModifier.of(0))));
-        entries.add(OrePlacedFeatures.ORE_GRANITE_LOWER, new PlacedFeature(granite,
-                modifiersWithCount(10, HeightRangePlacementModifier.uniform(YOffset.aboveBottom(0), YOffset.aboveBottom(79)))));
-        entries.add(OrePlacedFeatures.ORE_GRAVEL, new PlacedFeature(gravel,
-                modifiersWithCount(10, HeightRangePlacementModifier.uniform(YOffset.aboveBottom(0), YOffset.aboveBottom(255)))));
-        entries.add(OrePlacedFeatures.ORE_IRON_UPPER, new PlacedFeature(noOp, List.of(CountPlacementModifier.of(0))));
-        entries.add(OrePlacedFeatures.ORE_IRON_MIDDLE, new PlacedFeature(iron,
-                modifiersWithCount(20, HeightRangePlacementModifier.uniform(YOffset.aboveBottom(0), YOffset.aboveBottom(63)))));
-        entries.add(OrePlacedFeatures.ORE_IRON_SMALL, new PlacedFeature(noOp, List.of(CountPlacementModifier.of(0))));
-        entries.add(OrePlacedFeatures.ORE_LAPIS, new PlacedFeature(lapis,
-                modifiersWithCount(1, HeightRangePlacementModifier.uniform(YOffset.aboveBottom(0), YOffset.aboveBottom(31)))));
-        entries.add(OrePlacedFeatures.ORE_LAPIS_BURIED, new PlacedFeature(noOp, List.of(CountPlacementModifier.of(0))));
-        entries.add(OrePlacedFeatures.ORE_REDSTONE, new PlacedFeature(redstone,
-                modifiersWithCount(8, HeightRangePlacementModifier.uniform(YOffset.aboveBottom(0), YOffset.aboveBottom(15)))));
-        entries.add(OrePlacedFeatures.ORE_REDSTONE_LOWER, new PlacedFeature(noOp, List.of(CountPlacementModifier.of(0))));
-        entries.add(OrePlacedFeatures.ORE_TUFF, new PlacedFeature(noOp, List.of(CountPlacementModifier.of(0))));
+        entries.add(OrePlacements.ORE_DIAMOND_MEDIUM, new PlacedFeature(noOp, List.of(CountPlacement.of(0))));
+        entries.add(OrePlacements.ORE_DIAMOND_LARGE, new PlacedFeature(noOp, List.of(CountPlacement.of(0))));
+        entries.add(OrePlacements.ORE_DIAMOND_BURIED, new PlacedFeature(noOp, List.of(CountPlacement.of(0))));
+        entries.add(OrePlacements.ORE_DIORITE_UPPER, new PlacedFeature(noOp, List.of(CountPlacement.of(0))));
+        entries.add(OrePlacements.ORE_DIORITE_LOWER, new PlacedFeature(diorite,
+                modifiersWithCount(10, HeightRangePlacement.uniform(VerticalAnchor.aboveBottom(0), VerticalAnchor.aboveBottom(79)))));
+        entries.add(OrePlacements.ORE_DIRT, new PlacedFeature(dirt,
+                modifiersWithCount(10, HeightRangePlacement.uniform(VerticalAnchor.aboveBottom(0), VerticalAnchor.aboveBottom(255)))));
+        entries.add(OrePlacements.ORE_GOLD_EXTRA, new PlacedFeature(noOp, List.of(CountPlacement.of(0))));
+        entries.add(OrePlacements.ORE_GOLD, new PlacedFeature(gold,
+                modifiersWithCount(2, HeightRangePlacement.uniform(VerticalAnchor.aboveBottom(0), VerticalAnchor.aboveBottom(31)))));
+        entries.add(OrePlacements.ORE_GOLD_LOWER, new PlacedFeature(noOp, List.of(CountPlacement.of(0))));
+        entries.add(OrePlacements.ORE_GRANITE_UPPER, new PlacedFeature(noOp, List.of(CountPlacement.of(0))));
+        entries.add(OrePlacements.ORE_GRANITE_LOWER, new PlacedFeature(granite,
+                modifiersWithCount(10, HeightRangePlacement.uniform(VerticalAnchor.aboveBottom(0), VerticalAnchor.aboveBottom(79)))));
+        entries.add(OrePlacements.ORE_GRAVEL, new PlacedFeature(gravel,
+                modifiersWithCount(10, HeightRangePlacement.uniform(VerticalAnchor.aboveBottom(0), VerticalAnchor.aboveBottom(255)))));
+        entries.add(OrePlacements.ORE_IRON_UPPER, new PlacedFeature(noOp, List.of(CountPlacement.of(0))));
+        entries.add(OrePlacements.ORE_IRON_MIDDLE, new PlacedFeature(iron,
+                modifiersWithCount(20, HeightRangePlacement.uniform(VerticalAnchor.aboveBottom(0), VerticalAnchor.aboveBottom(63)))));
+        entries.add(OrePlacements.ORE_IRON_SMALL, new PlacedFeature(noOp, List.of(CountPlacement.of(0))));
+        entries.add(OrePlacements.ORE_LAPIS, new PlacedFeature(lapis,
+                modifiersWithCount(1, HeightRangePlacement.uniform(VerticalAnchor.aboveBottom(0), VerticalAnchor.aboveBottom(31)))));
+        entries.add(OrePlacements.ORE_LAPIS_BURIED, new PlacedFeature(noOp, List.of(CountPlacement.of(0))));
+        entries.add(OrePlacements.ORE_REDSTONE, new PlacedFeature(redstone,
+                modifiersWithCount(8, HeightRangePlacement.uniform(VerticalAnchor.aboveBottom(0), VerticalAnchor.aboveBottom(15)))));
+        entries.add(OrePlacements.ORE_REDSTONE_LOWER, new PlacedFeature(noOp, List.of(CountPlacement.of(0))));
+        entries.add(OrePlacements.ORE_TUFF, new PlacedFeature(noOp, List.of(CountPlacement.of(0))));
 
         isGeneratingData = false;
     }
 
-    private static ChunkGeneratorSettings createVanillaSurfaceSettings(WrapperLookup lookup, boolean amplified, boolean largeBiomes) {
-        return new ChunkGeneratorSettings(
+    private static NoiseGeneratorSettings createVanillaSurfaceSettings(Provider lookup, boolean amplified, boolean largeBiomes) {
+        return new NoiseGeneratorSettings(
             ModernBetaShapeReducedHeightConfigs.VANILLA_SURFACE,
-            Blocks.STONE.getDefaultState(),
-            Blocks.WATER.getDefaultState(),
-            AccessorDensityFunctionsFabric.invokeCreateSurfaceNoiseRouter(VersionCompat.getRegistryWrapper(lookup, RegistryKeys.DENSITY_FUNCTION),
-                VersionCompat.getRegistryWrapper(lookup, RegistryKeys.NOISE_PARAMETERS), largeBiomes, amplified),
-            VanillaSurfaceRules.createOverworldSurfaceRule(),
-            (new VanillaBiomeParameters()).getSpawnSuitabilityNoises(),
+            Blocks.STONE.defaultBlockState(),
+            Blocks.WATER.defaultBlockState(),
+            AccessorDensityFunctionsFabric.invokeOverworld(VersionCompat.getRegistryWrapper(lookup, Registries.DENSITY_FUNCTION),
+                VersionCompat.getRegistryWrapper(lookup, Registries.NOISE), largeBiomes, amplified),
+            SurfaceRuleData.overworld(),
+            (new OverworldBiomeBuilder()).spawnTarget(),
             63,
             false,
             true,
@@ -229,14 +233,14 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
         );
     }
 
-    private static ChunkGeneratorSettings createVanillaCavesSettings(WrapperLookup lookup) {
-        return new ChunkGeneratorSettings(
+    private static NoiseGeneratorSettings createVanillaCavesSettings(Provider lookup) {
+        return new NoiseGeneratorSettings(
             ModernBetaShapeReducedHeightConfigs.VANILLA_CAVES,
-            Blocks.STONE.getDefaultState(),
-            Blocks.WATER.getDefaultState(),
-            AccessorDensityFunctionsFabric.invokeCreateNetherNoiseRouter(VersionCompat.getRegistryWrapper(lookup, RegistryKeys.DENSITY_FUNCTION),
-                VersionCompat.getRegistryWrapper(lookup, RegistryKeys.NOISE_PARAMETERS)),
-            VanillaSurfaceRules.createDefaultRule(false, true, true),
+            Blocks.STONE.defaultBlockState(),
+            Blocks.WATER.defaultBlockState(),
+            AccessorDensityFunctionsFabric.invokeNether(VersionCompat.getRegistryWrapper(lookup, Registries.DENSITY_FUNCTION),
+                VersionCompat.getRegistryWrapper(lookup, Registries.NOISE)),
+            SurfaceRuleData.overworldLike(false, true, true),
             List.of(),
             32,
             false,
@@ -247,154 +251,154 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
     }
 
     private static DensityFunction createCavesEntrancesOverworldFunction(
-            RegistryEntryLookup<DensityFunction> densityFunctionLookup,
-            RegistryEntryLookup<DoublePerlinNoiseSampler.NoiseParameters> noiseParametersLookup
+            HolderGetter<DensityFunction> densityFunctionLookup,
+            HolderGetter<NormalNoise.NoiseParameters> noiseParametersLookup
     ) {
-        DensityFunction spaghettiRarity = DensityFunctionTypes.cacheOnce(DensityFunctionTypes.noise(
-                noiseParametersLookup.getOrThrow(NoiseParametersKeys.SPAGHETTI_3D_RARITY), 2.0, 1.0));
-        DensityFunction spaghettiThickness = DensityFunctionTypes.noiseInRange(
-                noiseParametersLookup.getOrThrow(NoiseParametersKeys.SPAGHETTI_3D_THICKNESS), -0.065, -0.088);
+        DensityFunction spaghettiRarity = DensityFunctions.cacheOnce(DensityFunctions.noise(
+                noiseParametersLookup.getOrThrow(Noises.SPAGHETTI_3D_RARITY), 2.0, 1.0));
+        DensityFunction spaghettiThickness = DensityFunctions.mappedNoise(
+                noiseParametersLookup.getOrThrow(Noises.SPAGHETTI_3D_THICKNESS), -0.065, -0.088);
 
-        DensityFunction weirdSpaghetti1 = DensityFunctionTypes.weirdScaledSampler(spaghettiRarity,
-                noiseParametersLookup.getOrThrow(NoiseParametersKeys.SPAGHETTI_3D_1), DensityFunctionTypes.WeirdScaledSampler.RarityValueMapper.TYPE1);
-        DensityFunction weirdSpaghetti2 = DensityFunctionTypes.weirdScaledSampler(spaghettiRarity,
-                noiseParametersLookup.getOrThrow(NoiseParametersKeys.SPAGHETTI_3D_2), DensityFunctionTypes.WeirdScaledSampler.RarityValueMapper.TYPE1);
+        DensityFunction weirdSpaghetti1 = DensityFunctions.weirdScaledSampler(spaghettiRarity,
+                noiseParametersLookup.getOrThrow(Noises.SPAGHETTI_3D_1), DensityFunctions.WeirdScaledSampler.RarityValueMapper.TYPE1);
+        DensityFunction weirdSpaghetti2 = DensityFunctions.weirdScaledSampler(spaghettiRarity,
+                noiseParametersLookup.getOrThrow(Noises.SPAGHETTI_3D_2), DensityFunctions.WeirdScaledSampler.RarityValueMapper.TYPE1);
 
-        DensityFunction mainSpaghetti = DensityFunctionTypes.add(DensityFunctionTypes.max(weirdSpaghetti1, weirdSpaghetti2), spaghettiThickness).clamp(-1.0, 1.0);
-        DensityFunction spaghettiRoughness = new DensityFunctionTypes.RegistryEntryHolder(
-                densityFunctionLookup.getOrThrow(AccessorDensityFunctionsFabric.getCavesSpaghettiRoughnessFunction()));
+        DensityFunction mainSpaghetti = DensityFunctions.add(DensityFunctions.max(weirdSpaghetti1, weirdSpaghetti2), spaghettiThickness).clamp(-1.0, 1.0);
+        DensityFunction spaghettiRoughness = new DensityFunctions.HolderHolder(
+                densityFunctionLookup.getOrThrow(AccessorDensityFunctionsFabric.getSpaghettiRoughnessFunction()));
 
-        DensityFunction entranceNoise = DensityFunctionTypes.noise(noiseParametersLookup.getOrThrow(
-                NoiseParametersKeys.CAVE_ENTRANCE), 0.75, 0.5);
-        DensityFunction mainEntrance = DensityFunctionTypes.add(
-                DensityFunctionTypes.add(entranceNoise, DensityFunctionTypes.constant(0.37)), DensityFunctionTypes.yClampedGradient(10, 30, 0.3, 0.0)
+        DensityFunction entranceNoise = DensityFunctions.noise(noiseParametersLookup.getOrThrow(
+                Noises.CAVE_ENTRANCE), 0.75, 0.5);
+        DensityFunction mainEntrance = DensityFunctions.add(
+                DensityFunctions.add(entranceNoise, DensityFunctions.constant(0.37)), DensityFunctions.yClampedGradient(10, 30, 0.3, 0.0)
         );
-        return DensityFunctionTypes.cacheOnce(DensityFunctionTypes.min(mainEntrance, DensityFunctionTypes.add(spaghettiRoughness, mainSpaghetti)));
+        return DensityFunctions.cacheOnce(DensityFunctions.min(mainEntrance, DensityFunctions.add(spaghettiRoughness, mainSpaghetti)));
     }
 
     private static DensityFunction createCavesNoodleOverworldFunction(
-            RegistryEntryLookup<DensityFunction> densityFunctionLookup,
-            RegistryEntryLookup<DoublePerlinNoiseSampler.NoiseParameters> noiseParametersLookup
+            HolderGetter<DensityFunction> densityFunctionLookup,
+            HolderGetter<NormalNoise.NoiseParameters> noiseParametersLookup
     ) {
-        DensityFunction y = new DensityFunctionTypes.RegistryEntryHolder(
+        DensityFunction y = new DensityFunctions.HolderHolder(
                 densityFunctionLookup.getOrThrow(AccessorDensityFunctionsFabric.getY()));
 
         int absMin = 0;
         int min = absMin + 4;
         int max = 320;
-        DensityFunction noodleNoise = verticalRangeChoice(y, DensityFunctionTypes.noise(
-                noiseParametersLookup.getOrThrow(NoiseParametersKeys.NOODLE), 1.0, 1.0), min, max, -1);
-        DensityFunction noodleThickness = verticalRangeChoice(y, DensityFunctionTypes.noiseInRange(
-                noiseParametersLookup.getOrThrow(NoiseParametersKeys.NOODLE_THICKNESS), 1.0, 1.0, -0.05, -0.1), min, max, 0);
+        DensityFunction noodleNoise = verticalRangeChoice(y, DensityFunctions.noise(
+                noiseParametersLookup.getOrThrow(Noises.NOODLE), 1.0, 1.0), min, max, -1);
+        DensityFunction noodleThickness = verticalRangeChoice(y, DensityFunctions.mappedNoise(
+                noiseParametersLookup.getOrThrow(Noises.NOODLE_THICKNESS), 1.0, 1.0, -0.05, -0.1), min, max, 0);
 
         double scale = 8D / 3D;
-        DensityFunction noodleRidgeA = verticalRangeChoice(y, DensityFunctionTypes.noise(
-                noiseParametersLookup.getOrThrow(NoiseParametersKeys.NOODLE_RIDGE_A), scale, scale), min, max, 0);
-        DensityFunction noodleRidgeB = verticalRangeChoice(y, DensityFunctionTypes.noise(
-                noiseParametersLookup.getOrThrow(NoiseParametersKeys.NOODLE_RIDGE_B), scale, scale), min, max, 0);
-        DensityFunction noodleRidges = DensityFunctionTypes.mul(DensityFunctionTypes.constant(1.5),
-                DensityFunctionTypes.max(noodleRidgeA.abs(), noodleRidgeB.abs()));
+        DensityFunction noodleRidgeA = verticalRangeChoice(y, DensityFunctions.noise(
+                noiseParametersLookup.getOrThrow(Noises.NOODLE_RIDGE_A), scale, scale), min, max, 0);
+        DensityFunction noodleRidgeB = verticalRangeChoice(y, DensityFunctions.noise(
+                noiseParametersLookup.getOrThrow(Noises.NOODLE_RIDGE_B), scale, scale), min, max, 0);
+        DensityFunction noodleRidges = DensityFunctions.mul(DensityFunctions.constant(1.5),
+                DensityFunctions.max(noodleRidgeA.abs(), noodleRidgeB.abs()));
 
-        return DensityFunctionTypes.rangeChoice(noodleNoise, -1000000.0, 0.0,
-                DensityFunctionTypes.constant(absMin + 64), DensityFunctionTypes.add(noodleThickness, noodleRidges));
+        return DensityFunctions.rangeChoice(noodleNoise, -1000000.0, 0.0,
+                DensityFunctions.constant(absMin + 64), DensityFunctions.add(noodleThickness, noodleRidges));
     }
 
     private static DensityFunction createCavesSpaghetti2dOverworldFunction(
-            RegistryEntryLookup<DensityFunction> densityFunctionLookup,
-            RegistryEntryLookup<DoublePerlinNoiseSampler.NoiseParameters> noiseParametersLookup
+            HolderGetter<DensityFunction> densityFunctionLookup,
+            HolderGetter<NormalNoise.NoiseParameters> noiseParametersLookup
     ) {
-        DensityFunction spaghettiModulator = DensityFunctionTypes.noise(noiseParametersLookup.getOrThrow(
-                NoiseParametersKeys.SPAGHETTI_2D_MODULATOR), 2.0, 1.0);
-        DensityFunction weirdSpaghetti = DensityFunctionTypes.weirdScaledSampler(spaghettiModulator, noiseParametersLookup.getOrThrow(
-                NoiseParametersKeys.SPAGHETTI_2D), DensityFunctionTypes.WeirdScaledSampler.RarityValueMapper.TYPE2);
-        DensityFunction spaghettiElevation = DensityFunctionTypes.noiseInRange(noiseParametersLookup.getOrThrow(
-                NoiseParametersKeys.SPAGHETTI_2D_ELEVATION), 0.0, Math.floorDiv(-64, 8), 8.0);
-        DensityFunction spaghettiThicknessModulator = new DensityFunctionTypes.RegistryEntryHolder(
-                densityFunctionLookup.getOrThrow(AccessorDensityFunctionsFabric.getCavesSpaghetti2dThicknessModulator()));
+        DensityFunction spaghettiModulator = DensityFunctions.noise(noiseParametersLookup.getOrThrow(
+                Noises.SPAGHETTI_2D_MODULATOR), 2.0, 1.0);
+        DensityFunction weirdSpaghetti = DensityFunctions.weirdScaledSampler(spaghettiModulator, noiseParametersLookup.getOrThrow(
+                Noises.SPAGHETTI_2D), DensityFunctions.WeirdScaledSampler.RarityValueMapper.TYPE2);
+        DensityFunction spaghettiElevation = DensityFunctions.mappedNoise(noiseParametersLookup.getOrThrow(
+                Noises.SPAGHETTI_2D_ELEVATION), 0.0, Math.floorDiv(-64, 8), 8.0);
+        DensityFunction spaghettiThicknessModulator = new DensityFunctions.HolderHolder(
+                densityFunctionLookup.getOrThrow(AccessorDensityFunctionsFabric.getSpaghetti2dThicknessModulator()));
 
-        DensityFunction clampedElevation = DensityFunctionTypes.add(spaghettiElevation, DensityFunctionTypes.yClampedGradient(0, 320, 8.0, -40.0)).abs();
-        DensityFunction minSpaghetti = DensityFunctionTypes.add(clampedElevation, spaghettiThicknessModulator).cube();
+        DensityFunction clampedElevation = DensityFunctions.add(spaghettiElevation, DensityFunctions.yClampedGradient(0, 320, 8.0, -40.0)).abs();
+        DensityFunction minSpaghetti = DensityFunctions.add(clampedElevation, spaghettiThicknessModulator).cube();
         double d = 0.083;
-        DensityFunction maxSpaghetti = DensityFunctionTypes.add(weirdSpaghetti, DensityFunctionTypes.mul(
-                DensityFunctionTypes.constant(d), spaghettiThicknessModulator));
-        return DensityFunctionTypes.max(maxSpaghetti, minSpaghetti).clamp(-1.0, 1.0);
+        DensityFunction maxSpaghetti = DensityFunctions.add(weirdSpaghetti, DensityFunctions.mul(
+                DensityFunctions.constant(d), spaghettiThicknessModulator));
+        return DensityFunctions.max(maxSpaghetti, minSpaghetti).clamp(-1.0, 1.0);
     }
 
     private static DensityFunction verticalRangeChoice(DensityFunction y, DensityFunction whenInRange, int minInclusive, int maxInclusive, int whenOutOfRange) {
-        return DensityFunctionTypes.interpolated(DensityFunctionTypes.rangeChoice(y, minInclusive, maxInclusive + 1,
-                whenInRange, DensityFunctionTypes.constant(whenOutOfRange)));
+        return DensityFunctions.interpolated(DensityFunctions.rangeChoice(y, minInclusive, maxInclusive + 1,
+                whenInRange, DensityFunctions.constant(whenOutOfRange)));
     }
 
     protected static List<PlacementModifier> modifiers(PlacementModifier countModifier, PlacementModifier heightModifier) {
-        return List.of(countModifier, SquarePlacementModifier.of(), heightModifier, BiomePlacementModifier.of());
+        return List.of(countModifier, InSquarePlacement.spread(), heightModifier, BiomeFilter.biome());
     }
 
     protected static List<PlacementModifier> modifiersWithCount(int count, PlacementModifier heightModifier) {
-        return modifiers(CountPlacementModifier.of(count), heightModifier);
+        return modifiers(CountPlacement.of(count), heightModifier);
     }
 
-    protected static <T> RegistryEntry<T> alwaysOwnedRegistryEntry(RegistryEntry<T> entry) {
-        return new RegistryEntry<>() {
+    protected static <T> Holder<T> alwaysSerializableHolder(Holder<T> entry) {
+        return new Holder<>() {
             @Override
             public T value() {
                 return entry.value();
             }
 
             @Override
-            public boolean hasKeyAndValue() {
-                return entry.hasKeyAndValue();
+            public boolean isBound() {
+                return entry.isBound();
             }
 
             @Override
-            public boolean matchesId(Identifier id) {
-                return entry.matchesId(id);
+            public boolean is(ResourceLocation id) {
+                return entry.is(id);
             }
 
             @Override
-            public boolean matchesKey(RegistryKey<T> key) {
-                return entry.matchesKey(key);
+            public boolean is(ResourceKey<T> key) {
+                return entry.is(key);
             }
 
             @Override
-            public boolean matches(Predicate<RegistryKey<T>> predicate) {
-                return entry.matches(predicate);
+            public boolean is(Predicate<ResourceKey<T>> predicate) {
+                return entry.is(predicate);
             }
 
             @Override
-            public boolean isIn(TagKey<T> tag) {
-                return entry.isIn(tag);
+            public boolean is(TagKey<T> tag) {
+                return entry.is(tag);
             }
 
             //? if >=1.21 {
             @SuppressWarnings("deprecation")
             @Override
-            public boolean matches(RegistryEntry<T> entry) {
-                return entry.matches(entry);
+            public boolean is(Holder<T> entry) {
+                return entry.is(entry);
             }
             //?}
 
             @Override
-            public Stream<TagKey<T>> streamTags() {
-                return entry.streamTags();
+            public Stream<TagKey<T>> tags() {
+                return entry.tags();
             }
 
             @Override
-            public Either<RegistryKey<T>, T> getKeyOrValue() {
-                return entry.getKeyOrValue();
+            public Either<ResourceKey<T>, T> unwrap() {
+                return entry.unwrap();
             }
 
             @Override
-            public Optional<RegistryKey<T>> getKey() {
-                return entry.getKey();
+            public Optional<ResourceKey<T>> unwrapKey() {
+                return entry.unwrapKey();
             }
 
             @Override
-            public Type getType() {
-                return entry.getType();
+            public Kind kind() {
+                return entry.kind();
             }
 
             @Override
-            public boolean ownerEquals(RegistryEntryOwner<T> owner) {
+            public boolean canSerializeIn(HolderOwner<T> owner) {
                 return true;
             }
         };

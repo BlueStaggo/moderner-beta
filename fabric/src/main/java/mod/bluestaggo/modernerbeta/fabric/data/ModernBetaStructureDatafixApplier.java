@@ -4,20 +4,20 @@ import com.google.common.hash.HashCode;
 import com.google.common.hash.Hashing;
 import com.google.common.hash.HashingOutputStream;
 import com.mojang.logging.LogUtils;
-import net.minecraft.data.DataOutput;
+import net.minecraft.Util;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
-import net.minecraft.data.DataWriter;
-import net.minecraft.datafixer.DataFixTypes;
-import net.minecraft.datafixer.Schemas;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtHelper;
-import net.minecraft.nbt.NbtIo;
+import net.minecraft.data.PackOutput;
+import net.minecraft.nbt.CompoundTag;
 //? if >=1.20.4
-import net.minecraft.nbt.NbtSizeTracker;
-import net.minecraft.registry.Registries;
-import net.minecraft.structure.StructureTemplate;
-import net.minecraft.util.FixedBufferInputStream;
-import net.minecraft.util.Util;
+import net.minecraft.nbt.NbtAccounter;
+import net.minecraft.nbt.NbtIo;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.util.FastBufferedInputStream;
+import net.minecraft.util.datafix.DataFixTypes;
+import net.minecraft.util.datafix.DataFixers;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
@@ -35,15 +35,15 @@ import java.util.stream.Stream;
 public class ModernBetaStructureDatafixApplier implements DataProvider {
     private static final Logger LOGGER = LogUtils.getLogger();
     private final Iterable<Path> paths;
-    private final DataOutput output;
+    private final PackOutput output;
 
-    public ModernBetaStructureDatafixApplier(DataOutput output, Collection<Path> paths) {
+    public ModernBetaStructureDatafixApplier(PackOutput output, Collection<Path> paths) {
         this.paths = paths;
         this.output = output;
     }
 
-    public CompletableFuture<?> run(DataWriter writer) {
-        Path output = this.output.getPath();
+    public CompletableFuture<?> run(CachedOutput writer) {
+        Path output = this.output.getOutputFolder();
         List<CompletableFuture<?>> list = new ArrayList<>();
 
         for (Path path : this.paths) {
@@ -52,13 +52,13 @@ public class ModernBetaStructureDatafixApplier implements DataProvider {
                     return CompletableFuture.allOf(stream
                             .filter(p -> p.toString().endsWith(".nbt"))
                             .map(p -> CompletableFuture.runAsync(() ->
-                                    datafixNBTFile(writer, p, getLocation(path, p), output), Util.getIoWorkerExecutor()))
+                                    datafixNBTFile(writer, p, getLocation(path, p), output), Util.ioPool()))
                             .toArray(CompletableFuture[]::new));
                 } catch (IOException e) {
                     LOGGER.error("Failed to read input directory", e);
                     return CompletableFuture.completedFuture(null);
                 }
-            }, Util.getMainWorkerExecutor()).thenCompose(future -> future));
+            }, Util.backgroundExecutor()).thenCompose(future -> future));
         }
 
         return CompletableFuture.allOf(list.toArray(CompletableFuture[]::new));
@@ -73,17 +73,17 @@ public class ModernBetaStructureDatafixApplier implements DataProvider {
     }
 
     @Nullable
-    public static Path datafixNBTFile(DataWriter writer, Path inputPath, String filename, Path outputPath) {
+    public static Path datafixNBTFile(CachedOutput writer, Path inputPath, String filename, Path outputPath) {
         try {
-            try (InputStream is = new FixedBufferInputStream(Files.newInputStream(inputPath))) {
-                NbtCompound read = NbtIo.readCompressed(is /*? if >=1.20.4 {*/, NbtSizeTracker.ofUnlimitedBytes() /*?}*/);
+            try (InputStream is = new FastBufferedInputStream(Files.newInputStream(inputPath))) {
+                CompoundTag read = NbtIo.readCompressed(is /*? if >=1.20.4 {*/, NbtAccounter.unlimitedHeap() /*?}*/);
 
                 StructureTemplate structureTemplate = new StructureTemplate();
-                int dataVersion = NbtHelper.getDataVersion(read, 500);
+                int dataVersion = NbtUtils.getDataVersion(read, 500);
 
-                NbtCompound fixed = DataFixTypes.STRUCTURE.update(Schemas.getFixer(), read, dataVersion);
-                structureTemplate.readNbt(Registries.BLOCK/*? if <1.21.2 {*//*.getReadOnlyWrapper()*//*?}*/, fixed);
-                NbtCompound out = structureTemplate.writeNbt(new NbtCompound());
+                CompoundTag fixed = DataFixTypes.STRUCTURE.updateToCurrentVersion(DataFixers.getDataFixer(), read, dataVersion);
+                structureTemplate.load(BuiltInRegistries.BLOCK/*? if <1.21.2 {*//*.asLookup()*//*?}*/, fixed);
+                CompoundTag out = structureTemplate.save(new CompoundTag());
                 Path path = outputPath.resolve(filename);
 
                 writeTo(writer, path, out);
@@ -97,7 +97,7 @@ public class ModernBetaStructureDatafixApplier implements DataProvider {
     }
 
     @SuppressWarnings({"UnstableApiUsage", "deprecation"})
-    public static void writeTo(DataWriter writer, Path path, NbtCompound content) throws IOException {
+    public static void writeTo(CachedOutput writer, Path path, CompoundTag content) throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         HashingOutputStream hashing = new HashingOutputStream(Hashing.sha1(), out);
         NbtIo.writeCompressed(content, hashing);
@@ -105,7 +105,7 @@ public class ModernBetaStructureDatafixApplier implements DataProvider {
         HashCode sha1 = hashing.hash();
 
         try {
-            writer.write(path, bytes, sha1);
+            writer.writeIfNeeded(path, bytes, sha1);
         } catch (IOException e) {
             LOGGER.error("Couldn't write structure file {}", path, e);
         }

@@ -19,10 +19,10 @@ import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.text.Text;
-import net.minecraft.util.Pair;
+import net.minecraft.core.Registry;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.util.Tuple;
 
 public class ModernerBetaFabric implements ModInitializer {
     @Override
@@ -35,7 +35,7 @@ public class ModernerBetaFabric implements ModInitializer {
         ModContainer modContainer = FabricLoader.getInstance().getModContainer(ModernerBeta.MOD_ID).orElseThrow();
         for (String pack : ModernerBeta.BUILT_IN_PACKS) {
             ResourceManagerHelper.registerBuiltinResourcePack(ModernerBeta.createId(pack), modContainer,
-                    Text.translatable("dataPack.moderner_beta." + pack + ".name"), ResourcePackActivationType.NORMAL);
+                    Component.translatable("dataPack.moderner_beta." + pack + ".name"), ResourcePackActivationType.NORMAL);
         }
 
         ModernerBeta.init();
@@ -44,8 +44,8 @@ public class ModernerBetaFabric implements ModInitializer {
         ModernerBeta.loadConfig(FabricLoader.getInstance().getConfigDir());
 
         ModernerBeta.setupCustomDynamicRegistries();
-        for (Pair<RegistryKey<?>, Codec<?>> dynamicRegistry : ModernerBeta.CUSTOM_DYNAMIC_REGISTRIES) {
-            DynamicRegistries.register((RegistryKey<Registry<Object>>)dynamicRegistry.getLeft(), (Codec<Object>)dynamicRegistry.getRight());
+        for (Tuple<ResourceKey<?>, Codec<?>> dynamicRegistry : ModernerBeta.CUSTOM_DYNAMIC_REGISTRIES) {
+            DynamicRegistries.register((ResourceKey<Registry<Object>>)dynamicRegistry.getA(), (Codec<Object>)dynamicRegistry.getB());
         }
 
         if (FabricLoader.getInstance().isDevelopmentEnvironment()) {

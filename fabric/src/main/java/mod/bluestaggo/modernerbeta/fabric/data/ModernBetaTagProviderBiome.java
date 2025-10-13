@@ -7,31 +7,31 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBiomeTags;
 //?} else {
 /*import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBiomeTags;
-*///?}
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.registry.RegistryWrapper.WrapperLookup;
-import net.minecraft.registry.tag.BiomeTags;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.BiomeKeys;
+ *///?}
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.HolderLookup.Provider;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.tags.BiomeTags;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.Biomes;
 
 import java.util.concurrent.CompletableFuture;
 
 import static mod.bluestaggo.modernerbeta.tags.ModernBetaBiomeTags.*;
 
 public class ModernBetaTagProviderBiome extends FabricTagProvider<Biome> {
-    public ModernBetaTagProviderBiome(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
-        super(output, RegistryKeys.BIOME, registriesFuture);
+    public ModernBetaTagProviderBiome(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
+        super(output, Registries.BIOME, registriesFuture);
     }
 
     @Override
-    protected void configure(WrapperLookup lookup) {
-        this.configureModernBeta(lookup);
-        this.configureVanilla(lookup);
-        this.configureConventional(lookup);
+    protected void addTags(Provider provider) {
+        this.configureModernBeta(provider);
+        this.configureVanilla(provider);
+        this.configureConventional(provider);
     }
     
-    private void configureModernBeta(WrapperLookup lookup) {
+    private void configureModernBeta(Provider provider) {
         /* Modern Beta Biome Tags */
         
         this.builder(IS_MODERN_BETA).add(
@@ -255,16 +255,16 @@ public class ModernBetaTagProviderBiome extends FabricTagProvider<Biome> {
             ModernBetaBiomes.LATE_BETA_PLAINS,
             ModernBetaBiomes.LATE_BETA_TAIGA,
             ModernBetaBiomes.EARLY_RELEASE_TAIGA,
-            BiomeKeys.FOREST,
-            BiomeKeys.PLAINS,
-            BiomeKeys.TAIGA,
-            BiomeKeys.JUNGLE
+            Biomes.FOREST,
+            Biomes.PLAINS,
+            Biomes.TAIGA,
+            Biomes.JUNGLE
         );
 
         this.builder(HAS_EARLY_RELEASE_SWAMP_COLORS).add(
             ModernBetaBiomes.EARLY_RELEASE_SWAMPLAND,
-            BiomeKeys.SWAMP,
-            BiomeKeys.MANGROVE_SWAMP
+            Biomes.SWAMP,
+            Biomes.MANGROVE_SWAMP
         );
 
         /* Modern Beta Biome Structure Tags */
@@ -282,9 +282,9 @@ public class ModernBetaTagProviderBiome extends FabricTagProvider<Biome> {
             .add(
                 ModernBetaBiomes.BETA_DESERT,
                 ModernBetaBiomes.PE_DESERT,
-                BiomeKeys.DESERT,
-                BiomeKeys.BEACH,
-                BiomeKeys.SNOWY_BEACH
+                Biomes.DESERT,
+                Biomes.BEACH,
+                Biomes.SNOWY_BEACH
             );
         
         this.builder(SURFACE_CONFIG_RED_SAND);
@@ -292,73 +292,73 @@ public class ModernBetaTagProviderBiome extends FabricTagProvider<Biome> {
         this.builder(SURFACE_CONFIG_BADLANDS)
             .addOptionalTag(SURFACE_CONFIG_IS_BADLANDS)
             .add(
-                BiomeKeys.BADLANDS,
-                BiomeKeys.ERODED_BADLANDS,
-                BiomeKeys.WOODED_BADLANDS
+                Biomes.BADLANDS,
+                Biomes.ERODED_BADLANDS,
+                Biomes.WOODED_BADLANDS
             );
     
         this.builder(SURFACE_CONFIG_NETHER)
             .addOptionalTag(SURFACE_CONFIG_IS_NETHER)
-            .add(BiomeKeys.NETHER_WASTES);
+            .add(Biomes.NETHER_WASTES);
         
         this.builder(SURFACE_CONFIG_WARPED_NYLIUM)
-            .add(BiomeKeys.WARPED_FOREST);
+            .add(Biomes.WARPED_FOREST);
         
         this.builder(SURFACE_CONFIG_CRIMSON_NYLIUM)
-            .add(BiomeKeys.CRIMSON_FOREST);
+            .add(Biomes.CRIMSON_FOREST);
         
         this.builder(SURFACE_CONFIG_BASALT)
-            .add(BiomeKeys.BASALT_DELTAS);
+            .add(Biomes.BASALT_DELTAS);
         
         this.builder(SURFACE_CONFIG_SOUL_SOIL)
-            .add(BiomeKeys.SOUL_SAND_VALLEY);
+            .add(Biomes.SOUL_SAND_VALLEY);
         
         this.builder(SURFACE_CONFIG_END)
             .addOptionalTag(SURFACE_CONFIG_IS_END)
             .add(
-                BiomeKeys.THE_END,
-                BiomeKeys.END_BARRENS,
-                BiomeKeys.END_HIGHLANDS,
-                BiomeKeys.END_MIDLANDS,
-                BiomeKeys.SMALL_END_ISLANDS
+                Biomes.THE_END,
+                Biomes.END_BARRENS,
+                Biomes.END_HIGHLANDS,
+                Biomes.END_MIDLANDS,
+                Biomes.SMALL_END_ISLANDS
             );
         
         this.builder(SURFACE_CONFIG_GRASS)
             .addOptionalTag(SURFACE_CONFIG_SWAMP)
-            .add(BiomeKeys.SWAMP);
+            .add(Biomes.SWAMP);
         
         this.builder(SURFACE_CONFIG_MUD)
-            .add(BiomeKeys.MANGROVE_SWAMP);
+            .add(Biomes.MANGROVE_SWAMP);
         
         this.builder(SURFACE_CONFIG_MYCELIUM)
-            .add(BiomeKeys.MUSHROOM_FIELDS);
+            .add(Biomes.MUSHROOM_FIELDS);
         
         this.builder(SURFACE_CONFIG_PODZOL)
             .add(
-                BiomeKeys.OLD_GROWTH_PINE_TAIGA,
-                BiomeKeys.OLD_GROWTH_SPRUCE_TAIGA
+                Biomes.OLD_GROWTH_PINE_TAIGA,
+                Biomes.OLD_GROWTH_SPRUCE_TAIGA
             );
         
         this.builder(SURFACE_CONFIG_STONE)
             .add(
-                BiomeKeys.STONY_PEAKS,
-                BiomeKeys.STONY_SHORE
+                Biomes.STONY_PEAKS,
+                Biomes.STONY_SHORE
             );
         
         this.builder(SURFACE_CONFIG_SNOW)
-            .add(BiomeKeys.SNOWY_SLOPES);
+            .add(Biomes.SNOWY_SLOPES);
         
         this.builder(SURFACE_CONFIG_SNOW_DIRT)
             .add(
-                BiomeKeys.GROVE,
-                BiomeKeys.ICE_SPIKES
+                Biomes.GROVE,
+                Biomes.ICE_SPIKES
             );
         
         this.builder(SURFACE_CONFIG_SNOW_PACKED_ICE)
-            .add(BiomeKeys.FROZEN_PEAKS);
+            .add(Biomes.FROZEN_PEAKS);
 
         this.builder(SURFACE_CONFIG_SNOW_STONE)
-            .add(BiomeKeys.JAGGED_PEAKS);
+            .add(Biomes.JAGGED_PEAKS);
 
         /* Modern Beta Biome Height Tags */
 
@@ -366,44 +366,44 @@ public class ModernBetaTagProviderBiome extends FabricTagProvider<Biome> {
             .addTag(IS_TUNDRA)
             .addTag(HEIGHT_CONFIG_SHORT_HILLS)
             .add(
-                BiomeKeys.BADLANDS,
-                BiomeKeys.ERODED_BADLANDS,
-                BiomeKeys.WOODED_BADLANDS,
-                BiomeKeys.SAVANNA
+                Biomes.BADLANDS,
+                Biomes.ERODED_BADLANDS,
+                Biomes.WOODED_BADLANDS,
+                Biomes.SAVANNA
             );
 
         this.builder(HEIGHT_CONFIG_OCEAN)
             .addTag(BiomeTags.IS_OCEAN)
             .add(
-                BiomeKeys.FROZEN_OCEAN,
-                BiomeKeys.OCEAN,
-                BiomeKeys.COLD_OCEAN,
-                BiomeKeys.LUKEWARM_OCEAN,
-                BiomeKeys.WARM_OCEAN
+                Biomes.FROZEN_OCEAN,
+                Biomes.OCEAN,
+                Biomes.COLD_OCEAN,
+                Biomes.LUKEWARM_OCEAN,
+                Biomes.WARM_OCEAN
             );
 
         this.builder(HEIGHT_CONFIG_DESERT)
             .addTag(IS_DESERT)
             .add(
-                BiomeKeys.DESERT,
-                BiomeKeys.BADLANDS,
-                BiomeKeys.ERODED_BADLANDS,
-                BiomeKeys.WOODED_BADLANDS
+                Biomes.DESERT,
+                Biomes.BADLANDS,
+                Biomes.ERODED_BADLANDS,
+                Biomes.WOODED_BADLANDS
             );
 
         this.builder(HEIGHT_CONFIG_BETA_HILLS)
             .addTag(IS_RAINFOREST)
             .add(
                 ModernBetaBiomes.LATE_BETA_EXTREME_HILLS,
-                BiomeKeys.WINDSWEPT_SAVANNA
+                Biomes.WINDSWEPT_SAVANNA
             );
 
         this.builder(HEIGHT_CONFIG_EXTREME_HILLS)
             .add(
                 ModernBetaBiomes.EARLY_RELEASE_EXTREME_HILLS,
-                BiomeKeys.WINDSWEPT_HILLS,
-                BiomeKeys.WINDSWEPT_FOREST,
-                BiomeKeys.WINDSWEPT_GRAVELLY_HILLS
+                Biomes.WINDSWEPT_HILLS,
+                Biomes.WINDSWEPT_FOREST,
+                Biomes.WINDSWEPT_GRAVELLY_HILLS
             );
 
         this.builder(HEIGHT_CONFIG_TAIGA)
@@ -412,38 +412,38 @@ public class ModernBetaTagProviderBiome extends FabricTagProvider<Biome> {
         this.builder(HEIGHT_CONFIG_SWAMPLAND)
             .addTag(IS_SWAMP)
             .add(
-                BiomeKeys.SWAMP,
-                BiomeKeys.MANGROVE_SWAMP
+                Biomes.SWAMP,
+                Biomes.MANGROVE_SWAMP
             );
 
         this.builder(HEIGHT_CONFIG_RIVER)
             .forceAddTag(BiomeTags.IS_RIVER)
             .add(
-                BiomeKeys.RIVER,
-                BiomeKeys.FROZEN_RIVER
+                Biomes.RIVER,
+                Biomes.FROZEN_RIVER
             );
 
         this.builder(HEIGHT_CONFIG_MOUNTAINS)
             .addTag(IS_TUNDRA)
             .add(
-                BiomeKeys.SNOWY_PLAINS,
-                BiomeKeys.GROVE,
-                BiomeKeys.FROZEN_PEAKS,
-                BiomeKeys.JAGGED_PEAKS,
-                BiomeKeys.STONY_PEAKS,
-                BiomeKeys.SNOWY_SLOPES
+                Biomes.SNOWY_PLAINS,
+                Biomes.GROVE,
+                Biomes.FROZEN_PEAKS,
+                Biomes.JAGGED_PEAKS,
+                Biomes.STONY_PEAKS,
+                Biomes.SNOWY_SLOPES
             );
 
         this.builder(HEIGHT_CONFIG_MUSHROOM_ISLAND)
-            .add(BiomeKeys.MUSHROOM_FIELDS);
+            .add(Biomes.MUSHROOM_FIELDS);
 
         this.builder(HEIGHT_CONFIG_MUSHROOM_ISLAND_SHORE)
-            .add(BiomeKeys.MUSHROOM_FIELDS);
+            .add(Biomes.MUSHROOM_FIELDS);
 
         this.builder(HEIGHT_CONFIG_BEACH)
             .add(
-                BiomeKeys.BEACH,
-                BiomeKeys.SNOWY_BEACH
+                Biomes.BEACH,
+                Biomes.SNOWY_BEACH
             );
 
         this.builder(HEIGHT_CONFIG_HILLS)
@@ -456,15 +456,15 @@ public class ModernBetaTagProviderBiome extends FabricTagProvider<Biome> {
             .addTag(IS_SHRUBLAND)
             .addTag(IS_PLAINS)
             .add(
-                BiomeKeys.PLAINS,
-                BiomeKeys.FOREST,
-                BiomeKeys.FLOWER_FOREST,
-                BiomeKeys.BIRCH_FOREST,
-                BiomeKeys.DARK_FOREST,
+                Biomes.PLAINS,
+                Biomes.FOREST,
+                Biomes.FLOWER_FOREST,
+                Biomes.BIRCH_FOREST,
+                Biomes.DARK_FOREST,
                 //? if >=1.21.4
-                BiomeKeys.PALE_GARDEN,
-                BiomeKeys.OLD_GROWTH_BIRCH_FOREST,
-                BiomeKeys.SNOWY_BEACH
+                Biomes.PALE_GARDEN,
+                Biomes.OLD_GROWTH_BIRCH_FOREST,
+                Biomes.SNOWY_BEACH
             );
 
         this.builder(HEIGHT_CONFIG_EXTREME_HILLS_EDGE)
@@ -472,24 +472,24 @@ public class ModernBetaTagProviderBiome extends FabricTagProvider<Biome> {
 
         this.builder(HEIGHT_CONFIG_JUNGLE)
             .add(
-                BiomeKeys.JUNGLE,
-                BiomeKeys.BAMBOO_JUNGLE,
-                BiomeKeys.SPARSE_JUNGLE
+                Biomes.JUNGLE,
+                Biomes.BAMBOO_JUNGLE,
+                Biomes.SPARSE_JUNGLE
             );
 
         this.builder(HEIGHT_CONFIG_JUNGLE_HILLS)
             .addTag(HEIGHT_CONFIG_JUNGLE)
             .add(
-                BiomeKeys.BADLANDS,
-                BiomeKeys.ERODED_BADLANDS,
-                BiomeKeys.WOODED_BADLANDS,
-                BiomeKeys.SAVANNA
+                Biomes.BADLANDS,
+                Biomes.ERODED_BADLANDS,
+                Biomes.WOODED_BADLANDS,
+                Biomes.SAVANNA
             );
 
         this.builder(HEIGHT_CONFIG_PLATEAU)
             .add(
-                BiomeKeys.CHERRY_GROVE,
-                BiomeKeys.MEADOW
+                Biomes.CHERRY_GROVE,
+                Biomes.MEADOW
             );
 
         this.builder(HEIGHT_CONFIG_SWAMPLAND_HILLS)
@@ -497,21 +497,21 @@ public class ModernBetaTagProviderBiome extends FabricTagProvider<Biome> {
 
         this.builder(HEIGHT_CONFIG_PLATEAU_HILL)
             .add(
-                BiomeKeys.BADLANDS,
-                BiomeKeys.ERODED_BADLANDS,
-                BiomeKeys.WOODED_BADLANDS
+                Biomes.BADLANDS,
+                Biomes.ERODED_BADLANDS,
+                Biomes.WOODED_BADLANDS
             );
 
         this.builder(HEIGHT_CONFIG_DEEP_OCEAN)
             .add(
-                BiomeKeys.DEEP_FROZEN_OCEAN,
-                BiomeKeys.DEEP_OCEAN,
-                BiomeKeys.DEEP_COLD_OCEAN,
-                BiomeKeys.DEEP_LUKEWARM_OCEAN
+                Biomes.DEEP_FROZEN_OCEAN,
+                Biomes.DEEP_OCEAN,
+                Biomes.DEEP_COLD_OCEAN,
+                Biomes.DEEP_LUKEWARM_OCEAN
             );
     }
     
-    private void configureVanilla(WrapperLookup lookup) {
+    private void configureVanilla(Provider provider) {
         /* Vanilla Biome Tags */
         
         this.builder(BiomeTags.IS_OVERWORLD)
@@ -535,26 +535,26 @@ public class ModernBetaTagProviderBiome extends FabricTagProvider<Biome> {
         
         /* Vanilla Biome Structure Tags */
         
-        this.builder(BiomeTags.BURIED_TREASURE_HAS_STRUCTURE)
+        this.builder(BiomeTags.HAS_BURIED_TREASURE)
             .addTag(BiomeTags.IS_OCEAN);
         
-        this.builder(BiomeTags.DESERT_PYRAMID_HAS_STRUCTURE)
+        this.builder(BiomeTags.HAS_DESERT_PYRAMID)
             .addTag(IS_DESERT);
         
-        this.builder(BiomeTags.IGLOO_HAS_STRUCTURE)
+        this.builder(BiomeTags.HAS_IGLOO)
             .addTag(IS_TUNDRA);
         
-        this.builder(BiomeTags.JUNGLE_TEMPLE_HAS_STRUCTURE)
+        this.builder(BiomeTags.HAS_JUNGLE_TEMPLE)
             .addTag(IS_RAINFOREST);
         
-        this.builder(BiomeTags.MINESHAFT_HAS_STRUCTURE)
+        this.builder(BiomeTags.HAS_MINESHAFT)
             .addTag(IS_BETA)
             .addTag(IS_PE)
             .addTag(IS_ALPHA)
             .addTag(IS_INFDEV)
             .addTag(IS_INDEV);
 
-        this.builder(BiomeTags.OCEAN_RUIN_COLD_HAS_STRUCTURE).add(
+        this.builder(BiomeTags.HAS_OCEAN_RUIN_COLD).add(
             ModernBetaBiomes.BETA_OCEAN,
             ModernBetaBiomes.BETA_COLD_OCEAN,
             ModernBetaBiomes.BETA_FROZEN_OCEAN,
@@ -564,7 +564,7 @@ public class ModernBetaTagProviderBiome extends FabricTagProvider<Biome> {
             ModernBetaBiomes.PE_FROZEN_OCEAN
         );
         
-        this.builder(BiomeTags.OCEAN_RUIN_WARM_HAS_STRUCTURE).add(
+        this.builder(BiomeTags.HAS_OCEAN_RUIN_WARM).add(
             ModernBetaBiomes.BETA_LUKEWARM_OCEAN,
             ModernBetaBiomes.BETA_WARM_OCEAN,
 
@@ -572,7 +572,7 @@ public class ModernBetaTagProviderBiome extends FabricTagProvider<Biome> {
             ModernBetaBiomes.PE_WARM_OCEAN
         );
         
-        this.builder(BiomeTags.PILLAGER_OUTPOST_HAS_STRUCTURE)
+        this.builder(BiomeTags.HAS_PILLAGER_OUTPOST)
             .addTag(IS_DESERT)
             .addTag(IS_PLAINS)
             .addTag(IS_SAVANNA)
@@ -580,36 +580,36 @@ public class ModernBetaTagProviderBiome extends FabricTagProvider<Biome> {
             .addTag(IS_TUNDRA)
             .add(ModernBetaBiomes.BETA_SKY);
         
-        this.builder(BiomeTags.RUINED_PORTAL_DESERT_HAS_STRUCTURE)
+        this.builder(BiomeTags.HAS_RUINED_PORTAL_DESERT)
             .addTag(IS_DESERT);
         
-        this.builder(BiomeTags.RUINED_PORTAL_STANDARD_HAS_STRUCTURE)
+        this.builder(BiomeTags.HAS_RUINED_PORTAL_STANDARD)
             .addTag(IS_PLAINS)
             .addTag(IS_SAVANNA)
             .addTag(IS_TUNDRA)
             .add(ModernBetaBiomes.BETA_SKY);
         
-        this.builder(BiomeTags.RUINED_PORTAL_SWAMP_HAS_STRUCTURE)
+        this.builder(BiomeTags.HAS_RUINED_PORTAL_SWAMP)
             .addTag(IS_SWAMP);
         
-        this.builder(BiomeTags.STRONGHOLD_HAS_STRUCTURE)
+        this.builder(BiomeTags.HAS_STRONGHOLD)
             .addTag(IS_BETA)
             .addTag(IS_PE)
             .addTag(IS_ALPHA)
             .addTag(IS_INFDEV);
         
-        this.builder(BiomeTags.SWAMP_HUT_HAS_STRUCTURE)
+        this.builder(BiomeTags.HAS_SWAMP_HUT)
             .addTag(IS_SWAMP);
 
         //? if >=1.21 {
-        this.builder(BiomeTags.TRIAL_CHAMBERS_HAS_STRUCTURE)
+        this.builder(BiomeTags.HAS_TRIAL_CHAMBERS)
             .addTag(IS_MODERN_BETA);
         //?}
         
-        this.builder(BiomeTags.VILLAGE_DESERT_HAS_STRUCTURE)
+        this.builder(BiomeTags.HAS_VILLAGE_DESERT)
             .addTag(IS_DESERT);
         
-        this.builder(BiomeTags.VILLAGE_PLAINS_HAS_STRUCTURE)
+        this.builder(BiomeTags.HAS_VILLAGE_PLAINS)
             .addTag(IS_PLAINS)
             .addTag(IS_SHRUBLAND)
             .addTag(IS_SAVANNA)
@@ -617,13 +617,13 @@ public class ModernBetaTagProviderBiome extends FabricTagProvider<Biome> {
             .addTag(IS_INFDEV)
             .addTag(IS_INDEV);
         
-        this.builder(BiomeTags.VILLAGE_SNOWY_HAS_STRUCTURE)
+        this.builder(BiomeTags.HAS_VILLAGE_SNOWY)
             .addTag(IS_TUNDRA);
         
-        this.builder(BiomeTags.VILLAGE_TAIGA_HAS_STRUCTURE)
+        this.builder(BiomeTags.HAS_VILLAGE_TAIGA)
             .addTag(IS_TAIGA);
         
-        this.builder(BiomeTags.WOODLAND_MANSION_HAS_STRUCTURE)
+        this.builder(BiomeTags.HAS_WOODLAND_MANSION)
             .addTag(IS_SEASONAL_FOREST);
         
         /* Misc. Tags */
@@ -641,7 +641,7 @@ public class ModernBetaTagProviderBiome extends FabricTagProvider<Biome> {
         this.builder(BiomeTags.ALLOWS_SURFACE_SLIME_SPAWNS)
             .addTag(IS_SWAMP);
         
-        this.builder(BiomeTags.TRAIL_RUINS_HAS_STRUCTURE)
+        this.builder(BiomeTags.HAS_TRAIL_RUINS)
             .add(
                 ModernBetaBiomes.BETA_TAIGA,
                 ModernBetaBiomes.BETA_RAINFOREST,
@@ -676,7 +676,7 @@ public class ModernBetaTagProviderBiome extends FabricTagProvider<Biome> {
      * https://www.minecraftforum.net/forums/archive/alpha/alpha-survival-single-player/820956-biome-geography-algorithm-analysis-updated-11-4
      * 
      */
-    private void configureConventional(WrapperLookup lookup) {
+    private void configureConventional(Provider provider) {
         this.builder(
             //? if >=1.20.5 {
             ConventionalBiomeTags.IS_AQUATIC

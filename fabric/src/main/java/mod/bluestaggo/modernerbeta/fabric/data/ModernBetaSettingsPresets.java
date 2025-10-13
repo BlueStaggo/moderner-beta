@@ -23,11 +23,11 @@ import mod.bluestaggo.modernerbeta.world.biome.voronoi.VoronoiPointBiome;
 import mod.bluestaggo.modernerbeta.world.chunk.provider.indev.IndevTheme;
 import mod.bluestaggo.modernerbeta.world.chunk.provider.indev.IndevType;
 import mod.bluestaggo.modernerbeta.world.chunk.provider.island.IslandShape;
-import net.minecraft.registry.Registerable;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.collection.Pool;
-import net.minecraft.world.biome.BiomeKeys;
+import net.minecraft.data.worldgen.BootstrapContext;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.random.WeightedList;
+import net.minecraft.world.level.biome.Biomes;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -39,85 +39,85 @@ public final class ModernBetaSettingsPresets {
     public static final ModernBetaSettingsPreset DEFAULT_BETA = presetBeta(false);
     public static final ModernBetaSettingsPreset DEFAULT_MAJOR = preset1122(false, 0, false);
 
-    public static void bootstrap(Registerable<ModernBetaSettingsPreset> presetRegisterable) {
-        Identifier betaId = ModernerBeta.createId("beta");
-        Identifier majorId = ModernerBeta.createId("release_1_12_2");
+    public static void bootstrap(BootstrapContext<ModernBetaSettingsPreset> context) {
+        ResourceLocation betaId = ModernerBeta.createId("beta");
+        ResourceLocation majorId = ModernerBeta.createId("release_1_12_2");
 
-        presetRegisterable.register(keyOf("beta"), DEFAULT_BETA);
-        presetRegisterable.register(keyOf("beta_1_1_02"), presetBeta(true));
-        presetRegisterable.register(keyOf("alpha"), presetAlpha());
-        presetRegisterable.register(keyOf("skylands"), presetSkylands());
-        presetRegisterable.register(keyOf("infdev_415"), presetInfdev415());
-        presetRegisterable.register(keyOf("infdev_420"), presetInfdev420());
-        presetRegisterable.register(keyOf("infdev_611"), presetInfdev611());
-        presetRegisterable.register(keyOf("infdev_325"), presetInfdev325());
-        presetRegisterable.register(keyOf("infdev_227"), presetInfdev227());
-        presetRegisterable.register(keyOf("indev"), presetIndev());
-        presetRegisterable.register(keyOf("classic_0_30"), presetClassic());
-        presetRegisterable.register(keyOf("classic_0_0_14a_08"), presetClassic14a08());
-        presetRegisterable.register(keyOf("pe"), presetPE());
-        presetRegisterable.register(keyOf("beta_1_8_1"), presetBeta181(false, 0));
-        presetRegisterable.register(keyOf("beta_1_9_pre_3"), presetBeta19Pre3(false, 0));
-        presetRegisterable.register(keyOf("release_1_0_0"), preset100(false, 0));
-        presetRegisterable.register(keyOf("release_1_1"), preset11(false, 0));
-        presetRegisterable.register(keyOf("release_1_2_5"), preset125(false, 0));
-        presetRegisterable.register(keyOf("release_1_6_4"), preset164(false, 0));
-        presetRegisterable.register(keyOf("release_1_12_2"), DEFAULT_MAJOR);
-        presetRegisterable.register(keyOf("release_1_17_1"), preset1171(false, 0, false));
-        presetRegisterable.register(keyOf("bedrock_1_2"), preset1122(false, 0, true));
-        presetRegisterable.register(keyOf("bedrock_1_17"), preset1171(false, 0, true));
-        presetRegisterable.register(keyOf("beta_skylands"), presetBetaSkylands());
-        presetRegisterable.register(keyOf("beta_isles"), presetIsles(DEFAULT_BETA, betaId));
-        presetRegisterable.register(keyOf("beta_water_world"), presetWaterWorld(DEFAULT_BETA, betaId));
-        presetRegisterable.register(keyOf("beta_isle_land"), presetIsleLand(DEFAULT_BETA, betaId));
-        presetRegisterable.register(keyOf("beta_cave_delight"), presetCaveDelight(DEFAULT_BETA, betaId));
-        presetRegisterable.register(keyOf("beta_mountain_madness"), presetMountainMadness(DEFAULT_BETA, betaId, false));
-        presetRegisterable.register(keyOf("beta_drought"), presetDrought(DEFAULT_BETA, betaId));
-        presetRegisterable.register(keyOf("beta_cave_chaos"), presetCaveChaos(DEFAULT_BETA, betaId));
-        presetRegisterable.register(keyOf("beta_large_biomes"), presetBetaLargeBiomes());
-        presetRegisterable.register(keyOf("beta_xbox_legacy"), presetBetaXboxLegacy());
-        presetRegisterable.register(keyOf("beta_survival_island"), presetBetaSurvivalIsland());
-        presetRegisterable.register(keyOf("beta_vanilla"), presetBetaVanilla());
-        presetRegisterable.register(keyOf("legacy_console_classic"), presetReleaseXboxLegacy(864));
-        presetRegisterable.register(keyOf("legacy_console_small"), presetReleaseXboxLegacy(1024));
-        presetRegisterable.register(keyOf("legacy_console_medium"), presetReleaseXboxLegacy(3072));
-        presetRegisterable.register(keyOf("legacy_console_large"), presetReleaseXboxLegacy(5120));
-        presetRegisterable.register(keyOf("release_hybrid"), presetReleaseHybrid(false, 0));
-        presetRegisterable.register(keyOf("snow_aint_snowier"), presetSnowAintSnowier(false, 0));
-        presetRegisterable.register(keyOf("alpha_winter"), presetAlphaWinter());
-        presetRegisterable.register(keyOf("indev_paradise"), presetIndevParadise());
-        presetRegisterable.register(keyOf("indev_woods"), presetIndevWoods());
-        presetRegisterable.register(keyOf("indev_hell"), presetIndevHell());
-        presetRegisterable.register(keyOf("water_world"), presetWaterWorld(DEFAULT_MAJOR, majorId));
-        presetRegisterable.register(keyOf("isle_land"), presetIsleLand(DEFAULT_MAJOR, majorId));
-        presetRegisterable.register(keyOf("cave_delight"), presetCaveDelight(DEFAULT_MAJOR, majorId));
-        presetRegisterable.register(keyOf("mountain_madness"), presetMountainMadness(DEFAULT_MAJOR, majorId, true));
-        presetRegisterable.register(keyOf("drought"), presetDrought(DEFAULT_MAJOR, majorId));
-        presetRegisterable.register(keyOf("cave_chaos"), presetCaveChaos(DEFAULT_MAJOR, majorId));
-        presetRegisterable.register(keyOf("beta_1_8_1_large_biomes"), presetBeta181(false, 2));
-        presetRegisterable.register(keyOf("beta_1_9_pre_3_large_biomes"), presetBeta19Pre3(false, 2));
-        presetRegisterable.register(keyOf("release_1_0_0_large_biomes"), preset100(false, 2));
-        presetRegisterable.register(keyOf("release_1_1_large_biomes"), preset11(false, 2));
-        presetRegisterable.register(keyOf("release_1_2_5_large_biomes"), preset125(false, 2));
-        presetRegisterable.register(keyOf("release_1_6_4_large_biomes"), preset164(false, 2));
-        presetRegisterable.register(keyOf("release_1_12_2_large_biomes"), preset1122(false, 2, false));
-        presetRegisterable.register(keyOf("release_1_17_1_large_biomes"), preset1171(false, 2, false));
-        presetRegisterable.register(keyOf("release_hybrid_large_biomes"), presetReleaseHybrid(false, 2));
-        presetRegisterable.register(keyOf("snow_aint_snowier_large_biomes"), presetSnowAintSnowier(false, 2));
-        presetRegisterable.register(keyOf("beta_1_8_1_amplified"), presetBeta181(true, 0));
-        presetRegisterable.register(keyOf("beta_1_9_pre_3_amplified"), presetBeta19Pre3(true, 0));
-        presetRegisterable.register(keyOf("release_1_0_0_amplified"), preset100(true, 0));
-        presetRegisterable.register(keyOf("release_1_1_amplified"), preset11(true, 0));
-        presetRegisterable.register(keyOf("release_1_2_5_amplified"), preset125(true, 0));
-        presetRegisterable.register(keyOf("release_1_6_4_amplified"), preset164(true, 0));
-        presetRegisterable.register(keyOf("release_1_12_2_amplified"), preset1122(true, 0, false));
-        presetRegisterable.register(keyOf("release_1_17_1_amplified"), preset1171(true, 0, false));
-        presetRegisterable.register(keyOf("release_hybrid_amplified"), presetReleaseHybrid(true, 0));
-        presetRegisterable.register(keyOf("snow_aint_snowier_amplified"), presetSnowAintSnowier(true, 0));
+        context.register(keyOf("beta"), DEFAULT_BETA);
+        context.register(keyOf("beta_1_1_02"), presetBeta(true));
+        context.register(keyOf("alpha"), presetAlpha());
+        context.register(keyOf("skylands"), presetSkylands());
+        context.register(keyOf("infdev_415"), presetInfdev415());
+        context.register(keyOf("infdev_420"), presetInfdev420());
+        context.register(keyOf("infdev_611"), presetInfdev611());
+        context.register(keyOf("infdev_325"), presetInfdev325());
+        context.register(keyOf("infdev_227"), presetInfdev227());
+        context.register(keyOf("indev"), presetIndev());
+        context.register(keyOf("classic_0_30"), presetClassic());
+        context.register(keyOf("classic_0_0_14a_08"), presetClassic14a08());
+        context.register(keyOf("pe"), presetPE());
+        context.register(keyOf("beta_1_8_1"), presetBeta181(false, 0));
+        context.register(keyOf("beta_1_9_pre_3"), presetBeta19Pre3(false, 0));
+        context.register(keyOf("release_1_0_0"), preset100(false, 0));
+        context.register(keyOf("release_1_1"), preset11(false, 0));
+        context.register(keyOf("release_1_2_5"), preset125(false, 0));
+        context.register(keyOf("release_1_6_4"), preset164(false, 0));
+        context.register(keyOf("release_1_12_2"), DEFAULT_MAJOR);
+        context.register(keyOf("release_1_17_1"), preset1171(false, 0, false));
+        context.register(keyOf("bedrock_1_2"), preset1122(false, 0, true));
+        context.register(keyOf("bedrock_1_17"), preset1171(false, 0, true));
+        context.register(keyOf("beta_skylands"), presetBetaSkylands());
+        context.register(keyOf("beta_isles"), presetIsles(DEFAULT_BETA, betaId));
+        context.register(keyOf("beta_water_world"), presetWaterWorld(DEFAULT_BETA, betaId));
+        context.register(keyOf("beta_isle_land"), presetIsleLand(DEFAULT_BETA, betaId));
+        context.register(keyOf("beta_cave_delight"), presetCaveDelight(DEFAULT_BETA, betaId));
+        context.register(keyOf("beta_mountain_madness"), presetMountainMadness(DEFAULT_BETA, betaId, false));
+        context.register(keyOf("beta_drought"), presetDrought(DEFAULT_BETA, betaId));
+        context.register(keyOf("beta_cave_chaos"), presetCaveChaos(DEFAULT_BETA, betaId));
+        context.register(keyOf("beta_large_biomes"), presetBetaLargeBiomes());
+        context.register(keyOf("beta_xbox_legacy"), presetBetaXboxLegacy());
+        context.register(keyOf("beta_survival_island"), presetBetaSurvivalIsland());
+        context.register(keyOf("beta_vanilla"), presetBetaVanilla());
+        context.register(keyOf("legacy_console_classic"), presetReleaseXboxLegacy(864));
+        context.register(keyOf("legacy_console_small"), presetReleaseXboxLegacy(1024));
+        context.register(keyOf("legacy_console_medium"), presetReleaseXboxLegacy(3072));
+        context.register(keyOf("legacy_console_large"), presetReleaseXboxLegacy(5120));
+        context.register(keyOf("release_hybrid"), presetReleaseHybrid(false, 0));
+        context.register(keyOf("snow_aint_snowier"), presetSnowAintSnowier(false, 0));
+        context.register(keyOf("alpha_winter"), presetAlphaWinter());
+        context.register(keyOf("indev_paradise"), presetIndevParadise());
+        context.register(keyOf("indev_woods"), presetIndevWoods());
+        context.register(keyOf("indev_hell"), presetIndevHell());
+        context.register(keyOf("water_world"), presetWaterWorld(DEFAULT_MAJOR, majorId));
+        context.register(keyOf("isle_land"), presetIsleLand(DEFAULT_MAJOR, majorId));
+        context.register(keyOf("cave_delight"), presetCaveDelight(DEFAULT_MAJOR, majorId));
+        context.register(keyOf("mountain_madness"), presetMountainMadness(DEFAULT_MAJOR, majorId, true));
+        context.register(keyOf("drought"), presetDrought(DEFAULT_MAJOR, majorId));
+        context.register(keyOf("cave_chaos"), presetCaveChaos(DEFAULT_MAJOR, majorId));
+        context.register(keyOf("beta_1_8_1_large_biomes"), presetBeta181(false, 2));
+        context.register(keyOf("beta_1_9_pre_3_large_biomes"), presetBeta19Pre3(false, 2));
+        context.register(keyOf("release_1_0_0_large_biomes"), preset100(false, 2));
+        context.register(keyOf("release_1_1_large_biomes"), preset11(false, 2));
+        context.register(keyOf("release_1_2_5_large_biomes"), preset125(false, 2));
+        context.register(keyOf("release_1_6_4_large_biomes"), preset164(false, 2));
+        context.register(keyOf("release_1_12_2_large_biomes"), preset1122(false, 2, false));
+        context.register(keyOf("release_1_17_1_large_biomes"), preset1171(false, 2, false));
+        context.register(keyOf("release_hybrid_large_biomes"), presetReleaseHybrid(false, 2));
+        context.register(keyOf("snow_aint_snowier_large_biomes"), presetSnowAintSnowier(false, 2));
+        context.register(keyOf("beta_1_8_1_amplified"), presetBeta181(true, 0));
+        context.register(keyOf("beta_1_9_pre_3_amplified"), presetBeta19Pre3(true, 0));
+        context.register(keyOf("release_1_0_0_amplified"), preset100(true, 0));
+        context.register(keyOf("release_1_1_amplified"), preset11(true, 0));
+        context.register(keyOf("release_1_2_5_amplified"), preset125(true, 0));
+        context.register(keyOf("release_1_6_4_amplified"), preset164(true, 0));
+        context.register(keyOf("release_1_12_2_amplified"), preset1122(true, 0, false));
+        context.register(keyOf("release_1_17_1_amplified"), preset1171(true, 0, false));
+        context.register(keyOf("release_hybrid_amplified"), presetReleaseHybrid(true, 0));
+        context.register(keyOf("snow_aint_snowier_amplified"), presetSnowAintSnowier(true, 0));
     }
 
-    private static RegistryKey<ModernBetaSettingsPreset> keyOf(String id) {
-        return RegistryKey.of(ModernBetaRegistryKeys.SETTINGS_PRESET, ModernerBeta.createId(id));
+    private static ResourceKey<ModernBetaSettingsPreset> keyOf(String id) {
+        return ResourceKey.create(ModernBetaRegistryKeys.SETTINGS_PRESET, ModernerBeta.createId(id));
     }
 
     private static ModernBetaSettingsPreset presetBeta() {
@@ -138,48 +138,48 @@ public final class ModernBetaSettingsPresets {
                 .add(CLIMATE_DISTRIBUTION, ClimateDistribution.BETA)
                 .add(CLIMATE_MAPPINGS, Map.ofEntries(
                     Map.entry("desert", new ClimateMapping(
-                        ModernBetaBiomes.BETA_DESERT.getValue(),
-                        ModernBetaBiomes.BETA_OCEAN.getValue()
+                        ModernBetaBiomes.BETA_DESERT.location(),
+                        ModernBetaBiomes.BETA_OCEAN.location()
                     )),
                     Map.entry("forest", new ClimateMapping(
-                        (oakBiomes ? ModernBetaBiomes.BETA_OAK_FOREST : ModernBetaBiomes.BETA_FOREST).getValue(),
-                        ModernBetaBiomes.BETA_OCEAN.getValue()
+                        (oakBiomes ? ModernBetaBiomes.BETA_OAK_FOREST : ModernBetaBiomes.BETA_FOREST).location(),
+                        ModernBetaBiomes.BETA_OCEAN.location()
                     )),
                     Map.entry("ice_desert", new ClimateMapping(
-                        ModernBetaBiomes.BETA_TUNDRA.getValue(),
-                        ModernBetaBiomes.BETA_FROZEN_OCEAN.getValue()
+                        ModernBetaBiomes.BETA_TUNDRA.location(),
+                        ModernBetaBiomes.BETA_FROZEN_OCEAN.location()
                     )),
                     Map.entry("plains", new ClimateMapping(
-                        ModernBetaBiomes.BETA_PLAINS.getValue(),
-                        ModernBetaBiomes.BETA_OCEAN.getValue()
+                        ModernBetaBiomes.BETA_PLAINS.location(),
+                        ModernBetaBiomes.BETA_OCEAN.location()
                     )),
                     Map.entry("rainforest", new ClimateMapping(
-                        ModernBetaBiomes.BETA_RAINFOREST.getValue(),
-                        ModernBetaBiomes.BETA_WARM_OCEAN.getValue()
+                        ModernBetaBiomes.BETA_RAINFOREST.location(),
+                        ModernBetaBiomes.BETA_WARM_OCEAN.location()
                     )),
                     Map.entry("savanna", new ClimateMapping(
-                        ModernBetaBiomes.BETA_SAVANNA.getValue(),
-                        ModernBetaBiomes.BETA_OCEAN.getValue()
+                        ModernBetaBiomes.BETA_SAVANNA.location(),
+                        ModernBetaBiomes.BETA_OCEAN.location()
                     )),
                     Map.entry("shrubland", new ClimateMapping(
-                        ModernBetaBiomes.BETA_SHRUBLAND.getValue(),
-                        ModernBetaBiomes.BETA_OCEAN.getValue()
+                        ModernBetaBiomes.BETA_SHRUBLAND.location(),
+                        ModernBetaBiomes.BETA_OCEAN.location()
                     )),
                     Map.entry("seasonal_forest", new ClimateMapping(
-                        ModernBetaBiomes.BETA_SEASONAL_FOREST.getValue(),
-                        ModernBetaBiomes.BETA_LUKEWARM_OCEAN.getValue()
+                        ModernBetaBiomes.BETA_SEASONAL_FOREST.location(),
+                        ModernBetaBiomes.BETA_LUKEWARM_OCEAN.location()
                     )),
                     Map.entry("swampland", new ClimateMapping(
-                        ModernBetaBiomes.BETA_SWAMPLAND.getValue(),
-                        ModernBetaBiomes.BETA_COLD_OCEAN.getValue()
+                        ModernBetaBiomes.BETA_SWAMPLAND.location(),
+                        ModernBetaBiomes.BETA_COLD_OCEAN.location()
                     )),
                     Map.entry("taiga", new ClimateMapping(
-                        (oakBiomes ? ModernBetaBiomes.BETA_OAK_TAIGA : ModernBetaBiomes.BETA_TAIGA).getValue(),
-                        ModernBetaBiomes.BETA_FROZEN_OCEAN.getValue()
+                        (oakBiomes ? ModernBetaBiomes.BETA_OAK_TAIGA : ModernBetaBiomes.BETA_TAIGA).location(),
+                        ModernBetaBiomes.BETA_FROZEN_OCEAN.location()
                     )),
                     Map.entry("tundra", new ClimateMapping(
-                        ModernBetaBiomes.BETA_TUNDRA.getValue(),
-                        ModernBetaBiomes.BETA_FROZEN_OCEAN.getValue()
+                        ModernBetaBiomes.BETA_TUNDRA.location(),
+                        ModernBetaBiomes.BETA_FROZEN_OCEAN.location()
                     ))
                 ))
                 .addDefault(CLIMATE_SCALE)
@@ -456,48 +456,48 @@ public final class ModernBetaSettingsPresets {
                 .add(CLIMATE_DISTRIBUTION, ClimateDistribution.BETA)
                 .add(CLIMATE_MAPPINGS, Map.ofEntries(
                     Map.entry("desert", new ClimateMapping(
-                        ModernBetaBiomes.PE_DESERT.getValue(),
-                        ModernBetaBiomes.PE_OCEAN.getValue()
+                        ModernBetaBiomes.PE_DESERT.location(),
+                        ModernBetaBiomes.PE_OCEAN.location()
                     )),
                     Map.entry("forest", new ClimateMapping(
-                        ModernBetaBiomes.PE_FOREST.getValue(),
-                        ModernBetaBiomes.PE_OCEAN.getValue()
+                        ModernBetaBiomes.PE_FOREST.location(),
+                        ModernBetaBiomes.PE_OCEAN.location()
                     )),
                     Map.entry("ice_desert", new ClimateMapping(
-                        ModernBetaBiomes.PE_TUNDRA.getValue(),
-                        ModernBetaBiomes.PE_FROZEN_OCEAN.getValue()
+                        ModernBetaBiomes.PE_TUNDRA.location(),
+                        ModernBetaBiomes.PE_FROZEN_OCEAN.location()
                     )),
                     Map.entry("plains", new ClimateMapping(
-                        ModernBetaBiomes.PE_PLAINS.getValue(),
-                        ModernBetaBiomes.PE_OCEAN.getValue()
+                        ModernBetaBiomes.PE_PLAINS.location(),
+                        ModernBetaBiomes.PE_OCEAN.location()
                     )),
                     Map.entry("rainforest", new ClimateMapping(
-                        ModernBetaBiomes.PE_RAINFOREST.getValue(),
-                        ModernBetaBiomes.PE_WARM_OCEAN.getValue()
+                        ModernBetaBiomes.PE_RAINFOREST.location(),
+                        ModernBetaBiomes.PE_WARM_OCEAN.location()
                     )),
                     Map.entry("savanna", new ClimateMapping(
-                        ModernBetaBiomes.PE_SAVANNA.getValue(),
-                        ModernBetaBiomes.PE_OCEAN.getValue()
+                        ModernBetaBiomes.PE_SAVANNA.location(),
+                        ModernBetaBiomes.PE_OCEAN.location()
                     )),
                     Map.entry("shrubland", new ClimateMapping(
-                        ModernBetaBiomes.PE_SHRUBLAND.getValue(),
-                        ModernBetaBiomes.PE_OCEAN.getValue()
+                        ModernBetaBiomes.PE_SHRUBLAND.location(),
+                        ModernBetaBiomes.PE_OCEAN.location()
                     )),
                     Map.entry("seasonal_forest", new ClimateMapping(
-                        ModernBetaBiomes.PE_SEASONAL_FOREST.getValue(),
-                        ModernBetaBiomes.PE_LUKEWARM_OCEAN.getValue()
+                        ModernBetaBiomes.PE_SEASONAL_FOREST.location(),
+                        ModernBetaBiomes.PE_LUKEWARM_OCEAN.location()
                     )),
                     Map.entry("swampland", new ClimateMapping(
-                        ModernBetaBiomes.PE_SWAMPLAND.getValue(),
-                        ModernBetaBiomes.PE_COLD_OCEAN.getValue()
+                        ModernBetaBiomes.PE_SWAMPLAND.location(),
+                        ModernBetaBiomes.PE_COLD_OCEAN.location()
                     )),
                     Map.entry("taiga", new ClimateMapping(
-                        ModernBetaBiomes.PE_TAIGA.getValue(),
-                        ModernBetaBiomes.PE_FROZEN_OCEAN.getValue()
+                        ModernBetaBiomes.PE_TAIGA.location(),
+                        ModernBetaBiomes.PE_FROZEN_OCEAN.location()
                     )),
                     Map.entry("tundra", new ClimateMapping(
-                        ModernBetaBiomes.PE_TUNDRA.getValue(),
-                        ModernBetaBiomes.PE_FROZEN_OCEAN.getValue()
+                        ModernBetaBiomes.PE_TUNDRA.location(),
+                        ModernBetaBiomes.PE_FROZEN_OCEAN.location()
                     ))
                 ))
                 .build(),
@@ -515,7 +515,7 @@ public final class ModernBetaSettingsPresets {
         );
     }
     
-    private static ModernBetaSettingsPreset presetIsles(ModernBetaSettingsPreset initialSettings, Identifier initialId) {
+    private static ModernBetaSettingsPreset presetIsles(ModernBetaSettingsPreset initialSettings, ResourceLocation initialId) {
         return new ModernBetaSettingsPreset(
             ModernBetaSettings.builder()
                 .add(PRESET, initialId)
@@ -530,7 +530,7 @@ public final class ModernBetaSettingsPresets {
         );
     }
 
-    private static ModernBetaSettingsPreset presetWaterWorld(ModernBetaSettingsPreset initialSettings, Identifier initialId) {
+    private static ModernBetaSettingsPreset presetWaterWorld(ModernBetaSettingsPreset initialSettings, ResourceLocation initialId) {
         NoiseScale baseNoiseScale = initialSettings.chunkSettings().getOrDefault(NOISE_SCALE);
         Map<ExtendedBiomeId, HeightConfig> baseHeightOverrides = initialSettings.chunkSettings().getOrDefault(FORCED_BIOME_HEIGHT).heightOverrides();
 
@@ -570,7 +570,7 @@ public final class ModernBetaSettingsPresets {
         );
     }
 
-    private static ModernBetaSettingsPreset presetIsleLand(ModernBetaSettingsPreset initialSettings, Identifier initialId) {
+    private static ModernBetaSettingsPreset presetIsleLand(ModernBetaSettingsPreset initialSettings, ResourceLocation initialId) {
         NoiseScale baseNoiseScale = initialSettings.chunkSettings().getOrDefault(NOISE_SCALE);
 
         return new ModernBetaSettingsPreset(
@@ -601,7 +601,7 @@ public final class ModernBetaSettingsPresets {
     }
     
 
-    private static ModernBetaSettingsPreset presetCaveDelight(ModernBetaSettingsPreset initialSettings, Identifier initialId) {
+    private static ModernBetaSettingsPreset presetCaveDelight(ModernBetaSettingsPreset initialSettings, ResourceLocation initialId) {
         NoiseScale baseNoiseScale = initialSettings.chunkSettings().getOrDefault(NOISE_SCALE);
         Map<ExtendedBiomeId, HeightConfig> baseHeightOverrides = initialSettings.chunkSettings().getOrDefault(FORCED_BIOME_HEIGHT).heightOverrides();
 
@@ -640,7 +640,7 @@ public final class ModernBetaSettingsPresets {
         );
     }
 
-    private static ModernBetaSettingsPreset presetMountainMadness(ModernBetaSettingsPreset initialSettings, Identifier initialId, boolean modifyBaseSize) {
+    private static ModernBetaSettingsPreset presetMountainMadness(ModernBetaSettingsPreset initialSettings, ResourceLocation initialId, boolean modifyBaseSize) {
         NoiseScale baseNoiseScale = initialSettings.chunkSettings().getOrDefault(NOISE_SCALE);
         Map<ExtendedBiomeId, HeightConfig> baseHeightOverrides = initialSettings.chunkSettings().getOrDefault(FORCED_BIOME_HEIGHT).heightOverrides();
 
@@ -679,7 +679,7 @@ public final class ModernBetaSettingsPresets {
         );
     }
 
-    private static ModernBetaSettingsPreset presetDrought(ModernBetaSettingsPreset initialSettings, Identifier initialId) {
+    private static ModernBetaSettingsPreset presetDrought(ModernBetaSettingsPreset initialSettings, ResourceLocation initialId) {
         NoiseScale baseNoiseScale = initialSettings.chunkSettings().getOrDefault(NOISE_SCALE);
 
         return new ModernBetaSettingsPreset(
@@ -710,7 +710,7 @@ public final class ModernBetaSettingsPresets {
         );
     }
 
-    private static ModernBetaSettingsPreset presetCaveChaos(ModernBetaSettingsPreset initialSettings, Identifier initialId) {
+    private static ModernBetaSettingsPreset presetCaveChaos(ModernBetaSettingsPreset initialSettings, ResourceLocation initialId) {
         NoiseScale baseNoiseScale = initialSettings.chunkSettings().getOrDefault(NOISE_SCALE);
 
         return new ModernBetaSettingsPreset(
@@ -816,473 +816,473 @@ public final class ModernBetaSettingsPresets {
                     // Standard Biomes
 
                     new VoronoiPointBiome(
-                        BiomeKeys.DESERT.getValue(),
-                        BiomeKeys.LUKEWARM_OCEAN.getValue(),
-                        BiomeKeys.DEEP_LUKEWARM_OCEAN.getValue(),
+                        Biomes.DESERT.location(),
+                        Biomes.LUKEWARM_OCEAN.location(),
+                        Biomes.DEEP_LUKEWARM_OCEAN.location(),
                         0.9, 0.1, 0.5
                     ),
                     new VoronoiPointBiome(
-                        BiomeKeys.PLAINS.getValue(),
-                        BiomeKeys.LUKEWARM_OCEAN.getValue(),
-                        BiomeKeys.DEEP_LUKEWARM_OCEAN.getValue(),
+                        Biomes.PLAINS.location(),
+                        Biomes.LUKEWARM_OCEAN.location(),
+                        Biomes.DEEP_LUKEWARM_OCEAN.location(),
                         0.9, 0.3, 0.5
                     ),
                     new VoronoiPointBiome(
-                        BiomeKeys.FOREST.getValue(),
-                        BiomeKeys.LUKEWARM_OCEAN.getValue(),
-                        BiomeKeys.DEEP_LUKEWARM_OCEAN.getValue(),
+                        Biomes.FOREST.location(),
+                        Biomes.LUKEWARM_OCEAN.location(),
+                        Biomes.DEEP_LUKEWARM_OCEAN.location(),
                         0.9, 0.5, 0.5
                     ),
                     new VoronoiPointBiome(
-                        BiomeKeys.FOREST.getValue(),
-                        BiomeKeys.WARM_OCEAN.getValue(),
-                        BiomeKeys.WARM_OCEAN.getValue(),
+                        Biomes.FOREST.location(),
+                        Biomes.WARM_OCEAN.location(),
+                        Biomes.WARM_OCEAN.location(),
                         0.9, 0.7, 0.5
                     ),
                     new VoronoiPointBiome(
-                        BiomeKeys.JUNGLE.getValue(),
-                        BiomeKeys.WARM_OCEAN.getValue(),
-                        BiomeKeys.WARM_OCEAN.getValue(),
+                        Biomes.JUNGLE.location(),
+                        Biomes.WARM_OCEAN.location(),
+                        Biomes.WARM_OCEAN.location(),
                         0.9, 0.9, 0.5
                     ),
 
                     new VoronoiPointBiome(
-                        BiomeKeys.SAVANNA.getValue(),
-                        BiomeKeys.OCEAN.getValue(),
-                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        Biomes.SAVANNA.location(),
+                        Biomes.OCEAN.location(),
+                        Biomes.DEEP_OCEAN.location(),
                         0.7, 0.1, 0.5
                     ),
                     new VoronoiPointBiome(
-                        BiomeKeys.PLAINS.getValue(),
-                        BiomeKeys.OCEAN.getValue(),
-                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        Biomes.PLAINS.location(),
+                        Biomes.OCEAN.location(),
+                        Biomes.DEEP_OCEAN.location(),
                         0.7, 0.3, 0.5
                     ),
                     new VoronoiPointBiome(
-                        BiomeKeys.FOREST.getValue(),
-                        BiomeKeys.OCEAN.getValue(),
-                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        Biomes.FOREST.location(),
+                        Biomes.OCEAN.location(),
+                        Biomes.DEEP_OCEAN.location(),
                         0.7, 0.5, 0.5
                     ),
                     new VoronoiPointBiome(
-                        BiomeKeys.FOREST.getValue(),
-                        BiomeKeys.OCEAN.getValue(),
-                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        Biomes.FOREST.location(),
+                        Biomes.OCEAN.location(),
+                        Biomes.DEEP_OCEAN.location(),
                         0.7, 0.7, 0.5
                     ),
                     new VoronoiPointBiome(
-                        BiomeKeys.FOREST.getValue(),
-                        BiomeKeys.OCEAN.getValue(),
-                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        Biomes.FOREST.location(),
+                        Biomes.OCEAN.location(),
+                        Biomes.DEEP_OCEAN.location(),
                         0.7, 0.9, 0.5
                     ),
 
                     new VoronoiPointBiome(
-                        BiomeKeys.PLAINS.getValue(),
-                        BiomeKeys.OCEAN.getValue(),
-                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        Biomes.PLAINS.location(),
+                        Biomes.OCEAN.location(),
+                        Biomes.DEEP_OCEAN.location(),
                         0.5, 0.1, 0.5
                     ),
                     new VoronoiPointBiome(
-                        BiomeKeys.PLAINS.getValue(),
-                        BiomeKeys.OCEAN.getValue(),
-                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        Biomes.PLAINS.location(),
+                        Biomes.OCEAN.location(),
+                        Biomes.DEEP_OCEAN.location(),
                         0.5, 0.3, 0.5
                     ),
                     new VoronoiPointBiome(
-                        BiomeKeys.BIRCH_FOREST.getValue(),
-                        BiomeKeys.OCEAN.getValue(),
-                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        Biomes.BIRCH_FOREST.location(),
+                        Biomes.OCEAN.location(),
+                        Biomes.DEEP_OCEAN.location(),
                         0.5, 0.5, 0.5
                     ),
                     new VoronoiPointBiome(
-                        BiomeKeys.BIRCH_FOREST.getValue(),
-                        BiomeKeys.OCEAN.getValue(),
-                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        Biomes.BIRCH_FOREST.location(),
+                        Biomes.OCEAN.location(),
+                        Biomes.DEEP_OCEAN.location(),
                         0.5, 0.7, 0.5
                     ),
                     new VoronoiPointBiome(
-                        BiomeKeys.SWAMP.getValue(),
-                        BiomeKeys.OCEAN.getValue(),
-                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        Biomes.SWAMP.location(),
+                        Biomes.OCEAN.location(),
+                        Biomes.DEEP_OCEAN.location(),
                         0.5, 0.9, 0.5
                     ),
 
                     new VoronoiPointBiome(
-                        BiomeKeys.SNOWY_PLAINS.getValue(),
-                        BiomeKeys.FROZEN_OCEAN.getValue(),
-                        BiomeKeys.DEEP_FROZEN_OCEAN.getValue(),
+                        Biomes.SNOWY_PLAINS.location(),
+                        Biomes.FROZEN_OCEAN.location(),
+                        Biomes.DEEP_FROZEN_OCEAN.location(),
                         0.3, 0.1, 0.5
                     ),
                     new VoronoiPointBiome(
-                        BiomeKeys.TAIGA.getValue(),
-                        BiomeKeys.COLD_OCEAN.getValue(),
-                        BiomeKeys.DEEP_COLD_OCEAN.getValue(),
+                        Biomes.TAIGA.location(),
+                        Biomes.COLD_OCEAN.location(),
+                        Biomes.DEEP_COLD_OCEAN.location(),
                         0.3, 0.3, 0.5
                     ),
                     new VoronoiPointBiome(
-                        BiomeKeys.TAIGA.getValue(),
-                        BiomeKeys.COLD_OCEAN.getValue(),
-                        BiomeKeys.DEEP_COLD_OCEAN.getValue(),
+                        Biomes.TAIGA.location(),
+                        Biomes.COLD_OCEAN.location(),
+                        Biomes.DEEP_COLD_OCEAN.location(),
                         0.3, 0.5, 0.5
                     ),
                     new VoronoiPointBiome(
-                        BiomeKeys.SNOWY_TAIGA.getValue(),
-                        BiomeKeys.FROZEN_OCEAN.getValue(),
-                        BiomeKeys.DEEP_FROZEN_OCEAN.getValue(),
+                        Biomes.SNOWY_TAIGA.location(),
+                        Biomes.FROZEN_OCEAN.location(),
+                        Biomes.DEEP_FROZEN_OCEAN.location(),
                         0.3, 0.7, 0.5
                     ),
                     new VoronoiPointBiome(
-                        BiomeKeys.SNOWY_TAIGA.getValue(),
-                        BiomeKeys.FROZEN_OCEAN.getValue(),
-                        BiomeKeys.DEEP_FROZEN_OCEAN.getValue(),
+                        Biomes.SNOWY_TAIGA.location(),
+                        Biomes.FROZEN_OCEAN.location(),
+                        Biomes.DEEP_FROZEN_OCEAN.location(),
                         0.3, 0.9, 0.5
                     ),
 
                     new VoronoiPointBiome(
-                        BiomeKeys.SNOWY_PLAINS.getValue(),
-                        BiomeKeys.FROZEN_OCEAN.getValue(),
-                        BiomeKeys.DEEP_FROZEN_OCEAN.getValue(),
+                        Biomes.SNOWY_PLAINS.location(),
+                        Biomes.FROZEN_OCEAN.location(),
+                        Biomes.DEEP_FROZEN_OCEAN.location(),
                         0.1, 0.1, 0.5
                     ),
                     new VoronoiPointBiome(
-                        BiomeKeys.SNOWY_PLAINS.getValue(),
-                        BiomeKeys.FROZEN_OCEAN.getValue(),
-                        BiomeKeys.DEEP_FROZEN_OCEAN.getValue(),
+                        Biomes.SNOWY_PLAINS.location(),
+                        Biomes.FROZEN_OCEAN.location(),
+                        Biomes.DEEP_FROZEN_OCEAN.location(),
                         0.1, 0.3, 0.5
                     ),
                     new VoronoiPointBiome(
-                        BiomeKeys.SNOWY_PLAINS.getValue(),
-                        BiomeKeys.FROZEN_OCEAN.getValue(),
-                        BiomeKeys.DEEP_FROZEN_OCEAN.getValue(),
+                        Biomes.SNOWY_PLAINS.location(),
+                        Biomes.FROZEN_OCEAN.location(),
+                        Biomes.DEEP_FROZEN_OCEAN.location(),
                         0.1, 0.5, 0.5
                     ),
                     new VoronoiPointBiome(
-                        BiomeKeys.SNOWY_PLAINS.getValue(),
-                        BiomeKeys.FROZEN_OCEAN.getValue(),
-                        BiomeKeys.DEEP_FROZEN_OCEAN.getValue(),
+                        Biomes.SNOWY_PLAINS.location(),
+                        Biomes.FROZEN_OCEAN.location(),
+                        Biomes.DEEP_FROZEN_OCEAN.location(),
                         0.1, 0.7, 0.5
                     ),
                     new VoronoiPointBiome(
-                        BiomeKeys.SNOWY_PLAINS.getValue(),
-                        BiomeKeys.FROZEN_OCEAN.getValue(),
-                        BiomeKeys.DEEP_FROZEN_OCEAN.getValue(),
+                        Biomes.SNOWY_PLAINS.location(),
+                        Biomes.FROZEN_OCEAN.location(),
+                        Biomes.DEEP_FROZEN_OCEAN.location(),
                         0.1, 0.9, 0.5
                     ),
 
                     // Mutated Biomes
 
                     new VoronoiPointBiome(
-                        BiomeKeys.DESERT.getValue(),
-                        BiomeKeys.LUKEWARM_OCEAN.getValue(),
-                        BiomeKeys.DEEP_LUKEWARM_OCEAN.getValue(),
+                        Biomes.DESERT.location(),
+                        Biomes.LUKEWARM_OCEAN.location(),
+                        Biomes.DEEP_LUKEWARM_OCEAN.location(),
                         0.9, 0.1, 0.2
                     ),
                     new VoronoiPointBiome(
-                        BiomeKeys.SUNFLOWER_PLAINS.getValue(),
-                        BiomeKeys.LUKEWARM_OCEAN.getValue(),
-                        BiomeKeys.DEEP_LUKEWARM_OCEAN.getValue(),
+                        Biomes.SUNFLOWER_PLAINS.location(),
+                        Biomes.LUKEWARM_OCEAN.location(),
+                        Biomes.DEEP_LUKEWARM_OCEAN.location(),
                         0.9, 0.3, 0.2
                     ),
                     new VoronoiPointBiome(
-                        BiomeKeys.DARK_FOREST.getValue(),
-                        BiomeKeys.LUKEWARM_OCEAN.getValue(),
-                        BiomeKeys.DEEP_LUKEWARM_OCEAN.getValue(),
+                        Biomes.DARK_FOREST.location(),
+                        Biomes.LUKEWARM_OCEAN.location(),
+                        Biomes.DEEP_LUKEWARM_OCEAN.location(),
                         0.9, 0.5, 0.2
                     ),
                     new VoronoiPointBiome(
-                        BiomeKeys.DARK_FOREST.getValue(),
-                        BiomeKeys.WARM_OCEAN.getValue(),
-                        BiomeKeys.WARM_OCEAN.getValue(),
+                        Biomes.DARK_FOREST.location(),
+                        Biomes.WARM_OCEAN.location(),
+                        Biomes.WARM_OCEAN.location(),
                         0.9, 0.7, 0.2
                     ),
                     new VoronoiPointBiome(
-                        BiomeKeys.BAMBOO_JUNGLE.getValue(),
-                        BiomeKeys.WARM_OCEAN.getValue(),
-                        BiomeKeys.WARM_OCEAN.getValue(),
+                        Biomes.BAMBOO_JUNGLE.location(),
+                        Biomes.WARM_OCEAN.location(),
+                        Biomes.WARM_OCEAN.location(),
                         0.9, 0.9, 0.2
                     ),
 
                     new VoronoiPointBiome(
-                        BiomeKeys.SAVANNA.getValue(),
-                        BiomeKeys.OCEAN.getValue(),
-                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        Biomes.SAVANNA.location(),
+                        Biomes.OCEAN.location(),
+                        Biomes.DEEP_OCEAN.location(),
                         0.7, 0.1, 0.2
                     ),
                     new VoronoiPointBiome(
-                        BiomeKeys.MEADOW.getValue(),
-                        BiomeKeys.OCEAN.getValue(),
-                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        Biomes.MEADOW.location(),
+                        Biomes.OCEAN.location(),
+                        Biomes.DEEP_OCEAN.location(),
                         0.7, 0.3, 0.2
                     ),
                     new VoronoiPointBiome(
-                        BiomeKeys.FLOWER_FOREST.getValue(),
-                        BiomeKeys.OCEAN.getValue(),
-                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        Biomes.FLOWER_FOREST.location(),
+                        Biomes.OCEAN.location(),
+                        Biomes.DEEP_OCEAN.location(),
                         0.7, 0.5, 0.2
                     ),
                     new VoronoiPointBiome(
-                        BiomeKeys.FLOWER_FOREST.getValue(),
-                        BiomeKeys.OCEAN.getValue(),
-                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        Biomes.FLOWER_FOREST.location(),
+                        Biomes.OCEAN.location(),
+                        Biomes.DEEP_OCEAN.location(),
                         0.7, 0.7, 0.2
                     ),
                     new VoronoiPointBiome(
-                        BiomeKeys.FLOWER_FOREST.getValue(),
-                        BiomeKeys.OCEAN.getValue(),
-                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        Biomes.FLOWER_FOREST.location(),
+                        Biomes.OCEAN.location(),
+                        Biomes.DEEP_OCEAN.location(),
                         0.7, 0.9, 0.2
                     ),
 
                     new VoronoiPointBiome(
-                        BiomeKeys.MEADOW.getValue(),
-                        BiomeKeys.OCEAN.getValue(),
-                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        Biomes.MEADOW.location(),
+                        Biomes.OCEAN.location(),
+                        Biomes.DEEP_OCEAN.location(),
                         0.5, 0.1, 0.2
                     ),
                     new VoronoiPointBiome(
-                        BiomeKeys.MEADOW.getValue(),
-                        BiomeKeys.OCEAN.getValue(),
-                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        Biomes.MEADOW.location(),
+                        Biomes.OCEAN.location(),
+                        Biomes.DEEP_OCEAN.location(),
                         0.5, 0.3, 0.2
                     ),
                     new VoronoiPointBiome(
-                        BiomeKeys.CHERRY_GROVE.getValue(),
-                        BiomeKeys.OCEAN.getValue(),
-                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        Biomes.CHERRY_GROVE.location(),
+                        Biomes.OCEAN.location(),
+                        Biomes.DEEP_OCEAN.location(),
                         0.5, 0.5, 0.2
                     ),
                     new VoronoiPointBiome(
-                        BiomeKeys.CHERRY_GROVE.getValue(),
-                        BiomeKeys.OCEAN.getValue(),
-                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        Biomes.CHERRY_GROVE.location(),
+                        Biomes.OCEAN.location(),
+                        Biomes.DEEP_OCEAN.location(),
                         0.5, 0.7, 0.2
                     ),
                     new VoronoiPointBiome(
-                        BiomeKeys.MANGROVE_SWAMP.getValue(),
-                        BiomeKeys.OCEAN.getValue(),
-                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        Biomes.MANGROVE_SWAMP.location(),
+                        Biomes.OCEAN.location(),
+                        Biomes.DEEP_OCEAN.location(),
                         0.5, 0.9, 0.2
                     ),
 
                     new VoronoiPointBiome(
-                        BiomeKeys.SNOWY_PLAINS.getValue(),
-                        BiomeKeys.FROZEN_OCEAN.getValue(),
-                        BiomeKeys.DEEP_FROZEN_OCEAN.getValue(),
+                        Biomes.SNOWY_PLAINS.location(),
+                        Biomes.FROZEN_OCEAN.location(),
+                        Biomes.DEEP_FROZEN_OCEAN.location(),
                         0.3, 0.1, 0.2
                     ),
                     new VoronoiPointBiome(
-                        BiomeKeys.OLD_GROWTH_PINE_TAIGA.getValue(),
-                        BiomeKeys.COLD_OCEAN.getValue(),
-                        BiomeKeys.DEEP_COLD_OCEAN.getValue(),
+                        Biomes.OLD_GROWTH_PINE_TAIGA.location(),
+                        Biomes.COLD_OCEAN.location(),
+                        Biomes.DEEP_COLD_OCEAN.location(),
                         0.3, 0.3, 0.2
                     ),
                     new VoronoiPointBiome(
-                        BiomeKeys.OLD_GROWTH_PINE_TAIGA.getValue(),
-                        BiomeKeys.COLD_OCEAN.getValue(),
-                        BiomeKeys.DEEP_COLD_OCEAN.getValue(),
+                        Biomes.OLD_GROWTH_PINE_TAIGA.location(),
+                        Biomes.COLD_OCEAN.location(),
+                        Biomes.DEEP_COLD_OCEAN.location(),
                         0.3, 0.5, 0.2
                     ),
                     new VoronoiPointBiome(
-                        BiomeKeys.GROVE.getValue(),
-                        BiomeKeys.FROZEN_OCEAN.getValue(),
-                        BiomeKeys.DEEP_FROZEN_OCEAN.getValue(),
+                        Biomes.GROVE.location(),
+                        Biomes.FROZEN_OCEAN.location(),
+                        Biomes.DEEP_FROZEN_OCEAN.location(),
                         0.3, 0.7, 0.2
                     ),
                     new VoronoiPointBiome(
-                        BiomeKeys.GROVE.getValue(),
-                        BiomeKeys.FROZEN_OCEAN.getValue(),
-                        BiomeKeys.DEEP_FROZEN_OCEAN.getValue(),
+                        Biomes.GROVE.location(),
+                        Biomes.FROZEN_OCEAN.location(),
+                        Biomes.DEEP_FROZEN_OCEAN.location(),
                         0.3, 0.9, 0.2
                     ),
 
                     new VoronoiPointBiome(
-                        BiomeKeys.SNOWY_PLAINS.getValue(),
-                        BiomeKeys.FROZEN_OCEAN.getValue(),
-                        BiomeKeys.DEEP_FROZEN_OCEAN.getValue(),
+                        Biomes.SNOWY_PLAINS.location(),
+                        Biomes.FROZEN_OCEAN.location(),
+                        Biomes.DEEP_FROZEN_OCEAN.location(),
                         0.1, 0.1, 0.2
                     ),
                     new VoronoiPointBiome(
-                        BiomeKeys.SNOWY_PLAINS.getValue(),
-                        BiomeKeys.FROZEN_OCEAN.getValue(),
-                        BiomeKeys.DEEP_FROZEN_OCEAN.getValue(),
+                        Biomes.SNOWY_PLAINS.location(),
+                        Biomes.FROZEN_OCEAN.location(),
+                        Biomes.DEEP_FROZEN_OCEAN.location(),
                         0.1, 0.3, 0.2
                     ),
                     new VoronoiPointBiome(
-                        BiomeKeys.SNOWY_PLAINS.getValue(),
-                        BiomeKeys.FROZEN_OCEAN.getValue(),
-                        BiomeKeys.DEEP_FROZEN_OCEAN.getValue(),
+                        Biomes.SNOWY_PLAINS.location(),
+                        Biomes.FROZEN_OCEAN.location(),
+                        Biomes.DEEP_FROZEN_OCEAN.location(),
                         0.1, 0.5, 0.2
                     ),
                     new VoronoiPointBiome(
-                        BiomeKeys.SNOWY_SLOPES.getValue(),
-                        BiomeKeys.FROZEN_OCEAN.getValue(),
-                        BiomeKeys.DEEP_FROZEN_OCEAN.getValue(),
+                        Biomes.SNOWY_SLOPES.location(),
+                        Biomes.FROZEN_OCEAN.location(),
+                        Biomes.DEEP_FROZEN_OCEAN.location(),
                         0.1, 0.7, 0.2
                     ),
                     new VoronoiPointBiome(
-                        BiomeKeys.SNOWY_SLOPES.getValue(),
-                        BiomeKeys.FROZEN_OCEAN.getValue(),
-                        BiomeKeys.DEEP_FROZEN_OCEAN.getValue(),
+                        Biomes.SNOWY_SLOPES.location(),
+                        Biomes.FROZEN_OCEAN.location(),
+                        Biomes.DEEP_FROZEN_OCEAN.location(),
                         0.1, 0.9, 0.2
                     ),
 
                     // Mutated Biomes 2
 
                     new VoronoiPointBiome(
-                        BiomeKeys.BADLANDS.getValue(),
-                        BiomeKeys.LUKEWARM_OCEAN.getValue(),
-                        BiomeKeys.DEEP_LUKEWARM_OCEAN.getValue(),
+                        Biomes.BADLANDS.location(),
+                        Biomes.LUKEWARM_OCEAN.location(),
+                        Biomes.DEEP_LUKEWARM_OCEAN.location(),
                         0.9, 0.1, 0.8
                     ),
                     new VoronoiPointBiome(
-                        BiomeKeys.PLAINS.getValue(),
-                        BiomeKeys.LUKEWARM_OCEAN.getValue(),
-                        BiomeKeys.DEEP_LUKEWARM_OCEAN.getValue(),
+                        Biomes.PLAINS.location(),
+                        Biomes.LUKEWARM_OCEAN.location(),
+                        Biomes.DEEP_LUKEWARM_OCEAN.location(),
                         0.9, 0.3, 0.8
                     ),
                     new VoronoiPointBiome(
-                        BiomeKeys.SPARSE_JUNGLE.getValue(),
-                        BiomeKeys.LUKEWARM_OCEAN.getValue(),
-                        BiomeKeys.DEEP_LUKEWARM_OCEAN.getValue(),
+                        Biomes.SPARSE_JUNGLE.location(),
+                        Biomes.LUKEWARM_OCEAN.location(),
+                        Biomes.DEEP_LUKEWARM_OCEAN.location(),
                         0.9, 0.5, 0.8
                     ),
                     new VoronoiPointBiome(
-                        BiomeKeys.SPARSE_JUNGLE.getValue(),
-                        BiomeKeys.WARM_OCEAN.getValue(),
-                        BiomeKeys.WARM_OCEAN.getValue(),
+                        Biomes.SPARSE_JUNGLE.location(),
+                        Biomes.WARM_OCEAN.location(),
+                        Biomes.WARM_OCEAN.location(),
                         0.9, 0.7, 0.8
                     ),
                     new VoronoiPointBiome(
-                        BiomeKeys.MUSHROOM_FIELDS.getValue(),
-                        BiomeKeys.WARM_OCEAN.getValue(),
-                        BiomeKeys.WARM_OCEAN.getValue(),
+                        Biomes.MUSHROOM_FIELDS.location(),
+                        Biomes.WARM_OCEAN.location(),
+                        Biomes.WARM_OCEAN.location(),
                         0.9, 0.9, 0.8
                     ),
 
                     new VoronoiPointBiome(
-                        BiomeKeys.SAVANNA.getValue(),
-                        BiomeKeys.OCEAN.getValue(),
-                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        Biomes.SAVANNA.location(),
+                        Biomes.OCEAN.location(),
+                        Biomes.DEEP_OCEAN.location(),
                         0.7, 0.1, 0.8
                     ),
                     new VoronoiPointBiome(
-                        BiomeKeys.PLAINS.getValue(),
-                        BiomeKeys.OCEAN.getValue(),
-                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        Biomes.PLAINS.location(),
+                        Biomes.OCEAN.location(),
+                        Biomes.DEEP_OCEAN.location(),
                         0.7, 0.3, 0.8
                     ),
                     //? if >=1.21.4 {
                     new VoronoiPointBiome(
-                        BiomeKeys.PALE_GARDEN.getValue(),
-                        BiomeKeys.OCEAN.getValue(),
-                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        Biomes.PALE_GARDEN.location(),
+                        Biomes.OCEAN.location(),
+                        Biomes.DEEP_OCEAN.location(),
                         0.7, 0.5, 0.8
                     ),
                     new VoronoiPointBiome(
-                        BiomeKeys.PALE_GARDEN.getValue(),
-                        BiomeKeys.OCEAN.getValue(),
-                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        Biomes.PALE_GARDEN.location(),
+                        Biomes.OCEAN.location(),
+                        Biomes.DEEP_OCEAN.location(),
                         0.7, 0.7, 0.8
                     ),
                     new VoronoiPointBiome(
-                        BiomeKeys.PALE_GARDEN.getValue(),
-                        BiomeKeys.OCEAN.getValue(),
-                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        Biomes.PALE_GARDEN.location(),
+                        Biomes.OCEAN.location(),
+                        Biomes.DEEP_OCEAN.location(),
                         0.7, 0.9, 0.8
                     ),
                     //?}
 
                     new VoronoiPointBiome(
-                        BiomeKeys.PLAINS.getValue(),
-                        BiomeKeys.OCEAN.getValue(),
-                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        Biomes.PLAINS.location(),
+                        Biomes.OCEAN.location(),
+                        Biomes.DEEP_OCEAN.location(),
                         0.5, 0.1, 0.8
                     ),
                     new VoronoiPointBiome(
-                        BiomeKeys.PLAINS.getValue(),
-                        BiomeKeys.OCEAN.getValue(),
-                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        Biomes.PLAINS.location(),
+                        Biomes.OCEAN.location(),
+                        Biomes.DEEP_OCEAN.location(),
                         0.5, 0.3, 0.8
                     ),
                     new VoronoiPointBiome(
-                        BiomeKeys.OLD_GROWTH_BIRCH_FOREST.getValue(),
-                        BiomeKeys.OCEAN.getValue(),
-                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        Biomes.OLD_GROWTH_BIRCH_FOREST.location(),
+                        Biomes.OCEAN.location(),
+                        Biomes.DEEP_OCEAN.location(),
                         0.5, 0.5, 0.8
                     ),
                     new VoronoiPointBiome(
-                        BiomeKeys.OLD_GROWTH_BIRCH_FOREST.getValue(),
-                        BiomeKeys.OCEAN.getValue(),
-                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        Biomes.OLD_GROWTH_BIRCH_FOREST.location(),
+                        Biomes.OCEAN.location(),
+                        Biomes.DEEP_OCEAN.location(),
                         0.5, 0.7, 0.8
                     ),
                     new VoronoiPointBiome(
-                        BiomeKeys.MANGROVE_SWAMP.getValue(),
-                        BiomeKeys.OCEAN.getValue(),
-                        BiomeKeys.DEEP_OCEAN.getValue(),
+                        Biomes.MANGROVE_SWAMP.location(),
+                        Biomes.OCEAN.location(),
+                        Biomes.DEEP_OCEAN.location(),
                         0.5, 0.9, 0.8
                     ),
 
                     new VoronoiPointBiome(
-                        BiomeKeys.SNOWY_PLAINS.getValue(),
-                        BiomeKeys.FROZEN_OCEAN.getValue(),
-                        BiomeKeys.DEEP_FROZEN_OCEAN.getValue(),
+                        Biomes.SNOWY_PLAINS.location(),
+                        Biomes.FROZEN_OCEAN.location(),
+                        Biomes.DEEP_FROZEN_OCEAN.location(),
                         0.3, 0.1, 0.8
                     ),
                     new VoronoiPointBiome(
-                        BiomeKeys.OLD_GROWTH_SPRUCE_TAIGA.getValue(),
-                        BiomeKeys.COLD_OCEAN.getValue(),
-                        BiomeKeys.DEEP_COLD_OCEAN.getValue(),
+                        Biomes.OLD_GROWTH_SPRUCE_TAIGA.location(),
+                        Biomes.COLD_OCEAN.location(),
+                        Biomes.DEEP_COLD_OCEAN.location(),
                         0.3, 0.3, 0.8
                     ),
                     new VoronoiPointBiome(
-                        BiomeKeys.OLD_GROWTH_SPRUCE_TAIGA.getValue(),
-                        BiomeKeys.COLD_OCEAN.getValue(),
-                        BiomeKeys.DEEP_COLD_OCEAN.getValue(),
+                        Biomes.OLD_GROWTH_SPRUCE_TAIGA.location(),
+                        Biomes.COLD_OCEAN.location(),
+                        Biomes.DEEP_COLD_OCEAN.location(),
                         0.3, 0.5, 0.8
                     ),
                     new VoronoiPointBiome(
-                        BiomeKeys.GROVE.getValue(),
-                        BiomeKeys.FROZEN_OCEAN.getValue(),
-                        BiomeKeys.DEEP_FROZEN_OCEAN.getValue(),
+                        Biomes.GROVE.location(),
+                        Biomes.FROZEN_OCEAN.location(),
+                        Biomes.DEEP_FROZEN_OCEAN.location(),
                         0.3, 0.7, 0.8
                     ),
                     new VoronoiPointBiome(
-                        BiomeKeys.GROVE.getValue(),
-                        BiomeKeys.FROZEN_OCEAN.getValue(),
-                        BiomeKeys.DEEP_FROZEN_OCEAN.getValue(),
+                        Biomes.GROVE.location(),
+                        Biomes.FROZEN_OCEAN.location(),
+                        Biomes.DEEP_FROZEN_OCEAN.location(),
                         0.3, 0.9, 0.8
                     ),
 
                     new VoronoiPointBiome(
-                        BiomeKeys.SNOWY_PLAINS.getValue(),
-                        BiomeKeys.FROZEN_OCEAN.getValue(),
-                        BiomeKeys.DEEP_FROZEN_OCEAN.getValue(),
+                        Biomes.SNOWY_PLAINS.location(),
+                        Biomes.FROZEN_OCEAN.location(),
+                        Biomes.DEEP_FROZEN_OCEAN.location(),
                         0.1, 0.1, 0.8
                     ),
                     new VoronoiPointBiome(
-                        BiomeKeys.SNOWY_PLAINS.getValue(),
-                        BiomeKeys.FROZEN_OCEAN.getValue(),
-                        BiomeKeys.DEEP_FROZEN_OCEAN.getValue(),
+                        Biomes.SNOWY_PLAINS.location(),
+                        Biomes.FROZEN_OCEAN.location(),
+                        Biomes.DEEP_FROZEN_OCEAN.location(),
                         0.1, 0.3, 0.8
                     ),
                     new VoronoiPointBiome(
-                        BiomeKeys.SNOWY_PLAINS.getValue(),
-                        BiomeKeys.FROZEN_OCEAN.getValue(),
-                        BiomeKeys.DEEP_FROZEN_OCEAN.getValue(),
+                        Biomes.SNOWY_PLAINS.location(),
+                        Biomes.FROZEN_OCEAN.location(),
+                        Biomes.DEEP_FROZEN_OCEAN.location(),
                         0.1, 0.5, 0.8
                     ),
                     new VoronoiPointBiome(
-                        BiomeKeys.ICE_SPIKES.getValue(),
-                        BiomeKeys.FROZEN_OCEAN.getValue(),
-                        BiomeKeys.DEEP_FROZEN_OCEAN.getValue(),
+                        Biomes.ICE_SPIKES.location(),
+                        Biomes.FROZEN_OCEAN.location(),
+                        Biomes.DEEP_FROZEN_OCEAN.location(),
                         0.1, 0.7, 0.8
                     ),
                     new VoronoiPointBiome(
-                        BiomeKeys.ICE_SPIKES.getValue(),
-                        BiomeKeys.FROZEN_OCEAN.getValue(),
-                        BiomeKeys.DEEP_FROZEN_OCEAN.getValue(),
+                        Biomes.ICE_SPIKES.location(),
+                        Biomes.FROZEN_OCEAN.location(),
+                        Biomes.DEEP_FROZEN_OCEAN.location(),
                         0.1, 0.9, 0.8
                     )
                 ))
@@ -1351,8 +1351,8 @@ public final class ModernBetaSettingsPresets {
         );
     }
 
-    private static Map<Identifier, String> earlyReleaseLayerOutputs(int biomeScale) {
-        ImmutableMap.Builder<Identifier, String> builder = new ImmutableMap.Builder<>();
+    private static Map<ResourceLocation, String> earlyReleaseLayerOutputs(int biomeScale) {
+        ImmutableMap.Builder<ResourceLocation, String> builder = new ImmutableMap.Builder<>();
         builder.put(ModernBetaBuiltInTypes.LayerOutput.BIOME.id, "land");
         for (int i = 0; i < 4 + biomeScale; i++) {
             builder.put(ModernerBeta.createId("climate_" + i), "land_" + i);
@@ -1419,7 +1419,7 @@ public final class ModernBetaSettingsPresets {
             AddLandLayer.forIslandScale("land", 1, "land"),
             new ModalZoomLayer("land", 2001, "land"),
             AddLandLayer.forIslandScale("land", 2, "land"),
-            new WeightedPoolLayer("snow", 2, Pool.<LayerTarget>builder()
+            new WeightedPoolLayer("snow", 2, WeightedList.<LayerTarget>builder()
                 .add(LayerTarget.biome(ExtendedBiomeId.SNOWY_PLAINS), 1)
                 .add(LayerTarget.none(), 4)
                 .build()),
@@ -1507,7 +1507,7 @@ public final class ModernBetaSettingsPresets {
         );
         if (addJungles) {
             biomePool = new ArrayList<>(biomePool);
-            biomePool.add(ExtendedBiomeId.of(BiomeKeys.JUNGLE));
+            biomePool.add(ExtendedBiomeId.of(Biomes.JUNGLE));
         }
 
         Map<ExtendedBiomeId, ExtendedBiomeId> hillsVariants = Map.ofEntries(
@@ -1525,7 +1525,7 @@ public final class ModernBetaSettingsPresets {
             );
         }
 
-        Layer swampLakesLayer = new WeightedPoolLayer("swamp_lakes", 1000, Pool.<LayerTarget>builder()
+        Layer swampLakesLayer = new WeightedPoolLayer("swamp_lakes", 1000, WeightedList.<LayerTarget>builder()
             .add(LayerTarget.biome(ExtendedBiomeId.RIVER), 1)
             .add(LayerTarget.none(), 5)
             .build());
@@ -1557,7 +1557,7 @@ public final class ModernBetaSettingsPresets {
             AddLandLayer.forIslandScale("land", 1, "land"),
             new ModalZoomLayer("land", 2001, "land"),
             AddLandLayer.forIslandScale("land", 2, "land"),
-            new WeightedPoolLayer("snow", 2, Pool.<LayerTarget>builder()
+            new WeightedPoolLayer("snow", 2, WeightedList.<LayerTarget>builder()
                 .add(LayerTarget.biome(ExtendedBiomeId.SNOWY_PLAINS), 1)
                 .add(LayerTarget.none(), 4)
                 .build()),
@@ -1619,7 +1619,7 @@ public final class ModernBetaSettingsPresets {
         //    MixRiverLayer.forEarlyRelease("land", 0, "land", "river")
 
         if (addJungles) {
-            Layer jungleLakesLayer = new WeightedPoolLayer("jungle_lakes", 1000, Pool.<LayerTarget>builder()
+            Layer jungleLakesLayer = new WeightedPoolLayer("jungle_lakes", 1000, WeightedList.<LayerTarget>builder()
                 .add(LayerTarget.biome(ExtendedBiomeId.RIVER), 1)
                 .add(LayerTarget.none(), 7)
                 .build());
@@ -1878,7 +1878,7 @@ public final class ModernBetaSettingsPresets {
                 LayerTarget.biome(ExtendedBiomeId.PLAINS), LayerTarget.none()
             ),
             // region AddSnowLayer
-            new WeightedPoolLayer("climate", 2, Pool.<LayerTarget>builder()
+            new WeightedPoolLayer("climate", 2, WeightedList.<LayerTarget>builder()
                 .add(LayerTarget.biome(ExtendedBiomeId.CLIMATE_SNOWY), 1)
                 .add(LayerTarget.biome(ExtendedBiomeId.CLIMATE_COOL), 1)
                 .add(LayerTarget.biome(ExtendedBiomeId.CLIMATE_WARM), 4)
@@ -2190,7 +2190,7 @@ public final class ModernBetaSettingsPresets {
             MixRiverLayer.forMajorRelease("land", 0, "land", "river"),
             climaticOceans
                 ? bedrock
-                    ? new WeightedPoolLayer("ocean_climate", 2, Pool.<LayerTarget>builder()
+                    ? new WeightedPoolLayer("ocean_climate", 2, WeightedList.<LayerTarget>builder()
                         .add(LayerTarget.biome(ExtendedBiomeId.WARM_OCEAN), 8)
                         .add(LayerTarget.biome(ExtendedBiomeId.LUKEWARM_OCEAN), 32)
                         .add(LayerTarget.biome(ExtendedBiomeId.OCEAN), 28)
@@ -2391,7 +2391,7 @@ public final class ModernBetaSettingsPresets {
                 AddLandLayer.forIslandScale("land", 1, "land"),
                 new ModalZoomLayer("land", 2001, "land"),
                 AddLandLayer.forIslandScale("land", 2, "land"),
-                new WeightedPoolLayer("snow", 2, Pool.<LayerTarget>builder()
+                new WeightedPoolLayer("snow", 2, WeightedList.<LayerTarget>builder()
                     .add(LayerTarget.biome(ExtendedBiomeId.SNOWY_PLAINS), 1)
                     .add(LayerTarget.none(), 4)
                     .build()),
@@ -2494,7 +2494,7 @@ public final class ModernBetaSettingsPresets {
                     LayerTarget.layer("mutated_land"), LayerTarget.layer("land")
                 ),
                 new ModalZoomLayer("land", 1000, "land"),
-                AddLandLayer.forEarlyRelease("land", 3, "land", ExtendedBiomeId.of(BiomeKeys.SNOWY_PLAINS)),
+                AddLandLayer.forEarlyRelease("land", 3, "land", ExtendedBiomeId.of(Biomes.SNOWY_PLAINS)),
                 new ModalZoomLayer("land", 1001, "land"),
                 new PredicateOverlayLayer("land", 0, "land", List.of(
                     PredicateOverlayLayer.Target.MUSHROOM_SHORE,

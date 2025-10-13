@@ -3,36 +3,36 @@ package mod.bluestaggo.modernerbeta.fabric.data.reduced_height;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.world.gen.YOffset;
-import net.minecraft.world.gen.feature.ConfiguredFeature;
-import net.minecraft.world.gen.feature.OreConfiguredFeatures;
-import net.minecraft.world.gen.feature.OrePlacedFeatures;
-import net.minecraft.world.gen.feature.PlacedFeature;
-import net.minecraft.world.gen.placementmodifier.HeightRangePlacementModifier;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.worldgen.features.OreFeatures;
+import net.minecraft.data.worldgen.placement.OrePlacements;
+import net.minecraft.world.level.levelgen.VerticalAnchor;
+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.levelgen.placement.HeightRangePlacement;
+import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 
 import java.util.concurrent.CompletableFuture;
 
-import static mod.bluestaggo.modernerbeta.fabric.data.reduced_height.ModernBetaReducedHeightDataProvider.alwaysOwnedRegistryEntry;
+import static mod.bluestaggo.modernerbeta.fabric.data.reduced_height.ModernBetaReducedHeightDataProvider.alwaysSerializableHolder;
 import static mod.bluestaggo.modernerbeta.fabric.data.reduced_height.ModernBetaReducedHeightDataProvider.modifiersWithCount;
 
 public class ModernBetaDeepslateBlobsDataProvider extends FabricDynamicRegistryProvider {
-    public ModernBetaDeepslateBlobsDataProvider(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
+    public ModernBetaDeepslateBlobsDataProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
         super(output, registriesFuture);
     }
 
     @Override
-    protected void configure(RegistryWrapper.WrapperLookup registries, Entries entries) {
-        RegistryWrapper.Impl<ConfiguredFeature<?, ?>> registryConfiguredFeature = VersionCompat.getRegistryWrapper(registries, RegistryKeys.CONFIGURED_FEATURE);
-        RegistryEntry<ConfiguredFeature<?, ?>> deepslate = alwaysOwnedRegistryEntry(entries.ref(ModernBetaReducedHeightDataProvider.ORE_DEEPSLATE_OLD));
-        RegistryEntry<ConfiguredFeature<?, ?>> tuff = registryConfiguredFeature.getOrThrow(OreConfiguredFeatures.ORE_TUFF);
+    protected void configure(HolderLookup.Provider registries, Entries entries) {
+        HolderLookup.RegistryLookup<ConfiguredFeature<?, ?>> registryConfiguredFeature = VersionCompat.getRegistryWrapper(registries, Registries.CONFIGURED_FEATURE);
+        Holder<ConfiguredFeature<?, ?>> deepslate = alwaysSerializableHolder(entries.ref(ModernBetaReducedHeightDataProvider.ORE_DEEPSLATE_OLD));
+        Holder<ConfiguredFeature<?, ?>> tuff = registryConfiguredFeature.getOrThrow(OreFeatures.ORE_TUFF);
 
-        entries.add(OrePlacedFeatures.ORE_COAL_UPPER, new PlacedFeature(deepslate,
-                modifiersWithCount(2, HeightRangePlacementModifier.uniform(YOffset.aboveBottom(0), YOffset.aboveBottom(16)))));
-        entries.add(OrePlacedFeatures.ORE_TUFF, new PlacedFeature(tuff,
-                modifiersWithCount(2, HeightRangePlacementModifier.uniform(YOffset.aboveBottom(0), YOffset.aboveBottom(16)))));
+        entries.add(OrePlacements.ORE_COAL_UPPER, new PlacedFeature(deepslate,
+                modifiersWithCount(2, HeightRangePlacement.uniform(VerticalAnchor.aboveBottom(0), VerticalAnchor.aboveBottom(16)))));
+        entries.add(OrePlacements.ORE_TUFF, new PlacedFeature(tuff,
+                modifiersWithCount(2, HeightRangePlacement.uniform(VerticalAnchor.aboveBottom(0), VerticalAnchor.aboveBottom(16)))));
     }
 
     @Override

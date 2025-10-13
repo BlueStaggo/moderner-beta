@@ -15,8 +15,8 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.resource.ResourceType;
+import net.minecraft.client.Minecraft;
+import net.minecraft.server.packs.PackType;
 
 @Environment(EnvType.CLIENT)
 public class ModernerBetaFabricClient implements ClientModInitializer {
@@ -30,7 +30,7 @@ public class ModernerBetaFabricClient implements ClientModInitializer {
 
         BlockColors.register(ColorProviderRegistry.BLOCK::register);
 
-        ResourceManagerHelper resourceManager = ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES);
+        ResourceManagerHelper resourceManager = ResourceManagerHelper.get(PackType.CLIENT_RESOURCES);
         resourceManager.registerReloadListener(new ModernBetaFabricColormapResource(
                 ModernerBeta.createId("water_colormap"),
                 "textures/colormap/water.png",
@@ -47,8 +47,8 @@ public class ModernerBetaFabricClient implements ClientModInitializer {
         //? if >=1.20.2 {
         ClientPlayNetworking.registerGlobalReceiver(BiomeProviderInfoPayload.ID, (payload, context) -> {
             @SuppressWarnings("resource")
-            MinecraftClient client = context.client();
-            client.execute(() -> S2CPacketHandlers.onBiomeProviderInfo(client.world, payload));
+            Minecraft client = context.client();
+            client.execute(() -> S2CPacketHandlers.onBiomeProviderInfo(client.level, payload));
         });
         //?} else {
         /*ClientPlayNetworking.registerGlobalReceiver(BiomeProviderInfoPayload.ID, (minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender) -> {

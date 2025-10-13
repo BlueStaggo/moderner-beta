@@ -1,44 +1,44 @@
 package mod.bluestaggo.modernerbeta.fabric.mixin;
 
-import net.minecraft.registry.RegistryEntryLookup;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.util.math.noise.DoublePerlinNoiseSampler;
-import net.minecraft.world.gen.densityfunction.DensityFunction;
-import net.minecraft.world.gen.densityfunction.DensityFunctions;
-import net.minecraft.world.gen.noise.NoiseRouter;
+import net.minecraft.core.HolderGetter;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.levelgen.DensityFunction;
+import net.minecraft.world.level.levelgen.NoiseRouter;
+import net.minecraft.world.level.levelgen.NoiseRouterData;
+import net.minecraft.world.level.levelgen.synth.NormalNoise;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
-@Mixin(DensityFunctions.class)
+@Mixin(NoiseRouterData.class)
 public interface AccessorDensityFunctionsFabric {
     @Invoker
-    static NoiseRouter invokeCreateSurfaceNoiseRouter(RegistryEntryLookup<DensityFunction> densityFunctionLookup, RegistryEntryLookup<DoublePerlinNoiseSampler.NoiseParameters> noiseParametersLookup, boolean largeBiomes, boolean amplified) {
+    static NoiseRouter invokeOverworld(HolderGetter<DensityFunction> densityFunctionLookup, HolderGetter<NormalNoise.NoiseParameters> noiseParametersLookup, boolean largeBiomes, boolean amplified) {
         throw new AssertionError();
     }
 
     @Invoker
-    static NoiseRouter invokeCreateNetherNoiseRouter(RegistryEntryLookup<DensityFunction> densityFunctionLookup, RegistryEntryLookup<DoublePerlinNoiseSampler.NoiseParameters> noiseParametersLookup) {
+    static NoiseRouter invokeNether(HolderGetter<DensityFunction> densityFunctionLookup, HolderGetter<NormalNoise.NoiseParameters> noiseParametersLookup) {
         throw new AssertionError();
     }
 
     @Accessor("Y")
-    static RegistryKey<DensityFunction> getY() {
+    static ResourceKey<DensityFunction> getY() {
         throw new AssertionError();
     }
 
-    @Accessor("CAVES_SPAGHETTI_ROUGHNESS_FUNCTION_OVERWORLD")
-    static RegistryKey<DensityFunction> getCavesSpaghettiRoughnessFunction() {
+    @Accessor("SPAGHETTI_ROUGHNESS_FUNCTION")
+    static ResourceKey<DensityFunction> getSpaghettiRoughnessFunction() {
         throw new AssertionError();
     }
 
-    @Accessor("CAVES_SPAGHETTI_2D_THICKNESS_MODULATOR_OVERWORLD")
-    static RegistryKey<DensityFunction> getCavesSpaghetti2dThicknessModulator() {
+    @Accessor("SPAGHETTI_2D_THICKNESS_MODULATOR")
+    static ResourceKey<DensityFunction> getSpaghetti2dThicknessModulator() {
         throw new AssertionError();
     }
 
-    @Accessor("CAVES_SPAGHETTI_2D_OVERWORLD")
-    static RegistryKey<DensityFunction> getCavesSpaghetti2d() {
+    @Accessor("SPAGHETTI_2D")
+    static ResourceKey<DensityFunction> getSpaghetti2d() {
         throw new AssertionError();
     }
 }

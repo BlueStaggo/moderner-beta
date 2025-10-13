@@ -3,13 +3,13 @@ package mod.bluestaggo.modernerbeta.fabric.registry;
 import mod.bluestaggo.modernerbeta.registry.IRegistryBuilder;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.fabricmc.fabric.api.event.registry.RegistryAttribute;
-import net.minecraft.registry.MutableRegistry;
-import net.minecraft.registry.Registry;
+import net.minecraft.core.Registry;
+import net.minecraft.core.WritableRegistry;
 
 public class RegistryBuilderImpl<T> implements IRegistryBuilder<T> {
-    private final FabricRegistryBuilder<T, MutableRegistry<T>> registryBuilder;
+    private final FabricRegistryBuilder<T, WritableRegistry<T>> registryBuilder;
 
-    public RegistryBuilderImpl(MutableRegistry<T> registry) {
+    public RegistryBuilderImpl(WritableRegistry<T> registry) {
         registryBuilder = FabricRegistryBuilder.from(registry);
     }
 

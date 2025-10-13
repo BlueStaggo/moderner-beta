@@ -6,9 +6,9 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.ChunkPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.ChunkPos;
 
 public class NetworkHelperImpl implements INetworkHelper {
     @Override
@@ -21,7 +21,7 @@ public class NetworkHelperImpl implements INetworkHelper {
     }
 
     @Override
-    public void sendToPlayer(ServerPlayerEntity player, ModernBetaPayload payload) {
+    public void sendToPlayer(ServerPlayer player, ModernBetaPayload payload) {
         //? if >=1.20.2 {
         ServerPlayNetworking.send(player, payload);
         //?} else {
@@ -30,15 +30,15 @@ public class NetworkHelperImpl implements INetworkHelper {
     }
 
     @Override
-    public void sendToPlayersTrackingChunk(ServerWorld world, ChunkPos pos, ModernBetaPayload payload) {
-        for (ServerPlayerEntity player : PlayerLookup.tracking(world, pos)) {
+    public void sendToPlayersTrackingChunk(ServerLevel world, ChunkPos pos, ModernBetaPayload payload) {
+        for (ServerPlayer player : PlayerLookup.tracking(world, pos)) {
             this.sendToPlayer(player, payload);
         }
     }
 
     @Override
     public void sendToAllPlayers(MinecraftServer server, ModernBetaPayload payload) {
-        for (ServerPlayerEntity player : PlayerLookup.all(server)) {
+        for (ServerPlayer player : PlayerLookup.all(server)) {
             this.sendToPlayer(player, payload);
         }
     }

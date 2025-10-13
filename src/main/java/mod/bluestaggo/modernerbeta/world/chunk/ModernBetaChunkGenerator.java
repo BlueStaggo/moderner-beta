@@ -246,6 +246,7 @@ public class ModernBetaChunkGenerator extends NoiseChunkGenerator {
                     if (configuredCarver.shouldCarve(random)) {
                         if (configuredCarver.config() instanceof BetaCaveCarverConfig betaCaveCarverConfig) {
                             betaCaveCarverConfig.useFixedCaves = Optional.of(this.caveSettings.fixCaveBorders());
+                            betaCaveCarverConfig.useSurfaceRules = Optional.of(this.useSurfaceRules);
                         }
 
                         configuredCarver.carve(carverContext, chunk, biomeAccessWithSource::getBiome, random, aquiferSampler, carverPos, carvingMask);

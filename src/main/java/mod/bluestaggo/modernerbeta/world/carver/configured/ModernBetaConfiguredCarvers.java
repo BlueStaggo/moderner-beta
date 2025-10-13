@@ -36,7 +36,8 @@ public class ModernBetaConfiguredCarvers {
         
         boolean useFixedCaves = false;
         boolean useAquifers = false;
-        
+        boolean useSurfaceRules = false;
+
         BetaCaveCarverConfig configCave = new BetaCaveCarverConfig(
             0.0f,                                                                               // Probability, unused here
             BiasedToBottomHeightProvider.create(YOffset.fixed(0), YOffset.fixed(127), 8),       // Y Level
@@ -48,7 +49,8 @@ public class ModernBetaConfiguredCarvers {
             ConstantFloatProvider.create(1.0f),                                                 // Tunnel vertical scale
             ConstantFloatProvider.create(-0.7f),                                                // Y Floor Level
             Optional.of(useFixedCaves),
-            Optional.of(useAquifers)
+            Optional.of(useAquifers),
+            Optional.of(useSurfaceRules)
         );
         
         BetaCaveCarverConfig configCaveDeep = new BetaCaveCarverConfig(
@@ -62,7 +64,8 @@ public class ModernBetaConfiguredCarvers {
             UniformFloatProvider.create(0.8f, 1.3f),                                            // Tunnel vertical scale
             UniformFloatProvider.create(-1.0f, -0.4f),                                          // Y Floor Level
             Optional.of(useFixedCaves),
-            Optional.of(useAquifers)
+            Optional.of(useAquifers),
+            Optional.of(useSurfaceRules)
         );
 
         RavineCarverConfig configRavine = new RavineCarverConfig(

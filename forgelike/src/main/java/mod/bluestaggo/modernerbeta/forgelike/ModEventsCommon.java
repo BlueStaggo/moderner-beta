@@ -8,14 +8,14 @@ import mod.bluestaggo.modernerbeta.network.BiomeProviderInfoPayload;
 import mod.bluestaggo.modernerbeta.network.S2CPacketHandlers;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHelper;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.resource.ResourcePackProfile;
-import net.minecraft.resource.ResourcePackSource;
-import net.minecraft.resource.ResourceType;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Pair;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.Registry;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.repository.Pack;
+import net.minecraft.server.packs.repository.PackSource;
+import net.minecraft.util.Tuple;
 //? if neoforge {
 import mod.bluestaggo.modernerbeta.registry.VanillaRegistryHandler;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -115,11 +115,11 @@ public class ModEventsCommon {
         /*ForgeRegistryHandler<?> registryHandler = new ForgeRegistryHandler<>(event);
         *///?}
         ModernerBeta.REGISTRY_HANDLERS.stream()
-            .filter(pair -> pair.getLeft().getKey().equals(event.getRegistryKey()))
-            .forEach(pair -> pair.getRight().accept(registryHandler));
+            .filter(pair -> pair.getA().key().equals(event.getRegistryKey()))
+            .forEach(pair -> pair.getB().accept(registryHandler));
         ModernerBeta.CUSTOM_REGISTRY_HANDLERS.stream()
-            .filter(pair -> pair.getLeft().getKey().equals(event.getRegistryKey()))
-            .forEach(pair -> pair.getRight().accept(registryHandler));
+            .filter(pair -> pair.getA().key().equals(event.getRegistryKey()))
+            .forEach(pair -> pair.getB().accept(registryHandler));
     }
 
     @SubscribeEvent
@@ -133,8 +133,8 @@ public class ModEventsCommon {
     @SuppressWarnings("unchecked")
     public static void registerDatapackRegistries(DataPackRegistryEvent.NewRegistry event) {
         ModernerBeta.setupCustomDynamicRegistries();
-        for (Pair<RegistryKey<?>, Codec<?>> dynamicRegistry : ModernerBeta.CUSTOM_DYNAMIC_REGISTRIES) {
-            event.dataPackRegistry((RegistryKey<Registry<Object>>)dynamicRegistry.getLeft(), (Codec<Object>)dynamicRegistry.getRight());
+        for (Tuple<ResourceKey<?>, Codec<?>> dynamicRegistry : ModernerBeta.CUSTOM_DYNAMIC_REGISTRIES) {
+            event.dataPackRegistry((ResourceKey<Registry<Object>>)dynamicRegistry.getA(), (Codec<Object>)dynamicRegistry.getB());
         }
     }
 
@@ -149,7 +149,7 @@ public class ModEventsCommon {
                 BiomeProviderInfoPayload.CODEC,
                 (payload, context) -> {
                     S2CPacketHandlers.onBiomeProviderInfo(context.player()
-                            /*? >=1.21.9 {*//*.getEntityWorld()*//*?} else {*/.getWorld()/*?}*/, payload);
+                            /*? >=1.21.9 {*//*.level()*//*?} else {*/.getWorld()/*?}*/, payload);
                 }
         );
     }
@@ -157,30 +157,30 @@ public class ModEventsCommon {
 
     @SubscribeEvent
     public static void addPackFinders(AddPackFindersEvent event) {
-        if (event.getPackType() == ResourceType.SERVER_DATA) {
-            ResourcePackSource source = new ResourcePackSource() {
+        if (event.getPackType() == PackType.SERVER_DATA) {
+            PackSource source = new PackSource() {
                 @Override
-                public Text decorate(Text packDisplayName) {
-                    return Text.translatable("pack.nameAndSource", packDisplayName,
-                            Text.translatable("pack.source.builtin")).formatted(Formatting.GRAY);
+                public Component decorate(Component packDisplayName) {
+                    return Component.translatable("pack.nameAndSource", packDisplayName,
+                            Component.translatable("pack.source.builtin")).withStyle(ChatFormatting.GRAY);
                 }
 
                 @Override
-                public boolean canBeEnabledLater() {
+                public boolean shouldAddAutomatically() {
                     return false;
                 }
             };
 
             for (String pack : ModernerBeta.BUILT_IN_PACKS) {
-                Text title = Text.translatable("dataPack.moderner_beta." + pack + ".name");
+                Component title = Component.translatable("dataPack.moderner_beta." + pack + ".name");
                 //? if neoforge {
                 event.addPackFinders(
                     ModernerBeta.createId("resourcepacks/" + pack),
-                    ResourceType.SERVER_DATA,
+                    PackType.SERVER_DATA,
                     title,
                     source,
                     false,
-                    ResourcePackProfile.InsertionPosition.TOP
+                    Pack.Position.TOP
                 );
                 //?} else {
                 /*Path resourcePath = ModList.get().getModFileById(ModernerBeta.MOD_ID).getFile().findResource("resourcepacks/" + pack);

@@ -10,9 +10,9 @@ import mod.bluestaggo.modernerbeta.client.resource.ModernBetaColormapResource;
 import mod.bluestaggo.modernerbeta.forgelike.registry.RegistryHelperImpl;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHelper;
-import net.minecraft.registry.Registry;
-import net.minecraft.resource.ResourceReloader;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.PreparableReloadListener;
 //? if neoforge {
 import mod.bluestaggo.modernerbeta.registry.VanillaRegistryHandler;
 import net.neoforged.api.distmarker.Dist;
@@ -91,8 +91,8 @@ public class ModEventsClient {
         /*ForgeRegistryHandler<?> registryHandler = new ForgeRegistryHandler<>(event);
         *///?}
         ModernerBetaClient.CUSTOM_REGISTRY_HANDLERS.stream()
-            .filter(pair -> pair.getLeft().getKey().equals(event.getRegistryKey()))
-            .forEach(pair -> pair.getRight().accept(registryHandler));
+            .filter(pair -> pair.getA().key().equals(event.getRegistryKey()))
+            .forEach(pair -> pair.getB().accept(registryHandler));
     }
 
     @SubscribeEvent
@@ -117,7 +117,7 @@ public class ModEventsClient {
         /*RegisterClientReloadListenersEvent event
         *///?}
     ) {
-        BiConsumer<Identifier, ResourceReloader> addListener = (id, resourceReloader) -> {
+        BiConsumer<ResourceLocation, PreparableReloadListener> addListener = (id, resourceReloader) -> {
             //? if neoforge && >=1.21.4 {
             event.addListener(id, resourceReloader);
              //?} else if neoforge && >=1.21.2 {

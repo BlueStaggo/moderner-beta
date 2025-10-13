@@ -2,9 +2,9 @@ package mod.bluestaggo.modernerbeta.forgelike.registry;
 
 import mod.bluestaggo.modernerbeta.registry.IRegistryBuilder;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHelper;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 //? if neoforge {
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 import net.neoforged.neoforge.registries.RegistryBuilder;
@@ -15,7 +15,7 @@ import net.minecraftforge.registries.RegistryBuilder;
 
 public record RegistryHelperImpl(NewRegistryEvent event) implements IRegistryHelper {
     @Override
-    public <T> IRegistryBuilder<T> createSimple(RegistryKey<Registry<T>> key) {
+    public <T> IRegistryBuilder<T> createSimple(ResourceKey<Registry<T>> key) {
         RegistryBuilder<T> registryBuilder =
             //? if neoforge {
             new RegistryBuilder<>(key);
@@ -26,7 +26,7 @@ public record RegistryHelperImpl(NewRegistryEvent event) implements IRegistryHel
     }
 
     @Override
-    public <T> IRegistryBuilder<T> createDefaulted(RegistryKey<Registry<T>> key, Identifier defaultKey) {
+    public <T> IRegistryBuilder<T> createDefaulted(ResourceKey<Registry<T>> key, ResourceLocation defaultKey) {
         RegistryBuilder<T> registryBuilder =
             //? if neoforge {
             new RegistryBuilder<>(key).defaultKey(defaultKey);

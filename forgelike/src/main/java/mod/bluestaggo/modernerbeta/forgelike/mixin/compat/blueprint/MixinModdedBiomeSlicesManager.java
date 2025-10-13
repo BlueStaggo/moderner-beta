@@ -2,9 +2,9 @@ package mod.bluestaggo.modernerbeta.forgelike.mixin.compat.blueprint;
 
 import mod.bluestaggo.modernerbeta.forgelike.mixin.AccessorChunkGenerator;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
-import net.minecraft.world.biome.source.BiomeSource;
-import net.minecraft.world.gen.chunk.ChunkGenerator;
-import net.minecraft.world.gen.feature.util.PlacedFeatureIndexer;
+import net.minecraft.world.level.biome.BiomeSource;
+import net.minecraft.world.level.biome.FeatureSorter;
+import net.minecraft.world.level.chunk.ChunkGenerator;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
@@ -42,11 +42,11 @@ public abstract class MixinModdedBiomeSlicesManager {
             opcode = Opcodes.PUTFIELD
         )
     )
-    private static void preventSettingIndexedFeatureSupplierForModernBeta(ChunkGenerator chunkGenerator, Supplier<List<PlacedFeatureIndexer.IndexedFeatures>> indexedFeatureSupplier) {
+    private static void preventSettingIndexedFeatureSupplierForModernBeta(ChunkGenerator chunkGenerator, Supplier<List<FeatureSorter.StepFeatureData>> indexedFeatureSupplier) {
         BiomeSource oldBiomeSource = chunkGenerator.getBiomeSource();
 
         if (!(oldBiomeSource instanceof ModernBetaBiomeSource)) {
-            ((AccessorChunkGenerator) chunkGenerator).setIndexedFeaturesListSupplier(indexedFeatureSupplier);
+            ((AccessorChunkGenerator) chunkGenerator).setFeaturesPerStep(indexedFeatureSupplier);
         }
     }
 }

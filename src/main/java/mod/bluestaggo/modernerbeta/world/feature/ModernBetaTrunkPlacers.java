@@ -4,8 +4,8 @@ import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.mixin.AccessorTrunkPlacerType;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import mod.bluestaggo.modernerbeta.world.feature.trunk.BetaLargeOakTrunkPlacer;
-import net.minecraft.world.gen.trunk.TrunkPlacer;
-import net.minecraft.world.gen.trunk.TrunkPlacerType;
+import net.minecraft.world.level.levelgen.feature.trunkplacers.TrunkPlacer;
+import net.minecraft.world.level.levelgen.feature.trunkplacers.TrunkPlacerType;
 
 public class ModernBetaTrunkPlacers {
     private static IRegistryHandler<TrunkPlacerType<?>> registryHandler;
@@ -13,7 +13,7 @@ public class ModernBetaTrunkPlacers {
 
     private static <P extends TrunkPlacer> TrunkPlacerType<P> register(
             String id,
-            com.mojang.serialization.MapCodec<P> codec
+            com.mojang.serialization./*Map*/Codec<P> codec
     ) {
         return registryHandler.register(ModernerBeta.createId(id), AccessorTrunkPlacerType.create(codec));
     }

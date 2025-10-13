@@ -4,17 +4,16 @@ import com.google.common.collect.ImmutableList;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.world.gen.surfacebuilder.MaterialRules;
-import net.minecraft.world.gen.surfacebuilder.VanillaSurfaceRules;
+import net.minecraft.data.worldgen.SurfaceRuleData;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 import static mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGeneratorSettings.useModernBetaSurfaceRules;
 
-@Mixin(VanillaSurfaceRules.class)
+@Mixin(SurfaceRuleData.class)
 public class MixinVanillaSurfaceRules {
     @ModifyExpressionValue(
-        method = "createDefaultRule",
+        method = "overworldLike",
         at = @At(
             value = "CONSTANT",
             args = "intValue=97"
@@ -28,7 +27,7 @@ public class MixinVanillaSurfaceRules {
     }
 
     @ModifyExpressionValue(
-        method = "createDefaultRule",
+        method = "overworldLike",
         at = @At(
             value = "CONSTANT",
             args = "intValue=74"
@@ -42,7 +41,7 @@ public class MixinVanillaSurfaceRules {
     }
 
     @SuppressWarnings({"InvalidInjectorMethodSignature", "rawtypes"})
-    @WrapOperation(method = "createDefaultRule",
+    @WrapOperation(method = "overworldLike",
         at = @At(
             value = "INVOKE",
             target = "Lcom/google/common/collect/ImmutableList$Builder;add(Ljava/lang/Object;)Lcom/google/common/collect/ImmutableList$Builder;",

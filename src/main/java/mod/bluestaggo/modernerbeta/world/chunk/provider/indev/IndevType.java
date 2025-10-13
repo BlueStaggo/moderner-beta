@@ -1,8 +1,8 @@
 package mod.bluestaggo.modernerbeta.world.chunk.provider.indev;
 
-import net.minecraft.util.StringIdentifiable;
+import net.minecraft.util.StringRepresentable;
 
-public enum IndevType implements StringIdentifiable {
+public enum IndevType implements StringRepresentable {
     ISLAND("island"),
     FLOATING("floating"),
     INLAND("inland");
@@ -14,7 +14,7 @@ public enum IndevType implements StringIdentifiable {
     }
 
     @Override
-    public String asString() {
+    public String getSerializedName() {
         return this.id;
     }
 }

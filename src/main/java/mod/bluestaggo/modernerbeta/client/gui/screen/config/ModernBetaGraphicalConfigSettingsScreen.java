@@ -3,9 +3,9 @@ package mod.bluestaggo.modernerbeta.client.gui.screen.config;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.OptionListWidget;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.client.gui.components.OptionsList;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 
 import java.nio.file.Path;
@@ -16,7 +16,7 @@ public class ModernBetaGraphicalConfigSettingsScreen extends ModernBetaGraphical
         super("createWorld.customize.modern_beta.title.config", parent, null, null, ModernerBeta.config.toCompound(), compound -> onDone(compound, configDir));
     }
 
-    private static void onDone(NbtCompound compound, Path configDir) {
+    private static void onDone(CompoundTag compound, Path configDir) {
         ModernBetaSettings.CODEC.decode(NbtOps.INSTANCE, compound).result().ifPresent(result -> {
             ModernerBeta.config = result.getFirst();
             ModernerBeta.saveConfig(configDir);
@@ -24,7 +24,7 @@ public class ModernBetaGraphicalConfigSettingsScreen extends ModernBetaGraphical
     }
 
     @Override
-    protected void addOptions(OptionListWidget list) {
+    protected void addOptions(OptionsList list) {
         this.addOptionsForComponents(list, List.of(
             SettingsComponentTypes.CONFIG_BETA_CLIMATIC_COLORS,
             SettingsComponentTypes.CONFIG_PE_CLIMATIC_COLORS,

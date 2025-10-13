@@ -1,7 +1,7 @@
 package mod.bluestaggo.modernerbeta.api.world.chunk.surface;
 
 import mod.bluestaggo.modernerbeta.util.BlockStates;
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.state.BlockState;
 
 public record SurfaceBlocks(BlockState topBlock, BlockState fillerBlock) {
     public static final SurfaceBlocks GRASS = new SurfaceBlocks(BlockStates.GRASS_BLOCK, BlockStates.DIRT);

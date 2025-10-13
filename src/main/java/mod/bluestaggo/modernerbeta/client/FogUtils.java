@@ -2,7 +2,7 @@ package mod.bluestaggo.modernerbeta.client;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.Mth;
 
 @Environment(EnvType.CLIENT)
 public class FogUtils {
@@ -10,7 +10,7 @@ public class FogUtils {
         // Old fog formula with old render distance: weight = 1.0F / (float)(4 - renderDistance)
         // where renderDistance is 0-3, 0 being 'Far' and 3 being 'Very Short'
 
-        int clampedDistance = MathHelper.clamp(renderDistance, 4, 16);
+        int clampedDistance = Mth.clamp(renderDistance, 4, 16);
         clampedDistance -= 4;
         clampedDistance /= 4;
 

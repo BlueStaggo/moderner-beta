@@ -1,77 +1,79 @@
+//~registryOr
 package mod.bluestaggo.modernerbeta.client.gui.optioncallbacks;
 
 import com.mojang.serialization.Codec;
 import mod.bluestaggo.modernerbeta.client.gui.screen.ModernBetaSelectBiomeScreen;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.option.GameOptions;
-import net.minecraft.client.option.SimpleOption;
-import net.minecraft.client.world.GeneratorOptionsHolder;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.Language;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.BiomeKeys;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.OptionInstance;
+import net.minecraft.client.Options;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.worldselection.WorldCreationContext;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.locale.Language;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.Biomes;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
 @Environment(EnvType.CLIENT)
-public record BiomePickerCallbacks(Consumer<Screen> screenChangeHandler, Screen parentScreen, GeneratorOptionsHolder generatorOptionsHolder, boolean allowNone) implements SimpleOption.Callbacks<String> {
+public record BiomePickerCallbacks(Consumer<Screen> screenChangeHandler, Screen parentScreen, WorldCreationContext generatorOptionsHolder, boolean allowNone) implements OptionInstance.ValueSet<String> {
     @Override
-    public Function<SimpleOption<String>, ClickableWidget> getWidgetCreator(SimpleOption.TooltipFactory<String> tooltipFactory, GameOptions gameOptions, int x, int y, int width, Consumer<String> changeCallback) {
+    public @NotNull Function<OptionInstance<String>, AbstractWidget> createButton(OptionInstance.TooltipSupplier<String> tooltipFactory, Options gameOptions, int x, int y, int width, Consumer<String> changeCallback) {
         return option -> {
-            Identifier biomeIdentifier = Identifier.tryParse(option.getValue());
+            ResourceLocation biomeIdentifier = ResourceLocation.tryParse(option.get());
             if (biomeIdentifier == null) {
-                biomeIdentifier = BiomeKeys.PLAINS.getValue();
+                biomeIdentifier = Biomes.PLAINS.location();
             }
-            String biomeTranslationKey = biomeIdentifier.toTranslationKey("biome");
+            String biomeTranslationKey = biomeIdentifier.toLanguageKey("biome");
 
-            return ButtonWidget.builder(
-                "".equals(option.getValue())
-                    ? Text.translatable("gui.none").formatted(Formatting.ITALIC)
-                    : Language.getInstance().hasTranslation(biomeTranslationKey)
-                        ? Text.translatable(biomeTranslationKey)
-                        : Text.literal(biomeIdentifier.toString()),
+            return Button.builder(
+                "".equals(option.get())
+                    ? Component.translatable("gui.none").withStyle(ChatFormatting.ITALIC)
+                    : Language.getInstance().has(biomeTranslationKey)
+                        ? Component.translatable(biomeTranslationKey)
+                        : Component.literal(biomeIdentifier.toString()),
                 onPress -> {
                     screenChangeHandler.accept(new ModernBetaSelectBiomeScreen(
                         parentScreen,
                         generatorOptionsHolder,
                         biome -> {
                             if (biome != null) {
-                                RegistryKey<Biome> key = biome.getKey().orElse(BiomeKeys.PLAINS);
-                                option.setValue(key.getValue().toString());
+                                ResourceKey<Biome> key = biome.unwrapKey().orElse(Biomes.PLAINS);
+                                option.set(key.location().toString());
                             } else {
                                 if (allowNone) {
-                                    option.setValue("");
+                                    option.set("");
                                 } else {
-                                    option.setValue(BiomeKeys.PLAINS.getValue().toString());
+                                    option.set(Biomes.PLAINS.location().toString());
                                 }
                             }
                         },
                         allowNone
                     ));
                 }
-            ).dimensions(x, y, width, 20).build();
+            ).bounds(x, y, width, 20).build();
         };
     }
 
     @Override
-    public Optional<String> validate(String value) {
-        return (allowNone && "".equals(value)) || generatorOptionsHolder.getCombinedRegistryManager()
-            .getOrThrow(RegistryKeys.BIOME).containsId(Identifier.tryParse(value))
+    public @NotNull Optional<String> validateValue(String value) {
+        return (allowNone && "".equals(value)) || generatorOptionsHolder.worldgenLoadContext()
+            .lookupOrThrow(Registries.BIOME).containsKey(ResourceLocation.tryParse(value))
             ? Optional.of(value) : Optional.empty();
     }
 
     @Override
-    public Codec<String> codec() {
+    public @NotNull Codec<String> codec() {
         return Codec.STRING;
     }
 }

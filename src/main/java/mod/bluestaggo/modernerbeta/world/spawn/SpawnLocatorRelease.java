@@ -6,12 +6,12 @@ import mod.bluestaggo.modernerbeta.api.world.chunk.ChunkProviderNoise;
 import mod.bluestaggo.modernerbeta.api.world.spawn.SpawnLocator;
 import mod.bluestaggo.modernerbeta.tags.ModernBetaBiomeTags;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkHeightmap;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.HeightLimitView;
-import net.minecraft.world.Heightmap;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.source.BiomeSource;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.world.level.LevelHeightAccessor;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.BiomeSource;
+import net.minecraft.world.level.levelgen.Heightmap;
 import org.slf4j.event.Level;
 
 import java.util.Optional;
@@ -35,7 +35,7 @@ public class SpawnLocatorRelease implements SpawnLocator {
     }
 
     @Override
-    public Optional<BlockPos> locateSpawn(HeightLimitView world) {
+    public Optional<BlockPos> locateSpawn(LevelHeightAccessor world) {
         ModernerBeta.log(Level.INFO, "Setting a grass spawn..");
 
         int x = 0;
@@ -67,7 +67,7 @@ public class SpawnLocatorRelease implements SpawnLocator {
         
         int y = (this.chunkProvider instanceof ChunkProviderNoise noiseChunkProvider) ?
             noiseChunkProvider.getHeight(world, x, z, ChunkHeightmap.Type.SURFACE_FLOOR) :
-            this.chunkProvider.getHeight(world, x, z, Heightmap.Type.WORLD_SURFACE_WG);
+            this.chunkProvider.getHeight(world, x, z, Heightmap.Types.WORLD_SURFACE_WG);
         
         return Optional.of(new BlockPos(x, y, z));
     }
@@ -85,8 +85,8 @@ public class SpawnLocatorRelease implements SpawnLocator {
         for (int i = 0; i < width * length; i++) {
             int biomeX = minX + i % width;
             int biomeZ = minZ + i / width;
-            RegistryEntry<Biome> biome = this.biomeSource.getBiome(biomeX, 16, biomeZ, null);
-            if (biome.isIn(ModernBetaBiomeTags.IS_RELEASE_SPAWN)
+            Holder<Biome> biome = this.biomeSource.getNoiseBiome(biomeX, 16, biomeZ, null);
+            if (biome.is(ModernBetaBiomeTags.IS_RELEASE_SPAWN)
                 && (position == null || this.rand.nextInt(choiceChance) == 0)) {
                 position = new BlockPos(biomeX << 2, 0, biomeZ << 2);
                 choiceChance++;
@@ -96,12 +96,12 @@ public class SpawnLocatorRelease implements SpawnLocator {
         return position;
     }
 
-    private boolean isGrassAt(HeightLimitView world, int x, int z) {
+    private boolean isGrassAt(LevelHeightAccessor world, int x, int z) {
         int seaLevel = this.chunkProvider.getSeaLevel();
 
         int y = (this.chunkProvider instanceof ChunkProviderNoise noiseChunkProvider) ?
             noiseChunkProvider.getHeight(world, x, z, ChunkHeightmap.Type.SURFACE_FLOOR) :
-            this.chunkProvider.getHeight(world, x, z, Heightmap.Type.OCEAN_FLOOR_WG);
+            this.chunkProvider.getHeight(world, x, z, Heightmap.Types.OCEAN_FLOOR_WG);
 
         return y >= seaLevel;
     }

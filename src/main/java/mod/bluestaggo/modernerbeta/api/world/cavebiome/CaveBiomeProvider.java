@@ -1,15 +1,15 @@
 package mod.bluestaggo.modernerbeta.api.world.cavebiome;
 
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
-import net.minecraft.registry.RegistryEntryLookup;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderGetter;
+import net.minecraft.world.level.biome.Biome;
 
 import java.util.List;
 
 public abstract class CaveBiomeProvider {
     protected final ModernBetaSettings settings;
-    protected final RegistryEntryLookup<Biome> biomeRegistry;
+    protected final HolderGetter<Biome> biomeRegistry;
     protected final long seed;
     
     /**
@@ -19,7 +19,7 @@ public abstract class CaveBiomeProvider {
      * @param seed World seed.
      * @param settings Biome settings.
      */
-    public CaveBiomeProvider(ModernBetaSettings settings, RegistryEntryLookup<Biome> biomeRegistry, long seed) {
+    public CaveBiomeProvider(ModernBetaSettings settings, HolderGetter<Biome> biomeRegistry, long seed) {
         this.settings = settings;
         this.biomeRegistry = biomeRegistry;
         this.seed = seed;
@@ -34,14 +34,14 @@ public abstract class CaveBiomeProvider {
      * 
      * @return A biome at given biome coordinates. May return null, in which case original biome is not replaced.
      */
-    public abstract RegistryEntry<Biome> getBiome(int biomeX, int biomeY, int biomeZ);
+    public abstract Holder<Biome> getBiome(int biomeX, int biomeY, int biomeZ);
     
     /**
      * Gets a list of biomes for biome source, for the purpose of locating structures, etc.
      * 
      * @return A list of biomes.
      */
-    public List<RegistryEntry<Biome>> getBiomes() {
+    public List<Holder<Biome>> getBiomes() {
         return List.of();
     }
 }

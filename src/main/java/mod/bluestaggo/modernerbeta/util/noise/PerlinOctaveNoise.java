@@ -1,6 +1,6 @@
 package mod.bluestaggo.modernerbeta.util.noise;
 
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.Mth;
 
 import java.util.Random;
 
@@ -37,8 +37,8 @@ public class PerlinOctaveNoise {
         for (int i = 0; i < octaves; i++) {
             double offX = x * frequency * scaleX;
             double offZ = z * frequency * scaleZ;
-            long offXCoord = MathHelper.lfloor(offX);
-            long offZCoord = MathHelper.lfloor(offZ);
+            long offXCoord = Mth.lfloor(offX);
+            long offZCoord = Mth.lfloor(offZ);
             offX -= offXCoord;
             offZ -= offZCoord;
             offXCoord %= 16777216L;
@@ -184,8 +184,8 @@ public class PerlinOctaveNoise {
         for (int i = 0; i < this.octaves; ++i) {
             double offX = x * frequency * scaleX;
             double offZ = z * frequency * scaleZ;
-            long offXCoord = MathHelper.lfloor(offX);
-            long offZCoord = MathHelper.lfloor(offZ);
+            long offXCoord = Mth.lfloor(offX);
+            long offZCoord = Mth.lfloor(offZ);
             offX -= offXCoord;
             offZ -= offZCoord;
             offXCoord %= 16777216L;
@@ -240,8 +240,8 @@ public class PerlinOctaveNoise {
         for (int i = 0; i < this.octaves; ++i) {
             double offX = x * frequency * scaleX;
             double offZ = z * frequency * scaleZ;
-            long offXCoord = MathHelper.lfloor(offX);
-            long offZCoord = MathHelper.lfloor(offZ);
+            long offXCoord = Mth.lfloor(offX);
+            long offZCoord = Mth.lfloor(offZ);
             offX -= offXCoord;
             offZ -= offZCoord;
             offXCoord %= 16777216L;

@@ -4,8 +4,8 @@ import mod.bluestaggo.modernerbeta.client.gui.screen.config.GraphicalConfigBuild
 import mod.bluestaggo.modernerbeta.registry.IRegistryHelper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 
 @Environment(EnvType.CLIENT)
 public final class ModernBetaClientRegistries {
@@ -13,7 +13,7 @@ public final class ModernBetaClientRegistries {
 
     public static Registry<GraphicalConfigBuilder> SETTINGS_COMPONENT_TYPE_GUI;
 
-    private static <T> Registry<T> register(RegistryKey<Registry<T>> key) {
+    private static <T> Registry<T> register(ResourceKey<Registry<T>> key) {
         return registryHelper.createSimple(key).build();
     }
 

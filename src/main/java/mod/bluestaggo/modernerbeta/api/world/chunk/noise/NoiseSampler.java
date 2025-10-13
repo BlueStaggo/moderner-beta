@@ -1,6 +1,6 @@
 package mod.bluestaggo.modernerbeta.api.world.chunk.noise;
 
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.Mth;
 
 public class NoiseSampler {
     protected final int noiseResX;
@@ -53,19 +53,19 @@ public class NoiseSampler {
     }
 
     public void sampleNoiseY(double deltaY) {
-        this.nw = MathHelper.lerp(deltaY, this.lowerNW, this.upperNW);
-        this.sw = MathHelper.lerp(deltaY, this.lowerSW, this.upperSW);
-        this.ne = MathHelper.lerp(deltaY, this.lowerNE, this.upperNE);
-        this.se = MathHelper.lerp(deltaY, this.lowerSE, this.upperSE);
+        this.nw = Mth.lerp(deltaY, this.lowerNW, this.upperNW);
+        this.sw = Mth.lerp(deltaY, this.lowerSW, this.upperSW);
+        this.ne = Mth.lerp(deltaY, this.lowerNE, this.upperNE);
+        this.se = Mth.lerp(deltaY, this.lowerSE, this.upperSE);
     }
 
     public void sampleNoiseX(double deltaX) {
-        this.n = MathHelper.lerp(deltaX, this.nw, this.ne);
-        this.s = MathHelper.lerp(deltaX, this.sw, this.se);
+        this.n = Mth.lerp(deltaX, this.nw, this.ne);
+        this.s = Mth.lerp(deltaX, this.sw, this.se);
     }
 
     public void sampleNoiseZ(double deltaZ) {
-        this.density = MathHelper.lerp(deltaZ, this.n, this.s);
+        this.density = Mth.lerp(deltaZ, this.n, this.s);
     }
 
     public double sample() {

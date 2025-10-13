@@ -1,25 +1,25 @@
 package mod.bluestaggo.modernerbeta.world.structure;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;
-import net.minecraft.registry.Registerable;
-import net.minecraft.registry.RegistryEntryLookup;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.tag.BiomeTags;
-import net.minecraft.structure.StructureSet;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.chunk.placement.ConcentricRingsStructurePlacement;
-import net.minecraft.world.gen.chunk.placement.RandomSpreadStructurePlacement;
-import net.minecraft.world.gen.chunk.placement.SpreadType;
-import net.minecraft.world.gen.structure.Structure;
+import net.minecraft.core.HolderGetter;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.worldgen.BootstrapContext;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.BiomeTags;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.levelgen.structure.Structure;
+import net.minecraft.world.level.levelgen.structure.StructureSet;
+import net.minecraft.world.level.levelgen.structure.placement.ConcentricRingsStructurePlacement;
+import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStructurePlacement;
+import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadType;
 
 public class ModernBetaStructureSets {
-    public static final RegistryKey<StructureSet> INDEV_STRONGHOLDS = keyOf("indev_strongholds");
-    public static final RegistryKey<StructureSet> OCEAN_SHRINE = keyOf("ocean_shrine");
+    public static final ResourceKey<StructureSet> INDEV_STRONGHOLDS = keyOf("indev_strongholds");
+    public static final ResourceKey<StructureSet> OCEAN_SHRINE = keyOf("ocean_shrine");
 
-    public static void bootstrap(Registerable<StructureSet> structureSetRegisterable) {
-        RegistryEntryLookup<Structure> registryStructure = structureSetRegisterable.getRegistryLookup(RegistryKeys.STRUCTURE);
-        RegistryEntryLookup<Biome> registryBiome = structureSetRegisterable.getRegistryLookup(RegistryKeys.BIOME);
+    public static void bootstrap(BootstrapContext<StructureSet> structureSetRegisterable) {
+        HolderGetter<Structure> registryStructure = structureSetRegisterable.lookup(Registries.STRUCTURE);
+        HolderGetter<Biome> registryBiome = structureSetRegisterable.lookup(Registries.BIOME);
         
         structureSetRegisterable.register(
             INDEV_STRONGHOLDS,
@@ -32,12 +32,12 @@ public class ModernBetaStructureSets {
             OCEAN_SHRINE,
             new StructureSet(
                 registryStructure.getOrThrow(ModernBetaStructures.OCEAN_SHRINE),
-                new RandomSpreadStructurePlacement(64, 16, SpreadType.TRIANGULAR, 357)
+                new RandomSpreadStructurePlacement(64, 16, RandomSpreadType.TRIANGULAR, 357)
             )
         );
     }
     
-    private static RegistryKey<StructureSet> keyOf(String id) {
-        return RegistryKey.of(RegistryKeys.STRUCTURE_SET, ModernerBeta.createId(id));
+    private static ResourceKey<StructureSet> keyOf(String id) {
+        return ResourceKey.create(Registries.STRUCTURE_SET, ModernerBeta.createId(id));
     }
 }

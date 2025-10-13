@@ -11,17 +11,17 @@ import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.world.biome.injector.BiomeInjectionRules.BiomeInjectionContext;
 import mod.bluestaggo.modernerbeta.world.cavebiome.provider.CaveBiomeProviderNone;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.HeightLimitView;
-import net.minecraft.world.Heightmap;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.source.util.MultiNoiseUtil.MultiNoiseSampler;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.ChunkSection;
-import net.minecraft.world.chunk.PalettedContainer;
-import net.minecraft.world.chunk.ReadableContainer;
+import net.minecraft.core.Holder;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.LevelHeightAccessor;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.Climate.Sampler;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.chunk.LevelChunkSection;
+import net.minecraft.world.level.chunk.PalettedContainer;
+import net.minecraft.world.level.chunk.PalettedContainerRO;
+import net.minecraft.world.level.levelgen.Heightmap;
 
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -83,16 +83,16 @@ public class BiomeInjector {
         this.rulesAll = builderAll.build();
     }
     
-    public void injectBiomes(Chunk chunk, MultiNoiseSampler noiseSampler, BiomeInjectionStep step) {
+    public void injectBiomes(ChunkAccess chunk, Sampler noiseSampler, BiomeInjectionStep step) {
         if (this.rulesAll.isEmpty()) {
             return;
         }
 
         ChunkPos chunkPos = chunk.getPos();
         
-        int startBiomeX = chunkPos.getStartX() >> 2;
-        int startBiomeZ = chunkPos.getStartZ() >> 2;
-        HeightLimitView view = chunk.getHeightLimitView();
+        int startBiomeX = chunkPos.getMinBlockX() >> 2;
+        int startBiomeZ = chunkPos.getMinBlockZ() >> 2;
+        LevelHeightAccessor view = chunk.getHeightAccessorForGeneration();
         
         /*
          * Collect the following for an x/z coordinate:
@@ -102,12 +102,12 @@ public class BiomeInjector {
          */
         
         // Replace biomes from biome container
-        for (int sectionY = view.getBottomSectionCoord(); sectionY < view.getTopSectionCoord(); ++sectionY) {
-            int sectionYNdx = chunk.sectionCoordToIndex(sectionY);
-            ChunkSection section = chunk.getSection(sectionYNdx);
+        for (int sectionY = view.getMinSectionY(); sectionY < view.getMaxSectionY(); ++sectionY) {
+            int sectionYNdx = chunk.getSectionIndexFromSectionY(sectionY);
+            LevelChunkSection section = chunk.getSection(sectionYNdx);
             
-            ReadableContainer<RegistryEntry<Biome>> readableContainer = section.getBiomeContainer();
-            PalettedContainer<RegistryEntry<Biome>> palettedContainer = section.getBiomeContainer().slice();
+            PalettedContainerRO<Holder<Biome>> readableContainer = section.getBiomes();
+            PalettedContainer<Holder<Biome>> palettedContainer = section.getBiomes().recreate();
             
             for (int localBiomeX = 0; localBiomeX < 4; ++localBiomeX) {
                 for (int localBiomeZ = 0; localBiomeZ < 4; ++localBiomeZ) {
@@ -117,19 +117,19 @@ public class BiomeInjector {
                     for (int localBiomeY = 0; localBiomeY < 4; ++localBiomeY) {
                         int biomeY = localBiomeY + sectionY << 2;
                         
-                        RegistryEntry<Biome> initialBiome = readableContainer.get(localBiomeX, localBiomeY, localBiomeZ);
-                        RegistryEntry<Biome> replacementBiome = this.getOptionalBiome(view, biomeX, biomeY, biomeZ, noiseSampler, step).orElse(initialBiome);
+                        Holder<Biome> initialBiome = readableContainer.get(localBiomeX, localBiomeY, localBiomeZ);
+                        Holder<Biome> replacementBiome = this.getOptionalBiome(view, biomeX, biomeY, biomeZ, noiseSampler, step).orElse(initialBiome);
                         
                         palettedContainer.set(localBiomeX, localBiomeY, localBiomeZ, replacementBiome);
                     }   
                 }
             }
             
-            ((AccessorChunkSection)section).setBiomeContainer(palettedContainer);
+            ((AccessorChunkSection)section).setBiomes(palettedContainer);
         }
     }
     
-    public RegistryEntry<Biome> getBiomeAtBlock(HeightLimitView world, int x, int y, int z, MultiNoiseSampler noiseSampler, BiomeInjectionStep step) {
+    public Holder<Biome> getBiomeAtBlock(LevelHeightAccessor world, int x, int y, int z, Sampler noiseSampler, BiomeInjectionStep step) {
         int biomeX = x >> 2;
         int biomeY = y >> 2;
         int biomeZ = z >> 2;
@@ -137,36 +137,36 @@ public class BiomeInjector {
         return this.getBiome(world, biomeX, biomeY, biomeZ, noiseSampler, step);
     }
 
-    public String getBiomeNameAtBlock(HeightLimitView world, int x, int y, int z, MultiNoiseSampler noiseSampler, BiomeInjectionStep step) {
+    public String getBiomeNameAtBlock(LevelHeightAccessor world, int x, int y, int z, Sampler noiseSampler, BiomeInjectionStep step) {
         int biomeX = x >> 2;
         int biomeY = y >> 2;
         int biomeZ = z >> 2;
 
-        RegistryKey<Biome> key = this.getBiome(world, biomeX, biomeY, biomeZ, noiseSampler, step).getKey().orElse(null);
+        ResourceKey<Biome> key = this.getBiome(world, biomeX, biomeY, biomeZ, noiseSampler, step).unwrapKey().orElse(null);
         if (key == null) return "???";
-        return key.getValue().toString();
+        return key.location().toString();
     }
     
-    public RegistryEntry<Biome> getBiome(HeightLimitView world, int biomeX, int biomeY, int biomeZ, MultiNoiseSampler noiseSampler, BiomeInjectionStep step) {
+    public Holder<Biome> getBiome(LevelHeightAccessor world, int biomeX, int biomeY, int biomeZ, Sampler noiseSampler, BiomeInjectionStep step) {
         if (this.rulesAll.isEmpty()) {
-            return this.modernBetaBiomeSource.getBiome(biomeX, biomeY, biomeZ, noiseSampler);
+            return this.modernBetaBiomeSource.getNoiseBiome(biomeX, biomeY, biomeZ, noiseSampler);
         }
 
         BiomeInjectionContext context = this.createContext(world, biomeX, biomeY, biomeZ);
 
         return this
             .getBiome(context, biomeX, biomeY, biomeZ, noiseSampler, step)
-            .orElseGet(() -> this.modernBetaBiomeSource.getBiome(biomeX, biomeY, biomeZ, noiseSampler));
+            .orElseGet(() -> this.modernBetaBiomeSource.getNoiseBiome(biomeX, biomeY, biomeZ, noiseSampler));
     }
     
-    public Optional<RegistryEntry<Biome>> getOptionalBiome(HeightLimitView world, int biomeX, int biomeY, int biomeZ, MultiNoiseSampler noiseSampler, BiomeInjectionStep step) {
+    public Optional<Holder<Biome>> getOptionalBiome(LevelHeightAccessor world, int biomeX, int biomeY, int biomeZ, Sampler noiseSampler, BiomeInjectionStep step) {
         BiomeInjectionContext context = this.createContext(world, biomeX, biomeY, biomeZ);
 
         return this.getBiome(context, biomeX, biomeY, biomeZ, noiseSampler, step);
     }
     
-    private Optional<RegistryEntry<Biome>> getBiome(BiomeInjectionContext context, int biomeX, int biomeY, int biomeZ, MultiNoiseSampler noiseSampler, BiomeInjectionStep step) {
-        RegistryEntry<Biome> biome = switch(step) {
+    private Optional<Holder<Biome>> getBiome(BiomeInjectionContext context, int biomeX, int biomeY, int biomeZ, Sampler noiseSampler, BiomeInjectionStep step) {
+        Holder<Biome> biome = switch(step) {
             case PRE -> this.rulesPre.test(context, biomeX, biomeY, biomeZ);
             case POST -> this.rulesPost.test(context, biomeX, biomeY, biomeZ);
             case ALL -> this.rulesAll.test(context, biomeX, biomeY, biomeZ);
@@ -175,24 +175,24 @@ public class BiomeInjector {
         return Optional.ofNullable(biome);
     }
     
-    private BiomeInjectionContext createContext(HeightLimitView world, int biomeX, int biomeY, int biomeZ) {
+    private BiomeInjectionContext createContext(LevelHeightAccessor world, int biomeX, int biomeY, int biomeZ) {
         int y = biomeY << 2;
         
-        int worldMinY = this.modernBetaChunkGenerator.getMinimumY();
+        int worldMinY = this.modernBetaChunkGenerator.getMinY();
         int topHeight = this.sampleTopHeight(world, biomeX, biomeZ);
         int minHeight = this.sampleMinHeight(world, biomeX, biomeZ);
 
         return new BiomeInjectionContext(worldMinY, topHeight, minHeight).setY(y);
     }
     
-    private int sampleTopHeight(HeightLimitView world, int biomeX, int biomeZ) {
+    private int sampleTopHeight(LevelHeightAccessor world, int biomeX, int biomeZ) {
         int x = (biomeX << 2) + 2;
         int z = (biomeZ << 2) + 2;
         
-        return this.modernBetaChunkGenerator.getHeight(x, z, Heightmap.Type.OCEAN_FLOOR_WG, world);
+        return this.modernBetaChunkGenerator.getHeight(x, z, Heightmap.Types.OCEAN_FLOOR_WG, world);
     }
     
-    private int sampleFloorHeight(HeightLimitView world, int biomeX, int biomeZ) {
+    private int sampleFloorHeight(LevelHeightAccessor world, int biomeX, int biomeZ) {
         int x = (biomeX << 2) + 2;
         int z = (biomeZ << 2) + 2;
         
@@ -200,10 +200,10 @@ public class BiomeInjector {
         
         return chunkProvider instanceof ChunkProviderNoise chunkProviderNoise ?
             chunkProviderNoise.getHeight(world, x, z, ChunkHeightmap.Type.SURFACE_FLOOR) :
-            chunkProvider.getHeight(world, x, z, Heightmap.Type.OCEAN_FLOOR_WG);
+            chunkProvider.getHeight(world, x, z, Heightmap.Types.OCEAN_FLOOR_WG);
     }
     
-    private int sampleMinHeight(HeightLimitView world, int centerBiomeX, int centerBiomeZ) {
+    private int sampleMinHeight(LevelHeightAccessor world, int centerBiomeX, int centerBiomeZ) {
         int minHeight = Integer.MAX_VALUE;
         
         for (int localBiomeX = -1; localBiomeX <= 1; ++localBiomeX) {

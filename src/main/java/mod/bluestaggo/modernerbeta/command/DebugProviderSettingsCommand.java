@@ -4,44 +4,44 @@ import com.mojang.brigadier.CommandDispatcher;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
-import net.minecraft.command.CommandRegistryAccess;
-import net.minecraft.server.command.CommandManager;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.ChatFormatting;
+import net.minecraft.commands.CommandBuildContext;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.network.chat.Component;
 
 public class DebugProviderSettingsCommand {
-    public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess, CommandManager.RegistrationEnvironment environment) {
-        dispatcher.register(CommandManager.literal("printprovidersettings")
-            .requires(source -> source.hasPermissionLevel(2))
+    public static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext registryAccess, Commands.CommandSelection environment) {
+        dispatcher.register(Commands.literal("printprovidersettings")
+            .requires(source -> source.hasPermission(2))
                 .executes(ctx -> execute(ctx.getSource())));
     }
     
-    private static int execute(ServerCommandSource source) {
+    private static int execute(CommandSourceStack source) {
         boolean validWorld = false;
         
-        if (source.getWorld().getChunkManager().getChunkGenerator() instanceof ModernBetaChunkGenerator modernBetaChunkGenerator) {
+        if (source.getLevel().getChunkSource().getGenerator() instanceof ModernBetaChunkGenerator modernBetaChunkGenerator) {
             validWorld = true;
             
-            source.sendFeedback(() -> Text.literal("Chunk Provider Settings:").formatted(Formatting.YELLOW), false);
-            source.sendFeedback(() -> Text.literal(modernBetaChunkGenerator.getChunkSettings().toString()), false);
+            source.sendSuccess(() -> Component.literal("Chunk Provider Settings:").withStyle(ChatFormatting.YELLOW), false);
+            source.sendSuccess(() -> Component.literal(modernBetaChunkGenerator.getChunkSettings().toString()), false);
         }
         
-        if (source.getWorld().getChunkManager().getChunkGenerator().getBiomeSource() instanceof ModernBetaBiomeSource modernBetaBiomeSource) {
+        if (source.getLevel().getChunkSource().getGenerator().getBiomeSource() instanceof ModernBetaBiomeSource modernBetaBiomeSource) {
             validWorld = true;
 
-            source.sendFeedback(() -> Text.literal("Biome Provider Settings:").formatted(Formatting.YELLOW), false);
-            source.sendFeedback(() -> Text.literal(modernBetaBiomeSource.getBiomeSettings().toString()), false);
+            source.sendSuccess(() -> Component.literal("Biome Provider Settings:").withStyle(ChatFormatting.YELLOW), false);
+            source.sendSuccess(() -> Component.literal(modernBetaBiomeSource.getBiomeSettings().toString()), false);
             
-            source.sendFeedback(() -> Text.literal("Cave Biome Provider Settings:").formatted(Formatting.YELLOW), false);
-            source.sendFeedback(() -> Text.literal(modernBetaBiomeSource.getCaveBiomeSettings().toString()), false);
+            source.sendSuccess(() -> Component.literal("Cave Biome Provider Settings:").withStyle(ChatFormatting.YELLOW), false);
+            source.sendSuccess(() -> Component.literal(modernBetaBiomeSource.getCaveBiomeSettings().toString()), false);
         }
 
         if (validWorld) {
             return 0;
         } 
 
-        source.sendFeedback(() -> Text.literal("Not a Modern Beta world!").formatted(Formatting.RED), false);
+        source.sendSuccess(() -> Component.literal("Not a Modern Beta world!").withStyle(ChatFormatting.RED), false);
         
         return -1;
     }

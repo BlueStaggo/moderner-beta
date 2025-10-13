@@ -1,9 +1,9 @@
 package mod.bluestaggo.modernerbeta.tags;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.level.biome.Biome;
 
 public class ModernBetaBiomeTags {
     public static final TagKey<Biome> IS_MODERN_BETA = keyOf("is_modern_beta");
@@ -85,6 +85,6 @@ public class ModernBetaBiomeTags {
     public static final TagKey<Biome> HEIGHT_CONFIG_DEEP_OCEAN = keyOf("height_config/deep_ocean");
 
     private static TagKey<Biome> keyOf(String id) {
-        return TagKey.of(RegistryKeys.BIOME, ModernerBeta.createId(id));
+        return TagKey.create(Registries.BIOME, ModernerBeta.createId(id));
     }
 }

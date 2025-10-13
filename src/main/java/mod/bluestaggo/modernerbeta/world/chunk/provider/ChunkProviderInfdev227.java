@@ -13,25 +13,25 @@ import mod.bluestaggo.modernerbeta.util.noise.SimpleNoisePos;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.world.blocksource.BlockSourceRules;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.util.Util;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.ChunkRegion;
-import net.minecraft.world.HeightLimitView;
-import net.minecraft.world.Heightmap;
-import net.minecraft.world.Heightmap.Type;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.gen.StructureAccessor;
-import net.minecraft.world.gen.StructureWeightSampler;
-import net.minecraft.world.gen.chunk.Blender;
-import net.minecraft.world.gen.chunk.ChunkGeneratorSettings;
-import net.minecraft.world.gen.chunk.GenerationShapeConfig;
-import net.minecraft.world.gen.noise.NoiseConfig;
+import net.minecraft.Util;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.server.level.WorldGenRegion;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.LevelHeightAccessor;
+import net.minecraft.world.level.StructureManager;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.levelgen.Beardifier;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.levelgen.Heightmap.Types;
+import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
+import net.minecraft.world.level.levelgen.NoiseSettings;
+import net.minecraft.world.level.levelgen.RandomState;
+import net.minecraft.world.level.levelgen.blending.Blender;
 
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
@@ -63,10 +63,10 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
     public ChunkProviderInfdev227(ModernBetaChunkGenerator chunkGenerator, long seed) {
         super(chunkGenerator, seed);
         
-        ChunkGeneratorSettings generatorSettings = this.chunkGenerator.getGeneratorSettings().value();
-        GenerationShapeConfig shapeConfig = generatorSettings.generationShapeConfig();
+        NoiseGeneratorSettings generatorSettings = this.chunkGenerator.getGeneratorSettings().value();
+        NoiseSettings shapeConfig = generatorSettings.noiseSettings();
         
-        this.worldMinY = shapeConfig.minimumY();
+        this.worldMinY = shapeConfig.minY();
         this.worldHeight = shapeConfig.height();
         this.worldTopY = this.worldHeight + this.worldMinY;
         this.seaLevel = generatorSettings.seaLevel();
@@ -91,23 +91,23 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
     }
 
     @Override
-    public CompletableFuture<Chunk> provideChunk(Blender blender, StructureAccessor structureAccessor, Chunk chunk, NoiseConfig noiseConfig) {
+    public CompletableFuture<ChunkAccess> provideChunk(Blender blender, StructureManager structureAccessor, ChunkAccess chunk, RandomState noiseConfig) {
         this.generateTerrain(chunk, structureAccessor);  
         
-        return CompletableFuture.<Chunk>supplyAsync(
-            () -> chunk, Util.getMainWorkerExecutor()
+        return CompletableFuture.<ChunkAccess>supplyAsync(
+            () -> chunk, Util.backgroundExecutor()
         );
     }
 
-    public void provideSurface(ChunkRegion region, StructureAccessor structureAccessor, Chunk chunk, ModernBetaBiomeSource biomeSource, NoiseConfig noiseConfig) {
-        BlockPos.Mutable pos = new BlockPos.Mutable();
+    public void provideSurface(WorldGenRegion region, StructureManager structureAccessor, ChunkAccess chunk, ModernBetaBiomeSource biomeSource, RandomState noiseConfig) {
+        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
         
         ChunkPos chunkPos = chunk.getPos();
         int chunkX = chunkPos.x;
         int chunkZ = chunkPos.z;
 
-        int startX = chunk.getPos().getStartX();
-        int startZ = chunk.getPos().getStartZ();
+        int startX = chunk.getPos().getMinBlockX();
+        int startZ = chunk.getPos().getMinBlockZ();
 
         int bedrockFloor = this.worldMinY + this.bedrockFloor;
 
@@ -117,9 +117,9 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
             for (int localZ = 0; localZ < 16; ++localZ) {
                 int x = startX + localX;
                 int z = startZ + localZ;
-                int surfaceTopY = chunk.getHeightmap(Type.OCEAN_FLOOR_WG).get(localX, localZ) - 1;
+                int surfaceTopY = chunk.getOrCreateHeightmapUnprimed(Types.OCEAN_FLOOR_WG).getFirstAvailable(localX, localZ) - 1;
                 
-                RegistryEntry<Biome> biome = biomeSource.getBiomeForSurfaceGen(region, pos.set(x, surfaceTopY, z));
+                Holder<Biome> biome = biomeSource.getBiomeForSurfaceGen(region, pos.set(x, surfaceTopY, z));
                 
                 SurfaceConfig surfaceConfig = this.surfaceBuilder.getSurfaceConfig(biome);
                 BlockState topBlock = surfaceConfig.normal().topBlock();
@@ -146,7 +146,7 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
                         continue;
                     }
                     
-                    if (!blockState.isOf(this.defaultBlock.getBlock())) {
+                    if (!blockState.is(this.defaultBlock.getBlock())) {
                         continue;
                     }
                         
@@ -162,34 +162,34 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
     }
 
     @Override
-    public int getHeight(HeightLimitView world, int x, int z, Type type) {
+    public int getHeight(LevelHeightAccessor world, int x, int z, Types type) {
         int chunkX = x >> 4;
         int chunkZ = z >> 4;
         
         int[] heightmap = this.chunkCacheHeightmap.get(chunkX, chunkZ); 
         int height = heightmap[(z & 0xF) + (x & 0xF) * 16];
         
-        if (type == Heightmap.Type.WORLD_SURFACE_WG && height < this.seaLevel)
+        if (type == Heightmap.Types.WORLD_SURFACE_WG && height < this.seaLevel)
             height = this.seaLevel;
         
         return height + 1;
     }
     
-    protected void generateTerrain(Chunk chunk, StructureAccessor structureAccessor) {
+    protected void generateTerrain(ChunkAccess chunk, StructureManager structureAccessor) {
         Random rand = new Random();
         
-        Heightmap heightmapOcean = chunk.getHeightmap(Heightmap.Type.OCEAN_FLOOR_WG);
-        Heightmap heightmapSurface = chunk.getHeightmap(Heightmap.Type.WORLD_SURFACE_WG);
+        Heightmap heightmapOcean = chunk.getOrCreateHeightmapUnprimed(Heightmap.Types.OCEAN_FLOOR_WG);
+        Heightmap heightmapSurface = chunk.getOrCreateHeightmapUnprimed(Heightmap.Types.WORLD_SURFACE_WG);
 
-        StructureWeightSampler structureWeightSampler = StructureWeightSampler.createStructureWeightSampler(structureAccessor, chunk.getPos());
-        BlockPos.Mutable mutable = new BlockPos.Mutable();
+        Beardifier structureWeightSampler = Beardifier.forStructuresInChunk(structureAccessor, chunk.getPos());
+        BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
         SimpleNoisePos noisePos = new SimpleNoisePos();
         
         int chunkX = chunk.getPos().x;
         int chunkZ = chunk.getPos().z;
         
-        int startX = chunk.getPos().getStartX();
-        int startZ = chunk.getPos().getStartZ();
+        int startX = chunk.getPos().getMinBlockX();
+        int startZ = chunk.getPos().getMinBlockZ();
         
         BlockHolder blockHolder = new BlockHolder();
         Block defaultBlock = this.defaultBlock.getBlock();
@@ -266,8 +266,8 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
 
                     VersionCompat.setBlockState(chunk, mutable.set(localX, y, localZ), blockState);
                     
-                    heightmapOcean.trackUpdate(localX, y, localZ, blockState);
-                    heightmapSurface.trackUpdate(localX, y, localZ, blockState);
+                    heightmapOcean.update(localX, y, localZ, blockState);
+                    heightmapSurface.update(localX, y, localZ, blockState);
                 }
             }
         }

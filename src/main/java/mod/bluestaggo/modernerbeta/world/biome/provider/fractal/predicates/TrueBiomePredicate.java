@@ -8,7 +8,7 @@ import java.util.function.Supplier;
 
 public final class TrueBiomePredicate implements BiomePredicate {
     public static final TrueBiomePredicate INSTANCE = new TrueBiomePredicate();
-    public static final com.mojang.serialization.MapCodec<TrueBiomePredicate> CODEC = com.mojang.serialization.MapCodec.unit(INSTANCE);
+    public static final com.mojang.serialization./*Map*/Codec<TrueBiomePredicate> CODEC = com.mojang.serialization./*Map*/Codec.unit(INSTANCE);
 
     private TrueBiomePredicate() {
     }

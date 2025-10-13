@@ -5,13 +5,13 @@ import mod.bluestaggo.modernerbeta.util.CodecUtil;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomes;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
-import net.minecraft.world.biome.BiomeKeys;
+import net.minecraft.world.level.biome.Biomes;
 
 import java.util.*;
 import java.util.function.Function;
 
 public class MixRiverLayer extends SingleParentLayer {
-    public static final com.mojang.serialization.MapCodec<MixRiverLayer> CODEC = VersionCompat.createMaybeMapCodec(
+    public static final com.mojang.serialization./*Map*/Codec<MixRiverLayer> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> fillSingleParentLayerFields(instance)
             .and(instance.group(
                 Codec.STRING.fieldOf("riverSource").forGetter(layer -> layer.riverSource),
@@ -38,7 +38,7 @@ public class MixRiverLayer extends SingleParentLayer {
 
     public static MixRiverLayer forMajorRelease(String id, long seed, String parent, String riverSource) {
         return new MixRiverLayer(id, seed, parent, riverSource, Set.of(ExtendedBiomeId.OCEAN, ExtendedBiomeId.DEEP_OCEAN), Map.of(
-            ExtendedBiomeId.of(BiomeKeys.SNOWY_PLAINS), ExtendedBiomeId.FROZEN_RIVER,
+            ExtendedBiomeId.of(Biomes.SNOWY_PLAINS), ExtendedBiomeId.FROZEN_RIVER,
             ExtendedBiomeId.MUSHROOM_ISLAND, ExtendedBiomeId.MUSHROOM_SHORE,
             ExtendedBiomeId.MUSHROOM_SHORE, ExtendedBiomeId.MUSHROOM_SHORE
         ));

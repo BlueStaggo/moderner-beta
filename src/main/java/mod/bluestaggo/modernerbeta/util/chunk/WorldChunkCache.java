@@ -1,8 +1,8 @@
 package mod.bluestaggo.modernerbeta.util.chunk;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectLinkedOpenHashMap;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.HeightLimitView;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.LevelHeightAccessor;
 import org.apache.commons.lang3.function.TriFunction;
 
 import java.util.concurrent.locks.StampedLock;
@@ -20,12 +20,12 @@ public class WorldChunkCache<T> {
     private final int capacity;
     private final boolean evictOldChunks;
 
-    private final TriFunction<HeightLimitView, Integer, Integer, T> chunkFunc;
+    private final TriFunction<LevelHeightAccessor, Integer, Integer, T> chunkFunc;
     private final Long2ObjectLinkedOpenHashMap<T> chunkMap;
 
     private final StampedLock lock;
 
-    public WorldChunkCache(String name, int capacity, boolean evictOldChunks, TriFunction<HeightLimitView, Integer, Integer, T> chunkFunc) {
+    public WorldChunkCache(String name, int capacity, boolean evictOldChunks, TriFunction<LevelHeightAccessor, Integer, Integer, T> chunkFunc) {
         this.name = name;
         this.capacity = capacity;
         this.evictOldChunks = evictOldChunks;
@@ -36,11 +36,11 @@ public class WorldChunkCache<T> {
         this.lock = new StampedLock();
     }
 
-    public WorldChunkCache(String name, int capacity, TriFunction<HeightLimitView, Integer, Integer, T> chunkFunc) {
+    public WorldChunkCache(String name, int capacity, TriFunction<LevelHeightAccessor, Integer, Integer, T> chunkFunc) {
         this(name, capacity, DEFAULT_EVICT, chunkFunc);
     }
 
-    public WorldChunkCache(String name, TriFunction<HeightLimitView, Integer, Integer, T> chunkFunc) {
+    public WorldChunkCache(String name, TriFunction<LevelHeightAccessor, Integer, Integer, T> chunkFunc) {
         this(name, DEFAULT_SIZE, DEFAULT_EVICT, chunkFunc);
     }
     
@@ -54,10 +54,10 @@ public class WorldChunkCache<T> {
         }
     }
     
-    public T get(HeightLimitView world, int chunkX, int chunkZ) {
+    public T get(LevelHeightAccessor world, int chunkX, int chunkZ) {
         T chunk;
         
-        long key = ChunkPos.toLong(chunkX, chunkZ);
+        long key = ChunkPos.asLong(chunkX, chunkZ);
         long stamp = this.lock.readLock();
         
         try {
@@ -86,7 +86,7 @@ public class WorldChunkCache<T> {
         return chunk;
     }
     
-    private T createChunk(long key, HeightLimitView world, int chunkX, int chunkZ) {
+    private T createChunk(long key, LevelHeightAccessor world, int chunkX, int chunkZ) {
         // Ensure cache size remains below capacity
         if (this.evictOldChunks && this.chunkMap.size() >= this.capacity) {
             this.chunkMap.removeFirst();

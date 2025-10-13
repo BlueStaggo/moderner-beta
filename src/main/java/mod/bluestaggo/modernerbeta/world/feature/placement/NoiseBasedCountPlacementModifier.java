@@ -3,12 +3,12 @@ package mod.bluestaggo.modernerbeta.world.feature.placement;
 import mod.bluestaggo.modernerbeta.util.noise.PerlinOctaveNoise;
 import mod.bluestaggo.modernerbeta.world.feature.placement.noise.NoiseBasedCount;
 import mod.bluestaggo.modernerbeta.world.feature.placement.noise.NoiseBasedCountBeta;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.random.LocalRandom;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.gen.placementmodifier.AbstractCountPlacementModifier;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.levelgen.SingleThreadedRandomSource;
+import net.minecraft.world.level.levelgen.placement.RepeatingPlacement;
 
-public abstract class NoiseBasedCountPlacementModifier extends AbstractCountPlacementModifier {
+public abstract class NoiseBasedCountPlacementModifier extends RepeatingPlacement {
     protected final int count;
     protected final double extraChance;
     protected final int extraCount;
@@ -20,11 +20,11 @@ public abstract class NoiseBasedCountPlacementModifier extends AbstractCountPlac
         this.extraChance = extraChance;
         this.extraCount = extraCount;
         
-        this.noiseDecorator = new NoiseBasedCountBeta(new LocalRandom(0L));
+        this.noiseDecorator = new NoiseBasedCountBeta(new SingleThreadedRandomSource(0L));
     }
     
     @Override
-    protected int getCount(Random random, BlockPos pos) {
+    protected int count(RandomSource random, BlockPos pos) {
         int chunkX = pos.getX() >> 4;
         int chunkZ = pos.getZ() >> 4;
         

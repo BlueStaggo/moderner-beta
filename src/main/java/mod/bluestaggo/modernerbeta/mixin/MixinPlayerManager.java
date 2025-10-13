@@ -6,12 +6,12 @@ import mod.bluestaggo.modernerbeta.network.BiomeProviderInfoPayload;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
-import net.minecraft.server.PlayerManager;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Identifier;
-import net.minecraft.world.biome.source.BiomeSource;
-import net.minecraft.world.gen.chunk.ChunkGenerator;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.players.PlayerList;
+import net.minecraft.world.level.biome.BiomeSource;
+import net.minecraft.world.level.chunk.ChunkGenerator;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -19,14 +19,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Optional;
 
-@Mixin(PlayerManager.class)
+@Mixin(PlayerList.class)
 public abstract class MixinPlayerManager {
-    @Inject(method = "sendWorldInfo", at = @At("HEAD"))
-    private void sendBiomeProviderInfo(ServerPlayerEntity player, ServerWorld world, CallbackInfo ci) {
+    @Inject(method = "sendLevelInfo", at = @At("HEAD"))
+    private void sendBiomeProviderInfo(ServerPlayer player, ServerLevel world, CallbackInfo ci) {
         if (ModernerBeta.networkHelper == null)
             throw new RuntimeException("Lousy porter did NOT make a network helper!");
 
-        ChunkGenerator chunkGenerator = world.getChunkManager().getChunkGenerator();
+        ChunkGenerator chunkGenerator = world.getChunkSource().getGenerator();
         BiomeSource biomeSource = chunkGenerator.getBiomeSource();
 
         boolean isModernBeta = chunkGenerator instanceof ModernBetaChunkGenerator || biomeSource instanceof ModernBetaBiomeSource;
@@ -35,9 +35,9 @@ public abstract class MixinPlayerManager {
         if (biomeSource instanceof ModernBetaBiomeSource modernBetaBiomeSource) {
             //FIXME: I hate this
             BiomeProvider provider = modernBetaBiomeSource.getBiomeProvider();
-            Identifier id = ModernBetaRegistries.BIOME.getEntrySet().stream()
+            ResourceLocation id = ModernBetaRegistries.BIOME.entrySet().stream()
                     .filter(c -> c.getValue().providerClass() == provider.getClass())
-                    .findFirst().orElseThrow().getKey().getValue();
+                    .findFirst().orElseThrow().getKey().location();
 
             payload = new BiomeProviderInfoPayload(
                     true,

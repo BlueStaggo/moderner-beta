@@ -1,7 +1,7 @@
 package mod.bluestaggo.modernerbeta.api.world.biome;
 
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.core.Holder;
+import net.minecraft.world.level.biome.Biome;
 
 public interface BiomeResolverOcean {
     /**
@@ -13,7 +13,7 @@ public interface BiomeResolverOcean {
      *
      * @return A biome at given biome coordinates. May return null, in which case original biome is not replaced.
      */
-    RegistryEntry<Biome> getOceanBiome(int biomeX, int biomeY, int biomeZ);
+    Holder<Biome> getOceanBiome(int biomeX, int biomeY, int biomeZ);
     
     /**
      * Gets a deep ocean biome to overwrite the original biome at given biome coordinates.
@@ -24,7 +24,7 @@ public interface BiomeResolverOcean {
      *
      * @return A biome at given biome coordinates. May return null, in which case original biome is not replaced.
      */
-    default RegistryEntry<Biome> getDeepOceanBiome(int biomeX, int biomeY, int biomeZ) {
+    default Holder<Biome> getDeepOceanBiome(int biomeX, int biomeY, int biomeZ) {
         return this.getOceanBiome(biomeX, biomeY, biomeZ);
     }
 }

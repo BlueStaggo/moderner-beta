@@ -3,47 +3,47 @@ package mod.bluestaggo.modernerbeta.world.carver;
 import com.mojang.serialization.Codec;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.random.LocalRandom;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.gen.carver.Carver;
-import net.minecraft.world.gen.carver.CarverConfig;
-import net.minecraft.world.gen.carver.CarverContext;
-import net.minecraft.world.gen.carver.CarvingMask;
-import net.minecraft.world.gen.chunk.AquiferSampler;
-import net.minecraft.world.gen.densityfunction.DensityFunction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
+import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.chunk.CarvingMask;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.levelgen.Aquifer;
+import net.minecraft.world.level.levelgen.DensityFunction;
+import net.minecraft.world.level.levelgen.SingleThreadedRandomSource;
+import net.minecraft.world.level.levelgen.carver.CarverConfiguration;
+import net.minecraft.world.level.levelgen.carver.CarvingContext;
+import net.minecraft.world.level.levelgen.carver.WorldCarver;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import java.util.function.Function;
 
-public class BetaCaveCarver extends Carver<BetaCaveCarverConfig> {
+public class BetaCaveCarver extends WorldCarver<BetaCaveCarverConfig> {
     public BetaCaveCarver(Codec<BetaCaveCarverConfig> caveCodec) {
         super(caveCodec);
     }
     
     @Override
-    public boolean shouldCarve(BetaCaveCarverConfig config, Random random) {
+    public boolean isStartChunk(BetaCaveCarverConfig config, RandomSource random) {
         return true;
     }
     
     @Override
     public boolean carve(
-        CarverContext context, 
+        CarvingContext context,
         BetaCaveCarverConfig config, 
-        Chunk mainChunk, 
-        Function<BlockPos, RegistryEntry<Biome>> posToBiome, 
-        Random random,
-        AquiferSampler aquiferSampler, 
+        ChunkAccess mainChunk,
+        Function<BlockPos, Holder<Biome>> posToBiome,
+        RandomSource random,
+        Aquifer aquiferSampler,
         ChunkPos pos,
         CarvingMask carvingMask
     ) {
@@ -55,21 +55,21 @@ public class BetaCaveCarver extends Carver<BetaCaveCarverConfig> {
         }
 
         for (int i = 0; i < caveCount; ++i) {
-            double x = pos.getOffsetX(random.nextInt(16)); // Starts
-            double y = config.y.get(random, context); // 1.17 stuff
-            double z = pos.getOffsetZ(random.nextInt(16));
+            double x = pos.getBlockX(random.nextInt(16)); // Starts
+            double y = config.y.sample(random, context); // 1.17 stuff
+            double z = pos.getBlockZ(random.nextInt(16));
             
             // 1.17 stuff
-            double horizontalScale = config.horizontalRadiusMultiplier.get(random);
-            double verticalScale = config.verticalRadiusMultiplier.get(random);
-            double floorLevel = config.floorLevel.get(random);
+            double horizontalScale = config.horizontalRadiusMultiplier.sample(random);
+            double verticalScale = config.verticalRadiusMultiplier.sample(random);
+            double floorLevel = config.floorLevel.sample(random);
             
-            Carver.SkipPredicate skipPredicate = (carverContext, scaledRelativeX, scaledRelativeY, scaledRelativeZ, relativeY) ->
+            WorldCarver.CarveSkipChecker skipPredicate = (CarvingContext, scaledRelativeX, scaledRelativeY, scaledRelativeZ, relativeY) ->
                 !this.isPositionExcluded(scaledRelativeX, scaledRelativeY, scaledRelativeZ, floorLevel);
 
             int tunnelCount = 1;
             if (random.nextInt(4) == 0) {
-                double yScale = config.yScale.get(random);
+                double yScale = config.yScale.sample(random);
                 
                 this.carveCave(
                     context,
@@ -117,20 +117,20 @@ public class BetaCaveCarver extends Carver<BetaCaveCarverConfig> {
     }
 
     private void carveCave(
-        CarverContext context, 
-        BetaCaveCarverConfig config, 
-        Chunk chunk,
-        Function<BlockPos, RegistryEntry<Biome>> posToBiome,
-        Random random,
+        CarvingContext context,
+        BetaCaveCarverConfig config,
+        ChunkAccess chunk,
+        Function<BlockPos, Holder<Biome>> posToBiome,
+        RandomSource random,
         int mainChunkX, 
         int mainChunkZ, 
         double x, 
         double y, 
         double z,
         double yScale,
-        Carver.SkipPredicate skipPredicate,
+        WorldCarver.CarveSkipChecker skipPredicate,
         CarvingMask carvingMask,
-        AquiferSampler aquiferSampler,
+        Aquifer aquiferSampler,
         boolean useFixedCaves
     ) {
         this.carveTunnels(
@@ -154,11 +154,11 @@ public class BetaCaveCarver extends Carver<BetaCaveCarverConfig> {
     }
 
     private void carveTunnels(
-        CarverContext context,
+        CarvingContext context,
         BetaCaveCarverConfig config,
-        Chunk chunk,
-        Function<BlockPos, RegistryEntry<Biome>> posToBiome,
-        Random initialRandom,
+        ChunkAccess chunk,
+        Function<BlockPos, Holder<Biome>> posToBiome,
+        RandomSource initialRandom,
         int mainChunkX,
         int mainChunkZ,
         double x,
@@ -172,15 +172,15 @@ public class BetaCaveCarver extends Carver<BetaCaveCarverConfig> {
         int branch,
         int branchCount,
         double yawPitchRatio,
-        Carver.SkipPredicate skipPredicate,
+        WorldCarver.CarveSkipChecker skipPredicate,
         CarvingMask carvingMask,
-        AquiferSampler aquiferSampler,
+        Aquifer aquiferSampler,
         boolean useFixedCaves
     ) {
         float f2 = 0.0F;
         float f3 = 0.0F;
 
-        Random random = new LocalRandom(initialRandom.nextLong());
+        RandomSource random = new SingleThreadedRandomSource(initialRandom.nextLong());
 
         if (branchCount <= 0) {
             int someNumMaxStarts = 8 * 16 - 16;
@@ -197,16 +197,16 @@ public class BetaCaveCarver extends Carver<BetaCaveCarverConfig> {
         boolean vary = random.nextInt(6) == 0;
 
         for (; branch < branchCount; branch++) {
-            double tunnelHorizontalScale = 1.5D + (double) (MathHelper.sin(((float) branch * 3.141593F) / (float) branchCount)
+            double tunnelHorizontalScale = 1.5D + (double) (Mth.sin(((float) branch * 3.141593F) / (float) branchCount)
                     * width * 1.0F);
             double tunnelVerticalScale = tunnelHorizontalScale * yawPitchRatio;
 
-            float f4 = MathHelper.cos(pitch);
-            float f5 = MathHelper.sin(pitch);
+            float f4 = Mth.cos(pitch);
+            float f5 = Mth.sin(pitch);
 
-            x += MathHelper.cos(yaw) * f4;
+            x += Mth.cos(yaw) * f4;
             y += f5;
-            z += MathHelper.sin(yaw) * f4;
+            z += Mth.sin(yaw) * f4;
 
             pitch *= vary ? 0.92F : 0.7F;
 
@@ -287,10 +287,10 @@ public class BetaCaveCarver extends Carver<BetaCaveCarverConfig> {
     }
 
     private boolean carveRegion(
-        CarverContext context,
+        CarvingContext context,
         BetaCaveCarverConfig config,
-        Chunk chunk,
-        Function<BlockPos, RegistryEntry<Biome>> posToBiome,
+        ChunkAccess chunk,
+        Function<BlockPos, Holder<Biome>> posToBiome,
         int mainChunkX, 
         int mainChunkZ, 
         double x, 
@@ -298,15 +298,15 @@ public class BetaCaveCarver extends Carver<BetaCaveCarverConfig> {
         double z, 
         double horizontalScale,
         double verticalScale,
-        Carver.SkipPredicate skipPredicate,
+        WorldCarver.CarveSkipChecker skipPredicate,
         CarvingMask carvingMask,
-        AquiferSampler aquiferSampler
+        Aquifer aquiferSampler
     ) {
         double ctrX = mainChunkX * 16 + 8;
         double ctrZ = mainChunkZ * 16 + 8;
 
-        BlockPos.Mutable pos = new BlockPos.Mutable();
-        BlockPos.Mutable tmp = new BlockPos.Mutable();
+        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
+        BlockPos.MutableBlockPos tmp = new BlockPos.MutableBlockPos();
 
         if ( // Check for valid tunnel starts, I guess? Or to prevent overlap?
         x < ctrX - 16D - horizontalScale * 2D || z < ctrZ - 16D - horizontalScale * 2D || x > ctrX + 16D + horizontalScale * 2D
@@ -318,14 +318,14 @@ public class BetaCaveCarver extends Carver<BetaCaveCarverConfig> {
         int mainChunkStartZ = mainChunkZ * 16;
         
         // Get min and max extents of tunnel, relative to chunk coords.
-        int minX = MathHelper.floor(x - horizontalScale) - mainChunkStartX - 1;         
-        int maxX = MathHelper.floor(x + horizontalScale) - mainChunkStartX + 1;
+        int minX = Mth.floor(x - horizontalScale) - mainChunkStartX - 1;
+        int maxX = Mth.floor(x + horizontalScale) - mainChunkStartX + 1;
 
-        int minY = MathHelper.floor(y - verticalScale) - 1;
-        int maxY = MathHelper.floor(y + verticalScale) + 1;
+        int minY = Mth.floor(y - verticalScale) - 1;
+        int maxY = Mth.floor(y + verticalScale) + 1;
 
-        int minZ = MathHelper.floor(z - horizontalScale) - mainChunkStartZ - 1;
-        int maxZ = MathHelper.floor(z + horizontalScale) - mainChunkStartZ + 1;
+        int minZ = Mth.floor(z - horizontalScale) - mainChunkStartZ - 1;
+        int maxZ = Mth.floor(z + horizontalScale) - mainChunkStartZ + 1;
 
         if (minX < 0) {
             minX = 0;
@@ -334,11 +334,11 @@ public class BetaCaveCarver extends Carver<BetaCaveCarverConfig> {
             maxX = 16;
         }
 
-        if (minY < context.getMinY() + 1) {
-            minY = context.getMinY() + 1;
+        if (minY < context.getMinGenY() + 1) {
+            minY = context.getMinGenY() + 1;
         }
-        if (maxY > context.getMinY() + context.getHeight() - 8) {
-            maxY = context.getMinY() + context.getHeight() - 8;
+        if (maxY > context.getMinGenY() + context.getGenDepth() - 8) {
+            maxY = context.getMinGenY() + context.getGenDepth() - 8;
         }
 
         if (minZ < 0) {
@@ -354,11 +354,11 @@ public class BetaCaveCarver extends Carver<BetaCaveCarverConfig> {
 
         boolean carved = false;
         for (int localX = minX; localX < maxX; localX++) {
-            int offsetX = chunk.getPos().getOffsetX(localX);
+            int offsetX = chunk.getPos().getBlockX(localX);
             double scaledRelX = (((double) (localX + mainChunkX * 16) + 0.5D) - x) / horizontalScale;
 
             for (int localZ = minZ; localZ < maxZ; localZ++) {
-                int offsetZ = chunk.getPos().getOffsetZ(localZ);
+                int offsetZ = chunk.getPos().getBlockZ(localZ);
                 double scaledRelZ = (((double) (localZ + mainChunkZ * 16) + 0.5D) - z) / horizontalScale;
                 MutableBoolean replacedGrassy = new MutableBoolean(false);
 
@@ -372,7 +372,7 @@ public class BetaCaveCarver extends Carver<BetaCaveCarverConfig> {
                     carvingMask.set(localX, localY, localZ);
                     pos.set(offsetX, localY, offsetZ);
                     
-                    carved |= this.carveAtPoint(context, config, chunk, posToBiome, carvingMask, pos, tmp, aquiferSampler, replacedGrassy);
+                    carved |= this.carveBlock(context, config, chunk, posToBiome, carvingMask, pos, tmp, aquiferSampler, replacedGrassy);
                 }
             }
         }
@@ -381,46 +381,46 @@ public class BetaCaveCarver extends Carver<BetaCaveCarverConfig> {
     }
 
     @Override
-    protected boolean carveAtPoint(
-            CarverContext context,
+    protected boolean carveBlock(
+            CarvingContext context,
             BetaCaveCarverConfig config,
-            Chunk chunk,
-            Function<BlockPos, RegistryEntry<Biome>> posToBiome,
+            ChunkAccess chunk,
+            Function<BlockPos, Holder<Biome>> posToBiome,
             CarvingMask carvingMask,
-            BlockPos.Mutable pos,
-            BlockPos.Mutable tmp,
-            AquiferSampler aquiferSampler,
+            BlockPos.MutableBlockPos pos,
+            BlockPos.MutableBlockPos tmp,
+            Aquifer aquiferSampler,
             MutableBoolean replacedGrassy
     ) {
         boolean useSurfaceRules = config.useSurfaceRules.orElse(false);
         if (useSurfaceRules) {
-            return super.carveAtPoint(context, config, chunk, posToBiome, carvingMask, pos, tmp, aquiferSampler, replacedGrassy);
+            return super.carveBlock(context, config, chunk, posToBiome, carvingMask, pos, tmp, aquiferSampler, replacedGrassy);
         }
 
         BlockState state = chunk.getBlockState(pos);
 
         boolean replacedGrass = false;
-        if (state.isOf(Blocks.GRASS_BLOCK) || state.isOf(Blocks.MYCELIUM)) {
+        if (state.is(Blocks.GRASS_BLOCK) || state.is(Blocks.MYCELIUM)) {
             replacedGrass = true;
         }
 
         // Don't use canCarveBlock for accuracy, for now.
-        if (state.isIn(config.replaceable)) {
-            BlockState carverState = this.getState(context, config, pos, aquiferSampler);
+        if (state.is(config.replaceable)) {
+            BlockState carverState = this.getCarveState(context, config, pos, aquiferSampler);
 
             if (carverState == null)
                 return false;
 
             VersionCompat.setBlockState(chunk, pos, carverState);
 
-            if (aquiferSampler.needsFluidTick() && !carverState.getFluidState().isEmpty()) {
-                chunk.markBlockForPostProcessing(pos);
+            if (aquiferSampler.shouldScheduleFluidUpdate() && !carverState.getFluidState().isEmpty()) {
+                chunk.markPosForPostprocessing(pos);
             }
 
             // Replaces carved-out dirt with grass, if block that was removed was grass.
             if (replacedGrass) {
-                tmp.set(pos, Direction.DOWN);
-                if (chunk.getBlockState(tmp).isOf(Blocks.DIRT)) {
+                tmp.setWithOffset(pos, Direction.DOWN);
+                if (chunk.getBlockState(tmp).is(Blocks.DIRT)) {
                     VersionCompat.setBlockState(chunk, tmp, BlockStates.GRASS_BLOCK);
                 }
             }
@@ -432,8 +432,8 @@ public class BetaCaveCarver extends Carver<BetaCaveCarverConfig> {
     }
 
     @Override
-    public BlockState getState(CarverContext context, BetaCaveCarverConfig config, BlockPos pos, AquiferSampler aquiferSampler) {
-        if (pos.getY() <= config.lavaLevel.getY(context)) {
+    public BlockState getCarveState(CarvingContext context, BetaCaveCarverConfig config, BlockPos pos, Aquifer aquiferSampler) {
+        if (pos.getY() <= config.lavaLevel.resolveY(context)) {
             return BlockStates.LAVA;
         }
 
@@ -448,13 +448,13 @@ public class BetaCaveCarver extends Carver<BetaCaveCarverConfig> {
         int x = pos.getX();
         int y = pos.getY();
         int z = pos.getZ();
-        BlockState state = aquiferSampler.apply(new DensityFunction.UnblendedNoisePos(x, y, z), 0.0);
-
+        BlockState state = aquiferSampler.computeSubstance(new DensityFunction.SinglePointContext(x, y, z), 0.0);
+        
         if (state == null) {
-            return isDebug(config) ? config.debugConfig.getBarrierState() : null;
+            return isDebugEnabled(config) ? config.debugSettings.getBarrierState() : null;
         }
-
-        return isDebug(config) ? getDebugState(config, state) : state;
+        
+        return isDebugEnabled(config) ? getDebugState(config, state) : state;
     }
 
     private boolean canCarveBranch(
@@ -482,9 +482,9 @@ public class BetaCaveCarver extends Carver<BetaCaveCarverConfig> {
     }
 
     private boolean isRegionUncarvable(
-        CarverContext context,
+        CarvingContext context,
         BetaCaveCarverConfig config,
-        Chunk chunk, 
+        ChunkAccess chunk,
         int mainChunkX, 
         int mainChunkZ, 
         int relMinX, 
@@ -494,18 +494,18 @@ public class BetaCaveCarver extends Carver<BetaCaveCarverConfig> {
         int relMinZ, 
         int relMaxZ
     ) {
-        BlockPos.Mutable blockPos = new BlockPos.Mutable();
+        BlockPos.MutableBlockPos blockPos = new BlockPos.MutableBlockPos();
         
         boolean useAquifers = config.useAquifers.orElse(false);
 
         for (int relX = relMinX; relX < relMaxX; relX++) {
             for (int relZ = relMinZ; relZ < relMaxZ; relZ++) {
                 for (int relY = maxY + 1; relY >= minY - 1; relY--) {
-                    if (relY < context.getMinY() || relY >= context.getMinY() + context.getHeight()) {
+                    if (relY < context.getMinGenY() || relY >= context.getMinGenY() + context.getGenDepth()) {
                         continue;
                     }
 
-                    int lavaLevel = config.lavaLevel.getY(context);
+                    int lavaLevel = config.lavaLevel.resolveY(context);
                     Block block = chunk.getBlockState(blockPos.set(relX, relY, relZ)).getBlock();
 
                     // Don't carve into water bodies, unless useAquifers enabled
@@ -546,7 +546,7 @@ public class BetaCaveCarver extends Carver<BetaCaveCarverConfig> {
         return relX != minX && relX != maxX - 1 && relZ != minZ && relZ != maxZ - 1;
     }
     
-    protected int getCaveY(CarverContext context, Random random) {
+    protected int getCaveY(CarvingContext context, RandomSource random) {
         return random.nextInt(random.nextInt(120) + 8);
     }
 
@@ -554,7 +554,7 @@ public class BetaCaveCarver extends Carver<BetaCaveCarverConfig> {
         return 15;
     }
 
-    protected float getTunnelSystemWidth(Random random, boolean useFixedCaves) {
+    protected float getTunnelSystemWidth(RandomSource random, boolean useFixedCaves) {
         float width = random.nextFloat() * 2.0f + random.nextFloat();
         if (useFixedCaves && random.nextInt(10) == 0) {
             width *= random.nextFloat() * random.nextFloat() * 3.0F + 1.0F;
@@ -562,27 +562,27 @@ public class BetaCaveCarver extends Carver<BetaCaveCarverConfig> {
         return width;
     }
     
-    private static BlockState getDebugState(CarverConfig config, BlockState state) {
-        if (state.isOf(Blocks.AIR)) {
-            return config.debugConfig.getAirState();
+    private static BlockState getDebugState(CarverConfiguration config, BlockState state) {
+        if (state.is(Blocks.AIR)) {
+            return config.debugSettings.getAirState();
         }
         
-        if (state.isOf(Blocks.WATER)) {
-            BlockState waterState = config.debugConfig.getWaterState();
-            if (waterState.contains(Properties.WATERLOGGED)) {
-                return (BlockState)waterState.with(Properties.WATERLOGGED, true);
+        if (state.is(Blocks.WATER)) {
+            BlockState waterState = config.debugSettings.getWaterState();
+            if (waterState.hasProperty(BlockStateProperties.WATERLOGGED)) {
+                return (BlockState)waterState.setValue(BlockStateProperties.WATERLOGGED, true);
             }
             return waterState;
         }
         
-        if (state.isOf(Blocks.LAVA)) {
-            return config.debugConfig.getLavaState();
+        if (state.is(Blocks.LAVA)) {
+            return config.debugSettings.getLavaState();
         }
         
         return state;
     }
     
-    private static boolean isDebug(CarverConfig config) {
-        return config.debugConfig.isDebugMode();
+    private static boolean isDebugEnabled(CarverConfiguration config) {
+        return config.debugSettings.isDebugMode();
     }
 }

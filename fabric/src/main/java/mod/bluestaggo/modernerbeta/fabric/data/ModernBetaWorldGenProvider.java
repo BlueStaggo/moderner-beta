@@ -28,16 +28,16 @@ public class ModernBetaWorldGenProvider extends FabricDynamicRegistryProvider {
 
     @Override
     protected void configure(HolderLookup.Provider provider, Entries entries) {
-        HolderLookup.RegistryLookup<Biome> registryBiome = VersionCompat.getRegistryWrapper(provider, Registries.BIOME);
-        HolderLookup.RegistryLookup<ConfiguredFeature<?, ?>> registryConfiguredFeature = VersionCompat.getRegistryWrapper(provider, Registries.CONFIGURED_FEATURE);
-        HolderLookup.RegistryLookup<PlacedFeature> registryPlacedFeature = VersionCompat.getRegistryWrapper(provider, Registries.PLACED_FEATURE);
-        HolderLookup.RegistryLookup<ConfiguredWorldCarver<?>> registryConfiguredCarver = VersionCompat.getRegistryWrapper(provider, Registries.CONFIGURED_CARVER);
-        HolderLookup.RegistryLookup<NoiseGeneratorSettings> registrySettings = VersionCompat.getRegistryWrapper(provider, Registries.NOISE_SETTINGS);
-        HolderLookup.RegistryLookup<Structure> registryStructure = VersionCompat.getRegistryWrapper(provider, Registries.STRUCTURE);
-        HolderLookup.RegistryLookup<StructureSet> registryStructureSet = VersionCompat.getRegistryWrapper(provider, Registries.STRUCTURE_SET);
-        HolderLookup.RegistryLookup<WorldPreset> registryWorldPreset = VersionCompat.getRegistryWrapper(provider, Registries.WORLD_PRESET);
-        HolderLookup.RegistryLookup<ModernBetaSettingsPreset> registrySettingsPreset = VersionCompat.getRegistryWrapper(provider, ModernBetaRegistryKeys.SETTINGS_PRESET);
-        HolderLookup.RegistryLookup<ModernBetaSettingsPresetCategory> registrySettingsPresetCategory= VersionCompat.getRegistryWrapper(provider, ModernBetaRegistryKeys.SETTINGS_PRESET_CATEGORY);
+        HolderLookup.RegistryLookup<Biome> registryBiome = provider.lookupOrThrow(Registries.BIOME);
+        HolderLookup.RegistryLookup<ConfiguredFeature<?, ?>> registryConfiguredFeature = provider.lookupOrThrow(Registries.CONFIGURED_FEATURE);
+        HolderLookup.RegistryLookup<PlacedFeature> registryPlacedFeature = provider.lookupOrThrow(Registries.PLACED_FEATURE);
+        HolderLookup.RegistryLookup<ConfiguredWorldCarver<?>> registryConfiguredCarver = provider.lookupOrThrow(Registries.CONFIGURED_CARVER);
+        HolderLookup.RegistryLookup<NoiseGeneratorSettings> registrySettings = provider.lookupOrThrow(Registries.NOISE_SETTINGS);
+        HolderLookup.RegistryLookup<Structure> registryStructure = provider.lookupOrThrow(Registries.STRUCTURE);
+        HolderLookup.RegistryLookup<StructureSet> registryStructureSet = provider.lookupOrThrow(Registries.STRUCTURE_SET);
+        HolderLookup.RegistryLookup<WorldPreset> registryWorldPreset = provider.lookupOrThrow(Registries.WORLD_PRESET);
+        HolderLookup.RegistryLookup<ModernBetaSettingsPreset> registrySettingsPreset = provider.lookupOrThrow(ModernBetaRegistryKeys.SETTINGS_PRESET);
+        HolderLookup.RegistryLookup<ModernBetaSettingsPresetCategory> registrySettingsPresetCategory= provider.lookupOrThrow(ModernBetaRegistryKeys.SETTINGS_PRESET_CATEGORY);
 
         entries.addAll(registryBiome);
         entries.addAll(registryConfiguredFeature);

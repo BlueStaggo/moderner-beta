@@ -13,13 +13,13 @@ import mod.bluestaggo.modernerbeta.util.noise.PerlinOctaveNoise;
 import mod.bluestaggo.modernerbeta.util.noise.PerlinOctaveNoiseCombined;
 import mod.bluestaggo.modernerbeta.world.blocksource.BlockSourceRules;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.SnowyBlock;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.chunk.Chunk;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SnowyDirtBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkAccess;
 
 public class ChunkProviderClassic030 extends ChunkProviderFinite {
     private PerlinOctaveNoiseCombined minHeightOctaveNoise;
@@ -56,8 +56,8 @@ public class ChunkProviderClassic030 extends ChunkProviderFinite {
     }
 
     @Override
-    protected void generateBorder(Chunk chunk) {
-        BlockPos.Mutable pos = new BlockPos.Mutable();
+    protected void generateBorder(ChunkAccess chunk) {
+        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
         
         for (int x = 0; x < 16; ++x) {
             for (int z = 0; z < 16; ++z) {
@@ -80,10 +80,10 @@ public class ChunkProviderClassic030 extends ChunkProviderFinite {
         int y = pos.getY();
         int z = pos.getZ();
         
-        BlockState blockState = block.getDefaultState();
+        BlockState blockState = block.defaultBlockState();
         BlockState modifiedBlockState = blockSources.apply(x, y, z);
         
-        boolean inFluid = modifiedBlockState.isAir() || modifiedBlockState.isOf(this.getLevelFluidBlock());
+        boolean inFluid = modifiedBlockState.isAir() || modifiedBlockState.is(this.getLevelFluidBlock());
         int runDepth = terrainState.getRunDepth();
         
         // Check to see if structure weight sampler modifies terrain.
@@ -108,7 +108,7 @@ public class ChunkProviderClassic030 extends ChunkProviderFinite {
     }
 
     @Override
-    protected void generateBedrock(Chunk chunk, Block block, BlockPos pos) {
+    protected void generateBedrock(ChunkAccess chunk, Block block, BlockPos pos) {
         int y = pos.getY();
         
         // Set bedrock at y0 to simulate bottom of world.
@@ -125,9 +125,9 @@ public class ChunkProviderClassic030 extends ChunkProviderFinite {
         int y = pos.getY();
         int z = pos.getZ();
         
-        if (blockState.isOf(BlockStates.GRASS_BLOCK.getBlock())) {
+        if (blockState.is(BlockStates.GRASS_BLOCK.getBlock())) {
             blockState = topBlock;
-        } else if (blockState.isOf(BlockStates.DIRT.getBlock())) {
+        } else if (blockState.is(BlockStates.DIRT.getBlock())) {
             blockState = fillerBlock;
         }
         
@@ -135,7 +135,7 @@ public class ChunkProviderClassic030 extends ChunkProviderFinite {
         if (!this.inWorldBounds(x, z)) {
             if (y == this.waterLevel) {
                 if (isCold && blockState.equals(topBlock)) {
-                    blockState = topBlock.with(SnowyBlock.SNOWY, true);
+                    blockState = topBlock.setValue(SnowyDirtBlock.SNOWY, true);
                 }
                 
             } else if (y == this.waterLevel - 1) {
@@ -264,9 +264,9 @@ public class ChunkProviderClassic030 extends ChunkProviderFinite {
             float caveRadius = random.nextFloat() * random.nextFloat() * this.caveRadius;
             
             for (int len = 0; len < caveLen; ++len) {
-                caveX += MathHelper.sin(theta) * MathHelper.cos(phi);
-                caveZ += MathHelper.cos(theta) * MathHelper.cos(phi);
-                caveY += MathHelper.sin(phi);
+                caveX += Mth.sin(theta) * Mth.cos(phi);
+                caveZ += Mth.cos(theta) * Mth.cos(phi);
+                caveY += Mth.sin(phi);
                 
                 // TODO: Double-check
                 theta = theta + deltaTheta * 0.2f;
@@ -275,7 +275,7 @@ public class ChunkProviderClassic030 extends ChunkProviderFinite {
                 if (caveSettings.use14aCaves()) {
                     phi = phi * 0.5f + deltaPhi * 0.5f;
                     deltaPhi = (deltaPhi * 0.9f) + (random.nextFloat() - random.nextFloat());
-                    float radius = MathHelper.sin(len * 3.1415927f / caveLen) * 2.5F + 1.0F;
+                    float radius = Mth.sin(len * 3.1415927f / caveLen) * 2.5F + 1.0F;
 
                     fillOblateSpheroid(caveX, caveY, caveZ, radius, Blocks.AIR);
                 } else {
@@ -289,7 +289,7 @@ public class ChunkProviderClassic030 extends ChunkProviderFinite {
 
                         float radius = (this.levelHeight - centerY) / this.levelHeight;
                         radius = 1.2f + (radius * 3.5f + 1.0f) * caveRadius;
-                        radius = radius * MathHelper.sin(len * 3.1415927f / caveLen);
+                        radius = radius * Mth.sin(len * 3.1415927f / caveLen);
 
                         fillOblateSpheroid(centerX, centerY, centerZ, radius, Blocks.AIR);
                     }

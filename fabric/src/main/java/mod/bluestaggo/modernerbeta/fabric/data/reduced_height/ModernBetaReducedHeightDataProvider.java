@@ -90,7 +90,7 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
         );
 
         //Configured carvers
-        HolderLookup.RegistryLookup<Block> registryBlock = VersionCompat.getRegistryWrapper(registries, Registries.BLOCK);
+        HolderLookup.RegistryLookup<Block> registryBlock = registries.lookupOrThrow(Registries.BLOCK);
         CaveCarverConfiguration configCaveDeep = new CaveCarverConfiguration(
             0.0f,
             ConstantHeight.of(VerticalAnchor.absolute(-2032)),
@@ -149,15 +149,15 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
         entries.add(EARLY_BEDROCK, createGeneratorSettings(registries, ModernBetaShapeReducedHeightConfigs.EARLY_BEDROCK, 63, true));
 
         //Density functions
-        HolderGetter<DensityFunction> densityFunctionLookup = VersionCompat.getRegistryWrapper(registries, Registries.DENSITY_FUNCTION);
-        HolderGetter<NormalNoise.NoiseParameters> noiseParametersLookup = VersionCompat.getRegistryWrapper(registries, Registries.NOISE);
+        HolderGetter<DensityFunction> densityFunctionLookup = registries.lookupOrThrow(Registries.DENSITY_FUNCTION);
+        HolderGetter<NormalNoise.NoiseParameters> noiseParametersLookup = registries.lookupOrThrow(Registries.NOISE);
 
         entries.add(AccessorDensityFunctionsFabric.getSpaghetti2d(), createCavesSpaghetti2dOverworldFunction(densityFunctionLookup, noiseParametersLookup));
-        entries.add(AccessorDensityFunctions.getCavesEntrancesOverworldKey(), createCavesEntrancesOverworldFunction(densityFunctionLookup, noiseParametersLookup));
-        entries.add(AccessorDensityFunctions.getCavesNoodleOverworldKey(), createCavesNoodleOverworldFunction(densityFunctionLookup, noiseParametersLookup));
+        entries.add(AccessorDensityFunctions.getEntrancesKey(), createCavesEntrancesOverworldFunction(densityFunctionLookup, noiseParametersLookup));
+        entries.add(AccessorDensityFunctions.getNoodleKey(), createCavesNoodleOverworldFunction(densityFunctionLookup, noiseParametersLookup));
 
         //Placed features
-        HolderGetter<ConfiguredFeature<?, ?>> registryConfiguredFeature = VersionCompat.getRegistryWrapper(registries, Registries.CONFIGURED_FEATURE);
+        HolderGetter<ConfiguredFeature<?, ?>> registryConfiguredFeature = registries.lookupOrThrow(Registries.CONFIGURED_FEATURE);
         Holder<ConfiguredFeature<?, ?>> noOp = new Holder.Direct<>(new ConfiguredFeature<>(Feature.NO_OP, NoneFeatureConfiguration.NONE));
         Holder<ConfiguredFeature<?, ?>> dirt = registryConfiguredFeature.getOrThrow(OreFeatures.ORE_DIRT);
         Holder<ConfiguredFeature<?, ?>> gravel = registryConfiguredFeature.getOrThrow(OreFeatures.ORE_GRAVEL);
@@ -221,8 +221,8 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
             ModernBetaShapeReducedHeightConfigs.VANILLA_SURFACE,
             Blocks.STONE.defaultBlockState(),
             Blocks.WATER.defaultBlockState(),
-            AccessorDensityFunctionsFabric.invokeOverworld(VersionCompat.getRegistryWrapper(lookup, Registries.DENSITY_FUNCTION),
-                VersionCompat.getRegistryWrapper(lookup, Registries.NOISE), largeBiomes, amplified),
+            AccessorDensityFunctionsFabric.invokeOverworld(lookup.lookupOrThrow(Registries.DENSITY_FUNCTION),
+                lookup, Registries.NOISE), largeBiomes.lookupOrThrow(amplified),
             SurfaceRuleData.overworld(),
             (new OverworldBiomeBuilder()).spawnTarget(),
             63,
@@ -238,8 +238,8 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
             ModernBetaShapeReducedHeightConfigs.VANILLA_CAVES,
             Blocks.STONE.defaultBlockState(),
             Blocks.WATER.defaultBlockState(),
-            AccessorDensityFunctionsFabric.invokeNether(VersionCompat.getRegistryWrapper(lookup, Registries.DENSITY_FUNCTION),
-                VersionCompat.getRegistryWrapper(lookup, Registries.NOISE)),
+            AccessorDensityFunctionsFabric.invokeNether(lookup.lookupOrThrow(Registries.DENSITY_FUNCTION),
+                lookup.lookupOrThrow(Registries.NOISE)),
             SurfaceRuleData.overworldLike(false, true, true),
             List.of(),
             32,

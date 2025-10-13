@@ -7,50 +7,34 @@ import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.world.GeneratorOptionsHolder;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryEntryLookup;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.util.Identifier;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.chunk.ChunkGeneratorSettings;
+import net.minecraft.client.gui.screens.worldselection.WorldCreationContext;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderGetter;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
 
 @Environment(EnvType.CLIENT)
 public class ModernBetaWorldScreenProvider {
-    public static GeneratorOptionsHolder.RegistryAwareModifier createModifier(
-        NbtCompound chunkSettingsCompound,
-        NbtCompound biomeSettingsCompound,
-        NbtCompound caveBiomeSettingsCompound
+    public static WorldCreationContext.DimensionsUpdater createModifier(
+        CompoundTag chunkSettingsCompound,
+        CompoundTag biomeSettingsCompound,
+        CompoundTag caveBiomeSettingsCompound
     ) {
         return (dynamicRegistryManager, dimensionsRegistryHolder) -> {
-            RegistryEntryLookup<ModernBetaSettingsPreset> registryPreset = dynamicRegistryManager
-                //? if >=1.21.2 {
-                .getOrThrow(ModernBetaRegistryKeys.SETTINGS_PRESET);
-                //?} else {
-                /*.getWrapperOrThrow(ModernBetaRegistryKeys.SETTINGS_PRESET);
-                 *///?}
+            HolderGetter<ModernBetaSettingsPreset> registryPreset = dynamicRegistryManager.lookupOrThrow(ModernBetaRegistryKeys.SETTINGS_PRESET);
 
             ModernBetaSettings chunkSettings = ModernBetaSettings.fromCompound(chunkSettingsCompound)
                 .mapPreset(registryPreset, ModernBetaSettingsPreset::chunkSettings);
-            RegistryKey<ChunkGeneratorSettings> modernBetaSettings = keyOfSettings(chunkSettings.getProvider());
+            ResourceKey<NoiseGeneratorSettings> modernBetaSettings = keyOfSettings(chunkSettings.getProvider());
 
-            Registry<ChunkGeneratorSettings> registrySettings = dynamicRegistryManager.getOrThrow(RegistryKeys.CHUNK_GENERATOR_SETTINGS);
-            RegistryEntry.Reference<ChunkGeneratorSettings> settings = registrySettings
-                //? if >=1.21.2 {
-                .getOrThrow(modernBetaSettings);
-                //?} else {
-                /*.getEntry(modernBetaSettings)
-                .orElseThrow();
-                *///?}
-            RegistryEntryLookup<Biome> registryBiome = dynamicRegistryManager
-                //? if >=1.21.2 {
-                .getOrThrow(RegistryKeys.BIOME);
-                //?} else {
-                /*.getWrapperOrThrow(RegistryKeys.BIOME);
-                *///?}
+            Registry<NoiseGeneratorSettings> registrySettings = dynamicRegistryManager.lookupOrThrow(Registries.NOISE_SETTINGS);
+            Holder.Reference<NoiseGeneratorSettings> settings = registrySettings.getHolder(modernBetaSettings).orElseThrow();
+            HolderGetter<Biome> registryBiome = dynamicRegistryManager.lookupOrThrow(Registries.BIOME);
 
             ModernBetaChunkGenerator chunkGenerator = new ModernBetaChunkGenerator(
                 new ModernBetaBiomeSource(
@@ -64,11 +48,11 @@ public class ModernBetaWorldScreenProvider {
                 chunkSettingsCompound
             );
 
-            return dimensionsRegistryHolder.with(dynamicRegistryManager, chunkGenerator);
+            return dimensionsRegistryHolder.replaceOverworldGenerator(dynamicRegistryManager, chunkGenerator);
         };
     }
     
-    private static RegistryKey<ChunkGeneratorSettings> keyOfSettings(Identifier id) {
-        return RegistryKey.of(RegistryKeys.CHUNK_GENERATOR_SETTINGS, id);
+    private static ResourceKey<NoiseGeneratorSettings> keyOfSettings(ResourceLocation id) {
+        return ResourceKey.create(Registries.NOISE_SETTINGS, id);
     }
 }

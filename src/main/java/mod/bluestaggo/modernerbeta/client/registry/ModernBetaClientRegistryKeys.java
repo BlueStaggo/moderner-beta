@@ -4,14 +4,14 @@ import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.client.gui.screen.config.GraphicalConfigBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 
 @Environment(EnvType.CLIENT)
 public class ModernBetaClientRegistryKeys {
-    public static final RegistryKey<Registry<GraphicalConfigBuilder>> SETTINGS_COMPONENT_TYPE_GUI = of("settings_component_type_gui");
+    public static final ResourceKey<Registry<GraphicalConfigBuilder>> SETTINGS_COMPONENT_TYPE_GUI = of("settings_component_type_gui");
 
-    private static <T> RegistryKey<Registry<T>> of(String id) {
-        return RegistryKey.ofRegistry(ModernerBeta.createId(id));
+    private static <T> ResourceKey<Registry<T>> of(String id) {
+        return ResourceKey.createRegistryKey(ModernerBeta.createId(id));
     }
 }

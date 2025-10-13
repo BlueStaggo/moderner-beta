@@ -1,7 +1,7 @@
 package mod.bluestaggo.modernerbeta.world.biome.injector;
 
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.core.Holder;
+import net.minecraft.world.level.biome.Biome;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,9 +14,9 @@ public class BiomeInjectionRules {
         this.rules = rules;
     }
     
-    public RegistryEntry<Biome> test(BiomeInjectionContext context, int biomeX, int biomeY, int biomeZ) {
+    public Holder<Biome> test(BiomeInjectionContext context, int biomeX, int biomeY, int biomeZ) {
         for (BiomeInjectionRule rule : this.rules) {
-            RegistryEntry<Biome> biome = rule.test(context).apply(biomeX, biomeY, biomeZ);
+            Holder<Biome> biome = rule.test(context).apply(biomeX, biomeY, biomeZ);
             
             if (biome != null)
                 return biome;

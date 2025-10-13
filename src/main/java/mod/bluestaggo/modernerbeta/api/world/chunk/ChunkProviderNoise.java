@@ -21,20 +21,24 @@ import mod.bluestaggo.modernerbeta.world.blocksource.BlockSourceRules;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkNoiseSampler;
 import mod.bluestaggo.modernerbeta.world.chunk.provider.island.IslandShape;
-import net.minecraft.block.BlockState;
-import net.minecraft.util.Util;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.random.RandomSplitter;
-import net.minecraft.world.HeightLimitView;
-import net.minecraft.world.Heightmap;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.ChunkSection;
-import net.minecraft.world.gen.StructureAccessor;
-import net.minecraft.world.gen.StructureWeightSampler;
-import net.minecraft.world.gen.chunk.*;
-import net.minecraft.world.gen.noise.NoiseConfig;
+import net.minecraft.Util;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.LevelHeightAccessor;
+import net.minecraft.world.level.StructureManager;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.chunk.LevelChunkSection;
+import net.minecraft.world.level.levelgen.Aquifer;
+import net.minecraft.world.level.levelgen.Beardifier;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.levelgen.NoiseChunk;
+import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
+import net.minecraft.world.level.levelgen.NoiseSettings;
+import net.minecraft.world.level.levelgen.PositionalRandomFactory;
+import net.minecraft.world.level.levelgen.RandomState;
+import net.minecraft.world.level.levelgen.blending.Blender;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -72,19 +76,19 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
     protected final NoiseScale noiseScale;
     private final NoiseSlide noiseSlide;
 
-    private final AtomicReference<NoiseConfig> noiseConfig = new AtomicReference<>();
+    private final AtomicReference<RandomState> noiseConfig = new AtomicReference<>();
 
     public ChunkProviderNoise(ModernBetaChunkGenerator chunkGenerator, long seed) {
         super(chunkGenerator, seed);
         
-        ChunkGeneratorSettings generatorSettings = chunkGenerator.getGeneratorSettings().value();
-        GenerationShapeConfig shapeConfig = generatorSettings.generationShapeConfig();
+        NoiseGeneratorSettings generatorSettings = chunkGenerator.getGeneratorSettings().value();
+        NoiseSettings shapeConfig = generatorSettings.noiseSettings();
 
         this.islesProperties = this.getChunkSettings().getOrDefault(SettingsComponentTypes.ISLES_PROPERTIES);
         this.noiseScale = this.getChunkSettings().getOrDefault(SettingsComponentTypes.NOISE_SCALE);
         this.noiseSlide = this.getChunkSettings().getOrElse(SettingsComponentTypes.NOISE_SLIDE, NoiseSlide.DISABLED);
 
-        this.worldMinY = shapeConfig.minimumY();
+        this.worldMinY = shapeConfig.minY();
         this.worldHeight = shapeConfig.height();
         this.worldTopY = this.worldHeight + this.worldMinY;
         this.seaLevel = generatorSettings.seaLevel() + this.getChunkSettings().getOrDefault(SettingsComponentTypes.SEA_LEVEL_OFFSET);
@@ -95,14 +99,14 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
         this.defaultBlock = generatorSettings.defaultBlock();
         this.defaultFluid = generatorSettings.defaultFluid();
         
-        this.noiseResolutionVertical = shapeConfig.verticalSize() * 4;
-        this.noiseResolutionHorizontal = shapeConfig.horizontalSize() * 4;
+        this.noiseResolutionVertical = shapeConfig.noiseSizeVertical() * 4;
+        this.noiseResolutionHorizontal = shapeConfig.noiseSizeHorizontal() * 4;
         
         this.noiseSizeX = 16 / this.noiseResolutionHorizontal;
         this.noiseSizeZ = 16 / this.noiseResolutionHorizontal;
-        this.noiseSizeY = MathHelper.floorDiv(this.worldHeight, this.noiseResolutionVertical);
-        this.noiseMinY = MathHelper.floorDiv(this.worldMinY, this.noiseResolutionVertical);
-        this.noiseTopY = MathHelper.floorDiv(this.worldMinY + this.worldHeight, this.noiseResolutionVertical);
+        this.noiseSizeY = Mth.floorDiv(this.worldHeight, this.noiseResolutionVertical);
+        this.noiseMinY = Mth.floorDiv(this.worldMinY, this.noiseResolutionVertical);
+        this.noiseTopY = Mth.floorDiv(this.worldMinY + this.worldHeight, this.noiseResolutionVertical);
 
         this.chunkCacheNoise = new ChunkCache<>(
             "base_noise",
@@ -137,36 +141,36 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
      * @return A completed chunk.
      */
     @Override
-    public CompletableFuture<Chunk> provideChunk(Blender blender, StructureAccessor structureAccessor, Chunk chunk, NoiseConfig noiseConfig) {
+    public CompletableFuture<ChunkAccess> provideChunk(Blender blender, StructureManager structureAccessor, ChunkAccess chunk, RandomState noiseConfig) {
         this.setNoiseConfig(noiseConfig);
 
-        GenerationShapeConfig shapeConfig = this.generatorSettings.value().generationShapeConfig().trimHeight(chunk.getHeightLimitView());
-        int minY = shapeConfig.minimumY();
-        int minimumCellY = MathHelper.floorDiv(minY, shapeConfig.verticalCellBlockCount());
-        int cellHeight = MathHelper.floorDiv(shapeConfig.height(), shapeConfig.verticalCellBlockCount());
+        NoiseSettings shapeConfig = this.generatorSettings.value().noiseSettings().clampToHeightAccessor(chunk.getHeightAccessorForGeneration());
+        int minY = shapeConfig.minY();
+        int minimumCellY = Mth.floorDiv(minY, shapeConfig.getCellHeight());
+        int cellHeight = Mth.floorDiv(shapeConfig.height(), shapeConfig.getCellHeight());
 
         return cellHeight <= 0 ? CompletableFuture.completedFuture(chunk) : CompletableFuture.supplyAsync(() -> {
-            int sectionTopY = chunk.getSectionIndex(cellHeight * shapeConfig.verticalCellBlockCount() - 1 + minY);
+            int sectionTopY = chunk.getSectionIndex(cellHeight * shapeConfig.getCellHeight() - 1 + minY);
             int sectionMinY = chunk.getSectionIndex(minY);
 
-            HashSet<ChunkSection> sections = Sets.newHashSet();
+            HashSet<LevelChunkSection> sections = Sets.newHashSet();
             for (int sectionNdx = sectionTopY; sectionNdx >= sectionMinY; --sectionNdx) {
-                ChunkSection section = chunk.getSection(sectionNdx);
+                LevelChunkSection section = chunk.getSection(sectionNdx);
 
-                section.lock();
+                section.acquire();
                 sections.add(section);
             }
 
             try {
                 this.generateTerrain(chunk, structureAccessor, noiseConfig, minimumCellY, cellHeight);
             } finally {
-                for (ChunkSection section : sections) {
-                    section.unlock();
+                for (LevelChunkSection section : sections) {
+                    section.release();
                 }
             }
 
             return chunk;
-        }, Util.getMainWorkerExecutor());
+        }, Util.backgroundExecutor());
     }
     
     /**
@@ -180,7 +184,7 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
      * @return The y-coordinate of top block at x/z.
      */
     @Override
-    public int getHeight(HeightLimitView world, int x, int z, Heightmap.Type type) {
+    public int getHeight(LevelHeightAccessor world, int x, int z, Heightmap.Types type) {
         int chunkX = x >> 4;
         int chunkZ = z >> 4;
         
@@ -205,7 +209,7 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
      * @param type  HeightmapChunk heightmap type.
      * @return The y-coordinate of top block at x/z.
      */
-    public int getHeight(HeightLimitView world, int x, int z, ChunkHeightmap.Type type) {
+    public int getHeight(LevelHeightAccessor world, int x, int z, ChunkHeightmap.Type type) {
         int chunkX = x >> 4;
         int chunkZ = z >> 4;
         
@@ -221,9 +225,9 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
      * @return A new aquifer sampler.
      */
     @Override
-    public AquiferSampler getAquiferSampler(Chunk chunk, NoiseConfig noiseConfig) {
-        RandomSplitter randomDeriver = this.randomProvider.create(this.seed).nextSplitter();
-        ChunkNoiseSampler noiseSampler = ModernBetaChunkNoiseSampler.create(
+    public Aquifer getAquiferSampler(ChunkAccess chunk, RandomState noiseConfig) {
+        PositionalRandomFactory randomDeriver = this.randomProvider.newInstance(this.seed).forkPositional();
+        NoiseChunk noiseSampler = ModernBetaChunkNoiseSampler.create(
             chunk,
             noiseConfig,
             this.generatorSettings.value(),
@@ -241,13 +245,13 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
             this.worldMinY,
             this.worldHeight,
             this.noiseResolutionVertical,
-            this.generatorSettings.value().aquifers()
+            this.generatorSettings.value().aquifersEnabled()
         );
         
         return aquiferSamplerProvider.provideAquiferSampler(chunk);
     }
 
-    public void setNoiseConfig(NoiseConfig noiseConfig) {
+    public void setNoiseConfig(RandomState noiseConfig) {
         this.noiseConfig.set(noiseConfig);
     }
     
@@ -290,7 +294,7 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
      * @return Modified noise density.
      */
     protected double sampleNoisePostProcessor(double noise, int noiseX, int noiseY, int noiseZ) {
-        NoiseConfig noiseConfig = this.noiseConfig.get();
+        RandomState noiseConfig = this.noiseConfig.get();
         if (!this.hasNoisePostProcessor() || noiseConfig == null) {
             return noise;
         }
@@ -330,7 +334,7 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
         double outerIslandNoiseOffset = this.islesProperties.outerIslandNoiseOffset();
         
         double islandDelta = (distance - centerIslandRadius) / centerIslandFalloffDistance;
-        double islandOffset = MathHelper.clampedLerp(0.0, oceanSlideTarget, islandDelta);
+        double islandOffset = Mth.clampedLerp(0.0, oceanSlideTarget, islandDelta);
             
         if (this.islesProperties.useOuterIslands() && distance > centerOceanRadius) {
             double islandAddition = (float)this.islandNoise.sample(
@@ -342,14 +346,14 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
             
             // 0.885539 = Simplex upper range, but scale a little higher to ensure island centers have untouched terrain.
             islandAddition /= 0.8F;
-            islandAddition = MathHelper.clamp(islandAddition, 0.0F, 1.0F);
+            islandAddition = Mth.clamp(islandAddition, 0.0F, 1.0F);
             
             // Interpolate noise addition so there isn't a sharp cutoff at start of ocean ring edge.
             double oceanDelta = (distance - centerOceanRadius) / centerOceanFalloffDistance;
-            islandAddition = MathHelper.clampedLerp(0.0F, islandAddition, oceanDelta);
+            islandAddition = Mth.clampedLerp(0.0F, islandAddition, oceanDelta);
             
             islandOffset += islandAddition * -oceanSlideTarget;
-            islandOffset = MathHelper.clamp(islandOffset, oceanSlideTarget, 0.0F);
+            islandOffset = Mth.clamp(islandOffset, oceanSlideTarget, 0.0F);
         }
         
         return islandOffset;
@@ -366,12 +370,12 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
     protected double applySlides(double density, int noiseY) {
         if (this.noiseSlide.topSize() > 0) {
             double delta = ((double)(this.noiseSizeY - noiseY) - this.noiseSlide.topOffset()) / this.noiseSlide.topSize();
-            density = MathHelper.clampedLerp(this.noiseSlide.topTarget(), density, delta);
+            density = Mth.clampedLerp(this.noiseSlide.topTarget(), density, delta);
         }
         
         if (this.noiseSlide.bottomSize() > 0) {
             double delta = ((double)noiseY - this.noiseSlide.bottomOffset()) / this.noiseSlide.bottomSize();
-            density = MathHelper.clampedLerp(this.noiseSlide.bottomTarget(), density, delta);
+            density = Mth.clampedLerp(this.noiseSlide.bottomTarget(), density, delta);
         }
         
         return density;
@@ -385,9 +389,9 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
      * @param pos BlockPos in block coordinates.
      * @param blockState Blockstate at pos.
      */
-    protected void scheduleFluidTick(Chunk chunk, AquiferSampler aquiferSampler, BlockPos pos, BlockState blockState) {
-        if (aquiferSampler.needsFluidTick() && !blockState.getFluidState().isEmpty()) {
-            chunk.markBlockForPostProcessing(pos);
+    protected void scheduleFluidTick(ChunkAccess chunk, Aquifer aquiferSampler, BlockPos pos, BlockState blockState) {
+        if (aquiferSampler.shouldScheduleFluidUpdate() && !blockState.getFluidState().isEmpty()) {
+            chunk.markPosForPostprocessing(pos);
         }
     }
 
@@ -399,7 +403,7 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
      * @param chunkZ
      * @return Heightmap for chunk.
      */
-    protected ChunkHeightmap getChunkHeightmap(HeightLimitView world, int chunkX, int chunkZ) {
+    protected ChunkHeightmap getChunkHeightmap(LevelHeightAccessor world, int chunkX, int chunkZ) {
         return this.chunkCacheHeightmap.get(world, chunkX, chunkZ);
     }
 
@@ -412,7 +416,7 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
      * @return If the block state is valid for placing extra surface features over.
      */
     protected boolean isBlockSuitableForSurface(BlockState blockState) {
-        return blockState.isOpaque() && !blockState.isOf(this.defaultBlock.getBlock());
+        return blockState.canOcclude() && !blockState.is(this.defaultBlock.getBlock());
     }
 
     /**
@@ -422,19 +426,19 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
      * @param structureAccessor Collects structures within the chunk, so that terrain can be modified to accommodate them.
      * @param noiseConfig NoiseConfig
      */
-    private void generateTerrain(Chunk chunk, StructureAccessor structureAccessor, NoiseConfig noiseConfig, int minimumCellY, int cellHeight) {
+    private void generateTerrain(ChunkAccess chunk, StructureManager structureAccessor, RandomState noiseConfig, int minimumCellY, int cellHeight) {
         ChunkPos chunkPos = chunk.getPos();
         int chunkX = chunkPos.x;
         int chunkZ = chunkPos.z;
-        int startX = chunkPos.getStartX();
-        int startZ = chunkPos.getStartZ();
+        int startX = chunkPos.getMinBlockX();
+        int startZ = chunkPos.getMinBlockZ();
         
-        Heightmap heightmapOcean = chunk.getHeightmap(Heightmap.Type.OCEAN_FLOOR_WG);
-        Heightmap heightmapSurface = chunk.getHeightmap(Heightmap.Type.WORLD_SURFACE_WG);
+        Heightmap heightmapOcean = chunk.getOrCreateHeightmapUnprimed(Heightmap.Types.OCEAN_FLOOR_WG);
+        Heightmap heightmapSurface = chunk.getOrCreateHeightmapUnprimed(Heightmap.Types.WORLD_SURFACE_WG);
         
-        StructureWeightSampler structureWeightSampler = StructureWeightSampler.createStructureWeightSampler(structureAccessor, chunkPos);
-        AquiferSampler aquiferSampler = this.getAquiferSampler(chunk, noiseConfig);
-        BlockPos.Mutable mutable = new BlockPos.Mutable();
+        Beardifier structureWeightSampler = Beardifier.forStructuresInChunk(structureAccessor, chunkPos);
+        Aquifer aquiferSampler = this.getAquiferSampler(chunk, noiseConfig);
+        BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
         
         // Create and populate noise provider
         NoiseProvider noiseProvider = this.chunkCacheNoise.get(chunkX, chunkZ);
@@ -453,8 +457,8 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
 
         for (int subChunkX = 0; subChunkX < this.noiseSizeX; ++subChunkX) {
             for (int subChunkZ = 0; subChunkZ < this.noiseSizeZ; ++subChunkZ) {
-                int sections = chunk.countVerticalSections() - 1;
-                ChunkSection section = chunk.getSection(sections);
+                int sections = chunk.getSectionsCount() - 1;
+                LevelChunkSection section = chunk.getSection(sections);
                 
                 for (int subChunkY = cellHeight - 1; subChunkY >= 0; --subChunkY) {
                     noiseSampler.sampleNoiseCorners(subChunkX, subChunkY, subChunkZ);
@@ -491,8 +495,8 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
                                 
                                 section.setBlockState(localX, localY, localZ, blockState, false);
 
-                                heightmapOcean.trackUpdate(localX, y, localZ, blockState);
-                                heightmapSurface.trackUpdate(localX, y, localZ, blockState);
+                                heightmapOcean.update(localX, y, localZ, blockState);
+                                heightmapSurface.update(localX, y, localZ, blockState);
                                 
                                 this.scheduleFluidTick(chunk, aquiferSampler, mutable.set(x, y, z), blockState);
                             }
@@ -505,7 +509,7 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
     
     /**
      * Generates a heightmap for the chunk containing the given x/z coordinates
-     * and returns to {@link ChunkProvider#getHeight(HeightLimitView, int, int, Heightmap.Type)}
+     * and returns to {@link ChunkProvider#getHeight(LevelHeightAccessor, int, int, Heightmap.Types)}
      * to cache and return the height.
      *
      * @param world  a world context to clamp heights to.
@@ -514,18 +518,18 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
      * 
      * @return A HeightmapChunk, containing an array of ints containing the heights for the entire chunk.
      */
-    private ChunkHeightmap sampleHeightmap(HeightLimitView world, int chunkX, int chunkZ) {
-        GenerationShapeConfig shapeConfig = this.generatorSettings.value().generationShapeConfig();
+    private ChunkHeightmap sampleHeightmap(LevelHeightAccessor world, int chunkX, int chunkZ) {
+        NoiseSettings shapeConfig = this.generatorSettings.value().noiseSettings();
 
         if (world != null)
-            shapeConfig = shapeConfig.trimHeight(world);
+            shapeConfig = shapeConfig.clampToHeightAccessor(world);
 
         short minHeight = 32;
-        short worldMinY = (short) shapeConfig.minimumY();
+        short worldMinY = (short) shapeConfig.minY();
         short worldTopY = (short) (shapeConfig.height() + worldMinY);
 
-        int minimumCellY = MathHelper.floorDiv(worldMinY, shapeConfig.verticalCellBlockCount());
-        int cellHeight = MathHelper.floorDiv(shapeConfig.height(), shapeConfig.verticalCellBlockCount());
+        int minimumCellY = Mth.floorDiv(worldMinY, shapeConfig.getCellHeight());
+        int cellHeight = Mth.floorDiv(shapeConfig.height(), shapeConfig.getCellHeight());
 
         //NoiseProviderBase noiseProvider = this.chunkCacheNoise.get(chunkX, chunkZ);
         NoiseProviderBase noiseProvider = new NoiseProviderBase(
@@ -618,18 +622,18 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
      */
     private BlockSource getBaseBlockSource(
         NoiseSampler noiseSampler,
-        StructureWeightSampler weightSampler,
-        AquiferSampler aquiferSampler
+        Beardifier weightSampler,
+        Aquifer aquiferSampler
     ) {
         SimpleNoisePos noisePos = new SimpleNoisePos();
         return (x, y, z) -> {
             double density = noiseSampler.sample();
-            double clampedDensity = MathHelper.clamp(density / 200.0, -1.0, 1.0);
+            double clampedDensity = Mth.clamp(density / 200.0, -1.0, 1.0);
             
             clampedDensity = clampedDensity / 2.0 - clampedDensity * clampedDensity * clampedDensity / 24.0;
-            clampedDensity += weightSampler.sample(noisePos.set(x, y, z));
+            clampedDensity += weightSampler.compute(noisePos.set(x, y, z));
 
-            return aquiferSampler.apply(noisePos, clampedDensity);
+            return aquiferSampler.computeSubstance(noisePos, clampedDensity);
         };
     }
 }

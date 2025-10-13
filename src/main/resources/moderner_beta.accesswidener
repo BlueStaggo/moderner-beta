@@ -1,20 +1,20 @@
 accessWidener v1 named
 
-accessible method net/minecraft/world/biome/OverworldBiomeCreator getSkyColor (F)I
-accessible class net/minecraft/world/biome/Biome$Weather
+accessible method net/minecraft/data/worldgen/biome/OverworldBiomes calculateSkyColor (F)I
+accessible class net/minecraft/world/level/biome/Biome$ClimateSettings
 
-extendable class net/minecraft/world/gen/chunk/NoiseChunkGenerator
-extendable class net/minecraft/world/gen/chunk/ChunkGenerator
-extendable method net/minecraft/world/gen/chunk/NoiseChunkGenerator createChunkNoiseSampler (Lnet/minecraft/world/chunk/Chunk;Lnet/minecraft/world/gen/StructureAccessor;Lnet/minecraft/world/gen/chunk/Blender;Lnet/minecraft/world/gen/noise/NoiseConfig;)Lnet/minecraft/world/gen/chunk/ChunkNoiseSampler;
+extendable class net/minecraft/world/level/levelgen/NoiseBasedChunkGenerator
+extendable class net/minecraft/world/level/chunk/ChunkGenerator
+extendable method net/minecraft/world/level/levelgen/NoiseBasedChunkGenerator createNoiseChunk (Lnet/minecraft/world/level/chunk/ChunkAccess;Lnet/minecraft/world/level/StructureManager;Lnet/minecraft/world/level/levelgen/blending/Blender;Lnet/minecraft/world/level/levelgen/RandomState;)Lnet/minecraft/world/level/levelgen/NoiseChunk;
 
-extendable class net/minecraft/client/option/SimpleOption$Callbacks
-extendable class net/minecraft/client/option/SimpleOption$SliderCallbacks
-extendable class net/minecraft/client/option/SimpleOption$IntSliderCallbacks
+extendable class net/minecraft/client/OptionInstance$ValueSet
+extendable class net/minecraft/client/OptionInstance$SliderableValueSet
+extendable class net/minecraft/client/OptionInstance$IntRangeBase
 
-extendable method net/minecraft/world/gen/carver/Carver getState (Lnet/minecraft/world/gen/carver/CarverContext;Lnet/minecraft/world/gen/carver/CarverConfig;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/world/gen/chunk/AquiferSampler;)Lnet/minecraft/block/BlockState;
+extendable method net/minecraft/world/level/levelgen/carver/WorldCarver getCarveState (Lnet/minecraft/world/level/levelgen/carver/CarvingContext;Lnet/minecraft/world/level/levelgen/carver/CarverConfiguration;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/levelgen/Aquifer;)Lnet/minecraft/world/level/block/state/BlockState;
 
-accessible field net/minecraft/world/gen/carver/CaveCarverConfig floorLevel Lnet/minecraft/util/math/floatprovider/FloatProvider;
+accessible field net/minecraft/world/level/levelgen/carver/CaveCarverConfiguration floorLevel Lnet/minecraft/util/valueproviders/FloatProvider;
 
-accessible method net/minecraft/world/gen/chunk/ChunkNoiseSampler createMultiNoiseSampler (Lnet/minecraft/world/gen/noise/NoiseRouter;Ljava/util/List;)Lnet/minecraft/world/biome/source/util/MultiNoiseUtil$MultiNoiseSampler;
+accessible method net/minecraft/world/level/levelgen/NoiseChunk cachedClimateSampler (Lnet/minecraft/world/level/levelgen/NoiseRouter;Ljava/util/List;)Lnet/minecraft/world/level/biome/Climate$Sampler;
 
-accessible class net/minecraft/world/gen/densityfunction/DensityFunctionTypes$WeirdScaledSampler
+accessible class net/minecraft/world/level/levelgen/DensityFunctions$WeirdScaledSampler

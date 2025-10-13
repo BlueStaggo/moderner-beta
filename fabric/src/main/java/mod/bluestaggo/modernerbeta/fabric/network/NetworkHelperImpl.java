@@ -16,7 +16,7 @@ public class NetworkHelperImpl implements INetworkHelper {
         //? if >=1.20.2 {
         ClientPlayNetworking.send(payload);
         //?} else {
-        /*ClientPlayNetworking.send(payload.getId(), payload.toPacketByteBuf());
+        /*ClientPlayNetworking.send(payload.getId(), payload.toFriendlyByteBuf());
         *///?}
     }
 
@@ -25,7 +25,7 @@ public class NetworkHelperImpl implements INetworkHelper {
         //? if >=1.20.2 {
         ServerPlayNetworking.send(player, payload);
         //?} else {
-        /*ServerPlayNetworking.send(player, payload.getId(), payload.toPacketByteBuf());
+        /*ServerPlayNetworking.send(player, payload.getId(), payload.toFriendlyByteBuf());
         *///?}
     }
 

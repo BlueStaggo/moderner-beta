@@ -5,7 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.ConstantBiomeLayer;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.Layer;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -16,7 +16,7 @@ public class ConfiguredLayers {
     public static final Codec<ConfiguredLayers> CODEC = RecordCodecBuilder.create(
         instance -> instance.group(
             Layer.TYPE_CODEC.listOf().fieldOf("pipeline").forGetter(configuredLayers -> configuredLayers.pipeline),
-            Codec.unboundedMap(Identifier.CODEC, Codec.STRING).fieldOf("outputs")
+            Codec.unboundedMap(ResourceLocation.CODEC, Codec.STRING).fieldOf("outputs")
                 .forGetter(configuredLayers -> configuredLayers.outputs.entrySet().stream()
                     .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().id)))
         ).apply(instance, ConfiguredLayers::new)
@@ -29,9 +29,9 @@ public class ConfiguredLayers {
         );
 
     private final List<Layer> pipeline;
-    private final Map<Identifier, Layer> outputs;
+    private final Map<ResourceLocation, Layer> outputs;
 
-    public ConfiguredLayers(List<Layer> pipeline, Map<Identifier, String> outputs) {
+    public ConfiguredLayers(List<Layer> pipeline, Map<ResourceLocation, String> outputs) {
         this.pipeline = Collections.unmodifiableList(pipeline);
 
         Map<String, Layer> layerMap = new HashMap<>();
@@ -58,11 +58,11 @@ public class ConfiguredLayers {
         return this.pipeline;
     }
 
-    public Optional<Layer> getOutput(Identifier output) {
+    public Optional<Layer> getOutput(ResourceLocation output) {
         return Optional.ofNullable(this.outputs.get(output));
     }
 
-    public Layer getOutputOrThrow(Identifier output) {
+    public Layer getOutputOrThrow(ResourceLocation output) {
         Layer layer = this.outputs.get(output);
         if (layer == null) {
             throw new IllegalArgumentException("No layer provided for required output \"" + output + "\"");

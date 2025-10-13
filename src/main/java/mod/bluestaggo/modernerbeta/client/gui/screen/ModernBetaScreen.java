@@ -2,12 +2,12 @@ package mod.bluestaggo.modernerbeta.client.gui.screen;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.GridWidget;
-import net.minecraft.client.gui.widget.TextWidget;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.StringWidget;
+import net.minecraft.client.gui.layouts.GridLayout;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
 
 @Environment(EnvType.CLIENT)
 public abstract class ModernBetaScreen extends Screen {
@@ -22,23 +22,23 @@ public abstract class ModernBetaScreen extends Screen {
     protected int overlayTop;
     protected int overlayBottom;
     
-    public ModernBetaScreen(Text title, Screen parent) {
+    public ModernBetaScreen(Component title, Screen parent) {
         super(title);
         
         this.parent = parent;
     }
 
     @Override
-    public void close() {
-        this.client.setScreen(this.parent);
+    public void onClose() {
+        this.minecraft.setScreen(this.parent);
     }
 
     @Override
-    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+    public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
         //? if <1.20.5
         /*this.renderBackground(context);*/
         super.render(context, mouseX, mouseY, delta);
-        context.drawCenteredTextWithShadow(this.textRenderer, this.title, this.width / 2, 16, 0xFFFFFFFF);
+        context.drawCenteredString(this.font, this.title, this.width / 2, 16, 0xFFFFFFFF);
     }
     
     @Override
@@ -49,21 +49,21 @@ public abstract class ModernBetaScreen extends Screen {
         this.overlayBottom = this.height - 32;
     }
     
-    protected GridWidget createGridWidget() {
-        GridWidget gridWidget = new GridWidget();
-        gridWidget.getMainPositioner().marginX(5).marginBottom(4).alignHorizontalCenter().alignTop();
+    protected GridLayout createGridWidget() {
+        GridLayout gridWidget = new GridLayout();
+        gridWidget.defaultCellSetting().paddingHorizontal(5).paddingBottom(4).alignHorizontallyCenter().alignVerticallyTop();
         
         return gridWidget;
     }
     
-    protected void addGridTextButtonPair(GridWidget.Adder adder, String text, ButtonWidget buttonWidget) {
-        adder.add(new TextWidget(Text.translatable(text), this.textRenderer));
-        adder.add(buttonWidget);
+    protected void addGridTextButtonPair(GridLayout.RowHelper adder, String text, Button buttonWidget) {
+        adder.addChild(new StringWidget(Component.translatable(text), this.font));
+        adder.addChild(buttonWidget);
     }
 
-    protected void addGridTextButtonTriplet(GridWidget.Adder adder, String text, ButtonWidget buttonWidget, ButtonWidget buttonWidget2) {
-        adder.add(new TextWidget(Text.translatable(text), this.textRenderer));
-        adder.add(buttonWidget);
-        adder.add(buttonWidget2);
+    protected void addGridTextButtonTriplet(GridLayout.RowHelper adder, String text, Button buttonWidget, Button buttonWidget2) {
+        adder.addChild(new StringWidget(Component.translatable(text), this.font));
+        adder.addChild(buttonWidget);
+        adder.addChild(buttonWidget2);
     }
 }

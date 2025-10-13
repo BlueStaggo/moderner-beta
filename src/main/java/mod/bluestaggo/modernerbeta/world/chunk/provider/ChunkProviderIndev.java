@@ -15,15 +15,15 @@ import mod.bluestaggo.modernerbeta.world.blocksource.BlockSourceRules;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
 import mod.bluestaggo.modernerbeta.world.chunk.provider.indev.IndevTheme;
 import mod.bluestaggo.modernerbeta.world.chunk.provider.indev.IndevType;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.SnowyBlock;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.BlockRotation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.chunk.Chunk;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.SnowyDirtBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkAccess;
 
 public class ChunkProviderIndev extends ChunkProviderFinite {
     private PerlinOctaveNoiseCombined minHeightOctaveNoise;
@@ -81,7 +81,7 @@ public class ChunkProviderIndev extends ChunkProviderFinite {
         return this.levelTheme;
     }
     
-    public void generateIndevHouse(ServerWorld world, BlockPos spawnPos) {
+    public void generateIndevHouse(ServerLevel world, BlockPos spawnPos) {
         if (!this.chunkSettings.getOrDefault(SettingsComponentTypes.SPAWN_INDEV_HOUSE)) {
             return;
         }
@@ -91,7 +91,7 @@ public class ChunkProviderIndev extends ChunkProviderFinite {
         int spawnX = spawnPos.getX();
         int spawnY = spawnPos.getY() + 1;
         int spawnZ = spawnPos.getZ();
-        BlockPos.Mutable pos = new BlockPos.Mutable();
+        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
         
         Block floorBlock = this.isHell() ? Blocks.MOSSY_COBBLESTONE : Blocks.STONE;
         Block wallBlock = this.isHell() ? Blocks.MOSSY_COBBLESTONE : Blocks.OAK_PLANKS;
@@ -111,13 +111,13 @@ public class ChunkProviderIndev extends ChunkProviderFinite {
                         block = Blocks.AIR;
                     }
                     
-                    world.setBlockState(pos.set(x, y, z), block.getDefaultState());
+                    world.setBlockAndUpdate(pos.set(x, y, z), block.defaultBlockState());
                 }
             }
         }
         
-        world.setBlockState(pos.set(spawnX - 3 + 1, spawnY, spawnZ), Blocks.WALL_TORCH.getDefaultState().rotate(BlockRotation.CLOCKWISE_90));
-        world.setBlockState(pos.set(spawnX + 3 - 1, spawnY, spawnZ), Blocks.WALL_TORCH.getDefaultState().rotate(BlockRotation.COUNTERCLOCKWISE_90));
+        world.setBlockAndUpdate(pos.set(spawnX - 3 + 1, spawnY, spawnZ), Blocks.WALL_TORCH.defaultBlockState().rotate(Rotation.CLOCKWISE_90));
+        world.setBlockAndUpdate(pos.set(spawnX + 3 - 1, spawnY, spawnZ), Blocks.WALL_TORCH.defaultBlockState().rotate(Rotation.COUNTERCLOCKWISE_90));
     }
     
     @Override
@@ -159,7 +159,7 @@ public class ChunkProviderIndev extends ChunkProviderFinite {
     }
 
     @Override
-    protected void generateBorder(Chunk chunk) {
+    protected void generateBorder(ChunkAccess chunk) {
         switch(this.levelType) {
             case ISLAND -> this.generateWaterBorder(chunk);
             case INLAND -> this.generateWorldBorder(chunk);
@@ -173,10 +173,10 @@ public class ChunkProviderIndev extends ChunkProviderFinite {
         int y = pos.getY();
         int z = pos.getZ();
         
-        BlockState blockState = block.getDefaultState();
+        BlockState blockState = block.defaultBlockState();
         BlockState modifiedBlockState = blockSources.apply(x, y, z);
         
-        boolean inFluid = modifiedBlockState.isAir() || modifiedBlockState.isOf(this.getLevelFluidBlock());
+        boolean inFluid = modifiedBlockState.isAir() || modifiedBlockState.is(this.getLevelFluidBlock());
         int runDepth = terrainState.getRunDepth();
         
         // Check to see if structure weight sampler modifies terrain.
@@ -203,13 +203,13 @@ public class ChunkProviderIndev extends ChunkProviderFinite {
     }
     
     @Override
-    protected void generateBedrock(Chunk chunk, Block block, BlockPos pos) {
+    protected void generateBedrock(ChunkAccess chunk, Block block, BlockPos pos) {
         int y = pos.getY();
         
         if (this.isFloating())
             return;
         
-        if (y == 1 + this.bedrockFloor && chunk.getBlockState(pos.up()).isAir()) {
+        if (y == 1 + this.bedrockFloor && chunk.getBlockState(pos.above()).isAir()) {
             VersionCompat.setBlockState(chunk, pos, BlockStates.LAVA);
         } else if (y <= 1 + this.bedrockFloor) {
             VersionCompat.setBlockState(chunk, pos, BlockStates.BEDROCK);
@@ -229,9 +229,9 @@ public class ChunkProviderIndev extends ChunkProviderFinite {
         if (this.isHell() && topBlock.equals(BlockStates.GRASS_BLOCK) && fillerBlock.equals(BlockStates.DIRT))
             return blockState;
         
-        if (blockState.isOf(this.topsoilBlock.getBlock())) {
+        if (blockState.is(this.topsoilBlock.getBlock())) {
             blockState = topBlock;
-        } else if (blockState.isOf(BlockStates.DIRT.getBlock())) {
+        } else if (blockState.is(BlockStates.DIRT.getBlock())) {
             blockState = fillerBlock;
         }
         
@@ -239,7 +239,7 @@ public class ChunkProviderIndev extends ChunkProviderFinite {
         if (!this.inWorldBounds(x, z)) {
             if (y == this.seaLevel) {
                 if (isCold && blockState.equals(topBlock)) {
-                    blockState = topBlock.with(SnowyBlock.SNOWY, true);
+                    blockState = topBlock.setValue(SnowyDirtBlock.SNOWY, true);
                 }
                 
             } else if (y == this.seaLevel - 1 && this.levelTheme != IndevTheme.HELL) {
@@ -446,9 +446,9 @@ public class ChunkProviderIndev extends ChunkProviderFinite {
             float caveRadius = random.nextFloat() * random.nextFloat() * this.caveRadius;
             
             for (int len = 0; len < caveLen; ++len) {
-                caveX += MathHelper.sin(theta) * MathHelper.cos(phi);
-                caveZ += MathHelper.cos(theta) * MathHelper.cos(phi);
-                caveY += MathHelper.sin(phi);
+                caveX += Mth.sin(theta) * Mth.cos(phi);
+                caveZ += Mth.cos(theta) * Mth.cos(phi);
+                caveY += Mth.sin(phi);
                 
                 theta = theta + deltaTheta * 0.2f;
                 deltaTheta = (deltaTheta * 0.9f) + (random.nextFloat() - random.nextFloat());
@@ -462,7 +462,7 @@ public class ChunkProviderIndev extends ChunkProviderFinite {
                     
                     float radius = (this.levelHeight - centerY) / this.levelHeight;
                     radius = 1.2f + (radius * 3.5f + 1.0f) * caveRadius;
-                    radius = radius * MathHelper.sin(len * 3.1415927f / caveLen);
+                    radius = radius * Mth.sin(len * 3.1415927f / caveLen);
                     
                     fillOblateSpheroid(centerX, centerY, centerZ, radius, Blocks.AIR);
                 }
@@ -541,9 +541,9 @@ public class ChunkProviderIndev extends ChunkProviderFinite {
         }
     }
 
-    private void generateWorldBorder(Chunk chunk) {
+    private void generateWorldBorder(ChunkAccess chunk) {
         BlockState topBlock = this.topsoilBlock;
-        BlockPos.Mutable pos = new BlockPos.Mutable();
+        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
          
         for (int x = 0; x < 16; ++x) {
             for (int z = 0; z < 16; ++z) {
@@ -560,8 +560,8 @@ public class ChunkProviderIndev extends ChunkProviderFinite {
         }
     }
     
-    private void generateWaterBorder(Chunk chunk) {
-        BlockPos.Mutable pos = new BlockPos.Mutable();
+    private void generateWaterBorder(ChunkAccess chunk) {
+        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
         
         for (int x = 0; x < 16; ++x) {
             for (int z = 0; z < 16; ++z) {

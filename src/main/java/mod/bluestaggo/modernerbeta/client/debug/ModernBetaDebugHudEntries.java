@@ -6,19 +6,19 @@ import mod.bluestaggo.modernerbeta.client.debug.hudentry.*;
 import mod.bluestaggo.modernerbeta.mixin.client.AccessorDebugHudEntries;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.hud.debug.DebugHudEntry;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.gui.components.debug.DebugScreenEntry;
+import net.minecraft.resources.ResourceLocation;
 
 @SuppressWarnings("unused")
 @Environment(EnvType.CLIENT)
 public class ModernBetaDebugHudEntries {
-    public static final Identifier EXTENDED_BIOME = register("extended_biome", new ExtendedBiomeDebugHudEntry());
-    public static final Identifier CLIMATE = register("climate", new ClimateDebugHudEntry());
-    public static final Identifier HEIGHTMAP = register("heightmap", new HeightmapDebugHudEntry());
-    public static final Identifier FORCED_HEIGHT = register("forced_height", new ForcedHeightDebugHudEntry());
-    public static final Identifier INJECTED_BIOME = register("injected_biome", new InjectedBiomeDebugHudEntry());
+    public static final ResourceLocation EXTENDED_BIOME = register("extended_biome", new ExtendedBiomeDebugHudEntry());
+    public static final ResourceLocation CLIMATE = register("climate", new ClimateDebugHudEntry());
+    public static final ResourceLocation HEIGHTMAP = register("heightmap", new HeightmapDebugHudEntry());
+    public static final ResourceLocation FORCED_HEIGHT = register("forced_height", new ForcedHeightDebugHudEntry());
+    public static final ResourceLocation INJECTED_BIOME = register("injected_biome", new InjectedBiomeDebugHudEntry());
 
-    private static Identifier register(String id, DebugHudEntry text) {
+    private static ResourceLocation register(String id, DebugScreenEntry text) {
         return AccessorDebugHudEntries.invokeRegister(ModernerBeta.createId(id), text);
     }
 

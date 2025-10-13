@@ -12,17 +12,17 @@ import mod.bluestaggo.modernerbeta.util.noise.SimpleNoisePos;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
 import mod.bluestaggo.modernerbeta.world.spawn.SpawnLocatorBeta;
-import net.minecraft.block.BlockState;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.ChunkRegion;
-import net.minecraft.world.Heightmap;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.gen.StructureAccessor;
-import net.minecraft.world.gen.chunk.AquiferSampler;
-import net.minecraft.world.gen.noise.NoiseConfig;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.server.level.WorldGenRegion;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.StructureManager;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.levelgen.Aquifer;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.levelgen.RandomState;
 
 import java.util.Random;
 
@@ -55,20 +55,20 @@ public class ChunkProviderAlpha extends ChunkProviderNoise {
     }
 
     @Override
-    public void provideSurface(ChunkRegion region, StructureAccessor structureAccessor, Chunk chunk, ModernBetaBiomeSource biomeSource, NoiseConfig noiseConfig) {
+    public void provideSurface(WorldGenRegion region, StructureManager structureAccessor, ChunkAccess chunk, ModernBetaBiomeSource biomeSource, RandomState noiseConfig) {
         double scale = 0.03125;
 
         ChunkPos chunkPos = chunk.getPos();
         int chunkX = chunkPos.x;
         int chunkZ = chunkPos.z;
         
-        int startX = chunk.getPos().getStartX();
-        int startZ = chunk.getPos().getStartZ();
+        int startX = chunk.getPos().getMinBlockX();
+        int startZ = chunk.getPos().getMinBlockZ();
         
         Random rand = this.createSurfaceRandom(chunkX, chunkZ);
-        BlockPos.Mutable pos = new BlockPos.Mutable();
+        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
 
-        AquiferSampler aquiferSampler = this.getAquiferSampler(chunk, noiseConfig);
+        Aquifer aquiferSampler = this.getAquiferSampler(chunk, noiseConfig);
         ChunkHeightmap heightmapChunk = this.getChunkHeightmap(region, chunkX, chunkZ);
         SimpleNoisePos noisePos = new SimpleNoisePos();
         
@@ -94,7 +94,7 @@ public class ChunkProviderAlpha extends ChunkProviderNoise {
             for (int localZ = 0; localZ < 16; localZ++) {
                 int x = startX + localX;
                 int z = startZ + localZ;
-                int surfaceTopY = chunk.getHeightmap(Heightmap.Type.OCEAN_FLOOR_WG).get(localX, localZ) - 1;
+                int surfaceTopY = chunk.getOrCreateHeightmapUnprimed(Heightmap.Types.OCEAN_FLOOR_WG).getFirstAvailable(localX, localZ) - 1;
                 int surfaceMinY = (this.hasNoisePostProcessor()) ? 
                     heightmapChunk.getHeight(x, z, ChunkHeightmap.Type.SURFACE_FLOOR) - 8 : 
                     this.worldMinY;
@@ -105,7 +105,7 @@ public class ChunkProviderAlpha extends ChunkProviderNoise {
 
                 int runDepth = -1;
                 
-                RegistryEntry<Biome> biome = biomeSource.getBiomeForSurfaceGen(region, pos.set(x, surfaceTopY, z));
+                Holder<Biome> biome = biomeSource.getBiomeForSurfaceGen(region, pos.set(x, surfaceTopY, z));
 
                 SurfaceConfig surfaceConfig = this.surfaceBuilder.getSurfaceConfig(biome);
                 BlockState topBlock = surfaceConfig.normal().topBlock();
@@ -134,7 +134,7 @@ public class ChunkProviderAlpha extends ChunkProviderNoise {
                         continue;
                     }
 
-                    if (!blockState.isOf(this.defaultBlock.getBlock())) { // Skip if not stone
+                    if (!blockState.is(this.defaultBlock.getBlock())) { // Skip if not stone
                         continue;
                     }
 
@@ -161,7 +161,7 @@ public class ChunkProviderAlpha extends ChunkProviderNoise {
                         runDepth = surfaceDepth;
                         
                         if (y < this.seaLevel && topBlock.isAir()) { // Generate water bodies
-                            BlockState fluidBlock = aquiferSampler.apply(noisePos.set(x, y, z), 0.0);
+                            BlockState fluidBlock = aquiferSampler.computeSubstance(noisePos.set(x, y, z), 0.0);
                             
                             boolean isAir = fluidBlock == null;
                             topBlock = isAir ? BlockStates.AIR : fluidBlock;
@@ -169,7 +169,7 @@ public class ChunkProviderAlpha extends ChunkProviderNoise {
                             this.scheduleFluidTick(chunk, aquiferSampler, pos, topBlock);
                         }
                         
-                        blockState = (y >= this.seaLevel - 1 || (y < this.seaLevel - 1 && chunk.getBlockState(pos.up()).isAir())) ? 
+                        blockState = (y >= this.seaLevel - 1 || (y < this.seaLevel - 1 && chunk.getBlockState(pos.above()).isAir())) ? 
                             topBlock : 
                             fillerBlock;
                         
@@ -188,19 +188,19 @@ public class ChunkProviderAlpha extends ChunkProviderNoise {
     }
 
     @Override
-    public void provideSurfaceExtra(ChunkRegion region, StructureAccessor structureAccessor, Chunk chunk, ModernBetaBiomeSource biomeSource, NoiseConfig noiseConfig) {
+    public void provideSurfaceExtra(WorldGenRegion region, StructureManager structureAccessor, ChunkAccess chunk, ModernBetaBiomeSource biomeSource, RandomState noiseConfig) {
         double scale = 0.03125;
 
         ChunkPos chunkPos = chunk.getPos();
         int chunkX = chunkPos.x;
         int chunkZ = chunkPos.z;
 
-        int startX = chunk.getPos().getStartX();
-        int startZ = chunk.getPos().getStartZ();
+        int startX = chunk.getPos().getMinBlockX();
+        int startZ = chunk.getPos().getMinBlockZ();
 
         Random rand = this.createSurfaceRandom(chunkX, chunkZ);
         ChunkHeightmap heightmapChunk = this.hasNoisePostProcessor() ? this.getChunkHeightmap(region, chunkX, chunkZ) : null;
-        BlockPos.Mutable pos = new BlockPos.Mutable();
+        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
 
         double[] sandNoise = beachOctaveNoise.sampleAlpha(
             chunkX * 16, chunkZ * 16, 0.0D,
@@ -226,14 +226,14 @@ public class ChunkProviderAlpha extends ChunkProviderNoise {
                 int z = startZ + localZ;
                 int surfaceTopY = heightmapChunk != null ?
                     heightmapChunk.getHeight(x, z, ChunkHeightmap.Type.SURFACE_FLOOR) :
-                    chunk.getHeightmap(Heightmap.Type.OCEAN_FLOOR_WG).get(localX, localZ);
+                    chunk.getOrCreateHeightmapUnprimed(Heightmap.Types.OCEAN_FLOOR_WG).getFirstAvailable(localX, localZ);
                 surfaceTopY--;
 
                 boolean genSandBeach = sandNoise[localZ + localX * 16] + rand.nextDouble() * 0.2D > 0.0D;
                 boolean genGravelBeach = gravelNoise[localZ + localX * 16] + rand.nextDouble() * 0.2D > 3D;
                 int surfaceDepth = (int) (surfaceNoise[localZ + localX * 16] / 3D + 3D + rand.nextDouble() * 0.25D);
 
-                RegistryEntry<Biome> biome = biomeSource.getBiomeForSurfaceGen(region, pos.set(x, surfaceTopY, z));
+                Holder<Biome> biome = biomeSource.getBiomeForSurfaceGen(region, pos.set(x, surfaceTopY, z));
 
                 SurfaceConfig surfaceConfig = this.surfaceBuilder.getSurfaceConfig(biome);
 

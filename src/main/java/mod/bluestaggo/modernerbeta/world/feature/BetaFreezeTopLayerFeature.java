@@ -6,57 +6,61 @@ import mod.bluestaggo.modernerbeta.api.world.biome.climate.ClimateSampler;
 import mod.bluestaggo.modernerbeta.mixin.AccessorBiome;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
-import net.minecraft.block.*;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.Heightmap;
-import net.minecraft.world.LightType;
-import net.minecraft.world.StructureWorldAccess;
-import net.minecraft.world.WorldView;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.source.BiomeSource;
-import net.minecraft.world.gen.chunk.ChunkGenerator;
-import net.minecraft.world.gen.feature.DefaultFeatureConfig;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.util.FeatureContext;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.LightLayer;
+import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.BiomeSource;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.world.level.block.SnowyDirtBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
+import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
 
-public class BetaFreezeTopLayerFeature extends Feature<DefaultFeatureConfig> {
-    public BetaFreezeTopLayerFeature(Codec<DefaultFeatureConfig> codec) {
+public class BetaFreezeTopLayerFeature extends Feature<NoneFeatureConfiguration> {
+    public BetaFreezeTopLayerFeature(Codec<NoneFeatureConfiguration> codec) {
         super(codec);
     }
 
     @Override
-    public boolean generate(FeatureContext<DefaultFeatureConfig> context) {
-        StructureWorldAccess world = context.getWorld();
-        BlockPos pos = context.getOrigin();
+    public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> context) {
+        WorldGenLevel world = context.level();
+        BlockPos pos = context.origin();
         
-        ChunkGenerator chunkGenerator = context.getGenerator();
+        ChunkGenerator chunkGenerator = context.chunkGenerator();
         BiomeSource biomeSource = chunkGenerator.getBiomeSource();
         
         setFreezeTopLayer(world, pos, biomeSource, false);
         return true;
     }
 
-    public static void setFreezeTopLayer(StructureWorldAccess world, BlockPos pos, BiomeSource biomeSource, boolean modernHeightSnow) {
-        BlockPos.Mutable mutable = new BlockPos.Mutable();
-        BlockPos.Mutable mutableDown = new BlockPos.Mutable();
+    public static void setFreezeTopLayer(WorldGenLevel world, BlockPos pos, BiomeSource biomeSource, boolean modernHeightSnow) {
+        BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
+        BlockPos.MutableBlockPos mutableDown = new BlockPos.MutableBlockPos();
         
         for (int localX = 0; localX < 16; ++localX) {
             for (int localZ = 0; localZ < 16; ++localZ) {
                 int x = pos.getX() + localX;
                 int z = pos.getZ() + localZ;
-                int y = world.getTopY(Heightmap.Type.MOTION_BLOCKING, x, z);
+                int y = world.getHeight(Heightmap.Types.MOTION_BLOCKING, x, z);
                 
                 mutable.set(x, y, z);
                 mutableDown.set(mutable).move(Direction.DOWN, 1);
                 
                 TemperatureHeightScaling heightType = TemperatureHeightScaling.NONE;
-                double temp = world.getBiome(mutable).value().getTemperature();
+                double temp = world.getBiome(mutable).value().getBaseTemperature();
                 double coldThreshold = 0.15;
 
-                Biome.TemperatureModifier temperatureModifier = ((AccessorBiome)(Object)world.getBiome(mutable).value()).getWeather().temperatureModifier();
+                Biome.TemperatureModifier temperatureModifier = ((AccessorBiome)(Object)world.getBiome(mutable).value()).getClimateSettings().temperatureModifier();
                 if (biomeSource instanceof ModernBetaBiomeSource modernBetaBiomeSource) {
                     heightType = modernBetaBiomeSource.getBiomeProvider().getTemperatureHeightScaling();
                     if (modernBetaBiomeSource.getBiomeProvider() instanceof ClimateSampler climateSampler
@@ -64,7 +68,7 @@ public class BetaFreezeTopLayerFeature extends Feature<DefaultFeatureConfig> {
                         temp = climateSampler.sampleModifiedTemperature(mutable, temperatureModifier);
                         coldThreshold = climateSampler.getSnowThreshold();
                     } else if (heightType.supportsModifier(temperatureModifier)) {
-                        temp = temperatureModifier.getModifiedTemperature(mutable, (float)temp);
+                        temp = temperatureModifier.modifyTemperature(mutable, (float)temp);
                     }
                 }
 
@@ -73,15 +77,15 @@ public class BetaFreezeTopLayerFeature extends Feature<DefaultFeatureConfig> {
                 }
                 
                 if (canSetIce(world, mutableDown, false, temp, coldThreshold, heightType)) {
-                    world.setBlockState(mutableDown, Blocks.ICE.getDefaultState(), Block.NOTIFY_LISTENERS);
+                    world.setBlock(mutableDown, Blocks.ICE.defaultBlockState(), Block.UPDATE_CLIENTS);
                 }
 
                 if (canSetSnow(world, mutable, temp, coldThreshold, heightType)) {
-                    world.setBlockState(mutable, Blocks.SNOW.getDefaultState(), Block.NOTIFY_LISTENERS);
+                    world.setBlock(mutable, Blocks.SNOW.defaultBlockState(), Block.UPDATE_CLIENTS);
 
                     BlockState blockState = world.getBlockState(mutableDown);
-                    if (blockState.contains(SnowyBlock.SNOWY)) {
-                        world.setBlockState(mutableDown, blockState.with(SnowyBlock.SNOWY, true), Block.NOTIFY_LISTENERS);
+                    if (blockState.hasProperty(SnowyDirtBlock.SNOWY)) {
+                        world.setBlock(mutableDown, blockState.setValue(SnowyDirtBlock.SNOWY, true), Block.UPDATE_CLIENTS);
                     }
                 }
             }
@@ -89,7 +93,7 @@ public class BetaFreezeTopLayerFeature extends Feature<DefaultFeatureConfig> {
     }
 
     public static boolean canSetIce(
-        WorldView worldView,
+        LevelReader worldView,
         BlockPos blockPos,
         boolean doWaterCheck,
         double temp,
@@ -100,23 +104,23 @@ public class BetaFreezeTopLayerFeature extends Feature<DefaultFeatureConfig> {
             return false;
         }
         
-        if (blockPos.getY() >= worldView.getBottomY() &&
+        if (blockPos.getY() >= worldView.getMinY() &&
             blockPos.getY() < VersionCompat.getTopYExclusive(worldView) &&
-            worldView.getLightLevel(LightType.BLOCK, blockPos) < 10
+            worldView.getBrightness(LightLayer.BLOCK, blockPos) < 10
         ) {
             BlockState blockState = worldView.getBlockState(blockPos);
             FluidState fluidState = worldView.getFluidState(blockPos);
 
-            if (fluidState.getFluid() == Fluids.WATER && blockState.getBlock() instanceof FluidBlock) {
+            if (fluidState.getType() == Fluids.WATER && blockState.getBlock() instanceof LiquidBlock) {
                 if (!doWaterCheck) {
                     return true;
                 }
 
                 boolean submerged = 
-                    worldView.isWater(blockPos.west()) &&
-                    worldView.isWater(blockPos.east()) &&
-                    worldView.isWater(blockPos.north()) &&
-                    worldView.isWater(blockPos.south());
+                    worldView.isWaterAt(blockPos.west()) &&
+                    worldView.isWaterAt(blockPos.east()) &&
+                    worldView.isWaterAt(blockPos.north()) &&
+                    worldView.isWaterAt(blockPos.south());
                 
                 if (!submerged) {
                     return true;
@@ -127,15 +131,15 @@ public class BetaFreezeTopLayerFeature extends Feature<DefaultFeatureConfig> {
         return false;
     }
 
-    public static boolean canSetSnow(WorldView worldView, BlockPos blockPos, double temp, double coldThreshold, TemperatureHeightScaling heightType) {
+    public static boolean canSetSnow(LevelReader worldView, BlockPos blockPos, double temp, double coldThreshold, TemperatureHeightScaling heightType) {
         if (heightType.modifyTemperature(blockPos, temp) >= coldThreshold) {
             return false;
         }
         
-        if (blockPos.getY() >= 0 && blockPos.getY() < 256 && worldView.getLightLevel(LightType.BLOCK, blockPos) < 10) {
+        if (blockPos.getY() >= 0 && blockPos.getY() < 256 && worldView.getBrightness(LightLayer.BLOCK, blockPos) < 10) {
             BlockState blockState = worldView.getBlockState(blockPos);
             
-            if (blockState.isAir() && Blocks.SNOW.getDefaultState().canPlaceAt(worldView, blockPos)) {
+            if (blockState.isAir() && Blocks.SNOW.defaultBlockState().canSurvive(worldView, blockPos)) {
                 return true;
             }
         }

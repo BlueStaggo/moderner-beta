@@ -1,31 +1,31 @@
 package mod.bluestaggo.modernerbeta.world.feature;
 
 import com.mojang.serialization.Codec;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkSectionPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.ChunkSectionCache;
-import net.minecraft.world.StructureWorldAccess;
-import net.minecraft.world.chunk.ChunkSection;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.OreFeature;
-import net.minecraft.world.gen.feature.OreFeatureConfig;
-import net.minecraft.world.gen.feature.util.FeatureContext;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.SectionPos;
+import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.BulkSectionAccess;
+import net.minecraft.world.level.chunk.LevelChunkSection;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
+import net.minecraft.world.level.levelgen.feature.OreFeature;
+import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration;
 
-public class BetaOreClayFeature extends Feature<OreFeatureConfig> {
-    public BetaOreClayFeature(Codec<OreFeatureConfig> configCodec) {
+public class BetaOreClayFeature extends Feature<OreConfiguration> {
+    public BetaOreClayFeature(Codec<OreConfiguration> configCodec) {
         super(configCodec);
     }
 
     @Override
-    public boolean generate(FeatureContext<OreFeatureConfig> context) {
-        StructureWorldAccess world = context.getWorld();
-        BlockPos pos = context.getOrigin();
-        OreFeatureConfig config = context.getConfig();
-        Random random = context.getRandom();
+    public boolean place(FeaturePlaceContext<OreConfiguration> context) {
+        WorldGenLevel world = context.level();
+        BlockPos pos = context.origin();
+        OreConfiguration config = context.config();
+        RandomSource random = context.random();
         
         int baseX = pos.getX();
         int baseY = pos.getY();
@@ -33,23 +33,23 @@ public class BetaOreClayFeature extends Feature<OreFeatureConfig> {
         
         int numberOfBlocks = config.size;
         
-        BlockPos.Mutable mutablePos = new BlockPos.Mutable();
+        BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
         
-        if(!world.testBlockState(pos, state -> state.isOf(Blocks.WATER))) {
+        if(!world.isStateAtPosition(pos, state -> state.is(Blocks.WATER))) {
             return false;
         }
         
         float radius = random.nextFloat() * 3.141593F;
         
-        double x0 = (float)(baseX + 8) + (MathHelper.sin(radius) * (float)numberOfBlocks) / 8F;
-        double x1 = (float)(baseX + 8) - (MathHelper.sin(radius) * (float)numberOfBlocks) / 8F;
-        double z0 = (float)(baseZ + 8) + (MathHelper.cos(radius) * (float)numberOfBlocks) / 8F;
-        double z1 = (float)(baseZ + 8) - (MathHelper.cos(radius) * (float)numberOfBlocks) / 8F;
+        double x0 = (float)(baseX + 8) + (Mth.sin(radius) * (float)numberOfBlocks) / 8F;
+        double x1 = (float)(baseX + 8) - (Mth.sin(radius) * (float)numberOfBlocks) / 8F;
+        double z0 = (float)(baseZ + 8) + (Mth.cos(radius) * (float)numberOfBlocks) / 8F;
+        double z1 = (float)(baseZ + 8) - (Mth.cos(radius) * (float)numberOfBlocks) / 8F;
         
         double y0 = baseY + random.nextInt(3) + 2;
         double y1 = baseY + random.nextInt(3) + 2;
         
-        try (ChunkSectionCache chunkSectionCache = new ChunkSectionCache(world)) {
+        try (BulkSectionAccess chunkSectionCache = new BulkSectionAccess(world)) {
             for(int block = 0; block <= numberOfBlocks; block++) {
                 double d6 = x0 + ((x1 - x0) * (double)block) / (double)numberOfBlocks;
                 double d7 = y0 + ((y1 - y0) * (double)block) / (double)numberOfBlocks;
@@ -57,15 +57,15 @@ public class BetaOreClayFeature extends Feature<OreFeatureConfig> {
                 
                 double d9 = (random.nextDouble() * (double)numberOfBlocks) / 16D;
                 
-                double d10 = (double)(MathHelper.sin(((float)block * 3.141593F) / (float)numberOfBlocks) + 1.0F) * d9 + 1.0D;
-                double d11 = (double)(MathHelper.sin(((float)block * 3.141593F) / (float)numberOfBlocks) + 1.0F) * d9 + 1.0D;
+                double d10 = (double)(Mth.sin(((float)block * 3.141593F) / (float)numberOfBlocks) + 1.0F) * d9 + 1.0D;
+                double d11 = (double)(Mth.sin(((float)block * 3.141593F) / (float)numberOfBlocks) + 1.0F) * d9 + 1.0D;
                 
-                int minX = MathHelper.floor(d6 - d10 / 2D);
-                int maxX = MathHelper.floor(d6 + d10 / 2D);
-                int minY = MathHelper.floor(d7 - d11 / 2D);
-                int maxY = MathHelper.floor(d7 + d11 / 2D);
-                int minZ = MathHelper.floor(d8 - d10 / 2D);
-                int maxZ = MathHelper.floor(d8 + d10 / 2D);
+                int minX = Mth.floor(d6 - d10 / 2D);
+                int maxX = Mth.floor(d6 + d10 / 2D);
+                int minY = Mth.floor(d7 - d11 / 2D);
+                int maxY = Mth.floor(d7 + d11 / 2D);
+                int minZ = Mth.floor(d8 - d10 / 2D);
+                int maxZ = Mth.floor(d8 + d10 / 2D);
                 
                 for(int x = minX; x <= maxX; x++) {
                     for(int y = minY; y <= maxY; y++) {
@@ -79,16 +79,16 @@ public class BetaOreClayFeature extends Feature<OreFeatureConfig> {
                                 continue;
                             }
 
-                            ChunkSection chunkSection = chunkSectionCache.getSection(mutablePos.set(x, y, z));
+                            LevelChunkSection chunkSection = chunkSectionCache.getSection(mutablePos.set(x, y, z));
                             
-                            if (!world.isOutOfHeightLimit(y) && chunkSection != null) {
-                                int localX = ChunkSectionPos.getLocalCoord(x); 
-                                int localY = ChunkSectionPos.getLocalCoord(y);
-                                int localZ = ChunkSectionPos.getLocalCoord(z);
+                            if (!world.isOutsideBuildHeight(y) && chunkSection != null) {
+                                int localX = SectionPos.sectionRelative(x); 
+                                int localY = SectionPos.sectionRelative(y);
+                                int localZ = SectionPos.sectionRelative(z);
                                 BlockState state = chunkSection.getBlockState(localX, localY, localZ);
                                 
-                                for (final OreFeatureConfig.Target target : config.targets) {
-                                    if (OreFeature.shouldPlace(state, chunkSectionCache::getBlockState, random, config, target, mutablePos)) {
+                                for (final OreConfiguration.TargetBlockState target : config.targetStates) {
+                                    if (OreFeature.canPlaceOre(state, chunkSectionCache::getBlockState, random, config, target, mutablePos)) {
                                         chunkSection.setBlockState(localX, localY, localZ, target.state, false);
                                     }
                                 }

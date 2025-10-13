@@ -1,10 +1,10 @@
 package mod.bluestaggo.modernerbeta.world.chunk.provider.island;
 
-import net.minecraft.util.StringIdentifiable;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.Mth;
+import net.minecraft.util.StringRepresentable;
 
-public enum IslandShape implements StringIdentifiable {
-    CIRCLE("circle", (noiseX, noiseZ) -> MathHelper.sqrt(noiseX * noiseX + noiseZ * noiseZ)),
+public enum IslandShape implements StringRepresentable {
+    CIRCLE("circle", (noiseX, noiseZ) -> Mth.sqrt(noiseX * noiseX + noiseZ * noiseZ)),
     SQUARE("square", (noiseX, noiseZ) -> Math.max(Math.abs(noiseX), Math.abs(noiseZ))),
     DIAMOND("diamond", (noiseX, noiseZ) -> Math.abs(noiseX) + Math.abs(noiseZ));
     
@@ -17,7 +17,7 @@ public enum IslandShape implements StringIdentifiable {
     }
 
     @Override
-    public String asString() {
+    public String getSerializedName() {
         return this.id;
     }
     

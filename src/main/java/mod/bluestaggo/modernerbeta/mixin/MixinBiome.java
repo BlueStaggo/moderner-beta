@@ -3,9 +3,9 @@ package mod.bluestaggo.modernerbeta.mixin;
 import mod.bluestaggo.modernerbeta.api.world.biome.climate.ClimateSampler;
 import mod.bluestaggo.modernerbeta.imixin.ModernBetaWorld;
 import mod.bluestaggo.modernerbeta.world.feature.BetaFreezeTopLayerFeature;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.WorldView;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.biome.Biome;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -15,14 +15,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Biome.class)
 public abstract class MixinBiome {
-    @Shadow @Final private Biome.Weather weather;
+    @Shadow @Final private Biome.ClimateSettings climateSettings;
 
     @Inject(
-        method = "canSetIce(Lnet/minecraft/world/WorldView;Lnet/minecraft/util/math/BlockPos;Z)Z",
+        method = "shouldFreeze(Lnet/minecraft/world/level/LevelReader;Lnet/minecraft/core/BlockPos;Z)Z",
         at = @At("HEAD"),
         cancellable = true
     )
-    private void canSetIceWithModernBetaClimate(WorldView world, BlockPos pos, boolean doWaterCheck, CallbackInfoReturnable<Boolean> cir) {
+    private void canSetIceWithModernBetaClimate(LevelReader world, BlockPos pos, boolean doWaterCheck, CallbackInfoReturnable<Boolean> cir) {
         if (!(world instanceof ModernBetaWorld serverWorld))
             return;
 
@@ -34,18 +34,18 @@ public abstract class MixinBiome {
             world,
             pos,
             doWaterCheck,
-            climateSampler.sampleModifiedTemperature(pos, this.weather.temperatureModifier()),
+            climateSampler.sampleModifiedTemperature(pos, this.climateSettings.temperatureModifier()),
             climateSampler.getSnowThreshold(),
             climateSampler.getHeightType()
         ));
     }
 
     @Inject(
-        method = "canSetSnow",
+        method = "shouldSnow",
         at = @At("HEAD"),
         cancellable = true
     )
-    private void canSetSnowWithModernBetaClimate(WorldView world, BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
+    private void canSetSnowWithModernBetaClimate(LevelReader world, BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
         if (!(world instanceof ModernBetaWorld serverWorld))
             return;
 
@@ -56,7 +56,7 @@ public abstract class MixinBiome {
         cir.setReturnValue(BetaFreezeTopLayerFeature.canSetSnow(
             world,
             pos,
-            climateSampler.sampleModifiedTemperature(pos, this.weather.temperatureModifier()),
+            climateSampler.sampleModifiedTemperature(pos, this.climateSettings.temperatureModifier()),
             climateSampler.getSnowThreshold(),
             climateSampler.getHeightType()
         ));

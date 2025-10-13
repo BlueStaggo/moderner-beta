@@ -1,8 +1,8 @@
 package mod.bluestaggo.modernerbeta.util.noise;
 
-import net.minecraft.world.gen.densityfunction.DensityFunction;
+import net.minecraft.world.level.levelgen.DensityFunction;
 
-public class SimpleNoisePos implements DensityFunction.NoisePos {
+public class SimpleNoisePos implements DensityFunction.FunctionContext {
     private int blockX;
     private int blockY;
     private int blockZ;

@@ -3,12 +3,12 @@ package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers;
 import com.mojang.serialization.Codec;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
-import net.minecraft.world.biome.BiomeKeys;
+import net.minecraft.world.level.biome.Biomes;
 
 import static mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId.*;
 
 public class ComputeRiverLayer extends SingleParentLayer {
-    public static final com.mojang.serialization.MapCodec<ComputeRiverLayer> CODEC = VersionCompat.createMaybeMapCodec(
+    public static final com.mojang.serialization./*Map*/Codec<ComputeRiverLayer> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> fillSingleParentLayerFields(instance)
             .and(Codec.BOOL.fieldOf("convertOceans").orElse(false).forGetter(layer -> layer.convertOceans))
             .apply(instance, ComputeRiverLayer::new)
@@ -33,7 +33,7 @@ public class ComputeRiverLayer extends SingleParentLayer {
 
         return (!this.convertOceans
             ? neighborsRiverBorder(neighbors, base)
-            : ((base.isOf(BiomeKeys.OCEAN) || neighborsContain(neighbors, OCEAN))
+            : ((base.isOf(Biomes.OCEAN) || neighborsContain(neighbors, OCEAN))
                 || !allNeighborsEqual(neighbors, base)))
             ? RIVER : NULL;
     }

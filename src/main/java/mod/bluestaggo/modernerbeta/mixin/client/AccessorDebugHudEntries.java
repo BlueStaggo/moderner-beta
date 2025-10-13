@@ -3,17 +3,17 @@
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.hud.debug.DebugHudEntries;
-import net.minecraft.client.gui.hud.debug.DebugHudEntry;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.gui.components.debug.DebugScreenEntries;
+import net.minecraft.client.gui.components.debug.DebugScreenEntry;
+import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Environment(EnvType.CLIENT)
-@Mixin(DebugHudEntries.class)
+@Mixin(DebugScreenEntries.class)
 public interface AccessorDebugHudEntries {
     @Invoker("register")
-    static Identifier invokeRegister(Identifier identifier, DebugHudEntry arg) {
+    static ResourceLocation invokeRegister(ResourceLocation identifier, DebugScreenEntry arg) {
         throw new IllegalStateException("Failed to mixin.");
     }
 }

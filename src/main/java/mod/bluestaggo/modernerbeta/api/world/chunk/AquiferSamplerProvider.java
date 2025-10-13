@@ -3,27 +3,27 @@ package mod.bluestaggo.modernerbeta.api.world.chunk;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.random.LocalRandom;
-import net.minecraft.util.math.random.RandomSplitter;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.gen.chunk.AquiferSampler;
-import net.minecraft.world.gen.chunk.AquiferSampler.FluidLevel;
-import net.minecraft.world.gen.chunk.AquiferSampler.FluidLevelSampler;
-import net.minecraft.world.gen.chunk.ChunkNoiseSampler;
-import net.minecraft.world.gen.noise.NoiseRouter;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.levelgen.Aquifer;
+import net.minecraft.world.level.levelgen.Aquifer.FluidPicker;
+import net.minecraft.world.level.levelgen.Aquifer.FluidStatus;
+import net.minecraft.world.level.levelgen.NoiseChunk;
+import net.minecraft.world.level.levelgen.NoiseRouter;
+import net.minecraft.world.level.levelgen.PositionalRandomFactory;
+import net.minecraft.world.level.levelgen.SingleThreadedRandomSource;
 
 public class AquiferSamplerProvider {
     private static final int FAR_LANDS_BOUNDARY = 12550821;
     
     private final NoiseRouter noiseRouter;
-    private final RandomSplitter randomSplitter;
+    private final PositionalRandomFactory randomSplitter;
     
-    private final FluidLevelSampler fluidLevelSampler;
-    private final FluidLevelSampler lavalessFluidLevelSampler;
+    private final FluidPicker fluidLevelSampler;
+    private final FluidPicker lavalessFluidLevelSampler;
     
-    private final ChunkNoiseSampler chunkSampler;
+    private final NoiseChunk chunkSampler;
     
     private final int worldMinY;
     private final int worldHeight;
@@ -39,7 +39,7 @@ public class AquiferSamplerProvider {
     ) {
         this(
             noiseRouter,
-            new LocalRandom(-1).nextSplitter(),
+            new SingleThreadedRandomSource(-1).forkPositional(),
             null,
             defaultFluid,
             seaLevel,
@@ -53,8 +53,8 @@ public class AquiferSamplerProvider {
     
     public AquiferSamplerProvider(
         NoiseRouter noiseRouter,
-        RandomSplitter randomSplitter,
-        ChunkNoiseSampler chunkSampler,
+        PositionalRandomFactory randomSplitter,
+        NoiseChunk chunkSampler,
         BlockState defaultFluid,
         int seaLevel,
         int lavaLevel,
@@ -64,10 +64,10 @@ public class AquiferSamplerProvider {
         boolean generateAquifers
     ) {
         this.noiseRouter = noiseRouter;
-        this.randomSplitter = randomSplitter.split(ModernerBeta.createId("aquifer")).nextSplitter();
+        this.randomSplitter = randomSplitter.fromHashOf(ModernerBeta.createId("aquifer")).forkPositional();
         
-        FluidLevel lavaFluidLevel = new FluidLevel(lavaLevel, BlockStates.LAVA); // Vanilla: -54
-        FluidLevel seaFluidLevel = new FluidLevel(seaLevel, defaultFluid);
+        FluidStatus lavaFluidLevel = new FluidStatus(lavaLevel, BlockStates.LAVA); // Vanilla: -54
+        FluidStatus seaFluidLevel = new FluidStatus(seaLevel, defaultFluid);
         
         this.fluidLevelSampler = (x, y, z) -> {
             // Do not generate lava past Far Lands boundary
@@ -88,18 +88,18 @@ public class AquiferSamplerProvider {
         this.generateAquifers = generateAquifers;
     }
     
-    public AquiferSampler provideAquiferSampler(Chunk chunk) {
+    public Aquifer provideAquiferSampler(ChunkAccess chunk) {
         if (!this.generateAquifers) {
-            return AquiferSampler.seaLevel(this.lavalessFluidLevelSampler);
+            return Aquifer.createDisabled(this.lavalessFluidLevelSampler);
         }
         
-        int minY = Math.max(this.worldMinY, chunk.getBottomY());
+        int minY = Math.max(this.worldMinY, chunk.getMinY());
         int topY = Math.min(this.worldMinY + this.worldHeight, VersionCompat.getTopYExclusive(chunk));
         
-        int noiseMinY = MathHelper.floorDiv(minY, this.noiseResolutionVertical);
-        int noiseTopY = MathHelper.floorDiv(topY - minY, this.noiseResolutionVertical);
+        int noiseMinY = Mth.floorDiv(minY, this.noiseResolutionVertical);
+        int noiseTopY = Mth.floorDiv(topY - minY, this.noiseResolutionVertical);
         
-        return AquiferSampler.aquifer(
+        return Aquifer.create(
             this.chunkSampler,
             chunk.getPos(),
             this.noiseRouter,

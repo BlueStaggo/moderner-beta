@@ -1,14 +1,14 @@
 package mod.bluestaggo.modernerbeta.api.world.biome.climate;
 
 import com.google.common.collect.ImmutableList;
-import net.minecraft.util.StringIdentifiable;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.noise.OctaveSimplexNoiseSampler;
-import net.minecraft.util.math.random.CheckedRandom;
-import net.minecraft.util.math.random.ChunkRandom;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.levelgen.LegacyRandomSource;
+import net.minecraft.world.level.levelgen.WorldgenRandom;
+import net.minecraft.world.level.levelgen.synth.PerlinSimplexNoise;
 
-public enum TemperatureHeightScaling implements StringIdentifiable {
+public enum TemperatureHeightScaling implements StringRepresentable {
     BETA("beta") {
         @Override
         public double modifyTemperature(BlockPos blockPos, double temp) {
@@ -19,7 +19,7 @@ public enum TemperatureHeightScaling implements StringIdentifiable {
         @Override
         public double modifyTemperature(BlockPos blockPos, double temp) {
             if (blockPos.getY() <= 64) return temp;
-            double g = TEMPERATURE_NOISE.sample((float)blockPos.getX() / 8.0f, (float)blockPos.getZ() / 8.0f, false) * 4.0;
+            double g = TEMPERATURE_NOISE.getValue((float)blockPos.getX() / 8.0f, (float)blockPos.getZ() / 8.0f, false) * 4.0;
             return temp - (g + (float)blockPos.getY() - 64.0) * 0.05 / 30.0;
         }
 
@@ -32,7 +32,7 @@ public enum TemperatureHeightScaling implements StringIdentifiable {
         @Override
         public double modifyTemperature(BlockPos blockPos, double temp) {
             if (blockPos.getY() <= 80) return temp;
-            double g = TEMPERATURE_NOISE.sample((float)blockPos.getX() / 8.0f, (float)blockPos.getZ() / 8.0f, false) * 8.0;
+            double g = TEMPERATURE_NOISE.getValue((float)blockPos.getX() / 8.0f, (float)blockPos.getZ() / 8.0f, false) * 8.0;
             return temp - (g + (float)blockPos.getY() - 80.0) * 0.05 / 40.0;
         }
 
@@ -48,7 +48,7 @@ public enum TemperatureHeightScaling implements StringIdentifiable {
         }
     };
 
-    private static final OctaveSimplexNoiseSampler TEMPERATURE_NOISE = new OctaveSimplexNoiseSampler(new ChunkRandom(new CheckedRandom(1234L)), ImmutableList.of(0));
+    private static final PerlinSimplexNoise TEMPERATURE_NOISE = new PerlinSimplexNoise(new WorldgenRandom(new LegacyRandomSource(1234L)), ImmutableList.of(0));
 
     public final String id;
 
@@ -63,7 +63,7 @@ public enum TemperatureHeightScaling implements StringIdentifiable {
     }
 
     @Override
-    public String asString() {
+    public String getSerializedName() {
         return this.id;
     }
 }

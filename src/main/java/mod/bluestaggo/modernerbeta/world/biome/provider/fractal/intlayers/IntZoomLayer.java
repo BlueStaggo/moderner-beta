@@ -1,8 +1,8 @@
 package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.intlayers;
 
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.LayerRandom;
-import net.minecraft.registry.RegistryEntryLookup;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.core.HolderGetter;
+import net.minecraft.world.level.biome.Biome;
 
 public class IntZoomLayer extends IntLayer {
     private final IntLayer parent;
@@ -19,7 +19,7 @@ public class IntZoomLayer extends IntLayer {
     }
 
     @Override
-    public int generate(RegistryEntryLookup<Biome> biomeRegistry, int x, int z) {
+    public int generate(HolderGetter<Biome> biomeRegistry, int x, int z) {
         int xHalf = x & 1;
         int zHalf = z & 1;
 

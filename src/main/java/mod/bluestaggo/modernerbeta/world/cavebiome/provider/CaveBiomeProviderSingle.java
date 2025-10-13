@@ -3,30 +3,30 @@ package mod.bluestaggo.modernerbeta.world.cavebiome.provider;
 import mod.bluestaggo.modernerbeta.api.world.cavebiome.CaveBiomeProvider;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
-import net.minecraft.registry.RegistryEntryLookup;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderGetter;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.biome.Biome;
 
 import java.util.List;
 
 public class CaveBiomeProviderSingle extends CaveBiomeProvider {
-    private final RegistryKey<Biome> biome;
+    private final ResourceKey<Biome> biome;
     
-    public CaveBiomeProviderSingle(ModernBetaSettings settings, RegistryEntryLookup<Biome> biomeRegistry, long seed) {
+    public CaveBiomeProviderSingle(ModernBetaSettings settings, HolderGetter<Biome> biomeRegistry, long seed) {
         super(settings, biomeRegistry, seed);
 
-        this.biome = RegistryKey.of(RegistryKeys.BIOME, this.settings.getOrThrow(SettingsComponentTypes.SINGLE_BIOME));
+        this.biome = ResourceKey.create(Registries.BIOME, this.settings.getOrThrow(SettingsComponentTypes.SINGLE_BIOME));
     }
 
     @Override
-    public RegistryEntry<Biome> getBiome(int biomeX, int biomeY, int biomeZ) {
+    public Holder<Biome> getBiome(int biomeX, int biomeY, int biomeZ) {
         return this.biomeRegistry.getOrThrow(this.biome);
     }
     
     @Override
-    public List<RegistryEntry<Biome>> getBiomes() {
+    public List<Holder<Biome>> getBiomes() {
         return List.of(this.biomeRegistry.getOrThrow(this.biome));
     }
 }

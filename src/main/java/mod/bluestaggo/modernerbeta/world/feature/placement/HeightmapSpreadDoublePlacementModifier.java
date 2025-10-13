@@ -1,46 +1,47 @@
 package mod.bluestaggo.modernerbeta.world.feature.placement;
 
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.Heightmap;
-import net.minecraft.world.gen.feature.FeaturePlacementContext;
-import net.minecraft.world.gen.placementmodifier.PlacementModifier;
-import net.minecraft.world.gen.placementmodifier.PlacementModifierType;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.levelgen.placement.PlacementContext;
+import net.minecraft.world.level.levelgen.placement.PlacementModifier;
+import net.minecraft.world.level.levelgen.placement.PlacementModifierType;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.stream.Stream;
 
 public class HeightmapSpreadDoublePlacementModifier extends PlacementModifier {
-    public static final com.mojang.serialization.MapCodec<HeightmapSpreadDoublePlacementModifier> MODIFIER_CODEC = VersionCompat.createMaybeMapCodec(
+    public static final com.mojang.serialization./*Map*/Codec<HeightmapSpreadDoublePlacementModifier> MODIFIER_CODEC = VersionCompat.createMaybeMapCodec(
         instance -> instance.group(
-            Heightmap.Type.CODEC.fieldOf("heightmap").forGetter(arg -> arg.heightmap)
+            Heightmap.Types.CODEC.fieldOf("heightmap").forGetter(arg -> arg.heightmap)
         ).apply(instance, HeightmapSpreadDoublePlacementModifier::of));
     
-    private final Heightmap.Type heightmap;
+    private final Heightmap.Types heightmap;
     
-    private HeightmapSpreadDoublePlacementModifier(Heightmap.Type heightmap) {
+    private HeightmapSpreadDoublePlacementModifier(Heightmap.Types heightmap) {
         this.heightmap = heightmap;
     }
     
-    public static HeightmapSpreadDoublePlacementModifier of(Heightmap.Type heightmap) {
+    public static HeightmapSpreadDoublePlacementModifier of(Heightmap.Types heightmap) {
         return new HeightmapSpreadDoublePlacementModifier(heightmap);
     }
     
     @Override
-    public Stream<BlockPos> getPositions(FeaturePlacementContext context, Random random, BlockPos pos) {
+    public @NotNull Stream<BlockPos> getPositions(PlacementContext context, RandomSource random, BlockPos pos) {
         int x = pos.getX();
         int z = pos.getZ();
         
-        int y = context.getTopY(this.heightmap, x, z);
-        if (y == context.getBottomY()) {
+        int y = context.getHeight(this.heightmap, x, z);
+        if (y == context.getMinY()) {
             return Stream.of(new BlockPos[0]);
         }
         
-        return Stream.of(new BlockPos(x, context.getBottomY() + random.nextInt((y - context.getBottomY()) * 2), z));
+        return Stream.of(new BlockPos(x, context.getMinY() + random.nextInt((y - context.getMinY()) * 2), z));
     }
 
     @Override
-    public PlacementModifierType<?> getType() {
+    public @NotNull PlacementModifierType<?> type() {
         return ModernBetaPlacementTypes.HEIGHTMAP_SPREAD_DOUBLE;
     }
 

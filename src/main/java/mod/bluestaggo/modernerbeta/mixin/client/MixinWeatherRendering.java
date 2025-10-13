@@ -8,15 +8,15 @@ import mod.bluestaggo.modernerbeta.imixin.ModernBetaWorld;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.render.WeatherRendering;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.client.renderer.WeatherEffectRenderer;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Environment(EnvType.CLIENT)
-@Mixin(WeatherRendering.class)
+@Mixin(WeatherEffectRenderer.class)
 public class MixinWeatherRendering {
     @WrapOperation(
         method = "getPrecipitationAt",
@@ -27,9 +27,9 @@ public class MixinWeatherRendering {
     )
     public Biome.Precipitation modifyTickPrecipitation(
         Biome biome, BlockPos blockPos
-        /*? if >=1.21.2 {*/, int seaLevel/*?}*/
+        /*if >=1.21.2 */, int seaLevel/**/
         , Operation<Biome.Precipitation> original,
-        @Local(argsOnly = true) World world
+        @Local(argsOnly = true) Level world
     ) {
         ModernBetaWorld modernBetaWorld = (ModernBetaWorld)world;
 

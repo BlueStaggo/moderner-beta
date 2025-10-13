@@ -11,7 +11,7 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 public interface BiomePredicate {
-    Codec<BiomePredicate> BASE_CODEC = ModernBetaRegistries.BIOME_PREDICATE.getCodec()
+    Codec<BiomePredicate> BASE_CODEC = ModernBetaRegistries.BIOME_PREDICATE.byNameCodec()
         .dispatch("condition", BiomePredicate::getType, BiomePredicateType::codec);
 
     static BiomePredicate allOf(BiomePredicate... predicates) {

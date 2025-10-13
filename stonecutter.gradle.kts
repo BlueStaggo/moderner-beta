@@ -8,41 +8,64 @@ stonecutter.active("1.21.6")
 
 stonecutter.parameters {
     replacements {
-        regex("datapool") {
+        string {
             direction = eval(current.version, "<1.21.5")
-            replace("""\bPool\b""", "DataPool")
-            reverse("""\bDataPool\b""", "Pool")
-            phase = "LAST"
+            replace("WeightedList", "SimpleWeightedRandomList")
         }
 
-        string {
+        string("registryOr") {
             direction = eval(current.version, "<1.21.2")
-            replace(".getOrThrow(ModernBetaRegistryKeys.", ".get(ModernBetaRegistryKeys.")
-            phase = "LAST"
+            replace(".lookupOrThrow(ModernBetaRegistryKeys.", ".registryOrThrow(ModernBetaRegistryKeys.")
         }
 
-        string {
+        string("registryOr") {
             direction = eval(current.version, "<1.21.2")
-            replace(".getOrThrow(RegistryKeys.", ".get(RegistryKeys.")
-            phase = "LAST"
+            replace(".lookupOrThrow(Registries.", ".registryOrThrow(Registries.")
         }
 
         string {
             direction = eval(current.version, ">=1.21.6")
             replace("this.getOrCreateTagBuilder(", "this.builder(")
-            phase = "LAST"
+        }
+
+        string {
+            direction = eval(current.version, "<1.20.5")
+            replace("BootstrapContext", "BootstapContext")
+        }
+
+        string {
+            direction = eval(current.version, "<1.21.2")
+            replace(".getMinSectionY()", ".getMinSection()")
+        }
+
+        string {
+            direction = eval(current.version, "<1.21.2")
+            replace(".getMaxSectionY()", ".getMaxSection()")
+        }
+
+        string {
+            direction = eval(current.version, "<1.21.2")
+            replace(".getMinY()", ".getMinBuildHeight()")
+        }
+
+        string {
+            direction = eval(current.version, "<1.21.2")
+            replace(".listElements()", ".holders()")
+        }
+
+        string {
+            direction = eval(current.version, "<1.21")
+            replace("gui.screens.options.OptionsSubScreen", "gui.screens.OptionsSubScreen")
         }
 
         string {
             direction = eval(current.version, "<1.20.5")
             replace("com.mojang.serialization.MapCodec<", "com.mojang.serialization./*Map*/Codec<")
-            phase = "LAST"
         }
 
         string {
             direction = eval(current.version, "<1.20.5")
             replace("com.mojang.serialization.MapCodec.", "com.mojang.serialization./*Map*/Codec.")
-            phase = "LAST"
         }
     }
 }

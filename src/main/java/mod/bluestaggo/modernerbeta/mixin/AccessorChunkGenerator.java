@@ -1,7 +1,7 @@
 package mod.bluestaggo.modernerbeta.mixin;
 
-import net.minecraft.world.gen.chunk.ChunkGenerator;
-import net.minecraft.world.gen.feature.util.PlacedFeatureIndexer;
+import net.minecraft.world.level.biome.FeatureSorter;
+import net.minecraft.world.level.chunk.ChunkGenerator;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
@@ -11,5 +11,5 @@ import java.util.function.Supplier;
 @Mixin(ChunkGenerator.class)
 public interface AccessorChunkGenerator {
     @Accessor
-    Supplier<List<PlacedFeatureIndexer.IndexedFeatures>> getIndexedFeaturesListSupplier();
+    Supplier<List<FeatureSorter.StepFeatureData>> getFeaturesPerStep();
 }

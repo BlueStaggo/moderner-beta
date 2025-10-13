@@ -1,10 +1,10 @@
 package mod.bluestaggo.modernerbeta.api.world.chunk.surface;
 
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.level.biome.Biome;
 
 import java.util.Optional;
 
@@ -33,9 +33,9 @@ public record SurfaceConfig(SurfaceBlocks normal, SurfaceBlocks beachSand, Surfa
     public static final SurfaceConfig SNOW_PACKED_ICE = new SurfaceConfig(SurfaceBlocks.SNOW_PACKED_ICE);
     public static final SurfaceConfig SNOW_STONE = new SurfaceConfig(SurfaceBlocks.SNOW_STONE);
     
-    public static SurfaceConfig getSurfaceConfig(RegistryEntry<Biome> biome) {
-        Optional<RegistryEntry.Reference<SurfaceConfig>> optionalKey = ModernBetaRegistries.SURFACE_CONFIG.streamEntries()
-            .filter(entry -> entry.hasKeyAndValue() && biome.isIn(TagKey.of(RegistryKeys.BIOME, entry.registryKey().getValue())))
+    public static SurfaceConfig getSurfaceConfig(Holder<Biome> biome) {
+        Optional<Holder.Reference<SurfaceConfig>> optionalKey = ModernBetaRegistries.SURFACE_CONFIG.listElements()
+            .filter(entry -> entry.isBound() && biome.is(TagKey.create(Registries.BIOME, entry.key().location())))
             .findFirst();
         
         if (optionalKey.isPresent()) {

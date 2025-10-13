@@ -4,7 +4,7 @@ import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 
 public class ProxyLayer extends SingleParentLayer {
-    public static final com.mojang.serialization.MapCodec<ProxyLayer> CODEC = VersionCompat.createMaybeMapCodec(
+    public static final com.mojang.serialization./*Map*/Codec<ProxyLayer> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> fillSingleParentLayerFields(instance)
             .apply(instance, ProxyLayer::new)
     );

@@ -2,17 +2,17 @@ package mod.bluestaggo.modernerbeta.world.cavebiome.provider;
 
 import mod.bluestaggo.modernerbeta.api.world.cavebiome.CaveBiomeProvider;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
-import net.minecraft.registry.RegistryEntryLookup;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderGetter;
+import net.minecraft.world.level.biome.Biome;
 
 public class CaveBiomeProviderNone extends CaveBiomeProvider {
-    public CaveBiomeProviderNone(ModernBetaSettings settings, RegistryEntryLookup<Biome> biomeRegistry, long seed) {
+    public CaveBiomeProviderNone(ModernBetaSettings settings, HolderGetter<Biome> biomeRegistry, long seed) {
         super(settings, biomeRegistry, seed);
     }
 
     @Override
-    public RegistryEntry<Biome> getBiome(int biomeX, int biomeY, int biomeZ) {
+    public Holder<Biome> getBiome(int biomeX, int biomeY, int biomeZ) {
         return null;
     }
 }

@@ -8,7 +8,7 @@ import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.LayerRand
 import java.util.function.Supplier;
 
 public record InvertedBiomePredicate(BiomePredicate term) implements BiomePredicate {
-    public static final com.mojang.serialization.MapCodec<InvertedBiomePredicate> CODEC = VersionCompat.createMaybeMapCodec(
+    public static final com.mojang.serialization./*Map*/Codec<InvertedBiomePredicate> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> instance.group(
             BiomePredicate.BASE_CODEC.fieldOf("term").forGetter(predicate -> predicate.term)
         ).apply(instance, InvertedBiomePredicate::new)

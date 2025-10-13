@@ -83,7 +83,7 @@ public class ModEventsCommon {
             ++id,
             BiomeProviderInfoPayload.class,
             BiomeProviderInfoPayload::write,
-            BiomeProviderInfoPayload::fromPacketByteBuf,
+            BiomeProviderInfoPayload::fromFriendlyByteBuf,
             (payload, context) -> {
                 context.get().enqueueWork(() -> {
                     DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () ->

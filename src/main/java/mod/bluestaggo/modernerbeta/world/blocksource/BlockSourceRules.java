@@ -2,7 +2,7 @@ package mod.bluestaggo.modernerbeta.world.blocksource;
 
 import mod.bluestaggo.modernerbeta.api.world.blocksource.BlockSource;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.ArrayList;
 import java.util.List;

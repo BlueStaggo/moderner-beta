@@ -7,9 +7,9 @@ import mod.bluestaggo.modernerbeta.imixin.ModernBetaWorld;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.render.Camera;
-import net.minecraft.client.render.fog.StandardFogModifier;
-import net.minecraft.client.world.ClientWorld;
+import net.minecraft.client.Camera;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.fog.environment.AirBasedFogEnvironment;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -18,14 +18,14 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Environment(EnvType.CLIENT)
-@Mixin(StandardFogModifier.class)
+@Mixin(AirBasedFogEnvironment.class)
 public abstract class MixinStandardFogModifier {
     @Unique private static int modernBeta_renderDistance = 16;
     @Unique private static float modernBeta_fogWeight = FogUtils.calculateFogWeight(16);
     @Unique private static boolean modernBeta_isModernBetaWorld = false;
 
-    @Inject(method = "getFogColor", at = @At("HEAD"))
-    private void captureVars(ClientWorld world, Camera camera, int renderDistance, float skyDarkness, CallbackInfoReturnable<Integer> cir) {
+    @Inject(method = "getBaseColor", at = @At("HEAD"))
+    private void captureVars(ClientLevel world, Camera camera, int renderDistance, float skyDarkness, CallbackInfoReturnable<Integer> cir) {
         if (modernBeta_renderDistance != renderDistance) {
             modernBeta_renderDistance = renderDistance;
             modernBeta_fogWeight = FogUtils.calculateFogWeight(renderDistance);
@@ -38,7 +38,7 @@ public abstract class MixinStandardFogModifier {
 
     @SuppressWarnings("DiscouragedShift")
     @ModifyVariable(
-            method = "getFogColor",
+            method = "getBaseColor",
             at = @At(
                     value = "INVOKE",
                     target = "Ljava/lang/Math;pow(DD)D",

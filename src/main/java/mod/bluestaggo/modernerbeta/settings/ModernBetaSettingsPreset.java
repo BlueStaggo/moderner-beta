@@ -9,9 +9,9 @@ import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.Pair;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Tuple;
 import org.slf4j.event.Level;
 
 import java.util.List;
@@ -26,7 +26,7 @@ public record ModernBetaSettingsPreset(ModernBetaSettings chunkSettings, ModernB
         ).apply(instance, ModernBetaSettingsPreset::new)
     );
 
-    public static ModernBetaSettingsPreset referenced(Identifier presetId) {
+    public static ModernBetaSettingsPreset referenced(ResourceLocation presetId) {
         return new ModernBetaSettingsPreset(
             ModernBetaSettings.builder()
                 .add(SettingsComponentTypes.PRESET, presetId)
@@ -41,9 +41,9 @@ public record ModernBetaSettingsPreset(ModernBetaSettings chunkSettings, ModernB
     }
 
     public ModernBetaSettingsPreset(
-        NbtCompound newChunkSettings,
-        NbtCompound newBiomeSettings,
-        NbtCompound newCaveBiomeSettings
+        CompoundTag newChunkSettings,
+        CompoundTag newBiomeSettings,
+        CompoundTag newCaveBiomeSettings
     ) {
         this(
             ModernBetaSettings.fromCompound(newChunkSettings),
@@ -52,7 +52,7 @@ public record ModernBetaSettingsPreset(ModernBetaSettings chunkSettings, ModernB
         );
     }
     
-    public Pair<ModernBetaSettingsPreset, Boolean> setJson(String stringChunk, String stringBiome, String stringCaveBiome) {
+    public Tuple<ModernBetaSettingsPreset, Boolean> setJson(String stringChunk, String stringBiome, String stringCaveBiome) {
         ModernBetaSettings chunkSettings;
         ModernBetaSettings biomeSettings;
         ModernBetaSettings caveBiomeSettings;
@@ -81,11 +81,11 @@ public record ModernBetaSettingsPreset(ModernBetaSettings chunkSettings, ModernB
             
             // Test providers
             if (chunkSettings.get(SettingsComponentTypes.PRESET) == null)
-                ModernBetaRegistries.CHUNK.get(chunkSettings.getProvider());
+                ModernBetaRegistries.CHUNK.getValue(chunkSettings.getProvider());
             if (biomeSettings.get(SettingsComponentTypes.PRESET) == null)
-                ModernBetaRegistries.BIOME.get(biomeSettings.getProvider());
+                ModernBetaRegistries.BIOME.getValue(biomeSettings.getProvider());
             if (caveBiomeSettings.get(SettingsComponentTypes.PRESET) == null)
-                ModernBetaRegistries.CAVE_BIOME.get(caveBiomeSettings.getProvider());
+                ModernBetaRegistries.CAVE_BIOME.getValue(caveBiomeSettings.getProvider());
         } catch (Exception e) {
             ModernerBeta.log(Level.ERROR, "Unable to read settings JSON! Reverting to previous settings..");
             ModernerBeta.log(Level.ERROR, String.format("Reason: %s", e.getMessage()));
@@ -96,10 +96,10 @@ public record ModernBetaSettingsPreset(ModernBetaSettings chunkSettings, ModernB
             caveBiomeSettings = this.caveBiomeSettings;
         }
         
-        return new Pair<>(new ModernBetaSettingsPreset(chunkSettings, biomeSettings, caveBiomeSettings), successful);
+        return new Tuple<>(new ModernBetaSettingsPreset(chunkSettings, biomeSettings, caveBiomeSettings), successful);
     }
 
-    public Pair<ModernBetaSettingsPreset, Boolean> setNbt(NbtCompound nbtChunk, NbtCompound nbtBiome, NbtCompound nbtCaveBiome) {
+    public Tuple<ModernBetaSettingsPreset, Boolean> setNbt(CompoundTag nbtChunk, CompoundTag nbtBiome, CompoundTag nbtCaveBiome) {
         ModernBetaSettings chunkSettings;
         ModernBetaSettings biomeSettings;
         ModernBetaSettings caveBiomeSettings;
@@ -122,11 +122,11 @@ public record ModernBetaSettingsPreset(ModernBetaSettings chunkSettings, ModernB
 
             // Test providers
             if (chunkSettings.get(SettingsComponentTypes.PRESET) == null)
-                ModernBetaRegistries.CHUNK.get(chunkSettings.getProvider());
+                ModernBetaRegistries.CHUNK.getValue(chunkSettings.getProvider());
             if (biomeSettings.get(SettingsComponentTypes.PRESET) == null)
-                ModernBetaRegistries.BIOME.get(biomeSettings.getProvider());
+                ModernBetaRegistries.BIOME.getValue(biomeSettings.getProvider());
             if (caveBiomeSettings.get(SettingsComponentTypes.PRESET) == null)
-                ModernBetaRegistries.CAVE_BIOME.get(caveBiomeSettings.getProvider());
+                ModernBetaRegistries.CAVE_BIOME.getValue(caveBiomeSettings.getProvider());
         } catch (Exception e) {
             ModernerBeta.log(Level.ERROR, "Unable to read settings NBT! Reverting to previous settings..");
             ModernerBeta.log(Level.ERROR, String.format("Reason: %s", e.getMessage()));
@@ -137,7 +137,7 @@ public record ModernBetaSettingsPreset(ModernBetaSettings chunkSettings, ModernB
             caveBiomeSettings = this.caveBiomeSettings;
         }
 
-        return new Pair<>(new ModernBetaSettingsPreset(chunkSettings, biomeSettings, caveBiomeSettings), successful);
+        return new Tuple<>(new ModernBetaSettingsPreset(chunkSettings, biomeSettings, caveBiomeSettings), successful);
     }
     
     public List<ModernBetaSettings> asList() {

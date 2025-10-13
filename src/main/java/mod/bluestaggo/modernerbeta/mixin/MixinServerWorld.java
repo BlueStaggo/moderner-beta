@@ -4,17 +4,17 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import mod.bluestaggo.modernerbeta.imixin.ModernBetaWorld;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.biome.Biome;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(ServerWorld.class)
+@Mixin(ServerLevel.class)
 public abstract class MixinServerWorld implements ModernBetaWorld {
     @WrapOperation(
         //? if >=1.20.2 {
-        method = "tickIceAndSnow",
+        method = "tickPrecipitation",
         //?} else {
         /*method = "tickChunk",
         *///?}

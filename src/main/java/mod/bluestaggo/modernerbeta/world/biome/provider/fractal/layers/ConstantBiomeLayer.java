@@ -6,7 +6,7 @@ import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import java.util.Set;
 
 public class ConstantBiomeLayer extends Layer {
-    public static final com.mojang.serialization.MapCodec<ConstantBiomeLayer> CODEC = VersionCompat.createMaybeMapCodec(
+    public static final com.mojang.serialization./*Map*/Codec<ConstantBiomeLayer> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> fillLayerFields(instance)
             .and(ExtendedBiomeId.CODEC.fieldOf("biome").forGetter(layer -> layer.biome))
             .apply(instance, ConstantBiomeLayer::new)

@@ -6,29 +6,29 @@ import mod.bluestaggo.modernerbeta.client.registry.ModernBetaClientRegistries;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentType;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.OptionListWidget;
-import net.minecraft.client.world.GeneratorOptionsHolder;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.components.OptionsList;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.worldselection.WorldCreationContext;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.Pair;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Tuple;
 
 import java.util.List;
 import java.util.function.Consumer;
 
 public abstract class ModernBetaGraphicalComponentedSettingsScreen extends ModernBetaGraphicalCompoundSettingsScreen {
-    private Identifier currentComponentType;
+    private ResourceLocation currentComponentType;
 
     public ModernBetaGraphicalComponentedSettingsScreen(
         String title,
         Screen parent,
-        GeneratorOptionsHolder generatorOptionsHolder,
+        WorldCreationContext generatorOptionsHolder,
         String type,
-        NbtCompound settings,
-        Consumer<NbtCompound> onDone
+        CompoundTag settings,
+        Consumer<CompoundTag> onDone
     ) {
         super(title, parent, generatorOptionsHolder, type, settings, onDone);
     }
@@ -42,10 +42,10 @@ public abstract class ModernBetaGraphicalComponentedSettingsScreen extends Moder
     }
 
     @Override
-    protected Pair<NbtCompound, String> resolveSettings(String key) {
+    protected Tuple<CompoundTag, String> resolveSettings(String key) {
         if (this.currentComponentType != null) {
             if ("self".equals(key)) {
-                return new Pair<>(this.settings, this.currentComponentType.toString());
+                return new Tuple<>(this.settings, this.currentComponentType.toString());
             }
             if (key.isEmpty()) {
                 key = this.currentComponentType.toString();
@@ -80,19 +80,19 @@ public abstract class ModernBetaGraphicalComponentedSettingsScreen extends Moder
     }
 
     @SuppressWarnings("unchecked")
-    protected void addOptionsForComponents(OptionListWidget list, List<SettingsComponentType<?>> componentTypes) {
+    protected void addOptionsForComponents(OptionsList list, List<SettingsComponentType<?>> componentTypes) {
         for (SettingsComponentType<?> componentType : componentTypes) {
-            ModernBetaRegistries.SETTINGS_COMPONENT_TYPE.getKey(componentType)
+            ModernBetaRegistries.SETTINGS_COMPONENT_TYPE.getResourceKey(componentType)
                 .ifPresent(componentTypeKey -> {
-                    Identifier componentTypeId = componentTypeKey.getValue();
+                    ResourceLocation componentTypeId = componentTypeKey.location();
 
                     GraphicalConfigBuilder configBuilder
-                        = ModernBetaClientRegistries.SETTINGS_COMPONENT_TYPE_GUI.get(componentTypeId);
+                        = ModernBetaClientRegistries.SETTINGS_COMPONENT_TYPE_GUI.getValue(componentTypeId);
 
                     if (configBuilder == null) {
-                        list.addSingleOptionEntry(this.headerOption(
-                            Text.translatable(STRING_PREFIX + "invalidComponentType", componentTypeId.toString())
-                                .formatted(Formatting.RED, Formatting.ITALIC)));
+                        list.addBig(this.headerOption(
+                            Component.translatable(STRING_PREFIX + "invalidComponentType", componentTypeId.toString())
+                                .withStyle(ChatFormatting.RED, ChatFormatting.ITALIC)));
                         return;
                     }
 
@@ -107,8 +107,8 @@ public abstract class ModernBetaGraphicalComponentedSettingsScreen extends Moder
                     }
 
                     this.currentComponentType = componentTypeId;
-                    list.addSingleOptionEntry(this.headerOption(
-                        Text.translatable(STRING_PREFIX + this.getCurrentComponentTypeAsString())));
+                    list.addBig(this.headerOption(
+                        Component.translatable(STRING_PREFIX + this.getCurrentComponentTypeAsString())));
                     configBuilder.apply(this, list);
                     this.currentComponentType = null;
                 });

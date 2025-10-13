@@ -2,12 +2,12 @@ package mod.bluestaggo.modernerbeta.world.feature.placement.noise;
 
 
 import mod.bluestaggo.modernerbeta.util.noise.PerlinOctaveNoise;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.util.RandomSource;
 
 public class NoiseBasedCountInfdev415 implements NoiseBasedCount {
     private final PerlinOctaveNoise noiseSampler;
     
-    public NoiseBasedCountInfdev415(Random random) {
+    public NoiseBasedCountInfdev415(RandomSource random) {
         this.noiseSampler = new PerlinOctaveNoise(new java.util.Random(random.nextLong()), 5, true);
     }
     
@@ -16,7 +16,7 @@ public class NoiseBasedCountInfdev415 implements NoiseBasedCount {
     }
 
     @Override
-    public int sample(int chunkX, int chunkZ, Random random) {
+    public int sample(int chunkX, int chunkZ, RandomSource random) {
         int startX = chunkX << 4;
         int startZ = chunkZ << 4;
         

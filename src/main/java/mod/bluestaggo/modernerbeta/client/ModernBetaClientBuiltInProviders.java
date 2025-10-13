@@ -9,18 +9,18 @@ import mod.bluestaggo.modernerbeta.world.chunk.provider.indev.IndevType;
 import mod.bluestaggo.modernerbeta.world.chunk.provider.island.IslandShape;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.widget.OptionListWidget;
-import net.minecraft.client.option.SimpleOption;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.util.Formatting;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.OptionInstance;
+import net.minecraft.client.gui.components.OptionsList;
+import net.minecraft.nbt.Tag;
 
 import static mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes.SettingsComponentType.*;
 
 @Environment(EnvType.CLIENT)
 @SuppressWarnings("unchecked")
 public class ModernBetaClientBuiltInProviders {
-    private static void addAll(OptionListWidget list, SimpleOption<?>... options) {
-        list.addAll(options);
+    private static void addAll(OptionsList list, OptionInstance<?>... options) {
+        list.addSmall(options);
     }
 
     public static void registerSettingsComponentTypeGuis(IRegistryHandler<?> handler) {
@@ -49,7 +49,7 @@ public class ModernBetaClientBuiltInProviders {
         registryHandler.register(
             USE_SURFACE_RULES.id,
             (screen, options) -> {
-                options.addSingleOptionEntry(screen.booleanOption("self"));
+                options.addBig(screen.booleanOption("self"));
             }
         );
 
@@ -63,7 +63,7 @@ public class ModernBetaClientBuiltInProviders {
                     maxY = providerSettingsScreen.worldMaxY;
                 }
 
-                options.addSingleOptionEntry(screen.intRangeOption("self", minY - 64, maxY - 64));
+                options.addBig(screen.intRangeOption("self", minY - 64, maxY - 64));
             }
         );
 
@@ -121,7 +121,7 @@ public class ModernBetaClientBuiltInProviders {
         registryHandler.register(
             FORCED_BIOME_HEIGHT.id,
             (screen, options) -> {
-                options.addSingleOptionEntry(screen.mapEditButton(
+                options.addBig(screen.mapEditButton(
                     screen.getText("heightOverrides"),
                     "heightOverrides",
                     ExtendedBiomeIdToHeightConfigMapScreen::new
@@ -231,7 +231,7 @@ public class ModernBetaClientBuiltInProviders {
         registryHandler.register(
             SPAWN_INDEV_HOUSE.id,
             (screen, options) -> {
-                options.addSingleOptionEntry(screen.booleanOption("self"));
+                options.addBig(screen.booleanOption("self"));
             }
         );
 
@@ -257,17 +257,17 @@ public class ModernBetaClientBuiltInProviders {
         registryHandler.register(
             SINGLE_BIOME.id,
             (screen, options) -> {
-                options.addSingleOptionEntry(screen.biomeOption("self", false));
+                options.addBig(screen.biomeOption("self", false));
             }
         );
 
         registryHandler.register(
             CLIMATE_SCALE.id,
             (screen, options) -> {
-                options.addSingleOptionEntry(screen.floatRangeOption("temp", 0.001f, 1.0f));
-                options.addSingleOptionEntry(screen.floatRangeOption("rain", 0.001f, 1.0f));
-                options.addSingleOptionEntry(screen.floatRangeOption("detail", 0.001f, 1.0f));
-                options.addSingleOptionEntry(screen.floatRangeOption("weird", 0.001f, 1.0f));
+                options.addBig(screen.floatRangeOption("temp", 0.001f, 1.0f));
+                options.addBig(screen.floatRangeOption("rain", 0.001f, 1.0f));
+                options.addBig(screen.floatRangeOption("detail", 0.001f, 1.0f));
+                options.addBig(screen.floatRangeOption("weird", 0.001f, 1.0f));
             }
         );
 
@@ -280,7 +280,7 @@ public class ModernBetaClientBuiltInProviders {
                 };
 
                 for (String target : climateMappingTargets) {
-                    options.addSingleOptionEntry(screen.headerOption(screen.getText(target).formatted(Formatting.BOLD)));
+                    options.addBig(screen.headerOption(screen.getText(target).withStyle(ChatFormatting.BOLD)));
                     addAll(
                         options,
                         screen.headerOption(screen.getText("biome")),
@@ -308,7 +308,7 @@ public class ModernBetaClientBuiltInProviders {
         registryHandler.register(
             TEMPERATURE_HEIGHT_SCALING.id,
             (screen, options) -> {
-                options.addSingleOptionEntry(
+                options.addBig(
                     screen.selectionOption("self", TemperatureHeightScaling::values)
                 );
             }
@@ -317,10 +317,10 @@ public class ModernBetaClientBuiltInProviders {
         registryHandler.register(
             VORONOI_POINTS.id,
             (screen, options) -> {
-                options.addSingleOptionEntry(screen.listEditButton(
+                options.addBig(screen.listEditButton(
                     screen.getText("self"),
                     "self",
-                    NbtElement.COMPOUND_TYPE,
+                    Tag.TAG_COMPOUND,
                     VoronoiPointBiomeListScreen::new
                 ));
             }
@@ -329,15 +329,15 @@ public class ModernBetaClientBuiltInProviders {
         registryHandler.register(
             FRACTAL_LAYERS.id,
             (screen, options) -> {
-                options.addSingleOptionEntry(screen.headerOption(
-                    screen.getText("self").formatted(Formatting.RED, Formatting.BOLD)));
+                options.addBig(screen.headerOption(
+                    screen.getText("self").withStyle(ChatFormatting.RED, ChatFormatting.BOLD)));
             }
         );
 
         registryHandler.register(
             USE_OCEAN_BIOMES.id,
             (screen, options) -> {
-                options.addSingleOptionEntry(screen.booleanOption("self"));
+                options.addBig(screen.booleanOption("self"));
             }
         );
 
@@ -358,10 +358,10 @@ public class ModernBetaClientBuiltInProviders {
                     screen.intRangeOption("depthMinY", minY, maxY),
                     screen.intRangeOption("depthMaxY", minY, maxY)
                 );
-                options.addSingleOptionEntry(screen.listEditButton(
+                options.addBig(screen.listEditButton(
                     screen.getText("points"),
                     "points",
-                    NbtElement.COMPOUND_TYPE,
+                    Tag.TAG_COMPOUND,
                     VoronoiPointCaveBiomeListScreen::new
                 ));
             }
@@ -374,7 +374,7 @@ public class ModernBetaClientBuiltInProviders {
         registryHandler.register(
             CONFIG_BIOME_PREVIEW_COLORS.id,
             (screen, options) -> {
-                options.addSingleOptionEntry(screen.mapEditButton(
+                options.addBig(screen.mapEditButton(
                     screen.getText("self"),
                     "self",
                     ExtendedBiomeIdToColorMapScreen::new
@@ -385,7 +385,7 @@ public class ModernBetaClientBuiltInProviders {
         registryHandler.register(
             CONFIG_MISCELLANEOUS.id,
             (screen, options) -> {
-                options.addSingleOptionEntry(screen.booleanOption("oldFogColorWeighting"));
+                options.addBig(screen.booleanOption("oldFogColorWeighting"));
                 addAll(
                     options,
                     screen.headerOption(screen.getText("defaultSettingsPreset")),
@@ -395,7 +395,7 @@ public class ModernBetaClientBuiltInProviders {
         );
     }
 
-    private static void addClimaticColorOptions(ModernBetaGraphicalCompoundSettingsScreen screen, OptionListWidget options) {
+    private static void addClimaticColorOptions(ModernBetaGraphicalCompoundSettingsScreen screen, OptionsList options) {
         addAll(
             options,
             screen.booleanOption("sky"),

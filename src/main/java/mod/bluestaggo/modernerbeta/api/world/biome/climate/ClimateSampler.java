@@ -2,8 +2,8 @@ package mod.bluestaggo.modernerbeta.api.world.biome.climate;
 
 import mod.bluestaggo.modernerbeta.api.debug.DebugTextProvider2D;
 import mod.bluestaggo.modernerbeta.settings.component.ClimateDistribution;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.biome.Biome;
 
 /**
  * Implemented by a climate sampler to provide temperatures and rainfall values,
@@ -32,7 +32,7 @@ public interface ClimateSampler extends DebugTextProvider2D {
     default double sampleModifiedTemperature(BlockPos blockPos, Biome.TemperatureModifier modifier) {
         double temp = this.sample(blockPos.getX(), blockPos.getZ()).temp();
         if (this.getHeightType().supportsModifier(modifier)) {
-            temp = modifier.getModifiedTemperature(blockPos, (float)temp);
+            temp = modifier.modifyTemperature(blockPos, (float)temp);
         }
         return temp;
     }

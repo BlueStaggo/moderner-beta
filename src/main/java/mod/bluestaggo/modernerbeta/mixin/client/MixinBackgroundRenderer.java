@@ -11,11 +11,11 @@ import mod.bluestaggo.modernerbeta.imixin.ModernBetaWorld;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.render.BackgroundRenderer;
-import net.minecraft.client.render.Camera;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.client.Camera;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.FogRenderer;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -30,16 +30,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 ^///?}
 
 @Environment(EnvType.CLIENT)
-@Mixin(BackgroundRenderer.class)
+@Mixin(FogRenderer.class)
 public abstract class MixinBackgroundRenderer {
     @Unique private static final String GET_FOG_COLOR_METHOD =
-        //? if >=1.21.2 {
-        "getFogColor";
-        //?} else {
-        /^"render";
-        ^///?}
+            //? if >=1.21.2 {
+            "computeFogColor";
+            //?} else {
+            /^"setupColor";
+            ^///?}
 
-    @Unique private static Vec3d modernBeta_pos;
+    @Unique private static Vec3 modernBeta_pos;
     @Unique private static int modernBeta_renderDistance = 16;
     @Unique private static float modernBeta_fogWeight = FogUtils.calculateFogWeight(16);
     @Unique private static boolean modernBeta_isModernBetaWorld = false;
@@ -48,30 +48,30 @@ public abstract class MixinBackgroundRenderer {
         method = GET_FOG_COLOR_METHOD,
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/world/biome/Biome;getWaterFogColor()I"
+            target = "Lnet/minecraft/world/level/biome/Biome;getWaterFogColor()I"
         )
     )
     private static int modifyWaterFogColor(Biome instance, Operation<Integer> original) {
         if (BlockColorSampler.INSTANCE.useWaterColor()) {
-            int x = (int)modernBeta_pos.getX();
-            int z = (int)modernBeta_pos.getZ();
-            
+            int x = (int)modernBeta_pos.x();
+            int z = (int)modernBeta_pos.z();
+
             Clime clime = BlockColorSampler.INSTANCE.getClimateSampler().sample(x, z);
             return BlockColorSampler.INSTANCE.colormapUnderwater.getColor(clime.temp(), clime.rain());
         }
 
         return original.call(instance);
     }
-    
+
     @Inject(method = GET_FOG_COLOR_METHOD, at = @At("HEAD"))
-    private static void captureVars(Camera camera, float tickDelta, ClientWorld world, int renderDistance, float skyDarkness,
+    private static void captureVars(Camera camera, float tickDelta, ClientLevel world, int renderDistance, float skyDarkness,
                                     //? if >=1.21.2 {
                                     CallbackInfoReturnable<Vector4f> cir
                                     //?} else {
                                     /^CallbackInfo ci
                                     ^///?}
     ) {
-        modernBeta_pos = camera.getPos();
+        modernBeta_pos = camera.getPosition();
 
         if (modernBeta_renderDistance != renderDistance) {
             modernBeta_renderDistance = renderDistance;
@@ -82,15 +82,15 @@ public abstract class MixinBackgroundRenderer {
         // old fog weighting won't be used if not.
         modernBeta_isModernBetaWorld = ((ModernBetaWorld)world).modernerBeta$isModded();
     }
-    
+
     @ModifyVariable(
         method = GET_FOG_COLOR_METHOD,
         at = @At(
             value = "INVOKE",
             //? if >=1.21.2 {
-            target = "Lnet/minecraft/client/world/ClientWorld;getSkyColor(Lnet/minecraft/util/math/Vec3d;F)I"
+            target = "Lnet/minecraft/client/multiplayer/ClientLevel;getSkyColor(Lnet/minecraft/world/phys/Vec3;F)I"
             //?} else {
-            /^target = "Lnet/minecraft/client/world/ClientWorld;getSkyColor(Lnet/minecraft/util/math/Vec3d;F)Lnet/minecraft/util/math/Vec3d;"
+            /^target = "Lnet/minecraft/client/multiplayer/ClientLevel;getSkyColor(Lnet/minecraft/world/phys/Vec3;F)Lnet/minecraft/world/phys/Vec3;"
             ^///?}
         ),
         index = /^? if >=1.21.2 {^/10/^?} else {^/ /^7 ^//^?}^/

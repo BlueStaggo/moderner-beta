@@ -7,14 +7,14 @@ import mod.bluestaggo.modernerbeta.api.world.biome.climate.ClimateSampler;
 import mod.bluestaggo.modernerbeta.api.world.biome.climate.TemperatureHeightScaling;
 import mod.bluestaggo.modernerbeta.imixin.ModernBetaWorld;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(World.class)
+@Mixin(Level.class)
 public abstract class MixinWorld implements ModernBetaWorld {
     @Unique private static final int MODERNER_BETA$TEMPERATURE_CACHE_CAPACITY = 128;
 
@@ -92,14 +92,14 @@ public abstract class MixinWorld implements ModernBetaWorld {
             );
         }
 
-        double temperature = biome.getTemperature();
+        double temperature = biome.getBaseTemperature();
         if (climateSampler != null) {
             temperature = climateSampler.sample(pos.getX(), pos.getZ()).temp();
         }
 
-        Biome.TemperatureModifier temperatureModifier = biomeAccessor.getWeather().temperatureModifier();
+        Biome.TemperatureModifier temperatureModifier = biomeAccessor.getClimateSettings().temperatureModifier();
         if (temperatureHeightScaling.supportsModifier(temperatureModifier)) {
-            temperature = temperatureModifier.getModifiedTemperature(pos, (float)temperature);
+            temperature = temperatureModifier.modifyTemperature(pos, (float)temperature);
         }
 
         if (temperatureHeightScaling != null) {
@@ -116,7 +116,7 @@ public abstract class MixinWorld implements ModernBetaWorld {
         }
 
         if (this.modernerBeta$getTemperatureHeightScaling() == TemperatureHeightScaling.BETA) {
-            pos = pos.withY(64);
+            pos = pos.atY(64);
         }
 
         double temp = this.modernerBeta$sampleTemperature(biome, pos);
@@ -127,9 +127,9 @@ public abstract class MixinWorld implements ModernBetaWorld {
 
     @WrapOperation(
         //? if >=1.21.6 {
-        method = "getPrecipitation",
+        method = "precipitationAt",
         //?} else {
-        /*method = "hasRain",
+        /*method = "isRainingAt",
         *///?}
         at = @At(
             value = "INVOKE",

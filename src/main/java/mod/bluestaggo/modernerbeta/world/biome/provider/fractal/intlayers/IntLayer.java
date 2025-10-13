@@ -4,13 +4,13 @@ import it.unimi.dsi.fastutil.longs.Long2IntLinkedOpenHashMap;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.Layer;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.LayerRandom;
-import net.minecraft.registry.RegistryEntryLookup;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.source.SeedMixer;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderGetter;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.util.LinearCongruentialGenerator;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.biome.Biome;
 
 public abstract class IntLayer {
     private transient final long seed;
@@ -28,17 +28,17 @@ public abstract class IntLayer {
 
         long saltedSeed = seed;
         for (int i = 0; i < 3; i++) {
-            saltedSeed = SeedMixer.mixSeed(saltedSeed, seed);
+            saltedSeed = LinearCongruentialGenerator.next(saltedSeed, seed);
         }
         this.saltedSeed = saltedSeed;
     }
 
-    public abstract int generate(RegistryEntryLookup<Biome> biomeRegistry, int x, int z);
+    public abstract int generate(HolderGetter<Biome> biomeRegistry, int x, int z);
 
-    public int sample(RegistryEntryLookup<Biome> biomeRegistry, int x, int z) {
+    public int sample(HolderGetter<Biome> biomeRegistry, int x, int z) {
         Long2IntLinkedOpenHashMap cache = this.cache.get();
 
-        long coord = ChunkPos.toLong(x, z);
+        long coord = ChunkPos.asLong(x, z);
         int value = cache.get(coord);
 
         if (value != Integer.MIN_VALUE) {
@@ -56,13 +56,13 @@ public abstract class IntLayer {
     public void init(long worldSeed) {
         this.saltedSeed = this.seed;
         for (int i = 0; i < 3; i++) {
-            this.saltedSeed = SeedMixer.mixSeed(this.saltedSeed, this.seed);
+            this.saltedSeed = LinearCongruentialGenerator.next(this.saltedSeed, this.seed);
         }
         long preWorldSeed = this.saltedSeed;
 
         this.saltedSeed = worldSeed;
         for (int i = 0; i < 3; i++) {
-            this.saltedSeed = SeedMixer.mixSeed(this.saltedSeed, preWorldSeed);
+            this.saltedSeed = LinearCongruentialGenerator.next(this.saltedSeed, preWorldSeed);
         }
 
         this.random = ThreadLocal.withInitial(() -> new LayerRandom(this.saltedSeed));
@@ -74,10 +74,10 @@ public abstract class IntLayer {
         return random;
     }
 
-    protected static Biome getBiomeFromLayer(RegistryEntryLookup<Biome> biomeRegistry, Layer layer, int x, int z) {
+    protected static Biome getBiomeFromLayer(HolderGetter<Biome> biomeRegistry, Layer layer, int x, int z) {
         ExtendedBiomeId extendedBiomeId = layer.sample(x, z);
-        return biomeRegistry.getOptional(RegistryKey.of(RegistryKeys.BIOME, extendedBiomeId.baseId()))
-            .map(RegistryEntry::value)
+        return biomeRegistry.get(ResourceKey.create(Registries.BIOME, extendedBiomeId.baseId()))
+            .map(Holder::value)
             .orElse(null);
     }
 }

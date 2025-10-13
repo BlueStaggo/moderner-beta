@@ -11,9 +11,9 @@ import mod.bluestaggo.modernerbeta.settings.SettingsComponentType;
 import mod.bluestaggo.modernerbeta.world.biome.HeightConfig;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.LayerType;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.predicates.BiomePredicateType;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 
 public final class ModernBetaRegistries {
     private static IRegistryHelper registryHelper;
@@ -28,11 +28,11 @@ public final class ModernBetaRegistries {
     public static Registry<LayerType<?>> FRACTAL_LAYER;
     public static Registry<BiomePredicateType<?>> BIOME_PREDICATE;
 
-    private static <T> Registry<T> register(RegistryKey<Registry<T>> key) {
+    private static <T> Registry<T> register(ResourceKey<Registry<T>> key) {
         return registryHelper.createSimple(key).build();
     }
 
-    private static <T> Registry<T> registerDefaulted(RegistryKey<Registry<T>> key, Identifier defaultKey) {
+    private static <T> Registry<T> registerDefaulted(ResourceKey<Registry<T>> key, ResourceLocation defaultKey) {
         return registryHelper.createDefaulted(key, defaultKey).build();
     }
 

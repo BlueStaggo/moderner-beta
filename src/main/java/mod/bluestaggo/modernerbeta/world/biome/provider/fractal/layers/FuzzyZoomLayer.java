@@ -4,7 +4,7 @@ import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 
 public class FuzzyZoomLayer extends SingleParentLayer {
-    public static final com.mojang.serialization.MapCodec<FuzzyZoomLayer> CODEC = VersionCompat.createMaybeMapCodec(
+    public static final com.mojang.serialization./*Map*/Codec<FuzzyZoomLayer> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> fillSingleParentLayerFields(instance)
             .apply(instance, FuzzyZoomLayer::new)
     );
@@ -35,10 +35,10 @@ public class FuzzyZoomLayer extends SingleParentLayer {
         if (xHalf == 0) {
             return random.nextInt(2) == 1 ? this.parentLayer.sample(halfX, halfZ + 1) : biome00;
         } else if (zHalf == 0) {
-            random.skip(1);
+            random.consumeCount(1);
             return random.nextInt(2) == 1 ? this.parentLayer.sample(halfX + 1, halfZ) : biome00;
         } else {
-            random.skip(2);
+            random.consumeCount(2);
             int choice = random.nextInt(4);
             return switch (choice) {
                 case 0 -> biome00;

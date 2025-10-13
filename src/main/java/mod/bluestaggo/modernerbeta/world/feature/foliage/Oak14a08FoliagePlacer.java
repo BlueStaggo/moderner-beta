@@ -3,15 +3,15 @@ package mod.bluestaggo.modernerbeta.world.feature.foliage;
 import com.mojang.serialization.Codec;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.world.feature.ModernBetaFoliagePlacers;
-import net.minecraft.util.math.intprovider.IntProvider;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.TestableWorld;
-import net.minecraft.world.gen.feature.TreeFeatureConfig;
-import net.minecraft.world.gen.foliage.FoliagePlacer;
-import net.minecraft.world.gen.foliage.FoliagePlacerType;
+import net.minecraft.util.RandomSource;
+import net.minecraft.util.valueproviders.IntProvider;
+import net.minecraft.world.level.LevelSimulatedReader;
+import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
+import net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacer;
+import net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacerType;
 
 public class Oak14a08FoliagePlacer extends FoliagePlacer {
-	public static final com.mojang.serialization.MapCodec<Oak14a08FoliagePlacer> CODEC = VersionCompat.createMaybeMapCodec(instance -> fillFoliagePlacerFields(instance)
+	public static final com.mojang.serialization./*Map*/Codec<Oak14a08FoliagePlacer> CODEC = VersionCompat.createMaybeMapCodec(instance -> foliagePlacerParts(instance)
 			.and(Codec.intRange(0, 16).fieldOf("height").forGetter(placer -> placer.height))
 			.apply(instance, Oak14a08FoliagePlacer::new));
 
@@ -23,24 +23,24 @@ public class Oak14a08FoliagePlacer extends FoliagePlacer {
 	}
 
 	@Override
-	protected FoliagePlacerType<?> getType() {
+	protected FoliagePlacerType<?> type() {
 		return ModernBetaFoliagePlacers.OAK_14A_08_FOLIAGE_PLACER;
 	}
 
 	@Override
-	protected void generate(TestableWorld world, BlockPlacer placer, Random random, TreeFeatureConfig config, int trunkHeight, TreeNode treeNode, int foliageHeight, int radius, int offset) {
+	protected void createFoliage(LevelSimulatedReader world, FoliageSetter placer, RandomSource random, TreeConfiguration config, int trunkHeight, FoliageAttachment treeNode, int foliageHeight, int radius, int offset) {
 		for (int y = offset; y >= offset - foliageHeight; --y) {
-			this.generateSquare(world, placer, random, config, treeNode.getCenter(), radius, y, treeNode.isGiantTrunk());
+			this.placeLeavesRow(world, placer, random, config, treeNode.pos(), radius, y, treeNode.doubleTrunk());
 		}
 	}
 
 	@Override
-	public int getRandomHeight(Random random, int trunkHeight, TreeFeatureConfig config) {
+	public int foliageHeight(RandomSource random, int trunkHeight, TreeConfiguration config) {
 		return this.height;
 	}
 
 	@Override
-	protected boolean isInvalidForLeaves(Random random, int dx, int y, int dz, int radius, boolean giantTrunk) {
+	protected boolean shouldSkipLocation(RandomSource random, int dx, int y, int dz, int radius, boolean giantTrunk) {
 		return y == 0 && Math.abs(dx) + Math.abs(dz) >= radius * 2;
 	}
 }

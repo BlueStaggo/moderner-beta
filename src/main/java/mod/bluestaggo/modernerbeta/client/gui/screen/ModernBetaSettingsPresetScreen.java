@@ -6,24 +6,24 @@ import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPresetCategory;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.sound.PositionedSoundInstance;
-import net.minecraft.registry.Registry;
-import net.minecraft.screen.ScreenTexts;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.OrderedText;
-import net.minecraft.text.Text;
-import net.minecraft.util.Colors;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
+import net.minecraft.ChatFormatting;
 //? if <1.21.9
-import net.minecraft.util.Util;
+import net.minecraft.Util;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.ObjectSelectionList;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.core.Registry;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.CommonColors;
+import net.minecraft.util.FormattedCharSequence;
 
 import java.util.List;
 
@@ -35,10 +35,10 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
     private static final String TEXT_PRESET_CATEGORY_NAME = "createWorld.customize.modern_beta.preset_category.name";
     private static final String TEXT_PRESET_CATEGORY_DESC = "createWorld.customize.modern_beta.preset_category.desc";
     
-    private static final Identifier TEXTURE_PRESET_CUSTOM = createTextureId(ModernerBeta.createId("custom"));
+    private static final ResourceLocation TEXTURE_PRESET_CUSTOM = createTextureId(ModernerBeta.createId("custom"));
     
     private final ModernBetaWorldScreen worldScreen;
-    private final List<Identifier> presets;
+    private final List<ResourceLocation> presets;
     private final boolean displayCategories;
 
     private final Registry<ModernBetaSettingsPreset> presetRegistry;
@@ -46,17 +46,17 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
 
     private ModernBetaSettingsPreset preset;
     private PresetsListWidget listWidget;
-    private ButtonWidget selectPresetButton;
+    private Button selectPresetButton;
 
     public ModernBetaSettingsPresetScreen(
         ModernBetaScreen parent,
         Registry<ModernBetaSettingsPreset> presetRegistry,
         Registry<ModernBetaSettingsPresetCategory> presetCategoryRegistry,
-        List<Identifier> presets,
+        List<ResourceLocation> presets,
         ModernBetaSettingsPreset preset,
         boolean displayCategories
     ) {
-        super(Text.translatable(TEXT_TITLE), parent);
+        super(Component.translatable(TEXT_TITLE), parent);
 
         this.presets = presets;
         this.preset = preset;
@@ -81,31 +81,31 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
         super.init();
         
         this.listWidget = new PresetsListWidget(this.presets);
-        this.addSelectableChild(this.listWidget);
+        this.addWidget(this.listWidget);
 
-        this.selectPresetButton = this.addDrawableChild(ButtonWidget.builder(
-            Text.translatable("createWorld.customize.presets.select"),
+        this.selectPresetButton = this.addRenderableWidget(Button.builder(
+            Component.translatable("createWorld.customize.presets.select"),
             onPress -> {
                 this.worldScreen.setPreset(this.preset);
-                this.client.setScreen(this.parent);
-        }).dimensions(this.width / 2 - 154, this.height - 26, 150, 20).build());
+                this.minecraft.setScreen(this.parent);
+        }).bounds(this.width / 2 - 154, this.height - 26, 150, 20).build());
         this.selectPresetButton.active = !this.displayCategories;
-        this.addDrawableChild(ButtonWidget.builder(
-            this.displayCategories ? ScreenTexts.CANCEL : ScreenTexts.BACK,
-            button -> this.client.setScreen(this.parent)
-        ).dimensions(this.width / 2 + 4, this.height - 26, 150, 20).build());
+        this.addRenderableWidget(Button.builder(
+            this.displayCategories ? CommonComponents.GUI_CANCEL : CommonComponents.GUI_BACK,
+            button -> this.minecraft.setScreen(this.parent)
+        ).bounds(this.width / 2 + 4, this.height - 26, 150, 20).build());
 
-        this.updateSelectButton(this.listWidget.getSelectedOrNull() instanceof PresetsListWidget.PresetEntry);
+        this.updateSelectButton(this.listWidget.getSelected() instanceof PresetsListWidget.PresetEntry);
     }
 
     //? if <1.20.5 {
     /*@Override
-    public void renderBackground(DrawContext context) {
+    public void renderBackground(GuiGraphics context) {
     }
     *///?}
 
     @Override
-    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+    public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
         //? if <1.20.5
         /*this.listWidget.render(context, mouseX, mouseY, delta);*/
         super.render(context, mouseX, mouseY, delta);
@@ -117,24 +117,24 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
         this.selectPresetButton.active = hasSelected;
     }
     
-    private static Identifier createTextureId(Identifier id) {
+    private static ResourceLocation createTextureId(ResourceLocation id) {
         return id.withPath("textures/gui/moderner_beta_settings_preset/" + id.getPath() + ".png");
     }
 
-    private static Identifier createPresetTextureId(Identifier id) {
-        Identifier idObj = createTextureId(id);
-        return MinecraftClient.getInstance().getResourceManager().getResource(idObj).isPresent()
+    private static ResourceLocation createPresetTextureId(ResourceLocation id) {
+        ResourceLocation idObj = createTextureId(id);
+        return Minecraft.getInstance().getResourceManager().getResource(idObj).isPresent()
             ? idObj : TEXTURE_PRESET_CUSTOM;
     }
 
-    private class PresetsListWidget extends AlwaysSelectedEntryListWidget<PresetsListWidget.AbstractPresetEntry> {
+    private class PresetsListWidget extends ObjectSelectionList<PresetsListWidget.AbstractPresetEntry> {
         private static final int ITEM_HEIGHT = 60;
         private static final int ICON_SIZE = 56;
 
-        public PresetsListWidget(List<Identifier> presets) {
+        public PresetsListWidget(List<ResourceLocation> presets) {
             //? if >=1.20.3 {
             super(
-                ModernBetaSettingsPresetScreen.this.client,
+                ModernBetaSettingsPresetScreen.this.minecraft,
                 ModernBetaSettingsPresetScreen.this.width,
                 ModernBetaSettingsPresetScreen.this.height - 64,
                 32,
@@ -142,7 +142,7 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
             );
             //?} else {
             /*super(
-                ModernBetaSettingsPresetScreen.this.client,
+                ModernBetaSettingsPresetScreen.this.minecraft,
                 ModernBetaSettingsPresetScreen.this.width,
                 ModernBetaSettingsPresetScreen.this.height,
                 32,
@@ -175,13 +175,13 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
         private static final int SCROLLBAR_X_OFFSET = 30;
         //? if >=1.20.5 {
         @Override
-        protected int getScrollbarX() {
-            return super.getScrollbarX() + SCROLLBAR_X_OFFSET;
+        protected int scrollBarX() {
+            return super.scrollBarX() + SCROLLBAR_X_OFFSET;
         }
         //?} else {
         /*@Override
-        protected int getScrollbarPositionX() {
-            return super.getScrollbarPositionX() + SCROLLBAR_X_OFFSET;
+        protected int getScrollbarPosition() {
+            return super.getScrollbarPosition() + SCROLLBAR_X_OFFSET;
         }
         *///?}
 
@@ -190,12 +190,12 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
             return super.getRowWidth() + 85;
         }
         
-        private abstract class AbstractPresetEntry extends AlwaysSelectedEntryListWidget.Entry<AbstractPresetEntry> {
+        private abstract class AbstractPresetEntry extends ObjectSelectionList.Entry<AbstractPresetEntry> {
             //? if >=1.20.2 {
-            private static final Identifier TEXTURE_JOIN = VersionCompat.vanillaId("world_list/join");
-            private static final Identifier TEXTURE_JOIN_HIGHLIGHTED =  VersionCompat.vanillaId("world_list/join_highlighted");
+            private static final ResourceLocation TEXTURE_JOIN = VersionCompat.vanillaId("world_list/join");
+            private static final ResourceLocation TEXTURE_JOIN_HIGHLIGHTED =  VersionCompat.vanillaId("world_list/join_highlighted");
             //?} else {
-            /*private static final Identifier TEXTURE_WORLD_SELECT = new Identifier("textures/gui/world_selection.png");
+            /*private static final ResourceLocation TEXTURE_WORLD_SELECT = new ResourceLocation("textures/gui/world_selection.png");
             private static final int TEXTURE_WORLD_SELECT_ATLAS_SIZE = 256;
             private static final int TEXTURE_WORLD_SELECT_SIZE= 32;
             *///?}
@@ -203,14 +203,14 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
             private static final int TEXT_SPACING = 11;
             private static final int TEXT_LENGTH = 240;
             
-            private final Identifier presetTexture;
-            private final MutableText presetName;
-            private final MutableText presetDesc;
+            private final ResourceLocation presetTexture;
+            private final MutableComponent presetName;
+            private final MutableComponent presetDesc;
 
             //? if <1.21.9
             private long time;
             
-            public AbstractPresetEntry(Identifier presetName) {
+            public AbstractPresetEntry(ResourceLocation presetName) {
                 this.presetTexture = this.getPresetTexture(presetName);
                 this.presetName = this.getPresetName(presetName);
                 this.presetDesc = this.getPresetDesc(presetName);
@@ -220,29 +220,29 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
 
             protected abstract void selectPreset();
 
-            protected Identifier getPresetTexture(Identifier presetName) {
+            protected ResourceLocation getPresetTexture(ResourceLocation presetName) {
                 return createPresetTextureId(presetName);
             }
 
-            protected MutableText getPresetName(Identifier presetName) {
-                return Text.translatable(TEXT_PRESET_NAME + "." + presetName.toTranslationKey());
+            protected MutableComponent getPresetName(ResourceLocation presetName) {
+                return Component.translatable(TEXT_PRESET_NAME + "." + presetName.toLanguageKey());
             }
 
-            protected MutableText getPresetDesc(Identifier presetName) {
-                return Text.translatable(TEXT_PRESET_DESC + "." + presetName.toTranslationKey());
+            protected MutableComponent getPresetDesc(ResourceLocation presetName) {
+                return Component.translatable(TEXT_PRESET_DESC + "." + presetName.toLanguageKey());
             }
 
-            protected Formatting getTextFormatting() {
-                return Formatting.YELLOW;
-            }
-
-            @Override
-            public Text getNarration() {
-                return Text.empty();
+            protected ChatFormatting getTextFormatting() {
+                return ChatFormatting.YELLOW;
             }
 
             @Override
-            public void render(DrawContext context,
+            public Component getNarration() {
+                return Component.empty();
+            }
+
+            @Override
+            public void render(GuiGraphics context,
                 //? if <1.21.9
                 int index, int y, int x, int entryWidth, int entryHeight,
                 int mouseX, int mouseY, boolean hovered, float tickDelta) {
@@ -251,35 +251,35 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
                 int y = this.getContentY();
                 *///?}
 
-                MutableText presetNameText = this.presetName.formatted(this.getTextFormatting());
+                MutableComponent presetNameText = this.presetName.withStyle(this.getTextFormatting());
                 
-                List<OrderedText> presetDescTexts = this.splitText(textRenderer, this.presetDesc);
+                List<FormattedCharSequence> presetDescTexts = this.splitText(font, this.presetDesc);
 
                 int textStartX = x + ICON_SIZE + 3;
                 int textStartY = 1;
                 
-                context.drawText(textRenderer, presetNameText, textStartX, y + textStartY, Colors.WHITE, false);
+                context.drawString(font, presetNameText, textStartX, y + textStartY, CommonColors.WHITE, false);
                 
                 int descSpacing = TEXT_SPACING + textStartY + 1;
-                for (OrderedText line : presetDescTexts) {
-                    context.drawText(textRenderer, line, textStartX, y + descSpacing, Colors.GRAY, false);
+                for (FormattedCharSequence line : presetDescTexts) {
+                    context.drawString(font, line, textStartX, y + descSpacing, CommonColors.GRAY, false);
                     descSpacing += TEXT_SPACING;
                 }
 
                 this.draw(context, x, y, this.presetTexture);
 
-                if (client != null && client.options.getTouchscreen().getValue() || hovered) {
+                if (minecraft != null && minecraft.options.touchscreen().get() || hovered) {
                     boolean isMouseHovering = (mouseX - x) < ICON_SIZE;
 
                     context.fill(x, y, x + ICON_SIZE, y + ICON_SIZE, -1601138544);
                     //? if >=1.20.2 {
-                    Identifier texture = isMouseHovering ? TEXTURE_JOIN_HIGHLIGHTED : TEXTURE_JOIN;
-                    context.drawGuiTexture(
+                    ResourceLocation texture = isMouseHovering ? TEXTURE_JOIN_HIGHLIGHTED : TEXTURE_JOIN;
+                    context.blitSprite(
                         //? if >=1.21.6 {
-                        net.minecraft.client.gl.RenderPipelines.GUI_TEXTURED,
-                        //?} else if >=1.21.2 {
-                        /*net.minecraft.client.render.RenderLayer::getGuiTextured,
-                        *///?}
+                        /*.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED,
+                     *///?} else if >=1.21.2 {
+                        /*.minecraft.client.render.RenderLayer::getGuiTextured,
+                     *///?}
                         texture,
                         x,
                         y,
@@ -288,7 +288,7 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
                     );
                     //?} else {
                     /*float v = isMouseHovering ? TEXTURE_WORLD_SELECT_SIZE : 0;
-                    context.drawTexture(
+                    context.blit(
                         TEXTURE_WORLD_SELECT,
                         x,
                         y,
@@ -306,7 +306,7 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
             }
             
             @Override
-            public boolean mouseClicked(/*? if <1.21.9 {*/ double mouseX, double mouseY, int button /*?} else {*/ /*net.minecraft.client.gui.Click click, boolean doubleClick *//*?}*/) {
+            public boolean mouseClicked(/*? if <1.21.9 {*/ double mouseX, double mouseY, int button /*?} else {*/ /*net.minecraft.client.input.MouseButtonEvent click, boolean doubleClick *//*?}*/) {
                 //? if >=1.21.9 {
                 /*double mouseX = click.x();
                 double mouseY = click.y();
@@ -324,20 +324,20 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
                     this.selectPreset();
                 }
                 
-                if (/*? >=1.21.9 {*/ /*doubleClick *//*?} else {*/ Util.getMeasuringTimeMs() - this.time < 250L /*?}*/) {
+                if (/*? >=1.21.9 {*/ /*doubleClick *//*?} else {*/ Util.getMillis() - this.time < 250L /*?}*/) {
                     this.selectPreset();
                 }
 
                 //? if <1.21.9
-                this.time = Util.getMeasuringTimeMs();
+                this.time = Util.getMillis();
                 
                 return true;
             }
 
-            private void draw(DrawContext context, int x, int y, Identifier textureId) {
-                context.drawTexture(
+            private void draw(GuiGraphics context, int x, int y, ResourceLocation textureId) {
+                context.blit(
                     //? if >= 1.21.6 {
-                    net.minecraft.client.gl.RenderPipelines.GUI_TEXTURED,
+                    net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED,
                     //?} else if >=1.21.2 {
                     /*net.minecraft.client.render.RenderLayer::getGuiTextured,
                     *///?}
@@ -349,15 +349,15 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
                 );
             }
             
-            private List<OrderedText> splitText(TextRenderer textRenderer, Text text) {
-                return textRenderer.wrapLines(text, TEXT_LENGTH);
+            private List<FormattedCharSequence> splitText(Font textRenderer, Component text) {
+                return textRenderer.split(text, TEXT_LENGTH);
             }
         }
 
         private class PresetEntry extends AbstractPresetEntry {
-            private final Identifier key;
+            private final ResourceLocation key;
 
-            public PresetEntry(Identifier presetName) {
+            public PresetEntry(ResourceLocation presetName) {
                 super(presetName);
                 this.key = presetName;
             }
@@ -371,15 +371,15 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
             @Override
             protected void selectPreset() {
                 ModernBetaSettingsPresetScreen presetScreen = ModernBetaSettingsPresetScreen.this;
-                MinecraftClient minecraftClient = presetScreen.client;
+                Minecraft minecraftClient = presetScreen.minecraft;
 
                 minecraftClient.getSoundManager().play(
-                    PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0f)
+                    SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0f)
                 );
 
             presetScreen.worldScreen.setPreset(ModernBetaSettingsPreset.referenced(this.key));
 
-                while (minecraftClient.currentScreen instanceof ModernBetaSettingsPresetScreen subPresetScreen) {
+                while (minecraftClient.screen instanceof ModernBetaSettingsPresetScreen subPresetScreen) {
                     minecraftClient.setScreen(subPresetScreen.parent);
                 }
             }
@@ -388,30 +388,30 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
         private class PresetCategoryEntry extends AbstractPresetEntry {
             private final ModernBetaSettingsPresetCategory presetCategory;
 
-            public PresetCategoryEntry(Identifier presetName, ModernBetaSettingsPresetCategory presetCategory) {
+            public PresetCategoryEntry(ResourceLocation presetName, ModernBetaSettingsPresetCategory presetCategory) {
                 super(presetName);
                 this.presetCategory = presetCategory;
             }
 
             @Override
-            protected Identifier getPresetTexture(Identifier presetName) {
+            protected ResourceLocation getPresetTexture(ResourceLocation presetName) {
                 presetName = presetCategoryRegistry.get(presetName).defaultIcon();
                 return super.getPresetTexture(presetName);
             }
 
             @Override
-            protected MutableText getPresetName(Identifier presetName) {
-                return Text.translatable(TEXT_PRESET_CATEGORY_NAME + "." + presetName.toTranslationKey());
+            protected MutableComponent getPresetName(ResourceLocation presetName) {
+                return Component.translatable(TEXT_PRESET_CATEGORY_NAME + "." + presetName.toLanguageKey());
             }
 
             @Override
-            protected MutableText getPresetDesc(Identifier presetName) {
-                return Text.translatable(TEXT_PRESET_CATEGORY_DESC + "." + presetName.toTranslationKey());
+            protected MutableComponent getPresetDesc(ResourceLocation presetName) {
+                return Component.translatable(TEXT_PRESET_CATEGORY_DESC + "." + presetName.toLanguageKey());
             }
 
             @Override
-            protected Formatting getTextFormatting() {
-                return Formatting.AQUA;
+            protected ChatFormatting getTextFormatting() {
+                return ChatFormatting.AQUA;
             }
 
             @Override
@@ -421,13 +421,13 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
 
             @Override
             protected void selectPreset() {
-                assert client != null;
+                assert minecraft != null;
 
-                client.getSoundManager().play(
-                    PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0f)
+                minecraft.getSoundManager().play(
+                    SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0f)
                 );
 
-                client.setScreen(new ModernBetaSettingsPresetScreen(
+                minecraft.setScreen(new ModernBetaSettingsPresetScreen(
                     ModernBetaSettingsPresetScreen.this,
                     presetRegistry,
                     presetCategoryRegistry,

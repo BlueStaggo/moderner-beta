@@ -8,108 +8,108 @@ import mod.bluestaggo.modernerbeta.world.biome.HeightConfig;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.option.GameOptions;
-import net.minecraft.client.option.SimpleOption;
-import net.minecraft.client.world.GeneratorOptionsHolder;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.registry.Registries;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.Pair;
-import net.minecraft.util.StringIdentifiable;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.OptionInstance;
+import net.minecraft.client.Options;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.worldselection.WorldCreationContext;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.util.Tuple;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.*;
 
 @Environment(EnvType.CLIENT)
-public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBetaGraphicalSettingsScreen<NbtCompound> {
+public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBetaGraphicalSettingsScreen<CompoundTag> {
     public ModernBetaGraphicalCompoundSettingsScreen(
         String title,
         Screen parent,
-        GeneratorOptionsHolder generatorOptionsHolder,
+        WorldCreationContext generatorOptionsHolder,
         String type,
-        NbtCompound settings,
-        Consumer<NbtCompound> onDone
+        CompoundTag settings,
+        Consumer<CompoundTag> onDone
     ) {
         super(title, parent, generatorOptionsHolder, type, settings, onDone);
     }
 
-    protected Pair<NbtCompound, String> resolveSettings(String key) {
+    protected Tuple<CompoundTag, String> resolveSettings(String key) {
         String[] subKeys = key.split("\\.");
-        var defaultPair = new Pair<>(this.settings, key);
+        var defaultPair = new Tuple<>(this.settings, key);
         if (subKeys.length <= 1) {
             return defaultPair;
         }
 
-        NbtElement element = this.settings;
+        Tag element = this.settings;
         for (int i = 0; i < subKeys.length - 1; i++) {
-            if (element instanceof NbtList list) {
+            if (element instanceof ListTag list) {
                 try {
                     element = list.get(Integer.parseInt(subKeys[i]));
                 } catch (NumberFormatException ignored) {
                     return defaultPair;
                 }
-            } else if (element instanceof NbtCompound compound) {
+            } else if (element instanceof CompoundTag compound) {
                 element = compound.get(subKeys[i]);
             } else {
                 return defaultPair;
             }
         }
 
-        if (element instanceof NbtCompound compound) {
-            return new Pair<>(compound, subKeys[subKeys.length - 1]);
+        if (element instanceof CompoundTag compound) {
+            return new Tuple<>(compound, subKeys[subKeys.length - 1]);
         }
         return defaultPair;
     }
 
-    public SimpleOption<Identifier> primarySelectionOption(String key, Identifier... options) {
-        Pair<NbtCompound, String> resolvedSettings = this.resolveSettings(key);
-        NbtCompound settings = resolvedSettings.getLeft();
-        String subKey = resolvedSettings.getRight();
+    public OptionInstance<ResourceLocation> primarySelectionOption(String key, ResourceLocation... options) {
+        Tuple<CompoundTag, String> resolvedSettings = this.resolveSettings(key);
+        CompoundTag settings = resolvedSettings.getA();
+        String subKey = resolvedSettings.getB();
         String textKey = this.getTextKey(key);
         Supplier<String> stringSupplier = () -> VersionCompat.unwrap(settings.getString(subKey));
 
-        return new SimpleOption<>(
+        return new OptionInstance<>(
             textKey,
             getTooltip(textKey),
-            (optionText, value) -> Text.translatable(textKey + "." + value),
-            new SimpleOption.LazyCyclingCallbacks<>(
+            (optionText, value) -> Component.translatable(textKey + "." + value),
+            new OptionInstance.LazyEnum<>(
                 () -> Arrays.stream(options).toList(),
                 value -> Arrays.stream(options).filter(value::equals).findFirst(),
-                Identifier.CODEC
+                ResourceLocation.CODEC
             ),
             VersionCompat.id(stringSupplier.get()),
             value -> {
                 settings.putString(subKey, value.toString());
-                this.clearAndInit();
+                this.rebuildWidgets();
             }
         );
     }
 
-    public SimpleOption<String> selectionOption(String key, Supplier<StringIdentifiable[]> options) {
+    public OptionInstance<String> selectionOption(String key, Supplier<StringRepresentable[]> options) {
         return this.selectionOption(key,
             Arrays.stream(options.get())
-                .map(StringIdentifiable::asString)
+                .map(StringRepresentable::getSerializedName)
                 .toArray(String[]::new));
     }
 
-    public SimpleOption<String> selectionOption(String key, String... options) {
-        Pair<NbtCompound, String> resolvedSettings = this.resolveSettings(key);
-        NbtCompound settings = resolvedSettings.getLeft();
-        String subKey = resolvedSettings.getRight();
+    public OptionInstance<String> selectionOption(String key, String... options) {
+        Tuple<CompoundTag, String> resolvedSettings = this.resolveSettings(key);
+        CompoundTag settings = resolvedSettings.getA();
+        String subKey = resolvedSettings.getB();
         String textKey = this.getTextKey(key);
         Supplier<String> stringSupplier = () -> VersionCompat.unwrap(settings.getString(subKey));
 
-        return new SimpleOption<>(
+        return new OptionInstance<>(
             textKey,
             getTooltip(textKey),
-            (optionText, value) -> Text.translatable(textKey + "." + value),
-            new SimpleOption.LazyCyclingCallbacks<>(
+            (optionText, value) -> Component.translatable(textKey + "." + value),
+            new OptionInstance.LazyEnum<>(
                 () -> Arrays.stream(options).toList(),
                 value -> Arrays.stream(options).filter(value::equals).findFirst(),
                 Codec.STRING
@@ -119,44 +119,44 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
         );
     }
 
-    public SimpleOption<Boolean> booleanOption(String key) {
-        Pair<NbtCompound, String> resolvedSettings = this.resolveSettings(key);
-        NbtCompound settings = resolvedSettings.getLeft();
-        String subKey = resolvedSettings.getRight();
+    public OptionInstance<Boolean> booleanOption(String key) {
+        Tuple<CompoundTag, String> resolvedSettings = this.resolveSettings(key);
+        CompoundTag settings = resolvedSettings.getA();
+        String subKey = resolvedSettings.getB();
         BooleanSupplier booleanSupplier = () -> VersionCompat.unwrapOrElse(settings.getBoolean(subKey), false);
 
-        return SimpleOption.ofBoolean(
+        return OptionInstance.createBoolean(
             this.getTextKey(key),
             booleanSupplier.getAsBoolean(),
             value -> settings.putBoolean(subKey, value)
         );
     }
 
-    public SimpleOption<Integer> intRangeOption(String key, int min, int max) {
+    public OptionInstance<Integer> intRangeOption(String key, int min, int max) {
         String textKey = this.getTextKey(key);
-        return this.intRangeOption(key, new SimpleOption.ValidatingIntSliderCallbacks(min, max),
-            (optionText, value) -> GameOptions.getGenericValueText(Text.translatable(textKey), value));
+        return this.intRangeOption(key, new OptionInstance.IntRange(min, max),
+            (optionText, value) -> Options.genericValueLabel(Component.translatable(textKey), value));
     }
 
-    public SimpleOption<Integer> intRangeOption(String key, int min, int max, int multiple) {
+    public OptionInstance<Integer> intRangeOption(String key, int min, int max, int multiple) {
         String textKey = this.getTextKey(key);
         return this.intRangeOption(key, new ValidatingIntMultipleSliderCallbacks(min, max, multiple),
-            (optionText, value) -> GameOptions.getGenericValueText(Text.translatable(textKey), value));
+            (optionText, value) -> Options.genericValueLabel(Component.translatable(textKey), value));
     }
 
-    public SimpleOption<Integer> intRangeOption(String key, SimpleOption.IntSliderCallbacks intSliderCallbacks) {
+    public OptionInstance<Integer> intRangeOption(String key, OptionInstance.IntRangeBase intSliderCallbacks) {
         String textKey = this.getTextKey(key);
         return this.intRangeOption(key, intSliderCallbacks,
-            (optionText, value) -> GameOptions.getGenericValueText(Text.translatable(textKey), value));
+            (optionText, value) -> Options.genericValueLabel(Component.translatable(textKey), value));
     }
 
-    public SimpleOption<Integer> intRangeOption(String key, SimpleOption.IntSliderCallbacks intSliderCallbacks, SimpleOption.ValueTextGetter<Integer> valueTextGetter) {
-        Pair<NbtCompound, String> resolvedSettings = this.resolveSettings(key);
-        NbtCompound settings = resolvedSettings.getLeft();
-        String subKey = resolvedSettings.getRight();
+    public OptionInstance<Integer> intRangeOption(String key, OptionInstance.IntRangeBase intSliderCallbacks, OptionInstance.CaptionBasedToString<Integer> valueTextGetter) {
+        Tuple<CompoundTag, String> resolvedSettings = this.resolveSettings(key);
+        CompoundTag settings = resolvedSettings.getA();
+        String subKey = resolvedSettings.getB();
         IntSupplier intSupplier = () -> VersionCompat.unwrapOrElse(settings.getInt(subKey), 0);
 
-        return new SimpleOption<>(
+        return new OptionInstance<>(
             this.getTextKey(key),
             getTooltip(this.getTextKey(key)),
             valueTextGetter,
@@ -166,54 +166,54 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
         );
     }
 
-    public SimpleOption<Integer> intFieldOption(String key) {
+    public OptionInstance<Integer> intFieldOption(String key) {
         return this.intFieldOption(key, "");
     }
 
-    public SimpleOption<Integer> intFieldOption(String key, String prefix) {
+    public OptionInstance<Integer> intFieldOption(String key, String prefix) {
         return this.intFieldOption(key, prefix, Integer::toString, Integer::parseInt);
     }
 
-    public SimpleOption<Integer> rgbFieldOption(String key, String prefix) {
+    public OptionInstance<Integer> rgbFieldOption(String key, String prefix) {
         return this.intFieldOption(key, prefix, i -> String.format("%06X", i), s -> Integer.parseInt(s, 16));
     }
 
-    public SimpleOption<Integer> intFieldOption(String key, String prefix, IntFunction<String> serializer, ToIntFunction<String> deserializer) {
+    public OptionInstance<Integer> intFieldOption(String key, String prefix, IntFunction<String> serializer, ToIntFunction<String> deserializer) {
         if (prefix == null) {
             prefix = "";
         } else if (!prefix.isEmpty()) {
             prefix += ": ";
         }
 
-        Pair<NbtCompound, String> resolvedSettings = this.resolveSettings(key);
-        NbtCompound settings = resolvedSettings.getLeft();
-        String subKey = resolvedSettings.getRight();
+        Tuple<CompoundTag, String> resolvedSettings = this.resolveSettings(key);
+        CompoundTag settings = resolvedSettings.getA();
+        String subKey = resolvedSettings.getB();
         IntSupplier intSupplier = () -> VersionCompat.unwrapOrElse(settings.getInt(subKey), 0);
 
-        return new SimpleOption<>(
+        return new OptionInstance<>(
             this.getTextKey(key),
             getTooltip(this.getTextKey(key)),
-            (optionText, value) -> Text.of(Integer.toString(intSupplier.getAsInt())),
+            (optionText, value) -> Component.nullToEmpty(Integer.toString(intSupplier.getAsInt())),
             new IntegerFieldCallbacks(prefix, serializer, deserializer),
             intSupplier.getAsInt(),
             value -> settings.putInt(subKey, value)
         );
     }
 
-    public SimpleOption<Integer> intFieldOptionFromString(String key, String prefix) {
+    public OptionInstance<Integer> intFieldOptionFromString(String key, String prefix) {
         return this.intFieldOptionFromString(key, prefix, Integer::toString, Integer::parseInt);
     }
 
-    public SimpleOption<Integer> intFieldOptionFromString(String key, String prefix, IntFunction<String> serializer, ToIntFunction<String> deserializer) {
+    public OptionInstance<Integer> intFieldOptionFromString(String key, String prefix, IntFunction<String> serializer, ToIntFunction<String> deserializer) {
         if (prefix == null) {
             prefix = "";
         } else if (!prefix.isEmpty()) {
             prefix += ": ";
         }
 
-        Pair<NbtCompound, String> resolvedSettings = this.resolveSettings(key);
-        NbtCompound settings = resolvedSettings.getLeft();
-        String subKey = resolvedSettings.getRight();
+        Tuple<CompoundTag, String> resolvedSettings = this.resolveSettings(key);
+        CompoundTag settings = resolvedSettings.getA();
+        String subKey = resolvedSettings.getB();
         Supplier<String> stringSupplier = () -> VersionCompat.unwrapOrElse(settings.getString(subKey), "0");
 
         int defaultValue = 0;
@@ -222,153 +222,153 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
         } catch (NumberFormatException ignored) {
         }
 
-        return new SimpleOption<>(
+        return new OptionInstance<>(
             this.getTextKey(key),
             getTooltip(this.getTextKey(key)),
-            (optionText, value) -> Text.of(stringSupplier.get()),
+            (optionText, value) -> Component.nullToEmpty(stringSupplier.get()),
             new IntegerFieldCallbacks(prefix, serializer, deserializer),
             defaultValue,
             value -> settings.putString(subKey, Integer.toString(value))
         );
     }
 
-    public SimpleOption<Float> floatRangeOption(String key, float min, float max) {
-        Pair<NbtCompound, String> resolvedSettings = this.resolveSettings(key);
-        NbtCompound settings = resolvedSettings.getLeft();
-        String subKey = resolvedSettings.getRight();
+    public OptionInstance<Float> floatRangeOption(String key, float min, float max) {
+        Tuple<CompoundTag, String> resolvedSettings = this.resolveSettings(key);
+        CompoundTag settings = resolvedSettings.getA();
+        String subKey = resolvedSettings.getB();
         String textKey = this.getTextKey(key);
         FloatSupplier floatSupplier = () -> VersionCompat.unwrapOrElse(settings.getFloat(subKey), 0.0F);
 
-        return new SimpleOption<>(
+        return new OptionInstance<>(
             textKey,
             getTooltip(textKey),
-            (optionText, value) -> GameOptions.getGenericValueText(Text.translatable(textKey), Text.literal("%.3f".formatted(value))),
+            (optionText, value) -> Options.genericValueLabel(Component.translatable(textKey), Component.literal("%.3f".formatted(value))),
             new FloatSliderCallbacks(min, max),
             floatSupplier.getAsFloat(),
             value -> settings.putFloat(subKey, value)
         );
     }
 
-    public SimpleOption<String> stringOption(String key) {
+    public OptionInstance<String> stringOption(String key) {
         return this.stringOption(key, TextFieldCallbacks.NO_VALIDATION);
     }
 
-    public SimpleOption<String> stringOption(String key, TextFieldCallbacks callbacks) {
-        Pair<NbtCompound, String> resolvedSettings = this.resolveSettings(key);
-        NbtCompound settings = resolvedSettings.getLeft();
-        String subKey = resolvedSettings.getRight();
+    public OptionInstance<String> stringOption(String key, TextFieldCallbacks callbacks) {
+        Tuple<CompoundTag, String> resolvedSettings = this.resolveSettings(key);
+        CompoundTag settings = resolvedSettings.getA();
+        String subKey = resolvedSettings.getB();
         Supplier<String> stringSupplier = () -> VersionCompat.unwrap(settings.getString(subKey));
 
-        return new SimpleOption<>(
+        return new OptionInstance<>(
             this.getTextKey(key),
             getTooltip(this.getTextKey(key)),
-            (optionText, value) -> Text.of(stringSupplier.get()),
+            (optionText, value) -> Component.nullToEmpty(stringSupplier.get()),
             callbacks,
             stringSupplier.get(),
             value -> settings.putString(subKey, value)
         );
     }
 
-    public SimpleOption<String> blockOption(String key) {
+    public OptionInstance<String> blockOption(String key) {
         return this.stringOption(key, new TextFieldCallbacks(
-            value -> Registries.BLOCK.containsId(Identifier.tryParse(value)),
-            value -> Identifier.validate(value).error().isEmpty()
+            value -> BuiltInRegistries.BLOCK.containsKey(ResourceLocation.tryParse(value)),
+            value -> ResourceLocation.read(value).error().isEmpty()
         ));
     }
 
-    public SimpleOption<String> biomeOption(String key, boolean allowNone) {
-        Pair<NbtCompound, String> resolvedSettings = this.resolveSettings(key);
-        NbtCompound settings = resolvedSettings.getLeft();
-        String subKey = resolvedSettings.getRight();
+    public OptionInstance<String> biomeOption(String key, boolean allowNone) {
+        Tuple<CompoundTag, String> resolvedSettings = this.resolveSettings(key);
+        CompoundTag settings = resolvedSettings.getA();
+        String subKey = resolvedSettings.getB();
         Supplier<String> stringSupplier = () -> VersionCompat.unwrap(settings.getString(subKey));
 
-        return new SimpleOption<>(
+        return new OptionInstance<>(
             this.getTextKey(key),
             getTooltip(this.getTextKey(key)),
-            (optionText, value) -> Text.of(stringSupplier.get()),
-            new BiomePickerCallbacks(this.client::setScreen, this, this.generatorOptionsHolder, allowNone),
+            (optionText, value) -> Component.nullToEmpty(stringSupplier.get()),
+            new BiomePickerCallbacks(this.minecraft::setScreen, this, this.generatorOptionsHolder, allowNone),
             stringSupplier.get(),
             value -> {
                 settings.putString(subKey, value);
-                this.clearAndInit();
+                this.rebuildWidgets();
             }
         );
     }
 
-    public SimpleOption<?> extendedBiomeIdOption(String key) {
-        Pair<NbtCompound, String> resolvedSettings = this.resolveSettings(key);
-        NbtCompound settings = resolvedSettings.getLeft();
-        String subKey = resolvedSettings.getRight();
+    public OptionInstance<?> extendedBiomeIdOption(String key) {
+        Tuple<CompoundTag, String> resolvedSettings = this.resolveSettings(key);
+        CompoundTag settings = resolvedSettings.getA();
+        String subKey = resolvedSettings.getB();
         Supplier<String> stringSupplier = () -> VersionCompat.unwrap(settings.getString(subKey));
 
-        return new SimpleOption<>(
+        return new OptionInstance<>(
             "",
-            SimpleOption.emptyTooltip(),
-            (optionText, value) -> Text.of(stringSupplier.get()),
+            OptionInstance.noTooltip(),
+            (optionText, value) -> Component.nullToEmpty(stringSupplier.get()),
             new TextFieldCallbacks(string -> ExtendedBiomeId.validate(string).error().isEmpty()),
             ExtendedBiomeId.of(stringSupplier.get()).toString(),
             value -> settings.putString(subKey, value)
         );
     }
 
-    public List<SimpleOption<?>> heightConfigOption(String key) {
-        Pair<NbtCompound, String> resolvedSettings = this.resolveSettings(key);
-        NbtCompound settings = resolvedSettings.getLeft();
-        String subKey = resolvedSettings.getRight();
+    public List<OptionInstance<?>> heightConfigOption(String key) {
+        Tuple<CompoundTag, String> resolvedSettings = this.resolveSettings(key);
+        CompoundTag settings = resolvedSettings.getA();
+        String subKey = resolvedSettings.getB();
         Supplier<String> stringSupplier = () -> VersionCompat.unwrap(settings.getString(subKey));
         Supplier<String> defaultedStringSupplier = () -> VersionCompat.unwrapOrElse(settings.getString(subKey), "");
 
         return List.of(
-            new SimpleOption<>(
+            new OptionInstance<>(
                 "createWorld.customize.modern_beta.settings.heightConfig.depth",
                 getTooltip("createWorld.customize.modern_beta.settings.heightConfig.depth.desc"),
-                (optionText, value) -> GameOptions.getGenericValueText(
-                    Text.translatable("createWorld.customize.modern_beta.settings.heightConfig.depth"),
-                    Text.literal(String.format("%.2f", HeightConfig.parse(stringSupplier.get(), HeightConfig.DEFAULT).depth()))
+                (optionText, value) -> Options.genericValueLabel(
+                    Component.translatable("createWorld.customize.modern_beta.settings.heightConfig.depth"),
+                    Component.literal(String.format("%.2f", HeightConfig.parse(stringSupplier.get(), HeightConfig.DEFAULT).depth()))
                 ),
                 new FloatSliderCallbacks(-2.0F, 2.0F),
                 HeightConfig.parse(stringSupplier.get(), HeightConfig.DEFAULT).depth(),
                 value -> {
                     String replacedString = defaultedStringSupplier.get();
                     float replacedScale = HeightConfig.parse(replacedString, HeightConfig.DEFAULT).scale();
-                    settings.putString(subKey, HeightConfig.makeString(MathHelper.floor(value * 100.0F) / 100.0F, replacedScale));
+                    settings.putString(subKey, HeightConfig.makeString(Mth.floor(value * 100.0F) / 100.0F, replacedScale));
                 }
             ),
-            new SimpleOption<>(
+            new OptionInstance<>(
                 "createWorld.customize.modern_beta.settings.heightConfig.scale",
                 getTooltip("createWorld.customize.modern_beta.settings.heightConfig.scale.desc"),
-                (optionText, value) -> GameOptions.getGenericValueText(
-                    Text.translatable("createWorld.customize.modern_beta.settings.heightConfig.scale"),
-                    Text.literal(String.format("%.2f", HeightConfig.parse(stringSupplier.get(), HeightConfig.DEFAULT).scale()))
+                (optionText, value) -> Options.genericValueLabel(
+                    Component.translatable("createWorld.customize.modern_beta.settings.heightConfig.scale"),
+                    Component.literal(String.format("%.2f", HeightConfig.parse(stringSupplier.get(), HeightConfig.DEFAULT).scale()))
                 ),
                 new FloatSliderCallbacks(0.0F, 5.0F),
                 HeightConfig.parse(stringSupplier.get(), HeightConfig.DEFAULT).scale(),
                 value -> {
                     String replacedString = defaultedStringSupplier.get();
                     float replacedDepth = HeightConfig.parse(replacedString, HeightConfig.DEFAULT).depth();
-                    settings.putString(subKey, HeightConfig.makeString(replacedDepth, MathHelper.floor(value * 100.0F) / 100.0F));
+                    settings.putString(subKey, HeightConfig.makeString(replacedDepth, Mth.floor(value * 100.0F) / 100.0F));
                 }
             )
         );
     }
 
-    public SimpleOption<Void> listEditButton(
-        Text text, String key, int type,
+    public OptionInstance<Void> listEditButton(
+        Component text, String key, int type,
         ModernBetaGraphicalListSettingsScreen.Constructor listSettingsScreenConstructor
     ) {
-        Pair<NbtCompound, String> resolvedSettings = this.resolveSettings(key);
-        NbtCompound settings = resolvedSettings.getLeft();
-        String subKey = resolvedSettings.getRight();
-        Supplier<NbtList> listSupplier = () -> VersionCompat.unwrap(settings.getList(
+        Tuple<CompoundTag, String> resolvedSettings = this.resolveSettings(key);
+        CompoundTag settings = resolvedSettings.getA();
+        String subKey = resolvedSettings.getB();
+        Supplier<ListTag> listSupplier = () -> VersionCompat.unwrap(settings.getList(
             subKey
             //? if <1.21.5
             /*, type*/
         ));
 
         return this.customButton(
-            Text.translatable(STRING_PREFIX + "list.button", text.getString()),
-            () -> this.client.setScreen(listSettingsScreenConstructor.create(
-                Text.translatable(STRING_PREFIX + "list.title", text.getString()).getString(),
+            Component.translatable(STRING_PREFIX + "list.button", text.getString()),
+            () -> this.minecraft.setScreen(listSettingsScreenConstructor.create(
+                Component.translatable(STRING_PREFIX + "list.title", text.getString()).getString(),
                 this,
                 this.generatorOptionsHolder,
                 listSupplier.get().copy(),
@@ -377,19 +377,19 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
         );
     }
 
-    public SimpleOption<Void> mapEditButton(
-        Text text, String key,
+    public OptionInstance<Void> mapEditButton(
+        Component text, String key,
         ModernBetaGraphicalMapSettingsScreen.Constructor mapSettingsScreenConstructor
     ) {
-        Pair<NbtCompound, String> resolvedSettings = this.resolveSettings(key);
-        NbtCompound settings = resolvedSettings.getLeft();
-        String subKey = resolvedSettings.getRight();
-        Supplier<NbtCompound> compoundSupplier = () -> VersionCompat.unwrap(settings.getCompound(subKey));
+        Tuple<CompoundTag, String> resolvedSettings = this.resolveSettings(key);
+        CompoundTag settings = resolvedSettings.getA();
+        String subKey = resolvedSettings.getB();
+        Supplier<CompoundTag> compoundSupplier = () -> VersionCompat.unwrap(settings.getCompound(subKey));
 
         return this.customButton(
-            Text.translatable(STRING_PREFIX + "list.button", text.getString()),
-            () -> this.client.setScreen(mapSettingsScreenConstructor.create(
-                Text.translatable(STRING_PREFIX + "list.titleMap", text.getString()).getString(),
+            Component.translatable(STRING_PREFIX + "list.button", text.getString()),
+            () -> this.minecraft.setScreen(mapSettingsScreenConstructor.create(
+                Component.translatable(STRING_PREFIX + "list.titleMap", text.getString()).getString(),
                 this,
                 this.generatorOptionsHolder,
                 compoundSupplier.get(),

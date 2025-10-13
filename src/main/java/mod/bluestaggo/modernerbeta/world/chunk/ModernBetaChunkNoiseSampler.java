@@ -4,41 +4,45 @@ import mod.bluestaggo.modernerbeta.api.world.chunk.ChunkProvider;
 import mod.bluestaggo.modernerbeta.api.world.chunk.ChunkProviderNoise;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkHeightmap;
 import mod.bluestaggo.modernerbeta.util.noise.SimpleDensityFunction;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.Heightmap;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.gen.chunk.*;
-import net.minecraft.world.gen.chunk.AquiferSampler.FluidLevelSampler;
-import net.minecraft.world.gen.densityfunction.DensityFunctionTypes;
-import net.minecraft.world.gen.noise.NoiseConfig;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.levelgen.Aquifer;
+import net.minecraft.world.level.levelgen.Aquifer.FluidPicker;
+import net.minecraft.world.level.levelgen.DensityFunctions;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.levelgen.NoiseChunk;
+import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
+import net.minecraft.world.level.levelgen.NoiseSettings;
+import net.minecraft.world.level.levelgen.RandomState;
+import net.minecraft.world.level.levelgen.blending.Blender;
 
 public class ModernBetaChunkNoiseSampler {
     private static final int HEIGHT_OFFSET = -8;
     
     private final ChunkProvider chunkProvider;
     
-    public static ChunkNoiseSampler create(
-        Chunk chunk,
-        NoiseConfig noiseConfig,
-        ChunkGeneratorSettings chunkGeneratorSettings,
-        AquiferSampler.FluidLevelSampler fluidLevelSampler,
+    public static NoiseChunk create(
+        ChunkAccess chunk,
+        RandomState noiseConfig,
+        NoiseGeneratorSettings chunkGeneratorSettings,
+        Aquifer.FluidPicker fluidLevelSampler,
         ChunkProvider chunkProvider
     ) {
-        GenerationShapeConfig shapeConfig = chunkGeneratorSettings.generationShapeConfig().trimHeight(chunk);
+        NoiseSettings shapeConfig = chunkGeneratorSettings.noiseSettings().clampToHeightAccessor(chunk);
         ChunkPos chunkPos = chunk.getPos();
         
-        int horizontalSize = 16 / shapeConfig.horizontalCellBlockCount();
+        int horizontalSize = 16 / shapeConfig.getCellWidth();
         
         return new ModernBetaChunkNoiseSampler(chunkProvider).createSampler(
             horizontalSize,
             noiseConfig,
-            chunkPos.getStartX(),
-            chunkPos.getStartZ(),
+            chunkPos.getMinBlockX(),
+            chunkPos.getMinBlockZ(),
             shapeConfig,
             SimpleDensityFunction.INSTANCE,
             chunkGeneratorSettings,
             fluidLevelSampler,
-            Blender.getNoBlending()
+            Blender.empty()
         );
     }
 
@@ -48,13 +52,13 @@ public class ModernBetaChunkNoiseSampler {
 
     private SamplerImpl createSampler(
         int horizontalSize,
-        NoiseConfig noiseConfig,
+        RandomState noiseConfig,
         int startX,
         int startZ,
-        GenerationShapeConfig shapeConfig,
-        DensityFunctionTypes.Beardifying beardifying,
-        ChunkGeneratorSettings settings,
-        FluidLevelSampler fluidLevelSampler,
+        NoiseSettings shapeConfig,
+        DensityFunctions.BeardifierOrMarker beardifying,
+        NoiseGeneratorSettings settings,
+        FluidPicker fluidLevelSampler,
         Blender blender
     ) {
         return new SamplerImpl(
@@ -70,16 +74,16 @@ public class ModernBetaChunkNoiseSampler {
         );
     }
 
-    private class SamplerImpl extends ChunkNoiseSampler {
+    private class SamplerImpl extends NoiseChunk {
         private SamplerImpl(
             int horizontalSize,
-            NoiseConfig noiseConfig,
+            RandomState noiseConfig,
             int startX,
             int startZ,
-            GenerationShapeConfig shapeConfig,
-            DensityFunctionTypes.Beardifying beardifying,
-            ChunkGeneratorSettings settings,
-            FluidLevelSampler fluidLevelSampler,
+            NoiseSettings shapeConfig,
+            DensityFunctions.BeardifierOrMarker beardifying,
+            NoiseGeneratorSettings settings,
+            FluidPicker fluidLevelSampler,
             Blender blender
         ) {
             super(
@@ -107,10 +111,10 @@ public class ModernBetaChunkNoiseSampler {
          *
          */
         @Override
-        public int estimateSurfaceHeight(int x, int z) {
+        public int preliminarySurfaceLevel(int x, int z) {
             int height = (chunkProvider instanceof ChunkProviderNoise noiseChunkProvider) ?
                     noiseChunkProvider.getHeight(null, x, z, ChunkHeightmap.Type.SURFACE_FLOOR) :
-                    chunkProvider.getHeight(null, x, z, Heightmap.Type.OCEAN_FLOOR_WG);
+                    chunkProvider.getHeight(null, x, z, Heightmap.Types.OCEAN_FLOOR_WG);
             return height + HEIGHT_OFFSET;
         }
     }

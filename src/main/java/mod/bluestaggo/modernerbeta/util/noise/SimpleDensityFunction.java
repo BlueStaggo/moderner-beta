@@ -1,20 +1,20 @@
 package mod.bluestaggo.modernerbeta.util.noise;
 
-import net.minecraft.world.gen.densityfunction.DensityFunction;
-import net.minecraft.world.gen.densityfunction.DensityFunctionTypes;
+import net.minecraft.world.level.levelgen.DensityFunction;
+import net.minecraft.world.level.levelgen.DensityFunctions;
 
 import java.util.Arrays;
 
-public enum SimpleDensityFunction implements DensityFunctionTypes.Beardifying {
+public enum SimpleDensityFunction implements DensityFunctions.BeardifierOrMarker {
     INSTANCE;
 
     @Override
-    public double sample(DensityFunction.NoisePos pos) {
+    public double compute(DensityFunction.FunctionContext pos) {
         return 0.0;
     }
 
     @Override
-    public void fill(double[] densities, DensityFunction.EachApplier applier) {
+    public void fillArray(double[] densities, DensityFunction.ContextProvider applier) {
         Arrays.fill(densities, 0.0);
     }
     

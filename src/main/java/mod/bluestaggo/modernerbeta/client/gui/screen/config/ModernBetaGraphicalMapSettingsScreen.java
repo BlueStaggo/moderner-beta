@@ -3,14 +3,14 @@ package mod.bluestaggo.modernerbeta.client.gui.screen.config;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.OptionListWidget;
-import net.minecraft.client.option.SimpleOption;
-import net.minecraft.client.world.GeneratorOptionsHolder;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.text.Text;
-import net.minecraft.util.Pair;
+import net.minecraft.client.OptionInstance;
+import net.minecraft.client.gui.components.OptionsList;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.worldselection.WorldCreationContext;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.Tuple;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,20 +21,20 @@ public abstract class ModernBetaGraphicalMapSettingsScreen extends ModernBetaGra
     protected static final String KEY = "$MB MAP KEY$.";
     protected static final String VALUE = "$MB MAP VALUE$.";
 
-    private final NbtCompound keys = new NbtCompound();
-    private final NbtCompound values = new NbtCompound();
+    private final CompoundTag keys = new CompoundTag();
+    private final CompoundTag values = new CompoundTag();
 
     public ModernBetaGraphicalMapSettingsScreen(
         String title,
         Screen parent,
-        GeneratorOptionsHolder generatorOptionsHolder,
-        NbtCompound settings,
-        Consumer<NbtCompound> onDone
+        WorldCreationContext generatorOptionsHolder,
+        CompoundTag settings,
+        Consumer<CompoundTag> onDone
     ) {
         super(title, parent, generatorOptionsHolder, "list", settings, onDone);
 
         int i = 0;
-        for (String key : this.settings.getKeys()) {
+        for (String key : this.settings./*? >=1.21.5 {*/keySet/*?} else {*//*getAllKeys*//*?}*/()) {
             String si = String.valueOf(i);
             this.keys.putString(si, key);
             this.values.put(si, this.settings.get(key));
@@ -42,16 +42,16 @@ public abstract class ModernBetaGraphicalMapSettingsScreen extends ModernBetaGra
         }
     }
 
-    protected abstract List<SimpleOption<?>> getOptions(int i);
+    protected abstract List<OptionInstance<?>> getOptions(int i);
 
     protected abstract String getDefaultKey();
 
-    protected abstract NbtElement getDefaultValue();
+    protected abstract Tag getDefaultValue();
 
     @Override
-    protected NbtCompound getResult() {
-        NbtCompound compound = new NbtCompound();
-        for (int i = 0; i < this.keys.getSize(); i++) {
+    protected CompoundTag getResult() {
+        CompoundTag compound = new CompoundTag();
+        for (int i = 0; i < this.keys.size(); i++) {
             String si = String.valueOf(i);
             compound.put(VersionCompat.unwrap(this.keys.getString(si)), this.values.get(si));
         }
@@ -59,20 +59,20 @@ public abstract class ModernBetaGraphicalMapSettingsScreen extends ModernBetaGra
     }
 
     @Override
-    protected void addOptions(OptionListWidget list) {
-        for (int i = 0; i < this.keys.getSize(); i++) {
+    protected void addOptions(OptionsList list) {
+        for (int i = 0; i < this.keys.size(); i++) {
             final int finalI = i;
             String si = String.valueOf(i);
 
-            List<SimpleOption<?>> options = new ArrayList<>(this.getOptions(i));
+            List<OptionInstance<?>> options = new ArrayList<>(this.getOptions(i));
             if (options.isEmpty()) {
                 continue;
             }
 
-            SimpleOption<?> removeButton = this.customButton(
+            OptionInstance<?> removeButton = this.customButton(
                 this.getText("remove"),
                 () -> {
-                    int size = this.keys.getSize();
+                    int size = this.keys.size();
                     this.keys.remove(si);
                     this.values.remove(si);
 
@@ -80,8 +80,8 @@ public abstract class ModernBetaGraphicalMapSettingsScreen extends ModernBetaGra
                         String sj = String.valueOf(j);
                         String sjm1 = String.valueOf(j - 1);
 
-                        NbtElement keyV = this.keys.get(sj);
-                        NbtElement valueV = this.values.get(sj);
+                        Tag keyV = this.keys.get(sj);
+                        Tag valueV = this.values.get(sj);
                         this.keys.remove(sj);
                         this.values.remove(sj);
                         if (keyV != null && valueV != null) {
@@ -90,7 +90,7 @@ public abstract class ModernBetaGraphicalMapSettingsScreen extends ModernBetaGra
                         }
                     }
 
-                    this.clearAndInit();
+                    this.rebuildWidgets();
                 }
             );
 
@@ -100,35 +100,35 @@ public abstract class ModernBetaGraphicalMapSettingsScreen extends ModernBetaGra
             }
 
             for (int j = 0; j < options.size(); j += 2) {
-                SimpleOption<?> left = options.get(j);
-                SimpleOption<?> right = options.get(j + 1);
+                OptionInstance<?> left = options.get(j);
+                OptionInstance<?> right = options.get(j + 1);
 
                 if (right != null) {
-                    list.addAll(new SimpleOption[] {left, right});
+                    list.addSmall(new OptionInstance[] {left, right});
                 } else {
-                    list.addSingleOptionEntry(left);
+                    list.addBig(left);
                 }
             }
         }
 
-        list.addSingleOptionEntry(this.headerOption(Text.empty()));
-        list.addSingleOptionEntry(this.customButton(
+        list.addBig(this.headerOption(Component.empty()));
+        list.addBig(this.customButton(
             this.getText("add"),
             () -> {
-                String si = String.valueOf(this.keys.getSize());
+                String si = String.valueOf(this.keys.size());
                 this.keys.putString(si, this.getDefaultKey());
                 this.values.put(si, this.getDefaultValue());
-                this.clearAndInit();
+                this.rebuildWidgets();
             }
         ));
     }
 
     @Override
-    protected Pair<NbtCompound, String> resolveSettings(String key) {
+    protected Tuple<CompoundTag, String> resolveSettings(String key) {
         if (key.startsWith(KEY)) {
-            return new Pair<>(keys, key.substring(KEY.length()));
+            return new Tuple<>(keys, key.substring(KEY.length()));
         } else if (key.startsWith(VALUE)) {
-            return new Pair<>(values, key.substring(VALUE.length()));
+            return new Tuple<>(values, key.substring(VALUE.length()));
         }
         return super.resolveSettings(key);
     }
@@ -138,9 +138,9 @@ public abstract class ModernBetaGraphicalMapSettingsScreen extends ModernBetaGra
         ModernBetaGraphicalMapSettingsScreen create(
             String title,
             Screen parent,
-            GeneratorOptionsHolder generatorOptionsHolder,
-            NbtCompound settings,
-            Consumer<NbtCompound> onDone
+            WorldCreationContext generatorOptionsHolder,
+            CompoundTag settings,
+            Consumer<CompoundTag> onDone
         );
     }
 }

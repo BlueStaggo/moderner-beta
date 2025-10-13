@@ -1,7 +1,7 @@
 package mod.bluestaggo.modernerbeta.mixin;
 
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.biome.Biome;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.gen.Invoker;
@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 @Mixin(Biome.class)
 public interface AccessorBiome {
     @Accessor
-    Biome.Weather getWeather();
+    Biome.ClimateSettings getClimateSettings();
 
     @Invoker
     float invokeGetTemperature(

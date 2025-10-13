@@ -2,9 +2,9 @@ package mod.bluestaggo.modernerbeta.world.feature;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
-import net.minecraft.world.gen.feature.DefaultFeatureConfig;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.OreFeatureConfig;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
+import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration;
 
 public class ModernBetaFeatures {
     private static IRegistryHandler<Feature<?>> registryHandler;
@@ -20,15 +20,15 @@ public class ModernBetaFeatures {
     public static void register(IRegistryHandler<?> handler) {
         registryHandler = (IRegistryHandler<Feature<?>>) handler;
         FREEZE_TOP_LAYER = register(
-                ModernBetaFeatureTags.FREEZE_TOP_LAYER, new BetaFreezeTopLayerFeature(DefaultFeatureConfig.CODEC)
+                ModernBetaFeatureTags.FREEZE_TOP_LAYER, new BetaFreezeTopLayerFeature(NoneFeatureConfiguration.CODEC)
         );
 
         ORE_CLAY = register(
-                ModernBetaFeatureTags.ORE_CLAY, new BetaOreClayFeature(OreFeatureConfig.CODEC)
+                ModernBetaFeatureTags.ORE_CLAY, new BetaOreClayFeature(OreConfiguration.CODEC)
         );
 
         CAVE_INFDEV_325 = register(
-                ModernBetaFeatureTags.CAVE_INFDEV_325, new CaveInfdev325Feature(OreFeatureConfig.CODEC)
+                ModernBetaFeatureTags.CAVE_INFDEV_325, new CaveInfdev325Feature(OreConfiguration.CODEC)
         );
     }
 }

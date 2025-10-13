@@ -9,32 +9,32 @@ import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ConfiguredLayers;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.Layer;
-import net.minecraft.registry.RegistryEntryLookup;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.source.BiomeAccess;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderGetter;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.BiomeManager;
 
 import java.util.*;
 
-public class BiomeProviderFractal extends BiomeProvider implements BiomeResolverBlock, BiomeResolverExtendedIdStepped, BiomeAccess.Storage {
+public class BiomeProviderFractal extends BiomeProvider implements BiomeResolverBlock, BiomeResolverExtendedIdStepped, BiomeManager.NoiseBiomeSource {
 	protected final ConfiguredLayers configuredLayers;
 	protected final List<Layer> pipeline;
 
-	private final Supplier<RegistryEntry<Biome>> baseBiome;
-	private final BiomeAccess biomeAccess;
-	private final List<RegistryEntry<Biome>> allBiomes;
+	private final Supplier<Holder<Biome>> baseBiome;
+	private final BiomeManager biomeAccess;
+	private final List<Holder<Biome>> allBiomes;
 	private final Layer layer;
 
-	public BiomeProviderFractal(ModernBetaSettings settings, RegistryEntryLookup<Biome> biomeRegistry, long seed) {
+	public BiomeProviderFractal(ModernBetaSettings settings, HolderGetter<Biome> biomeRegistry, long seed) {
 		super(settings, biomeRegistry, seed);
 
 		this.baseBiome = Suppliers.memoize(() -> this.getBiomeEntry(this.settings.getOrDefault(SettingsComponentTypes.SINGLE_BIOME)).orElseThrow());
-		this.biomeAccess = new BiomeAccess(this, seed);
+		this.biomeAccess = new BiomeManager(this, seed);
 
 		this.configuredLayers = this.settings.getOrThrow(SettingsComponentTypes.FRACTAL_LAYERS);
 		this.pipeline = this.configuredLayers.getPipeline();
@@ -57,14 +57,14 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 	}
 
 	@SuppressWarnings("unchecked")
-    private Optional<RegistryEntry<Biome>> getBiomeEntry(Identifier id) {
-		RegistryKey<Biome> key = RegistryKey.of(RegistryKeys.BIOME, id);
-		return (Optional<RegistryEntry<Biome>>)(Object)this.biomeRegistry.getOptional(key);
+    private Optional<Holder<Biome>> getBiomeEntry(ResourceLocation id) {
+		ResourceKey<Biome> key = ResourceKey.create(Registries.BIOME, id);
+		return (Optional<Holder<Biome>>)(Object)this.biomeRegistry.get(key);
 	}
 
 	@Override
-	public RegistryEntry<Biome> getBiome(int biomeX, int biomeY, int biomeZ) {
-		Identifier baseId = this.getExtendedBiomeId(biomeX, biomeY, biomeZ).baseId();
+	public Holder<Biome> getBiome(int biomeX, int biomeY, int biomeZ) {
+		ResourceLocation baseId = this.getExtendedBiomeId(biomeX, biomeY, biomeZ).baseId();
 		return this.getBiomeEntry(baseId)
 			.orElseThrow(() -> new NoSuchElementException("Biome \"" + baseId + "\" does not exist."));
 	}
@@ -75,23 +75,23 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 	}
 
 	@Override
-	public RegistryEntry<Biome> getBiomeBlock(int x, int y, int z) {
+	public Holder<Biome> getBiomeBlock(int x, int y, int z) {
 		return this.biomeAccess.getBiome(new BlockPos(x, y, z));
 	}
 
 	@Override
-	public List<RegistryEntry<Biome>> getBiomes() {
+	public List<Holder<Biome>> getBiomes() {
 		return allBiomes;
 	}
 
 	@Override
-	public RegistryEntry<Biome> getBiomeForNoiseGen(int biomeX, int biomeY, int biomeZ) {
+	public Holder<Biome> getNoiseBiome(int biomeX, int biomeY, int biomeZ) {
 		return this.getBiome(biomeX, biomeY, biomeZ);
 	}
 
 	@Override
-	public RegistryEntry<Biome> getBiomeForStep(int biomeX, int biomeY, int biomeZ, int step) {
-		Identifier baseId = this.getExtendedBiomeIdForStep(biomeX, biomeY, biomeZ, step).baseId();
+	public Holder<Biome> getBiomeForStep(int biomeX, int biomeY, int biomeZ, int step) {
+		ResourceLocation baseId = this.getExtendedBiomeIdForStep(biomeX, biomeY, biomeZ, step).baseId();
 		return this.getBiomeEntry(baseId)
 			.orElseThrow(() -> new NoSuchElementException("Biome \"" + baseId + "\" does not exist."));
 	}
@@ -102,24 +102,24 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 	}
 
 	@Override
-	public Text getBiomeName(int biomeX, int biomeY, int biomeZ) {
+	public Component getBiomeName(int biomeX, int biomeY, int biomeZ) {
 		return this.getExtendedBiomeName(this.getExtendedBiomeId(biomeX, biomeY, biomeZ));
 	}
 
 	@Override
-	public Text getBiomeNameForStep(int biomeX, int biomeY, int biomeZ, int step) {
+	public Component getBiomeNameForStep(int biomeX, int biomeY, int biomeZ, int step) {
 		return this.getExtendedBiomeName(this.getExtendedBiomeIdForStep(biomeX, biomeY, biomeZ, step));
 	}
 
-	private Text getExtendedBiomeName(ExtendedBiomeId extendedBiomeId) {
-		Text text = this.getBiomeEntry(extendedBiomeId.baseId())
-			.map(entry -> entry.getKey()
-				.map(key -> Text.translatable(key.getValue().toTranslationKey("biome")))
-				.orElse(Text.literal("[unregistered]")))
-			.orElse(Text.literal("[unregistered]"));
+	private Component getExtendedBiomeName(ExtendedBiomeId extendedBiomeId) {
+		Component text = this.getBiomeEntry(extendedBiomeId.baseId())
+			.map(entry -> entry.unwrapKey()
+				.map(key -> Component.translatable(key.location().toLanguageKey("biome")))
+				.orElse(Component.literal("[unregistered]")))
+			.orElse(Component.literal("[unregistered]"));
 
 		if (!extendedBiomeId.ext().isEmpty()) {
-			text = Text.translatable(ExtendedBiomeId.TRANSLATION_KEY, text, Text.literal(extendedBiomeId.ext()));
+			text = Component.translatable(ExtendedBiomeId.TRANSLATION_KEY, text, Component.literal(extendedBiomeId.ext()));
 		}
 
 		return text;
@@ -131,7 +131,7 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 	}
 
 	@Override
-	public Text getStepName(int step) {
-		return Text.literal(this.pipeline.get(step).toString());
+	public Component getStepName(int step) {
+		return Component.literal(this.pipeline.get(step).toString());
 	}
 }

@@ -19,7 +19,7 @@ public class ModernBetaReducedHeightTagProviderBlock extends FabricTagProvider<B
 
     @Override
     protected void configure(WrapperLookup lookup) {
-        this.builder(TagKey.of(RegistryKeys.BLOCK, ModernerBeta.createId("air"))).add(
+        this.getOrCreateTagBuilder(TagKey.of(RegistryKeys.BLOCK, ModernerBeta.createId("air"))).add(
             Blocks.AIR,
             Blocks.CAVE_AIR,
             Blocks.VOID_AIR

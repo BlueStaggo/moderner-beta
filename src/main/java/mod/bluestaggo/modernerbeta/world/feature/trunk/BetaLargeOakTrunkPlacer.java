@@ -4,24 +4,24 @@ import com.google.common.collect.Lists;
 import com.mojang.serialization.Codec;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.world.feature.ModernBetaTrunkPlacers;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.PillarBlock;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.TestableWorld;
-import net.minecraft.world.gen.feature.TreeFeatureConfig;
-import net.minecraft.world.gen.foliage.FoliagePlacer;
-import net.minecraft.world.gen.trunk.TrunkPlacer;
-import net.minecraft.world.gen.trunk.TrunkPlacerType;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.LevelSimulatedReader;
+import net.minecraft.world.level.block.RotatedPillarBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
+import net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacer;
+import net.minecraft.world.level.levelgen.feature.trunkplacers.TrunkPlacer;
+import net.minecraft.world.level.levelgen.feature.trunkplacers.TrunkPlacerType;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 
 public class BetaLargeOakTrunkPlacer extends TrunkPlacer {
-    public static final com.mojang.serialization.MapCodec<BetaLargeOakTrunkPlacer> CODEC = VersionCompat.createMaybeMapCodec(instance -> fillTrunkPlacerFields(instance)
+    public static final com.mojang.serialization./*Map*/Codec<BetaLargeOakTrunkPlacer> CODEC = VersionCompat.createMaybeMapCodec(instance -> trunkPlacerParts(instance)
             .and(Codec.BOOL.fieldOf("rotate_logs").forGetter(p -> p.rotateLogs))
             .apply(instance, BetaLargeOakTrunkPlacer::new));
 
@@ -38,17 +38,17 @@ public class BetaLargeOakTrunkPlacer extends TrunkPlacer {
     }
 
     @Override
-    protected TrunkPlacerType<?> getType() {
+    protected TrunkPlacerType<?> type() {
         return ModernBetaTrunkPlacers.BETA_LARGE_OAK_TRUNK_PLACER;
     }
 
     @Override
-    public List<FoliagePlacer.TreeNode> generate(TestableWorld world, BiConsumer<BlockPos, BlockState> replacer, Random random, int height, BlockPos basePos, TreeFeatureConfig config) {
+    public List<FoliagePlacer.FoliageAttachment> placeTrunk(LevelSimulatedReader world, BiConsumer<BlockPos, BlockState> replacer, RandomSource random, int height, BlockPos basePos, TreeConfiguration config) {
         int foliageHeight = 5;
         double branchDensity = 1.0;
 
-        setToDirt(world, replacer, random, basePos.down(), config);
-        int treeHeight = MathHelper.floor(height * HEIGHT_SCALE);
+        setDirtAt(world, replacer, random, basePos.below(), config);
+        int treeHeight = Mth.floor(height * HEIGHT_SCALE);
 
         if (treeHeight >= height) {
             treeHeight = height - 1;
@@ -61,7 +61,7 @@ public class BetaLargeOakTrunkPlacer extends TrunkPlacer {
         int treeRelY = foliageBaseY - basePos.getY();
 
         List<BranchPosition> list = Lists.newArrayList();
-        list.add(new BranchPosition(basePos.withY(foliageBaseY), treeTopY));
+        list.add(new BranchPosition(basePos.atY(foliageBaseY), treeTopY));
 
         --foliageBaseY;
 
@@ -75,11 +75,11 @@ public class BetaLargeOakTrunkPlacer extends TrunkPlacer {
                     double randRadius = branchDensity * foliageDistance * (random.nextFloat() + BRANCH_LENGTH);
                     double randAngle = random.nextFloat() * 2.0F * Math.PI;
 
-                    int randX = MathHelper.floor(randRadius * Math.sin(randAngle) + 0.5D);
-                    int randZ = MathHelper.floor(randRadius * Math.cos(randAngle) + 0.5D);
+                    int randX = Mth.floor(randRadius * Math.sin(randAngle) + 0.5D);
+                    int randZ = Mth.floor(randRadius * Math.cos(randAngle) + 0.5D);
 
-                    BlockPos startPos = basePos.add(randX, treeRelY - 1, randZ);
-                    BlockPos endPos = startPos.up(foliageHeight);
+                    BlockPos startPos = basePos.offset(randX, treeRelY - 1, randZ);
+                    BlockPos endPos = startPos.above(foliageHeight);
 
                     if (this.makeOrCheckBranch(world, replacer, random, startPos, endPos, false, config)) {
                         int xLength = Math.abs(basePos.getX() - startPos.getX());
@@ -102,9 +102,9 @@ public class BetaLargeOakTrunkPlacer extends TrunkPlacer {
             --treeRelY;
         }
 
-        this.makeOrCheckBranch(world, replacer, random, basePos, basePos.up(treeHeight), true, config);
+        this.makeOrCheckBranch(world, replacer, random, basePos, basePos.above(treeHeight), true, config);
         this.makeBranches(world, replacer, random, height, basePos, list, config);
-        List<FoliagePlacer.TreeNode> nodes = Lists.newArrayList();
+        List<FoliagePlacer.FoliageAttachment> nodes = Lists.newArrayList();
 
         for (BranchPosition branchPosition : list) {
             nodes.add(branchPosition.node);
@@ -114,27 +114,27 @@ public class BetaLargeOakTrunkPlacer extends TrunkPlacer {
     }
 
     @Override
-    public int getHeight(Random random) {
-        return this.baseHeight + random.nextInt(this.firstRandomHeight + 1);
+    public int getTreeHeight(RandomSource random) {
+        return this.baseHeight + random.nextInt(this.heightRandA + 1);
     }
 
-    private boolean makeOrCheckBranch(TestableWorld world, BiConsumer<BlockPos, BlockState> replacer, Random random, BlockPos startPos, BlockPos branchPos, boolean make, TreeFeatureConfig config) {
+    private boolean makeOrCheckBranch(LevelSimulatedReader world, BiConsumer<BlockPos, BlockState> replacer, RandomSource random, BlockPos startPos, BlockPos branchPos, boolean make, TreeConfiguration config) {
         if (!make && Objects.equals(startPos, branchPos)) {
             return true;
         }
 
-        BlockPos startMinus = branchPos.add(-startPos.getX(), -startPos.getY(), -startPos.getZ());
+        BlockPos startMinus = branchPos.offset(-startPos.getX(), -startPos.getY(), -startPos.getZ());
         int longestSide = this.getLongestSide(startMinus);
         float xM = (float)startMinus.getX() / longestSide;
         float yM = (float)startMinus.getY() / longestSide;
         float zM = (float)startMinus.getZ() / longestSide;
 
         for (int i = 0; i <= longestSide; i++) {
-            BlockPos offset = startPos.add(MathHelper.floor(i * xM), MathHelper.floor(i * yM), MathHelper.floor(i * zM));
+            BlockPos offset = startPos.offset(Mth.floor(i * xM), Mth.floor(i * yM), Mth.floor(i * zM));
             if (make) {
-                this.getAndSetState(world, replacer, random, offset, config, state ->
-                        rotateLogs ? state.withIfExists(PillarBlock.AXIS, this.getLogAxis(startPos, offset)) : state);
-            } else if (!this.canReplaceOrIsLog(world, offset)) {
+                this.placeLog(world, replacer, random, offset, config, state ->
+                        rotateLogs ? state.trySetValue(RotatedPillarBlock.AXIS, this.getLogAxis(startPos, offset)) : state);
+            } else if (!this.isFree(world, offset)) {
                 return false;
             }
         }
@@ -143,9 +143,9 @@ public class BetaLargeOakTrunkPlacer extends TrunkPlacer {
     }
 
     private int getLongestSide(BlockPos offset) {
-        int x = MathHelper.abs(offset.getX());
-        int y = MathHelper.abs(offset.getY());
-        int z = MathHelper.abs(offset.getZ());
+        int x = Mth.abs(offset.getX());
+        int y = Mth.abs(offset.getY());
+        int z = Mth.abs(offset.getZ());
         return Math.max(x, Math.max(y, z));
     }
 
@@ -169,12 +169,12 @@ public class BetaLargeOakTrunkPlacer extends TrunkPlacer {
         return height >= treeHeight * 0.2;
     }
 
-    private void makeBranches(TestableWorld world, BiConsumer<BlockPos, BlockState> replacer, Random random, int treeHeight, BlockPos startPos, List<BranchPosition> branchPositions, TreeFeatureConfig config) {
+    private void makeBranches(LevelSimulatedReader world, BiConsumer<BlockPos, BlockState> replacer, RandomSource random, int treeHeight, BlockPos startPos, List<BranchPosition> branchPositions, TreeConfiguration config) {
         for (BranchPosition branchPosition : branchPositions) {
             int endY = branchPosition.endY;
             BlockPos blockPos = new BlockPos(startPos.getX(), endY, startPos.getZ());
-            if (!blockPos.equals(branchPosition.node.getCenter()) && this.isHighEnough(treeHeight, endY - startPos.getY())) {
-                this.makeOrCheckBranch(world, replacer, random, blockPos, branchPosition.node.getCenter(), true, config);
+            if (!blockPos.equals(branchPosition.node.pos()) && this.isHighEnough(treeHeight, endY - startPos.getY())) {
+                this.makeOrCheckBranch(world, replacer, random, blockPos, branchPosition.node.pos(), true, config);
             }
         }
     }
@@ -185,7 +185,7 @@ public class BetaLargeOakTrunkPlacer extends TrunkPlacer {
         } else {
             float radius = treeHeight / 2.0F;
             float distFromRadius = radius - treeRelY;
-            float distance = MathHelper.sqrt(radius * radius - distFromRadius * distFromRadius);
+            float distance = Mth.sqrt(radius * radius - distFromRadius * distFromRadius);
             if (distFromRadius == 0.0F) {
                 distance = radius;
             } else if (Math.abs(distFromRadius) >= radius) {
@@ -196,9 +196,9 @@ public class BetaLargeOakTrunkPlacer extends TrunkPlacer {
         }
     }
 
-    record BranchPosition(FoliagePlacer.TreeNode node, int endY) {
+    record BranchPosition(FoliagePlacer.FoliageAttachment node, int endY) {
         public BranchPosition(BlockPos pos, int endY) {
-            this(new FoliagePlacer.TreeNode(pos, 0, false), endY);
+            this(new FoliagePlacer.FoliageAttachment(pos, 0, false), endY);
         }
     }
 }

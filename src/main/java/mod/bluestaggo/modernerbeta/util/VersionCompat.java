@@ -1,25 +1,24 @@
-//~datapool
 package mod.bluestaggo.modernerbeta.util;
 
 import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SpawnGroup;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.collection.Pool;
-import net.minecraft.util.collection.Weighted;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.HeightLimitView;
-import net.minecraft.world.biome.SpawnSettings;
-import net.minecraft.world.chunk.Chunk;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
+//? if >=1.21.5
+import net.minecraft.util.random.Weighted;
+import net.minecraft.util.random.WeightedList;
+//? if <1.21.5
+/*import net.minecraft.util.random.WeightedEntry;*/
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.level.LevelHeightAccessor;
+import net.minecraft.world.level.biome.MobSpawnSettings;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkAccess;
 
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -41,26 +40,16 @@ public final class VersionCompat {
 
     public static final String BIOME_GET_PRECIPITATION_TARGET =
         //? if >=1.21.2 {
-        "Lnet/minecraft/world/biome/Biome;getPrecipitation(Lnet/minecraft/util/math/BlockPos;I)Lnet/minecraft/world/biome/Biome$Precipitation;";
+        "Lnet/minecraft/world/level/biome/Biome;getPrecipitationAt(Lnet/minecraft/core/BlockPos;I)Lnet/minecraft/world/level/biome/Biome$Precipitation;";
         //?} else {
-        /*"Lnet/minecraft/world/biome/Biome;getPrecipitation(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/world/biome/Biome$Precipitation;";
+        /*"Lnet/minecraft/world/level/biome/Biome;getPrecipitationAt(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/biome/Biome$Precipitation;";
         *///?}
 
-    public static <T> RegistryWrapper.Impl<T> getRegistryWrapper(RegistryWrapper.WrapperLookup registries, RegistryKey<Registry<T>> registryKey) {
-        return registries.
-        //? if >=1.21.2 {
-        getOrThrow
-         //?} else {
-        /*getWrapperOrThrow
-        *///?}
-            (registryKey);
-    }
-
-    public static <T> T accessPool(Pool<T> pool, Random random) {
+    public static <T> T accessPool(WeightedList<T> pool, RandomSource random) {
         //? if >=1.21.5 {
-        return pool.get(random);
+        return pool.getRandomOrThrow(random);
         //?} else {
-        /*return pool.getDataOrEmpty(random).orElseThrow();
+        /*return pool.getRandomValue(random).orElseThrow();
         *///?}
     }
 
@@ -70,30 +59,30 @@ public final class VersionCompat {
         return weighted.value();
     }
     //?} else {
-    /*(Weighted.Present<T> weighted) {
+    /*(WeightedEntry.Wrapper<T> weighted) {
         //? if >=1.20.5 {
-        return weighted.data();
-        //?} else {
-        /^return weighted.getData();
-        ^///?}
+        /^turn weighted.data();
+      ^///?} else {
+        return weighted.getData();
+        //?}
     }
     *///?}
 
-    public static <T> void forEachValueInPool(Pool<T> pool, Consumer<T> consumer) {
-        for (var entry : pool.getEntries()) {
+    public static <T> void forEachValueInPool(WeightedList<T> pool, Consumer<T> consumer) {
+        for (var entry : pool.unwrap()) {
             consumer.accept(getWeightedValue(entry));
         }
     }
 
-    public static void addSpawnEntry(SpawnSettings.Builder spawnSettings, SpawnGroup spawnGroup, EntityType<?> entityType, int weight, int minGroupSize, int maxGroupSize) {
+    public static void addSpawnEntry(MobSpawnSettings.Builder spawnSettings, MobCategory spawnGroup, EntityType<?> entityType, int weight, int minGroupSize, int maxGroupSize) {
         //? if >=1.21.5 {
-        spawnSettings.spawn(spawnGroup, weight, new SpawnSettings.SpawnEntry(entityType, minGroupSize, maxGroupSize));
+        spawnSettings.addSpawn(spawnGroup, weight, new MobSpawnSettings.SpawnerData(entityType, minGroupSize, maxGroupSize));
         //?} else {
-        /*spawnSettings.spawn(spawnGroup, new SpawnSettings.SpawnEntry(entityType, weight, minGroupSize, maxGroupSize));
+        /*spawnSettings.addSpawn(spawnGroup, new MobSpawnSettings.SpawnerData(entityType, weight, minGroupSize, maxGroupSize));
         *///?}
     }
 
-    public static void setBlockState(Chunk chunk, BlockPos pos, BlockState blockState) {
+    public static void setBlockState(ChunkAccess chunk, BlockPos pos, BlockState blockState) {
         //? if >=1.21.5 {
         chunk.setBlockState(pos, blockState);
         //?} else {
@@ -101,19 +90,19 @@ public final class VersionCompat {
         *///?}
     }
 
-    public static void setBlockState(Chunk chunk, BlockPos pos, BlockState blockState, int flags) {
+    public static void setBlockState(ChunkAccess chunk, BlockPos pos, BlockState blockState, int flags) {
         //? if >=1.21.5 {
         chunk.setBlockState(pos, blockState, flags);
         //?} else {
-        /*chunk.setBlockState(pos, blockState, (flags & Block.MOVED) != 0);
+        /*chunk.setBlockState(pos, blockState, (flags & Block.UPDATE_MOVE_BY_PISTON) != 0);
         *///?}
     }
 
-    public static int getTopYExclusive(HeightLimitView heightLimitView) {
+    public static int getTopYExclusive(LevelHeightAccessor heightLimitView) {
         //? if >=1.21.2 {
-        return heightLimitView.getTopYInclusive() + 1;
+        return heightLimitView.getMaxY() + 1;
         //?} else {
-        /*return heightLimitView.getTopY();
+        /*return heightLimitView.getMaxBuildHeight();
         *///?}
     }
 
@@ -145,19 +134,19 @@ public final class VersionCompat {
         *///?}
     }
     
-    public static Identifier id(String string) {
+    public static ResourceLocation id(String string) {
         //? if >=1.21 {
-        return Identifier.of(string);
+        return ResourceLocation.parse(string);
         //?} else {
-        /*return new Identifier(string);
+        /*return new ResourceLocation(string);
         *///?}
     }
 
-    public static Identifier vanillaId(String string) {
+    public static ResourceLocation vanillaId(String string) {
         //? if >=1.21 {
-        return Identifier.ofVanilla(string);
+        return ResourceLocation.withDefaultNamespace(string);
          //?} else {
-        /*return new Identifier(string);
+        /*return new ResourceLocation(string);
         *///?}
     }
 

@@ -4,89 +4,93 @@ import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
 import mod.bluestaggo.modernerbeta.mixin.AccessorDensityFunctions;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
-import net.minecraft.registry.*;
-import net.minecraft.registry.entry.RegistryEntry.Reference;
-import net.minecraft.util.math.noise.DoublePerlinNoiseSampler;
-import net.minecraft.util.math.noise.DoublePerlinNoiseSampler.NoiseParameters;
-import net.minecraft.world.gen.chunk.ChunkGeneratorSettings;
-import net.minecraft.world.gen.chunk.GenerationShapeConfig;
-import net.minecraft.world.gen.densityfunction.DensityFunction;
-import net.minecraft.world.gen.densityfunction.DensityFunctionTypes;
-import net.minecraft.world.gen.noise.NoiseParametersKeys;
-import net.minecraft.world.gen.noise.NoiseRouter;
-import net.minecraft.world.gen.surfacebuilder.MaterialRules;
-import net.minecraft.world.gen.surfacebuilder.VanillaSurfaceRules;
+import net.minecraft.core.Holder.Reference;
+import net.minecraft.core.HolderGetter;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.worldgen.BootstrapContext;
+import net.minecraft.data.worldgen.SurfaceRuleData;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.levelgen.DensityFunction;
+import net.minecraft.world.level.levelgen.DensityFunctions;
+import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
+import net.minecraft.world.level.levelgen.NoiseRouter;
+import net.minecraft.world.level.levelgen.NoiseSettings;
+import net.minecraft.world.level.levelgen.Noises;
+import net.minecraft.world.level.levelgen.SurfaceRules;
+import net.minecraft.world.level.levelgen.synth.NormalNoise;
+import net.minecraft.world.level.levelgen.synth.NormalNoise.NoiseParameters;
 
 import java.util.List;
 
 public class ModernBetaChunkGeneratorSettings {
     private static boolean useModernBetaSurfaceRules;
 
-    public static final RegistryKey<ChunkGeneratorSettings> BETA;
-    public static final RegistryKey<ChunkGeneratorSettings> ALPHA;
-    public static final RegistryKey<ChunkGeneratorSettings> SKYLANDS;
-    public static final RegistryKey<ChunkGeneratorSettings> INFDEV_611;
-    public static final RegistryKey<ChunkGeneratorSettings> INFDEV_420;
-    public static final RegistryKey<ChunkGeneratorSettings> INFDEV_415;
-    public static final RegistryKey<ChunkGeneratorSettings> INFDEV_227;
-    public static final RegistryKey<ChunkGeneratorSettings> INDEV;
-    public static final RegistryKey<ChunkGeneratorSettings> CLASSIC_0_30;
-    public static final RegistryKey<ChunkGeneratorSettings> PE;
-    public static final RegistryKey<ChunkGeneratorSettings> EARLY_RELEASE;
-    public static final RegistryKey<ChunkGeneratorSettings> MAJOR_RELEASE;
-    public static final RegistryKey<ChunkGeneratorSettings> EARLY_BEDROCK;
+    public static final ResourceKey<NoiseGeneratorSettings> BETA;
+    public static final ResourceKey<NoiseGeneratorSettings> ALPHA;
+    public static final ResourceKey<NoiseGeneratorSettings> SKYLANDS;
+    public static final ResourceKey<NoiseGeneratorSettings> INFDEV_611;
+    public static final ResourceKey<NoiseGeneratorSettings> INFDEV_420;
+    public static final ResourceKey<NoiseGeneratorSettings> INFDEV_415;
+    public static final ResourceKey<NoiseGeneratorSettings> INFDEV_227;
+    public static final ResourceKey<NoiseGeneratorSettings> INDEV;
+    public static final ResourceKey<NoiseGeneratorSettings> CLASSIC_0_30;
+    public static final ResourceKey<NoiseGeneratorSettings> PE;
+    public static final ResourceKey<NoiseGeneratorSettings> EARLY_RELEASE;
+    public static final ResourceKey<NoiseGeneratorSettings> MAJOR_RELEASE;
+    public static final ResourceKey<NoiseGeneratorSettings> EARLY_BEDROCK;
 
-    public static void bootstrap(Registerable<ChunkGeneratorSettings> settingsRegisterable) {
-        settingsRegisterable.register(BETA, createGeneratorSettings(settingsRegisterable, ModernBetaShapeConfigs.BETA, 64, true));
-        settingsRegisterable.register(ALPHA, createGeneratorSettings(settingsRegisterable, ModernBetaShapeConfigs.ALPHA, 64, true));
-        settingsRegisterable.register(SKYLANDS, createGeneratorSettings(settingsRegisterable, ModernBetaShapeConfigs.SKYLANDS, 0, false));
-        settingsRegisterable.register(INFDEV_611, createGeneratorSettings(settingsRegisterable, ModernBetaShapeConfigs.INFDEV_611, 64, true));
-        settingsRegisterable.register(INFDEV_420, createGeneratorSettings(settingsRegisterable, ModernBetaShapeConfigs.INFDEV_420, 64, true));
-        settingsRegisterable.register(INFDEV_415, createGeneratorSettings(settingsRegisterable, ModernBetaShapeConfigs.INFDEV_415, 64, true));
-        settingsRegisterable.register(INFDEV_227, createGeneratorSettings(settingsRegisterable, ModernBetaShapeConfigs.INFDEV_227, 64, true));
-        settingsRegisterable.register(INDEV, createGeneratorSettings(settingsRegisterable, ModernBetaShapeConfigs.INDEV, 64, false));
-        settingsRegisterable.register(CLASSIC_0_30, createGeneratorSettings(settingsRegisterable, ModernBetaShapeConfigs.CLASSIC_0_30, 64, false));
-        settingsRegisterable.register(PE, createGeneratorSettings(settingsRegisterable, ModernBetaShapeConfigs.PE, 64, true));
-        settingsRegisterable.register(EARLY_RELEASE, createGeneratorSettings(settingsRegisterable, ModernBetaShapeConfigs.EARLY_RELEASE, 63, true));
-        settingsRegisterable.register(MAJOR_RELEASE, createGeneratorSettings(settingsRegisterable, ModernBetaShapeConfigs.MAJOR_RELEASE, 63, true));
-        settingsRegisterable.register(EARLY_BEDROCK, createGeneratorSettings(settingsRegisterable, ModernBetaShapeConfigs.EARLY_BEDROCK, 63, true));
+    public static void bootstrap(BootstrapContext<NoiseGeneratorSettings> context) {
+        context.register(BETA, createGeneratorSettings(context, ModernBetaShapeConfigs.BETA, 64, true));
+        context.register(ALPHA, createGeneratorSettings(context, ModernBetaShapeConfigs.ALPHA, 64, true));
+        context.register(SKYLANDS, createGeneratorSettings(context, ModernBetaShapeConfigs.SKYLANDS, 0, false));
+        context.register(INFDEV_611, createGeneratorSettings(context, ModernBetaShapeConfigs.INFDEV_611, 64, true));
+        context.register(INFDEV_420, createGeneratorSettings(context, ModernBetaShapeConfigs.INFDEV_420, 64, true));
+        context.register(INFDEV_415, createGeneratorSettings(context, ModernBetaShapeConfigs.INFDEV_415, 64, true));
+        context.register(INFDEV_227, createGeneratorSettings(context, ModernBetaShapeConfigs.INFDEV_227, 64, true));
+        context.register(INDEV, createGeneratorSettings(context, ModernBetaShapeConfigs.INDEV, 64, false));
+        context.register(CLASSIC_0_30, createGeneratorSettings(context, ModernBetaShapeConfigs.CLASSIC_0_30, 64, false));
+        context.register(PE, createGeneratorSettings(context, ModernBetaShapeConfigs.PE, 64, true));
+        context.register(EARLY_RELEASE, createGeneratorSettings(context, ModernBetaShapeConfigs.EARLY_RELEASE, 63, true));
+        context.register(MAJOR_RELEASE, createGeneratorSettings(context, ModernBetaShapeConfigs.MAJOR_RELEASE, 63, true));
+        context.register(EARLY_BEDROCK, createGeneratorSettings(context, ModernBetaShapeConfigs.EARLY_BEDROCK, 63, true));
     }
     
     private static NoiseRouter createDensityFunctions(
-        RegistryEntryLookup<DensityFunction> densityFunctionLookup,
-        RegistryEntryLookup<DoublePerlinNoiseSampler.NoiseParameters> noiseParametersLookup
+        HolderGetter<DensityFunction> densityFunctionLookup,
+        HolderGetter<NormalNoise.NoiseParameters> noiseParametersLookup
     ) {
-        Reference<NoiseParameters> aquiferBarrier = noiseParametersLookup.getOrThrow(NoiseParametersKeys.AQUIFER_BARRIER);
-        Reference<NoiseParameters> aquiferFloodedness = noiseParametersLookup.getOrThrow(NoiseParametersKeys.AQUIFER_FLUID_LEVEL_FLOODEDNESS);
-        Reference<NoiseParameters> aquiferSpread = noiseParametersLookup.getOrThrow(NoiseParametersKeys.AQUIFER_FLUID_LEVEL_SPREAD);
-        Reference<NoiseParameters> aquiferLava = noiseParametersLookup.getOrThrow(NoiseParametersKeys.AQUIFER_LAVA);
-        Reference<NoiseParameters> caveEntranceNoise = noiseParametersLookup.getOrThrow(NoiseParametersKeys.CAVE_ENTRANCE);
+        Reference<NoiseParameters> aquiferBarrier = noiseParametersLookup.getOrThrow(Noises.AQUIFER_BARRIER);
+        Reference<NoiseParameters> aquiferFloodedness = noiseParametersLookup.getOrThrow(Noises.AQUIFER_FLUID_LEVEL_FLOODEDNESS);
+        Reference<NoiseParameters> aquiferSpread = noiseParametersLookup.getOrThrow(Noises.AQUIFER_FLUID_LEVEL_SPREAD);
+        Reference<NoiseParameters> aquiferLava = noiseParametersLookup.getOrThrow(Noises.AQUIFER_LAVA);
+        Reference<NoiseParameters> caveEntranceNoise = noiseParametersLookup.getOrThrow(Noises.CAVE_ENTRANCE);
         
-        DensityFunction functionAquiferBarrier = DensityFunctionTypes.noise(aquiferBarrier, 0.5);
-        DensityFunction functionAquiferFloodedness = DensityFunctionTypes.noise(aquiferFloodedness, 0.67);
-        DensityFunction functionAquiferSpread = DensityFunctionTypes.noise(aquiferSpread, 0.7142857142857143);
-        DensityFunction functionAquiferLava = DensityFunctionTypes.noise(aquiferLava);
-        DensityFunction functionCaveEntranceNoise = DensityFunctionTypes.noise(caveEntranceNoise);
+        DensityFunction functionAquiferBarrier = DensityFunctions.noise(aquiferBarrier, 0.5);
+        DensityFunction functionAquiferFloodedness = DensityFunctions.noise(aquiferFloodedness, 0.67);
+        DensityFunction functionAquiferSpread = DensityFunctions.noise(aquiferSpread, 0.7142857142857143);
+        DensityFunction functionAquiferLava = DensityFunctions.noise(aquiferLava);
+        DensityFunction functionCaveEntranceNoise = DensityFunctions.noise(caveEntranceNoise);
 
-        DensityFunction functionSlopedCheeseEstimate = DensityFunctionTypes.add(
-            DensityFunctionTypes.yClampedGradient(0, 64, 3.0, 1.0),
-            DensityFunctionTypes.mul(
-                DensityFunctionTypes.constant(-0.5),
+        DensityFunction functionSlopedCheeseEstimate = DensityFunctions.add(
+            DensityFunctions.yClampedGradient(0, 64, 3.0, 1.0),
+            DensityFunctions.mul(
+                DensityFunctions.constant(-0.5),
                 functionCaveEntranceNoise
             )
         );
-        DensityFunction functionCaveEntrances = DensityFunctionTypes.min(
+        DensityFunction functionCaveEntrances = DensityFunctions.min(
             functionSlopedCheeseEstimate,
-            DensityFunctionTypes.mul(DensityFunctionTypes.constant(5.0),
-                new DensityFunctionTypes.RegistryEntryHolder(densityFunctionLookup.getOrThrow(AccessorDensityFunctions.getCavesEntrancesOverworldKey())))
+            DensityFunctions.mul(DensityFunctions.constant(5.0),
+                new DensityFunctions.HolderHolder(densityFunctionLookup.getOrThrow(AccessorDensityFunctions.getEntrancesKey())))
         );
-        DensityFunction functionCaves = DensityFunctionTypes.rangeChoice(
+        DensityFunction functionCaves = DensityFunctions.rangeChoice(
             functionSlopedCheeseEstimate, -1000000.0, 1.5625, functionCaveEntrances,
-            AccessorDensityFunctions.invokeCreateCavesFunction(densityFunctionLookup, noiseParametersLookup, functionSlopedCheeseEstimate)
+            AccessorDensityFunctions.invokeUnderground(densityFunctionLookup, noiseParametersLookup, functionSlopedCheeseEstimate)
         );
-        DensityFunction functionCavesWithNoodles = DensityFunctionTypes.min(
-            AccessorDensityFunctions.invokeApplyBlendDensity(AccessorDensityFunctions.invokeApplySurfaceSlides(false, functionCaves)),
-            new DensityFunctionTypes.RegistryEntryHolder(densityFunctionLookup.getOrThrow(AccessorDensityFunctions.getCavesNoodleOverworldKey()))
+        DensityFunction functionCavesWithNoodles = DensityFunctions.min(
+            AccessorDensityFunctions.invokePostProcess(AccessorDensityFunctions.invokeSlideOverworld(false, functionCaves)),
+            new DensityFunctions.HolderHolder(densityFunctionLookup.getOrThrow(AccessorDensityFunctions.getNoodleKey()))
         );
         
         return new NoiseRouter(
@@ -94,56 +98,56 @@ public class ModernBetaChunkGeneratorSettings {
             functionAquiferFloodedness,  // Fluid level floodedness noise
             functionAquiferSpread,       // Fluid level spread noise
             functionAquiferLava,         // Lava noise
-            DensityFunctionTypes.zero(), // Temperature
-            DensityFunctionTypes.zero(), // Vegetation
-            DensityFunctionTypes.zero(), // Continents
-            DensityFunctionTypes.zero(), // Erosion
-            DensityFunctionTypes.zero(), // Depth
-            DensityFunctionTypes.zero(), // Ridges
-            DensityFunctionTypes.zero(), // Initial density
+            DensityFunctions.zero(),     // Temperature
+            DensityFunctions.zero(),     // Vegetation
+            DensityFunctions.zero(),     // Continents
+            DensityFunctions.zero(),     // Erosion
+            DensityFunctions.zero(),     // Depth
+            DensityFunctions.zero(),     // Ridges
+            DensityFunctions.zero(),     // Initial density
             functionCavesWithNoodles,    // Final density (used for noise caves post-processor)
-            DensityFunctionTypes.zero(), // Vein Toggle
-            DensityFunctionTypes.zero(), // Vein Ridged
-            DensityFunctionTypes.zero()  // Vein Gap
+            DensityFunctions.zero(),     // Vein Toggle
+            DensityFunctions.zero(),     // Vein Ridged
+            DensityFunctions.zero()      // Vein Gap
         );
     }
 
-    private static ChunkGeneratorSettings createGeneratorSettings(
-        Registerable<ChunkGeneratorSettings> settingsRegisterable,
-        GenerationShapeConfig shapeConfig,
+    private static NoiseGeneratorSettings createGeneratorSettings(
+        BootstrapContext<NoiseGeneratorSettings> context,
+        NoiseSettings shapeConfig,
         int seaLevel,
         boolean useAquifers
     ) {
-        RegistryEntryLookup<DensityFunction> densityFunctionLookup = settingsRegisterable.getRegistryLookup(RegistryKeys.DENSITY_FUNCTION);
-        RegistryEntryLookup<DoublePerlinNoiseSampler.NoiseParameters> noiseParametersLookup = settingsRegisterable.getRegistryLookup(RegistryKeys.NOISE_PARAMETERS);
+        HolderGetter<DensityFunction> densityFunctionLookup = context.lookup(Registries.DENSITY_FUNCTION);
+        HolderGetter<NormalNoise.NoiseParameters> noiseParametersLookup = context.lookup(Registries.NOISE);
 
         return createGeneratorSettings(densityFunctionLookup, noiseParametersLookup, shapeConfig, seaLevel, useAquifers);
     }
 
-    public static ChunkGeneratorSettings createGeneratorSettings(
-        RegistryWrapper.WrapperLookup lookup,
-        GenerationShapeConfig shapeConfig,
+    public static NoiseGeneratorSettings createGeneratorSettings(
+        HolderLookup.Provider lookup,
+        NoiseSettings shapeConfig,
         int seaLevel,
         boolean useAquifers
     ) {
-        RegistryEntryLookup<DensityFunction> densityFunctionLookup = VersionCompat.getRegistryWrapper(lookup, RegistryKeys.DENSITY_FUNCTION);
-        RegistryEntryLookup<DoublePerlinNoiseSampler.NoiseParameters> noiseParametersLookup = VersionCompat.getRegistryWrapper(lookup, RegistryKeys.NOISE_PARAMETERS);
+        HolderGetter<DensityFunction> densityFunctionLookup = lookup.lookupOrThrow(Registries.DENSITY_FUNCTION);
+        HolderGetter<NormalNoise.NoiseParameters> noiseParametersLookup = lookup.lookupOrThrow(Registries.NOISE);
 
         return createGeneratorSettings(densityFunctionLookup, noiseParametersLookup, shapeConfig, seaLevel, useAquifers);
     }
     
-    private static ChunkGeneratorSettings createGeneratorSettings(
-        RegistryEntryLookup<DensityFunction> densityFunctionLookup,
-        RegistryEntryLookup<DoublePerlinNoiseSampler.NoiseParameters> noiseParametersLookup,
-        GenerationShapeConfig shapeConfig,
+    private static NoiseGeneratorSettings createGeneratorSettings(
+        HolderGetter<DensityFunction> densityFunctionLookup,
+        HolderGetter<NormalNoise.NoiseParameters> noiseParametersLookup,
+        NoiseSettings shapeConfig,
         int seaLevel,
         boolean useAquifers
     ) {
         useModernBetaSurfaceRules = true;
-        MaterialRules.MaterialRule materialRule = VanillaSurfaceRules.createOverworldSurfaceRule();
+        SurfaceRules.RuleSource materialRule = SurfaceRuleData.overworld();
         useModernBetaSurfaceRules = false;
 
-        return new ChunkGeneratorSettings(
+        return new NoiseGeneratorSettings(
             shapeConfig,
             BlockStates.STONE,
             BlockStates.WATER,
@@ -163,18 +167,18 @@ public class ModernBetaChunkGeneratorSettings {
     }
 
     static {
-        BETA = RegistryKey.of(RegistryKeys.CHUNK_GENERATOR_SETTINGS, ModernBetaBuiltInTypes.Chunk.BETA.id);
-        ALPHA = RegistryKey.of(RegistryKeys.CHUNK_GENERATOR_SETTINGS, ModernBetaBuiltInTypes.Chunk.ALPHA.id);
-        SKYLANDS = RegistryKey.of(RegistryKeys.CHUNK_GENERATOR_SETTINGS, ModernBetaBuiltInTypes.Chunk.SKYLANDS.id);
-        INFDEV_611 = RegistryKey.of(RegistryKeys.CHUNK_GENERATOR_SETTINGS, ModernBetaBuiltInTypes.Chunk.INFDEV_611.id);
-        INFDEV_420 = RegistryKey.of(RegistryKeys.CHUNK_GENERATOR_SETTINGS, ModernBetaBuiltInTypes.Chunk.INFDEV_420.id);
-        INFDEV_415 = RegistryKey.of(RegistryKeys.CHUNK_GENERATOR_SETTINGS, ModernBetaBuiltInTypes.Chunk.INFDEV_415.id);
-        INFDEV_227 = RegistryKey.of(RegistryKeys.CHUNK_GENERATOR_SETTINGS, ModernBetaBuiltInTypes.Chunk.INFDEV_227.id);
-        INDEV = RegistryKey.of(RegistryKeys.CHUNK_GENERATOR_SETTINGS, ModernBetaBuiltInTypes.Chunk.INDEV.id);
-        CLASSIC_0_30 = RegistryKey.of(RegistryKeys.CHUNK_GENERATOR_SETTINGS, ModernBetaBuiltInTypes.Chunk.CLASSIC_0_30.id);
-        PE = RegistryKey.of(RegistryKeys.CHUNK_GENERATOR_SETTINGS, ModernBetaBuiltInTypes.Chunk.PE.id);
-        EARLY_RELEASE = RegistryKey.of(RegistryKeys.CHUNK_GENERATOR_SETTINGS, ModernBetaBuiltInTypes.Chunk.EARLY_RELEASE.id);
-        MAJOR_RELEASE = RegistryKey.of(RegistryKeys.CHUNK_GENERATOR_SETTINGS, ModernBetaBuiltInTypes.Chunk.MAJOR_RELEASE.id);
-        EARLY_BEDROCK = RegistryKey.of(RegistryKeys.CHUNK_GENERATOR_SETTINGS, ModernBetaBuiltInTypes.Chunk.EARLY_BEDROCK.id);
+        BETA = ResourceKey.create(Registries.NOISE_SETTINGS, ModernBetaBuiltInTypes.Chunk.BETA.id);
+        ALPHA = ResourceKey.create(Registries.NOISE_SETTINGS, ModernBetaBuiltInTypes.Chunk.ALPHA.id);
+        SKYLANDS = ResourceKey.create(Registries.NOISE_SETTINGS, ModernBetaBuiltInTypes.Chunk.SKYLANDS.id);
+        INFDEV_611 = ResourceKey.create(Registries.NOISE_SETTINGS, ModernBetaBuiltInTypes.Chunk.INFDEV_611.id);
+        INFDEV_420 = ResourceKey.create(Registries.NOISE_SETTINGS, ModernBetaBuiltInTypes.Chunk.INFDEV_420.id);
+        INFDEV_415 = ResourceKey.create(Registries.NOISE_SETTINGS, ModernBetaBuiltInTypes.Chunk.INFDEV_415.id);
+        INFDEV_227 = ResourceKey.create(Registries.NOISE_SETTINGS, ModernBetaBuiltInTypes.Chunk.INFDEV_227.id);
+        INDEV = ResourceKey.create(Registries.NOISE_SETTINGS, ModernBetaBuiltInTypes.Chunk.INDEV.id);
+        CLASSIC_0_30 = ResourceKey.create(Registries.NOISE_SETTINGS, ModernBetaBuiltInTypes.Chunk.CLASSIC_0_30.id);
+        PE = ResourceKey.create(Registries.NOISE_SETTINGS, ModernBetaBuiltInTypes.Chunk.PE.id);
+        EARLY_RELEASE = ResourceKey.create(Registries.NOISE_SETTINGS, ModernBetaBuiltInTypes.Chunk.EARLY_RELEASE.id);
+        MAJOR_RELEASE = ResourceKey.create(Registries.NOISE_SETTINGS, ModernBetaBuiltInTypes.Chunk.MAJOR_RELEASE.id);
+        EARLY_BEDROCK = ResourceKey.create(Registries.NOISE_SETTINGS, ModernBetaBuiltInTypes.Chunk.EARLY_BEDROCK.id);
     }
 }

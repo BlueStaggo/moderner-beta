@@ -3,16 +3,16 @@ package mod.bluestaggo.modernerbeta.api.world.biome;
 import mod.bluestaggo.modernerbeta.api.world.biome.climate.TemperatureHeightScaling;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
-import net.minecraft.registry.RegistryEntryLookup;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.text.Text;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderGetter;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.biome.Biome;
 
 import java.util.List;
 
 public abstract class BiomeProvider {
     protected final ModernBetaSettings settings;
-    protected final RegistryEntryLookup<Biome> biomeRegistry;
+    protected final HolderGetter<Biome> biomeRegistry;
     protected final long seed;
 
     private final TemperatureHeightScaling temperatureHeightScaling;
@@ -24,7 +24,7 @@ public abstract class BiomeProvider {
      * @param settings Biome settings.
      * @param biomeRegistry Minecraft biome registry.
      */
-    public BiomeProvider(ModernBetaSettings settings, RegistryEntryLookup<Biome> biomeRegistry, long seed) {
+    public BiomeProvider(ModernBetaSettings settings, HolderGetter<Biome> biomeRegistry, long seed) {
         this.settings = settings;
         this.biomeRegistry = biomeRegistry;
         this.seed = seed;
@@ -42,14 +42,14 @@ public abstract class BiomeProvider {
      * 
      * @return A biome at given biome coordinates.
      */
-    public abstract RegistryEntry<Biome> getBiome(int biomeX, int biomeY, int biomeZ);
+    public abstract Holder<Biome> getBiome(int biomeX, int biomeY, int biomeZ);
     
     /**
      * Gets a list of biomes for biome source, for the purpose of locating structures, etc.
      * 
      * @return A list of biomes.
      */
-    public List<RegistryEntry<Biome>> getBiomes() {
+    public List<Holder<Biome>> getBiomes() {
         return List.of();
     }
 
@@ -81,9 +81,9 @@ public abstract class BiomeProvider {
      *
      * @return The name of the biome at given biome coordinates.
      */
-    public Text getBiomeName(int biomeX, int biomeY, int biomeZ) {
-        return this.getBiome(biomeX, biomeY, biomeZ).getKey()
-            .map(key -> Text.translatable(key.getValue().toTranslationKey("biome")))
-            .orElse(Text.literal("[unregistered]"));
+    public Component getBiomeName(int biomeX, int biomeY, int biomeZ) {
+        return this.getBiome(biomeX, biomeY, biomeZ).unwrapKey()
+            .map(key -> Component.translatable(key.location().toLanguageKey("biome")))
+            .orElse(Component.literal("[unregistered]"));
     }
 }

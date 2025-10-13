@@ -3,35 +3,35 @@ package mod.bluestaggo.modernerbeta.world.structure;
 import java.util.Optional;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;
-import net.minecraft.util.BlockRotation;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.Heightmap.Type;
-import net.minecraft.world.gen.structure.Structure;
-import net.minecraft.world.gen.structure.StructureType;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.levelgen.Heightmap.Types;
+import net.minecraft.world.level.levelgen.structure.Structure;
+import net.minecraft.world.level.levelgen.structure.StructureType;
 
 public class OceanShrineStructure extends Structure {
-    public static final com.mojang.serialization.MapCodec<OceanShrineStructure> CODEC = createCodec(OceanShrineStructure::new);
-    private static final Identifier SHRINE_BASE = ModernerBeta.createId("ocean_shrine/base");
+    public static final com.mojang.serialization./*Map*/Codec<OceanShrineStructure> CODEC = simpleCodec(OceanShrineStructure::new);
+    private static final ResourceLocation SHRINE_BASE = ModernerBeta.createId("ocean_shrine/base");
 
-    public OceanShrineStructure(Structure.Config config) {
+    public OceanShrineStructure(Structure.StructureSettings config) {
         super(config);
     }
 
     @Override
-    public Optional<StructurePosition> getStructurePosition(Context context) {
-        int x = context.chunkPos().getStartX();
-        int z = context.chunkPos().getStartZ();
-        int y = context.chunkGenerator().getHeightInGround(x, z, Type.OCEAN_FLOOR_WG, context.world(), context.noiseConfig());
+    public Optional<GenerationStub> findGenerationPoint(GenerationContext context) {
+        int x = context.chunkPos().getMinBlockX();
+        int z = context.chunkPos().getMinBlockZ();
+        int y = context.chunkGenerator().getFirstOccupiedHeight(x, z, Types.OCEAN_FLOOR_WG, context.heightAccessor(), context.randomState());
 
         BlockPos pos = new BlockPos(x, y, z);
-        BlockRotation rot = BlockRotation.random(context.random());
+        Rotation rot = Rotation.getRandom(context.random());
 
-        return Optional.of(new StructurePosition(pos, (collector) ->
+        return Optional.of(new GenerationStub(pos, (collector) ->
             collector.addPiece(new OceanShrineStructurePiece(context.structureTemplateManager(), pos, SHRINE_BASE, rot))));
     }
     @Override
-    public StructureType<?> getType() {
+    public StructureType<?> type() {
         return ModernBetaStructureTypes.OCEAN_SHRINE;
     }
 }

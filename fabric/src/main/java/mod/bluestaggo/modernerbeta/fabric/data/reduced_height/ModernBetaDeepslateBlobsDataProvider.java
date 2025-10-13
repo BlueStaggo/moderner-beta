@@ -25,7 +25,7 @@ public class ModernBetaDeepslateBlobsDataProvider extends FabricDynamicRegistryP
 
     @Override
     protected void configure(HolderLookup.Provider registries, Entries entries) {
-        HolderLookup.RegistryLookup<ConfiguredFeature<?, ?>> registryConfiguredFeature = VersionCompat.getRegistryWrapper(registries, Registries.CONFIGURED_FEATURE);
+        HolderLookup.RegistryLookup<ConfiguredFeature<?, ?>> registryConfiguredFeature = registries.lookupOrThrow(Registries.CONFIGURED_FEATURE);
         Holder<ConfiguredFeature<?, ?>> deepslate = alwaysSerializableHolder(entries.ref(ModernBetaReducedHeightDataProvider.ORE_DEEPSLATE_OLD));
         Holder<ConfiguredFeature<?, ?>> tuff = registryConfiguredFeature.getOrThrow(OreFeatures.ORE_TUFF);
 

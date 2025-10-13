@@ -5,19 +5,19 @@ import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.Layer;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.LayerRandom;
-import net.minecraft.util.StringIdentifiable;
+import net.minecraft.util.StringRepresentable;
 
 import java.util.function.Supplier;
 
 public record InRangeBiomePredicate(int centerX, int centerZ, int radiusX, int radiusZ, boolean evenSize, Shape shape) implements BiomePredicate {
-    public static final com.mojang.serialization.MapCodec<InRangeBiomePredicate> CODEC = VersionCompat.createMaybeMapCodec(
+    public static final com.mojang.serialization./*Map*/Codec<InRangeBiomePredicate> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> instance.group(
             Codec.INT.fieldOf("centerX").orElse(0).forGetter(InRangeBiomePredicate::centerX),
             Codec.INT.fieldOf("centerZ").orElse(0).forGetter(InRangeBiomePredicate::centerZ),
             Codec.INT.fieldOf("radiusX").forGetter(InRangeBiomePredicate::radiusX),
             Codec.INT.fieldOf("radiusZ").forGetter(InRangeBiomePredicate::radiusZ),
             Codec.BOOL.fieldOf("evenSize").orElse(false).forGetter(InRangeBiomePredicate::evenSize),
-            StringIdentifiable.createCodec(Shape::values).fieldOf("shape").forGetter(InRangeBiomePredicate::shape)
+            StringRepresentable.fromEnum(Shape::values).fieldOf("shape").forGetter(InRangeBiomePredicate::shape)
         ).apply(instance, InRangeBiomePredicate::new)
     );
 
@@ -58,7 +58,7 @@ public record InRangeBiomePredicate(int centerX, int centerZ, int radiusX, int r
         return Math.abs(localX) <= 1.0 && Math.abs(localZ) <= 1.0 && this.shape.containsPoint(localX, localZ);
     }
 
-    public enum Shape implements StringIdentifiable {
+    public enum Shape implements StringRepresentable {
         CIRCLE("circle", (x, z) -> x * x + z * z <= 1.0),
         RECTANGLE("rectangle", (x, z) -> true),
         DIAMOND("diamond", (x, z) -> Math.abs(x) + Math.abs(z) <= 1.0);
@@ -72,7 +72,7 @@ public record InRangeBiomePredicate(int centerX, int centerZ, int radiusX, int r
         }
 
         @Override
-        public String asString() {
+        public String getSerializedName() {
             return this.id;
         }
 

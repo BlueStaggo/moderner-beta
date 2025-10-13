@@ -8,58 +8,58 @@ import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGeneratorSettings;
-import net.minecraft.registry.Registerable;
-import net.minecraft.registry.RegistryEntryLookup;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.util.Identifier;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.source.MultiNoiseBiomeSource;
-import net.minecraft.world.biome.source.MultiNoiseBiomeSourceParameterList;
-import net.minecraft.world.biome.source.MultiNoiseBiomeSourceParameterLists;
-import net.minecraft.world.biome.source.TheEndBiomeSource;
-import net.minecraft.world.dimension.DimensionOptions;
-import net.minecraft.world.dimension.DimensionType;
-import net.minecraft.world.dimension.DimensionTypes;
-import net.minecraft.world.gen.WorldPreset;
-import net.minecraft.world.gen.chunk.ChunkGeneratorSettings;
-import net.minecraft.world.gen.chunk.NoiseChunkGenerator;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderGetter;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.worldgen.BootstrapContext;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.MultiNoiseBiomeSource;
+import net.minecraft.world.level.biome.MultiNoiseBiomeSourceParameterList;
+import net.minecraft.world.level.biome.MultiNoiseBiomeSourceParameterLists;
+import net.minecraft.world.level.biome.TheEndBiomeSource;
+import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
+import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.world.level.dimension.LevelStem;
+import net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator;
+import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
+import net.minecraft.world.level.levelgen.presets.WorldPreset;
 
 import java.util.Map;
 
 public class ModernBetaWorldPresets {
-    public static final RegistryKey<WorldPreset> MODERN_BETA = keyOf(ModernerBeta.createId(ModernerBeta.MOD_ID));
+    public static final ResourceKey<WorldPreset> MODERN_BETA = keyOf(ModernerBeta.createId(ModernerBeta.MOD_ID));
             
-    public static void bootstrap(Registerable<WorldPreset> presetRegisterable) {
-        RegistryEntryLookup<DimensionType> registryDimensionType = presetRegisterable.getRegistryLookup(RegistryKeys.DIMENSION_TYPE);
-        RegistryEntryLookup<ChunkGeneratorSettings> registrySettings = presetRegisterable.getRegistryLookup(RegistryKeys.CHUNK_GENERATOR_SETTINGS);
-        RegistryEntryLookup<Biome> registryBiome = presetRegisterable.getRegistryLookup(RegistryKeys.BIOME);
-        RegistryEntryLookup<ModernBetaSettingsPreset> registryPreset = presetRegisterable.getRegistryLookup(ModernBetaRegistryKeys.SETTINGS_PRESET);
-        RegistryEntryLookup<MultiNoiseBiomeSourceParameterList> registryParameters = presetRegisterable.getRegistryLookup(RegistryKeys.MULTI_NOISE_BIOME_SOURCE_PARAMETER_LIST);
+    public static void bootstrap(BootstrapContext<WorldPreset> presetRegisterable) {
+        HolderGetter<DimensionType> registryDimensionType = presetRegisterable.lookup(Registries.DIMENSION_TYPE);
+        HolderGetter<NoiseGeneratorSettings> registrySettings = presetRegisterable.lookup(Registries.NOISE_SETTINGS);
+        HolderGetter<Biome> registryBiome = presetRegisterable.lookup(Registries.BIOME);
+        HolderGetter<ModernBetaSettingsPreset> registryPreset = presetRegisterable.lookup(ModernBetaRegistryKeys.SETTINGS_PRESET);
+        HolderGetter<MultiNoiseBiomeSourceParameterList> registryParameters = presetRegisterable.lookup(Registries.MULTI_NOISE_BIOME_SOURCE_PARAMETER_LIST);
 
-        DimensionOptions overworld = createOverworldOptions(registryDimensionType, registrySettings, registryBiome, registryPreset);
-        DimensionOptions nether = createNetherOptions(registryDimensionType, registrySettings, registryParameters);
-        DimensionOptions end = createEndOptions(registryDimensionType, registrySettings, registryBiome);
+        LevelStem overworld = createOverworldOptions(registryDimensionType, registrySettings, registryBiome, registryPreset);
+        LevelStem nether = createNetherOptions(registryDimensionType, registrySettings, registryParameters);
+        LevelStem end = createEndOptions(registryDimensionType, registrySettings, registryBiome);
         
         presetRegisterable.register(
             MODERN_BETA,
-            new WorldPreset(Map.of(DimensionOptions.OVERWORLD, overworld, DimensionOptions.NETHER, nether, DimensionOptions.END, end))
+            new WorldPreset(Map.of(LevelStem.OVERWORLD, overworld, LevelStem.NETHER, nether, LevelStem.END, end))
         );
     }
     
-    private static DimensionOptions createOverworldOptions(
-        RegistryEntryLookup<DimensionType> registryDimensionType,
-        RegistryEntryLookup<ChunkGeneratorSettings> registrySettings,
-        RegistryEntryLookup<Biome> registryBiome,
-        RegistryEntryLookup<ModernBetaSettingsPreset> registryPreset
+    private static LevelStem createOverworldOptions(
+        HolderGetter<DimensionType> registryDimensionType,
+        HolderGetter<NoiseGeneratorSettings> registrySettings,
+        HolderGetter<Biome> registryBiome,
+        HolderGetter<ModernBetaSettingsPreset> registryPreset
     ) {
-        RegistryEntry.Reference<DimensionType> dimensionType = registryDimensionType.getOrThrow(DimensionTypes.OVERWORLD);
-        RegistryEntry.Reference<ChunkGeneratorSettings> settings = registrySettings.getOrThrow(ModernBetaChunkGeneratorSettings.BETA);
+        Holder.Reference<DimensionType> dimensionType = registryDimensionType.getOrThrow(BuiltinDimensionTypes.OVERWORLD);
+        Holder.Reference<NoiseGeneratorSettings> settings = registrySettings.getOrThrow(ModernBetaChunkGeneratorSettings.BETA);
         
         ModernBetaSettingsPreset defaultPreset = ModernBetaSettingsPreset.referenced(ModernBetaSettings.DEFAULT_PRESET_ID);
 
-        return new DimensionOptions(
+        return new LevelStem(
             dimensionType,
             new ModernBetaChunkGenerator(
                 new ModernBetaBiomeSource(
@@ -75,30 +75,30 @@ public class ModernBetaWorldPresets {
         );
     }
     
-    private static DimensionOptions createNetherOptions(
-        RegistryEntryLookup<DimensionType> registryDimensionType,
-        RegistryEntryLookup<ChunkGeneratorSettings> registrySettings,
-        RegistryEntryLookup<MultiNoiseBiomeSourceParameterList> registryParameters
+    private static LevelStem createNetherOptions(
+        HolderGetter<DimensionType> registryDimensionType,
+        HolderGetter<NoiseGeneratorSettings> registrySettings,
+        HolderGetter<MultiNoiseBiomeSourceParameterList> registryParameters
     ) {
-        RegistryEntry.Reference<DimensionType> dimensionType = registryDimensionType.getOrThrow(DimensionTypes.THE_NETHER);
-        RegistryEntry.Reference<ChunkGeneratorSettings> settings = registrySettings.getOrThrow(ChunkGeneratorSettings.NETHER);
-        RegistryEntry.Reference<MultiNoiseBiomeSourceParameterList> parameters = registryParameters.getOrThrow(MultiNoiseBiomeSourceParameterLists.NETHER);
+        Holder.Reference<DimensionType> dimensionType = registryDimensionType.getOrThrow(BuiltinDimensionTypes.NETHER);
+        Holder.Reference<NoiseGeneratorSettings> settings = registrySettings.getOrThrow(NoiseGeneratorSettings.NETHER);
+        Holder.Reference<MultiNoiseBiomeSourceParameterList> parameters = registryParameters.getOrThrow(MultiNoiseBiomeSourceParameterLists.NETHER);
         
-        return new DimensionOptions(dimensionType, new NoiseChunkGenerator(MultiNoiseBiomeSource.create(parameters), settings));
+        return new LevelStem(dimensionType, new NoiseBasedChunkGenerator(MultiNoiseBiomeSource.createFromPreset(parameters), settings));
     }
     
-    private static DimensionOptions createEndOptions(
-        RegistryEntryLookup<DimensionType> registryDimensionType,
-        RegistryEntryLookup<ChunkGeneratorSettings> registrySettings,
-        RegistryEntryLookup<Biome> registryBiome
+    private static LevelStem createEndOptions(
+        HolderGetter<DimensionType> registryDimensionType,
+        HolderGetter<NoiseGeneratorSettings> registrySettings,
+        HolderGetter<Biome> registryBiome
     ) {
-        RegistryEntry.Reference<DimensionType> dimensionType = registryDimensionType.getOrThrow(DimensionTypes.THE_END);
-        RegistryEntry.Reference<ChunkGeneratorSettings> settings = registrySettings.getOrThrow(ChunkGeneratorSettings.END);
+        Holder.Reference<DimensionType> dimensionType = registryDimensionType.getOrThrow(BuiltinDimensionTypes.END);
+        Holder.Reference<NoiseGeneratorSettings> settings = registrySettings.getOrThrow(NoiseGeneratorSettings.END);
 
-        return new DimensionOptions(dimensionType, new NoiseChunkGenerator(TheEndBiomeSource.createVanilla(registryBiome), settings));
+        return new LevelStem(dimensionType, new NoiseBasedChunkGenerator(TheEndBiomeSource.create(registryBiome), settings));
     }
     
-    private static RegistryKey<WorldPreset> keyOf(Identifier id) {
-        return RegistryKey.of(RegistryKeys.WORLD_PRESET, id);
+    private static ResourceKey<WorldPreset> keyOf(ResourceLocation id) {
+        return ResourceKey.create(Registries.WORLD_PRESET, id);
     }
 }

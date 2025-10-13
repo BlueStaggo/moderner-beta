@@ -1,15 +1,15 @@
 package mod.bluestaggo.modernerbeta.util.random;
 
-import net.minecraft.util.math.random.ChunkRandom;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.levelgen.WorldgenRandom;
 
-public class BedrockChunkRandom extends ChunkRandom {
-    public BedrockChunkRandom(Random baseRandom) {
+public class BedrockChunkRandom extends WorldgenRandom {
+    public BedrockChunkRandom(RandomSource baseRandom) {
         super(baseRandom);
     }
 
     @Override
-    public void setCarverSeed(long worldSeed, int chunkX, int chunkZ) {
+    public void setLargeFeatureSeed(long worldSeed, int chunkX, int chunkZ) {
         this.setSeed(worldSeed);
         int randX = this.nextInt();
         int randZ = this.nextInt();

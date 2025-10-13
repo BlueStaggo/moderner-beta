@@ -4,55 +4,58 @@ import mod.bluestaggo.modernerbeta.world.feature.ModernBetaFeatureTags;
 import mod.bluestaggo.modernerbeta.world.feature.foliage.BetaLargeOakFoliagePlacer;
 import mod.bluestaggo.modernerbeta.world.feature.foliage.Oak14a08FoliagePlacer;
 import mod.bluestaggo.modernerbeta.world.feature.trunk.BetaLargeOakTrunkPlacer;
-import net.minecraft.block.Blocks;
-import net.minecraft.registry.Registerable;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.util.math.intprovider.ConstantIntProvider;
-import net.minecraft.world.gen.feature.*;
-import net.minecraft.world.gen.feature.size.TwoLayersFeatureSize;
-import net.minecraft.world.gen.stateprovider.BlockStateProvider;
-import net.minecraft.world.gen.treedecorator.BeehiveTreeDecorator;
-import net.minecraft.world.gen.trunk.StraightTrunkPlacer;
+import net.minecraft.data.worldgen.BootstrapContext;
+import net.minecraft.data.worldgen.features.FeatureUtils;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.util.valueproviders.ConstantInt;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
+import net.minecraft.world.level.levelgen.feature.featuresize.TwoLayersFeatureSize;
+import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
+import net.minecraft.world.level.levelgen.feature.treedecorators.BeehiveDecorator;
+import net.minecraft.world.level.levelgen.feature.trunkplacers.StraightTrunkPlacer;
 
 import java.util.List;
 import java.util.OptionalInt;
 
 public class ModernBetaTreeConfiguredFeatures {
-    public static final RegistryKey<ConfiguredFeature<?, ?>> FANCY_OAK = ModernBetaConfiguredFeatures.of(ModernBetaFeatureTags.FANCY_OAK);
-    public static final RegistryKey<ConfiguredFeature<?, ?>> OAK_14A_08 = ModernBetaConfiguredFeatures.of(ModernBetaFeatureTags.OAK_14A_08);
-    public static final RegistryKey<ConfiguredFeature<?, ?>> OAK_14A_08_BEES_0002 = ModernBetaConfiguredFeatures.of(ModernBetaFeatureTags.OAK_14A_08_BEES_0002);
+    public static final ResourceKey<ConfiguredFeature<?, ?>> FANCY_OAK = ModernBetaConfiguredFeatures.of(ModernBetaFeatureTags.FANCY_OAK);
+    public static final ResourceKey<ConfiguredFeature<?, ?>> OAK_14A_08 = ModernBetaConfiguredFeatures.of(ModernBetaFeatureTags.OAK_14A_08);
+    public static final ResourceKey<ConfiguredFeature<?, ?>> OAK_14A_08_BEES_0002 = ModernBetaConfiguredFeatures.of(ModernBetaFeatureTags.OAK_14A_08_BEES_0002);
 
     @SuppressWarnings("unchecked")
-    public static void bootstrap(Registerable<?> registerable) {
-        Registerable<ConfiguredFeature<?, ?>> featureRegisterable = (Registerable<ConfiguredFeature<?, ?>>)registerable;
+    public static void bootstrap(BootstrapContext<?> registerable) {
+        BootstrapContext<ConfiguredFeature<?, ?>> featureRegisterable = (BootstrapContext<ConfiguredFeature<?, ?>>)registerable;
 
-        ConfiguredFeatures.register(featureRegisterable, FANCY_OAK, Feature.TREE, getOldFancyTreeConfig());
-        ConfiguredFeatures.register(featureRegisterable, OAK_14A_08, Feature.TREE, getOak14a08Config(false));
-        ConfiguredFeatures.register(featureRegisterable, OAK_14A_08_BEES_0002, Feature.TREE, getOak14a08Config(true));
+        FeatureUtils.register(featureRegisterable, FANCY_OAK, Feature.TREE, getOldFancyTreeConfig());
+        FeatureUtils.register(featureRegisterable, OAK_14A_08, Feature.TREE, getOak14a08Config(false));
+        FeatureUtils.register(featureRegisterable, OAK_14A_08_BEES_0002, Feature.TREE, getOak14a08Config(true));
     }
 
-    private static TreeFeatureConfig getOak14a08Config(boolean bees) {
-        TreeFeatureConfig.Builder builder = new TreeFeatureConfig.Builder(
-                BlockStateProvider.of(Blocks.OAK_LOG),
+    private static TreeConfiguration getOak14a08Config(boolean bees) {
+        TreeConfiguration.TreeConfigurationBuilder builder = new TreeConfiguration.TreeConfigurationBuilder(
+                BlockStateProvider.simple(Blocks.OAK_LOG),
                 new StraightTrunkPlacer(4, 1, 0),
-                BlockStateProvider.of(Blocks.OAK_LEAVES),
-                new Oak14a08FoliagePlacer(ConstantIntProvider.create(1), ConstantIntProvider.create(0), 2),
+                BlockStateProvider.simple(Blocks.OAK_LEAVES),
+                new Oak14a08FoliagePlacer(ConstantInt.of(1), ConstantInt.of(0), 2),
                 new TwoLayersFeatureSize(1, 0, 1)
         );
 
         if (bees) {
-            builder.decorators(List.of(new BeehiveTreeDecorator(0.002F)));
+            builder.decorators(List.of(new BeehiveDecorator(0.002F)));
         }
 
         return builder.build();
     }
 
-    private static TreeFeatureConfig getOldFancyTreeConfig() {
-        TreeFeatureConfig.Builder builder = new TreeFeatureConfig.Builder(
-                BlockStateProvider.of(Blocks.OAK_LOG),
+    private static TreeConfiguration getOldFancyTreeConfig() {
+        TreeConfiguration.TreeConfigurationBuilder builder = new TreeConfiguration.TreeConfigurationBuilder(
+                BlockStateProvider.simple(Blocks.OAK_LOG),
                 new BetaLargeOakTrunkPlacer(5, 11, 0, false),
-                BlockStateProvider.of(Blocks.OAK_LEAVES),
-                new BetaLargeOakFoliagePlacer(ConstantIntProvider.create(2), ConstantIntProvider.create(4), 4),
+                BlockStateProvider.simple(Blocks.OAK_LEAVES),
+                new BetaLargeOakFoliagePlacer(ConstantInt.of(2), ConstantInt.of(4), 4),
                 new TwoLayersFeatureSize(0, 0, 0, OptionalInt.of(8))
         );
 

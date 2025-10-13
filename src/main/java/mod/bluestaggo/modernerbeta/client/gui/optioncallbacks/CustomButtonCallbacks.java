@@ -3,27 +3,28 @@ package mod.bluestaggo.modernerbeta.client.gui.optioncallbacks;
 import com.mojang.serialization.Codec;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.option.GameOptions;
-import net.minecraft.client.option.SimpleOption;
-import net.minecraft.text.Text;
+import net.minecraft.client.OptionInstance;
+import net.minecraft.client.Options;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
 @Environment(EnvType.CLIENT)
-public record CustomButtonCallbacks(Text text, Runnable onPress) implements SimpleOption.Callbacks<Void> {
+public record CustomButtonCallbacks(Component text, Runnable onPress) implements OptionInstance.ValueSet<Void> {
     @Override
-    public Function<SimpleOption<Void>, ClickableWidget> getWidgetCreator(SimpleOption.TooltipFactory<Void> tooltipFactory, GameOptions gameOptions, int x, int y, int width, Consumer<Void> changeCallback) {
+    public @NotNull Function<OptionInstance<Void>, AbstractWidget> createButton(OptionInstance.TooltipSupplier<Void> tooltipFactory, Options gameOptions, int x, int y, int width, Consumer<Void> changeCallback) {
         return option ->
-            ButtonWidget.builder(text, onPress -> this.onPress.run())
-            .dimensions(x, y, width, 20).build();
+            Button.builder(text, onPress -> this.onPress.run())
+            .bounds(x, y, width, 20).build();
     }
 
     @Override
-    public Optional<Void> validate(Void value) {
+    public @NotNull Optional<Void> validateValue(Void value) {
         return Optional.empty();
     }
 

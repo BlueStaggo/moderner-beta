@@ -26,7 +26,7 @@ public class ModernBetaTagProviderBlock
         //? if >=1.21.6 {
         this.valueLookupBuilder(
         //?} else {
-        /*this.builder(
+        /*this.getOrCreateTagBuilder(
         *///?}
                 ModernBetaBlockTags.OVERWORLD_CARVER_REPLACEABLES
         ).add(

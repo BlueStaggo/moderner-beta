@@ -6,8 +6,8 @@ import it.unimi.dsi.fastutil.doubles.DoubleImmutableList;
 import it.unimi.dsi.fastutil.doubles.DoubleList;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
-import net.minecraft.util.math.noise.OctavePerlinNoiseSampler;
-import net.minecraft.util.math.random.LocalRandom;
+import net.minecraft.world.level.levelgen.SingleThreadedRandomSource;
+import net.minecraft.world.level.levelgen.synth.PerlinNoise;
 
 import java.util.Comparator;
 import java.util.List;
@@ -15,7 +15,7 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 public class MappedNoiseLayer extends Layer {
-    public static final com.mojang.serialization.MapCodec<MappedNoiseLayer> CODEC = VersionCompat.createMaybeMapCodec(
+    public static final com.mojang.serialization./*Map*/Codec<MappedNoiseLayer> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> fillLayerFields(instance)
             .and(instance.group(
                 Entry.CODEC
@@ -41,7 +41,7 @@ public class MappedNoiseLayer extends Layer {
     private final double scale;
     private final DoubleList amplitudes;
     private final boolean useSaltedSeed;
-    private transient OctavePerlinNoiseSampler noiseSampler;
+    private transient PerlinNoise noiseSampler;
 
     public MappedNoiseLayer(String id, long seed, List<Entry> values, double scale, List<Double> amplitudes, boolean useSaltedSeed) {
         this(id, seed, values, scale, new DoubleImmutableList(amplitudes), useSaltedSeed);
@@ -77,19 +77,19 @@ public class MappedNoiseLayer extends Layer {
     public void init(long worldSeed) {
         super.init(worldSeed);
         long noiseSeed = this.useSaltedSeed ? this.getSaltedSeed() : worldSeed;
-        this.noiseSampler = OctavePerlinNoiseSampler.createLegacy(new LocalRandom(noiseSeed), 0, amplitudes);
+        this.noiseSampler = PerlinNoise.createLegacyForLegacyNetherBiome(new SingleThreadedRandomSource(noiseSeed), 0, amplitudes);
     }
 
     @Override
     @SuppressWarnings("deprecation")
     public void initUnsalted() {
         super.initUnsalted();
-        this.noiseSampler = OctavePerlinNoiseSampler.createLegacy(new LocalRandom(0), 0, amplitudes);
+        this.noiseSampler = PerlinNoise.createLegacyForLegacyNetherBiome(new SingleThreadedRandomSource(0), 0, amplitudes);
     }
 
     @Override
     protected ExtendedBiomeId generate(int x, int z) {
-        double noiseValue = this.noiseSampler.sample(x / this.scale, z / this.scale, 0.0);
+        double noiseValue = this.noiseSampler.getValue(x / this.scale, z / this.scale, 0.0);
 
         for (Entry lowerBiome : this.lowerBiomes) {
             if (noiseValue < lowerBiome.value) {

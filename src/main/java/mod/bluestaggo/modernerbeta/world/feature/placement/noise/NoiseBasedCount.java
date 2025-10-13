@@ -1,7 +1,7 @@
 package mod.bluestaggo.modernerbeta.world.feature.placement.noise;
 
-import net.minecraft.util.math.random.Random;
+import net.minecraft.util.RandomSource;
 
 public interface NoiseBasedCount {
-    int sample(int chunkX, int chunkZ, Random random);
+    int sample(int chunkX, int chunkZ, RandomSource random);
 }

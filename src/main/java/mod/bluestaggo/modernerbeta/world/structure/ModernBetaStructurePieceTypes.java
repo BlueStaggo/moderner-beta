@@ -2,7 +2,7 @@ package mod.bluestaggo.modernerbeta.world.structure;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
-import net.minecraft.structure.StructurePieceType;
+import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceType;
 
 import java.util.Locale;
 
@@ -16,11 +16,11 @@ public class ModernBetaStructurePieceTypes {
         return registryHandler.register(ModernerBeta.createId(id.toLowerCase(Locale.ROOT)), type);
     }
 
-    private static StructurePieceType register(StructurePieceType.Simple type, String id) {
+    private static StructurePieceType register(StructurePieceType.ContextlessType type, String id) {
         return register((StructurePieceType) type, id);
     }
 
-    private static StructurePieceType register(StructurePieceType.ManagerAware type, String id) {
+    private static StructurePieceType register(StructurePieceType.StructureTemplateType type, String id) {
         return register((StructurePieceType) type, id);
     }
 

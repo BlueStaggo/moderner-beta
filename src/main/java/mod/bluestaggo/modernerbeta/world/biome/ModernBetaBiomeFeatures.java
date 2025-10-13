@@ -4,13 +4,18 @@ import mod.bluestaggo.modernerbeta.world.carver.configured.ModernBetaConfiguredC
 import mod.bluestaggo.modernerbeta.world.feature.placed.ModernBetaMiscPlacedFeatures;
 import mod.bluestaggo.modernerbeta.world.feature.placed.ModernBetaOrePlacedFeatures;
 import mod.bluestaggo.modernerbeta.world.feature.placed.ModernBetaVegetationPlacedFeatures;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.world.biome.GenerationSettings;
-import net.minecraft.world.gen.GenerationStep;
-import net.minecraft.world.gen.GenerationStep.Feature;
-import net.minecraft.world.gen.carver.ConfiguredCarver;
-import net.minecraft.world.gen.carver.ConfiguredCarvers;
-import net.minecraft.world.gen.feature.*;
+import net.minecraft.data.worldgen.BiomeDefaultFeatures;
+import net.minecraft.data.worldgen.Carvers;
+import net.minecraft.data.worldgen.placement.AquaticPlacements;
+import net.minecraft.data.worldgen.placement.CavePlacements;
+import net.minecraft.data.worldgen.placement.MiscOverworldPlacements;
+import net.minecraft.data.worldgen.placement.OrePlacements;
+import net.minecraft.data.worldgen.placement.VegetationPlacements;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.biome.BiomeGenerationSettings;
+import net.minecraft.world.level.levelgen.GenerationStep;
+import net.minecraft.world.level.levelgen.GenerationStep.Decoration;
+import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
 
 public class ModernBetaBiomeFeatures {
     /*
@@ -42,14 +47,14 @@ public class ModernBetaBiomeFeatures {
     private static final boolean INDEV_ADD_SPRINGS = false;
     */
 
-    public static void addDefaultVegetation(GenerationSettings.LookupBackedBuilder builder, boolean includeNearWater) {
-        DefaultBiomeFeatures.addDefaultVegetation(builder /*? if >=1.21.5 {*/, includeNearWater/*?}*/);
+    public static void addDefaultVegetation(BiomeGenerationSettings.Builder builder, boolean includeNearWater) {
+        BiomeDefaultFeatures.addDefaultExtraVegetation(builder /*? if >=1.21.5 {*/, includeNearWater/*?}*/);
     }
 
     /* Beta Biomes */
     
-    public static void addDesertFeatures(GenerationSettings.LookupBackedBuilder builder, boolean pe) {
-        DefaultBiomeFeatures.addFossils(builder);
+    public static void addDesertFeatures(BiomeGenerationSettings.Builder builder, boolean pe) {
+        BiomeDefaultFeatures.addFossilDecoration(builder);
         
         addDefaultFeatures(builder, pe ? ModernBetaFeatureSettings.PE : ModernBetaFeatureSettings.BETA);
 
@@ -57,60 +62,60 @@ public class ModernBetaBiomeFeatures {
         if (pe) {
             addPEVegetation(builder, false);
 
-            DefaultBiomeFeatures.addDefaultMushrooms(builder);
+            BiomeDefaultFeatures.addDefaultMushrooms(builder);
 
-            builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_CACTUS_PE);
+            builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_CACTUS_PE);
         } else {
-            builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_POPPY);
+            builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_POPPY);
 
             //? if >= 1.21.5
-            DefaultBiomeFeatures.addDesertDryVegetation(builder);
-            DefaultBiomeFeatures.addDefaultMushrooms(builder);
+            BiomeDefaultFeatures.addDesertVegetation(builder);
+            BiomeDefaultFeatures.addDefaultMushrooms(builder);
 
-            builder.feature(Feature.VEGETAL_DECORATION, VegetationPlacedFeatures.PATCH_CACTUS_DESERT);
+            builder.addFeature(Decoration.VEGETAL_DECORATION, VegetationPlacements.PATCH_CACTUS_DESERT);
         }
 
-        builder.feature(Feature.VEGETAL_DECORATION, VegetationPlacedFeatures.PATCH_SUGAR_CANE_DESERT);
-        builder.feature(Feature.VEGETAL_DECORATION, VegetationPlacedFeatures.PATCH_PUMPKIN);
+        builder.addFeature(Decoration.VEGETAL_DECORATION, VegetationPlacements.PATCH_SUGAR_CANE_DESERT);
+        builder.addFeature(Decoration.VEGETAL_DECORATION, VegetationPlacements.PATCH_PUMPKIN);
 
-        DefaultBiomeFeatures.addDesertFeatures(builder);
+        BiomeDefaultFeatures.addDesertExtraDecoration(builder);
     }
     
-    public static void addForestFeatures(GenerationSettings.LookupBackedBuilder builder, boolean pe, boolean hasBirch) {
+    public static void addForestFeatures(BiomeGenerationSettings.Builder builder, boolean pe, boolean hasBirch) {
         addDefaultFeatures(builder, pe ? ModernBetaFeatureSettings.PE : ModernBetaFeatureSettings.BETA);
         
         if (pe) {
             addPEVegetation(builder, true);
-            builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.TREES_PE_FOREST);
+            builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.TREES_PE_FOREST);
         } else {
-            builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_DANDELION_2);
-            builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_POPPY);
-            builder.feature(Feature.VEGETAL_DECORATION,
+            builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_DANDELION_2);
+            builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_POPPY);
+            builder.addFeature(Decoration.VEGETAL_DECORATION,
                 hasBirch ? ModernBetaVegetationPlacedFeatures.TREES_BETA_FOREST_BEES
                 : ModernBetaVegetationPlacedFeatures.TREES_BETA_OAK_FOREST_BEES);
 
-            builder.feature(Feature.VEGETAL_DECORATION, VegetationPlacedFeatures.FOREST_FLOWERS);
-            builder.feature(Feature.VEGETAL_DECORATION, VegetationPlacedFeatures.PATCH_GRASS_FOREST);
+            builder.addFeature(Decoration.VEGETAL_DECORATION, VegetationPlacements.FOREST_FLOWERS);
+            builder.addFeature(Decoration.VEGETAL_DECORATION, VegetationPlacements.PATCH_GRASS_FOREST);
         }
         
-        DefaultBiomeFeatures.addDefaultMushrooms(builder);
+        BiomeDefaultFeatures.addDefaultMushrooms(builder);
         addDefaultVegetation(builder, true);
     }
     
-    public static void addIceDesertFeatures(GenerationSettings.LookupBackedBuilder builder, boolean pe) {
+    public static void addIceDesertFeatures(BiomeGenerationSettings.Builder builder, boolean pe) {
         addDefaultFeatures(builder, pe ? ModernBetaFeatureSettings.PE : ModernBetaFeatureSettings.BETA);
         
         if (pe) {
             addPEVegetation(builder, false);
         } else {
-            builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_POPPY);
+            builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_POPPY);
         }
         
-        DefaultBiomeFeatures.addDefaultMushrooms(builder);
+        BiomeDefaultFeatures.addDefaultMushrooms(builder);
         addDefaultVegetation(builder, false);
     }
     
-    public static void addPlainsFeatures(GenerationSettings.LookupBackedBuilder builder, boolean pe, boolean earlyRelease) {
+    public static void addPlainsFeatures(BiomeGenerationSettings.Builder builder, boolean pe, boolean earlyRelease) {
         addDefaultFeatures(builder,
             pe ? ModernBetaFeatureSettings.PE
             : earlyRelease ? ModernBetaFeatureSettings.EARLY_RELEASE
@@ -119,426 +124,426 @@ public class ModernBetaBiomeFeatures {
         if (pe) {
             addPEVegetation(builder, true);
         } else {
-            builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_DANDELION_3);
-            builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_POPPY);
-            builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_GRASS_PLAINS_10);
+            builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_DANDELION_3);
+            builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_POPPY);
+            builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_GRASS_PLAINS_10);
         }
         
-        builder.feature(Feature.VEGETAL_DECORATION, VegetationPlacedFeatures.FLOWER_PLAIN);
+        builder.addFeature(Decoration.VEGETAL_DECORATION, VegetationPlacements.FLOWER_PLAINS);
 
-        DefaultBiomeFeatures.addDefaultMushrooms(builder);
+        BiomeDefaultFeatures.addDefaultMushrooms(builder);
         addDefaultVegetation(builder, true);
     }
     
-    public static void addRainforestFeatures(GenerationSettings.LookupBackedBuilder builder, boolean pe) {
+    public static void addRainforestFeatures(BiomeGenerationSettings.Builder builder, boolean pe) {
         addDefaultFeatures(builder, pe ? ModernBetaFeatureSettings.PE : ModernBetaFeatureSettings.BETA);
         
         if (pe) {
             addPEVegetation(builder, true);
-            builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.TREES_PE_RAINFOREST);
+            builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.TREES_PE_RAINFOREST);
         } else {
-            builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_POPPY);
-            builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.TREES_BETA_RAINFOREST_BEES);
-            builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_GRASS_RAINFOREST_10);
-            builder.feature(Feature.VEGETAL_DECORATION, VegetationPlacedFeatures.FOREST_FLOWERS);
+            builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_POPPY);
+            builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.TREES_BETA_RAINFOREST_BEES);
+            builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_GRASS_RAINFOREST_10);
+            builder.addFeature(Decoration.VEGETAL_DECORATION, VegetationPlacements.FOREST_FLOWERS);
         }
         
-        DefaultBiomeFeatures.addDefaultMushrooms(builder);
+        BiomeDefaultFeatures.addDefaultMushrooms(builder);
         addDefaultVegetation(builder, false);
         
-        builder.feature(Feature.VEGETAL_DECORATION, VegetationPlacedFeatures.PATCH_MELON_SPARSE);
+        builder.addFeature(Decoration.VEGETAL_DECORATION, VegetationPlacements.PATCH_MELON_SPARSE);
     }
     
-    public static void addSavannaFeatures(GenerationSettings.LookupBackedBuilder builder, boolean pe) {
+    public static void addSavannaFeatures(BiomeGenerationSettings.Builder builder, boolean pe) {
         addDefaultFeatures(builder, pe ? ModernBetaFeatureSettings.PE : ModernBetaFeatureSettings.BETA);
         
         if (pe) {
             addPEVegetation(builder, false);
-            builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.TREES_PE_SPARSE);
+            builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.TREES_PE_SPARSE);
         } else {
-            builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_POPPY);
-            builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.TREES_BETA_SPARSE_BEES);
+            builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_POPPY);
+            builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.TREES_BETA_SPARSE_BEES);
         }
         
-        DefaultBiomeFeatures.addDefaultMushrooms(builder);
+        BiomeDefaultFeatures.addDefaultMushrooms(builder);
         addDefaultVegetation(builder, false);
     }
     
-    public static void addSeasonalForestFeatures(GenerationSettings.LookupBackedBuilder builder, boolean pe) {
+    public static void addSeasonalForestFeatures(BiomeGenerationSettings.Builder builder, boolean pe) {
         addDefaultFeatures(builder, pe ? ModernBetaFeatureSettings.PE : ModernBetaFeatureSettings.BETA);
         
         if (pe) {
             addPEVegetation(builder, true);
-            builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.TREES_PE_SEASONAL_FOREST);
+            builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.TREES_PE_SEASONAL_FOREST);
         } else {
-            builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_DANDELION_4);
-            builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_POPPY);
-            builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.TREES_BETA_SEASONAL_FOREST_BEES);
-            builder.feature(Feature.VEGETAL_DECORATION, VegetationPlacedFeatures.PATCH_GRASS_FOREST);
+            builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_DANDELION_4);
+            builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_POPPY);
+            builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.TREES_BETA_SEASONAL_FOREST_BEES);
+            builder.addFeature(Decoration.VEGETAL_DECORATION, VegetationPlacements.PATCH_GRASS_FOREST);
         }
         
-        DefaultBiomeFeatures.addDefaultMushrooms(builder);
+        BiomeDefaultFeatures.addDefaultMushrooms(builder);
         addDefaultVegetation(builder, true);
     }
     
-    public static void addShrublandFeatures(GenerationSettings.LookupBackedBuilder builder, boolean pe) {
+    public static void addShrublandFeatures(BiomeGenerationSettings.Builder builder, boolean pe) {
         addDefaultFeatures(builder, pe ? ModernBetaFeatureSettings.PE : ModernBetaFeatureSettings.BETA);
         
         if (pe) {
             addPEVegetation(builder, false);
-            builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.TREES_PE_SPARSE);
+            builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.TREES_PE_SPARSE);
         } else {
-            builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_POPPY);
-            builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.TREES_BETA_SPARSE_BEES);
+            builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_POPPY);
+            builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.TREES_BETA_SPARSE_BEES);
         }
         
-        DefaultBiomeFeatures.addDefaultMushrooms(builder);
+        BiomeDefaultFeatures.addDefaultMushrooms(builder);
         addDefaultVegetation(builder, false);
     }
     
-    public static void addSkyFeatures(GenerationSettings.LookupBackedBuilder builder) {
+    public static void addSkyFeatures(BiomeGenerationSettings.Builder builder) {
         addDefaultFeatures(builder, ModernBetaFeatureSettings.SKY);
         
-        builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_DANDELION_2);
-        builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_POPPY);
-        builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.TREES_BETA_SPARSE);
+        builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_DANDELION_2);
+        builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_POPPY);
+        builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.TREES_BETA_SPARSE);
         
-        DefaultBiomeFeatures.addDefaultMushrooms(builder);
+        BiomeDefaultFeatures.addDefaultMushrooms(builder);
         addDefaultVegetation(builder, false);
     }
     
-    public static void addSwamplandFeatures(GenerationSettings.LookupBackedBuilder builder, boolean pe) {
+    public static void addSwamplandFeatures(BiomeGenerationSettings.Builder builder, boolean pe) {
         addDefaultFeatures(builder, pe ? ModernBetaFeatureSettings.PE : ModernBetaFeatureSettings.BETA);
         
         if (pe) {
             addPEVegetation(builder, false);
-            builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.TREES_PE_SPARSE);
+            builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.TREES_PE_SPARSE);
         } else {
-            builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_POPPY);
-            builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.TREES_BETA_SPARSE_BEES);
-            builder.feature(Feature.VEGETAL_DECORATION, VegetationPlacedFeatures.FLOWER_SWAMP);
+            builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_POPPY);
+            builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.TREES_BETA_SPARSE_BEES);
+            builder.addFeature(Decoration.VEGETAL_DECORATION, VegetationPlacements.FLOWER_SWAMP);
             //builder.feature(Feature.VEGETAL_DECORATION, VegetationPlacedFeatures.PATCH_WATERLILY);
         }
         
-        DefaultBiomeFeatures.addDefaultMushrooms(builder);
-        DefaultBiomeFeatures.addSwampVegetation(builder);
+        BiomeDefaultFeatures.addDefaultMushrooms(builder);
+        BiomeDefaultFeatures.addSwampExtraVegetation(builder);
     }
     
-    public static void addTaigaFeatures(GenerationSettings.LookupBackedBuilder builder, boolean pe, boolean spruce) {
+    public static void addTaigaFeatures(BiomeGenerationSettings.Builder builder, boolean pe, boolean spruce) {
         addDefaultFeatures(builder, pe ? ModernBetaFeatureSettings.PE : ModernBetaFeatureSettings.BETA);
         
         if (pe) {
             addPEVegetation(builder, true);
-            builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.TREES_PE_TAIGA);
+            builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.TREES_PE_TAIGA);
         } else {
-            builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_DANDELION_2);
-            builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_POPPY);
-            builder.feature(Feature.VEGETAL_DECORATION,
+            builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_DANDELION_2);
+            builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_POPPY);
+            builder.addFeature(Decoration.VEGETAL_DECORATION,
                 spruce ? ModernBetaVegetationPlacedFeatures.TREES_BETA_TAIGA
                 : ModernBetaVegetationPlacedFeatures.TREES_BETA_OAK_FOREST);
-            builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_GRASS_TAIGA_1);
+            builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_GRASS_TAIGA_1);
         }
         
-        DefaultBiomeFeatures.addDefaultMushrooms(builder);
+        BiomeDefaultFeatures.addDefaultMushrooms(builder);
         addDefaultVegetation(builder, true);
-        if (!pe) DefaultBiomeFeatures.addSweetBerryBushes(builder);
+        if (!pe) BiomeDefaultFeatures.addCommonBerryBushes(builder);
     }
     
-    public static void addTundraFeatures(GenerationSettings.LookupBackedBuilder builder, boolean pe) {
+    public static void addTundraFeatures(BiomeGenerationSettings.Builder builder, boolean pe) {
         addDefaultFeatures(builder, pe ? ModernBetaFeatureSettings.PE : ModernBetaFeatureSettings.BETA);
         
         if (pe) {
             addPEVegetation(builder, false);
         } else {
-            builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_POPPY);
+            builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_POPPY);
         }
         
-        DefaultBiomeFeatures.addDefaultMushrooms(builder);
+        BiomeDefaultFeatures.addDefaultMushrooms(builder);
         addDefaultVegetation(builder, false);
     }
 
-    public static void addExtremeHillsFeatures(GenerationSettings.LookupBackedBuilder builder) {
+    public static void addExtremeHillsFeatures(BiomeGenerationSettings.Builder builder) {
         addDefaultFeatures(builder, ModernBetaFeatureSettings.EARLY_RELEASE);
 
-        builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_POPPY);
-        builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.TREES_BETA_SPARSE);
-        builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_GRASS_TAIGA_1);
+        builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_POPPY);
+        builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.TREES_BETA_SPARSE);
+        builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_GRASS_TAIGA_1);
 
-        DefaultBiomeFeatures.addDefaultDisks(builder);
-        DefaultBiomeFeatures.addDefaultMushrooms(builder);
+        BiomeDefaultFeatures.addDefaultSoftDisks(builder);
+        BiomeDefaultFeatures.addDefaultMushrooms(builder);
         addDefaultVegetation(builder, true);
     }
 
-    public static void addAdventureSwamplandFeatures(GenerationSettings.LookupBackedBuilder builder, boolean lilypads) {
+    public static void addAdventureSwamplandFeatures(BiomeGenerationSettings.Builder builder, boolean lilypads) {
         addDefaultFeatures(builder, ModernBetaFeatureSettings.EARLY_RELEASE);
 
-        builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_POPPY);
-        builder.feature(Feature.VEGETAL_DECORATION, VegetationPlacedFeatures.TREES_SWAMP);
-        builder.feature(Feature.VEGETAL_DECORATION, VegetationPlacedFeatures.FLOWER_SWAMP);
-        builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_GRASS_TAIGA_1);
-        builder.feature(Feature.VEGETAL_DECORATION, VegetationPlacedFeatures.PATCH_DEAD_BUSH);
-        if (lilypads) builder.feature(Feature.VEGETAL_DECORATION, VegetationPlacedFeatures.PATCH_WATERLILY);
-        builder.feature(Feature.VEGETAL_DECORATION, VegetationPlacedFeatures.BROWN_MUSHROOM_SWAMP);
-        builder.feature(Feature.VEGETAL_DECORATION, VegetationPlacedFeatures.RED_MUSHROOM_SWAMP);
+        builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_POPPY);
+        builder.addFeature(Decoration.VEGETAL_DECORATION, VegetationPlacements.TREES_SWAMP);
+        builder.addFeature(Decoration.VEGETAL_DECORATION, VegetationPlacements.FLOWER_SWAMP);
+        builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_GRASS_TAIGA_1);
+        builder.addFeature(Decoration.VEGETAL_DECORATION, VegetationPlacements.PATCH_DEAD_BUSH);
+        if (lilypads) builder.addFeature(Decoration.VEGETAL_DECORATION, VegetationPlacements.PATCH_WATERLILY);
+        builder.addFeature(Decoration.VEGETAL_DECORATION, VegetationPlacements.BROWN_MUSHROOM_SWAMP);
+        builder.addFeature(Decoration.VEGETAL_DECORATION, VegetationPlacements.RED_MUSHROOM_SWAMP);
 
-        DefaultBiomeFeatures.addDefaultDisks(builder);
-        DefaultBiomeFeatures.addDefaultMushrooms(builder);
-        DefaultBiomeFeatures.addSwampVegetation(builder);
+        BiomeDefaultFeatures.addDefaultSoftDisks(builder);
+        BiomeDefaultFeatures.addDefaultMushrooms(builder);
+        BiomeDefaultFeatures.addSwampExtraVegetation(builder);
     }
 
-    public static void addIcePlainsFeatures(GenerationSettings.LookupBackedBuilder builder, boolean grass) {
+    public static void addIcePlainsFeatures(BiomeGenerationSettings.Builder builder, boolean grass) {
         addDefaultFeatures(builder, ModernBetaFeatureSettings.EARLY_RELEASE);
 
-        if (grass) builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_POPPY);
-        builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.TREES_BETA_SPARSE);
-        if (grass) builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_GRASS_TAIGA_1);
+        if (grass) builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_POPPY);
+        builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.TREES_BETA_SPARSE);
+        if (grass) builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_GRASS_TAIGA_1);
 
-        DefaultBiomeFeatures.addDefaultDisks(builder);
-        DefaultBiomeFeatures.addDefaultMushrooms(builder);
+        BiomeDefaultFeatures.addDefaultSoftDisks(builder);
+        BiomeDefaultFeatures.addDefaultMushrooms(builder);
         addDefaultVegetation(builder, false);
     }
 
-    public static void addOceanFeatures(GenerationSettings.LookupBackedBuilder builder, boolean pe) {
+    public static void addOceanFeatures(BiomeGenerationSettings.Builder builder, boolean pe) {
         addDefaultFeatures(builder, pe ? ModernBetaFeatureSettings.PE : ModernBetaFeatureSettings.BETA);
         
         if (pe) {
             addPEVegetation(builder, false);
         } else {
-            builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_DANDELION_2);
-            builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_POPPY);
+            builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_DANDELION_2);
+            builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_POPPY);
         }
         
-        DefaultBiomeFeatures.addDefaultMushrooms(builder);
+        BiomeDefaultFeatures.addDefaultMushrooms(builder);
         addDefaultVegetation(builder, false);
         
         if (!pe) {
-            builder.feature(Feature.VEGETAL_DECORATION, OceanPlacedFeatures.SEAGRASS_NORMAL);
-            builder.feature(Feature.VEGETAL_DECORATION, OceanPlacedFeatures.KELP_COLD);
+            builder.addFeature(Decoration.VEGETAL_DECORATION, AquaticPlacements.SEAGRASS_NORMAL);
+            builder.addFeature(Decoration.VEGETAL_DECORATION, AquaticPlacements.KELP_COLD);
         }
     }
     
-    public static void addColdOceanFeatures(GenerationSettings.LookupBackedBuilder builder, boolean pe) {
+    public static void addColdOceanFeatures(BiomeGenerationSettings.Builder builder, boolean pe) {
         addDefaultFeatures(builder, pe ? ModernBetaFeatureSettings.PE : ModernBetaFeatureSettings.BETA);
         
         if (pe) {
             addPEVegetation(builder, false);
         } else {
-            builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_DANDELION_2);
-            builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_POPPY);
+            builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_DANDELION_2);
+            builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_POPPY);
         }
         
-        DefaultBiomeFeatures.addDefaultMushrooms(builder);
+        BiomeDefaultFeatures.addDefaultMushrooms(builder);
         addDefaultVegetation(builder, false);
         
         if (!pe) {
-            builder.feature(Feature.VEGETAL_DECORATION, OceanPlacedFeatures.SEAGRASS_COLD);
-            builder.feature(Feature.VEGETAL_DECORATION, OceanPlacedFeatures.KELP_COLD);
+            builder.addFeature(Decoration.VEGETAL_DECORATION, AquaticPlacements.SEAGRASS_COLD);
+            builder.addFeature(Decoration.VEGETAL_DECORATION, AquaticPlacements.KELP_COLD);
         }
     }
     
-    public static void addFrozenOceanFeatures(GenerationSettings.LookupBackedBuilder builder, boolean pe) {
+    public static void addFrozenOceanFeatures(BiomeGenerationSettings.Builder builder, boolean pe) {
         addDefaultFeatures(builder, pe ? ModernBetaFeatureSettings.PE : ModernBetaFeatureSettings.BETA);
         
         if (pe) {
             addPEVegetation(builder, false);
         } else {
-            builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_DANDELION_2);
-            builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_POPPY);
+            builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_DANDELION_2);
+            builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_POPPY);
         }
         
-        DefaultBiomeFeatures.addDefaultMushrooms(builder);
+        BiomeDefaultFeatures.addDefaultMushrooms(builder);
         addDefaultVegetation(builder, false);
     }
     
-    public static void addLukewarmOceanFeatures(GenerationSettings.LookupBackedBuilder builder, boolean pe) {
+    public static void addLukewarmOceanFeatures(BiomeGenerationSettings.Builder builder, boolean pe) {
         addDefaultFeatures(builder, pe ? ModernBetaFeatureSettings.PE : ModernBetaFeatureSettings.BETA);
         
         if (pe) {
             addPEVegetation(builder, false);
         } else {
-            builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_DANDELION_2);
-            builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_POPPY);
+            builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_DANDELION_2);
+            builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_POPPY);
         }
         
-        DefaultBiomeFeatures.addDefaultMushrooms(builder);
+        BiomeDefaultFeatures.addDefaultMushrooms(builder);
         addDefaultVegetation(builder, false);
 
         if (!pe) {
-            builder.feature(Feature.VEGETAL_DECORATION, OceanPlacedFeatures.SEAGRASS_WARM);
-            builder.feature(Feature.VEGETAL_DECORATION, OceanPlacedFeatures.KELP_WARM);
+            builder.addFeature(Decoration.VEGETAL_DECORATION, AquaticPlacements.SEAGRASS_WARM);
+            builder.addFeature(Decoration.VEGETAL_DECORATION, AquaticPlacements.KELP_WARM);
         }
     }
     
-    public static void addWarmOceanFeatures(GenerationSettings.LookupBackedBuilder builder, boolean pe) {
+    public static void addWarmOceanFeatures(BiomeGenerationSettings.Builder builder, boolean pe) {
         addDefaultFeatures(builder, pe ? ModernBetaFeatureSettings.PE : ModernBetaFeatureSettings.BETA);
         
         if (pe) {
             addPEVegetation(builder, false);
         } else {
-            builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_DANDELION_2);
-            builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_POPPY);
+            builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_DANDELION_2);
+            builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_POPPY);
         }
         
-        DefaultBiomeFeatures.addDefaultMushrooms(builder);
+        BiomeDefaultFeatures.addDefaultMushrooms(builder);
         addDefaultVegetation(builder, false);
         
         if (!pe) {
-            builder.feature(Feature.VEGETAL_DECORATION, OceanPlacedFeatures.WARM_OCEAN_VEGETATION);
-            builder.feature(Feature.VEGETAL_DECORATION, OceanPlacedFeatures.SEAGRASS_WARM);
-            builder.feature(Feature.VEGETAL_DECORATION, OceanPlacedFeatures.SEA_PICKLE);
+            builder.addFeature(Decoration.VEGETAL_DECORATION, AquaticPlacements.WARM_OCEAN_VEGETATION);
+            builder.addFeature(Decoration.VEGETAL_DECORATION, AquaticPlacements.SEAGRASS_WARM);
+            builder.addFeature(Decoration.VEGETAL_DECORATION, AquaticPlacements.SEA_PICKLE);
         }
     }
     
     /* Inf Biomes */
     
-    public static void addAlphaFeatures(GenerationSettings.LookupBackedBuilder builder) {
+    public static void addAlphaFeatures(BiomeGenerationSettings.Builder builder) {
         addDefaultFeatures(builder, ModernBetaFeatureSettings.ALPHA);
         
-        builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_DANDELION_2);
-        builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_POPPY);
-        builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_CACTUS_ALPHA);
-        builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.TREES_ALPHA);
-        builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_GRASS_ALPHA_2);
+        builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_DANDELION_2);
+        builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_POPPY);
+        builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_CACTUS_ALPHA);
+        builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.TREES_ALPHA);
+        builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_GRASS_ALPHA_2);
         
-        DefaultBiomeFeatures.addDefaultMushrooms(builder);
+        BiomeDefaultFeatures.addDefaultMushrooms(builder);
         addDefaultVegetation(builder, true);
     }
     
-    public static void addInfdev611Features(GenerationSettings.LookupBackedBuilder builder) {
+    public static void addInfdev611Features(BiomeGenerationSettings.Builder builder) {
         addDefaultFeatures(builder, ModernBetaFeatureSettings.INFDEV_611);
         
-        builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.TREES_INFDEV_611);
-        builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_GRASS_ALPHA_2);
+        builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.TREES_INFDEV_611);
+        builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_GRASS_ALPHA_2);
         
-        DefaultBiomeFeatures.addDefaultMushrooms(builder);
+        BiomeDefaultFeatures.addDefaultMushrooms(builder);
     }
     
-    public static void addInfdev420Features(GenerationSettings.LookupBackedBuilder builder) {
+    public static void addInfdev420Features(BiomeGenerationSettings.Builder builder) {
         addDefaultFeatures(builder, ModernBetaFeatureSettings.INFDEV_420);
         
-        builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.TREES_INFDEV_420);
-        builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_GRASS_ALPHA_2);
+        builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.TREES_INFDEV_420);
+        builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_GRASS_ALPHA_2);
         
-        DefaultBiomeFeatures.addDefaultMushrooms(builder);
+        BiomeDefaultFeatures.addDefaultMushrooms(builder);
     }
     
-    public static void addInfdev415Features(GenerationSettings.LookupBackedBuilder builder) {
+    public static void addInfdev415Features(BiomeGenerationSettings.Builder builder) {
         addDefaultFeatures(builder, ModernBetaFeatureSettings.INFDEV_415);
         
-        builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.TREES_INFDEV_415);
-        builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_GRASS_ALPHA_2);
+        builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.TREES_INFDEV_415);
+        builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_GRASS_ALPHA_2);
         
-        DefaultBiomeFeatures.addDefaultMushrooms(builder);
+        BiomeDefaultFeatures.addDefaultMushrooms(builder);
     }
 
-    public static void addInfdev325Features(GenerationSettings.LookupBackedBuilder builder) {
+    public static void addInfdev325Features(BiomeGenerationSettings.Builder builder) {
         addDefaultFeatures(builder, ModernBetaFeatureSettings.INFDEV_325);
 
-        builder.feature(Feature.RAW_GENERATION, ModernBetaOrePlacedFeatures.CAVE_INFDEV_325);
-        builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_GRASS_ALPHA_2);
-        builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_DANDELION_INFDEV_227);
-        builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.TREES_INFDEV_325);
+        builder.addFeature(Decoration.RAW_GENERATION, ModernBetaOrePlacedFeatures.CAVE_INFDEV_325);
+        builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_GRASS_ALPHA_2);
+        builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_DANDELION_INFDEV_227);
+        builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.TREES_INFDEV_325);
 
-        DefaultBiomeFeatures.addDefaultMushrooms(builder);
+        BiomeDefaultFeatures.addDefaultMushrooms(builder);
     }
     
-    public static void addInfdev227Features(GenerationSettings.LookupBackedBuilder builder) {
+    public static void addInfdev227Features(BiomeGenerationSettings.Builder builder) {
         addDefaultFeatures(builder, ModernBetaFeatureSettings.INFDEV_227);
         
-        builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_GRASS_ALPHA_2);
-        builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_DANDELION_INFDEV_227);
+        builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_GRASS_ALPHA_2);
+        builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_DANDELION_INFDEV_227);
         
-        DefaultBiomeFeatures.addDefaultMushrooms(builder);
+        BiomeDefaultFeatures.addDefaultMushrooms(builder);
     }
     
     /* Indev Biomes */
     
-    public static void addIndevHellFeatures(GenerationSettings.LookupBackedBuilder builder) {
+    public static void addIndevHellFeatures(BiomeGenerationSettings.Builder builder) {
         addDefaultFeatures(builder, ModernBetaFeatureSettings.INDEV);
         
-        builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_DANDELION_2);
-        builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_POPPY);
-        builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.TREES_INDEV);
-        builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_GRASS_ALPHA_2);
-        builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.MUSHROOM_HELL);
+        builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_DANDELION_2);
+        builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_POPPY);
+        builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.TREES_INDEV);
+        builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_GRASS_ALPHA_2);
+        builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.MUSHROOM_HELL);
         
-        DefaultBiomeFeatures.addDefaultMushrooms(builder);
+        BiomeDefaultFeatures.addDefaultMushrooms(builder);
     }
     
-    public static void addIndevNormalFeatures(GenerationSettings.LookupBackedBuilder builder) {
+    public static void addIndevNormalFeatures(BiomeGenerationSettings.Builder builder) {
         addDefaultFeatures(builder, ModernBetaFeatureSettings.INDEV);
         
-        builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_DANDELION_2);
-        builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_POPPY);
-        builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.TREES_INDEV);
-        builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_GRASS_ALPHA_2);
+        builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_DANDELION_2);
+        builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_POPPY);
+        builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.TREES_INDEV);
+        builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_GRASS_ALPHA_2);
 
-        DefaultBiomeFeatures.addDefaultMushrooms(builder);
+        BiomeDefaultFeatures.addDefaultMushrooms(builder);
     }
     
-    public static void addIndevParadiseFeatures(GenerationSettings.LookupBackedBuilder builder) {
+    public static void addIndevParadiseFeatures(BiomeGenerationSettings.Builder builder) {
         addDefaultFeatures(builder, ModernBetaFeatureSettings.INDEV);
         
-        builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_FLOWER_PARADISE);
-        builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.TREES_INDEV);
-        builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_GRASS_ALPHA_2);
+        builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_FLOWER_PARADISE);
+        builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.TREES_INDEV);
+        builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_GRASS_ALPHA_2);
 
-        DefaultBiomeFeatures.addDefaultMushrooms(builder);
+        BiomeDefaultFeatures.addDefaultMushrooms(builder);
     }
     
-    public static void addIndevSnowyFeatures(GenerationSettings.LookupBackedBuilder builder) {
+    public static void addIndevSnowyFeatures(BiomeGenerationSettings.Builder builder) {
         addIndevNormalFeatures(builder);
     }
     
-    public static void addIndevWoodsFeatures(GenerationSettings.LookupBackedBuilder builder) {
+    public static void addIndevWoodsFeatures(BiomeGenerationSettings.Builder builder) {
         addDefaultFeatures(builder, ModernBetaFeatureSettings.INDEV);
         
-        builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_DANDELION_2);
-        builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_POPPY);
-        builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.TREES_INDEV_WOODS);
-        builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_GRASS_ALPHA_2);
-        builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.MUSHROOM_HELL);
+        builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_DANDELION_2);
+        builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_POPPY);
+        builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.TREES_INDEV_WOODS);
+        builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_GRASS_ALPHA_2);
+        builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.MUSHROOM_HELL);
     }
 
-    public static void addClassic14a08Features(GenerationSettings.LookupBackedBuilder builder) {
+    public static void addClassic14a08Features(BiomeGenerationSettings.Builder builder) {
         addDefaultFeatures(builder, ModernBetaFeatureSettings.INDEV);
 
-        builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.TREES_CLASSIC_14A_08);
-        builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_GRASS_ALPHA_2);
+        builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.TREES_CLASSIC_14A_08);
+        builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_GRASS_ALPHA_2);
 
-        DefaultBiomeFeatures.addDefaultMushrooms(builder);
+        BiomeDefaultFeatures.addDefaultMushrooms(builder);
     }
     
     public static void addDefaultFeatures(
-        GenerationSettings.LookupBackedBuilder builder,
+        BiomeGenerationSettings.Builder builder,
         ModernBetaFeatureSettings featureSettings
     ) {
         addCarvers(builder, featureSettings.addCanyons, featureSettings.useBetaCarvers);
 
         if (featureSettings.addLakes) addLakes(builder);
-        DefaultBiomeFeatures.addAmethystGeodes(builder);
-        DefaultBiomeFeatures.addDungeons(builder);
+        BiomeDefaultFeatures.addDefaultCrystalFormations(builder);
+        BiomeDefaultFeatures.addDefaultMonsterRoom(builder);
         addMineables(builder, featureSettings.addClay, featureSettings.addAlternateStones, featureSettings.addNewMineables);
         
-        if (featureSettings.addSprings) DefaultBiomeFeatures.addSprings(builder);
+        if (featureSettings.addSprings) BiomeDefaultFeatures.addDefaultSprings(builder);
         if (featureSettings.useBetaFreezeTopLayer)
             ModernBetaBiomeFeatures.addBetaFrozenTopLayer(builder);
         else
-            DefaultBiomeFeatures.addFrozenTopLayer(builder);
+            BiomeDefaultFeatures.addSurfaceFreezing(builder);
         
-        DefaultBiomeFeatures.addDefaultOres(builder);
+        BiomeDefaultFeatures.addDefaultOres(builder);
         addOres(builder);
     }
     
-    public static void addDefaultFeatures(GenerationSettings.LookupBackedBuilder builder, boolean isOcean, boolean addLakes, boolean addSprings) {
+    public static void addDefaultFeatures(BiomeGenerationSettings.Builder builder, boolean isOcean, boolean addLakes, boolean addSprings) {
         if (addLakes) addLakes(builder);
-        DefaultBiomeFeatures.addDungeons(builder);
-        DefaultBiomeFeatures.addDefaultOres(builder);
-        if (addSprings) DefaultBiomeFeatures.addSprings(builder);
-        DefaultBiomeFeatures.addAmethystGeodes(builder);
+        BiomeDefaultFeatures.addDefaultMonsterRoom(builder);
+        BiomeDefaultFeatures.addDefaultOres(builder);
+        if (addSprings) BiomeDefaultFeatures.addDefaultSprings(builder);
+        BiomeDefaultFeatures.addDefaultCrystalFormations(builder);
     }
 
-    private static void addCarvers(GenerationSettings.LookupBackedBuilder builder, boolean addCanyons, boolean useBetaCarvers) {
+    private static void addCarvers(BiomeGenerationSettings.Builder builder, boolean addCanyons, boolean useBetaCarvers) {
         if (useBetaCarvers) {
             addCarver(builder, ModernBetaConfiguredCarvers.BETA_CAVE);
             addCarver(builder, ModernBetaConfiguredCarvers.BETA_CAVE_DEEP);
@@ -546,61 +551,61 @@ public class ModernBetaBiomeFeatures {
                 addCarver(builder, ModernBetaConfiguredCarvers.BETA_CANYON);
             }
         } else {
-            addCarver(builder, ConfiguredCarvers.CAVE);
-            addCarver(builder, ConfiguredCarvers.CAVE_EXTRA_UNDERGROUND);
+            addCarver(builder, Carvers.CAVE);
+            addCarver(builder, Carvers.CAVE_EXTRA_UNDERGROUND);
             if (addCanyons) {
-                addCarver(builder, ConfiguredCarvers.CANYON);
+                addCarver(builder, Carvers.CANYON);
             }
         }
     }
 
-    private static void addCarver(GenerationSettings.LookupBackedBuilder builder, RegistryKey<ConfiguredCarver<?>> carver) {
-        builder.carver(
+    private static void addCarver(BiomeGenerationSettings.Builder builder, ResourceKey<ConfiguredWorldCarver<?>> carver) {
+        builder.addCarver(
             //? if <1.21.2
-            /*GenerationStep.Carver.AIR,*/
+            /*GenerationStep.Carving.AIR,*/
             carver
         );
     }
     
-    private static void addLakes(GenerationSettings.LookupBackedBuilder builder) {
-        builder.feature(GenerationStep.Feature.LAKES, MiscPlacedFeatures.LAKE_LAVA_UNDERGROUND);
-        builder.feature(GenerationStep.Feature.LAKES, MiscPlacedFeatures.LAKE_LAVA_SURFACE);
+    private static void addLakes(BiomeGenerationSettings.Builder builder) {
+        builder.addFeature(GenerationStep.Decoration.LAKES, MiscOverworldPlacements.LAKE_LAVA_UNDERGROUND);
+        builder.addFeature(GenerationStep.Decoration.LAKES, MiscOverworldPlacements.LAKE_LAVA_SURFACE);
     }
 
-    private static void addMineables(GenerationSettings.LookupBackedBuilder builder, boolean addClay, boolean addAlternateStones, boolean addNewMineables) {
-        builder.feature(Feature.UNDERGROUND_ORES, OrePlacedFeatures.ORE_DIRT);
-        builder.feature(Feature.UNDERGROUND_ORES, OrePlacedFeatures.ORE_GRAVEL);
+    private static void addMineables(BiomeGenerationSettings.Builder builder, boolean addClay, boolean addAlternateStones, boolean addNewMineables) {
+        builder.addFeature(Decoration.UNDERGROUND_ORES, OrePlacements.ORE_DIRT);
+        builder.addFeature(Decoration.UNDERGROUND_ORES, OrePlacements.ORE_GRAVEL);
         
         if (addClay) {
-            builder.feature(Feature.UNDERGROUND_ORES, ModernBetaOrePlacedFeatures.ORE_CLAY);
+            builder.addFeature(Decoration.UNDERGROUND_ORES, ModernBetaOrePlacedFeatures.ORE_CLAY);
         }
         
         if (addAlternateStones) {
-            builder.feature(GenerationStep.Feature.UNDERGROUND_ORES, OrePlacedFeatures.ORE_GRANITE_LOWER);
-            builder.feature(GenerationStep.Feature.UNDERGROUND_ORES, OrePlacedFeatures.ORE_DIORITE_LOWER);
-            builder.feature(GenerationStep.Feature.UNDERGROUND_ORES, OrePlacedFeatures.ORE_ANDESITE_LOWER);
+            builder.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, OrePlacements.ORE_GRANITE_LOWER);
+            builder.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, OrePlacements.ORE_DIORITE_LOWER);
+            builder.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, OrePlacements.ORE_ANDESITE_LOWER);
         }
         
         if (addNewMineables) {
-            builder.feature(GenerationStep.Feature.UNDERGROUND_ORES, OrePlacedFeatures.ORE_TUFF);
-            builder.feature(GenerationStep.Feature.VEGETAL_DECORATION, UndergroundPlacedFeatures.GLOW_LICHEN);
+            builder.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, OrePlacements.ORE_TUFF);
+            builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, CavePlacements.GLOW_LICHEN);
         }
     }
     
-    private static void addOres(GenerationSettings.LookupBackedBuilder builder) {
-        builder.feature(Feature.UNDERGROUND_ORES, ModernBetaOrePlacedFeatures.ORE_EMERALD_Y95);
+    private static void addOres(BiomeGenerationSettings.Builder builder) {
+        builder.addFeature(Decoration.UNDERGROUND_ORES, ModernBetaOrePlacedFeatures.ORE_EMERALD_Y95);
     }
 
-    private static void addBetaFrozenTopLayer(GenerationSettings.LookupBackedBuilder builder) {
-        builder.feature(Feature.TOP_LAYER_MODIFICATION, ModernBetaMiscPlacedFeatures.FREEZE_TOP_LAYER);
+    private static void addBetaFrozenTopLayer(BiomeGenerationSettings.Builder builder) {
+        builder.addFeature(Decoration.TOP_LAYER_MODIFICATION, ModernBetaMiscPlacedFeatures.FREEZE_TOP_LAYER);
     }
     
-    private static void addPEVegetation(GenerationSettings.LookupBackedBuilder builder, boolean addGrass) {
-        builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_DANDELION);
-        builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_POPPY);
+    private static void addPEVegetation(BiomeGenerationSettings.Builder builder, boolean addGrass) {
+        builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_DANDELION);
+        builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_POPPY);
         
         if (addGrass)
-            builder.feature(Feature.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_GRASS_ALPHA_2);
+            builder.addFeature(Decoration.VEGETAL_DECORATION, ModernBetaVegetationPlacedFeatures.PATCH_GRASS_ALPHA_2);
     }
 
     private record ModernBetaFeatureSettings(

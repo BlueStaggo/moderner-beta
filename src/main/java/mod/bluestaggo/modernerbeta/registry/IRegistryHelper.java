@@ -1,9 +1,10 @@
 package mod.bluestaggo.modernerbeta.registry;
 
-import net.minecraft.registry.*;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 
 public interface IRegistryHelper {
-    <T> IRegistryBuilder<T> createSimple(RegistryKey<Registry<T>> key);
-    <T> IRegistryBuilder<T> createDefaulted(RegistryKey<Registry<T>> key, Identifier defaultKey);
+    <T> IRegistryBuilder<T> createSimple(ResourceKey<Registry<T>> key);
+    <T> IRegistryBuilder<T> createDefaulted(ResourceKey<Registry<T>> key, ResourceLocation defaultKey);
 }

@@ -12,9 +12,9 @@ import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.intlayers.IntCli
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.intlayers.IntLayer;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.intlayers.IntZoomLayer;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.Layer;
-import net.minecraft.registry.RegistryEntryLookup;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.core.HolderGetter;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.biome.Biome;
 
 import java.util.Optional;
 
@@ -23,7 +23,7 @@ public class BiomeProviderBetaFractal extends BiomeProviderFractal implements Cl
     private final IntLayer downfallLayer;
     private final ClimateDistribution distribution;
 
-    public BiomeProviderBetaFractal(ModernBetaSettings settings, RegistryEntryLookup<Biome> biomeRegistry, long seed) {
+    public BiomeProviderBetaFractal(ModernBetaSettings settings, HolderGetter<Biome> biomeRegistry, long seed) {
         super(settings, biomeRegistry, seed);
 
         int i = 0;
@@ -64,8 +64,8 @@ public class BiomeProviderBetaFractal extends BiomeProviderFractal implements Cl
         int temperature = this.temperatureLayer.sample(this.biomeRegistry, x, z);
         int downfall = this.downfallLayer.sample(this.biomeRegistry, x, z);
         return new Clime(
-            MathHelper.clamp(temperature, 0, 65536) / 65536.0,
-            MathHelper.clamp(downfall, 0, 65536) / 65536.0
+            Mth.clamp(temperature, 0, 65536) / 65536.0,
+            Mth.clamp(downfall, 0, 65536) / 65536.0
         );
     }
 

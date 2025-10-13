@@ -1,7 +1,7 @@
 package mod.bluestaggo.modernerbeta.world.biome.provider.climate;
 
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.biome.Biome;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -22,15 +22,15 @@ public class ClimateMap {
         return new LinkedHashMap<>(this.climateMap);
     }
     
-    public RegistryKey<Biome> getBiome(double temp, double rain, ClimateType type) {
+    public ResourceKey<Biome> getBiome(double temp, double rain, ClimateType type) {
         int t = (int) (temp * 63D);
         int r = (int) (rain * 63D);
 
         return this.climateTable[t + r * 64].getBiome(type);
     }
     
-    public List<RegistryKey<Biome>> getBiomeKeys() {
-        List<RegistryKey<Biome>> biomeKeys = new ArrayList<>();
+    public List<ResourceKey<Biome>> getBiomeKeys() {
+        List<ResourceKey<Biome>> biomeKeys = new ArrayList<>();
         
         this.climateMap.values().forEach(mapping -> {
             biomeKeys.add(mapping.getBiome(ClimateType.LAND));

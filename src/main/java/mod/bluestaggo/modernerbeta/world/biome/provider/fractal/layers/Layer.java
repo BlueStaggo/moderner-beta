@@ -7,9 +7,9 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectLinkedOpenHashMap;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.ColumnPos;
-import net.minecraft.world.biome.source.SeedMixer;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ColumnPos;
+import net.minecraft.util.LinearCongruentialGenerator;
 
 import java.util.Collections;
 import java.util.List;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 public abstract class Layer {
     public final static int CACHE_CAPACITY = 25;
-    public static final Codec<Layer> TYPE_CODEC = ModernBetaRegistries.FRACTAL_LAYER.getCodec()
+    public static final Codec<Layer> TYPE_CODEC = ModernBetaRegistries.FRACTAL_LAYER.byNameCodec()
         .dispatch(Layer::getType, LayerType::codec);
 
     public final String id;
@@ -48,7 +48,7 @@ public abstract class Layer {
 
         long saltedSeed = seed;
         for (int i = 0; i < 3; i++) {
-            saltedSeed = SeedMixer.mixSeed(saltedSeed, seed);
+            saltedSeed = LinearCongruentialGenerator.next(saltedSeed, seed);
         }
         this.saltedSeed = saltedSeed;
     }
@@ -79,13 +79,13 @@ public abstract class Layer {
 
         this.saltedSeed = this.seed;
         for (int i = 0; i < 3; i++) {
-            this.saltedSeed = SeedMixer.mixSeed(this.saltedSeed, this.seed);
+            this.saltedSeed = LinearCongruentialGenerator.next(this.saltedSeed, this.seed);
         }
         long preWorldSeed = this.saltedSeed;
 
         this.saltedSeed = worldSeed;
         for (int i = 0; i < 3; i++) {
-            this.saltedSeed = SeedMixer.mixSeed(this.saltedSeed, preWorldSeed);
+            this.saltedSeed = LinearCongruentialGenerator.next(this.saltedSeed, preWorldSeed);
         }
 
         this.random = ThreadLocal.withInitial(() -> new LayerRandom(this.saltedSeed));
@@ -103,7 +103,7 @@ public abstract class Layer {
 
     public ExtendedBiomeId sample(int x, int z) {
         Long2ObjectLinkedOpenHashMap<ExtendedBiomeId> cache = this.cache.get();
-        long pos = ColumnPos.pack(x, z);
+        long pos = ColumnPos.asLong(x, z);
         ExtendedBiomeId biome = cache.get(pos);
         if (biome != null) {
             return biome;
@@ -121,7 +121,7 @@ public abstract class Layer {
         LayerRandom random = this.random.get();
         random.init(x, z);
         if (this.initialSkip > 0) {
-            random.skip(this.initialSkip);
+            random.consumeCount(this.initialSkip);
         }
         return random;
     }
@@ -164,9 +164,9 @@ public abstract class Layer {
     }
 
     protected String getName() {
-        return ModernBetaRegistries.FRACTAL_LAYER.getKey(this.getType())
+        return ModernBetaRegistries.FRACTAL_LAYER.getResourceKey(this.getType())
             .map(key -> {
-                Identifier identifier = key.getValue();
+                ResourceLocation identifier = key.location();
                 if (ModernerBeta.MOD_ID.equals(identifier.getNamespace())) {
                     return identifier.getPath();
                 }

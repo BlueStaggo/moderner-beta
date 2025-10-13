@@ -22,12 +22,10 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.loading.FMLPaths;
 //? if >=1.21.4 {
-import net.neoforged.neoforge.client.event.AddClientReloadListenersEvent;
-//?} else if >=1.21.2 {
-/*import net.neoforged.neoforge.client.event.AddReloadListenerEvent;
-*///?} else {
-/*import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent;
-*///?}
+/*ort net.neoforged.neoforge.client.event.AddClientReloadListenersEven*///?} else if >=1.21.2 {
+/*ort net.neoforged.neoforge.client.event.AddReloadListenerEven*///?} else {
+import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent;
+//?}
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.registries.NewRegistryEvent;

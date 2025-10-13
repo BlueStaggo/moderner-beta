@@ -3,7 +3,7 @@ package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 
-public record LayerType<L extends Layer>(com.mojang.serialization.MapCodec<L> codec) {
+public record LayerType<L extends Layer>(com.mojang.serialization./*Map*/Codec<L> codec) {
     private static IRegistryHandler<LayerType<?>> registryHandler;
 
     public static LayerType<AddLandLayer> ADD_LAND;
@@ -31,7 +31,7 @@ public record LayerType<L extends Layer>(com.mojang.serialization.MapCodec<L> co
     public static LayerType<VoronoiZoomLayer> VORONOI_ZOOM;
     public static LayerType<WeightedPoolLayer> WEIGHTED_POOL;
 
-    private static <L extends Layer> LayerType<L> register(String id, com.mojang.serialization.MapCodec<L> codec) {
+    private static <L extends Layer> LayerType<L> register(String id, com.mojang.serialization./*Map*/Codec<L> codec) {
         LayerType<L> layerType = new LayerType<>(codec);
         return registryHandler.register(ModernerBeta.createId(id), layerType);
     }

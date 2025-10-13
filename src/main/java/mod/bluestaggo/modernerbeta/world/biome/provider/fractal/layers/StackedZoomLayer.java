@@ -3,19 +3,19 @@ package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers;
 import com.mojang.serialization.Codec;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
-import net.minecraft.util.StringIdentifiable;
+import net.minecraft.util.StringRepresentable;
 
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.LongFunction;
 
 public class StackedZoomLayer extends SingleParentLayer {
-    public static final com.mojang.serialization.MapCodec<StackedZoomLayer> CODEC = VersionCompat.createMaybeMapCodec(
+    public static final com.mojang.serialization./*Map*/Codec<StackedZoomLayer> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> fillSingleParentLayerFields(instance)
             .and(instance.group(
                 Codec.INT.fieldOf("level").orElse(1).forGetter(layer -> layer.level),
                 Codec.INT.fieldOf("seedModifier").orElse(1).forGetter(layer -> layer.seedModifier),
-                StringIdentifiable.createCodec(Type::values).fieldOf("zoomType").orElse(Type.MODAL).forGetter(layer -> layer.zoomType)
+                StringRepresentable.fromEnum(Type::values).fieldOf("zoomType").orElse(Type.MODAL).forGetter(layer -> layer.zoomType)
             ))
             .apply(instance, StackedZoomLayer::new)
     );
@@ -86,7 +86,7 @@ public class StackedZoomLayer extends SingleParentLayer {
         return new StackedZoomLayer(id, seed, parent, level, seedModifier, Type.FUZZY);
     }
 
-    public enum Type implements StringIdentifiable {
+    public enum Type implements StringRepresentable {
         MODAL("modal", seed -> new ModalZoomLayer("", seed, "")),
         FUZZY("fuzzy", seed -> new FuzzyZoomLayer("", seed, ""));
 
@@ -99,7 +99,7 @@ public class StackedZoomLayer extends SingleParentLayer {
         }
 
         @Override
-        public String asString() {
+        public String getSerializedName() {
             return this.id;
         }
     }

@@ -3,7 +3,7 @@ package mod.bluestaggo.modernerbeta.settings.component;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.util.CodecUtil;
-import net.minecraft.util.StringIdentifiable;
+import net.minecraft.util.StringRepresentable;
 
 public record CaveGeneration(
     boolean useCarvers,
@@ -20,7 +20,7 @@ public record CaveGeneration(
             Codec.BOOL.fieldOf("fixCaveBorders").orElse(true).forGetter(CaveGeneration::fixCaveBorders),
             Codec.BOOL.fieldOf("forceBetaCaves").orElse(true).forGetter(CaveGeneration::forceBetaCaves),
             Codec.BOOL.fieldOf("forceBetaCanyons").orElse(true).forGetter(CaveGeneration::forceBetaCanyons),
-            StringIdentifiable.createCodec(SeedMethod::values).fieldOf("seedMethod").orElse(SeedMethod.MODERN).forGetter(CaveGeneration::seedMethod)
+            StringRepresentable.fromEnum(SeedMethod::values).fieldOf("seedMethod").orElse(SeedMethod.MODERN).forGetter(CaveGeneration::seedMethod)
         ).apply(instance, CaveGeneration::new)
     );
     public static final CaveGeneration DEFAULT = CodecUtil.getDefaultByMap(CODEC);
@@ -33,7 +33,7 @@ public record CaveGeneration(
     public static final CaveGeneration BEDROCK = new CaveGeneration(true, false, true, false, false, SeedMethod.BEDROCK);
     public static final CaveGeneration MODERN_BETA = new CaveGeneration(true, true, true, true, true, SeedMethod.MODERN);
 
-    public enum SeedMethod implements StringIdentifiable {
+    public enum SeedMethod implements StringRepresentable {
         BETA("beta"),
         EARLY_RELEASE("early_release"),
         MODERN("modern"),
@@ -47,7 +47,7 @@ public record CaveGeneration(
         }
 
         @Override
-        public String asString() {
+        public String getSerializedName() {
             return this.id;
         }
     }

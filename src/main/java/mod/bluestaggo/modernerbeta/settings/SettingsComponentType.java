@@ -8,7 +8,7 @@ import java.util.Map;
 //? if <1.20.5 {
 /*import com.google.common.collect.ImmutableMap;
 import com.mojang.datafixers.util.Pair;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.List;
 *///?}
@@ -16,9 +16,9 @@ import java.util.List;
 public record SettingsComponentType<T>(Codec<T> codec, T defaultValue) {
     public static final Codec<SettingsComponentType<?>> CODEC =
         //? if >=1.20.5 {
-        Codec.lazyInitialized(ModernBetaRegistries.SETTINGS_COMPONENT_TYPE::getCodec);
+        Codec.lazyInitialized(ModernBetaRegistries.SETTINGS_COMPONENT_TYPE::byNameCodec);
         //?} else {
-        /*ModernBetaRegistries.SETTINGS_COMPONENT_TYPE.getCodec();
+        /*ModernBetaRegistries.SETTINGS_COMPONENT_TYPE.byNameCodec();
         *///?}
     //? if <1.20.5
     /*@SuppressWarnings("unchecked")*/
@@ -32,8 +32,8 @@ public record SettingsComponentType<T>(Codec<T> codec, T defaultValue) {
                 public <T2> DataResult<T2> encode(Map<SettingsComponentType<?>, Object> input, DynamicOps<T2> ops, T2 prefix) {
                     var recordBuilder = (RecordBuilder<Object>) ops.mapBuilder();
                     for (Map.Entry<SettingsComponentType<?>, Object> entry : input.entrySet()) {
-                        DataResult<T2> identifierResult = Identifier.CODEC.encodeStart(
-                            ops, ModernBetaRegistries.SETTINGS_COMPONENT_TYPE.getId(entry.getKey()));
+                        DataResult<T2> identifierResult = ResourceLocation.CODEC.encodeStart(
+                            ops, ModernBetaRegistries.SETTINGS_COMPONENT_TYPE.getKey(entry.getKey()));
                         if (identifierResult.result().isEmpty()) {
                             return DataResult.error(identifierResult.error().orElseThrow()::message);
                         }
@@ -59,7 +59,7 @@ public record SettingsComponentType<T>(Codec<T> codec, T defaultValue) {
 
                     List<DataResult<Pair<SettingsComponentType<?>, Object>>> entries = mapResult.result().orElseThrow().entries()
                         .<DataResult<Pair<SettingsComponentType<?>, Object>>>map(pair -> {
-                            DataResult<Identifier> identifierResult = Identifier.CODEC.decode(ops, pair.getFirst()).map(Pair::getFirst);
+                            DataResult<ResourceLocation> identifierResult = ResourceLocation.CODEC.decode(ops, pair.getFirst()).map(Pair::getFirst);
                             if (identifierResult.result().isEmpty()) {
                                 return DataResult.error(identifierResult.error().orElseThrow()::message);
                             }

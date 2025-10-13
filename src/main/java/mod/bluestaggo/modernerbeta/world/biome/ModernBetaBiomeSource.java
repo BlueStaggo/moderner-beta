@@ -14,20 +14,22 @@ import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.world.biome.injector.BiomeInjector.BiomeInjectionStep;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.*;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.ChunkRegion;
-import net.minecraft.world.Heightmap;
-import net.minecraft.world.WorldView;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.source.BiomeCoords;
-import net.minecraft.world.biome.source.BiomeSource;
-import net.minecraft.world.biome.source.util.MultiNoiseUtil;
-import net.minecraft.world.biome.source.util.MultiNoiseUtil.MultiNoiseSampler;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderGetter;
+import net.minecraft.core.QuartPos;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.RegistryOps;
+import net.minecraft.server.level.WorldGenRegion;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.BiomeSource;
+import net.minecraft.world.level.biome.Climate;
+import net.minecraft.world.level.biome.Climate.Sampler;
+import net.minecraft.world.level.levelgen.Heightmap;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -38,19 +40,19 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class ModernBetaBiomeSource extends BiomeSource {
-    public static final com.mojang.serialization.MapCodec<ModernBetaBiomeSource> CODEC = VersionCompat.createMaybeMapCodec(
+    public static final com.mojang.serialization./*Map*/Codec<ModernBetaBiomeSource> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> instance.group(
-            RegistryOps.getEntryLookupCodec(RegistryKeys.BIOME),
-            RegistryOps.getEntryLookupCodec(ModernBetaRegistryKeys.SETTINGS_PRESET),
-            NbtCompound.CODEC.fieldOf("provider_settings").forGetter(biomeSource -> biomeSource.biomeSettings),
-            NbtCompound.CODEC.fieldOf("cave_provider_settings").forGetter(biomeSource -> biomeSource.caveBiomeSettings)
+            RegistryOps.retrieveGetter(Registries.BIOME),
+            RegistryOps.retrieveGetter(ModernBetaRegistryKeys.SETTINGS_PRESET),
+            CompoundTag.CODEC.fieldOf("provider_settings").forGetter(biomeSource -> biomeSource.biomeSettings),
+            CompoundTag.CODEC.fieldOf("cave_provider_settings").forGetter(biomeSource -> biomeSource.caveBiomeSettings)
         ).apply(instance, (instance).stable(ModernBetaBiomeSource::new))
     );
 
-    private final RegistryEntryLookup<Biome> biomeRegistry;
-    private final RegistryEntryLookup<ModernBetaSettingsPreset> presetRegistry;
-    private final NbtCompound biomeSettings;
-    private final NbtCompound caveBiomeSettings;
+    private final HolderGetter<Biome> biomeRegistry;
+    private final HolderGetter<ModernBetaSettingsPreset> presetRegistry;
+    private final CompoundTag biomeSettings;
+    private final CompoundTag caveBiomeSettings;
     
     private BiomeProvider biomeProvider;
     private CaveBiomeProvider caveBiomeProvider;
@@ -58,10 +60,10 @@ public class ModernBetaBiomeSource extends BiomeSource {
     private ModernBetaChunkGenerator chunkGenerator;
     
     public ModernBetaBiomeSource(
-        RegistryEntryLookup<Biome> biomeRegistry,
-        RegistryEntryLookup<ModernBetaSettingsPreset> presetRegistry,
-        NbtCompound biomeSettings,
-        NbtCompound caveBiomeSettings
+        HolderGetter<Biome> biomeRegistry,
+        HolderGetter<ModernBetaSettingsPreset> presetRegistry,
+        CompoundTag biomeSettings,
+        CompoundTag caveBiomeSettings
     ) {
         super();
         
@@ -87,25 +89,25 @@ public class ModernBetaBiomeSource extends BiomeSource {
     }
     
     @Override
-    public RegistryEntry<Biome> getBiome(int biomeX, int biomeY, int biomeZ, MultiNoiseUtil.MultiNoiseSampler noiseSampler) {
+    public Holder<Biome> getNoiseBiome(int biomeX, int biomeY, int biomeZ, Climate.Sampler noiseSampler) {
         return this.biomeProvider.getBiome(biomeX, biomeY, biomeZ);
     }
     
     @Override
-    public Set<RegistryEntry<Biome>> getBiomesInArea(int startX, int startY, int startZ, int radius, MultiNoiseSampler noiseSampler) {
+    public Set<Holder<Biome>> getBiomesWithin(int startX, int startY, int startZ, int radius, Sampler noiseSampler) {
         if (this.chunkGenerator == null)
-            return super.getBiomesInArea(startX, startY, startZ, radius, noiseSampler);
+            return super.getBiomesWithin(startX, startY, startZ, radius, noiseSampler);
         
-        int minX = BiomeCoords.fromBlock(startX - radius);
-        int minZ = BiomeCoords.fromBlock(startZ - radius);
+        int minX = QuartPos.fromBlock(startX - radius);
+        int minZ = QuartPos.fromBlock(startZ - radius);
         
-        int maxX = BiomeCoords.fromBlock(startX + radius);
-        int maxZ = BiomeCoords.fromBlock(startZ + radius);
+        int maxX = QuartPos.fromBlock(startX + radius);
+        int maxZ = QuartPos.fromBlock(startZ + radius);
         
         int rangeX = maxX - minX + 1;
         int rangeZ = maxZ - minZ + 1;
         
-        HashSet<RegistryEntry<Biome>> set = Sets.newHashSet();
+        HashSet<Holder<Biome>> set = Sets.newHashSet();
         for (int localZ = 0; localZ < rangeZ; ++localZ) {
             for (int localX = 0; localX < rangeX; ++localX) {
                 int biomeX = minX + localX;
@@ -113,7 +115,7 @@ public class ModernBetaBiomeSource extends BiomeSource {
                 
                 int x = biomeX << 2;
                 int z = biomeZ << 2;
-                int y = this.chunkGenerator.getHeight(x, z, Heightmap.Type.OCEAN_FLOOR_WG, null);
+                int y = this.chunkGenerator.getHeight(x, z, Heightmap.Types.OCEAN_FLOOR_WG, null);
                 
                 set.add(this.chunkGenerator.getBiomeInjector().getBiomeAtBlock(null, x, y, z, noiseSampler, BiomeInjectionStep.ALL));
             }
@@ -123,17 +125,17 @@ public class ModernBetaBiomeSource extends BiomeSource {
     }
     
     @Override
-    public Pair<BlockPos, RegistryEntry<Biome>> locateBiome(
+    public Pair<BlockPos, Holder<Biome>> findClosestBiome3d(
         BlockPos origin,
         int radius,
         int horizontalBlockCheckInterval,
         int verticalBlockCheckInterval,
-        Predicate<RegistryEntry<Biome>> predicate,
-        MultiNoiseUtil.MultiNoiseSampler noiseSampler,
-        WorldView world
+        Predicate<Holder<Biome>> predicate,
+        Climate.Sampler noiseSampler,
+        LevelReader world
     ) {
         if (this.chunkGenerator == null || true) {
-            return super.locateBiome(
+            return super.findClosestBiome3d(
                 origin,
                 radius,
                 horizontalBlockCheckInterval,
@@ -144,7 +146,7 @@ public class ModernBetaBiomeSource extends BiomeSource {
             );
         }
         
-        Set<RegistryEntry<Biome>> biomeSet = this.getBiomes()
+        Set<Holder<Biome>> biomeSet = this.possibleBiomes()
             .stream()
             .filter(predicate)
             .collect(Collectors.toUnmodifiableSet());
@@ -154,21 +156,21 @@ public class ModernBetaBiomeSource extends BiomeSource {
         }
         
         int searchRadius = Math.floorDiv(radius, horizontalBlockCheckInterval);
-        int[] sections = MathHelper
-            .stream(origin.getY(), world.getBottomY() + 1, VersionCompat.getTopYExclusive(world), verticalBlockCheckInterval)
+        int[] sections = Mth
+            .outFromOrigin(origin.getY(), world.getMinY() + 1, VersionCompat.getTopYExclusive(world), verticalBlockCheckInterval)
             .toArray();
         
-        for (BlockPos.Mutable mutable : BlockPos.iterateInSquare(BlockPos.ORIGIN, searchRadius, Direction.EAST, Direction.SOUTH)) {
+        for (BlockPos.MutableBlockPos mutable : BlockPos.spiralAround(BlockPos.ZERO, searchRadius, Direction.EAST, Direction.SOUTH)) {
             int x = origin.getX() + mutable.getX() * horizontalBlockCheckInterval;
             int z = origin.getZ() + mutable.getZ() * horizontalBlockCheckInterval;
             
-            int biomeX = BiomeCoords.fromBlock(x);
-            int biomeZ = BiomeCoords.fromBlock(z);
+            int biomeX = QuartPos.fromBlock(x);
+            int biomeZ = QuartPos.fromBlock(z);
             
             for (int y : sections) {
-                int biomeY = BiomeCoords.fromBlock(y);
+                int biomeY = QuartPos.fromBlock(y);
                 
-                RegistryEntry<Biome> biome = this.chunkGenerator
+                Holder<Biome> biome = this.chunkGenerator
                     .getBiomeInjector()
                     .getBiome(world, biomeX, biomeY, biomeZ, noiseSampler, BiomeInjectionStep.ALL);
 
@@ -181,25 +183,25 @@ public class ModernBetaBiomeSource extends BiomeSource {
         return null;
     }
 
-    public RegistryEntry<Biome> getOceanBiome(int biomeX, int biomeY, int biomeZ) {
+    public Holder<Biome> getOceanBiome(int biomeX, int biomeY, int biomeZ) {
         if (this.biomeProvider instanceof BiomeResolverOcean biomeResolverOcean)
             return biomeResolverOcean.getOceanBiome(biomeX, biomeY, biomeZ);
         
         return this.biomeProvider.getBiome(biomeX, biomeY, biomeZ);
     }
     
-    public RegistryEntry<Biome> getDeepOceanBiome(int biomeX, int biomeY, int biomeZ) {
+    public Holder<Biome> getDeepOceanBiome(int biomeX, int biomeY, int biomeZ) {
         if (this.biomeProvider instanceof BiomeResolverOcean biomeResolverOcean)
             return biomeResolverOcean.getDeepOceanBiome(biomeX, biomeY, biomeZ);
         
         return this.biomeProvider.getBiome(biomeX, biomeY, biomeZ);
     }
     
-    public RegistryEntry<Biome> getCaveBiome(int biomeX, int biomeY, int biomeZ) {
+    public Holder<Biome> getCaveBiome(int biomeX, int biomeY, int biomeZ) {
         return this.caveBiomeProvider.getBiome(biomeX, biomeY, biomeZ);
     }
     
-    public RegistryEntry<Biome> getBiomeForSpawn(int x, int y, int z) {
+    public Holder<Biome> getBiomeForSpawn(int x, int y, int z) {
         if (this.biomeProvider instanceof BiomeResolverBlock biomeResolver) {
             return biomeResolver.getBiomeBlock(x, y, z);
         }
@@ -207,7 +209,7 @@ public class ModernBetaBiomeSource extends BiomeSource {
         return this.biomeProvider.getBiome(x >> 2, y >> 2, z >> 2);
     }
     
-    public RegistryEntry<Biome> getBiomeForSurfaceGen(ChunkRegion region, BlockPos pos) {
+    public Holder<Biome> getBiomeForSurfaceGen(WorldGenRegion region, BlockPos pos) {
         if (this.biomeProvider instanceof BiomeResolverBlock biomeResolver)
             return biomeResolver.getBiomeBlock(pos.getX(), pos.getY(), pos.getZ());
         
@@ -218,7 +220,7 @@ public class ModernBetaBiomeSource extends BiomeSource {
         if (this.biomeProvider instanceof BiomeResolverExtendedId biomeResolver)
             return biomeResolver.getExtendedBiomeId(biomeX, biomeY, biomeZ);
 
-        return ExtendedBiomeId.of(this.biomeProvider.getBiome(biomeX, biomeY, biomeZ).getKey().orElseThrow().getValue());
+        return ExtendedBiomeId.of(this.biomeProvider.getBiome(biomeX, biomeY, biomeZ).unwrapKey().orElseThrow().location());
     }
     
     public void setChunkGenerator(ModernBetaChunkGenerator chunkGenerator) {
@@ -233,11 +235,11 @@ public class ModernBetaBiomeSource extends BiomeSource {
         return this.caveBiomeProvider;
     }
     
-    public NbtCompound getBiomeSettings() {
+    public CompoundTag getBiomeSettings() {
         return this.biomeSettings;
     }
     
-    public NbtCompound getCaveBiomeSettings() {
+    public CompoundTag getCaveBiomeSettings() {
         return this.caveBiomeSettings;
     }
 
@@ -247,31 +249,31 @@ public class ModernBetaBiomeSource extends BiomeSource {
     
     @SuppressWarnings("unchecked")
     public static void register(IRegistryHandler<?> handler) {
-        var registryHandler = (IRegistryHandler<com.mojang.serialization.MapCodec<?>>) handler;
+        var registryHandler = (IRegistryHandler<com.mojang.serialization./*Map*/Codec<?>>) handler;
         registryHandler.register(ModernerBeta.createId(ModernerBeta.MOD_ID), CODEC);
     }
 
     @Override
-    protected com.mojang.serialization.MapCodec<? extends BiomeSource> getCodec() {
+    protected com.mojang.serialization./*Map*/Codec<? extends BiomeSource> codec() {
         return CODEC;
     }
 
     @Override
-    protected Stream<RegistryEntry<Biome>> biomeStream() {
+    protected Stream<Holder<Biome>> collectPossibleBiomes() {
         ModernBetaSettings biomeSettings = ModernBetaSettings.fromCompound(this.biomeSettings)
             .mapPreset(this.presetRegistry, ModernBetaSettingsPreset::biomeSettings);
         ModernBetaSettings caveBiomeSettings = ModernBetaSettings.fromCompound(this.caveBiomeSettings)
             .mapPreset(this.presetRegistry, ModernBetaSettingsPreset::caveBiomeSettings);
         
         BiomeProvider biomeProvider  = ModernBetaRegistries.BIOME
-            .get(biomeSettings.getProvider())
+            .getValue(biomeSettings.getProvider())
             .apply(biomeSettings, biomeRegistry, 0L);
         
         CaveBiomeProvider caveBiomeProvider = ModernBetaRegistries.CAVE_BIOME
-            .get(caveBiomeSettings.getProvider())
+            .getValue(caveBiomeSettings.getProvider())
             .apply(caveBiomeSettings, biomeRegistry, 0L);
 
-        List<RegistryEntry<Biome>> biomes = new ArrayList<>();
+        List<Holder<Biome>> biomes = new ArrayList<>();
         biomes.addAll(biomeProvider.getBiomes());
         biomes.addAll(caveBiomeProvider.getBiomes());
         

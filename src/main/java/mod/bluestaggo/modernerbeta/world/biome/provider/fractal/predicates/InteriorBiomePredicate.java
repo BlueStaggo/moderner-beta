@@ -4,14 +4,14 @@ import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.Layer;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.LayerRandom;
-import net.minecraft.util.StringIdentifiable;
+import net.minecraft.util.StringRepresentable;
 
 import java.util.function.Supplier;
 
 public record InteriorBiomePredicate(Type type) implements BiomePredicate {
-    public static final com.mojang.serialization.MapCodec<InteriorBiomePredicate> CODEC = VersionCompat.createMaybeMapCodec(
+    public static final com.mojang.serialization./*Map*/Codec<InteriorBiomePredicate> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> instance.group(
-            StringIdentifiable.createCodec(Type::values).fieldOf("type").orElse(Type.INTERIOR).forGetter(predicate -> predicate.type)
+            StringRepresentable.fromEnum(Type::values).fieldOf("type").orElse(Type.INTERIOR).forGetter(predicate -> predicate.type)
         ).apply(instance, InteriorBiomePredicate::new)
     );
 
@@ -25,7 +25,7 @@ public record InteriorBiomePredicate(Type type) implements BiomePredicate {
         return this.type.matches(biome, layer, x, z);
     }
 
-    public enum Type implements StringIdentifiable {
+    public enum Type implements StringRepresentable {
         INTERIOR("interior", false, false),
         DIAGONAL_INTERIOR("diagonal_interior", false, true),
         BORDER("border", true, false),
@@ -47,7 +47,7 @@ public record InteriorBiomePredicate(Type type) implements BiomePredicate {
         }
 
         @Override
-        public String asString() {
+        public String getSerializedName() {
             return this.id;
         }
     }

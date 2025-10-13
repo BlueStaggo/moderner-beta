@@ -1,6 +1,7 @@
 package mod.bluestaggo.modernerbeta.client.gui.screen;
 
 import com.google.common.util.concurrent.AtomicDouble;
+import com.mojang.blaze3d.platform.NativeImage;
 import it.unimi.dsi.fastutil.ints.Int2IntAVLTreeMap;
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
@@ -17,29 +18,31 @@ import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.LayerRandom;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
-import net.minecraft.client.gui.widget.*;
-import net.minecraft.client.texture.NativeImage;
-import net.minecraft.client.texture.NativeImageBackedTexture;
-import net.minecraft.client.texture.TextureManager;
-import net.minecraft.client.world.GeneratorOptionsHolder;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.registry.tag.BiomeTags;
-import net.minecraft.screen.ScreenTexts;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.Util;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.random.RandomSeed;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.ChatFormatting;
+import net.minecraft.Util;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.layouts.FrameLayout;
+import net.minecraft.client.gui.layouts.GridLayout;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.worldselection.WorldCreationContext;
+import net.minecraft.client.renderer.texture.DynamicTexture;
+import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BiomeTags;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.RandomSupport;
 import org.slf4j.event.Level;
 
 import java.awt.*;
@@ -56,7 +59,7 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
     private BiomeDisplayWidget biomeDisplay;
     private volatile String exceptionMessage;
 
-    public ModernBetaBiomePreviewScreen(Text title, Screen parent, GeneratorOptionsHolder generationOptions, ModernBetaSettings biomeSettings) {
+    public ModernBetaBiomePreviewScreen(Component title, Screen parent, WorldCreationContext generationOptions, ModernBetaSettings biomeSettings) {
         super(title, parent);
 
         BiomeProvider biomeProvider = null;
@@ -64,13 +67,8 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
             biomeProvider = ModernBetaRegistries.BIOME.get(biomeSettings.getProvider())
                 .apply(
                     biomeSettings,
-                    generationOptions.getCombinedRegistryManager()
-                        //? if >=1.21.2 {
-                        .getOrThrow(RegistryKeys.BIOME),
-                        //?} else {
-                        /*.getWrapperOrThrow(RegistryKeys.BIOME),
-                        *///?}
-                    generationOptions.generatorOptions().getSeed()
+                    generationOptions.worldgenLoadContext().lookupOrThrow(Registries.BIOME),
+                    generationOptions.options().seed()
                 );
         } catch (Exception exception) {
             exception.printStackTrace();
@@ -91,56 +89,56 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
 
         boolean hasSteps = this.biomeProvider instanceof BiomeResolverStepped;
 
-        ButtonWidget buttonZoomOut = ButtonWidget.builder(Text.literal("-"), button ->
+        Button buttonZoomOut = Button.builder(Component.literal("-"), button ->
             this.biomeDisplay.zoomOut()
-        ).dimensions(0, 0, 20, 20).build();
-        ButtonWidget buttonZoomIn = ButtonWidget.builder(Text.literal("+"), button ->
+        ).bounds(0, 0, 20, 20).build();
+        Button buttonZoomIn = Button.builder(Component.literal("+"), button ->
             this.biomeDisplay.zoomIn()
-        ).dimensions(0, 0, 20, 20).build();
-        ButtonWidget buttonScreenshot = ButtonWidget.builder(Text.translatable("createWorld.customize.modern_beta.settings.screenshot"), button ->
+        ).bounds(0, 0, 20, 20).build();
+        Button buttonScreenshot = Button.builder(Component.translatable("createWorld.customize.modern_beta.settings.screenshot"), button ->
             this.biomeDisplay.saveScreenshot()
-        ).dimensions(0, 0, 100, 20).build();
-        ButtonWidget buttonBack = ButtonWidget.builder(ScreenTexts.BACK, button ->
-            this.client.setScreen(this.parent)
-        ).dimensions(0, 0, 100, 20).build();
+        ).bounds(0, 0, 100, 20).build();
+        Button buttonBack = Button.builder(CommonComponents.GUI_BACK, button ->
+            this.minecraft.setScreen(this.parent)
+        ).bounds(0, 0, 100, 20).build();
 
-        GridWidget gridWidgetMain = this.createGridWidget();
-        GridWidget gridWidgetButtons = this.createGridWidget();
-        gridWidgetMain.getMainPositioner().alignHorizontalCenter().alignVerticalCenter();
+        GridLayout gridWidgetMain = this.createGridWidget();
+        GridLayout gridWidgetButtons = this.createGridWidget();
+        gridWidgetMain.defaultCellSetting().alignHorizontallyCenter().alignVerticallyMiddle();
 
-        GridWidget.Adder gridAdderMain = gridWidgetMain.createAdder(1);
-        GridWidget.Adder gridAdderButtons = gridWidgetButtons.createAdder(hasSteps ? 6 : 4);
+        GridLayout.RowHelper gridAdderMain = gridWidgetMain.createRowHelper(1);
+        GridLayout.RowHelper gridAdderButtons = gridWidgetButtons.createRowHelper(hasSteps ? 6 : 4);
 
-        gridAdderMain.add(this.biomeDisplay);
-        gridAdderMain.add(gridWidgetButtons);
+        gridAdderMain.addChild(this.biomeDisplay);
+        gridAdderMain.addChild(gridWidgetButtons);
 
-        gridAdderButtons.add(buttonZoomOut);
-        gridAdderButtons.add(buttonZoomIn);
+        gridAdderButtons.addChild(buttonZoomOut);
+        gridAdderButtons.addChild(buttonZoomIn);
 
         if (hasSteps) {
             BiomeResolverStepped stepResolver = (BiomeResolverStepped) this.biomeProvider;
             int stepCount = stepResolver.getStepCount();
             this.biomeDisplay.step.set(stepCount - 1);
 
-            ButtonWidget buttonPrevStep = ButtonWidget.builder(Text.literal("◀"), button -> {
+            Button buttonPrevStep = Button.builder(Component.literal("◀"), button -> {
                 this.biomeDisplay.step.getAndUpdate(i -> Math.floorMod(i - 1, stepCount));
                 this.biomeDisplay.clear();
-            }).dimensions(0, 0, 20, 20).build();
-            ButtonWidget buttonNextStep = ButtonWidget.builder(Text.literal("▶"), button -> {
+            }).bounds(0, 0, 20, 20).build();
+            Button buttonNextStep = Button.builder(Component.literal("▶"), button -> {
                 this.biomeDisplay.step.getAndUpdate(i -> Math.floorMod(i + 1, stepCount));
                 this.biomeDisplay.clear();
-            }).dimensions(0, 0, 20, 20).build();
+            }).bounds(0, 0, 20, 20).build();
 
-            gridAdderButtons.add(buttonPrevStep);
-            gridAdderButtons.add(buttonNextStep);
+            gridAdderButtons.addChild(buttonPrevStep);
+            gridAdderButtons.addChild(buttonNextStep);
         }
 
-        gridAdderButtons.add(buttonScreenshot);
-        gridAdderButtons.add(buttonBack);
+        gridAdderButtons.addChild(buttonScreenshot);
+        gridAdderButtons.addChild(buttonBack);
 
-        gridWidgetMain.refreshPositions();
-        SimplePositioningWidget.setPos(gridWidgetMain, 0, 0, this.width, this.height, 0.5f, 1.0f);
-        gridWidgetMain.forEachChild(this::addDrawableChild);
+        gridWidgetMain.arrangeElements();
+        FrameLayout.alignInRectangle(gridWidgetMain, 0, 0, this.width, this.height, 0.5f, 1.0f);
+        gridWidgetMain.visitWidgets(this::addRenderableWidget);
 
         this.biomeDisplay.startRenderThread();
     }
@@ -150,13 +148,13 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
         this.biomeDisplay.close();
     }
 
-    class BiomeDisplayWidget extends ClickableWidget implements AutoCloseable {
-        static final Identifier TEXTURE_ID = ModernerBeta.createId("biome_preview");
+    class BiomeDisplayWidget extends AbstractWidget implements AutoCloseable {
+        static final ResourceLocation TEXTURE_ID = ModernerBeta.createId("biome_preview");
         static final int EMPTY_COLOR = 0x7F000000;
 
         final TextureManager textureManager;
         final NativeImage image;
-        final NativeImageBackedTexture texture;
+        final DynamicTexture texture;
         final BiomeRenderThread renderThread;
         final AtomicInteger zoomOut = new AtomicInteger(1);
         final AtomicInteger zoomIn = new AtomicInteger(1);
@@ -167,19 +165,19 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
         final AtomicDouble offsetY = new AtomicDouble();
 
         BiomeDisplayWidget(int x, int y, int width, int height) {
-            super(x, y, width, height, Text.empty());
-            assert client != null;
+            super(x, y, width, height, Component.empty());
+            assert minecraft != null;
 
             this.image = new NativeImage(width, height, false);
             this.image.fillRect(0, 0, width, height, EMPTY_COLOR);
-            this.texture = new NativeImageBackedTexture(
+            this.texture = new DynamicTexture(
                 //? if >=1.21.5
                 TEXTURE_ID::toString,
                 this.image
             );
             this.texture.upload();
-            this.textureManager = client.getTextureManager();
-            this.textureManager.registerTexture(TEXTURE_ID, this.texture);
+            this.textureManager = minecraft.getTextureManager();
+            this.textureManager.register(TEXTURE_ID, this.texture);
             this.renderThread = new BiomeRenderThread();
         }
 
@@ -224,14 +222,14 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
         }
 
         void saveScreenshot() {
-            assert client != null;
-            File screenshotDirectory = new File(client.runDirectory, "screenshots");
+            assert minecraft != null;
+            File screenshotDirectory = new File(minecraft.gameDirectory, "screenshots");
             screenshotDirectory.mkdir();
-            File screenshotPath = AccessorScreenshotRecorder.invokeGetScreenshotFilename(screenshotDirectory);
+            File screenshotPath = AccessorScreenshotRecorder.invokeGetFile(screenshotDirectory);
 
-            Util.getIoWorkerExecutor().execute(() -> {
+            Util.ioPool().execute(() -> {
                 try {
-                    image.writeTo(screenshotPath);
+                    image.writeToFile(screenshotPath);
                 } catch (Exception exception) {
                     ModernerBeta.log(Level.WARN, "Couldn't save screenshot: " + exception);
                 }
@@ -239,13 +237,7 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
         }
 
         @Override
-        protected void
-        //? if >=1.20.3 {
-        renderWidget 
-        //?} else {
-        /*renderButton
-        *///?}
-            (DrawContext context, int mouseX, int mouseY, float deltaTicks) {
+        protected void renderWidget(GuiGraphics context, int mouseX, int mouseY, float deltaTicks) {
             int step = this.step.get();
 
             if (this.renderThread.uploadRequested) {
@@ -254,9 +246,9 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                 }
             }
 
-            context.drawTexture(
+            context.blit(
                 //? if >= 1.21.6 {
-                net.minecraft.client.gl.RenderPipelines.GUI_TEXTURED,
+                net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED,
                 //?} else if >=1.21.2 {
                 /*net.minecraft.client.render.RenderLayer::getGuiTextured,
                 *///?}
@@ -268,23 +260,23 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
             );
 
             if (biomeProvider instanceof BiomeResolverStepped resolverStepped) {
-                MutableText stepName = Text.literal((step + 1) + "/" + resolverStepped.getStepCount() + " - ");
+                MutableComponent stepName = Component.literal((step + 1) + "/" + resolverStepped.getStepCount() + " - ");
                 stepName.append(resolverStepped.getStepName(step));
-                context.fill(this.getX(), this.getY(), this.getX() + textRenderer.getWidth(stepName) + 8, this.getY() + 16, 0xAA000000);
-                context.drawText(textRenderer, stepName, this.getX() + 4, this.getY() + 4, 0xFFFFFFFF, false);
+                context.fill(this.getX(), this.getY(), this.getX() + font.width(stepName) + 8, this.getY() + 16, 0xAA000000);
+                context.drawString(font, stepName, this.getX() + 4, this.getY() + 4, 0xFFFFFFFF, false);
             }
 
             double zoomLevel = (double)this.zoomOut.get() * 4.0 / (double)this.zoomIn.get();
-            Text zoomLabel = Text.literal("1:" + (zoomLevel % 1.0 == 0.0 ? Integer.toString((int)zoomLevel) : Double.toString(zoomLevel)));
-            int zoomLabelWidth = textRenderer.getWidth(zoomLabel);
+            Component zoomLabel = Component.literal("1:" + (zoomLevel % 1.0 == 0.0 ? Integer.toString((int)zoomLevel) : Double.toString(zoomLevel)));
+            int zoomLabelWidth = font.width(zoomLabel);
             context.fill(this.getX() + this.getWidth() - zoomLabelWidth - 8, this.getY(), this.getX() + this.getWidth(), this.getY() + 16, 0xAA000000);
-            context.drawText(textRenderer, zoomLabel, this.getX() + this.getWidth() - zoomLabelWidth - 4, this.getY() + 4, 0xFFFFFFFF, false);
+            context.drawString(font, zoomLabel, this.getX() + this.getWidth() - zoomLabelWidth - 4, this.getY() + 4, 0xFFFFFFFF, false);
 
             if (exceptionMessage != null) {
-                context.drawCenteredTextWithShadow(
-                    textRenderer,
-                    Text.literal(exceptionMessage)
-                        .formatted(Formatting.RED),
+                context.drawCenteredString(
+                    font,
+                    Component.literal(exceptionMessage)
+                        .withStyle(ChatFormatting.RED),
                     this.getX() + this.getWidth() / 2,
                     this.getY() + this.getHeight() / 2 - 4,
                     0xFFFFFFFF
@@ -296,13 +288,13 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
             if (biomeProvider != null && offsetMouseX >= 0 && offsetMouseY >= 0 && offsetMouseX < this.width && offsetMouseY < this.height) {
                 int sampleX = (offsetMouseX + (int)Math.round(offsetX.get()) - this.width / 2) * this.zoomOut.get() / this.zoomIn.get();
                 int sampleY = (offsetMouseY + (int)Math.round(offsetY.get()) - this.height / 2) * this.zoomOut.get() / this.zoomIn.get();
-                Text biomeName = biomeProvider instanceof BiomeResolverStepped resolverStepped
+                Component biomeName = biomeProvider instanceof BiomeResolverStepped resolverStepped
                     ? resolverStepped.getBiomeNameForStep(sampleX, 64, sampleY, step)
                     : biomeProvider.getBiomeName(sampleX, 64, sampleY);
-                context.drawTooltip(
-                    textRenderer,
+                context.renderComponentTooltip(
+                    font,
                     List.of(
-                        Text.literal((sampleX * 4) + ", " + (sampleY * 4)),
+                        Component.literal((sampleX * 4) + ", " + (sampleY * 4)),
                         biomeName
                     ),
                     mouseX,
@@ -310,7 +302,7 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                 );
 
                 //? if >=1.21.9
-                /*context.setCursor(net.minecraft.client.gui.cursor.StandardCursors.RESIZE_ALL);*/
+                /*context.requestCursor(com.mojang.blaze3d.platform.cursor.CursorTypes.RESIZE_ALL);*/
             }
 
             this.prevMouseX = mouseX;
@@ -318,8 +310,8 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
         }
 
         @Override
-        protected void onDrag(/*? if <1.21.9 {*/ double mouseX, double mouseY, /*?} else {*/ /*net.minecraft.client.gui.Click click, *//*?}*/ double deltaX, double deltaY) {
-            assert client != null;
+        protected void onDrag(/*? if <1.21.9 {*/ double mouseX, double mouseY, /*?} else {*/ /*net.minecraft.client.input.MouseButtonEvent click, *//*?}*/ double deltaX, double deltaY) {
+            assert minecraft != null;
             double prevOffsetX = this.offsetX.getAndAdd(-deltaX);
             double prevOffsetY = this.offsetY.getAndAdd(-deltaY);
             int diffOffsetX = (int)Math.round(this.offsetX.get()) - (int)Math.round(prevOffsetX);
@@ -328,9 +320,9 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
             synchronized (this.image) {
                 int[] pixels =
                     //? if >=1.21.2 {
-                    this.image.copyPixelsArgb();
+                    this.image.getPixels();
                     //?} else {
-                    /*this.image.copyPixelsRgba();
+                    /*this.image.getPixelsRGBA();
                     *///?}
                 int i = 0;
                 this.image.fillRect(0, 0, this.width, this.height, 0x7F000000);
@@ -341,9 +333,9 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                         if (dstX >= 0 && dstX < this.width && dstY >= 0 && dstY < this.height) {
                             this.image.
                                 //? if >=1.21.2 {
-                                setColorArgb
+                                setPixel
                                 //?} else {
-                                /*setColor
+                                /*setPixelRGBA
                                 *///?}
                                 (dstX, dstY, pixels[i]);
                         }
@@ -373,14 +365,14 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
         }
 
         @Override
-        protected void appendClickableNarrations(NarrationMessageBuilder builder) {
+        protected void updateWidgetNarration(NarrationElementOutput builder) {
         }
 
         @Override
         public void close() {
             this.renderThread.stop = true;
             this.texture.close();
-            this.textureManager.destroyTexture(TEXTURE_ID);
+            this.textureManager.release(TEXTURE_ID);
             synchronized (this) {
                 this.notify();
             }
@@ -403,7 +395,7 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                 boolean full = true;
                 Int2IntMap randColors = new Int2IntAVLTreeMap();
                 Random random = new Random();
-                LayerRandom voronoiRandom = new LayerRandom(RandomSeed.getSeed());
+                LayerRandom voronoiRandom = new LayerRandom(RandomSupport.generateUniqueSeed());
 
                 try {
                     while (!stop) {
@@ -433,9 +425,9 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                         synchronized (image) {
                             baseAlpha = image.
                                 //? if >=1.21.2 {
-                                getColorArgb
+                                getPixel
                                 //?} else {
-                                /*getColor
+                                /*getPixelRGBA
                                 *///?}
                                 (genX, genY) >>> 24;
                         }
@@ -480,10 +472,10 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                             sampleX = scaledSampleX;
                             sampleY = scaledSampleY;
 
-                            float dist00 = MathHelper.square(subSampleX - n00x) + MathHelper.square(subSampleY - n00y);
-                            float dist10 = MathHelper.square(subSampleX - n10x) + MathHelper.square(subSampleY - n10y);
-                            float dist01 = MathHelper.square(subSampleX - n01x) + MathHelper.square(subSampleY - n01y);
-                            float dist11 = MathHelper.square(subSampleX - n11x) + MathHelper.square(subSampleY - n11y);
+                            float dist00 = Mth.square(subSampleX - n00x) + Mth.square(subSampleY - n00y);
+                            float dist10 = Mth.square(subSampleX - n10x) + Mth.square(subSampleY - n10y);
+                            float dist01 = Mth.square(subSampleX - n01x) + Mth.square(subSampleY - n01y);
+                            float dist11 = Mth.square(subSampleX - n11x) + Mth.square(subSampleY - n11y);
 
                             if (dist11 < dist10 && dist11 < dist01 && dist11 < dist00) {
                                 sampleX++;
@@ -496,7 +488,7 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                         }
 
                         int step = BiomeDisplayWidget.this.step.get();
-                        RegistryEntry<Biome> biome = biomeProvider instanceof BiomeResolverStepped resolverStepped
+                        Holder<Biome> biome = biomeProvider instanceof BiomeResolverStepped resolverStepped
                             ? resolverStepped.getBiomeForStep(sampleX, 64, sampleY, step)
                             : biomeProvider.getBiome(sampleX, 64, sampleY);
                         ExtendedBiomeId extendedBiome = biomeProvider instanceof BiomeResolverExtendedId resolverExtendedId
@@ -511,24 +503,24 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                             int r = (color >> 16) & 0xFF;
                             int g = (color >> 8) & 0xFF;
                             int b = color & 0xFF;
-                            r = MathHelper.lerp(1.0F / 3.0F, r, 0xFF);
-                            g = MathHelper.lerp(1.0F / 3.0F, g, 0xFF);
-                            b = MathHelper.lerp(1.0F / 3.0F, b, 0xFF);
+                            r = Mth.lerpInt(1.0F / 3.0F, r, 0xFF);
+                            g = Mth.lerpInt(1.0F / 3.0F, g, 0xFF);
+                            b = Mth.lerpInt(1.0F / 3.0F, b, 0xFF);
                             color = r << 16 | g << 8 | b;
                         } else if (gridSampleX % (4 * gridScale) == 0 || gridSampleY % (4 * gridScale) == 0) {
                             int r = (color >> 16) & 0xFF;
                             int g = (color >> 8) & 0xFF;
                             int b = color & 0xFF;
-                            r = MathHelper.lerp(0.1F, r, 0xFF);
-                            g = MathHelper.lerp(0.1F, g, 0xFF);
-                            b = MathHelper.lerp(0.1F, b, 0xFF);
+                            r = Mth.lerpInt(0.1F, r, 0xFF);
+                            g = Mth.lerpInt(0.1F, g, 0xFF);
+                            b = Mth.lerpInt(0.1F, b, 0xFF);
                             color = r << 16 | g << 8 | b;
                         }
 
                         //? if >=1.21.2 {
                         color |= 0xFF000000;
                         synchronized (image) {
-                            image.setColorArgb(genX, genY, color);
+                            image.setPixel(genX, genY, color);
                             this.uploadRequested = true;
                         }
                         //?} else {
@@ -537,7 +529,7 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                         int b = color & 0xFF;
                         color = r | g << 8 | b << 16 | 0xFF << 24;
                         synchronized (image) {
-                            image.setColor(genX, genY, color);
+                            image.setPixelRGBA(genX, genY, color);
                             this.uploadRequested = true;
                         }
                         *///?}
@@ -548,8 +540,8 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                 }
             }
 
-            private int getBiomeColor(RegistryEntry<Biome> biomeEntry, String ext, int x, int y, Int2IntMap randColors, Random random) {
-                String id = biomeEntry.getKey().map(key -> key.getValue().toString()).orElse("[unregistered]");
+            private int getBiomeColor(Holder<Biome> biomeEntry, String ext, int x, int y, Int2IntMap randColors, Random random) {
+                String id = biomeEntry.unwrapKey().map(key -> key.location().toString()).orElse("[unregistered]");
                 if (ext != null && !ext.isEmpty()) {
                     String extId = id + "*" + ext;
                     Integer registeredExtColor = ModernerBeta.config.getOrDefault(SettingsComponentTypes.CONFIG_BIOME_PREVIEW_COLORS).get(extId);
@@ -576,33 +568,33 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                 }
 
                 Biome biome = biomeEntry.value();
-                boolean watery = biomeEntry.isIn(BiomeTags.IS_OCEAN) || biomeEntry.isIn(BiomeTags.IS_RIVER);
+                boolean watery = biomeEntry.is(BiomeTags.IS_OCEAN) || biomeEntry.is(BiomeTags.IS_RIVER);
                 int color;
                 if (watery) {
                     color = biome.getWaterColor();
-                    if (biomeEntry.isIn(BiomeTags.IS_OCEAN)) {
+                    if (biomeEntry.is(BiomeTags.IS_OCEAN)) {
                         color = (color & 0xFEFEFE) >> 1;
-                        if (biomeEntry.isIn(BiomeTags.IS_DEEP_OCEAN)) {
+                        if (biomeEntry.is(BiomeTags.IS_DEEP_OCEAN)) {
                             color = (color & 0xFEFEFE) >> 1;
                         }
                     }
                 } else {
                     SurfaceConfig surfaceConfig = SurfaceConfig.getSurfaceConfig(biomeEntry);
                     BlockState topBlock = surfaceConfig.normal().topBlock();
-                    if (topBlock.isOf(Blocks.GRASS_BLOCK)) {
-                        color = biome.getGrassColorAt(x, y);
+                    if (topBlock.is(Blocks.GRASS_BLOCK)) {
+                        color = biome.getGrassColor(x, y);
                     } else {
-                        color = topBlock.getMapColor(null, new BlockPos(x, 64, y)).color;
+                        color = topBlock.getMapColor(null, new BlockPos(x, 64, y)).col;
                     }
                 }
 
                 float contrast = 2.0F;
                 float[] hsb = new float[3];
                 Color.RGBtoHSB((color >> 16) & 0xFF, (color >> 8) & 0xFF, color & 0xFF, hsb);
-                hsb[1] = MathHelper.clamp(hsb[1] * contrast, 0.0F, 1.0F);
-                hsb[2] = MathHelper.clamp((hsb[2] - 0.5F) * contrast + 0.5F, 0.0F, 1.0F);
+                hsb[1] = Mth.clamp(hsb[1] * contrast, 0.0F, 1.0F);
+                hsb[2] = Mth.clamp((hsb[2] - 0.5F) * contrast + 0.5F, 0.0F, 1.0F);
 
-                if (biome.getTemperature() < 0.15F && !biomeEntry.isIn(BiomeTags.IS_DEEP_OCEAN)) {
+                if (biome.getBaseTemperature() < 0.15F && !biomeEntry.is(BiomeTags.IS_DEEP_OCEAN)) {
                     hsb[1] *= 0.1F;
                     hsb[2] = hsb[2] * 0.25F + 0.75F;
                 }

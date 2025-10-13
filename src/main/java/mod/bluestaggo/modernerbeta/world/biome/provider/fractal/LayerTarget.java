@@ -3,7 +3,7 @@ package mod.bluestaggo.modernerbeta.world.biome.provider.fractal;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.Layer;
-import net.minecraft.util.StringIdentifiable;
+import net.minecraft.util.StringRepresentable;
 
 import java.util.Optional;
 import java.util.Set;
@@ -14,7 +14,7 @@ public record LayerTarget(Type type, String value) {
 
     public static final Codec<LayerTarget> CODEC = RecordCodecBuilder.create(
         instance -> instance.group(
-            StringIdentifiable.createCodec(Type::values).fieldOf("type").forGetter(LayerTarget::type),
+            StringRepresentable.fromEnum(Type::values).fieldOf("type").forGetter(LayerTarget::type),
             Codec.STRING.fieldOf("value").forGetter(LayerTarget::value)
         ).apply(instance, LayerTarget::new)
     );
@@ -35,14 +35,14 @@ public record LayerTarget(Type type, String value) {
         return NONE;
     }
 
-    public LayerTarget.Configured configure(Function<String, Layer> layerMap) {
+    public Configured configure(Function<String, Layer> layerMap) {
         return switch (this.type) {
             case LAYER -> new Configured.OfLayer(layerMap.apply(this.value));
             case BIOME -> new Configured.OfBiome(ExtendedBiomeId.of(this.value));
         };
     }
 
-    public enum Type implements StringIdentifiable {
+    public enum Type implements StringRepresentable {
         LAYER("layer"),
         BIOME("biome");
 
@@ -53,7 +53,7 @@ public record LayerTarget(Type type, String value) {
         }
 
         @Override
-        public String asString() {
+        public String getSerializedName() {
             return this.id;
         }
     }

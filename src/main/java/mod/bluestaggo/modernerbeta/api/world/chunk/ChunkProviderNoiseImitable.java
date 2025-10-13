@@ -3,11 +3,11 @@ package mod.bluestaggo.modernerbeta.api.world.chunk;
 import mod.bluestaggo.modernerbeta.api.world.blocksource.BlockSource;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
 import mod.bluestaggo.modernerbeta.util.noise.SimpleNoisePos;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.gen.StructureWeightSampler;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.Beardifier;
 
 public interface ChunkProviderNoiseImitable {
     /**
@@ -24,7 +24,7 @@ public interface ChunkProviderNoiseImitable {
      * @return A blockstate.
      */
     default BlockSource getBaseBlockSource(
-        StructureWeightSampler weightSampler,
+        Beardifier weightSampler,
         SimpleNoisePos noisePos,
         BlockHolder blockHolder,
         Block defaultBlock,
@@ -39,9 +39,9 @@ public interface ChunkProviderNoiseImitable {
             
             double density = !isSolid ? -25D : 25D;
             
-            double clampedDensity = MathHelper.clamp(density / 200.0, -1.0, 1.0);
+            double clampedDensity = Mth.clamp(density / 200.0, -1.0, 1.0);
             clampedDensity = clampedDensity / 2.0 - clampedDensity * clampedDensity * clampedDensity / 24.0;
-            clampedDensity += weightSampler.sample(noisePos.set(x, y, z));
+            clampedDensity += weightSampler.compute(noisePos.set(x, y, z));
             
             BlockState blockState = BlockStates.AIR;
             
@@ -50,7 +50,7 @@ public interface ChunkProviderNoiseImitable {
                 
                 // Handle structures generating over water/air
                 if (!isSolid)
-                    blockState = defaultBlock.getDefaultState();
+                    blockState = defaultBlock.defaultBlockState();
                 
             } else if (clampedDensity <= 0.0) {
                 // Handle original fluid blocks
@@ -67,7 +67,7 @@ public interface ChunkProviderNoiseImitable {
     }
     
     default BlockSource getActualBlockSource(BlockHolder blockHolder) {
-        return (x, y, z) -> blockHolder.getBlock().getDefaultState();
+        return (x, y, z) -> blockHolder.getBlock().defaultBlockState();
     }
     
     public static class BlockHolder {

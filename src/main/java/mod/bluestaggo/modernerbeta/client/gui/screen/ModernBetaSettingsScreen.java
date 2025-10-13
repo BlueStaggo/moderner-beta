@@ -11,13 +11,17 @@ import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.EditBox;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.*;
-import net.minecraft.client.input.CursorMovement;
-import net.minecraft.screen.ScreenTexts;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.MultiLineEditBox;
+import net.minecraft.client.gui.components.MultilineTextField;
+import net.minecraft.client.gui.components.StringWidget;
+import net.minecraft.client.gui.components.Whence;
+import net.minecraft.client.gui.layouts.FrameLayout;
+import net.minecraft.client.gui.layouts.GridLayout;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
 
 import java.util.function.Consumer;
 
@@ -32,12 +36,12 @@ public class ModernBetaSettingsScreen extends ModernBetaScreen {
     private final Gson gson;
     private String settingsString;
     
-    private ButtonWidget widgetDone;
-    private EditBoxWidget widgetSettings;
-    private TextWidget widgetInvalid;
+    private Button widgetDone;
+    private MultiLineEditBox widgetSettings;
+    private StringWidget widgetInvalid;
     
     public ModernBetaSettingsScreen(String title, Screen parent, ModernBetaSettings settings, Consumer<String> onDone) {
-        super(Text.translatable(title), parent);
+        super(Component.translatable(title), parent);
 
         this.onDone = onDone;
         this.gson = ModernerBeta.getSettingsGson().setPrettyPrinting().create();
@@ -49,58 +53,58 @@ public class ModernBetaSettingsScreen extends ModernBetaScreen {
     protected void init() {
         super.init();
         
-        this.widgetDone = ButtonWidget.builder(Text.translatable(TEXT_SETTINGS_SAVE), button -> {
+        this.widgetDone = Button.builder(Component.translatable(TEXT_SETTINGS_SAVE), button -> {
             this.onDone.accept(this.settingsString);
-            this.client.setScreen(this.parent);
-        }).dimensions(this.width / 2 - 154, this.height - 26, BUTTON_LENGTH, BUTTON_HEIGHT).build();
+            this.minecraft.setScreen(this.parent);
+        }).bounds(this.width / 2 - 154, this.height - 26, BUTTON_LENGTH, BUTTON_HEIGHT).build();
         
-        this.addDrawableChild(this.widgetDone);
-        this.addDrawableChild(ButtonWidget.builder(ScreenTexts.CANCEL, button -> 
-            this.client.setScreen(this.parent)
-        ).dimensions(this.width / 2 + 4, this.height - 26, BUTTON_LENGTH, BUTTON_HEIGHT).build());
+        this.addRenderableWidget(this.widgetDone);
+        this.addRenderableWidget(Button.builder(CommonComponents.GUI_CANCEL, button -> 
+            this.minecraft.setScreen(this.parent)
+        ).bounds(this.width / 2 + 4, this.height - 26, BUTTON_LENGTH, BUTTON_HEIGHT).build());
         
         int editBoxWidth = this.width - 16;
         int editBoxHeight = this.height - 96;
 
         //? if >=1.21.6 {
-        this.widgetSettings = EditBoxWidget.builder().build(
+        this.widgetSettings = MultiLineEditBox.builder().build(
         //?} else {
-        /*this.widgetSettings = new EditBoxWidget(
+        /*this.widgetSettings = new MultiLineEditBox(
         *///?}
-                this.textRenderer,
+                this.font,
                 //? if <1.21.6
                 /*0, 0,*/
                 editBoxWidth, editBoxHeight,
                 //? if <1.21.6
-                /*Text.of(""),*/
-                Text.translatable(TEXT_SETTINGS)
+                /*Component.literal(""),*/
+                Component.translatable(TEXT_SETTINGS)
         );
-        this.widgetSettings.setText(this.settingsString);
-        this.widgetSettings.setChangeListener(string -> {
+        this.widgetSettings.setValue(this.settingsString);
+        this.widgetSettings.setValueListener(string -> {
             this.settingsString = string;
             this.onChange();
         });
         
-        Text textInvalid = Text.translatable(TEXT_INVALID_JSON).formatted(Formatting.RED);
-        this.widgetInvalid = new TextWidget(textInvalid, this.textRenderer);
+        Component textInvalid = Component.translatable(TEXT_INVALID_JSON).withStyle(ChatFormatting.RED);
+        this.widgetInvalid = new StringWidget(textInvalid, this.font);
         
-        Text textNavigation = Text.translatable(TEXT_NAVIGATION);
-        TextWidget widgetNavigation = new TextWidget(textNavigation, this.textRenderer);
+        Component textNavigation = Component.translatable(TEXT_NAVIGATION);
+        StringWidget widgetNavigation = new StringWidget(textNavigation, this.font);
         
-        GridWidget gridWidget = this.createGridWidget();
+        GridLayout gridWidget = this.createGridWidget();
         
-        GridWidget.Adder gridWidgetAdder = gridWidget.createAdder(1);
-        gridWidgetAdder.add(widgetNavigation);
-        gridWidgetAdder.add(this.widgetSettings);
-        gridWidgetAdder.add(this.widgetInvalid);
+        GridLayout.RowHelper gridWidgetAdder = gridWidget.createRowHelper(1);
+        gridWidgetAdder.addChild(widgetNavigation);
+        gridWidgetAdder.addChild(this.widgetSettings);
+        gridWidgetAdder.addChild(this.widgetInvalid);
         
-        gridWidget.refreshPositions();
-        SimplePositioningWidget.setPos(gridWidget, 0, this.overlayTop + 8, this.width, this.height, 0.5f, 0.0f);
-        gridWidget.forEachChild(this::addDrawableChild);
+        gridWidget.arrangeElements();
+        FrameLayout.alignInRectangle(gridWidget, 0, this.overlayTop + 8, this.width, this.height, 0.5f, 0.0f);
+        gridWidget.visitWidgets(this::addRenderableWidget);
         
         // Set cursor to beginning of edit box
-        EditBox editBox = ((AccessorEditBoxWidget) this.widgetSettings).getEditBox();
-        editBox.moveCursor(CursorMovement.ABSOLUTE, 0);
+        MultilineTextField editBox = ((AccessorEditBoxWidget) this.widgetSettings).getTextField();
+        editBox.seekCursor(Whence.ABSOLUTE, 0);
         
         this.onChange();
     }

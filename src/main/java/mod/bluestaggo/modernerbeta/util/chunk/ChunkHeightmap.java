@@ -1,6 +1,6 @@
 package mod.bluestaggo.modernerbeta.util.chunk;
 
-import net.minecraft.world.Heightmap;
+import net.minecraft.world.level.levelgen.Heightmap;
 
 import java.util.Arrays;
 
@@ -46,7 +46,7 @@ public class ChunkHeightmap {
         Arrays.fill(this.heightmapSurfaceFloor, (short)0);
     }
     
-    public int getHeight(int x, int z, Heightmap.Type type) {
+    public int getHeight(int x, int z, Heightmap.Types type) {
         int ndx = (z & 0xF) + (x & 0xF) * 16;
         
         return switch(type) {
@@ -60,7 +60,7 @@ public class ChunkHeightmap {
         };
     }
     
-    public int getHeight(int x, int z, ChunkHeightmap.Type type) {
+    public int getHeight(int x, int z, Type type) {
         int ndx = (z & 0xF) + (x & 0xF) * 16;
         
         return switch(type) {

@@ -1,6 +1,6 @@
 package mod.bluestaggo.modernerbeta.registry;
 
-import net.minecraft.registry.Registry;
+import net.minecraft.core.Registry;
 
 public interface IRegistryBuilder<T> {
     IRegistryBuilder<T> synced();

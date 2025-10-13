@@ -2,8 +2,8 @@ package mod.bluestaggo.modernerbeta.imixin;
 
 import mod.bluestaggo.modernerbeta.api.world.biome.climate.ClimateSampler;
 import mod.bluestaggo.modernerbeta.api.world.biome.climate.TemperatureHeightScaling;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.biome.Biome;
 
 public interface ModernBetaWorld {
     boolean modernerBeta$isModded();

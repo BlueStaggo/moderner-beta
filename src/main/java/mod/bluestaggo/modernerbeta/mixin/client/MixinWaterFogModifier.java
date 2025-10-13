@@ -7,11 +7,11 @@ import mod.bluestaggo.modernerbeta.api.world.biome.climate.Clime;
 import mod.bluestaggo.modernerbeta.client.color.BlockColorSampler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.render.Camera;
-import net.minecraft.client.render.fog.WaterFogModifier;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.client.Camera;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.fog.environment.WaterFogEnvironment;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -19,22 +19,22 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Environment(EnvType.CLIENT)
-@Mixin(WaterFogModifier.class)
+@Mixin(WaterFogEnvironment.class)
 public abstract class MixinWaterFogModifier {
     @Unique
-    private static Vec3d modernBeta_pos;
+    private static Vec3 modernBeta_pos;
 
     @WrapOperation(
-        method = "getFogColor",
+        method = "getBaseColor",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/world/biome/Biome;getWaterFogColor()I"
+            target = "Lnet/minecraft/world/level/biome/Biome;getWaterFogColor()I"
         )
     )
     private int modifyWaterFogColor(Biome instance, Operation<Integer> original) {
         if (BlockColorSampler.INSTANCE.useWaterColor()) {
-            int x = (int)modernBeta_pos.getX();
-            int z = (int)modernBeta_pos.getZ();
+            int x = (int)modernBeta_pos.x();
+            int z = (int)modernBeta_pos.z();
 
             Clime clime = BlockColorSampler.INSTANCE.getClimateSampler().sample(x, z);
 
@@ -44,9 +44,9 @@ public abstract class MixinWaterFogModifier {
         return original.call(instance);
     }
 
-    @Inject(method = "getFogColor", at = @At("HEAD"))
-    private void captureVars(ClientWorld world, Camera camera, int viewDistance, float skyDarkness, CallbackInfoReturnable<Integer> cir) {
-        modernBeta_pos = camera.getPos();
+    @Inject(method = "getBaseColor", at = @At("HEAD"))
+    private void captureVars(ClientLevel world, Camera camera, int viewDistance, float skyDarkness, CallbackInfoReturnable<Integer> cir) {
+        modernBeta_pos = camera.getPosition();
     }
 }
 //?}

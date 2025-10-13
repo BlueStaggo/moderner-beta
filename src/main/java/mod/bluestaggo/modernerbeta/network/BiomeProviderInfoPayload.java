@@ -1,16 +1,16 @@
 package mod.bluestaggo.modernerbeta.network;
 
 import mod.bluestaggo.modernerbeta.util.ModernBetaPayload;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.CompoundTag;
 //? if >=1.20.2 {
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.network.packet.CustomPayload;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 //?} else {
-/*import net.minecraft.network.PacketByteBuf;
-*///?}
-import net.minecraft.util.Identifier;
+/*import net.minecraft.network.FriendlyByteBuf;
+ *///?}
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.Optional;
 
@@ -18,68 +18,68 @@ public record BiomeProviderInfoPayload(
         boolean isModernBetaWorld,
         boolean hasBiomeProvider,
         Optional<Long> seed,
-        Optional<Identifier> providerId,
-        Optional<NbtCompound> settings
+        Optional<ResourceLocation> providerId,
+        Optional<CompoundTag> settings
 ) implements ModernBetaPayload
 //? if >=1.20.2 {
 {
-    public static final CustomPayload.Id<BiomeProviderInfoPayload> ID = new CustomPayload.Id<>(ModernBetaNetworkConstants.BIOME_PROVIDER_INFO_PACKET_ID);
-    public static final PacketCodec<RegistryByteBuf, BiomeProviderInfoPayload> CODEC = PacketCodec.tuple(
+    public static final CustomPacketPayload.Type<BiomeProviderInfoPayload> ID = new CustomPacketPayload.Type<>(ModernBetaNetworkConstants.BIOME_PROVIDER_INFO_PACKET_ID);
+    public static final StreamCodec<RegistryFriendlyByteBuf, BiomeProviderInfoPayload> CODEC = StreamCodec.composite(
         //? if >=1.21.4 {
-        PacketCodecs.BOOLEAN,
-        //?} else {
-        /*PacketCodecs.BOOL,
-        *///?}
+        /*eBufCodecs.BOOL,
+     *///?} else {
+        PacketCodecs.BOOL,
+        //?}
         BiomeProviderInfoPayload::isModernBetaWorld,
         //? if >=1.21.4 {
-        PacketCodecs.BOOLEAN,
-        //?} else {
-        /*PacketCodecs.BOOL,
-        *///?}
+        /*eBufCodecs.BOOL,
+     *///?} else {
+        PacketCodecs.BOOL,
+        //?}
         BiomeProviderInfoPayload::hasBiomeProvider,
         //? if >=1.21.2 {
-        PacketCodecs.LONG
-        //?} else {
-        /*PacketCodecs.VAR_LONG
-        *///?}
-            .collect(PacketCodecs::optional), BiomeProviderInfoPayload::seed,
-        Identifier.PACKET_CODEC.collect(PacketCodecs::optional), BiomeProviderInfoPayload::providerId,
-        PacketCodecs.NBT_COMPOUND.collect(PacketCodecs::optional), BiomeProviderInfoPayload::settings,
+        /*eBufCodecs.LONG
+     *///?} else {
+        PacketCodecs.VAR_LONG
+        //?}
+            .apply(ByteBufCodecs::optional), BiomeProviderInfoPayload::seed,
+        ResourceLocation.STREAM_CODEC.apply(ByteBufCodecs::optional), BiomeProviderInfoPayload::providerId,
+        ByteBufCodecs.COMPOUND_TAG.apply(ByteBufCodecs::optional), BiomeProviderInfoPayload::settings,
 
         BiomeProviderInfoPayload::new
     );
 
     @Override
-    public CustomPayload.Id<? extends CustomPayload> getId() {
+    public CustomPacketPayload.Type<? extends CustomPacketPayload> type() {
         return ID;
     }
 }
 
 //?} else {
 /*{
-    public static final Identifier ID = ModernBetaNetworkConstants.BIOME_PROVIDER_INFO_PACKET_ID;
+    public static final ResourceLocation ID = ModernBetaNetworkConstants.BIOME_PROVIDER_INFO_PACKET_ID;
 
-    public static BiomeProviderInfoPayload fromPacketByteBuf(PacketByteBuf packetByteBuf) {
+    public static BiomeProviderInfoPayload fromFriendlyByteBuf(FriendlyByteBuf friendlyByteBuf) {
         return new BiomeProviderInfoPayload(
-            packetByteBuf.readBoolean(),
-            packetByteBuf.readBoolean(),
-            packetByteBuf.readOptional(PacketByteBuf::readLong),
-            packetByteBuf.readOptional(PacketByteBuf::readIdentifier),
-            packetByteBuf.readOptional(PacketByteBuf::readNbt)
+            friendlyByteBuf.readBoolean(),
+            friendlyByteBuf.readBoolean(),
+            friendlyByteBuf.readOptional(FriendlyByteBuf::readLong),
+            friendlyByteBuf.readOptional(FriendlyByteBuf::readResourceLocation),
+            friendlyByteBuf.readOptional(FriendlyByteBuf::readNbt)
         );
     }
 
     @Override
-    public void write(PacketByteBuf packetByteBuf) {
-        packetByteBuf.writeBoolean(this.isModernBetaWorld());
-        packetByteBuf.writeBoolean(this.hasBiomeProvider());
-        packetByteBuf.writeOptional(this.seed(), PacketByteBuf::writeLong);
-        packetByteBuf.writeOptional(this.providerId(), PacketByteBuf::writeIdentifier);
-        packetByteBuf.writeOptional(this.settings(), PacketByteBuf::writeNbt);
+    public void write(FriendlyByteBuf friendlyByteBuf) {
+        friendlyByteBuf.writeBoolean(this.isModernBetaWorld());
+        friendlyByteBuf.writeBoolean(this.hasBiomeProvider());
+        friendlyByteBuf.writeOptional(this.seed(), FriendlyByteBuf::writeLong);
+        friendlyByteBuf.writeOptional(this.providerId(), FriendlyByteBuf::writeResourceLocation);
+        friendlyByteBuf.writeOptional(this.settings(), FriendlyByteBuf::writeNbt);
     }
 
     @Override
-    public Identifier getId() {
+    public ResourceLocation getId() {
         return ID;
     }
 }

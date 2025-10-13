@@ -5,11 +5,11 @@ import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.client.debug.hudentry.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.hud.DebugHud;
-import net.minecraft.server.integrated.IntegratedServer;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.DebugScreenOverlay;
+import net.minecraft.client.server.IntegratedServer;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -21,22 +21,22 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.List;
 
 @Environment(EnvType.CLIENT)
-@Mixin(DebugHud.class)
+@Mixin(DebugScreenOverlay.class)
 public abstract class MixinDebugHud {
-    @Shadow @Final private MinecraftClient client;
-    
-    @Inject(method = "getLeftText", at = @At("TAIL"))
-    private void injectGetLeftText(CallbackInfoReturnable<List<String>> info) {
-        BlockPos pos = this.client.getCameraEntity().getBlockPos();
+    @Shadow @Final private Minecraft minecraft;
+
+    @Inject(method = "getGameInformation", at = @At("TAIL"))
+    private void injectGetGameInformation(CallbackInfoReturnable<List<String>> info) {
+        BlockPos pos = this.minecraft.getCameraEntity().blockPosition();
         int x = pos.getX();
         int y = pos.getY();
         int z = pos.getZ();
-        
-        IntegratedServer integratedServer = this.client.getServer();
-        ServerWorld serverWorld = null;
-        
+
+        IntegratedServer integratedServer = this.minecraft.getSingleplayerServer();
+        ServerLevel serverWorld = null;
+
         if (integratedServer != null) {
-            serverWorld = integratedServer.getWorld(this.client.world.getRegistryKey());
+            serverWorld = integratedServer.getLevel(this.minecraft.level.dimension());
         }
 
         List<String> lines = info.getReturnValue();

@@ -3,8 +3,8 @@ package mod.bluestaggo.modernerbeta.client.color;
 import mod.bluestaggo.modernerbeta.api.world.biome.climate.ClimateSamplerSky;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.Optional;
 
@@ -22,16 +22,16 @@ public class SkyColorSampler {
         this.climateSampler = climateSampler;
     }
 
-    public Vec3d getSkyColor(Vec3d cameraPos, Vec3d skyColorVec) {
+    public Vec3 getSkyColor(Vec3 cameraPos, Vec3 skyColorVec) {
         if (this.useSkyColor()) {
-            int x = (int)cameraPos.getX();
-            int z = (int)cameraPos.getZ();
+            int x = (int)cameraPos.x();
+            int z = (int)cameraPos.z();
 
             float temp = (float)this.climateSampler.sampleSky(x, z);
             temp /= 3F;
-            temp = MathHelper.clamp(temp, -1F, 1F);
+            temp = Mth.clamp(temp, -1F, 1F);
 
-            return Vec3d.unpackRgb(MathHelper.hsvToRgb(0.6222222F - temp * 0.05F, 0.5F + temp * 0.1F, 1.0F));
+            return Vec3.fromRGB24(Mth.hsvToRgb(0.6222222F - temp * 0.05F, 0.5F + temp * 0.1F, 1.0F));
         }
 
         return skyColorVec;

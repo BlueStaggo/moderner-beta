@@ -1,3 +1,4 @@
+//~registryOr
 package mod.bluestaggo.modernerbeta.mixin;
 
 import mod.bluestaggo.modernerbeta.api.world.biome.climate.ClimateSampler;
@@ -7,19 +8,19 @@ import mod.bluestaggo.modernerbeta.world.chunk.provider.ChunkProviderEarlyReleas
 import mod.bluestaggo.modernerbeta.world.chunk.provider.ChunkProviderMajorRelease;
 import mod.bluestaggo.modernerbeta.world.feature.BetaFreezeTopLayerFeature;
 import mod.bluestaggo.modernerbeta.world.feature.placed.ModernBetaMiscPlacedFeatures;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.registry.entry.RegistryEntry.Reference;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.Heightmap;
-import net.minecraft.world.StructureWorldAccess;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.source.BiomeSource;
-import net.minecraft.world.gen.chunk.ChunkGenerator;
-import net.minecraft.world.gen.feature.DefaultFeatureConfig;
-import net.minecraft.world.gen.feature.FreezeTopLayerFeature;
-import net.minecraft.world.gen.feature.PlacedFeature;
-import net.minecraft.world.gen.feature.util.FeatureContext;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Holder.Reference;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.BiomeSource;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
+import net.minecraft.world.level.levelgen.feature.SnowAndFreezeFeature;
+import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
+import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -40,14 +41,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  * Coord: -2770 139 -3404
  * 
  */
-@Mixin(FreezeTopLayerFeature.class)
+@Mixin(SnowAndFreezeFeature.class)
 public abstract class MixinFreezeTopLayerFeature {
-    @Inject(method = "generate", at = @At("HEAD"), cancellable = true)
-    private void injectGenerate(FeatureContext<DefaultFeatureConfig> context, CallbackInfoReturnable<Boolean> info) {
-        StructureWorldAccess world = context.getWorld();
-        BlockPos pos = context.getOrigin();
+    @Inject(method = "place", at = @At("HEAD"), cancellable = true)
+    private void injectPlace(FeaturePlaceContext<NoneFeatureConfiguration> context, CallbackInfoReturnable<Boolean> info) {
+        WorldGenLevel world = context.level();
+        BlockPos pos = context.origin();
         
-        ChunkGenerator chunkGenerator = context.getGenerator();
+        ChunkGenerator chunkGenerator = context.chunkGenerator();
         BiomeSource biomeSource = chunkGenerator.getBiomeSource();
 
         if (chunkGenerator instanceof ModernBetaChunkGenerator modernBetaChunkGenerator
@@ -65,24 +66,20 @@ public abstract class MixinFreezeTopLayerFeature {
         if (hasClimateSampler) {
             int x = pos.getX();
             int z = pos.getZ();
-            int y = context.getWorld().getTopY(Heightmap.Type.OCEAN_FLOOR_WG, x, z);
+            int y = context.level().getHeight(Heightmap.Types.OCEAN_FLOOR_WG, x, z);
             
             BlockPos topPos = new BlockPos(x, y, z);
-            RegistryEntry<Biome> topBiome = context.getWorld().getBiome(topPos);
+            Holder<Biome> topBiome = context.level().getBiome(topPos);
             
-            Reference<PlacedFeature> betaFreezeTopLayer = context.getWorld()
-                .getRegistryManager()
-                .getOrThrow(RegistryKeys.PLACED_FEATURE)
-                //? if >=1.21.2 {
-                .getOptional(ModernBetaMiscPlacedFeatures.FREEZE_TOP_LAYER)
-                //?} else {
-                /*.getEntry(ModernBetaMiscPlacedFeatures.FREEZE_TOP_LAYER)
-                *///?}
+            Reference<PlacedFeature> betaFreezeTopLayer = context.level()
+                .registryAccess()
+                .lookupOrThrow(Registries.PLACED_FEATURE)
+                .getHolder(ModernBetaMiscPlacedFeatures.FREEZE_TOP_LAYER)
                 .orElse(null);
 
             boolean hasBetaFreezeTopLayer = topBiome.value()
                 .getGenerationSettings()
-                .getFeatures()
+                .features()
                 .stream()
                 .anyMatch(list -> list.contains(betaFreezeTopLayer));
             

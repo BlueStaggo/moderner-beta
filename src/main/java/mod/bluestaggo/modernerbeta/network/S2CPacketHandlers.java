@@ -8,14 +8,14 @@ import mod.bluestaggo.modernerbeta.client.color.BlockColorSampler;
 import mod.bluestaggo.modernerbeta.client.color.SkyColorSampler;
 import mod.bluestaggo.modernerbeta.imixin.ModernBetaWorld;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
-import net.minecraft.registry.RegistryEntryLookup;
-import net.minecraft.registry.RegistryKeys;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.core.HolderGetter;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
 
 public class S2CPacketHandlers {
-    public static void onBiomeProviderInfo(World world, BiomeProviderInfoPayload payload) {
+    public static void onBiomeProviderInfo(Level world, BiomeProviderInfoPayload payload) {
         BlockColorSampler.INSTANCE.setClimateSampler(null);
         SkyColorSampler.INSTANCE.setClimateSampler(null);
 
@@ -27,12 +27,7 @@ public class S2CPacketHandlers {
             if (!payload.hasBiomeProvider())
                 return;
 
-            RegistryEntryLookup<Biome> biomeRegistry = world.getRegistryManager()
-                //? if >=1.21.2 {
-                .getOrThrow(RegistryKeys.BIOME);
-                //?} else {
-                /*.getWrapperOrThrow(RegistryKeys.BIOME);
-                *///?}
+            HolderGetter<Biome> biomeRegistry = world.registryAccess().lookupOrThrow(Registries.BIOME);
             BiomeProviderType<?> providerCreator = ModernBetaRegistries.BIOME.get(payload.providerId().orElseThrow());
             BiomeProvider provider = providerCreator.apply(ModernBetaSettings.fromCompound(payload.settings().orElseThrow()), biomeRegistry, payload.seed().orElseThrow());
             ((ModernBetaWorld) world).modernerBeta$setTemperatureHeightScaling(provider.getTemperatureHeightScaling());

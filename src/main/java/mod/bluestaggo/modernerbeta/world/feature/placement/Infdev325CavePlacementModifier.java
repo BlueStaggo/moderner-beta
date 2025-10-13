@@ -4,11 +4,12 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.util.noise.PerlinOctaveNoise;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.gen.feature.FeaturePlacementContext;
-import net.minecraft.world.gen.placementmodifier.PlacementModifier;
-import net.minecraft.world.gen.placementmodifier.PlacementModifierType;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.levelgen.placement.PlacementContext;
+import net.minecraft.world.level.levelgen.placement.PlacementModifier;
+import net.minecraft.world.level.levelgen.placement.PlacementModifierType;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class Infdev325CavePlacementModifier extends PlacementModifier {
-    public static final com.mojang.serialization.MapCodec<Infdev325CavePlacementModifier> MODIFIER_CODEC = VersionCompat.createMaybeMapCodec(
+    public static final com.mojang.serialization./*Map*/Codec<Infdev325CavePlacementModifier> MODIFIER_CODEC = VersionCompat.createMaybeMapCodec(
         instance -> instance.group(
             Codec.INT.fieldOf("min_section").forGetter(i -> i.minSection),
             Codec.INT.fieldOf("max_section").forGetter(i -> i.maxSection)
@@ -41,12 +42,12 @@ public class Infdev325CavePlacementModifier extends PlacementModifier {
     }
 
     @Override
-    public PlacementModifierType<?> getType() {
+    public @NotNull PlacementModifierType<?> type() {
         return ModernBetaPlacementTypes.INFDEV_325_CAVES;
     }
 
     @Override
-    public Stream<BlockPos> getPositions(FeaturePlacementContext context, Random random, BlockPos pos) {
+    public @NotNull Stream<BlockPos> getPositions(PlacementContext context, RandomSource random, BlockPos pos) {
         int x = pos.getX();
         int z = pos.getZ();
         List<BlockPos> positions = new ArrayList<>();
@@ -55,7 +56,7 @@ public class Infdev325CavePlacementModifier extends PlacementModifier {
         for (int section = this.minSection; section <= this.maxSection; section++) {
             final int fsection = section;
             int count = (int) (this.octaves.sample(x * scale, section * scale * 64.0D, z * scale) + (128.0D - section * 16.0D) / 64.0D);
-            positions.addAll(IntStream.range(0, count).mapToObj(i -> pos.withY(fsection * 16).add(random.nextInt(16), random.nextInt(16), random.nextInt(16))).toList());
+            positions.addAll(IntStream.range(0, count).mapToObj(i -> pos.atY(fsection * 16).offset(random.nextInt(16), random.nextInt(16), random.nextInt(16))).toList());
         }
 
         return positions.stream();

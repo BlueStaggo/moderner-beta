@@ -1,16 +1,16 @@
 package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers;
 
-import net.minecraft.util.math.random.GaussianGenerator;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.util.math.random.RandomSplitter;
-import net.minecraft.world.biome.source.SeedMixer;
+import net.minecraft.util.LinearCongruentialGenerator;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.levelgen.MarsagliaPolarGaussian;
+import net.minecraft.world.level.levelgen.PositionalRandomFactory;
 
 import java.util.List;
 
-public class LayerRandom implements Random {
+public class LayerRandom implements RandomSource {
     private final long baseSeed;
     private long seed;
-    private GaussianGenerator gaussianGenerator;
+    private MarsagliaPolarGaussian gaussianGenerator;
 
     public LayerRandom(long seed) {
         this.baseSeed = seed;
@@ -19,20 +19,20 @@ public class LayerRandom implements Random {
     public void init(long x, long z) {
         this.seed = this.baseSeed;
         for (int i = 0; i < 2; i++) {
-            this.seed = SeedMixer.mixSeed(this.seed, x);
-            this.seed = SeedMixer.mixSeed(this.seed, z);
+            this.seed = LinearCongruentialGenerator.next(this.seed, x);
+            this.seed = LinearCongruentialGenerator.next(this.seed, z);
         }
     }
 
     @Override
-    public Random split() {
+    public RandomSource fork() {
         LayerRandom random = new LayerRandom(0);
         random.seed = this.seed;
         return random;
     }
 
     @Override
-    public RandomSplitter nextSplitter() {
+    public PositionalRandomFactory forkPositional() {
         return null;
     }
 
@@ -44,7 +44,7 @@ public class LayerRandom implements Random {
     @Override
     public int nextInt() {
         int result = (int)(this.seed >> 24);
-        this.seed = SeedMixer.mixSeed(this.seed, this.baseSeed);
+        this.seed = LinearCongruentialGenerator.next(this.seed, this.baseSeed);
         return result;
     }
 
@@ -57,7 +57,7 @@ public class LayerRandom implements Random {
         if (result < 0) {
             result += bound;
         }
-        this.seed = SeedMixer.mixSeed(this.seed, this.baseSeed);
+        this.seed = LinearCongruentialGenerator.next(this.seed, this.baseSeed);
         return result;
     }
 
@@ -84,15 +84,15 @@ public class LayerRandom implements Random {
     @Override
     public double nextGaussian() {
         if (this.gaussianGenerator == null) {
-            this.gaussianGenerator = new GaussianGenerator(this);
+            this.gaussianGenerator = new MarsagliaPolarGaussian(this);
         }
-        return this.gaussianGenerator.next();
+        return this.gaussianGenerator.nextGaussian();
     }
 
     @Override
-    public void skip(int count) {
+    public void consumeCount(int count) {
         for (int i = 0; i < count; i++) {
-            this.seed = SeedMixer.mixSeed(this.seed, this.baseSeed);
+            this.seed = LinearCongruentialGenerator.next(this.seed, this.baseSeed);
         }
     }
 

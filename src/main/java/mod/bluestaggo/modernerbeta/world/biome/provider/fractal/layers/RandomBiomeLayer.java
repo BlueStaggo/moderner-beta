@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 public class RandomBiomeLayer extends Layer {
-    public static final com.mojang.serialization.MapCodec<RandomBiomeLayer> CODEC = VersionCompat.createMaybeMapCodec(
+    public static final com.mojang.serialization./*Map*/Codec<RandomBiomeLayer> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> fillLayerFields(instance)
             .and(ExtendedBiomeId.CODEC.listOf().fieldOf("biomes").forGetter(layer -> layer.biomes))
             .apply(instance, RandomBiomeLayer::new)

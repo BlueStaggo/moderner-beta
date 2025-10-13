@@ -6,7 +6,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.predicates.BiomePredicate;
-import net.minecraft.util.StringIdentifiable;
+import net.minecraft.util.StringRepresentable;
 
 import java.util.List;
 import java.util.Objects;
@@ -16,7 +16,7 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 public class PredicateOverlayLayer extends SingleParentLayer {
-    public static final com.mojang.serialization.MapCodec<PredicateOverlayLayer> CODEC = VersionCompat.createMaybeMapCodec(
+    public static final com.mojang.serialization./*Map*/Codec<PredicateOverlayLayer> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> fillSingleParentLayerFields(instance)
             .and(Target.CODEC.listOf().fieldOf("targets").forGetter(layer -> layer.targets))
             .apply(instance, PredicateOverlayLayer::new)
@@ -81,7 +81,7 @@ public class PredicateOverlayLayer extends SingleParentLayer {
             instance -> instance.group(
                 BiomePredicate.BASE_CODEC.fieldOf("predicate").forGetter(Target::predicate),
                 Codec.STRING.fieldOf("result").forGetter(Target::result),
-                StringIdentifiable.createCodec(Type::values).fieldOf("type").orElse(Type.BIOME).forGetter(Target::type)
+                StringRepresentable.fromEnum(Type::values).fieldOf("type").orElse(Type.BIOME).forGetter(Target::type)
             ).apply(instance, Target::new)
         );
 
@@ -148,7 +148,7 @@ public class PredicateOverlayLayer extends SingleParentLayer {
             };
         }
 
-        public enum Type implements StringIdentifiable {
+        public enum Type implements StringRepresentable {
             LAYER("layer"),
             BIOME("biome");
 
@@ -159,7 +159,7 @@ public class PredicateOverlayLayer extends SingleParentLayer {
             }
 
             @Override
-            public String asString() {
+            public String getSerializedName() {
                 return this.id;
             }
         }

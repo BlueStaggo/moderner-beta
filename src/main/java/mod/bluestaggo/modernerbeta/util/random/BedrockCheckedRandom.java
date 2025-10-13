@@ -2,11 +2,11 @@ package mod.bluestaggo.modernerbeta.util.random;
 
 import com.google.common.annotations.VisibleForTesting;
 import mod.bluestaggo.modernerbeta.util.random.mersenne.MersenneTwister;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.random.CheckedRandom;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.util.math.random.RandomSplitter;
-import net.minecraft.util.thread.LockHelper;
+import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
+import net.minecraft.util.ThreadingDetector;
+import net.minecraft.world.level.levelgen.LegacyRandomSource;
+import net.minecraft.world.level.levelgen.PositionalRandomFactory;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -19,7 +19,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * <p>
  * Partially based on implementation by Earthcomputer, licensed under MIT license.
  */
-public class BedrockCheckedRandom extends CheckedRandom {
+public class BedrockCheckedRandom extends LegacyRandomSource {
     private static final int UPPER_MASK = 0x80000000;
     private static final double TWO_POW_M32 = 1.0 / (1L << 32);
 
@@ -42,12 +42,12 @@ public class BedrockCheckedRandom extends CheckedRandom {
     }
 
     @Override
-    public Random split() {
+    public RandomSource fork() {
         return new BedrockCheckedRandom(this.nextInt());
     }
 
     @Override
-    public RandomSplitter nextSplitter() {
+    public PositionalRandomFactory forkPositional() {
         return new Splitter(this.nextInt());
     }
 
@@ -63,7 +63,7 @@ public class BedrockCheckedRandom extends CheckedRandom {
 
     private void setSeed(int seed) {
         if (!this.seed.compareAndSet(this.seed.get(), seed)) {
-            throw LockHelper.crash("BedrockCheckedRandom", null);
+            throw ThreadingDetector.makeThreadingException("BedrockCheckedRandom", null);
         } else {
             this.haveNextNextGaussian = false;
             this.nextNextGaussian = 0;
@@ -145,7 +145,7 @@ public class BedrockCheckedRandom extends CheckedRandom {
         return Integer.toUnsignedLong(mt.genRandInt32()) * TWO_POW_M32;
     }
 
-    public static class Splitter implements RandomSplitter {
+    public static class Splitter implements PositionalRandomFactory {
         private final int seed;
 
         public Splitter(int seed) {
@@ -153,28 +153,28 @@ public class BedrockCheckedRandom extends CheckedRandom {
         }
 
         @Override
-        public Random split(int x, int y, int z) {
-            long posHash = MathHelper.hashCode(x, y, z);
+        public RandomSource at(int x, int y, int z) {
+            long posHash = Mth.getSeed(x, y, z);
             long seed = posHash ^ this.seed;
             return new BedrockCheckedRandom((int) seed);
         }
 
         @Override
-        public Random split(String seed) {
+        public RandomSource fromHashOf(String seed) {
             int i = seed.hashCode();
             return new BedrockCheckedRandom(i ^ this.seed);
         }
 
         //? if >=1.21 {
         @Override
-        public Random split(long seed) {
+        public RandomSource fromSeed(long seed) {
             return new BedrockCheckedRandom((int) seed);
         }
         //?}
 
         @VisibleForTesting
         @Override
-        public void addDebugInfo(StringBuilder info) {
+        public void parityConfigString(StringBuilder info) {
             info.append("BedrockCheckedRandom.Splitter{").append(this.seed).append("}");
         }
     }

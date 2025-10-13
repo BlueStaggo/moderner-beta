@@ -3,10 +3,10 @@ package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers;
 import com.mojang.serialization.Codec;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.Mth;
 
 public class VoronoiZoomLayer extends FuzzyZoomLayer {
-    public static final com.mojang.serialization.MapCodec<VoronoiZoomLayer> CODEC = VersionCompat.createMaybeMapCodec(
+    public static final com.mojang.serialization./*Map*/Codec<VoronoiZoomLayer> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> fillSingleParentLayerFields(instance)
             .and(Codec.INT.fieldOf("scale").orElse(4).forGetter(layer -> layer.scale))
             .apply(instance, VoronoiZoomLayer::new)
@@ -48,10 +48,10 @@ public class VoronoiZoomLayer extends FuzzyZoomLayer {
         double n11x = (voronoiRandom.nextInt(1024) / 1024.0D - 0.5D) * voronoiFactor + voronoiZoom;
         double n11z = (voronoiRandom.nextInt(1024) / 1024.0D - 0.5D) * voronoiFactor + voronoiZoom;
 
-        double dist00 = MathHelper.square(subX - n00x) + MathHelper.square(subZ - n00z);
-        double dist10 = MathHelper.square(subX - n10x) + MathHelper.square(subZ - n10z);
-        double dist01 = MathHelper.square(subX - n01x) + MathHelper.square(subZ - n01z);
-        double dist11 = MathHelper.square(subX - n11x) + MathHelper.square(subZ - n11z);
+        double dist00 = Mth.square(subX - n00x) + Mth.square(subZ - n00z);
+        double dist10 = Mth.square(subX - n10x) + Mth.square(subZ - n10z);
+        double dist01 = Mth.square(subX - n01x) + Mth.square(subZ - n01z);
+        double dist11 = Mth.square(subX - n11x) + Mth.square(subZ - n11z);
 
         if (dist00 < dist10 && dist00 < dist01 && dist00 < dist11) {
             return this.parentLayer.sample(scaledX, scaledZ);

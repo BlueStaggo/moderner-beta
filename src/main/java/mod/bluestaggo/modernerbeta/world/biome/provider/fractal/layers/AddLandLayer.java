@@ -4,7 +4,7 @@ import com.mojang.serialization.Codec;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomes;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
-import net.minecraft.world.biome.BiomeKeys;
+import net.minecraft.world.level.biome.Biomes;
 
 import java.util.Map;
 import java.util.Set;
@@ -12,7 +12,7 @@ import java.util.Set;
 import static mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId.*;
 
 public class AddLandLayer extends SingleParentLayer {
-    public static final com.mojang.serialization.MapCodec<AddLandLayer> CODEC = VersionCompat.createMaybeMapCodec(
+    public static final com.mojang.serialization./*Map*/Codec<AddLandLayer> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> instance.group(
             Codec.STRING.fieldOf("id").forGetter(layer -> layer.id),
             Codec.LONG.fieldOf("seed").orElse(0L).forGetter(layer -> layer.seed),
@@ -72,7 +72,7 @@ public class AddLandLayer extends SingleParentLayer {
     }
 
     public static AddLandLayer forMajorRelease(String id, long seed, String parent) {
-        return new AddLandLayer(id, seed, parent, false, OCEAN, PLAINS, Map.of(ExtendedBiomeId.of(BiomeKeys.FOREST), ExtendedBiomeId.of(BiomeKeys.FOREST)));
+        return new AddLandLayer(id, seed, parent, false, OCEAN, PLAINS, Map.of(ExtendedBiomeId.of(Biomes.FOREST), ExtendedBiomeId.of(Biomes.FOREST)));
     }
 
     @Override

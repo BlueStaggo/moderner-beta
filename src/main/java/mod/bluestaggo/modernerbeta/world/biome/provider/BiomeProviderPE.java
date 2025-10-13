@@ -18,10 +18,10 @@ import mod.bluestaggo.modernerbeta.util.noise.PerlinOctaveNoise;
 import mod.bluestaggo.modernerbeta.world.biome.provider.climate.ClimateMap;
 import mod.bluestaggo.modernerbeta.world.biome.provider.climate.ClimateMapping;
 import mod.bluestaggo.modernerbeta.world.biome.provider.climate.ClimateType;
-import net.minecraft.registry.RegistryEntryLookup;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderGetter;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.biome.Biome;
 
 import java.util.List;
 import java.util.Map;
@@ -32,7 +32,7 @@ public class BiomeProviderPE extends BiomeProvider implements ClimateSampler, Cl
     private final PEClimateSampler climateSampler;
     private final ClimateDistribution distribution;
 
-    public BiomeProviderPE(ModernBetaSettings settings, RegistryEntryLookup<Biome> biomeRegistry, long seed) {
+    public BiomeProviderPE(ModernBetaSettings settings, HolderGetter<Biome> biomeRegistry, long seed) {
         super(settings, biomeRegistry, seed);
 
         ClimateScale climateScale = this.settings.getOrDefault(SettingsComponentTypes.CLIMATE_SCALE);
@@ -50,7 +50,7 @@ public class BiomeProviderPE extends BiomeProvider implements ClimateSampler, Cl
     }
     
     @Override
-    public RegistryEntry<Biome> getBiome(int biomeX, int biomeY, int biomeZ) {
+    public Holder<Biome> getBiome(int biomeX, int biomeY, int biomeZ) {
         int x = biomeX << 2;
         int z = biomeZ << 2;
         
@@ -62,7 +62,7 @@ public class BiomeProviderPE extends BiomeProvider implements ClimateSampler, Cl
     }
  
     @Override
-    public RegistryEntry<Biome> getOceanBiome(int biomeX, int biomeY, int biomeZ) {
+    public Holder<Biome> getOceanBiome(int biomeX, int biomeY, int biomeZ) {
         int x = biomeX << 2;
         int z = biomeZ << 2;
         
@@ -74,7 +74,7 @@ public class BiomeProviderPE extends BiomeProvider implements ClimateSampler, Cl
     }
     
     @Override
-    public RegistryEntry<Biome> getDeepOceanBiome(int biomeX, int biomeY, int biomeZ) {
+    public Holder<Biome> getDeepOceanBiome(int biomeX, int biomeY, int biomeZ) {
         int x = biomeX << 2;
         int z = biomeZ << 2;
         
@@ -86,7 +86,7 @@ public class BiomeProviderPE extends BiomeProvider implements ClimateSampler, Cl
     }
     
     @Override
-    public RegistryEntry<Biome> getBiomeBlock(int x, int y, int z) {
+    public Holder<Biome> getBiomeBlock(int x, int y, int z) {
         Clime clime = this.climateSampler.sample(x, z);
         double temp = clime.temp();
         double rain = clime.rain();
@@ -95,7 +95,7 @@ public class BiomeProviderPE extends BiomeProvider implements ClimateSampler, Cl
     }
 
     @Override
-    public List<RegistryEntry<Biome>> getBiomes() {
+    public List<Holder<Biome>> getBiomes() {
         return this.climateMap
             .getBiomeKeys()
             .stream()
@@ -190,7 +190,7 @@ public class BiomeProviderPE extends BiomeProvider implements ClimateSampler, Cl
 
             temp = 1.0D - (1.0D - temp) * (1.0D - temp);
             
-            return new Clime(MathHelper.clamp(temp, 0.0, 1.0), MathHelper.clamp(rain, 0.0, 1.0));
+            return new Clime(Mth.clamp(temp, 0.0, 1.0), Mth.clamp(rain, 0.0, 1.0));
         }
 
         private String getDebugText(int x, int z) {

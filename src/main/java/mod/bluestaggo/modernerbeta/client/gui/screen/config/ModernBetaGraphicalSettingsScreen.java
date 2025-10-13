@@ -4,52 +4,52 @@ import mod.bluestaggo.modernerbeta.client.gui.optioncallbacks.*;
 import mod.bluestaggo.modernerbeta.imixin.ModernBetaClearableWidget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.OptionInstance;
 //? if <1.21
-/*import net.minecraft.client.gui.DrawContext;*/
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.option.GameOptionsScreen;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.GridWidget;
-import net.minecraft.client.gui.widget.OptionListWidget;
+/*import net.minecraft.client.gui.GuiGraphics;*/
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.OptionsList;
+import net.minecraft.client.gui.layouts.GridLayout;
 //? if <1.20.5
-/*import net.minecraft.client.gui.widget.ThreePartsLayoutWidget;*/
-import net.minecraft.client.option.SimpleOption;
-import net.minecraft.client.world.GeneratorOptionsHolder;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.screen.ScreenTexts;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.Language;
+/*import net.minecraft.client.gui.layouts.HeaderAndFooterLayout;*/
+import net.minecraft.client.gui.screens.options.OptionsSubScreen;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.worldselection.WorldCreationContext;
+import net.minecraft.locale.Language;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.function.Consumer;
 
 @Environment(EnvType.CLIENT)
-public abstract class ModernBetaGraphicalSettingsScreen<T extends NbtElement> extends GameOptionsScreen {
+public abstract class ModernBetaGraphicalSettingsScreen<T extends Tag> extends OptionsSubScreen {
     protected static final String STRING_PREFIX = "createWorld.customize.modern_beta.settings.";
 
     protected final T settings;
-    protected final GeneratorOptionsHolder generatorOptionsHolder;
+    protected final WorldCreationContext generatorOptionsHolder;
     protected final Consumer<T> onDone;
     protected final String type;
 
     private double prevScroll = -1.0D;
 
     //? if <1.21
-    /*protected OptionListWidget body;*/
+    /*protected OptionsList body;*/
     //? if <1.20.5
-    /*public final ThreePartsLayoutWidget layout = new ThreePartsLayoutWidget(this);*/
+    /*public final HeaderAndFooterLayout layout = new HeaderAndFooterLayout(this);*/
 
     public ModernBetaGraphicalSettingsScreen(
         String title,
         Screen parent,
-        GeneratorOptionsHolder generatorOptionsHolder,
+        WorldCreationContext generatorOptionsHolder,
         String type,
         T settings,
         Consumer<T> onDone
     ) {
-        super(parent, null, Text.translatable(title));
+        super(parent, null, Component.translatable(title));
 
         this.onDone = onDone;
         this.type = type;
@@ -63,11 +63,11 @@ public abstract class ModernBetaGraphicalSettingsScreen<T extends NbtElement> ex
         this.initHeader();
         this.initBody();
         this.initFooter();
-        this.layout.forEachChild(this::addDrawableChild);
+        this.layout.visitWidgets(this::addRenderableWidget);
     }
     *///?}
 
-    protected abstract void addOptions(OptionListWidget list);
+    protected abstract void addOptions(OptionsList list);
 
     protected void addOptions() {
     }
@@ -77,22 +77,22 @@ public abstract class ModernBetaGraphicalSettingsScreen<T extends NbtElement> ex
     }
 
     @Override
-    public void close() {
-        this.client.setScreen(null);
+    public void onClose() {
+        this.minecraft.setScreen(null);
     }
 
     @Override
-    protected void clearChildren() {
+    protected void clearWidgets() {
         if (this.body != null) {
             this.prevScroll =
                 //? if >=1.21.4 {
-                this.body.getScrollY();
+                this.body.scrollAmount();
                 //?} else {
                 /*this.body.getScrollAmount();
                 *///?}
         }
 
-        super.clearChildren();
+        super.clearWidgets();
 
         ((ModernBetaClearableWidget)this.layout).modernBeta$clear();
     }
@@ -107,23 +107,23 @@ public abstract class ModernBetaGraphicalSettingsScreen<T extends NbtElement> ex
     protected void initBody() {
         this.body =
             //? if >=1.20.5 {
-            this.layout.addBody(
+            this.layout.addToContents(
                 //? if >=1.21 {
-                new OptionListWidget(this.client, this.width, this)
-                //?} else {
-                /*new OptionListWidget(this.client, this.width, 0, this)
-                *///?}
+                /*w OptionsList(this.minecraft, this.width, this)
+             *///?} else {
+                new OptionsList(this.minecraft, this.width, 0, this)
+                //?}
             );
             //?} else {
-            /*new OptionListWidget(this.client, this.width, this.height, 32, this.height - 32, 25);
+            /*new OptionsList(this.minecraft, this.width, this.height, 32, this.height - 32, 25);
             *///?}
         this.addOptions(this.body);
         //? if <1.21
-        /*this.addSelectableChild(this.body);*/
+        /*this.addWidget(this.body);*/
 
         if (this.prevScroll >= 0.0D && this.body != null) {
             //? if >=1.21.4 {
-            this.body.setScrollY
+            this.body.setScrollAmount
             //?} else {
             /*this.body.setScrollAmount
             *///?}
@@ -131,47 +131,47 @@ public abstract class ModernBetaGraphicalSettingsScreen<T extends NbtElement> ex
         }
 
         //? if <1.21 {
-        /*this.addDrawableChild(ButtonWidget.builder(
-            Text.translatable("createWorld.customize.modern_beta.settings.save"),
+        /*this.addRenderableWidget(Button.builder(
+            Component.translatable("createWorld.customize.modern_beta.settings.save"),
             onPress -> {
                 this.onDone.accept(this.getResult());
-                this.client.setScreen(this.parent);
+                this.minecraft.setScreen(this.lastScreen);
             }
-        ).dimensions(this.width / 2 - 155, this.height - 28, 150, 20).build());
+        ).bounds(this.width / 2 - 155, this.height - 28, 150, 20).build());
 
-        this.addDrawableChild(ButtonWidget.builder(
-            ScreenTexts.CANCEL,
-            onPress -> this.client.setScreen(this.parent)
-        ).dimensions(this.width / 2 + 5, this.height - 28, 150, 20).build());
+        this.addRenderableWidget(Button.builder(
+            CommonComponents.GUI_CANCEL,
+            onPress -> this.minecraft.setScreen(this.lastScreen)
+        ).bounds(this.width / 2 + 5, this.height - 28, 150, 20).build());
         *///?}
     }
 
     //? if >=1.20.5
     @Override
     protected void initFooter() {
-        GridWidget gridWidget = new GridWidget().setColumnSpacing(8);
-        GridWidget.Adder gridWidgetAdder = gridWidget.createAdder(2);
+        GridLayout gridWidget = new GridLayout().columnSpacing(8);
+        GridLayout.RowHelper gridWidgetAdder = gridWidget.createRowHelper(2);
 
-        gridWidgetAdder.add(ButtonWidget.builder(
-            Text.translatable("createWorld.customize.modern_beta.settings.save"),
+        gridWidgetAdder.addChild(Button.builder(
+            Component.translatable("createWorld.customize.modern_beta.settings.save"),
             onPress -> {
                 this.onDone.accept(this.getResult());
-                this.client.setScreen(this.parent);
+                this.minecraft.setScreen(this.lastScreen);
             }
-        ).dimensions(this.width / 2 - 155, this.height - 28, 150, 20).build());
+        ).bounds(this.width / 2 - 155, this.height - 28, 150, 20).build());
 
-        gridWidgetAdder.add(ButtonWidget.builder(
-            ScreenTexts.CANCEL,
-            onPress -> this.client.setScreen(this.parent)
-        ).dimensions(this.width / 2 + 5, this.height - 28, 150, 20).build());
+        gridWidgetAdder.addChild(Button.builder(
+            CommonComponents.GUI_CANCEL,
+            onPress -> this.minecraft.setScreen(this.lastScreen)
+        ).bounds(this.width / 2 + 5, this.height - 28, 150, 20).build());
 
-        this.layout.addFooter(gridWidget);
+        this.layout.addToFooter(gridWidget);
     }
 
     //? if <1.21 {
     /*@Override
-    public void render(DrawContext context, int mouseX, int mouseY, float tickDelta) {
-        this.render(context, this.body, mouseX, mouseY, tickDelta);
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float tickDelta) {
+        this.basicListRender(graphics, this.body, mouseX, mouseY, tickDelta);
     }
     *///?}
 
@@ -195,38 +195,38 @@ public abstract class ModernBetaGraphicalSettingsScreen<T extends NbtElement> ex
         return text;
     }
 
-    protected String getTextKey(String key, Identifier subKey) {
+    protected String getTextKey(String key, ResourceLocation subKey) {
         return getTextKey(key, subKey != null ? subKey.getPath() : null);
     }
 
-    protected static <T> SimpleOption.TooltipFactory<T> getTooltip(String key) {
+    protected static <T> OptionInstance.TooltipSupplier<T> getTooltip(String key) {
         key += ".desc";
-        if (!Language.getInstance().hasTranslation(key)) {
-            return SimpleOption.emptyTooltip();
+        if (!Language.getInstance().has(key)) {
+            return OptionInstance.noTooltip();
         }
-        return SimpleOption.constantTooltip(Text.translatable(key));
+        return OptionInstance.cachedConstantTooltip(Component.translatable(key));
     }
 
-    public MutableText getText(String key) {
+    public MutableComponent getText(String key) {
         return this.getText(key, (String) null);
     }
 
-    public MutableText getText(String key, String subKey) {
-        return Text.translatable(getTextKey(key, subKey));
+    public MutableComponent getText(String key, String subKey) {
+        return Component.translatable(getTextKey(key, subKey));
     }
 
-    public MutableText getText(String key, Identifier subKey) {
-        return Text.translatable(getTextKey(key, subKey));
+    public MutableComponent getText(String key, ResourceLocation subKey) {
+        return Component.translatable(getTextKey(key, subKey));
     }
 
-    public SimpleOption<Void> headerOption(Text text) {
+    public OptionInstance<Void> headerOption(Component text) {
         return this.headerOption(text, 0.5F);
     }
 
-    public SimpleOption<Void> headerOption(Text text, float alignment) {
-        return new SimpleOption<>(
+    public OptionInstance<Void> headerOption(Component text, float alignment) {
+        return new OptionInstance<>(
             "",
-            SimpleOption.emptyTooltip(),
+            OptionInstance.noTooltip(),
             (optionText, value) -> text,
             new TextLabelCallbacks(text, alignment),
             null,
@@ -234,15 +234,15 @@ public abstract class ModernBetaGraphicalSettingsScreen<T extends NbtElement> ex
         );
     }
 
-    public SimpleOption<Void> placeholderOption(String key) {
-        return this.headerOption(this.getText(key).formatted(Formatting.RED, Formatting.ITALIC));
+    public OptionInstance<Void> placeholderOption(String key) {
+        return this.headerOption(this.getText(key).withStyle(ChatFormatting.RED, ChatFormatting.ITALIC));
     }
 
-    public SimpleOption<Void> customButton(Text text, Runnable onPress) {
-        return new SimpleOption<>(
+    public OptionInstance<Void> customButton(Component text, Runnable onPress) {
+        return new OptionInstance<>(
             "",
-            SimpleOption.emptyTooltip(),
-            (optionText, value) -> Text.empty(),
+            OptionInstance.noTooltip(),
+            (optionText, value) -> Component.empty(),
             new CustomButtonCallbacks(text, onPress),
             null,
             value -> {}

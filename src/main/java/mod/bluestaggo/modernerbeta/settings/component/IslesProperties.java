@@ -4,7 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.util.CodecUtil;
 import mod.bluestaggo.modernerbeta.world.chunk.provider.island.IslandShape;
-import net.minecraft.util.StringIdentifiable;
+import net.minecraft.util.StringRepresentable;
 
 public record IslesProperties(
     boolean useIslands,
@@ -23,7 +23,7 @@ public record IslesProperties(
             Codec.BOOL.fieldOf("useIslands").orElse(false).forGetter(IslesProperties::useIslands),
             Codec.BOOL.fieldOf("useOuterIslands").orElse(true).forGetter(IslesProperties::useOuterIslands),
             Codec.FLOAT.fieldOf("oceanSlideTarget").orElse(-200.0f).forGetter(IslesProperties::oceanSlideTarget),
-            StringIdentifiable.createCodec(IslandShape::values).fieldOf("centerIslandShape").orElse(IslandShape.CIRCLE).forGetter(IslesProperties::centerIslandShape),
+            StringRepresentable.fromEnum(IslandShape::values).fieldOf("centerIslandShape").orElse(IslandShape.CIRCLE).forGetter(IslesProperties::centerIslandShape),
             Codec.INT.fieldOf("centerIslandRadius").orElse(16).forGetter(IslesProperties::centerIslandRadius),
             Codec.INT.fieldOf("centerIslandFalloffDistance").orElse(8).forGetter(IslesProperties::centerIslandFalloffDistance),
             Codec.INT.fieldOf("centerOceanRadius").orElse(64).forGetter(IslesProperties::centerOceanRadius),

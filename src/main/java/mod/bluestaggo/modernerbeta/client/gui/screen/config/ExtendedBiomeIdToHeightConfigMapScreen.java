@@ -3,15 +3,15 @@ package mod.bluestaggo.modernerbeta.client.gui.screen.config;
 import mod.bluestaggo.modernerbeta.world.biome.HeightConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.option.SimpleOption;
-import net.minecraft.client.world.GeneratorOptionsHolder;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtString;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.world.biome.BiomeKeys;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.OptionInstance;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.worldselection.WorldCreationContext;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.StringTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.biome.Biomes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,14 +19,14 @@ import java.util.function.Consumer;
 
 @Environment(EnvType.CLIENT)
 public class ExtendedBiomeIdToHeightConfigMapScreen extends ModernBetaGraphicalMapSettingsScreen {
-    public ExtendedBiomeIdToHeightConfigMapScreen(String title, Screen parent, GeneratorOptionsHolder generatorOptionsHolder, NbtCompound settings, Consumer<NbtCompound> onDone) {
+    public ExtendedBiomeIdToHeightConfigMapScreen(String title, Screen parent, WorldCreationContext generatorOptionsHolder, CompoundTag settings, Consumer<CompoundTag> onDone) {
         super(title, parent, generatorOptionsHolder, settings, onDone);
     }
 
     @Override
-    protected List<SimpleOption<?>> getOptions(int i) {
-        ArrayList<SimpleOption<?>> options = new ArrayList<>();
-        options.add(this.headerOption(Text.translatable(this.getTextKey("item"), i).formatted(Formatting.BOLD)));
+    protected List<OptionInstance<?>> getOptions(int i) {
+        ArrayList<OptionInstance<?>> options = new ArrayList<>();
+        options.add(this.headerOption(Component.translatable(this.getTextKey("item"), i).withStyle(ChatFormatting.BOLD)));
         options.add(null);
         options.add(this.extendedBiomeIdOption(KEY + i));
         options.addAll(this.heightConfigOption(VALUE + i));
@@ -35,11 +35,11 @@ public class ExtendedBiomeIdToHeightConfigMapScreen extends ModernBetaGraphicalM
 
     @Override
     protected String getDefaultKey() {
-        return BiomeKeys.PLAINS.getValue().toString();
+        return Biomes.PLAINS.location().toString();
     }
 
     @Override
-    protected NbtElement getDefaultValue() {
-        return NbtString.of(HeightConfig.DEFAULT.makeString());
+    protected Tag getDefaultValue() {
+        return StringTag.valueOf(HeightConfig.DEFAULT.makeString());
     }
 }

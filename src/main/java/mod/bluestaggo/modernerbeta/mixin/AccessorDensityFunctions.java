@@ -1,44 +1,44 @@
 package mod.bluestaggo.modernerbeta.mixin;
 
-import net.minecraft.registry.RegistryEntryLookup;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.util.math.noise.DoublePerlinNoiseSampler;
-import net.minecraft.world.gen.densityfunction.DensityFunction;
-import net.minecraft.world.gen.densityfunction.DensityFunctions;
+import net.minecraft.core.HolderGetter;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.levelgen.DensityFunction;
+import net.minecraft.world.level.levelgen.NoiseRouterData;
+import net.minecraft.world.level.levelgen.synth.NormalNoise;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
-@Mixin(DensityFunctions.class)
+@Mixin(NoiseRouterData.class)
 public interface AccessorDensityFunctions {
-    @Accessor("CAVES_ENTRANCES_OVERWORLD")
-    static RegistryKey<DensityFunction> getCavesEntrancesOverworldKey() {
+    @Accessor("ENTRANCES")
+    static ResourceKey<DensityFunction> getEntrancesKey() {
         throw new AssertionError();
     }
 
-    @Accessor("CAVES_NOODLE_OVERWORLD")
-    static RegistryKey<DensityFunction> getCavesNoodleOverworldKey() {
+    @Accessor("NOODLE")
+    static ResourceKey<DensityFunction> getNoodleKey() {
         throw new AssertionError();
     }
 
     @Invoker
-    static DensityFunction invokeCreateCavesFunction(
-        RegistryEntryLookup<DensityFunction> densityFunctionLookup,
-        RegistryEntryLookup<DoublePerlinNoiseSampler.NoiseParameters> noiseParametersLookup,
+    static DensityFunction invokeUnderground(
+        HolderGetter<DensityFunction> densityFunctionLookup,
+        HolderGetter<NormalNoise.NoiseParameters> noiseParametersLookup,
         DensityFunction slopedCheese
     ) {
         throw new AssertionError();
     }
 
     @Invoker
-    static DensityFunction invokeApplyBlendDensity(
+    static DensityFunction invokePostProcess(
         DensityFunction density
     ) {
         throw new AssertionError();
     }
 
     @Invoker
-    static DensityFunction invokeApplySurfaceSlides(
+    static DensityFunction invokeSlideOverworld(
         boolean amplified,
         DensityFunction density
     ) {

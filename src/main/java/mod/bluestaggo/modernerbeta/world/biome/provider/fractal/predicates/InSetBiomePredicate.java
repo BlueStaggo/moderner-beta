@@ -10,7 +10,7 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 public record InSetBiomePredicate(Set<ExtendedBiomeId> biomes) implements BiomePredicate {
-    public static final com.mojang.serialization.MapCodec<InSetBiomePredicate> CODEC = VersionCompat.createMaybeMapCodec(
+    public static final com.mojang.serialization./*Map*/Codec<InSetBiomePredicate> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> instance.group(
             CodecUtil.set(ExtendedBiomeId.CODEC).fieldOf("biomes").forGetter(predicate -> predicate.biomes)
         ).apply(instance, InSetBiomePredicate::new)

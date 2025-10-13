@@ -1,7 +1,7 @@
 package mod.bluestaggo.modernerbeta;
 
 import mod.bluestaggo.modernerbeta.tags.ModernBetaBiomeTags;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 public final class ModernBetaBuiltInTypes {
     public enum SettingsComponentType {
@@ -39,7 +39,7 @@ public final class ModernBetaBuiltInTypes {
         CONFIG_MISCELLANEOUS("config/miscellaneous"),
         ;
 
-        public final Identifier id;
+        public final ResourceLocation id;
 
         SettingsComponentType(String id) {
             this.id = ModernerBeta.createId(id);
@@ -62,7 +62,7 @@ public final class ModernBetaBuiltInTypes {
         EARLY_BEDROCK("early_bedrock")
         ;
 
-        public final Identifier id;
+        public final ResourceLocation id;
         
         Chunk(String id) {
             this.id = ModernerBeta.createId(id);
@@ -78,7 +78,7 @@ public final class ModernBetaBuiltInTypes {
         BETA_FRACTAL("beta_fractal"),
         ;
 
-        public final Identifier id;
+        public final ResourceLocation id;
         
         Biome(String id) { this.id = ModernerBeta.createId(id); }
     }
@@ -89,7 +89,7 @@ public final class ModernBetaBuiltInTypes {
         VORONOI("voronoi"),
         ;
 
-        public final Identifier id;
+        public final ResourceLocation id;
         
         CaveBiome(String id) {
             this.id = ModernerBeta.createId(id);
@@ -97,27 +97,27 @@ public final class ModernBetaBuiltInTypes {
     }
     
     public enum SurfaceConfig {
-        SAND(ModernBetaBiomeTags.SURFACE_CONFIG_SAND.id().getPath()),
-        RED_SAND(ModernBetaBiomeTags.SURFACE_CONFIG_RED_SAND.id().getPath()),
-        BADLANDS(ModernBetaBiomeTags.SURFACE_CONFIG_BADLANDS.id().getPath()),
-        NETHER(ModernBetaBiomeTags.SURFACE_CONFIG_NETHER.id().getPath()),
-        WARPED_NYLIUM(ModernBetaBiomeTags.SURFACE_CONFIG_WARPED_NYLIUM.id().getPath()),
-        CRIMSON_NYLIUM(ModernBetaBiomeTags.SURFACE_CONFIG_CRIMSON_NYLIUM.id().getPath()),
-        BASALT(ModernBetaBiomeTags.SURFACE_CONFIG_BASALT.id().getPath()),
-        SOUL_SOIL(ModernBetaBiomeTags.SURFACE_CONFIG_SOUL_SOIL.id().getPath()),
-        THEEND(ModernBetaBiomeTags.SURFACE_CONFIG_END.id().getPath()),
-        GRASS(ModernBetaBiomeTags.SURFACE_CONFIG_GRASS.id().getPath()),
-        MUD(ModernBetaBiomeTags.SURFACE_CONFIG_MUD.id().getPath()),
-        MYCELIUM(ModernBetaBiomeTags.SURFACE_CONFIG_MYCELIUM.id().getPath()),
-        PODZOL(ModernBetaBiomeTags.SURFACE_CONFIG_PODZOL.id().getPath()),
-        STONE(ModernBetaBiomeTags.SURFACE_CONFIG_STONE.id().getPath()),
-        SNOW(ModernBetaBiomeTags.SURFACE_CONFIG_SNOW.id().getPath()),
-        SNOW_DIRT(ModernBetaBiomeTags.SURFACE_CONFIG_SNOW_DIRT.id().getPath()),
-        SNOW_PACKED_ICE(ModernBetaBiomeTags.SURFACE_CONFIG_SNOW_PACKED_ICE.id().getPath()),
-        SNOW_STONE(ModernBetaBiomeTags.SURFACE_CONFIG_SNOW_STONE.id().getPath()),
+        SAND(ModernBetaBiomeTags.SURFACE_CONFIG_SAND.location().getPath()),
+        RED_SAND(ModernBetaBiomeTags.SURFACE_CONFIG_RED_SAND.location().getPath()),
+        BADLANDS(ModernBetaBiomeTags.SURFACE_CONFIG_BADLANDS.location().getPath()),
+        NETHER(ModernBetaBiomeTags.SURFACE_CONFIG_NETHER.location().getPath()),
+        WARPED_NYLIUM(ModernBetaBiomeTags.SURFACE_CONFIG_WARPED_NYLIUM.location().getPath()),
+        CRIMSON_NYLIUM(ModernBetaBiomeTags.SURFACE_CONFIG_CRIMSON_NYLIUM.location().getPath()),
+        BASALT(ModernBetaBiomeTags.SURFACE_CONFIG_BASALT.location().getPath()),
+        SOUL_SOIL(ModernBetaBiomeTags.SURFACE_CONFIG_SOUL_SOIL.location().getPath()),
+        THEEND(ModernBetaBiomeTags.SURFACE_CONFIG_END.location().getPath()),
+        GRASS(ModernBetaBiomeTags.SURFACE_CONFIG_GRASS.location().getPath()),
+        MUD(ModernBetaBiomeTags.SURFACE_CONFIG_MUD.location().getPath()),
+        MYCELIUM(ModernBetaBiomeTags.SURFACE_CONFIG_MYCELIUM.location().getPath()),
+        PODZOL(ModernBetaBiomeTags.SURFACE_CONFIG_PODZOL.location().getPath()),
+        STONE(ModernBetaBiomeTags.SURFACE_CONFIG_STONE.location().getPath()),
+        SNOW(ModernBetaBiomeTags.SURFACE_CONFIG_SNOW.location().getPath()),
+        SNOW_DIRT(ModernBetaBiomeTags.SURFACE_CONFIG_SNOW_DIRT.location().getPath()),
+        SNOW_PACKED_ICE(ModernBetaBiomeTags.SURFACE_CONFIG_SNOW_PACKED_ICE.location().getPath()),
+        SNOW_STONE(ModernBetaBiomeTags.SURFACE_CONFIG_SNOW_STONE.location().getPath()),
         ;
         
-        public final Identifier id;
+        public final ResourceLocation id;
         
         SurfaceConfig(String id) {
             this.id = ModernerBeta.createId(id);
@@ -125,30 +125,30 @@ public final class ModernBetaBuiltInTypes {
     }
 
     public enum HeightConfig {
-        HEIGHT_CONFIG_DEFAULT(ModernBetaBiomeTags.HEIGHT_CONFIG_DEFAULT.id().getPath()),
-        HEIGHT_CONFIG_OCEAN(ModernBetaBiomeTags.HEIGHT_CONFIG_OCEAN.id().getPath()),
-        HEIGHT_CONFIG_DESERT(ModernBetaBiomeTags.HEIGHT_CONFIG_DESERT.id().getPath()),
-        HEIGHT_CONFIG_EXTREME_HILLS(ModernBetaBiomeTags.HEIGHT_CONFIG_EXTREME_HILLS.id().getPath()),
-        HEIGHT_CONFIG_BETA_HILLS(ModernBetaBiomeTags.HEIGHT_CONFIG_BETA_HILLS.id().getPath()),
-        HEIGHT_CONFIG_TAIGA(ModernBetaBiomeTags.HEIGHT_CONFIG_TAIGA.id().getPath()),
-        HEIGHT_CONFIG_SWAMPLAND(ModernBetaBiomeTags.HEIGHT_CONFIG_SWAMPLAND.id().getPath()),
-        HEIGHT_CONFIG_RIVER(ModernBetaBiomeTags.HEIGHT_CONFIG_RIVER.id().getPath()),
-        HEIGHT_CONFIG_MOUNTAINS(ModernBetaBiomeTags.HEIGHT_CONFIG_MOUNTAINS.id().getPath()),
-        HEIGHT_CONFIG_MUSHROOM_ISLAND(ModernBetaBiomeTags.HEIGHT_CONFIG_MUSHROOM_ISLAND.id().getPath()),
-        HEIGHT_CONFIG_MUSHROOM_ISLAND_SHORE(ModernBetaBiomeTags.HEIGHT_CONFIG_MUSHROOM_ISLAND_SHORE.id().getPath()),
-        HEIGHT_CONFIG_BEACH(ModernBetaBiomeTags.HEIGHT_CONFIG_BEACH.id().getPath()),
-        HEIGHT_CONFIG_HILLS(ModernBetaBiomeTags.HEIGHT_CONFIG_HILLS.id().getPath()),
-        HEIGHT_CONFIG_SHORT_HILLS(ModernBetaBiomeTags.HEIGHT_CONFIG_SHORT_HILLS.id().getPath()),
-        HEIGHT_CONFIG_EXTREME_HILLS_EDGE(ModernBetaBiomeTags.HEIGHT_CONFIG_EXTREME_HILLS_EDGE.id().getPath()),
-        HEIGHT_CONFIG_JUNGLE(ModernBetaBiomeTags.HEIGHT_CONFIG_JUNGLE.id().getPath()),
-        HEIGHT_CONFIG_JUNGLE_HILLS(ModernBetaBiomeTags.HEIGHT_CONFIG_JUNGLE_HILLS.id().getPath()),
-        HEIGHT_CONFIG_PLATEAU(ModernBetaBiomeTags.HEIGHT_CONFIG_PLATEAU.id().getPath()),
-        HEIGHT_CONFIG_SWAMPLAND_HILLS(ModernBetaBiomeTags.HEIGHT_CONFIG_SWAMPLAND_HILLS.id().getPath()),
-        HEIGHT_CONFIG_PLATEAU_HILL(ModernBetaBiomeTags.HEIGHT_CONFIG_PLATEAU_HILL.id().getPath()),
-        HEIGHT_CONFIG_DEEP_OCEAN(ModernBetaBiomeTags.HEIGHT_CONFIG_DEEP_OCEAN.id().getPath()),
+        HEIGHT_CONFIG_DEFAULT(ModernBetaBiomeTags.HEIGHT_CONFIG_DEFAULT.location().getPath()),
+        HEIGHT_CONFIG_OCEAN(ModernBetaBiomeTags.HEIGHT_CONFIG_OCEAN.location().getPath()),
+        HEIGHT_CONFIG_DESERT(ModernBetaBiomeTags.HEIGHT_CONFIG_DESERT.location().getPath()),
+        HEIGHT_CONFIG_EXTREME_HILLS(ModernBetaBiomeTags.HEIGHT_CONFIG_EXTREME_HILLS.location().getPath()),
+        HEIGHT_CONFIG_BETA_HILLS(ModernBetaBiomeTags.HEIGHT_CONFIG_BETA_HILLS.location().getPath()),
+        HEIGHT_CONFIG_TAIGA(ModernBetaBiomeTags.HEIGHT_CONFIG_TAIGA.location().getPath()),
+        HEIGHT_CONFIG_SWAMPLAND(ModernBetaBiomeTags.HEIGHT_CONFIG_SWAMPLAND.location().getPath()),
+        HEIGHT_CONFIG_RIVER(ModernBetaBiomeTags.HEIGHT_CONFIG_RIVER.location().getPath()),
+        HEIGHT_CONFIG_MOUNTAINS(ModernBetaBiomeTags.HEIGHT_CONFIG_MOUNTAINS.location().getPath()),
+        HEIGHT_CONFIG_MUSHROOM_ISLAND(ModernBetaBiomeTags.HEIGHT_CONFIG_MUSHROOM_ISLAND.location().getPath()),
+        HEIGHT_CONFIG_MUSHROOM_ISLAND_SHORE(ModernBetaBiomeTags.HEIGHT_CONFIG_MUSHROOM_ISLAND_SHORE.location().getPath()),
+        HEIGHT_CONFIG_BEACH(ModernBetaBiomeTags.HEIGHT_CONFIG_BEACH.location().getPath()),
+        HEIGHT_CONFIG_HILLS(ModernBetaBiomeTags.HEIGHT_CONFIG_HILLS.location().getPath()),
+        HEIGHT_CONFIG_SHORT_HILLS(ModernBetaBiomeTags.HEIGHT_CONFIG_SHORT_HILLS.location().getPath()),
+        HEIGHT_CONFIG_EXTREME_HILLS_EDGE(ModernBetaBiomeTags.HEIGHT_CONFIG_EXTREME_HILLS_EDGE.location().getPath()),
+        HEIGHT_CONFIG_JUNGLE(ModernBetaBiomeTags.HEIGHT_CONFIG_JUNGLE.location().getPath()),
+        HEIGHT_CONFIG_JUNGLE_HILLS(ModernBetaBiomeTags.HEIGHT_CONFIG_JUNGLE_HILLS.location().getPath()),
+        HEIGHT_CONFIG_PLATEAU(ModernBetaBiomeTags.HEIGHT_CONFIG_PLATEAU.location().getPath()),
+        HEIGHT_CONFIG_SWAMPLAND_HILLS(ModernBetaBiomeTags.HEIGHT_CONFIG_SWAMPLAND_HILLS.location().getPath()),
+        HEIGHT_CONFIG_PLATEAU_HILL(ModernBetaBiomeTags.HEIGHT_CONFIG_PLATEAU_HILL.location().getPath()),
+        HEIGHT_CONFIG_DEEP_OCEAN(ModernBetaBiomeTags.HEIGHT_CONFIG_DEEP_OCEAN.location().getPath()),
         ;
 
-        public final Identifier id;
+        public final ResourceLocation id;
 
         HeightConfig(String id) {
             this.id = ModernerBeta.createId(id);
@@ -159,7 +159,7 @@ public final class ModernBetaBuiltInTypes {
         DEEPSLATE("deepslate"),
         ;
         
-        public final Identifier id;
+        public final ResourceLocation id;
         
         BlockSource(String id) {
             this.id = ModernerBeta.createId(id);
@@ -240,7 +240,7 @@ public final class ModernBetaBuiltInTypes {
         SNOW_AINT_SNOWIER_AMPLIFIED("snow_aint_snowier_amplified"),
         ;
         
-        public final Identifier id;
+        public final ResourceLocation id;
         
         Preset(String id) {
             this.id = ModernerBeta.createId(id);
@@ -251,7 +251,7 @@ public final class ModernBetaBuiltInTypes {
         BIOME("biome"),
         ;
 
-        public final Identifier id;
+        public final ResourceLocation id;
 
         LayerOutput(String id) {
             this.id = ModernerBeta.createId(id);

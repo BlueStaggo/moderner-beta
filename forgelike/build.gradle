@@ -21,8 +21,8 @@ project.ext["loom.platform"] = loader
 
 apply plugin: "dev.architectury.loom"
 
-stonecutter.const("forge", !neoforge)
-stonecutter.const("neoforge", neoforge)
+stonecutter.constants.put("forge", !neoforge)
+stonecutter.constants.put("neoforge", neoforge)
 
 version = "${rootProject.mod_version}+$mc"
 base {
@@ -94,13 +94,9 @@ repositories {
 
 dependencies {
     minecraft "net.minecraft:minecraft:$mc"
-    if (neoforge && property("yarn_mappings_neoforge_patch") != "N/A") {
-        mappings loom.layered() {
-            mappings "net.fabricmc:yarn:${commonPr.yarn_mappings}:v2"
-            mappings "dev.architectury:yarn-mappings-patch-neoforge:${commonPr.yarn_mappings_neoforge_patch}"
-        }
-    } else {
-        mappings "net.fabricmc:yarn:${commonPr.yarn_mappings}:v2"
+    mappings loom.layered() {
+        officialMojangMappings()
+        parchment("org.parchmentmc.data:parchment-$commonPr.parchment_mappings@zip")
     }
 
     if (neoforge) {
@@ -119,6 +115,7 @@ dependencies {
 repositories {
     mavenCentral()
     maven { url "https://maven.shedaniel.me/" }
+    maven { url "https://maven.parchmentmc.org" }
 }
 
 processResources {

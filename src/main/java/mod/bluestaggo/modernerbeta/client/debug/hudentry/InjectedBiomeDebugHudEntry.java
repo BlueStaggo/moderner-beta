@@ -3,31 +3,31 @@ package mod.bluestaggo.modernerbeta.client.debug.hudentry;
 import mod.bluestaggo.modernerbeta.world.biome.injector.BiomeInjector;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
 //? if >=1.21.9 {
-/*import net.minecraft.client.gui.hud.debug.DebugHudEntry;
-import net.minecraft.client.gui.hud.debug.DebugHudLines;
-import net.minecraft.world.chunk.WorldChunk;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.math.BlockPos;
+/*import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.debug.DebugScreenDisplayer;
+import net.minecraft.client.gui.components.debug.DebugScreenEntry;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.chunk.LevelChunk;
 import org.jetbrains.annotations.Nullable;
 *///?}
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.world.World;
-import net.minecraft.world.gen.chunk.ChunkGenerator;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.chunk.ChunkGenerator;
 
 @Environment(EnvType.CLIENT)
-public class InjectedBiomeDebugHudEntry /*? >=1.21.9 {*/ /*implements DebugHudEntry *//*?}*/ {
+public class InjectedBiomeDebugHudEntry /*? >=1.21.9 {*/ /*implements DebugScreenEntry *//*?}*/ {
     //? if >=1.21.9 {
     /*@Override
-    public void render(DebugHudLines lines, @Nullable World world, @Nullable WorldChunk clientChunk, @Nullable WorldChunk chunk) {
-        MinecraftClient client = MinecraftClient.getInstance();
+    public void display(DebugScreenDisplayer lines, @Nullable Level world, @Nullable LevelChunk clientChunk, @Nullable LevelChunk chunk) {
+        Minecraft client = Minecraft.getInstance();
         Entity entity = client.getCameraEntity();
         if (entity == null)
             return;
 
-        BlockPos pos = entity.getBlockPos();
+        BlockPos pos = entity.blockPosition();
 
         int x = pos.getX();
         int y = pos.getY();
@@ -39,11 +39,11 @@ public class InjectedBiomeDebugHudEntry /*? >=1.21.9 {*/ /*implements DebugHudEn
     }
     *///?}
 
-    public static String getLine(World world, int x, int y, int z) {
-        if (!(world instanceof ServerWorld serverWorld))
+    public static String getLine(Level world, int x, int y, int z) {
+        if (!(world instanceof ServerLevel serverWorld))
             return "";
 
-        ChunkGenerator chunkGenerator = serverWorld.getChunkManager().getChunkGenerator();
+        ChunkGenerator chunkGenerator = serverWorld.getChunkSource().getGenerator();
 
         if (chunkGenerator instanceof ModernBetaChunkGenerator modernBetaChunkGenerator &&
                 modernBetaChunkGenerator.getBiomeInjector() != null) {

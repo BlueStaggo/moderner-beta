@@ -9,7 +9,7 @@ import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.LayerRand
 import java.util.function.Supplier;
 
 public record RandomChanceBiomePredicate(int numerator, int denominator) implements BiomePredicate {
-    public static final com.mojang.serialization.MapCodec<RandomChanceBiomePredicate> CODEC = VersionCompat.createMaybeMapCodec(
+    public static final com.mojang.serialization./*Map*/Codec<RandomChanceBiomePredicate> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> instance.group(
             Codec.INT.fieldOf("numerator").orElse(1).forGetter(predicate -> predicate.numerator),
             Codec.INT.fieldOf("denominator").forGetter(predicate -> predicate.denominator)

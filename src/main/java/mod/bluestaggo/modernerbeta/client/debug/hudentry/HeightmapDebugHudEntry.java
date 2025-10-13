@@ -6,52 +6,52 @@ import mod.bluestaggo.modernerbeta.util.chunk.ChunkHeightmap;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
 //? if >=1.21.9 {
 /*import mod.bluestaggo.modernerbeta.ModernerBeta;
-import net.minecraft.client.gui.hud.debug.DebugHudEntry;
-import net.minecraft.client.gui.hud.debug.DebugHudLines;
-import net.minecraft.util.Identifier;
-import net.minecraft.world.chunk.WorldChunk;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.debug.DebugScreenDisplayer;
+import net.minecraft.client.gui.components.debug.DebugScreenEntry;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.chunk.LevelChunk;
 import org.jetbrains.annotations.Nullable;
 *///?}
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.world.Heightmap;
-import net.minecraft.world.World;
-import net.minecraft.world.gen.chunk.ChunkGenerator;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.Heightmap;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 @Environment(EnvType.CLIENT)
-public class HeightmapDebugHudEntry /*? >=1.21.9 {*/ /*implements DebugHudEntry *//*?}*/ {
+public class HeightmapDebugHudEntry /*? >=1.21.9 {*/ /*implements DebugScreenEntry *//*?}*/ {
     //? if >=1.21.9 {
-    /*private static final Identifier SECTION_ID = ModernerBeta.createId("heightmap");
+    /*private static final ResourceLocation SECTION_ID = ModernerBeta.createId("heightmap");
 
     @Override
-    public void render(DebugHudLines lines, @Nullable World world, @Nullable WorldChunk clientChunk, @Nullable WorldChunk chunk) {
-        MinecraftClient client = MinecraftClient.getInstance();
+    public void display(DebugScreenDisplayer lines, @Nullable Level world, @Nullable LevelChunk clientChunk, @Nullable LevelChunk chunk) {
+        Minecraft client = Minecraft.getInstance();
         Entity entity = client.getCameraEntity();
         if (entity == null)
             return;
 
-        BlockPos pos = entity.getBlockPos();
+        BlockPos pos = entity.blockPosition();
 
         int x = pos.getX();
         int z = pos.getZ();
 
-        lines.addLinesToSection(SECTION_ID, getLines(world, x, z));
+        lines.addToGroup(SECTION_ID, getLines(world, x, z));
     }
     *///?}
 
-    public static Collection<String> getLines(World world, int x, int z) {
-        if (!(world instanceof ServerWorld serverWorld))
+    public static Collection<String> getLines(Level world, int x, int z) {
+        if (!(world instanceof ServerLevel serverWorld))
             return List.of();
 
-        ChunkGenerator chunkGenerator = serverWorld.getChunkManager().getChunkGenerator();
+        ChunkGenerator chunkGenerator = serverWorld.getChunkSource().getGenerator();
 
         List<String> lines = new ArrayList<>();
         if (chunkGenerator instanceof ModernBetaChunkGenerator modernBetaChunkGenerator) {
@@ -60,8 +60,8 @@ public class HeightmapDebugHudEntry /*? >=1.21.9 {*/ /*implements DebugHudEntry 
             lines.add(
                     String.format(
                             "[Modern Beta] Chunk Provider WS height: %d OF height: %d Sea level: %d",
-                            chunkProvider.getHeight(world, x, z, Heightmap.Type.WORLD_SURFACE_WG),
-                            chunkProvider.getHeight(world, x, z, Heightmap.Type.OCEAN_FLOOR),
+                            chunkProvider.getHeight(world, x, z, Heightmap.Types.WORLD_SURFACE_WG),
+                            chunkProvider.getHeight(world, x, z, Heightmap.Types.OCEAN_FLOOR),
                             chunkProvider.getSeaLevel()
                     )
             );

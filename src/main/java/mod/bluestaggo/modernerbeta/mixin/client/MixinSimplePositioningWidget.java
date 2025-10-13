@@ -3,7 +3,7 @@ package mod.bluestaggo.modernerbeta.mixin.client;
 import mod.bluestaggo.modernerbeta.imixin.ModernBetaClearableWidget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.widget.SimplePositioningWidget;
+import net.minecraft.client.gui.layouts.FrameLayout;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -11,12 +11,12 @@ import org.spongepowered.asm.mixin.Shadow;
 import java.util.List;
 
 @Environment(EnvType.CLIENT)
-@Mixin(SimplePositioningWidget.class)
+@Mixin(FrameLayout.class)
 public class MixinSimplePositioningWidget implements ModernBetaClearableWidget {
-    @Shadow @Final private List<?> elements;
+    @Shadow @Final private List<?> children;
 
     @Override
     public void modernBeta$clear() {
-        this.elements.clear();
+        this.children.clear();
     }
 }

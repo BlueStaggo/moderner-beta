@@ -3,20 +3,20 @@ package mod.bluestaggo.modernerbeta.world.carver;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.block.Block;
-import net.minecraft.registry.entry.RegistryEntryList;
-import net.minecraft.util.math.floatprovider.FloatProvider;
-import net.minecraft.world.gen.YOffset;
-import net.minecraft.world.gen.carver.CarverDebugConfig;
-import net.minecraft.world.gen.carver.CaveCarverConfig;
-import net.minecraft.world.gen.heightprovider.HeightProvider;
+import net.minecraft.core.HolderSet;
+import net.minecraft.util.valueproviders.FloatProvider;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.levelgen.VerticalAnchor;
+import net.minecraft.world.level.levelgen.carver.CarverDebugSettings;
+import net.minecraft.world.level.levelgen.carver.CaveCarverConfiguration;
+import net.minecraft.world.level.levelgen.heightproviders.HeightProvider;
 
 import java.util.Optional;
 
-public class BetaCaveCarverConfig extends CaveCarverConfig {
-    public static final Codec<BetaCaveCarverConfig> CAVE_CODEC = RecordCodecBuilder.create(instance -> 
+public class BetaCaveCarverConfig extends CaveCarverConfiguration {
+    public static final Codec<BetaCaveCarverConfig> CODEC = RecordCodecBuilder.create(instance ->
         instance.group(
-            ((MapCodec.MapCodecCodec<CaveCarverConfig>) CaveCarverConfig.CAVE_CODEC).codec().forGetter(config -> config),
+            ((MapCodec.MapCodecCodec<CaveCarverConfiguration>) CaveCarverConfiguration.CODEC).codec().forGetter(config -> config),
             Codec.BOOL.optionalFieldOf("use_fixed_caves").forGetter(config -> config.useFixedCaves),
             Codec.BOOL.optionalFieldOf("use_aquifers").forGetter(config -> config.useAquifers),
             Codec.BOOL.optionalFieldOf("use_surface_rules").forGetter(config -> config.useSurfaceRules)
@@ -30,9 +30,9 @@ public class BetaCaveCarverConfig extends CaveCarverConfig {
         float probability,
         HeightProvider y,
         FloatProvider yScale,
-        YOffset lavaLevel,
-        CarverDebugConfig debugConfig,
-        RegistryEntryList<Block> replaceable,
+        VerticalAnchor lavaLevel,
+        CarverDebugSettings debugConfig,
+        HolderSet<Block> replaceable,
         FloatProvider horizontalRadiusMultiplier,
         FloatProvider verticalRadiusMultiplier,
         FloatProvider floorLevel,
@@ -58,7 +58,7 @@ public class BetaCaveCarverConfig extends CaveCarverConfig {
     }
     
     public BetaCaveCarverConfig(
-        CaveCarverConfig config,
+        CaveCarverConfiguration config,
         Optional<Boolean> useFixedCaves,
         Optional<Boolean> useAquifers,
         Optional<Boolean> useSurfaceRules
@@ -68,7 +68,7 @@ public class BetaCaveCarverConfig extends CaveCarverConfig {
             config.y,
             config.yScale,
             config.lavaLevel,
-            config.debugConfig,
+            config.debugSettings,
             config.replaceable,
             config.horizontalRadiusMultiplier,
             config.verticalRadiusMultiplier,

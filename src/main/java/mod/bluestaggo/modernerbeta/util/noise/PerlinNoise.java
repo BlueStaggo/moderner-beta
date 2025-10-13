@@ -1,6 +1,6 @@
 package mod.bluestaggo.modernerbeta.util.noise;
 
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.Mth;
 
 import java.util.Random;
 
@@ -55,9 +55,9 @@ public class PerlinNoise {
         y += this.offsetY;
         z += this.offsetZ;
         
-        int floorX = MathHelper.floor(x);
-        int floorY = MathHelper.floor(y);
-        int floorZ = MathHelper.floor(z);
+        int floorX = Mth.floor(x);
+        int floorY = Mth.floor(y);
+        int floorZ = Mth.floor(z);
         
         // Find unit cube that contains point.
         int X = floorX & 0xFF;
@@ -131,9 +131,9 @@ public class PerlinNoise {
                     double curY = (y + (double)sY) * scaleY + this.offsetY;
                     double curZ = (z + (double)sZ) * scaleZ + this.offsetZ;
 
-                    int floorX = MathHelper.floor(curX);
-                    int floorY = MathHelper.floor(curY);
-                    int floorZ = MathHelper.floor(curZ);
+                    int floorX = Mth.floor(curX);
+                    int floorY = Mth.floor(curY);
+                    int floorZ = Mth.floor(curZ);
                     
                     // Find unit cube that contains point.
                     int X = floorX & 0xFF;
@@ -221,8 +221,8 @@ public class PerlinNoise {
         x = x + this.offsetX;
         z = z + this.offsetZ;
         
-        int floorX = MathHelper.floor(x);
-        int floorZ = MathHelper.floor(z);
+        int floorX = Mth.floor(x);
+        int floorZ = Mth.floor(z);
         
         // Find unit cube that contains point.
         int X = floorX & 0xFF;
@@ -263,9 +263,9 @@ public class PerlinNoise {
         y += this.offsetY;
         z += this.offsetZ;
         
-        int floorX = MathHelper.floor(x);
-        int floorY = MathHelper.floor(y);
-        int floorZ = MathHelper.floor(z);
+        int floorX = Mth.floor(x);
+        int floorY = Mth.floor(y);
+        int floorZ = Mth.floor(z);
         
         x -= floorX;
         y -= floorY;
@@ -279,7 +279,7 @@ public class PerlinNoise {
                 yOffset = y;
             }
             
-            yOffset = MathHelper.floor(yOffset / yScale + 1.0000000116860974E-7) * yScale;
+            yOffset = Mth.floor(yOffset / yScale + 1.0000000116860974E-7) * yScale;
         } else {
             yOffset = 0.0;
         }
@@ -320,7 +320,7 @@ public class PerlinNoise {
         double v = fade(localY);
         double w = fade(localZ);
         
-        return MathHelper.lerp3(u, v, w, grad0, grad1, grad2, grad3, grad4, grad5, grad6, grad7);
+        return Mth.lerp3(u, v, w, grad0, grad1, grad2, grad3, grad4, grad5, grad6, grad7);
     }
 
     private static double lerp(double delta, double start, double end) {

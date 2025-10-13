@@ -1,75 +1,78 @@
 package mod.bluestaggo.modernerbeta.world.structure;
 
-import net.minecraft.block.Blocks;
-import net.minecraft.block.ChestBlock;
-import net.minecraft.block.entity.ChestBlockEntity;
-import net.minecraft.loot.LootTables;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.tag.FluidTags;
-import net.minecraft.structure.*;
-import net.minecraft.structure.processor.BlockIgnoreStructureProcessor;
-import net.minecraft.structure.processor.BlockRotStructureProcessor;
-import net.minecraft.util.BlockMirror;
-import net.minecraft.util.BlockRotation;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockBox;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.ServerWorldAccess;
-import net.minecraft.world.StructureWorldAccess;
-import net.minecraft.world.gen.StructureAccessor;
-import net.minecraft.world.gen.chunk.ChunkGenerator;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.StructureManager;
+import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ChestBlock;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.entity.ChestBlockEntity;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.level.levelgen.structure.TemplateStructurePiece;
+import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
+import net.minecraft.world.level.levelgen.structure.templatesystem.BlockIgnoreProcessor;
+import net.minecraft.world.level.levelgen.structure.templatesystem.BlockRotProcessor;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 
-public class OceanShrineStructurePiece extends SimpleStructurePiece {
-    public OceanShrineStructurePiece(StructureTemplateManager manager, BlockPos pos, Identifier template, BlockRotation rot) {
+public class OceanShrineStructurePiece extends TemplateStructurePiece {
+    public OceanShrineStructurePiece(StructureTemplateManager manager, BlockPos pos, ResourceLocation template, Rotation rot) {
         super(ModernBetaStructurePieceTypes.OCEAN_SHRINE, 0, manager, template, template.toString(), getPlacementData(rot), pos);
     }
 
-    public OceanShrineStructurePiece(StructureTemplateManager manager, NbtCompound tag) {
+    public OceanShrineStructurePiece(StructureTemplateManager manager, CompoundTag tag) {
         super(ModernBetaStructurePieceTypes.OCEAN_SHRINE, tag, manager, identifier ->
-            getPlacementData(BlockRotation.valueOf(tag.getString("Rot")
+            getPlacementData(Rotation.valueOf(tag.getString("Rot")
                 //? if >=1.21.5
                 .orElseThrow()
             ))
         );
     }
 
-    private static StructurePlacementData getPlacementData(BlockRotation rotation) {
-        return new StructurePlacementData().setRotation(rotation).setMirror(BlockMirror.NONE).addProcessor(BlockIgnoreStructureProcessor.IGNORE_AIR_AND_STRUCTURE_BLOCKS);
+    private static StructurePlaceSettings getPlacementData(Rotation rotation) {
+        return new StructurePlaceSettings().setRotation(rotation).setMirror(Mirror.NONE).addProcessor(BlockIgnoreProcessor.STRUCTURE_AND_AIR);
     }
 
     @Override
-    protected void writeNbt(StructureContext context, NbtCompound nbtCompound) {
-        super.writeNbt(context, nbtCompound);
-        nbtCompound.putString("Rot", this.placementData.getRotation().name());
+    protected void addAdditionalSaveData(StructurePieceSerializationContext context, CompoundTag nbtCompound) {
+        super.addAdditionalSaveData(context, nbtCompound);
+        nbtCompound.putString("Rot", this.placeSettings.getRotation().name());
     }
 
     @Override
-    protected void handleMetadata(String metadata, BlockPos pos, ServerWorldAccess world, Random random, BlockBox boundingBox) {
+    protected void handleDataMarker(String metadata, BlockPos pos, ServerLevelAccessor world, RandomSource random, BoundingBox boundingBox) {
         if (metadata.equals("chest")) {
-            world.setBlockState(pos, Blocks.CHEST.getDefaultState().with(ChestBlock.WATERLOGGED, world.getFluidState(pos).isIn(FluidTags.WATER)), 2);
+            world.setBlock(pos, Blocks.CHEST.defaultBlockState().setValue(ChestBlock.WATERLOGGED, world.getFluidState(pos).is(FluidTags.WATER)), 2);
 
             if (world.getBlockEntity(pos) instanceof ChestBlockEntity chestBlockEntity) {
-                chestBlockEntity.setLootTable(LootTables.BURIED_TREASURE_CHEST, random.nextLong());
+                chestBlockEntity.setLootTable(BuiltInLootTables.BURIED_TREASURE, random.nextLong());
             }
         }
     }
 
     @Override
-    public void generate(
-        StructureWorldAccess world,
-        StructureAccessor accessor,
+    public void postProcess(
+        WorldGenLevel world,
+        StructureManager accessor,
         ChunkGenerator chunkGenerator,
-        Random random,
-        BlockBox blockBox,
+        RandomSource random,
+        BoundingBox blockBox,
         ChunkPos chunkPos,
         BlockPos blockPos
     ) {
-        this.placementData.clearProcessors()
-                .addProcessor(new BlockRotStructureProcessor(1.0f))
-                .addProcessor(BlockIgnoreStructureProcessor.IGNORE_AIR_AND_STRUCTURE_BLOCKS);
+        this.placeSettings.clearProcessors()
+                .addProcessor(new BlockRotProcessor(1.0f))
+                .addProcessor(BlockIgnoreProcessor.STRUCTURE_AND_AIR);
 
-        super.generate(world, accessor, chunkGenerator, random, blockBox, chunkPos, blockPos);
+        super.postProcess(world, accessor, chunkGenerator, random, blockBox, chunkPos, blockPos);
     }
 }

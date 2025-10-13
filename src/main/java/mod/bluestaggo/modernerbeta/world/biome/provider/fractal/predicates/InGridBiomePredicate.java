@@ -9,7 +9,7 @@ import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.LayerRand
 import java.util.function.Supplier;
 
 public record InGridBiomePredicate(int size, int spacing, int offset) implements BiomePredicate {
-    public static final com.mojang.serialization.MapCodec<InGridBiomePredicate> CODEC = VersionCompat.createMaybeMapCodec(
+    public static final com.mojang.serialization./*Map*/Codec<InGridBiomePredicate> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> instance.group(
             Codec.INT.fieldOf("size").forGetter(InGridBiomePredicate::size),
             Codec.INT.fieldOf("spacing").forGetter(InGridBiomePredicate::spacing),

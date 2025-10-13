@@ -6,14 +6,13 @@ import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.api.world.biome.climate.TemperatureHeightScaling;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import mod.bluestaggo.modernerbeta.settings.component.*;
-import mod.bluestaggo.modernerbeta.settings.component.ClimaticBiomeColors;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.world.biome.provider.climate.ClimateMapping;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ConfiguredLayers;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import mod.bluestaggo.modernerbeta.world.biome.voronoi.VoronoiPointBiome;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.StringIdentifiable;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.StringRepresentable;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,8 +21,8 @@ import java.util.Map;
 public class SettingsComponentTypes {
     private static IRegistryHandler<SettingsComponentType<?>> registryHandler;
 
-    public static SettingsComponentType<Identifier> PRESET;
-    public static SettingsComponentType<Identifier> PROVIDER;
+    public static SettingsComponentType<ResourceLocation> PRESET;
+    public static SettingsComponentType<ResourceLocation> PROVIDER;
 
     // Chunk provider
     public static SettingsComponentType<DeepslateGeneration> DEEPSLATE_GENERATION;
@@ -43,7 +42,7 @@ public class SettingsComponentTypes {
     public static SettingsComponentType<IslesProperties> ISLES_PROPERTIES;
 
     // Biome provider
-    public static SettingsComponentType<Identifier> SINGLE_BIOME;
+    public static SettingsComponentType<ResourceLocation> SINGLE_BIOME;
     public static SettingsComponentType<ClimateScale> CLIMATE_SCALE;
     public static SettingsComponentType<Map<String, ClimateMapping>> CLIMATE_MAPPINGS;
     public static SettingsComponentType<ClimateDistribution> CLIMATE_DISTRIBUTION;
@@ -63,7 +62,7 @@ public class SettingsComponentTypes {
     public static SettingsComponentType<Map<String, Integer>> CONFIG_BIOME_PREVIEW_COLORS;
     public static SettingsComponentType<MiscConfig> CONFIG_MISCELLANEOUS;
 
-    private static <T> SettingsComponentType<T> register(Identifier id, Codec<T> codec, T defaultValue) {
+    private static <T> SettingsComponentType<T> register(ResourceLocation id, Codec<T> codec, T defaultValue) {
         return registryHandler.register(id, new SettingsComponentType<>(codec, defaultValue));
     }
 
@@ -73,11 +72,11 @@ public class SettingsComponentTypes {
 
         PRESET = register(
             ModernBetaBuiltInTypes.SettingsComponentType.PRESET.id,
-            Identifier.CODEC,
+            ResourceLocation.CODEC,
             null);
         PROVIDER = register(
             ModernBetaBuiltInTypes.SettingsComponentType.PROVIDER.id,
-            Identifier.CODEC,
+            ResourceLocation.CODEC,
             null);
 
         // Chunk provider
@@ -145,7 +144,7 @@ public class SettingsComponentTypes {
         // Biome provider
         SINGLE_BIOME = register(
             ModernBetaBuiltInTypes.SettingsComponentType.SINGLE_BIOME.id,
-            Identifier.CODEC,
+            ResourceLocation.CODEC,
             VersionCompat.id("moderner_beta:beta_plains"));
         CLIMATE_SCALE = register(
             ModernBetaBuiltInTypes.SettingsComponentType.CLIMATE_SCALE.id,
@@ -177,7 +176,7 @@ public class SettingsComponentTypes {
             false);
         TEMPERATURE_HEIGHT_SCALING = register(
             ModernBetaBuiltInTypes.SettingsComponentType.TEMPERATURE_HEIGHT_SCALING.id,
-            StringIdentifiable.createCodec(TemperatureHeightScaling::values),
+            StringRepresentable.fromEnum(TemperatureHeightScaling::values),
             TemperatureHeightScaling.NONE);
 
         // Cave biome provider

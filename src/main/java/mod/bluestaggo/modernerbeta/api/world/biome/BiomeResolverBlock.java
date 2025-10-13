@@ -1,7 +1,7 @@
 package mod.bluestaggo.modernerbeta.api.world.biome;
 
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.core.Holder;
+import net.minecraft.world.level.biome.Biome;
 
 public interface BiomeResolverBlock {
     /**
@@ -13,5 +13,5 @@ public interface BiomeResolverBlock {
      * 
      * @return A biome at given block coordinates.
      */
-    RegistryEntry<Biome> getBiomeBlock(int x, int y, int z);
+    Holder<Biome> getBiomeBlock(int x, int y, int z);
 }

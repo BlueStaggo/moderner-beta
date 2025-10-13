@@ -1,7 +1,7 @@
 package mod.bluestaggo.modernerbeta.util.chunk;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectLinkedOpenHashMap;
-import net.minecraft.util.math.ChunkPos;
+import net.minecraft.world.level.ChunkPos;
 
 import java.util.concurrent.locks.StampedLock;
 import java.util.function.BiFunction;
@@ -56,7 +56,7 @@ public class ChunkCache<T> {
     public T get(int chunkX, int chunkZ) {
         T chunk;
         
-        long key = ChunkPos.toLong(chunkX, chunkZ);
+        long key = ChunkPos.asLong(chunkX, chunkZ);
         long stamp = this.lock.readLock();
         
         try {

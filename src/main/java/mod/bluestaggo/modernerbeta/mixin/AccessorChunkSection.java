@@ -1,14 +1,14 @@
 package mod.bluestaggo.modernerbeta.mixin;
 
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.chunk.ChunkSection;
-import net.minecraft.world.chunk.ReadableContainer;
+import net.minecraft.core.Holder;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.chunk.LevelChunkSection;
+import net.minecraft.world.level.chunk.PalettedContainerRO;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-@Mixin(ChunkSection.class)
+@Mixin(LevelChunkSection.class)
 public interface AccessorChunkSection {
-    @Accessor("biomeContainer")
-    void setBiomeContainer(ReadableContainer<RegistryEntry<Biome>> biomeContainer);
+    @Accessor("biomes")
+    void setBiomes(PalettedContainerRO<Holder<Biome>> biomes);
 }

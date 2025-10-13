@@ -1,8 +1,8 @@
 package mod.bluestaggo.modernerbeta.world.chunk.provider.indev;
 
-import net.minecraft.util.StringIdentifiable;
+import net.minecraft.util.StringRepresentable;
 
-public enum IndevTheme implements StringIdentifiable {
+public enum IndevTheme implements StringRepresentable {
     NORMAL("normal"),
     HELL("hell"),
     PARADISE("paradise"),
@@ -15,7 +15,7 @@ public enum IndevTheme implements StringIdentifiable {
     }
 
     @Override
-    public String asString() {
+    public String getSerializedName() {
         return this.id;
     }
 }

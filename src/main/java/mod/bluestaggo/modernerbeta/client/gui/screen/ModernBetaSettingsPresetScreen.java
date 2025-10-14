@@ -242,7 +242,13 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
             }
 
             @Override
-            public void render(GuiGraphics context,
+            public void
+            //? if >=1.21.9 {
+            /*renderContent
+            *///? } else {
+            render
+            //? }
+            (GuiGraphics context,
                 //? if <1.21.9
                 int index, int y, int x, int entryWidth, int entryHeight,
                 int mouseX, int mouseY, boolean hovered, float tickDelta) {

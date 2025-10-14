@@ -27,13 +27,7 @@ public abstract class MixinSpawnLocating {
      * Override vanilla behavior of moving player to highest solid block, 
      * even after finding initial spawn point.
      */
-    @Inject(method = 
-            //? if >=1.21.9 {
-            /*"findOverworldSpawn"
-            *///?} else {
-            "getOverworldRespawnPos"
-            //?}
-            , at = @At("HEAD"), cancellable = true)
+    @Inject(method = "getOverworldRespawnPos", at = @At("HEAD"), cancellable = true)
     private static void injectFindOverworldSpawnHeight(ServerLevel world, int x, int z, CallbackInfoReturnable<BlockPos> info) {
         ChunkGenerator chunkGenerator = world.getChunkSource().getGenerator();
         

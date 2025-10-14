@@ -250,7 +250,7 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                 //? if >= 1.21.6 {
                 net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED,
                 //?} else if >=1.21.2 {
-                /*net.minecraft.client.render.RenderLayer::getGuiTextured,
+                /*net.minecraft.client.renderer.RenderType::guiTextured,
                 *///?}
                 TEXTURE_ID,
                 this.getX(), this.getY(),
@@ -291,7 +291,13 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                 Component biomeName = biomeProvider instanceof BiomeResolverStepped resolverStepped
                     ? resolverStepped.getBiomeNameForStep(sampleX, 64, sampleY, step)
                     : biomeProvider.getBiomeName(sampleX, 64, sampleY);
-                context.setComponentTooltipForNextFrame(
+                context.
+                //? if >=1.21.6 {
+                setComponentTooltipForNextFrame
+                //? } else {
+                /*renderComponentTooltip
+                *///? }
+                (
                     font,
                     List.of(
                         Component.literal((sampleX * 4) + ", " + (sampleY * 4)),

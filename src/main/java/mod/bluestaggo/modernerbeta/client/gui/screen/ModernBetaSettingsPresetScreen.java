@@ -345,7 +345,7 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
                     //? if >= 1.21.6 {
                     net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED,
                     //?} else if >=1.21.2 {
-                    /*net.minecraft.client.render.RenderLayer::getGuiTextured,
+                    /*net.minecraft.client.renderer.RenderType::guiTextured,
                     *///?}
                     textureId,
                     x, y,

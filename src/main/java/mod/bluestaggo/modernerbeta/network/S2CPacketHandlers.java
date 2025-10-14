@@ -28,7 +28,7 @@ public class S2CPacketHandlers {
                 return;
 
             HolderGetter<Biome> biomeRegistry = world.registryAccess().lookupOrThrow(Registries.BIOME);
-            BiomeProviderType<?> providerCreator = ModernBetaRegistries.BIOME.get(payload.providerId().orElseThrow());
+            BiomeProviderType<?> providerCreator = ModernBetaRegistries.BIOME.getValue(payload.providerId().orElseThrow());
             BiomeProvider provider = providerCreator.apply(ModernBetaSettings.fromCompound(payload.settings().orElseThrow()), biomeRegistry, payload.seed().orElseThrow());
             ((ModernBetaWorld) world).modernerBeta$setTemperatureHeightScaling(provider.getTemperatureHeightScaling());
 

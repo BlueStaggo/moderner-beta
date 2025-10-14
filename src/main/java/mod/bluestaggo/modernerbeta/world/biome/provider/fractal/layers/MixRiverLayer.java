@@ -11,7 +11,7 @@ import java.util.*;
 import java.util.function.Function;
 
 public class MixRiverLayer extends SingleParentLayer {
-    public static final com.mojang.serialization./*Map*/Codec<MixRiverLayer> CODEC = VersionCompat.createMaybeMapCodec(
+    public static final com.mojang.serialization.MapCodec<MixRiverLayer> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> fillSingleParentLayerFields(instance)
             .and(instance.group(
                 Codec.STRING.fieldOf("riverSource").forGetter(layer -> layer.riverSource),

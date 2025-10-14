@@ -53,7 +53,7 @@ public class ModernerBetaFabricClient implements ClientModInitializer {
         //?} else {
         /*ClientPlayNetworking.registerGlobalReceiver(BiomeProviderInfoPayload.ID, (minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender) -> {
             BiomeProviderInfoPayload payload = BiomeProviderInfoPayload.fromFriendlyByteBuf(packetByteBuf);
-            minecraftClient.execute(() -> S2CPacketHandlers.onBiomeProviderInfo(minecraftClient.world, payload));
+            minecraftClient.execute(() -> S2CPacketHandlers.onBiomeProviderInfo(minecraftClient.level, payload));
         });
         *///?}
     }

@@ -11,7 +11,7 @@ import net.minecraft.world.level.levelgen.feature.foliageplacers.BlobFoliagePlac
 import net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacerType;
 
 public class BetaLargeOakFoliagePlacer extends BlobFoliagePlacer {
-    public static final com.mojang.serialization./*Map*/Codec<BetaLargeOakFoliagePlacer> CODEC = VersionCompat.createMaybeMapCodec(
+    public static final com.mojang.serialization.MapCodec<BetaLargeOakFoliagePlacer> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> blobParts(instance).apply(instance, BetaLargeOakFoliagePlacer::new));
 
     public BetaLargeOakFoliagePlacer(IntProvider radius, IntProvider offset, int height) {

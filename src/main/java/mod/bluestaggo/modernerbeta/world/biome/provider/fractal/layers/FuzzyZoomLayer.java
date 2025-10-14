@@ -4,7 +4,7 @@ import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 
 public class FuzzyZoomLayer extends SingleParentLayer {
-    public static final com.mojang.serialization./*Map*/Codec<FuzzyZoomLayer> CODEC = VersionCompat.createMaybeMapCodec(
+    public static final com.mojang.serialization.MapCodec<FuzzyZoomLayer> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> fillSingleParentLayerFields(instance)
             .apply(instance, FuzzyZoomLayer::new)
     );

@@ -37,7 +37,7 @@ public abstract class ModernBetaGraphicalSettingsScreen<T extends Tag> extends O
     private double prevScroll = -1.0D;
 
     //? if <1.21
-    /*protected OptionsList body;*/
+    /*protected OptionsList list;*/
     //? if <1.20.5
     /*public final HeaderAndFooterLayout layout = new HeaderAndFooterLayout(this);*/
 
@@ -60,9 +60,9 @@ public abstract class ModernBetaGraphicalSettingsScreen<T extends Tag> extends O
     //? if <1.20.5 {
     /*@Override
     protected void init() {
-        this.initHeader();
-        this.initBody();
-        this.initFooter();
+        this.addHeader();
+        this.addContents();
+        this.addFooter();
         this.layout.visitWidgets(this::addRenderableWidget);
     }
     *///?}
@@ -83,12 +83,12 @@ public abstract class ModernBetaGraphicalSettingsScreen<T extends Tag> extends O
 
     @Override
     protected void clearWidgets() {
-        if (this.body != null) {
+        if (this.list != null) {
             this.prevScroll =
                 //? if >=1.21.4 {
-                this.body.scrollAmount();
+                this.list.scrollAmount();
                 //?} else {
-                /*this.body.getScrollAmount();
+                /*this.list.getScrollAmount();
                 *///?}
         }
 
@@ -98,34 +98,34 @@ public abstract class ModernBetaGraphicalSettingsScreen<T extends Tag> extends O
     }
 
     //? if <1.20.5 {
-    /*protected void initHeader() {
+    /*protected void addHeader() {
     }
     *///?}
 
     //? if >=1.20.5
     @Override
-    protected void initBody() {
-        this.body =
+    protected void addContents() {
+        this.list =
             //? if >=1.20.5 {
             this.layout.addToContents(
                 //? if >=1.21 {
-                /*w OptionsList(this.minecraft, this.width, this)
-             *///?} else {
-                new OptionsList(this.minecraft, this.width, 0, this)
-                //?}
+                new OptionsList(this.minecraft, this.width, this)
+                //?} else {
+                /*new OptionsList(this.minecraft, this.width, 0, this)
+                *///?}
             );
             //?} else {
             /*new OptionsList(this.minecraft, this.width, this.height, 32, this.height - 32, 25);
             *///?}
-        this.addOptions(this.body);
+        this.addOptions(this.list);
         //? if <1.21
-        /*this.addWidget(this.body);*/
+        /*this.addWidget(this.list);*/
 
-        if (this.prevScroll >= 0.0D && this.body != null) {
+        if (this.prevScroll >= 0.0D && this.list != null) {
             //? if >=1.21.4 {
-            this.body.setScrollAmount
+            this.list.setScrollAmount
             //?} else {
-            /*this.body.setScrollAmount
+            /*this.list.setScrollAmount
             *///?}
                 (this.prevScroll);
         }
@@ -148,7 +148,7 @@ public abstract class ModernBetaGraphicalSettingsScreen<T extends Tag> extends O
 
     //? if >=1.20.5
     @Override
-    protected void initFooter() {
+    protected void addFooter() {
         GridLayout gridWidget = new GridLayout().columnSpacing(8);
         GridLayout.RowHelper gridWidgetAdder = gridWidget.createRowHelper(2);
 
@@ -171,7 +171,7 @@ public abstract class ModernBetaGraphicalSettingsScreen<T extends Tag> extends O
     //? if <1.21 {
     /*@Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float tickDelta) {
-        this.basicListRender(graphics, this.body, mouseX, mouseY, tickDelta);
+        this.basicListRender(graphics, this.list, mouseX, mouseY, tickDelta);
     }
     *///?}
 

@@ -15,7 +15,7 @@ public class ModernBetaFoliagePlacers {
 
 	private static <P extends FoliagePlacer> FoliagePlacerType<P> register(
 		String id,
-		com.mojang.serialization./*Map*/Codec<P> codec
+		com.mojang.serialization.MapCodec<P> codec
 	) {
 		return registryHandler.register(ModernerBeta.createId(id), AccessorFoliagePlacerType.create(codec));
     }

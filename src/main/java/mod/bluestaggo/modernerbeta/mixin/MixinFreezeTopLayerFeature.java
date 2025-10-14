@@ -74,7 +74,7 @@ public abstract class MixinFreezeTopLayerFeature {
             Reference<PlacedFeature> betaFreezeTopLayer = context.level()
                 .registryAccess()
                 .lookupOrThrow(Registries.PLACED_FEATURE)
-                .getHolder(ModernBetaMiscPlacedFeatures.FREEZE_TOP_LAYER)
+                .get(ModernBetaMiscPlacedFeatures.FREEZE_TOP_LAYER)
                 .orElse(null);
 
             boolean hasBetaFreezeTopLayer = topBiome.value()

@@ -13,7 +13,7 @@ public class ModernBetaTrunkPlacers {
 
     private static <P extends TrunkPlacer> TrunkPlacerType<P> register(
             String id,
-            com.mojang.serialization./*Map*/Codec<P> codec
+            com.mojang.serialization.MapCodec<P> codec
     ) {
         return registryHandler.register(ModernerBeta.createId(id), AccessorTrunkPlacerType.create(codec));
     }

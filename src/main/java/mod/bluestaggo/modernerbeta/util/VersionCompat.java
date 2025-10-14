@@ -60,11 +60,7 @@ public final class VersionCompat {
     }
     //?} else {
     /*(WeightedEntry.Wrapper<T> weighted) {
-        //? if >=1.20.5 {
         return weighted.data();
-        //?} else {
-        /^return weighted.getData();
-        ^///?}
     }
     *///?}
 

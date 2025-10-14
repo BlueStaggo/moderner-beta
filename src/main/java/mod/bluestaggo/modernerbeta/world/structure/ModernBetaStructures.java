@@ -39,7 +39,7 @@ public class ModernBetaStructures {
                     Map.of(
                         MobCategory.MONSTER, new StructureSpawnOverride(
                             StructureSpawnOverride.BoundingBoxType.STRUCTURE,
-                            WeightedList.create(new MobSpawnSettings.SpawnerData(EntityType.GUARDIAN, /*? if <1.21.5 {*//*1, *//*?}*/ 1, 2))
+                            WeightedList.of(new MobSpawnSettings.SpawnerData(EntityType.GUARDIAN, /*? if <1.21.5 {*//*1, *//*?}*/ 1, 2))
                         ),
                         MobCategory.UNDERGROUND_WATER_CREATURE, new StructureSpawnOverride(
                             StructureSpawnOverride.BoundingBoxType.STRUCTURE,

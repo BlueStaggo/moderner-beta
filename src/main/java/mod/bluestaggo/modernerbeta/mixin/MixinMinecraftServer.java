@@ -42,14 +42,14 @@ public abstract class MixinMinecraftServer {
             *///?} else {
             worldProperties.setSpawn(
                 //? if >=1.20.5 {
-                /*worldProperties.getSpawnPos(),
-                *///?} else {
-                new BlockPos(
+                worldProperties.getSpawnPos(),
+                //?} else {
+                /*new BlockPos(
                     worldProperties.getXSpawn(),
                     worldProperties.getYSpawn(),
                     worldProperties.getZSpawn()
                 ),
-                //?}
+                *///?}
                 -90.0f
             );
             //?}

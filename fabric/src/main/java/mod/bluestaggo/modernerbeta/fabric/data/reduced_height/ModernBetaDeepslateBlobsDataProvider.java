@@ -1,6 +1,5 @@
 package mod.bluestaggo.modernerbeta.fabric.data.reduced_height;
 
-import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;
 import net.minecraft.core.Holder;

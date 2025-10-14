@@ -11,7 +11,7 @@ import java.util.Set;
 import java.util.function.Function;
 
 public class WeightedPoolLayer extends Layer {
-    public static final com.mojang.serialization./*Map*/Codec<WeightedPoolLayer> CODEC = VersionCompat.createMaybeMapCodec(
+    public static final com.mojang.serialization.MapCodec<WeightedPoolLayer> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> fillLayerFields(instance)
             .and(WeightedList.codec(LayerTarget.CODEC).fieldOf("targets").forGetter(layer -> layer.targets))
             .apply(instance, WeightedPoolLayer::new)
@@ -35,11 +35,11 @@ public class WeightedPoolLayer extends Layer {
         //? if >=1.21.5 {
         this.configuredTargets = this.targets.map(target -> target.configure(layerMap));
         //?} else {
-        /*Pool.Builder<LayerTarget.Configured> poolBuilder = Pool.builder();
-        for (net.minecraft.util.collection.Weighted.Present<LayerTarget> entry : this.targets.getEntries()) {
+        /*SimpleWeightedRandomList.Builder<LayerTarget.Configured> poolBuilder = SimpleWeightedRandomList.builder();
+        for (net.minecraft.util.random.WeightedEntry.Wrapper<LayerTarget> entry : this.targets.unwrap()) {
             poolBuilder.add(
-                VersionCompat.getWeightedValue(entry).configure(layerMap),
-                entry.getWeight().getValue()
+                entry.getData().configure(layerMap),
+                entry.getWeight().asInt()
             );
         }
         this.configuredTargets = poolBuilder.build();

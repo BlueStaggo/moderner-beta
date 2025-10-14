@@ -10,7 +10,7 @@ import java.util.function.Function;
 import java.util.function.LongFunction;
 
 public class StackedZoomLayer extends SingleParentLayer {
-    public static final com.mojang.serialization./*Map*/Codec<StackedZoomLayer> CODEC = VersionCompat.createMaybeMapCodec(
+    public static final com.mojang.serialization.MapCodec<StackedZoomLayer> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> fillSingleParentLayerFields(instance)
             .and(instance.group(
                 Codec.INT.fieldOf("level").orElse(1).forGetter(layer -> layer.level),

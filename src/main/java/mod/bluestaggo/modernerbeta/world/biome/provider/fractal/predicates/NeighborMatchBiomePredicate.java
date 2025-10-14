@@ -8,7 +8,7 @@ import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.LayerRand
 import java.util.function.Supplier;
 
 public class NeighborMatchBiomePredicate extends NeighborComparisonPredicate {
-    public static final com.mojang.serialization./*Map*/Codec<NeighborMatchBiomePredicate> CODEC = VersionCompat.createMaybeMapCodec(
+    public static final com.mojang.serialization.MapCodec<NeighborMatchBiomePredicate> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> fillNeighborComparisonFields(instance)
             .and(BiomePredicate.BASE_CODEC.fieldOf("neighborPredicate").forGetter(predicate -> predicate.neighborPredicate))
             .apply(instance, NeighborMatchBiomePredicate::new)

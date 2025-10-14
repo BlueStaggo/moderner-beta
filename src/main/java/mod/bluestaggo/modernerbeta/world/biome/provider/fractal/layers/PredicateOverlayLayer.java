@@ -16,7 +16,7 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 public class PredicateOverlayLayer extends SingleParentLayer {
-    public static final com.mojang.serialization./*Map*/Codec<PredicateOverlayLayer> CODEC = VersionCompat.createMaybeMapCodec(
+    public static final com.mojang.serialization.MapCodec<PredicateOverlayLayer> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> fillSingleParentLayerFields(instance)
             .and(Target.CODEC.listOf().fieldOf("targets").forGetter(layer -> layer.targets))
             .apply(instance, PredicateOverlayLayer::new)

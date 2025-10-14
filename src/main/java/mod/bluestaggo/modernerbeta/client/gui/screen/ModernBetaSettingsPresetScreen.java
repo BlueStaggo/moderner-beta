@@ -155,7 +155,7 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
                 presets.forEach(key -> {
                     this.addEntry(new PresetCategoryEntry(
                         key,
-                        presetCategoryRegistry.get(key)
+                        presetCategoryRegistry.getValue(key)
                     ));
                 });
             } else {
@@ -276,10 +276,10 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
                     ResourceLocation texture = isMouseHovering ? TEXTURE_JOIN_HIGHLIGHTED : TEXTURE_JOIN;
                     context.blitSprite(
                         //? if >=1.21.6 {
-                        /*.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED,
-                     *///?} else if >=1.21.2 {
-                        /*.minecraft.client.render.RenderLayer::getGuiTextured,
-                     *///?}
+                        net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED,
+                        //?} else if >=1.21.2 {
+                        /*net.minecraft.client.renderer.RenderType::guiTextured,
+                        *///?}
                         texture,
                         x,
                         y,
@@ -395,7 +395,7 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
 
             @Override
             protected ResourceLocation getPresetTexture(ResourceLocation presetName) {
-                presetName = presetCategoryRegistry.get(presetName).defaultIcon();
+                presetName = presetCategoryRegistry.getValue(presetName).defaultIcon();
                 return super.getPresetTexture(presetName);
             }
 

@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 @Mixin(FoliagePlacerType.class)
 public interface AccessorFoliagePlacerType {
     @Invoker("<init>")
-    static <P extends FoliagePlacer> FoliagePlacerType<P> create(com.mojang.serialization./*Map*/Codec<P> codec) {
+    static <P extends FoliagePlacer> FoliagePlacerType<P> create(com.mojang.serialization.MapCodec<P> codec) {
         throw new AssertionError();
     }
 }

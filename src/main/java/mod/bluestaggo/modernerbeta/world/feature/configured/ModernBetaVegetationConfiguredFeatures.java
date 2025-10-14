@@ -28,6 +28,13 @@ import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import java.util.List;
 
 public class ModernBetaVegetationConfiguredFeatures {
+    private static final ResourceKey<PlacedFeature> OAK_BEES_0002 =
+            //? if >=1.21.5 {
+            TreePlacements.OAK_BEES_0002_LEAF_LITTER;
+            //? } else {
+            /*TreePlacements.OAK_BEES_0002;
+            *///? }
+
     public static final ResourceKey<ConfiguredFeature<?, ?>> MUSHROOM_HELL = ModernBetaConfiguredFeatures.of(ModernBetaFeatureTags.MUSHROOM_HELL);
     public static final ResourceKey<ConfiguredFeature<?, ?>> PATCH_DANDELION = ModernBetaConfiguredFeatures.of(ModernBetaFeatureTags.PATCH_DANDELION);
     public static final ResourceKey<ConfiguredFeature<?, ?>> PATCH_POPPY = ModernBetaConfiguredFeatures.of(ModernBetaFeatureTags.PATCH_POPPY);
@@ -142,7 +149,7 @@ public class ModernBetaVegetationConfiguredFeatures {
 
     private static RandomFeatureConfiguration createOakTreeConfig(HolderGetter<PlacedFeature> registryPlaced, boolean bees) {
         Holder.Reference<PlacedFeature> oak = registryPlaced.getOrThrow(TreePlacements.OAK_CHECKED);
-        Holder.Reference<PlacedFeature> oakBees = registryPlaced.getOrThrow(TreePlacements.OAK_BEES_0002_LEAF_LITTER);
+        Holder.Reference<PlacedFeature> oakBees = registryPlaced.getOrThrow(OAK_BEES_0002);
         
         return new RandomFeatureConfiguration(
             List.of(
@@ -155,7 +162,7 @@ public class ModernBetaVegetationConfiguredFeatures {
     private static RandomFeatureConfiguration createDefaultRandomTreeConfig(HolderGetter<PlacedFeature> registryPlaced, boolean bees) {
         Holder.Reference<PlacedFeature> fancyOak = registryPlaced.getOrThrow(ModernBetaTreePlacedFeatures.FANCY_OAK);
         Holder.Reference<PlacedFeature> oak = registryPlaced.getOrThrow(TreePlacements.OAK_CHECKED);
-        Holder.Reference<PlacedFeature> oakBees = registryPlaced.getOrThrow(TreePlacements.OAK_BEES_0002_LEAF_LITTER);
+        Holder.Reference<PlacedFeature> oakBees = registryPlaced.getOrThrow(OAK_BEES_0002);
         
         return new RandomFeatureConfiguration(
             List.of(
@@ -169,7 +176,7 @@ public class ModernBetaVegetationConfiguredFeatures {
     private static RandomFeatureConfiguration createInfdevRandomTreeConfig(HolderGetter<PlacedFeature> registryPlaced, boolean bees) {
         Holder.Reference<PlacedFeature> fancyOak = registryPlaced.getOrThrow(ModernBetaTreePlacedFeatures.FANCY_OAK);
         Holder.Reference<PlacedFeature> oak = registryPlaced.getOrThrow(TreePlacements.OAK_CHECKED);
-        Holder.Reference<PlacedFeature> oakBees = registryPlaced.getOrThrow(TreePlacements.OAK_BEES_0002_LEAF_LITTER);
+        Holder.Reference<PlacedFeature> oakBees = registryPlaced.getOrThrow(OAK_BEES_0002);
         
         return new RandomFeatureConfiguration(
             List.of(
@@ -183,7 +190,7 @@ public class ModernBetaVegetationConfiguredFeatures {
     private static RandomFeatureConfiguration createOakForestRandomTreeConfig(HolderGetter<PlacedFeature> registryPlaced, boolean bees) {
         Holder.Reference<PlacedFeature> fancyOak = registryPlaced.getOrThrow(ModernBetaTreePlacedFeatures.FANCY_OAK);
         Holder.Reference<PlacedFeature> oak = registryPlaced.getOrThrow(TreePlacements.OAK_CHECKED);
-        Holder.Reference<PlacedFeature> oakBees = registryPlaced.getOrThrow(TreePlacements.OAK_BEES_0002_LEAF_LITTER);
+        Holder.Reference<PlacedFeature> oakBees = registryPlaced.getOrThrow(OAK_BEES_0002);
 
         return new RandomFeatureConfiguration(
             List.of(
@@ -197,7 +204,7 @@ public class ModernBetaVegetationConfiguredFeatures {
     private static RandomFeatureConfiguration createForestRandomTreeConfig(HolderGetter<PlacedFeature> registryPlaced, boolean bees) {
         Holder.Reference<PlacedFeature> fancyOak = registryPlaced.getOrThrow(ModernBetaTreePlacedFeatures.FANCY_OAK);
         Holder.Reference<PlacedFeature> oak = registryPlaced.getOrThrow(TreePlacements.OAK_CHECKED);
-        Holder.Reference<PlacedFeature> oakBees = registryPlaced.getOrThrow(TreePlacements.OAK_BEES_0002_LEAF_LITTER);
+        Holder.Reference<PlacedFeature> oakBees = registryPlaced.getOrThrow(OAK_BEES_0002);
 
         Holder.Reference<PlacedFeature> birch = registryPlaced.getOrThrow(TreePlacements.BIRCH_CHECKED);
         Holder.Reference<PlacedFeature> birchBees = registryPlaced.getOrThrow(TreePlacements.BIRCH_BEES_0002_PLACED);
@@ -217,7 +224,7 @@ public class ModernBetaVegetationConfiguredFeatures {
     private static RandomFeatureConfiguration createRainforestRandomTreeConfig(HolderGetter<PlacedFeature> registryPlaced, boolean bees) {
         Holder.Reference<PlacedFeature> fancyOak = registryPlaced.getOrThrow(ModernBetaTreePlacedFeatures.FANCY_OAK);
         Holder.Reference<PlacedFeature> oak = registryPlaced.getOrThrow(TreePlacements.OAK_CHECKED);
-        Holder.Reference<PlacedFeature> oakBees = registryPlaced.getOrThrow(TreePlacements.OAK_BEES_0002_LEAF_LITTER);
+        Holder.Reference<PlacedFeature> oakBees = registryPlaced.getOrThrow(OAK_BEES_0002);
         
         return new RandomFeatureConfiguration(
             List.of(
@@ -231,7 +238,7 @@ public class ModernBetaVegetationConfiguredFeatures {
     private static RandomFeatureConfiguration createSeasonalForestRandomTreeConfig(HolderGetter<PlacedFeature> registryPlaced, boolean bees) {
         Holder.Reference<PlacedFeature> fancyOak = registryPlaced.getOrThrow(ModernBetaTreePlacedFeatures.FANCY_OAK);
         Holder.Reference<PlacedFeature> oak = registryPlaced.getOrThrow(TreePlacements.OAK_CHECKED);
-        Holder.Reference<PlacedFeature> oakBees = registryPlaced.getOrThrow(TreePlacements.OAK_BEES_0002_LEAF_LITTER);
+        Holder.Reference<PlacedFeature> oakBees = registryPlaced.getOrThrow(OAK_BEES_0002);
         
         return new RandomFeatureConfiguration(
             List.of(
@@ -257,7 +264,7 @@ public class ModernBetaVegetationConfiguredFeatures {
     
     private static RandomFeatureConfiguration createPEForestRandomTreeConfig(HolderGetter<PlacedFeature> registryPlaced, boolean bees) {
         Holder.Reference<PlacedFeature> oak = registryPlaced.getOrThrow(TreePlacements.OAK_CHECKED);
-        Holder.Reference<PlacedFeature> oakBees = registryPlaced.getOrThrow(TreePlacements.OAK_BEES_0002_LEAF_LITTER);
+        Holder.Reference<PlacedFeature> oakBees = registryPlaced.getOrThrow(OAK_BEES_0002);
 
         Holder.Reference<PlacedFeature> birch = registryPlaced.getOrThrow(TreePlacements.BIRCH_CHECKED);
         Holder.Reference<PlacedFeature> birchBees = registryPlaced.getOrThrow(TreePlacements.BIRCH_BEES_0002_PLACED);

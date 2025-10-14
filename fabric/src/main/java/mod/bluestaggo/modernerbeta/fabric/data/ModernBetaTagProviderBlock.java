@@ -14,11 +14,11 @@ public class ModernBetaTagProviderBlock
         //? if >=1.21.6 {
         FabricTagProvider.BlockTagProvider
         //?} else {
-        /*FabricTagProvider<net.minecraft.block.Block>
+        /*FabricTagProvider<net.minecraft.world.level.block.Block>
         *///?}
 {
     public ModernBetaTagProviderBlock(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
-        super(output, /*? <1.21.6 {*/ /*net.minecraft.registry.RegistryKeys.BLOCK, *//*?}*/ registriesFuture);
+        super(output, /*? <1.21.6 {*/ /*net.minecraft.core.registries.Registries.BLOCK, *//*?}*/ registriesFuture);
     }
 
     @Override

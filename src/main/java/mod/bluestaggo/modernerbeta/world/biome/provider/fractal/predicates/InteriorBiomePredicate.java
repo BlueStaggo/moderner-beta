@@ -9,7 +9,7 @@ import net.minecraft.util.StringRepresentable;
 import java.util.function.Supplier;
 
 public record InteriorBiomePredicate(Type type) implements BiomePredicate {
-    public static final com.mojang.serialization./*Map*/Codec<InteriorBiomePredicate> CODEC = VersionCompat.createMaybeMapCodec(
+    public static final com.mojang.serialization.MapCodec<InteriorBiomePredicate> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> instance.group(
             StringRepresentable.fromEnum(Type::values).fieldOf("type").orElse(Type.INTERIOR).forGetter(predicate -> predicate.type)
         ).apply(instance, InteriorBiomePredicate::new)

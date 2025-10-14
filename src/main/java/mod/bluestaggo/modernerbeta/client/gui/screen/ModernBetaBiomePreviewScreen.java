@@ -64,7 +64,7 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
 
         BiomeProvider biomeProvider = null;
         try {
-            biomeProvider = ModernBetaRegistries.BIOME.get(biomeSettings.getProvider())
+            biomeProvider = ModernBetaRegistries.BIOME.getValue(biomeSettings.getProvider())
                 .apply(
                     biomeSettings,
                     generationOptions.worldgenLoadContext().lookupOrThrow(Registries.BIOME),
@@ -291,7 +291,7 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                 Component biomeName = biomeProvider instanceof BiomeResolverStepped resolverStepped
                     ? resolverStepped.getBiomeNameForStep(sampleX, 64, sampleY, step)
                     : biomeProvider.getBiomeName(sampleX, 64, sampleY);
-                context.renderComponentTooltip(
+                context.setComponentTooltipForNextFrame(
                     font,
                     List.of(
                         Component.literal((sampleX * 4) + ", " + (sampleY * 4)),

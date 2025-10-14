@@ -33,7 +33,7 @@ public class ModernBetaWorldScreenProvider {
             ResourceKey<NoiseGeneratorSettings> modernBetaSettings = keyOfSettings(chunkSettings.getProvider());
 
             Registry<NoiseGeneratorSettings> registrySettings = dynamicRegistryManager.lookupOrThrow(Registries.NOISE_SETTINGS);
-            Holder.Reference<NoiseGeneratorSettings> settings = registrySettings.getHolder(modernBetaSettings).orElseThrow();
+            Holder.Reference<NoiseGeneratorSettings> settings = registrySettings.get(modernBetaSettings).orElseThrow();
             HolderGetter<Biome> registryBiome = dynamicRegistryManager.lookupOrThrow(Registries.BIOME);
 
             ModernBetaChunkGenerator chunkGenerator = new ModernBetaChunkGenerator(

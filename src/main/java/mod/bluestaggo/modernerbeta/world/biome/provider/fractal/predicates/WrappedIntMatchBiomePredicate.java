@@ -9,7 +9,7 @@ import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.LayerRand
 import java.util.function.Supplier;
 
 public record WrappedIntMatchBiomePredicate(int range, int match) implements BiomePredicate {
-    public static final com.mojang.serialization./*Map*/Codec<WrappedIntMatchBiomePredicate> CODEC = VersionCompat.createMaybeMapCodec(
+    public static final com.mojang.serialization.MapCodec<WrappedIntMatchBiomePredicate> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> instance.group(
             Codec.INT.fieldOf("range").forGetter(predicate -> predicate.range),
             Codec.INT.fieldOf("match").orElse(0).forGetter(predicate -> predicate.match)

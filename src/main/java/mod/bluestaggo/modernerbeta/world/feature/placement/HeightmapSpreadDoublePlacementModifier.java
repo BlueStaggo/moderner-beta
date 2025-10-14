@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.stream.Stream;
 
 public class HeightmapSpreadDoublePlacementModifier extends PlacementModifier {
-    public static final com.mojang.serialization./*Map*/Codec<HeightmapSpreadDoublePlacementModifier> MODIFIER_CODEC = VersionCompat.createMaybeMapCodec(
+    public static final com.mojang.serialization.MapCodec<HeightmapSpreadDoublePlacementModifier> MODIFIER_CODEC = VersionCompat.createMaybeMapCodec(
         instance -> instance.group(
             Heightmap.Types.CODEC.fieldOf("heightmap").forGetter(arg -> arg.heightmap)
         ).apply(instance, HeightmapSpreadDoublePlacementModifier::of));

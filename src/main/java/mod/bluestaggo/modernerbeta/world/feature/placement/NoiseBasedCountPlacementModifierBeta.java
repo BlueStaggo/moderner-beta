@@ -7,7 +7,7 @@ import mod.bluestaggo.modernerbeta.world.feature.placement.noise.NoiseBasedCount
 import net.minecraft.world.level.levelgen.placement.PlacementModifierType;
 
 public class NoiseBasedCountPlacementModifierBeta extends NoiseBasedCountPlacementModifier {
-    public static final com.mojang.serialization./*Map*/Codec<NoiseBasedCountPlacementModifierBeta> MODIFIER_CODEC = VersionCompat.createMaybeMapCodec(
+    public static final com.mojang.serialization.MapCodec<NoiseBasedCountPlacementModifierBeta> MODIFIER_CODEC = VersionCompat.createMaybeMapCodec(
         instance -> instance.group(
             Codec.INT.fieldOf("count").forGetter(arg -> arg.count),
             Codec.DOUBLE.fieldOf("extra_chance").forGetter(arg -> arg.extraChance),

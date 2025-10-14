@@ -12,7 +12,7 @@ import java.util.Set;
 import java.util.function.Function;
 
 public class ConditionalOverlayLayer extends SingleParentLayer {
-    public static final com.mojang.serialization./*Map*/Codec<ConditionalOverlayLayer> CODEC = VersionCompat.createMaybeMapCodec(
+    public static final com.mojang.serialization.MapCodec<ConditionalOverlayLayer> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> fillSingleParentLayerFields(instance)
             .and(instance.group(
                 BiomePredicate.BASE_CODEC.fieldOf("predicate").forGetter(layer -> layer.predicate),

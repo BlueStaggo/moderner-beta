@@ -11,7 +11,7 @@ import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureType;
 
 public class OceanShrineStructure extends Structure {
-    public static final com.mojang.serialization./*Map*/Codec<OceanShrineStructure> CODEC = simpleCodec(OceanShrineStructure::new);
+    public static final com.mojang.serialization.MapCodec<OceanShrineStructure> CODEC = simpleCodec(OceanShrineStructure::new);
     private static final ResourceLocation SHRINE_BASE = ModernerBeta.createId("ocean_shrine/base");
 
     public OceanShrineStructure(Structure.StructureSettings config) {

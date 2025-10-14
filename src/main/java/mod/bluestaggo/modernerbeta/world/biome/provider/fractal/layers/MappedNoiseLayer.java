@@ -15,7 +15,7 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 public class MappedNoiseLayer extends Layer {
-    public static final com.mojang.serialization./*Map*/Codec<MappedNoiseLayer> CODEC = VersionCompat.createMaybeMapCodec(
+    public static final com.mojang.serialization.MapCodec<MappedNoiseLayer> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> fillLayerFields(instance)
             .and(instance.group(
                 Entry.CODEC

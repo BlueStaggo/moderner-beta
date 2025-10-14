@@ -10,7 +10,7 @@ public class ModernBetaStructureTypes {
 
     public static StructureType<OceanShrineStructure> OCEAN_SHRINE;
 
-    private static <S extends Structure> StructureType<S> register(String id, com.mojang.serialization./*Map*/Codec<S> codec) {
+    private static <S extends Structure> StructureType<S> register(String id, com.mojang.serialization.MapCodec<S> codec) {
         return registryHandler.register(ModernerBeta.createId(id), () -> codec);
     }
 

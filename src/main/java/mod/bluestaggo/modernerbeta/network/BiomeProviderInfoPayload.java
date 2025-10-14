@@ -9,7 +9,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 //?} else {
 /*import net.minecraft.network.FriendlyByteBuf;
- *///?}
+*///?}
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.Optional;
@@ -25,23 +25,15 @@ public record BiomeProviderInfoPayload(
 {
     public static final CustomPacketPayload.Type<BiomeProviderInfoPayload> ID = new CustomPacketPayload.Type<>(ModernBetaNetworkConstants.BIOME_PROVIDER_INFO_PACKET_ID);
     public static final StreamCodec<RegistryFriendlyByteBuf, BiomeProviderInfoPayload> CODEC = StreamCodec.composite(
-        //? if >=1.21.4 {
-        /*eBufCodecs.BOOL,
-     *///?} else {
-        PacketCodecs.BOOL,
-        //?}
+        ByteBufCodecs.BOOL,
         BiomeProviderInfoPayload::isModernBetaWorld,
-        //? if >=1.21.4 {
-        /*eBufCodecs.BOOL,
-     *///?} else {
-        PacketCodecs.BOOL,
-        //?}
+        ByteBufCodecs.BOOL,
         BiomeProviderInfoPayload::hasBiomeProvider,
         //? if >=1.21.2 {
-        /*eBufCodecs.LONG
-     *///?} else {
-        PacketCodecs.VAR_LONG
-        //?}
+        ByteBufCodecs.LONG
+        //?} else {
+        /*ByteBufCodecs.VAR_LONG
+        *///?}
             .apply(ByteBufCodecs::optional), BiomeProviderInfoPayload::seed,
         ResourceLocation.STREAM_CODEC.apply(ByteBufCodecs::optional), BiomeProviderInfoPayload::providerId,
         ByteBufCodecs.COMPOUND_TAG.apply(ByteBufCodecs::optional), BiomeProviderInfoPayload::settings,

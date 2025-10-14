@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 public record AnyOfBiomePredicate(List<BiomePredicate> terms) implements BiomePredicate {
-    public static final com.mojang.serialization./*Map*/Codec<AnyOfBiomePredicate> CODEC = VersionCompat.createMaybeMapCodec(
+    public static final com.mojang.serialization.MapCodec<AnyOfBiomePredicate> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> instance.group(
             BiomePredicate.BASE_CODEC.listOf().fieldOf("terms").forGetter(AnyOfBiomePredicate::terms)
         ).apply(instance, AnyOfBiomePredicate::new)

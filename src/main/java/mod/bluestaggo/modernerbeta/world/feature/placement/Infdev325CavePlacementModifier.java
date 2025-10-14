@@ -17,7 +17,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class Infdev325CavePlacementModifier extends PlacementModifier {
-    public static final com.mojang.serialization./*Map*/Codec<Infdev325CavePlacementModifier> MODIFIER_CODEC = VersionCompat.createMaybeMapCodec(
+    public static final com.mojang.serialization.MapCodec<Infdev325CavePlacementModifier> MODIFIER_CODEC = VersionCompat.createMaybeMapCodec(
         instance -> instance.group(
             Codec.INT.fieldOf("min_section").forGetter(i -> i.minSection),
             Codec.INT.fieldOf("max_section").forGetter(i -> i.maxSection)

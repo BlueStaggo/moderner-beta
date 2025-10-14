@@ -49,7 +49,7 @@ public class ModernBetaSelectBiomeScreen extends Screen {
         this.allowNone = allowNone;
         this.biomeRegistry = generatorOptionsHolder.worldgenLoadContext().lookupOrThrow(Registries.BIOME);
         Holder<Biome> registryEntry = this.biomeRegistry
-            .getHolder(Biomes.PLAINS)
+            .get(Biomes.PLAINS)
             .or(() -> this.biomeRegistry.listElements().findAny())
             .orElseThrow();
         this.biome = generatorOptionsHolder.selectedDimensions()

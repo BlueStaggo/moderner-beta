@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class ModernBetaBiomeSource extends BiomeSource {
-    public static final com.mojang.serialization./*Map*/Codec<ModernBetaBiomeSource> CODEC = VersionCompat.createMaybeMapCodec(
+    public static final com.mojang.serialization.MapCodec<ModernBetaBiomeSource> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> instance.group(
             RegistryOps.retrieveGetter(Registries.BIOME),
             RegistryOps.retrieveGetter(ModernBetaRegistryKeys.SETTINGS_PRESET),
@@ -80,11 +80,11 @@ public class ModernBetaBiomeSource extends BiomeSource {
             .mapPreset(this.presetRegistry, ModernBetaSettingsPreset::caveBiomeSettings);
         
         this.biomeProvider = ModernBetaRegistries.BIOME
-            .get(biomeSettings.getProvider())
+            .getValue(biomeSettings.getProvider())
             .apply(biomeSettings, this.biomeRegistry, seed);
         
         this.caveBiomeProvider = ModernBetaRegistries.CAVE_BIOME
-            .get(caveBiomeSettings.getProvider())
+            .getValue(caveBiomeSettings.getProvider())
             .apply(caveBiomeSettings, this.biomeRegistry, seed);
     }
     
@@ -249,12 +249,12 @@ public class ModernBetaBiomeSource extends BiomeSource {
     
     @SuppressWarnings("unchecked")
     public static void register(IRegistryHandler<?> handler) {
-        var registryHandler = (IRegistryHandler<com.mojang.serialization./*Map*/Codec<?>>) handler;
+        var registryHandler = (IRegistryHandler<com.mojang.serialization.MapCodec<?>>) handler;
         registryHandler.register(ModernerBeta.createId(ModernerBeta.MOD_ID), CODEC);
     }
 
     @Override
-    protected com.mojang.serialization./*Map*/Codec<? extends BiomeSource> codec() {
+    protected com.mojang.serialization.MapCodec<? extends BiomeSource> codec() {
         return CODEC;
     }
 

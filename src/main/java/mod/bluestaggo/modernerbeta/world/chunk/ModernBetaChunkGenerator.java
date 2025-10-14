@@ -69,7 +69,7 @@ import java.util.function.Supplier;
 /*import java.util.concurrent.Executor;*/
 
 public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
-    public static final com.mojang.serialization./*Map*/Codec<ModernBetaChunkGenerator> CODEC = VersionCompat.createMaybeMapCodec(
+    public static final com.mojang.serialization.MapCodec<ModernBetaChunkGenerator> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> instance.group(
             BiomeSource.CODEC.fieldOf("biome_source").forGetter(generator -> generator.biomeSource),
             RegistryOps.retrieveGetter(ModernBetaRegistryKeys.SETTINGS_PRESET),
@@ -113,7 +113,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
             .mapPreset(this.presetRegistry, ModernBetaSettingsPreset::chunkSettings);
 
         this.chunkProvider = ModernBetaRegistries.CHUNK
-            .get(chunkSettings.getProvider())
+            .getValue(chunkSettings.getProvider())
             .apply(this, seed);
         
         this.chunkProvider.initForestOctaveNoise();
@@ -243,13 +243,13 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
                             ConfiguredWorldCarver<?> replacementCarver = null;
                             if (this.caveSettings.forceBetaCaves()) {
                                 if (carverKey.equals(Carvers.CAVE)) {
-                                    replacementCarver = configuredCarverRegistry.get(ModernBetaConfiguredCarvers.BETA_CAVE);
+                                    replacementCarver = configuredCarverRegistry.getValue(ModernBetaConfiguredCarvers.BETA_CAVE);
                                 } else if (carverKey.equals(Carvers.CAVE_EXTRA_UNDERGROUND)) {
-                                    replacementCarver = configuredCarverRegistry.get(ModernBetaConfiguredCarvers.BETA_CAVE_DEEP);
+                                    replacementCarver = configuredCarverRegistry.getValue(ModernBetaConfiguredCarvers.BETA_CAVE_DEEP);
                                 }
                             }
                             if (this.caveSettings.forceBetaCanyons() && carverKey.equals(Carvers.CANYON)) {
-                                replacementCarver = configuredCarverRegistry.get(ModernBetaConfiguredCarvers.BETA_CANYON);
+                                replacementCarver = configuredCarverRegistry.getValue(ModernBetaConfiguredCarvers.BETA_CANYON);
                             }
 
                             if (replacementCarver != null) {
@@ -388,7 +388,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
     }
 
     @Override
-    protected com.mojang.serialization./*Map*/Codec<? extends ChunkGenerator> codec() {
+    protected com.mojang.serialization.MapCodec<? extends ChunkGenerator> codec() {
         return CODEC;
     }
     
@@ -401,7 +401,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
 
     @SuppressWarnings("unchecked")
     public static void register(IRegistryHandler<?> handler) {
-        var registryHandler = (IRegistryHandler<com.mojang.serialization./*Map*/Codec<?>>) handler;
+        var registryHandler = (IRegistryHandler<com.mojang.serialization.MapCodec<?>>) handler;
         registryHandler.register(ModernerBeta.createId(ModernerBeta.MOD_ID), CODEC);
     }
 }

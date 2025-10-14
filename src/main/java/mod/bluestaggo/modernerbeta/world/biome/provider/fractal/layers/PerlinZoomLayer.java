@@ -8,7 +8,7 @@ import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import java.util.Random;
 
 public class PerlinZoomLayer extends SingleParentLayer {
-    public static final com.mojang.serialization./*Map*/Codec<PerlinZoomLayer> CODEC = VersionCompat.createMaybeMapCodec(
+    public static final com.mojang.serialization.MapCodec<PerlinZoomLayer> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> fillSingleParentLayerFields(instance)
             .and(instance.group(
                 Codec.DOUBLE.fieldOf("scale").orElse(2.0D).forGetter(layer -> layer.scale),

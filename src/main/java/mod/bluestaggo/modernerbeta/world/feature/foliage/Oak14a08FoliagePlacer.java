@@ -11,7 +11,7 @@ import net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacer;
 import net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacerType;
 
 public class Oak14a08FoliagePlacer extends FoliagePlacer {
-	public static final com.mojang.serialization./*Map*/Codec<Oak14a08FoliagePlacer> CODEC = VersionCompat.createMaybeMapCodec(instance -> foliagePlacerParts(instance)
+	public static final com.mojang.serialization.MapCodec<Oak14a08FoliagePlacer> CODEC = VersionCompat.createMaybeMapCodec(instance -> foliagePlacerParts(instance)
 			.and(Codec.intRange(0, 16).fieldOf("height").forGetter(placer -> placer.height))
 			.apply(instance, Oak14a08FoliagePlacer::new));
 

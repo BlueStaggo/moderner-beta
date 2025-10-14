@@ -3,7 +3,7 @@ package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.predicates;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 
-public record BiomePredicateType<P extends BiomePredicate>(com.mojang.serialization./*Map*/Codec<P> codec) {
+public record BiomePredicateType<P extends BiomePredicate>(com.mojang.serialization.MapCodec<P> codec) {
     private static IRegistryHandler<BiomePredicateType<?>> registryHandler;
 
     public static BiomePredicateType<AllOfBiomePredicate> ALL_OF;
@@ -23,7 +23,7 @@ public record BiomePredicateType<P extends BiomePredicate>(com.mojang.serializat
     public static BiomePredicateType<TrueBiomePredicate> TRUE;
     public static BiomePredicateType<WrappedIntMatchBiomePredicate> WRAPPED_INT_MATCH;
 
-    private static <P extends BiomePredicate> BiomePredicateType<P> register(String id, com.mojang.serialization./*Map*/Codec<P> codec) {
+    private static <P extends BiomePredicate> BiomePredicateType<P> register(String id, com.mojang.serialization.MapCodec<P> codec) {
         return registryHandler.register(ModernerBeta.createId(id), new BiomePredicateType<>(codec));
     }
 

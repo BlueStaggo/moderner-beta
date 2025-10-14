@@ -1,6 +1,5 @@
 package mod.bluestaggo.modernerbeta.world.feature.placement;
 
-import com.mojang.serialization.MapCodec;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import net.minecraft.world.level.levelgen.placement.PlacementModifier;
@@ -18,7 +17,7 @@ public class ModernBetaPlacementTypes {
     
     public static PlacementModifierType<HeightmapSpreadDoublePlacementModifier> HEIGHTMAP_SPREAD_DOUBLE;
     
-    private static <P extends PlacementModifier> PlacementModifierType<P> register(String id, MapCodec<P> codec) {
+    private static <P extends PlacementModifier> PlacementModifierType<P> register(String id, com.mojang.serialization.MapCodec<P> codec) {
         return registryHandler.register(ModernerBeta.createId(id), () -> codec);
     }
     

@@ -4,22 +4,21 @@
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.RegistryWrapper.WrapperLookup;
-import net.minecraft.registry.tag.TagKey;
-
+import net.minecraft.core.HolderLookup.Provider;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import java.util.concurrent.CompletableFuture;
 
 public class ModernBetaReducedHeightTagProviderBlock extends FabricTagProvider<Block> {
-    public ModernBetaReducedHeightTagProviderBlock(FabricDataOutput output, CompletableFuture<WrapperLookup> registriesFuture) {
-        super(output, RegistryKeys.BLOCK, registriesFuture);
+    public ModernBetaReducedHeightTagProviderBlock(FabricDataOutput output, CompletableFuture<Provider> registriesFuture) {
+        super(output, Registries.BLOCK, registriesFuture);
     }
 
     @Override
-    protected void configure(WrapperLookup lookup) {
-        this.getOrCreateTagBuilder(TagKey.of(RegistryKeys.BLOCK, ModernerBeta.createId("air"))).add(
+    protected void addTags(Provider lookup) {
+        this.getOrCreateTagBuilder(TagKey.create(Registries.BLOCK, ModernerBeta.createId("air"))).add(
             Blocks.AIR,
             Blocks.CAVE_AIR,
             Blocks.VOID_AIR

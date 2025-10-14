@@ -10,7 +10,7 @@ import net.minecraft.util.StringRepresentable;
 import java.util.function.Supplier;
 
 public record InRangeBiomePredicate(int centerX, int centerZ, int radiusX, int radiusZ, boolean evenSize, Shape shape) implements BiomePredicate {
-    public static final com.mojang.serialization./*Map*/Codec<InRangeBiomePredicate> CODEC = VersionCompat.createMaybeMapCodec(
+    public static final com.mojang.serialization.MapCodec<InRangeBiomePredicate> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> instance.group(
             Codec.INT.fieldOf("centerX").orElse(0).forGetter(InRangeBiomePredicate::centerX),
             Codec.INT.fieldOf("centerZ").orElse(0).forGetter(InRangeBiomePredicate::centerZ),

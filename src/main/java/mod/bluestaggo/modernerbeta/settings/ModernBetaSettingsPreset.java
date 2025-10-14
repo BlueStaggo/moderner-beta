@@ -81,11 +81,11 @@ public record ModernBetaSettingsPreset(ModernBetaSettings chunkSettings, ModernB
             
             // Test providers
             if (chunkSettings.get(SettingsComponentTypes.PRESET) == null)
-                ModernBetaRegistries.CHUNK.getValue(chunkSettings.getProvider());
+                ModernBetaRegistries.CHUNK.get(chunkSettings.getProvider());
             if (biomeSettings.get(SettingsComponentTypes.PRESET) == null)
-                ModernBetaRegistries.BIOME.getValue(biomeSettings.getProvider());
+                ModernBetaRegistries.BIOME.get(biomeSettings.getProvider());
             if (caveBiomeSettings.get(SettingsComponentTypes.PRESET) == null)
-                ModernBetaRegistries.CAVE_BIOME.getValue(caveBiomeSettings.getProvider());
+                ModernBetaRegistries.CAVE_BIOME.get(caveBiomeSettings.getProvider());
         } catch (Exception e) {
             ModernerBeta.log(Level.ERROR, "Unable to read settings JSON! Reverting to previous settings..");
             ModernerBeta.log(Level.ERROR, String.format("Reason: %s", e.getMessage()));
@@ -122,11 +122,11 @@ public record ModernBetaSettingsPreset(ModernBetaSettings chunkSettings, ModernB
 
             // Test providers
             if (chunkSettings.get(SettingsComponentTypes.PRESET) == null)
-                ModernBetaRegistries.CHUNK.getValue(chunkSettings.getProvider());
+                ModernBetaRegistries.CHUNK.get(chunkSettings.getProvider());
             if (biomeSettings.get(SettingsComponentTypes.PRESET) == null)
-                ModernBetaRegistries.BIOME.getValue(biomeSettings.getProvider());
+                ModernBetaRegistries.BIOME.get(biomeSettings.getProvider());
             if (caveBiomeSettings.get(SettingsComponentTypes.PRESET) == null)
-                ModernBetaRegistries.CAVE_BIOME.getValue(caveBiomeSettings.getProvider());
+                ModernBetaRegistries.CAVE_BIOME.get(caveBiomeSettings.getProvider());
         } catch (Exception e) {
             ModernerBeta.log(Level.ERROR, "Unable to read settings NBT! Reverting to previous settings..");
             ModernerBeta.log(Level.ERROR, String.format("Reason: %s", e.getMessage()));

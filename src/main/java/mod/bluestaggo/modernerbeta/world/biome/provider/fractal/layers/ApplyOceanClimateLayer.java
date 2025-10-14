@@ -10,7 +10,7 @@ import java.util.Set;
 import java.util.function.Function;
 
 public class ApplyOceanClimateLayer extends SingleParentLayer {
-    public static final com.mojang.serialization./*Map*/Codec<ApplyOceanClimateLayer> CODEC = VersionCompat.createMaybeMapCodec(
+    public static final com.mojang.serialization.MapCodec<ApplyOceanClimateLayer> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> fillSingleParentLayerFields(instance)
             .and(instance.group(
                 Codec.STRING.fieldOf("oceanClimate").forGetter(layer -> layer.oceanClimate),

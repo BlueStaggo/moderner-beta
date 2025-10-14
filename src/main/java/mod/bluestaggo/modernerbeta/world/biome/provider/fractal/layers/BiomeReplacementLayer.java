@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class BiomeReplacementLayer extends SingleParentLayer {
-    public static final com.mojang.serialization./*Map*/Codec<BiomeReplacementLayer> CODEC = VersionCompat.createMaybeMapCodec(
+    public static final com.mojang.serialization.MapCodec<BiomeReplacementLayer> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> fillSingleParentLayerFields(instance)
             .and(Codec.unboundedMap(ExtendedBiomeId.CODEC, LayerTarget.CODEC).fieldOf("targets").forGetter(layer -> layer.targets))
             .apply(instance, BiomeReplacementLayer::new)

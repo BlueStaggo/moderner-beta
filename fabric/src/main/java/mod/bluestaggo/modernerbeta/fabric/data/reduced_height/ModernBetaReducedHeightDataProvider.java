@@ -100,8 +100,8 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
             //? if >=1.21 {
             registryBlock.getOrThrow(BlockTags.AIR),
             //?} else {
-            /*net.minecraft.registry.entry.RegistryEntryList.of(registryBlock,
-                net.minecraft.registry.tag.TagKey.of(RegistryKeys.BLOCK, mod.bluestaggo.modernerbeta.ModernerBeta.createId("air"))),
+            /*net.minecraft.core.HolderSet.emptyNamed(registryBlock,
+                net.minecraft.tags.TagKey.create(Registries.BLOCK, mod.bluestaggo.modernerbeta.ModernerBeta.createId("air"))),
             *///?}
             ConstantFloat.of(0.0f),
             ConstantFloat.of(0.0f),
@@ -222,7 +222,7 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
             Blocks.STONE.defaultBlockState(),
             Blocks.WATER.defaultBlockState(),
             AccessorDensityFunctionsFabric.invokeOverworld(lookup.lookupOrThrow(Registries.DENSITY_FUNCTION),
-                lookup, Registries.NOISE), largeBiomes.lookupOrThrow(amplified),
+                lookup.lookupOrThrow(Registries.NOISE), largeBiomes, amplified),
             SurfaceRuleData.overworld(),
             (new OverworldBiomeBuilder()).spawnTarget(),
             63,

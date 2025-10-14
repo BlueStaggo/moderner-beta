@@ -148,7 +148,7 @@ public abstract class ChunkProviderFinite extends ChunkProvider implements Chunk
                     //? if >=1.21.2 {
                     isCold = biome.value().coldEnoughToSnow(pos, seaLevel);
                     //?} else {
-                    /*isCold = biome.value().isCold(pos.down(seaLevel - 63));
+                    /*isCold = biome.value().coldEnoughToSnow(pos.below(seaLevel - 63));
                     *///?}
                 }
                 

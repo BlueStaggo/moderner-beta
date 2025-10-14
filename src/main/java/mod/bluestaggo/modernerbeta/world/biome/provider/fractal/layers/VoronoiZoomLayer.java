@@ -6,7 +6,7 @@ import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import net.minecraft.util.Mth;
 
 public class VoronoiZoomLayer extends FuzzyZoomLayer {
-    public static final com.mojang.serialization./*Map*/Codec<VoronoiZoomLayer> CODEC = VersionCompat.createMaybeMapCodec(
+    public static final com.mojang.serialization.MapCodec<VoronoiZoomLayer> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> fillSingleParentLayerFields(instance)
             .and(Codec.INT.fieldOf("scale").orElse(4).forGetter(layer -> layer.scale))
             .apply(instance, VoronoiZoomLayer::new)

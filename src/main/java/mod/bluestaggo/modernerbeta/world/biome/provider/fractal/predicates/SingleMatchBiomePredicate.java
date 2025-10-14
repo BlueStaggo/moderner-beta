@@ -8,7 +8,7 @@ import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.LayerRand
 import java.util.function.Supplier;
 
 public record SingleMatchBiomePredicate(ExtendedBiomeId biome) implements BiomePredicate {
-    public static final com.mojang.serialization./*Map*/Codec<SingleMatchBiomePredicate> CODEC = VersionCompat.createMaybeMapCodec(
+    public static final com.mojang.serialization.MapCodec<SingleMatchBiomePredicate> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> instance.group(
             ExtendedBiomeId.CODEC.fieldOf("biome").forGetter(predicate -> predicate.biome)
         ).apply(instance, SingleMatchBiomePredicate::new)

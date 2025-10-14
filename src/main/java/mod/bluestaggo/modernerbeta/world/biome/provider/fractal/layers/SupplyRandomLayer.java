@@ -5,7 +5,7 @@ import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 
 public class SupplyRandomLayer extends Layer {
-    public static final com.mojang.serialization./*Map*/Codec<SupplyRandomLayer> CODEC = VersionCompat.createMaybeMapCodec(
+    public static final com.mojang.serialization.MapCodec<SupplyRandomLayer> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> fillLayerFields(instance)
             .and(Codec.INT.fieldOf("range").forGetter(layer -> layer.range))
             .apply(instance, SupplyRandomLayer::new)

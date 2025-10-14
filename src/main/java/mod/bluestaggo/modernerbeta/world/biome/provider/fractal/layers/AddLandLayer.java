@@ -12,7 +12,7 @@ import java.util.Set;
 import static mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId.*;
 
 public class AddLandLayer extends SingleParentLayer {
-    public static final com.mojang.serialization./*Map*/Codec<AddLandLayer> CODEC = VersionCompat.createMaybeMapCodec(
+    public static final com.mojang.serialization.MapCodec<AddLandLayer> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> instance.group(
             Codec.STRING.fieldOf("id").forGetter(layer -> layer.id),
             Codec.LONG.fieldOf("seed").orElse(0L).forGetter(layer -> layer.seed),

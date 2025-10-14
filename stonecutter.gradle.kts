@@ -10,6 +10,16 @@ stonecutter.parameters {
     replacements {
         string {
             direction = eval(current.version, "<1.21.5")
+            replace("WeightedList.codec", "SimpleWeightedRandomList.wrappedCodec")
+        }
+
+        string {
+            direction = eval(current.version, "<1.21.5")
+            replace("WeightedList.of", "SimpleWeightedRandomList.create")
+        }
+
+        string {
+            direction = eval(current.version, "<1.21.5")
             replace("WeightedList", "SimpleWeightedRandomList")
         }
 

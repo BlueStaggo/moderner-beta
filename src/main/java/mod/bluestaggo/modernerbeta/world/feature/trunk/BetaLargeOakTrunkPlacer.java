@@ -21,7 +21,7 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 
 public class BetaLargeOakTrunkPlacer extends TrunkPlacer {
-    public static final com.mojang.serialization./*Map*/Codec<BetaLargeOakTrunkPlacer> CODEC = VersionCompat.createMaybeMapCodec(instance -> trunkPlacerParts(instance)
+    public static final com.mojang.serialization.MapCodec<BetaLargeOakTrunkPlacer> CODEC = VersionCompat.createMaybeMapCodec(instance -> trunkPlacerParts(instance)
             .and(Codec.BOOL.fieldOf("rotate_logs").forGetter(p -> p.rotateLogs))
             .apply(instance, BetaLargeOakTrunkPlacer::new));
 

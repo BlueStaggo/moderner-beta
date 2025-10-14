@@ -38,7 +38,7 @@ public class WeightedPoolLayer extends Layer {
         /*SimpleWeightedRandomList.Builder<LayerTarget.Configured> poolBuilder = SimpleWeightedRandomList.builder();
         for (net.minecraft.util.random.WeightedEntry.Wrapper<LayerTarget> entry : this.targets.unwrap()) {
             poolBuilder.add(
-                entry.getData().configure(layerMap),
+                VersionCompat.getWeightedValue(entry).configure(layerMap),
                 entry.getWeight().asInt()
             );
         }

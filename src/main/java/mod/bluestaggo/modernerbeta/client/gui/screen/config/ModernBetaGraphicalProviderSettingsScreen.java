@@ -63,7 +63,13 @@ public class ModernBetaGraphicalProviderSettingsScreen extends ModernBetaGraphic
 
         list.addBig(this.primarySelectionOption(providerKey, this.providers));
 
-        ProviderType providerType = this.providerRegistry.getValue(providerId);
+        ProviderType providerType = this.providerRegistry
+            //? if >=1.21.2 {
+            .getValue
+            //? } else {
+            /*.get
+            *///? }
+                (providerId);
         if (providerType == null) {
             list.addBig(this.headerOption(Component.translatable(STRING_PREFIX + "invalidProvider")));
         } else {

@@ -113,7 +113,12 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
             .mapPreset(this.presetRegistry, ModernBetaSettingsPreset::chunkSettings);
 
         this.chunkProvider = ModernBetaRegistries.CHUNK
-            .getValue(chunkSettings.getProvider())
+            //? if >=1.21.2 {
+            .getValue
+            //? } else {
+            /*.get
+            *///? }
+                (chunkSettings.getProvider())
             .apply(this, seed);
         
         this.chunkProvider.initForestOctaveNoise();
@@ -243,13 +248,31 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
                             ConfiguredWorldCarver<?> replacementCarver = null;
                             if (this.caveSettings.forceBetaCaves()) {
                                 if (carverKey.equals(Carvers.CAVE)) {
-                                    replacementCarver = configuredCarverRegistry.getValue(ModernBetaConfiguredCarvers.BETA_CAVE);
+                                    replacementCarver = configuredCarverRegistry
+                                        //? if >=1.21.2 {
+                                        .getValue
+                                        //? } else {
+                                        /*.get
+                                        *///? }
+                                            (ModernBetaConfiguredCarvers.BETA_CAVE);
                                 } else if (carverKey.equals(Carvers.CAVE_EXTRA_UNDERGROUND)) {
-                                    replacementCarver = configuredCarverRegistry.getValue(ModernBetaConfiguredCarvers.BETA_CAVE_DEEP);
+                                    replacementCarver = configuredCarverRegistry
+                                        //? if >=1.21.2 {
+                                        .getValue
+                                        //? } else {
+                                        /*.get
+                                        *///? }
+                                            (ModernBetaConfiguredCarvers.BETA_CAVE_DEEP);
                                 }
                             }
                             if (this.caveSettings.forceBetaCanyons() && carverKey.equals(Carvers.CANYON)) {
-                                replacementCarver = configuredCarverRegistry.getValue(ModernBetaConfiguredCarvers.BETA_CANYON);
+                                replacementCarver = configuredCarverRegistry
+                                    //? if >=1.21.2 {
+                                    .getValue
+                                    //? } else {
+                                    /*.get
+                                    *///? }
+                                        (ModernBetaConfiguredCarvers.BETA_CANYON);
                             }
 
                             if (replacementCarver != null) {

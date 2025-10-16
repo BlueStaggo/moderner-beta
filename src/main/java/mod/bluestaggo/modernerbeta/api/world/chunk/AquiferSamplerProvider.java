@@ -1,3 +1,4 @@
+//~minBuild
 package mod.bluestaggo.modernerbeta.api.world.chunk;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;

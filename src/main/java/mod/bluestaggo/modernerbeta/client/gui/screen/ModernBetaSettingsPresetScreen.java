@@ -155,7 +155,13 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
                 presets.forEach(key -> {
                     this.addEntry(new PresetCategoryEntry(
                         key,
-                        presetCategoryRegistry.getValue(key)
+                        presetCategoryRegistry
+                            //? if >=1.21.2 {
+                            .getValue
+                            //? } else {
+                            /*.get
+                            *///? }
+                                (key)
                     ));
                 });
             } else {
@@ -173,7 +179,7 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
         }
 
         private static final int SCROLLBAR_X_OFFSET = 30;
-        //? if >=1.20.5 {
+        //? if >=1.21.4 {
         @Override
         protected int scrollBarX() {
             return super.scrollBarX() + SCROLLBAR_X_OFFSET;
@@ -401,7 +407,14 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
 
             @Override
             protected ResourceLocation getPresetTexture(ResourceLocation presetName) {
-                presetName = presetCategoryRegistry.getValue(presetName).defaultIcon();
+                presetName = presetCategoryRegistry
+                    //? if >=1.21.2 {
+                    .getValue
+                    //? } else {
+                    /*.get
+                    *///? }
+                        (presetName)
+                    .defaultIcon();
                 return super.getPresetTexture(presetName);
             }
 

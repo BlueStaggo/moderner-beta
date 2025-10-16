@@ -1,3 +1,4 @@
+//~registryGet
 package mod.bluestaggo.modernerbeta.network;
 
 import mod.bluestaggo.modernerbeta.api.world.biome.BiomeProvider;

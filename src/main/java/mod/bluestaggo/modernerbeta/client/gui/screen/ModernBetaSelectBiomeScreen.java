@@ -9,7 +9,8 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.client.gui.components.StringWidget;
-import net.minecraft.client.gui.layouts.GridLayout;
+//? if <1.20.2
+/*import net.minecraft.client.gui.layouts.GridLayout;*/
 import net.minecraft.client.gui.layouts.HeaderAndFooterLayout;
 //? if >=1.20.2
 import net.minecraft.client.gui.layouts.LinearLayout;
@@ -49,7 +50,12 @@ public class ModernBetaSelectBiomeScreen extends Screen {
         this.allowNone = allowNone;
         this.biomeRegistry = generatorOptionsHolder.worldgenLoadContext().lookupOrThrow(Registries.BIOME);
         Holder<Biome> registryEntry = this.biomeRegistry
-            .get(Biomes.PLAINS)
+            //? if >=1.21.2 {
+            .get
+            //? } else {
+            /*.getHolder
+            *///? }
+                (Biomes.PLAINS)
             .or(() -> this.biomeRegistry.listElements().findAny())
             .orElseThrow();
         this.biome = generatorOptionsHolder.selectedDimensions()

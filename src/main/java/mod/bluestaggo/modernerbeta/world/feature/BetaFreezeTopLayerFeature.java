@@ -1,3 +1,4 @@
+//~minBuild
 package mod.bluestaggo.modernerbeta.world.feature;
 
 import com.mojang.serialization.Codec;

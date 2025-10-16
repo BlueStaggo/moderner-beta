@@ -1,3 +1,4 @@
+//~minBuild
 package mod.bluestaggo.modernerbeta.world.feature.placement;
 
 import mod.bluestaggo.modernerbeta.util.VersionCompat;

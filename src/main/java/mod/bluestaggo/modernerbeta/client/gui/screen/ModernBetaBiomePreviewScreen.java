@@ -64,7 +64,13 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
 
         BiomeProvider biomeProvider = null;
         try {
-            biomeProvider = ModernBetaRegistries.BIOME.getValue(biomeSettings.getProvider())
+            biomeProvider = ModernBetaRegistries.BIOME
+                //? if >=1.21.2 {
+                .getValue
+                //? } else {
+                /*.get
+                *///? }
+                    (biomeSettings.getProvider())
                 .apply(
                     biomeSettings,
                     generationOptions.worldgenLoadContext().lookupOrThrow(Registries.BIOME),

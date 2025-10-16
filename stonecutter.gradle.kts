@@ -33,6 +33,11 @@ stonecutter.parameters {
             replace(".lookupOrThrow(Registries.", ".registryOrThrow(Registries.")
         }
 
+        string("registryGet") {
+            direction = eval(current.version, "<1.21.2")
+            replace(".getValue(", ".get(")
+        }
+
         string {
             direction = eval(current.version, ">=1.21.6")
             replace("this.getOrCreateTagBuilder(", "this.builder(")
@@ -53,7 +58,7 @@ stonecutter.parameters {
             replace(".getMaxSectionY()", ".getMaxSection()")
         }
 
-        string {
+        string("minBuild") {
             direction = eval(current.version, "<1.21.2")
             replace(".getMinY()", ".getMinBuildHeight()")
         }

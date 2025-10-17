@@ -2,15 +2,15 @@
 /*package mod.bluestaggo.modernerbeta.forgelike.registry;
 
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
-import net.minecraft.registry.Registry;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegisterEvent;
 import org.jetbrains.annotations.NotNull;
 
 public record ForgeRegistryHandler<V>(RegisterEvent event) implements IRegistryHandler<V> {
     @Override
-    public <T extends V> @NotNull T register(Identifier id, T value) {
+    public <T extends V> @NotNull T register(ResourceLocation id, T value) {
         IForgeRegistry<T> forgeRegistry = event.getForgeRegistry();
         Registry<T> vanillaRegistry = event.getVanillaRegistry();
 

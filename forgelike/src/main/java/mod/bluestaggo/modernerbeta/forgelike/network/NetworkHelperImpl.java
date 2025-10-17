@@ -54,12 +54,12 @@ public class NetworkHelperImpl implements INetworkHelper {
     }
 
     @Override
-    public void sendToPlayer(ServerPlayerEntity player, ModernBetaPayload payload) {
-        this.channel.sendTo(payload, player.networkHandler.connection, NetworkDirection.PLAY_TO_CLIENT);
+    public void sendToPlayer(ServerPlayer player, ModernBetaPayload payload) {
+        this.channel.sendTo(payload, player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
     }
 
     @Override
-    public void sendToPlayersTrackingChunk(ServerWorld world, ChunkPos pos, ModernBetaPayload payload) {
+    public void sendToPlayersTrackingChunk(ServerLevel world, ChunkPos pos, ModernBetaPayload payload) {
         this.channel.send(PacketDistributor.TRACKING_CHUNK.with(() -> world.getChunk(pos.x, pos.z)), payload);
     }
 

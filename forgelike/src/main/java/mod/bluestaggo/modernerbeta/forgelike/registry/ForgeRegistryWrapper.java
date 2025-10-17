@@ -4,15 +4,11 @@
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Lifecycle;
 import mod.bluestaggo.modernerbeta.forgelike.mixin.AccessorRegistryEntryReference;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.registry.entry.RegistryEntryList;
-import net.minecraft.registry.entry.RegistryEntryOwner;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.core.*;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.util.RandomSource;
 import net.minecraftforge.registries.IForgeRegistry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -25,41 +21,41 @@ import java.util.stream.Stream;
 @SuppressWarnings("deprecation")
 public class ForgeRegistryWrapper<T> implements Registry<T> {
     private final Supplier<IForgeRegistry<T>> forgeRegistrySupplier;
-    private final RegistryWrapper.Impl<T> wrapper;
+    private final HolderLookup.RegistryLookup<T> wrapper;
 
     public ForgeRegistryWrapper(Supplier<IForgeRegistry<T>> forgeRegistrySupplier) {
         this.forgeRegistrySupplier = forgeRegistrySupplier;
-        this.wrapper = new RegistryWrapper.Impl<>() {
+        this.wrapper = new HolderLookup.RegistryLookup<>() {
             @Override
-            public RegistryKey<? extends Registry<? extends T>> getRegistryKey() {
+            public @NotNull ResourceKey<? extends Registry<? extends T>> key() {
                 return getForgeRegistry().getRegistryKey();
             }
 
             @Override
-            public Lifecycle getLifecycle() {
+            public @NotNull Lifecycle registryLifecycle() {
                 return Lifecycle.stable();
             }
 
             @Override
-            public Stream<RegistryEntry.Reference<T>> streamEntries() {
+            public @NotNull Stream<Holder.Reference<T>> listElements() {
                 return getForgeRegistry().getEntries().stream()
-                    .map(entry -> RegistryEntry.Reference.standAlone(this, entry.getKey()));
+                    .map(entry -> Holder.Reference.createStandAlone(this, entry.getKey()));
             }
 
             @Override
-            public Stream<RegistryEntryList.Named<T>> streamTags() {
-                return ForgeRegistryWrapper.this.streamTagsAndEntries()
+            public @NotNull Stream<HolderSet.Named<T>> listTags() {
+                return ForgeRegistryWrapper.this.getTags()
                     .map(Pair::getSecond);
             }
 
             @Override
-            public Optional<RegistryEntry.Reference<T>> getOptional(RegistryKey<T> key) {
-                return ForgeRegistryWrapper.this.getEntry(key);
+            public @NotNull Optional<Holder.Reference<T>> get(@NotNull ResourceKey<T> key) {
+                return ForgeRegistryWrapper.this.getHolder(key);
             }
 
             @Override
-            public Optional<RegistryEntryList.Named<T>> getOptional(TagKey<T> tag) {
-                return ForgeRegistryWrapper.this.getEntryList(tag);
+            public @NotNull Optional<HolderSet.Named<T>> get(@NotNull TagKey<T> tag) {
+                return ForgeRegistryWrapper.this.getTag(tag);
             }
         };
     }
@@ -73,27 +69,27 @@ public class ForgeRegistryWrapper<T> implements Registry<T> {
     }
 
     @Override
-    public RegistryKey<? extends Registry<T>> getKey() {
+    public @NotNull ResourceKey<? extends Registry<T>> key() {
         return this.getForgeRegistry().getRegistryKey();
     }
 
     @Override
-    public @Nullable Identifier getId(T value) {
+    public @Nullable ResourceLocation getKey(@NotNull T value) {
         return this.getForgeRegistry().getKey(value);
     }
 
     @Override
-    public Optional<RegistryKey<T>> getKey(T entry) {
+    public @NotNull Optional<ResourceKey<T>> getResourceKey(@NotNull T entry) {
         return this.getForgeRegistry().getResourceKey(entry);
     }
 
     @Override
-    public int getRawId(@Nullable T value) {
+    public int getId(@Nullable T value) {
         throw new UnsupportedOperationException("Forge registries do not have raw IDs associated with its entries");
     }
 
     @Override
-    public @Nullable T get(int index) {
+    public @Nullable T byId(int index) {
         throw new UnsupportedOperationException("Forge registries do not have raw IDs associated with its entries");
     }
 
@@ -103,150 +99,150 @@ public class ForgeRegistryWrapper<T> implements Registry<T> {
     }
 
     @Override
-    public @Nullable T get(@Nullable RegistryKey<T> key) {
+    public @Nullable T get(@Nullable ResourceKey<T> key) {
         if (key == null) {
             return null;
         }
-        return this.getForgeRegistry().getValue(key.getValue());
+        return this.getForgeRegistry().getValue(key.location());
     }
 
     @Override
-    public @Nullable T get(@Nullable Identifier id) {
+    public @Nullable T get(@Nullable ResourceLocation id) {
         return this.getForgeRegistry().getValue(id);
     }
 
     @Override
-    public Lifecycle getEntryLifecycle(T entry) {
+    public @NotNull Lifecycle lifecycle(@NotNull T entry) {
         return Lifecycle.stable();
     }
 
     @Override
-    public Lifecycle getLifecycle() {
+    public @NotNull Lifecycle registryLifecycle() {
         return Lifecycle.stable();
     }
 
     @Override
-    public Set<Identifier> getIds() {
+    public @NotNull Set<ResourceLocation> keySet() {
         return this.getForgeRegistry().getKeys();
     }
 
     @Override
-    public Set<Map.Entry<RegistryKey<T>, T>> getEntrySet() {
+    public @NotNull Set<Map.Entry<ResourceKey<T>, T>> entrySet() {
         return this.getForgeRegistry().getEntries();
     }
 
     @Override
-    public Set<RegistryKey<T>> getKeys() {
+    public @NotNull Set<ResourceKey<T>> registryKeySet() {
         return this.getForgeRegistry().getEntries().stream()
             .map(Map.Entry::getKey)
             .collect(Collectors.toSet());
     }
 
     @Override
-    public Optional<RegistryEntry.Reference<T>> getRandom(Random random) {
+    public @NotNull Optional<Holder.Reference<T>> getRandom(@NotNull RandomSource random) {
         if (this.size() == 0) {
             return Optional.empty();
         }
 
-        Collection<Identifier> keys = this.getForgeRegistry().getKeys();
+        Collection<ResourceLocation> keys = this.getForgeRegistry().getKeys();
         int index = random.nextInt(keys.size());
-        return Optional.of(this.createEntry(RegistryKey.of(this.getKey(), keys.stream().skip(index).findAny().orElseThrow())));
+        return Optional.of(this.createIntrusiveHolder(ResourceKey.create(this.key(), keys.stream().skip(index).findAny().orElseThrow())));
     }
 
     @Override
-    public boolean containsId(Identifier id) {
+    public boolean containsKey(@NotNull ResourceLocation id) {
         return this.getForgeRegistry().containsKey(id);
     }
 
     @Override
-    public boolean contains(RegistryKey<T> key) {
-        return this.getForgeRegistry().containsKey(key.getValue());
+    public boolean containsKey(ResourceKey<T> key) {
+        return this.getForgeRegistry().containsKey(key.location());
     }
 
     @Override
-    public Registry<T> freeze() {
+    public @NotNull Registry<T> freeze() {
         return this;
     }
 
     @Override
-    public RegistryEntry.Reference<T> createEntry(T value) {
+    public @NotNull Holder.Reference<T> createIntrusiveHolder(@NotNull T value) {
         //return RegistryEntry.Reference.intrusive(this.wrapper, value);
-        return this.createEntry(this.getKey(value).orElseThrow(), value);
+        return this.createIntrusiveHolder(this.getResourceKey(value).orElseThrow(), value);
     }
 
-    public RegistryEntry.Reference<T> createEntry(RegistryKey<T> key) {
-        return this.createEntry(key, this.get(key));
+    public Holder.Reference<T> createIntrusiveHolder(ResourceKey<T> key) {
+        return this.createIntrusiveHolder(key, this.get(key));
     }
 
     @SuppressWarnings("unchecked")
-    public RegistryEntry.Reference<T> createEntry(RegistryKey<T> key, T value) {
-        RegistryEntry.Reference<T> entry = RegistryEntry.Reference.standAlone(this.wrapper, key);
-        ((AccessorRegistryEntryReference<T>)entry).invokeSetValue(value);
+    public Holder.Reference<T> createIntrusiveHolder(ResourceKey<T> key, T value) {
+        Holder.Reference<T> entry = Holder.Reference.createStandAlone(this.wrapper, key);
+        ((AccessorRegistryEntryReference<T>)entry).invokeBindValue(value);
         return entry;
     }
 
     @Override
-    public Optional<RegistryEntry.Reference<T>> getEntry(int rawId) {
+    public @NotNull Optional<Holder.Reference<T>> getHolder(int rawId) {
         throw new UnsupportedOperationException("Forge registries do not have raw IDs associated with its entries");
     }
 
     @Override
-    public Optional<RegistryEntry.Reference<T>> getEntry(RegistryKey<T> key) {
+    public @NotNull Optional<Holder.Reference<T>> getHolder(@NotNull ResourceKey<T> key) {
         T value = this.get(key);
         if (value == null) {
             return Optional.empty();
         }
-        return Optional.of(this.createEntry(value));
+        return Optional.of(this.createIntrusiveHolder(value));
     }
 
     @Override
-    public RegistryEntry<T> getEntry(T value) {
-        return this.createEntry(value);
+    public @NotNull Holder<T> wrapAsHolder(@NotNull T value) {
+        return this.createIntrusiveHolder(value);
     }
 
     @Override
-    public Stream<RegistryEntry.Reference<T>> streamEntries() {
+    public @NotNull Stream<Holder.Reference<T>> holders() {
         return this.getForgeRegistry().getEntries().stream()
-            .map(entry -> this.createEntry(entry.getKey(), entry.getValue()));
+            .map(entry -> this.createIntrusiveHolder(entry.getKey(), entry.getValue()));
     }
 
     @Override
-    public Optional<RegistryEntryList.Named<T>> getEntryList(TagKey<T> tag) {
-        return Optional.of(RegistryEntryList.of(this.wrapper, tag));
+    public @NotNull Optional<HolderSet.Named<T>> getTag(@NotNull TagKey<T> tag) {
+        return Optional.of(HolderSet.emptyNamed(this.wrapper, tag));
     }
 
     @Override
-    public RegistryEntryList.Named<T> getOrCreateEntryList(TagKey<T> tag) {
-        return RegistryEntryList.of(this.wrapper, tag);
+    public @NotNull HolderSet.Named<T> getOrCreateTag(@NotNull TagKey<T> tag) {
+        return HolderSet.emptyNamed(this.wrapper, tag);
     }
 
     @Override
-    public Stream<Pair<TagKey<T>, RegistryEntryList.Named<T>>> streamTagsAndEntries() {
+    public @NotNull Stream<Pair<TagKey<T>, HolderSet.Named<T>>> getTags() {
         return Objects.requireNonNull(this.getForgeRegistry().tags())
             .getTagNames()
-            .map(tag -> Pair.of(tag, this.getEntryList(tag).orElseThrow()));
+            .map(tag -> Pair.of(tag, this.getTag(tag).orElseThrow()));
     }
 
     @Override
-    public Stream<TagKey<T>> streamTags() {
+    public @NotNull Stream<TagKey<T>> getTagNames() {
         return Objects.requireNonNull(this.getForgeRegistry().tags()).getTagNames();
     }
 
     @Override
-    public void clearTags() {
+    public void resetTags() {
     }
 
     @Override
-    public void populateTags(Map<TagKey<T>, List<RegistryEntry<T>>> tagEntries) {
+    public void bindTags(@NotNull Map<TagKey<T>, List<Holder<T>>> tagEntries) {
     }
 
     @Override
-    public RegistryEntryOwner<T> getEntryOwner() {
+    public @NotNull HolderOwner<T> holderOwner() {
         return this.wrapper;
     }
 
     @Override
-    public RegistryWrapper.Impl<T> getReadOnlyWrapper() {
+    public @NotNull HolderLookup.RegistryLookup<T> asLookup() {
         return this.wrapper;
     }
 

@@ -20,7 +20,7 @@ public record RegistryHelperImpl(NewRegistryEvent event) implements IRegistryHel
             //? if neoforge {
             new RegistryBuilder<>(key);
             //?} else {
-            /*new RegistryBuilder<T>().setName(key.getValue());
+            /*new RegistryBuilder<T>().setName(key.location());
             *///?}
         return new RegistryBuilderImpl<>(event, registryBuilder);
     }
@@ -31,7 +31,7 @@ public record RegistryHelperImpl(NewRegistryEvent event) implements IRegistryHel
             //? if neoforge {
             new RegistryBuilder<>(key).defaultKey(defaultKey);
              //?} else {
-            /*new RegistryBuilder<T>().setName(key.getValue()).setDefaultKey(defaultKey);
+            /*new RegistryBuilder<T>().setName(key.location()).setDefaultKey(defaultKey);
             *///?}
         return new RegistryBuilderImpl<>(event, registryBuilder);
     }

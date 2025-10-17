@@ -32,7 +32,7 @@ import net.neoforged.neoforge.registries.NewRegistryEvent;
 import net.neoforged.neoforge.registries.RegisterEvent;
 //?} else {
 /*import mod.bluestaggo.modernerbeta.forgelike.registry.ForgeRegistryHandler;
-import net.minecraft.resource.DirectoryResourcePack;
+import net.minecraft.server.packs.PathPackResources;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.util.LogicalSidedProvider;
 import net.minecraftforge.event.AddPackFindersEvent;
@@ -148,8 +148,7 @@ public class ModEventsCommon {
                 BiomeProviderInfoPayload.ID,
                 BiomeProviderInfoPayload.CODEC,
                 (payload, context) -> {
-                    S2CPacketHandlers.onBiomeProviderInfo(context.player()
-                            /*? >=1.21.9 {*//*.level()*//*?} else {*/.getWorld()/*?}*/, payload);
+                    S2CPacketHandlers.onBiomeProviderInfo(context.player().level(), payload);
                 }
         );
     }
@@ -184,13 +183,13 @@ public class ModEventsCommon {
                 );
                 //?} else {
                 /*Path resourcePath = ModList.get().getModFileById(ModernerBeta.MOD_ID).getFile().findResource("resourcepacks/" + pack);
-                ResourcePackProfile packProfile = ResourcePackProfile.create(
+                Pack packProfile = Pack.readMetaAndCreate(
                     "moderner_beta/" + pack,
                     title,
                     false,
-                    path -> new DirectoryResourcePack(path, resourcePath, false),
-                    ResourceType.SERVER_DATA,
-                    ResourcePackProfile.InsertionPosition.TOP,
+                    path -> new PathPackResources(path, resourcePath, false),
+                    PackType.SERVER_DATA,
+                    Pack.Position.TOP,
                     source
                 );
 

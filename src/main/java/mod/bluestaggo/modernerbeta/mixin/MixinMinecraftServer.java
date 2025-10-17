@@ -60,7 +60,13 @@ public abstract class MixinMinecraftServer {
         method = "setInitialSpawn",
         at = @At(
             value = "INVOKE", 
-            target = "Lnet/minecraft/server/level/PlayerRespawnLogic;getSpawnPosInChunk(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/level/ChunkPos;)Lnet/minecraft/core/BlockPos;"
+            target = "Lnet/minecraft/server/level/" +
+                //? if >=1.21.9 {
+                /*"PlayerSpawnFinder"
+                *///? } else {
+                "PlayerRespawnLogic"
+                //? }
+                + ";getSpawnPosInChunk(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/level/ChunkPos;)Lnet/minecraft/core/BlockPos;"
         )
     )
     private static BlockPos redirectPlayerSpawnFinder(ServerLevel world, ChunkPos chunkPos, Operation<BlockPos> original) {

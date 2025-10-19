@@ -21,8 +21,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
 
-public class ModernBetaLevelGenProvider extends FabricDynamicRegistryProvider {
-    public ModernBetaLevelGenProvider(FabricDataOutput output, CompletableFuture<Provider> registriesFuture) {
+public class ModernBetaWorldGenProvider extends FabricDynamicRegistryProvider {
+    public ModernBetaWorldGenProvider(FabricDataOutput output, CompletableFuture<Provider> registriesFuture) {
         super(output, registriesFuture);
     }
 

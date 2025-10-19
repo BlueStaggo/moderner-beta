@@ -30,7 +30,7 @@ public class ModernBetaDataGeneratorEntrypoint implements DataGeneratorEntrypoin
         
         pack.addProvider((FabricDataGenerator.Pack.Factory<ModernBetaStructureDatafixProvider>)
                 outputx -> new ModernBetaStructureDatafixProvider(outputx, inputs));
-        pack.addProvider(ModernBetaLevelGenProvider::new);
+        pack.addProvider(ModernBetaWorldGenProvider::new);
         pack.addProvider(ModernBetaTagProviderBiome::new);
         pack.addProvider(ModernBetaTagProviderStructure::new);
         pack.addProvider(ModernBetaTagProviderBlock::new);

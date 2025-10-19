@@ -25,7 +25,7 @@ stonecutter.parameters {
 
         string("registryOr") {
             direction = eval(current.version, "<1.21.2")
-            replace(".lookupOrThrow(ModernBetaRegistryKeys.", ".registryOrThrow(ModernBetaRegistryKeys.")
+            replace(".lookupOrThrow(ModernBetaResourceKeys.", ".registryOrThrow(ModernBetaResourceKeys.")
         }
 
         string("registryOr") {

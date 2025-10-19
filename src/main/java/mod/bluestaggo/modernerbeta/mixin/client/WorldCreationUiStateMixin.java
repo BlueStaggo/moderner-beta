@@ -1,8 +1,8 @@
 package mod.bluestaggo.modernerbeta.mixin.client;
 
-import mod.bluestaggo.modernerbeta.client.gui.screen.ModernBetaLevelScreen;
-import mod.bluestaggo.modernerbeta.client.gui.screen.ModernBetaLevelScreenProvider;
-import mod.bluestaggo.modernerbeta.world.preset.ModernBetaLevelPresets;
+import mod.bluestaggo.modernerbeta.client.gui.screen.ModernBetaWorldScreen;
+import mod.bluestaggo.modernerbeta.client.gui.screen.ModernBetaWorldScreenProvider;
+import mod.bluestaggo.modernerbeta.world.preset.ModernBetaWorldPresets;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screens.worldselection.PresetEditor;
@@ -22,15 +22,15 @@ public abstract class WorldCreationUiStateMixin {
     @Inject(method = "getPresetEditor", at = @At("RETURN"), cancellable = true)
     public void injectGetPresetEditor(CallbackInfoReturnable<PresetEditor> info) {
         Holder<WorldPreset> preset = this.getWorldType().preset();
-        ResourceKey<WorldPreset> modernBeta = ModernBetaLevelPresets.MODERN_BETA;
+        ResourceKey<WorldPreset> modernBeta = ModernBetaWorldPresets.MODERN_BETA;
         
         if (preset != null && preset.unwrapKey().isPresent() && preset.unwrapKey().get().equals(modernBeta)) {
             info.setReturnValue(
-                (parent, generatorOptionsHolder) -> new ModernBetaLevelScreen(
+                (parent, generatorOptionsHolder) -> new ModernBetaWorldScreen(
                     parent,
                     generatorOptionsHolder,
                     (settingsChunk, settingsBiome, settingsCaveBiome) -> parent.getUiState().updateDimensions(
-                        ModernBetaLevelScreenProvider.createModifier(
+                        ModernBetaWorldScreenProvider.createModifier(
                             settingsChunk,
                             settingsBiome,
                             settingsCaveBiome

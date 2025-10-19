@@ -37,7 +37,7 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
     
     private static final ResourceLocation TEXTURE_PRESET_CUSTOM = createTextureId(ModernerBeta.createId("custom"));
     
-    private final ModernBetaLevelScreen worldScreen;
+    private final ModernBetaWorldScreen worldScreen;
     private final List<ResourceLocation> presets;
     private final boolean displayCategories;
 
@@ -66,14 +66,14 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
         this.presetCategoryRegistry = presetCategoryRegistry;
 
         Screen worldScreen = parent;
-        while (!(worldScreen instanceof ModernBetaLevelScreen)) {
+        while (!(worldScreen instanceof ModernBetaWorldScreen)) {
             if (!(worldScreen instanceof ModernBetaScreen modernBetaScreen)) {
                 worldScreen = null;
                 break;
             }
             worldScreen = modernBetaScreen.parent;
         }
-        this.worldScreen = (ModernBetaLevelScreen)worldScreen;
+        this.worldScreen = (ModernBetaWorldScreen)worldScreen;
     }
     
     @Override

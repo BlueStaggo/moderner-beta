@@ -19,7 +19,7 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
 
 @Environment(EnvType.CLIENT)
-public class ModernBetaLevelScreenProvider {
+public class ModernBetaWorldScreenProvider {
     public static WorldCreationContext.DimensionsUpdater createModifier(
         CompoundTag chunkSettingsCompound,
         CompoundTag biomeSettingsCompound,

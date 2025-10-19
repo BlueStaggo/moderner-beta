@@ -9,7 +9,7 @@ import mod.bluestaggo.modernerbeta.world.carver.configured.ModernBetaConfiguredC
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaNoiseGeneratorSettings;
 import mod.bluestaggo.modernerbeta.world.feature.configured.ModernBetaConfiguredFeatures;
 import mod.bluestaggo.modernerbeta.world.feature.placed.ModernBetaPlacedFeatures;
-import mod.bluestaggo.modernerbeta.world.preset.ModernBetaLevelPresets;
+import mod.bluestaggo.modernerbeta.world.preset.ModernBetaWorldPresets;
 import mod.bluestaggo.modernerbeta.world.structure.ModernBetaStructureSets;
 import mod.bluestaggo.modernerbeta.world.structure.ModernBetaStructures;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
@@ -59,7 +59,7 @@ public class ModernBetaDataGeneratorEntrypoint implements DataGeneratorEntrypoin
         registryBuilder.add(Registries.NOISE_SETTINGS, ModernBetaNoiseGeneratorSettings::bootstrap);
         registryBuilder.add(Registries.STRUCTURE, ModernBetaStructures::bootstrap);
         registryBuilder.add(Registries.STRUCTURE_SET, ModernBetaStructureSets::bootstrap);
-        registryBuilder.add(Registries.WORLD_PRESET, ModernBetaLevelPresets::bootstrap);
+        registryBuilder.add(Registries.WORLD_PRESET, ModernBetaWorldPresets::bootstrap);
         registryBuilder.add(ModernBetaResourceKeys.SETTINGS_PRESET, ModernBetaSettingsPresets::bootstrap);
         registryBuilder.add(ModernBetaResourceKeys.SETTINGS_PRESET_CATEGORY, ModernBetaSettingsPresetCategories::bootstrap);
     }

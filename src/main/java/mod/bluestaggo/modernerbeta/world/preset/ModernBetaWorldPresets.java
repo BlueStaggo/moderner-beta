@@ -27,7 +27,7 @@ import net.minecraft.world.level.levelgen.presets.WorldPreset;
 
 import java.util.Map;
 
-public class ModernBetaLevelPresets {
+public class ModernBetaWorldPresets {
     public static final ResourceKey<WorldPreset> MODERN_BETA = keyOf(ModernerBeta.createId(ModernerBeta.MOD_ID));
             
     public static void bootstrap(BootstrapContext<WorldPreset> context) {

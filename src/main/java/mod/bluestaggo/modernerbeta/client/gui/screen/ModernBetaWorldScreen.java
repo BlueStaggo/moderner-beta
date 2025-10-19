@@ -38,7 +38,7 @@ import java.util.Optional;
 import java.util.Random;
 
 @Environment(EnvType.CLIENT)
-public class ModernBetaLevelScreen extends ModernBetaScreen {
+public class ModernBetaWorldScreen extends ModernBetaScreen {
     private static final String TEXT_TITLE = "createWorld.customize.modern_beta.title"; 
     private static final String TEXT_TITLE_CHUNK = "createWorld.customize.modern_beta.title.chunk"; 
     private static final String TEXT_TITLE_BIOME = "createWorld.customize.modern_beta.title.biome"; 
@@ -72,7 +72,7 @@ public class ModernBetaLevelScreen extends ModernBetaScreen {
     private ModernBetaSettingsPreset preset;
     private Button buttonPreset;
 
-    public ModernBetaLevelScreen(Screen parent, WorldCreationContext context, TriConsumer<CompoundTag, CompoundTag, CompoundTag> onDone) {
+    public ModernBetaWorldScreen(Screen parent, WorldCreationContext context, TriConsumer<CompoundTag, CompoundTag, CompoundTag> onDone) {
         super(Component.translatable(TEXT_TITLE), parent);
         
         ChunkGenerator chunkGenerator = context.selectedDimensions().overworld();

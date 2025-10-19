@@ -31,12 +31,12 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
     public ModernBetaGraphicalCompoundSettingsScreen(
         String title,
         Screen parent,
-        WorldCreationContext generatorOptionsHolder,
+        WorldCreationContext context,
         String type,
         CompoundTag settings,
         Consumer<CompoundTag> onDone
     ) {
-        super(title, parent, generatorOptionsHolder, type, settings, onDone);
+        super(title, parent, context, type, settings, onDone);
     }
 
     protected Tuple<CompoundTag, String> resolveSettings(String key) {
@@ -286,7 +286,7 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
             this.getTextKey(key),
             getTooltip(this.getTextKey(key)),
             (optionText, value) -> Component.nullToEmpty(stringSupplier.get()),
-            new BiomePickerCallbacks(this.minecraft::setScreen, this, this.generatorOptionsHolder, allowNone),
+            new BiomePickerCallbacks(this.minecraft::setScreen, this, this.context, allowNone),
             stringSupplier.get(),
             value -> {
                 settings.putString(subKey, value);
@@ -370,7 +370,7 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
             () -> this.minecraft.setScreen(listSettingsScreenConstructor.create(
                 Component.translatable(STRING_PREFIX + "list.title", text.getString()).getString(),
                 this,
-                this.generatorOptionsHolder,
+                this.context,
                 listSupplier.get().copy(),
                 list -> settings.put(subKey, list)
             ))
@@ -391,7 +391,7 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
             () -> this.minecraft.setScreen(mapSettingsScreenConstructor.create(
                 Component.translatable(STRING_PREFIX + "list.titleMap", text.getString()).getString(),
                 this,
-                this.generatorOptionsHolder,
+                this.context,
                 compoundSupplier.get(),
                 compound -> settings.put(subKey, compound)
             ))

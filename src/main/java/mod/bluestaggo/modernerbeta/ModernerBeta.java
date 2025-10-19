@@ -9,7 +9,7 @@ import com.mojang.serialization.JsonOps;
 import mod.bluestaggo.modernerbeta.network.INetworkHelper;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
-import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistryKeys;
+import mod.bluestaggo.modernerbeta.registry.ModernBetaResourceKeys;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPresetCategory;
@@ -95,8 +95,8 @@ public class ModernerBeta {
 
     public static void setupCustomDynamicRegistries() {
         CUSTOM_DYNAMIC_REGISTRIES = List.of(
-            new Tuple<>(ModernBetaRegistryKeys.SETTINGS_PRESET, ModernBetaSettingsPreset.CODEC),
-            new Tuple<>(ModernBetaRegistryKeys.SETTINGS_PRESET_CATEGORY, ModernBetaSettingsPresetCategory.CODEC)
+            new Tuple<>(ModernBetaResourceKeys.SETTINGS_PRESET, ModernBetaSettingsPreset.CODEC),
+            new Tuple<>(ModernBetaResourceKeys.SETTINGS_PRESET_CATEGORY, ModernBetaSettingsPresetCategory.CODEC)
         );
     }
 

@@ -13,13 +13,13 @@ import net.minecraft.world.level.levelgen.placement.BiomeFilter;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 
 public class ModernBetaMiscPlacedFeatures {
-    public static final ResourceKey<PlacedFeature> FREEZE_TOP_LAYER = ModernBetaPlacedFeatures.of(ModernBetaFeatureTags.FREEZE_TOP_LAYER);
+    public static final ResourceKey<PlacedFeature> FREEZE_TOP_LAYER = ModernBetaPlacedFeatures.of(ModernBetaFeatureTags.SNOW_AND_FREEZE);
     
-    public static void bootstrap(BootstrapContext<PlacedFeature> featureRegisterable) {
-        HolderGetter<ConfiguredFeature<?, ?>> registryConfigured = featureRegisterable.lookup(Registries.CONFIGURED_FEATURE);
+    public static void bootstrap(BootstrapContext<PlacedFeature> context) {
+        HolderGetter<ConfiguredFeature<?, ?>> registryConfigured = context.lookup(Registries.CONFIGURED_FEATURE);
 
         Holder.Reference<ConfiguredFeature<?, ?>> freezeTopLayer = registryConfigured.getOrThrow(ModernBetaMiscConfiguredFeatures.FREEZE_TOP_LAYER);
         
-        PlacementUtils.register(featureRegisterable, FREEZE_TOP_LAYER, freezeTopLayer, BiomeFilter.biome());
+        PlacementUtils.register(context, FREEZE_TOP_LAYER, freezeTopLayer, BiomeFilter.biome());
     }
 }

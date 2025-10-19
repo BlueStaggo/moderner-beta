@@ -14,7 +14,7 @@ import java.util.function.Supplier;
 public class ModernerBetaForgeLikeMixinPlugin implements IMixinConfigPlugin {
     private static final Supplier<Boolean> TRUE = () -> true;
     private static final Map<String, Supplier<Boolean>> CONDITIONS = ImmutableMap.of(
-        "mod.bluestaggo.modernerbeta.forgelike.mixin.compat.blueprint.MixinModdedBiomeSlicesManager", () -> ModernerBetaForgeLike.isModPresent("blueprint")
+        "mod.bluestaggo.modernerbeta.forgelike.mixin.compat.blueprint.ModdedBiomeSlicesManagerMixin", () -> ModernerBetaForgeLike.isModPresent("blueprint")
     );
 
     @Override

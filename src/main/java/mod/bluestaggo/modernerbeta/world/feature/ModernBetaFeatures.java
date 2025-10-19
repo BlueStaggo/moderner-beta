@@ -8,7 +8,7 @@ import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguratio
 
 public class ModernBetaFeatures {
     private static IRegistryHandler<Feature<?>> registryHandler;
-    public static BetaFreezeTopLayerFeature FREEZE_TOP_LAYER;
+    public static BetaSnowAndFreezeFeature SNOW_AND_FREEZE;
     public static BetaOreClayFeature ORE_CLAY;
     public static CaveInfdev325Feature CAVE_INFDEV_325;
 
@@ -19,8 +19,8 @@ public class ModernBetaFeatures {
     @SuppressWarnings("unchecked")
     public static void register(IRegistryHandler<?> handler) {
         registryHandler = (IRegistryHandler<Feature<?>>) handler;
-        FREEZE_TOP_LAYER = register(
-                ModernBetaFeatureTags.FREEZE_TOP_LAYER, new BetaFreezeTopLayerFeature(NoneFeatureConfiguration.CODEC)
+        SNOW_AND_FREEZE = register(
+                ModernBetaFeatureTags.SNOW_AND_FREEZE, new BetaSnowAndFreezeFeature(NoneFeatureConfiguration.CODEC)
         );
 
         ORE_CLAY = register(

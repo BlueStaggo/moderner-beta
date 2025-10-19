@@ -23,8 +23,8 @@ public class ModernBetaOreConfiguredFeatures {
     public static final ResourceKey<ConfiguredFeature<?, ?>> CAVE_INFDEV_325 = ModernBetaConfiguredFeatures.of(ModernBetaFeatureTags.CAVE_INFDEV_325);
 
     @SuppressWarnings("unchecked")
-    public static void bootstrap(BootstrapContext<?> registerable) {
-        BootstrapContext<ConfiguredFeature<?, ?>> featureRegisterable = (BootstrapContext<ConfiguredFeature<?, ?>>)registerable;
+    public static void bootstrap(BootstrapContext<?> context) {
+        BootstrapContext<ConfiguredFeature<?, ?>> featureContext = (BootstrapContext<ConfiguredFeature<?, ?>>)context;
         
         TagMatchTest ruleStone = new TagMatchTest(BlockTags.STONE_ORE_REPLACEABLES);
         TagMatchTest ruleDeepslate = new TagMatchTest(BlockTags.DEEPSLATE_ORE_REPLACEABLES);
@@ -39,8 +39,8 @@ public class ModernBetaOreConfiguredFeatures {
             OreConfiguration.target(new BlockMatchTest(Blocks.LAVA), BlockStates.LAVA)
         );
         
-        FeatureUtils.register(featureRegisterable, ORE_CLAY, ModernBetaFeatures.ORE_CLAY, new OreConfiguration(new BlockMatchTest(Blocks.SAND), Blocks.CLAY.defaultBlockState(), 33));
-        FeatureUtils.register(featureRegisterable, ORE_EMERALD_Y95, Feature.ORE, new OreConfiguration(emeraldTargets, 8, 0.9f));
-        FeatureUtils.register(featureRegisterable, CAVE_INFDEV_325, ModernBetaFeatures.CAVE_INFDEV_325, new OreConfiguration(caveTargets, 16, 0.0f));
+        FeatureUtils.register(featureContext, ORE_CLAY, ModernBetaFeatures.ORE_CLAY, new OreConfiguration(new BlockMatchTest(Blocks.SAND), Blocks.CLAY.defaultBlockState(), 33));
+        FeatureUtils.register(featureContext, ORE_EMERALD_Y95, Feature.ORE, new OreConfiguration(emeraldTargets, 8, 0.9f));
+        FeatureUtils.register(featureContext, CAVE_INFDEV_325, ModernBetaFeatures.CAVE_INFDEV_325, new OreConfiguration(caveTargets, 16, 0.0f));
     }
 }

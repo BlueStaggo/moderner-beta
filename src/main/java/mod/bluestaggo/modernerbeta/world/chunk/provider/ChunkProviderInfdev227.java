@@ -162,7 +162,7 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
     }
 
     @Override
-    public int getHeight(LevelHeightAccessor world, int x, int z, Types type) {
+    public int getHeight(LevelHeightAccessor level, int x, int z, Types type) {
         int chunkX = x >> 4;
         int chunkZ = z >> 4;
         

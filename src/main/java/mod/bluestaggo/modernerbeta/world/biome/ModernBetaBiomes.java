@@ -1,12 +1,12 @@
 package mod.bluestaggo.modernerbeta.world.biome;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;
-import mod.bluestaggo.modernerbeta.world.biome.biomes.alpha.BiomeAlpha;
-import mod.bluestaggo.modernerbeta.world.biome.biomes.alpha.BiomeAlphaWinter;
+import mod.bluestaggo.modernerbeta.world.biome.biomes.alpha.AlphaBiome;
+import mod.bluestaggo.modernerbeta.world.biome.biomes.alpha.AlphaWinterBiome;
 import mod.bluestaggo.modernerbeta.world.biome.biomes.beta.*;
-import mod.bluestaggo.modernerbeta.world.biome.biomes.earlyrelease.BiomeEarlyReleaseIcePlains;
-import mod.bluestaggo.modernerbeta.world.biome.biomes.earlyrelease.BiomeEarlyReleaseSwampland;
-import mod.bluestaggo.modernerbeta.world.biome.biomes.earlyrelease.BiomeEarlyReleaseTaiga;
+import mod.bluestaggo.modernerbeta.world.biome.biomes.earlyrelease.EarlyReleaseIcePlainsBiome;
+import mod.bluestaggo.modernerbeta.world.biome.biomes.earlyrelease.EarlyReleaseSwamplandBiome;
+import mod.bluestaggo.modernerbeta.world.biome.biomes.earlyrelease.EarlyReleaseTaigaBiome;
 import mod.bluestaggo.modernerbeta.world.biome.biomes.indev.*;
 import mod.bluestaggo.modernerbeta.world.biome.biomes.infdev.*;
 import mod.bluestaggo.modernerbeta.world.biome.biomes.latebeta.*;
@@ -90,71 +90,71 @@ public class ModernBetaBiomes {
     public static final ResourceKey<Biome> EARLY_RELEASE_TAIGA = keyOf(ModernerBeta.createId(ModernBetaBiomeIDs.EARLY_RELEASE_TAIGA));
 
     public static void bootstrap(BootstrapContext<Biome> biomeRegisterable) {
-        register(biomeRegisterable, BETA_FOREST, BiomeBetaForest::create);
-        register(biomeRegisterable, BETA_OAK_FOREST, BiomeBetaOakForest::create);
-        register(biomeRegisterable, BETA_SHRUBLAND, BiomeBetaShrubland::create);
-        register(biomeRegisterable, BETA_DESERT, BiomeBetaDesert::create);
-        register(biomeRegisterable, BETA_SAVANNA, BiomeBetaSavanna::create);
-        register(biomeRegisterable, BETA_PLAINS, BiomeBetaPlains::create);
-        register(biomeRegisterable, BETA_SEASONAL_FOREST, BiomeBetaSeasonalForest::create);
-        register(biomeRegisterable, BETA_RAINFOREST, BiomeBetaRainforest::create);
-        register(biomeRegisterable, BETA_SWAMPLAND, BiomeBetaSwampland::create);
-        register(biomeRegisterable, BETA_TAIGA, BiomeBetaTaiga::create);
-        register(biomeRegisterable, BETA_OAK_TAIGA, BiomeBetaOakTaiga::create);
-        register(biomeRegisterable, BETA_TUNDRA, BiomeBetaTundra::create);
-        register(biomeRegisterable, BETA_ICE_DESERT, BiomeBetaIceDesert::create);
+        register(biomeRegisterable, BETA_FOREST, BetaForestBiome::create);
+        register(biomeRegisterable, BETA_OAK_FOREST, BetaOakForestBiome::create);
+        register(biomeRegisterable, BETA_SHRUBLAND, BetaShrublandBiome::create);
+        register(biomeRegisterable, BETA_DESERT, BetaDesertBiome::create);
+        register(biomeRegisterable, BETA_SAVANNA, BetaSavannaBiome::create);
+        register(biomeRegisterable, BETA_PLAINS, BetaPlainsBiome::create);
+        register(biomeRegisterable, BETA_SEASONAL_FOREST, BetaSeasonalForestBiome::create);
+        register(biomeRegisterable, BETA_RAINFOREST, BetaRainforestBiome::create);
+        register(biomeRegisterable, BETA_SWAMPLAND, BetaSwamplandBiome::create);
+        register(biomeRegisterable, BETA_TAIGA, BetaTaigaBiome::create);
+        register(biomeRegisterable, BETA_OAK_TAIGA, BetaOakTaigaBiome::create);
+        register(biomeRegisterable, BETA_TUNDRA, BetaTundraBiome::create);
+        register(biomeRegisterable, BETA_ICE_DESERT, BetaIceDesertBiome::create);
 
-        register(biomeRegisterable, BETA_OCEAN, BiomeBetaOcean::create);
-        register(biomeRegisterable, BETA_LUKEWARM_OCEAN, BiomeBetaLukewarmOcean::create);
-        register(biomeRegisterable, BETA_WARM_OCEAN, BiomeBetaWarmOcean::create);
-        register(biomeRegisterable, BETA_COLD_OCEAN, BiomeBetaColdOcean::create);
-        register(biomeRegisterable, BETA_FROZEN_OCEAN, BiomeBetaFrozenOcean::create);
+        register(biomeRegisterable, BETA_OCEAN, BetaOceanBiome::create);
+        register(biomeRegisterable, BETA_LUKEWARM_OCEAN, BetaLukewarmOceanBiome::create);
+        register(biomeRegisterable, BETA_WARM_OCEAN, BetaWarmOceanBiome::create);
+        register(biomeRegisterable, BETA_COLD_OCEAN, BetaColdOceanBiome::create);
+        register(biomeRegisterable, BETA_FROZEN_OCEAN, BetaFrozenOceanBiome::create);
         
-        register(biomeRegisterable, BETA_SKY, BiomeBetaSky::create);
+        register(biomeRegisterable, BETA_SKY, BetaSkyBiome::create);
 
-        register(biomeRegisterable, PE_FOREST, BiomePEForest::create);
-        register(biomeRegisterable, PE_SHRUBLAND, BiomePEShrubland::create);
-        register(biomeRegisterable, PE_DESERT, BiomePEDesert::create);
-        register(biomeRegisterable, PE_SAVANNA, BiomePESavanna::create);
-        register(biomeRegisterable, PE_PLAINS, BiomePEPlains::create);
-        register(biomeRegisterable, PE_SEASONAL_FOREST, BiomePESeasonalForest::create);
-        register(biomeRegisterable, PE_RAINFOREST, BiomePERainforest::create);
-        register(biomeRegisterable, PE_SWAMPLAND, BiomePESwampland::create);
-        register(biomeRegisterable, PE_TAIGA, BiomePETaiga::create);
-        register(biomeRegisterable, PE_TUNDRA, BiomePETundra::create);
-        register(biomeRegisterable, PE_ICE_DESERT, BiomePEIceDesert::create);
+        register(biomeRegisterable, PE_FOREST, PEForestBiome::create);
+        register(biomeRegisterable, PE_SHRUBLAND, PEShrublandBiome::create);
+        register(biomeRegisterable, PE_DESERT, PEDesertBiome::create);
+        register(biomeRegisterable, PE_SAVANNA, PESavannaBiome::create);
+        register(biomeRegisterable, PE_PLAINS, PEPlainsBiome::create);
+        register(biomeRegisterable, PE_SEASONAL_FOREST, PESeasonalForestBiome::create);
+        register(biomeRegisterable, PE_RAINFOREST, PERainforestBiome::create);
+        register(biomeRegisterable, PE_SWAMPLAND, PESwamplandBiome::create);
+        register(biomeRegisterable, PE_TAIGA, PETaigaBiome::create);
+        register(biomeRegisterable, PE_TUNDRA, PETundraBiome::create);
+        register(biomeRegisterable, PE_ICE_DESERT, PEIceDesertBiome::create);
 
-        register(biomeRegisterable, PE_OCEAN, BiomePEOcean::create);
-        register(biomeRegisterable, PE_LUKEWARM_OCEAN, BiomePELukewarmOcean::create);
-        register(biomeRegisterable, PE_WARM_OCEAN, BiomePEWarmOcean::create);
-        register(biomeRegisterable, PE_COLD_OCEAN, BiomePEColdOcean::create);
-        register(biomeRegisterable, PE_FROZEN_OCEAN, BiomePEFrozenOcean::create);
+        register(biomeRegisterable, PE_OCEAN, PEOceanBiome::create);
+        register(biomeRegisterable, PE_LUKEWARM_OCEAN, PELukewarmOceanBiome::create);
+        register(biomeRegisterable, PE_WARM_OCEAN, PEWarmOceanBiome::create);
+        register(biomeRegisterable, PE_COLD_OCEAN, PEColdOceanBiome::create);
+        register(biomeRegisterable, PE_FROZEN_OCEAN, PEFrozenOceanBiome::create);
 
-        register(biomeRegisterable, ALPHA, BiomeAlpha::create);
-        register(biomeRegisterable, ALPHA_WINTER, BiomeAlphaWinter::create);
+        register(biomeRegisterable, ALPHA, AlphaBiome::create);
+        register(biomeRegisterable, ALPHA_WINTER, AlphaWinterBiome::create);
 
-        register(biomeRegisterable, INFDEV_611, BiomeInfdev611::create);
-        register(biomeRegisterable, INFDEV_420, BiomeInfdev420::create);
-        register(biomeRegisterable, INFDEV_415, BiomeInfdev415::create);
-        register(biomeRegisterable, INFDEV_325, BiomeInfdev325::create);
-        register(biomeRegisterable, INFDEV_227, BiomeInfdev227::create);
+        register(biomeRegisterable, INFDEV_611, Infdev611Biome::create);
+        register(biomeRegisterable, INFDEV_420, Infdev420Biome::create);
+        register(biomeRegisterable, INFDEV_415, Infdev415Biome::create);
+        register(biomeRegisterable, INFDEV_325, Infdev325Biome::create);
+        register(biomeRegisterable, INFDEV_227, Infdev227Biome::create);
 
-        register(biomeRegisterable, INDEV_NORMAL, BiomeIndevNormal::create);
-        register(biomeRegisterable, INDEV_HELL, BiomeIndevHell::create);
-        register(biomeRegisterable, INDEV_PARADISE, BiomeIndevParadise::create);
-        register(biomeRegisterable, INDEV_WOODS, BiomeIndevWoods::create);
-        register(biomeRegisterable, CLASSIC_14A_08, BiomeClassic14a08::create);
+        register(biomeRegisterable, INDEV_NORMAL, IndevNormalBiome::create);
+        register(biomeRegisterable, INDEV_HELL, IndevHellBiome::create);
+        register(biomeRegisterable, INDEV_PARADISE, IndevParadiseBiome::create);
+        register(biomeRegisterable, INDEV_WOODS, IndevWoodsBiome::create);
+        register(biomeRegisterable, CLASSIC_14A_08, Classic14a08Biome::create);
 
-        register(biomeRegisterable, LATE_BETA_EXTREME_HILLS, BiomeLateBetaExtremeHills::create);
-        register(biomeRegisterable, LATE_BETA_ICE_PLAINS, BiomeLateBetaIcePlains::create);
-        register(biomeRegisterable, LATE_BETA_SWAMPLAND, BiomeLateBetaSwampland::create);
-        register(biomeRegisterable, LATE_BETA_PLAINS, BiomeLateBetaPlains::create);
-        register(biomeRegisterable, LATE_BETA_TAIGA, BiomeLateBetaTaiga::create);
+        register(biomeRegisterable, LATE_BETA_EXTREME_HILLS, LateBetaExtremeHillsBiome::create);
+        register(biomeRegisterable, LATE_BETA_ICE_PLAINS, LateBetaIcePlainsBiome::create);
+        register(biomeRegisterable, LATE_BETA_SWAMPLAND, LateBetaSwamplandBiome::create);
+        register(biomeRegisterable, LATE_BETA_PLAINS, LateBetaPlainsBiome::create);
+        register(biomeRegisterable, LATE_BETA_TAIGA, LateBetaTaigaBiome::create);
 
-        register(biomeRegisterable, EARLY_RELEASE_ICE_PLAINS, BiomeEarlyReleaseIcePlains::create);
-        register(biomeRegisterable, EARLY_RELEASE_SWAMPLAND, BiomeEarlyReleaseSwampland::create);
-        register(biomeRegisterable, EARLY_RELEASE_EXTREME_HILLS, BiomeLateBetaExtremeHills::create);
-        register(biomeRegisterable, EARLY_RELEASE_TAIGA, BiomeEarlyReleaseTaiga::create);
+        register(biomeRegisterable, EARLY_RELEASE_ICE_PLAINS, EarlyReleaseIcePlainsBiome::create);
+        register(biomeRegisterable, EARLY_RELEASE_SWAMPLAND, EarlyReleaseSwamplandBiome::create);
+        register(biomeRegisterable, EARLY_RELEASE_EXTREME_HILLS, LateBetaExtremeHillsBiome::create);
+        register(biomeRegisterable, EARLY_RELEASE_TAIGA, EarlyReleaseTaigaBiome::create);
     }
     
     private static void register(BootstrapContext<Biome> biomeRegisterable, ResourceKey<Biome> biome, BiFunction<HolderGetter<PlacedFeature>, HolderGetter<ConfiguredWorldCarver<?>>, Biome> biomeCreator) {

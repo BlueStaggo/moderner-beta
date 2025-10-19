@@ -7,11 +7,11 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 
 public class ModernBetaPlacedFeatures {
-    public static void bootstrap(BootstrapContext<PlacedFeature> featureRegisterable) {
-        ModernBetaMiscPlacedFeatures.bootstrap(featureRegisterable);
-        ModernBetaOrePlacedFeatures.bootstrap(featureRegisterable);
-        ModernBetaTreePlacedFeatures.bootstrap(featureRegisterable);
-        ModernBetaVegetationPlacedFeatures.bootstrap(featureRegisterable);
+    public static void bootstrap(BootstrapContext<PlacedFeature> context) {
+        ModernBetaMiscPlacedFeatures.bootstrap(context);
+        ModernBetaOrePlacedFeatures.bootstrap(context);
+        ModernBetaTreePlacedFeatures.bootstrap(context);
+        ModernBetaVegetationPlacedFeatures.bootstrap(context);
     }
     
     public static ResourceKey<PlacedFeature> of(String id) {

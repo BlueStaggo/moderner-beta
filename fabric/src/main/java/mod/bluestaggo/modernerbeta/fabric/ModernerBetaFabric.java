@@ -6,7 +6,7 @@ import mod.bluestaggo.modernerbeta.command.DebugProviderSettingsCommand;
 import mod.bluestaggo.modernerbeta.fabric.network.NetworkHelperImpl;
 import mod.bluestaggo.modernerbeta.fabric.registry.RegistryHelperImpl;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
-import mod.bluestaggo.modernerbeta.world.ModernBetaWorldInitializer;
+import mod.bluestaggo.modernerbeta.world.ModernBetaLevelInitializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -53,8 +53,8 @@ public class ModernerBetaFabric implements ModInitializer {
             ModernerBeta.DEV_ENV = true;
         }
 
-        ServerLifecycleEvents.SERVER_STARTING.register(ModernBetaWorldInitializer::initStarting);
-        ServerLifecycleEvents.SERVER_STARTED.register(ModernBetaWorldInitializer::initStarted);
+        ServerLifecycleEvents.SERVER_STARTING.register(ModernBetaLevelInitializer::initStarting);
+        ServerLifecycleEvents.SERVER_STARTED.register(ModernBetaLevelInitializer::initStarted);
 
         ModernerBeta.networkHelper = new NetworkHelperImpl();
 

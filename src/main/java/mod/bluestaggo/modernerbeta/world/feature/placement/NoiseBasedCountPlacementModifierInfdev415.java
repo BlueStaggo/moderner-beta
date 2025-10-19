@@ -5,6 +5,7 @@ import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.util.noise.PerlinOctaveNoise;
 import mod.bluestaggo.modernerbeta.world.feature.placement.noise.NoiseBasedCountInfdev415;
 import net.minecraft.world.level.levelgen.placement.PlacementModifierType;
+import org.jetbrains.annotations.NotNull;
 
 public class NoiseBasedCountPlacementModifierInfdev415 extends NoiseBasedCountPlacementModifier {
     public static final com.mojang.serialization.MapCodec<NoiseBasedCountPlacementModifierInfdev415> MODIFIER_CODEC = VersionCompat.createMaybeMapCodec(
@@ -28,7 +29,7 @@ public class NoiseBasedCountPlacementModifierInfdev415 extends NoiseBasedCountPl
     }
     
     @Override
-    public PlacementModifierType<?> type() {
+    public @NotNull PlacementModifierType<?> type() {
         return ModernBetaPlacementTypes.INFDEV_415_NOISE_BASED_COUNT;
     }
 

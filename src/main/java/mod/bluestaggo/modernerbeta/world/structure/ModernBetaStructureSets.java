@@ -17,18 +17,18 @@ public class ModernBetaStructureSets {
     public static final ResourceKey<StructureSet> INDEV_STRONGHOLDS = keyOf("indev_strongholds");
     public static final ResourceKey<StructureSet> OCEAN_SHRINE = keyOf("ocean_shrine");
 
-    public static void bootstrap(BootstrapContext<StructureSet> structureSetRegisterable) {
-        HolderGetter<Structure> registryStructure = structureSetRegisterable.lookup(Registries.STRUCTURE);
-        HolderGetter<Biome> registryBiome = structureSetRegisterable.lookup(Registries.BIOME);
+    public static void bootstrap(BootstrapContext<StructureSet> context) {
+        HolderGetter<Structure> registryStructure = context.lookup(Registries.STRUCTURE);
+        HolderGetter<Biome> registryBiome = context.lookup(Registries.BIOME);
         
-        structureSetRegisterable.register(
+        context.register(
             INDEV_STRONGHOLDS,
             new StructureSet(
                 registryStructure.getOrThrow(ModernBetaStructures.INDEV_STRONGHOLD),
                 new ConcentricRingsStructurePlacement(0, 0, 1, registryBiome.getOrThrow(BiomeTags.STRONGHOLD_BIASED_TO))
             )
         );
-        structureSetRegisterable.register(
+        context.register(
             OCEAN_SHRINE,
             new StructureSet(
                 registryStructure.getOrThrow(ModernBetaStructures.OCEAN_SHRINE),

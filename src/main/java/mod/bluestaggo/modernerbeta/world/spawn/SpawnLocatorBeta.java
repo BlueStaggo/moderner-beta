@@ -36,14 +36,14 @@ public class SpawnLocatorBeta implements SpawnLocator {
     }
 
     @Override
-    public Optional<BlockPos> locateSpawn(LevelHeightAccessor world) {
+    public Optional<BlockPos> locateSpawn(LevelHeightAccessor level) {
         ModernerBeta.log(Level.INFO, "Setting a beach spawn..");
         
         int x = 0;
         int z = 0;
         int attempts = 0;
         
-        while(!this.isSandAt(world, x, z)) {
+        while(!this.isSandAt(level, x, z)) {
             if (attempts > 10000) {
                 ModernerBeta.log(Level.INFO, "Exceeded spawn attempts, spawning anyway at 0,0..");
                 
@@ -58,23 +58,23 @@ public class SpawnLocatorBeta implements SpawnLocator {
             attempts++;
         }
         
-        int y = (this.chunkProvider instanceof ChunkProviderNoise noiseChunkProvider) ?
-            noiseChunkProvider.getHeight(world, x, z, ChunkHeightmap.Type.SURFACE_FLOOR) :
-            this.chunkProvider.getHeight(world, x, z, Heightmap.Types.WORLD_SURFACE_WG);
+        int y = (this.chunkProvider instanceof ChunkProviderNoise chunkProviderNoise) ?
+            chunkProviderNoise.getHeight(level, x, z, ChunkHeightmap.Type.SURFACE_FLOOR) :
+            this.chunkProvider.getHeight(level, x, z, Heightmap.Types.WORLD_SURFACE_WG);
         
         return Optional.of(new BlockPos(x, y, z));
     }
 
-    private boolean isSandAt(LevelHeightAccessor world, int x, int z) {
+    private boolean isSandAt(LevelHeightAccessor level, int x, int z) {
         double eighth = 0.03125D;
         int seaLevel = this.chunkProvider.getSeaLevel();
         
-        int y = (this.chunkProvider instanceof ChunkProviderNoise noiseChunkProvider) ?
-            noiseChunkProvider.getHeight(world, x, z, ChunkHeightmap.Type.SURFACE_FLOOR) :
-            this.chunkProvider.getHeight(world, x, z, Heightmap.Types.OCEAN_FLOOR_WG);
+        int y = (this.chunkProvider instanceof ChunkProviderNoise chunkProviderNoise) ?
+            chunkProviderNoise.getHeight(level, x, z, ChunkHeightmap.Type.SURFACE_FLOOR) :
+            this.chunkProvider.getHeight(level, x, z, Heightmap.Types.OCEAN_FLOOR_WG);
 
-        Holder<Biome> biome = (this.chunkProvider.getChunkGenerator().getBiomeSource() instanceof ModernBetaBiomeSource oldBiomeSource) ? 
-            oldBiomeSource.getBiomeForSpawn(x, y, z) :
+        Holder<Biome> biome = (this.chunkProvider.getChunkGenerator().getBiomeSource() instanceof ModernBetaBiomeSource modernBetaBiomeSource) ?
+            modernBetaBiomeSource.getBiomeForSpawn(x, y, z) :
             this.chunkProvider.getBiome(x >> 2, y >> 2, z >> 2, null);
         
         return

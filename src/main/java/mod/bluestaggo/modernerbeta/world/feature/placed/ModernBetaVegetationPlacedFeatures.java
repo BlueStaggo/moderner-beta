@@ -145,8 +145,8 @@ public class ModernBetaVegetationPlacedFeatures {
     public static final ResourceKey<PlacedFeature> TREES_INDEV_WOODS_BEES = ModernBetaPlacedFeatures.of(ModernBetaFeatureTags.TREES_INDEV_WOODS_BEES);
     public static final ResourceKey<PlacedFeature> TREES_CLASSIC_14A_08_BEES = ModernBetaPlacedFeatures.of(ModernBetaFeatureTags.TREES_CLASSIC_14A_08_BEES);
 
-    public static void bootstrap(BootstrapContext<PlacedFeature> featureRegisterable) {
-        HolderGetter<ConfiguredFeature<?, ?>> registryConfigured = featureRegisterable.lookup(Registries.CONFIGURED_FEATURE);
+    public static void bootstrap(BootstrapContext<PlacedFeature> context) {
+        HolderGetter<ConfiguredFeature<?, ?>> registryConfigured = context.lookup(Registries.CONFIGURED_FEATURE);
 
         Holder.Reference<ConfiguredFeature<?, ?>> patchCactus = registryConfigured.getOrThrow(VegetationFeatures.PATCH_CACTUS);
         Holder.Reference<ConfiguredFeature<?, ?>> mushroomHell = registryConfigured.getOrThrow(ModernBetaVegetationConfiguredFeatures.MUSHROOM_HELL);
@@ -205,67 +205,67 @@ public class ModernBetaVegetationPlacedFeatures {
         Holder.Reference<ConfiguredFeature<?, ?>> treesIndevWoodsBees = registryConfigured.getOrThrow(ModernBetaVegetationConfiguredFeatures.TREES_INDEV_WOODS_BEES);
         Holder.Reference<ConfiguredFeature<?, ?>> treesClassic14a08Bees = registryConfigured.getOrThrow(ModernBetaVegetationConfiguredFeatures.TREES_CLASSIC_14A_08_BEES);
 
-        PlacementUtils.register(featureRegisterable, PATCH_CACTUS_ALPHA, patchCactus, CountPlacement.of(2), InSquarePlacement.spread(), HEIGHTMAP_SPREAD_DOUBLE, BiomeFilter.biome());
-        PlacementUtils.register(featureRegisterable, PATCH_CACTUS_PE, patchCactus, CountPlacement.of(5), InSquarePlacement.spread(), HEIGHTMAP_SPREAD_DOUBLE, BiomeFilter.biome());
-        PlacementUtils.register(featureRegisterable, MUSHROOM_HELL, mushroomHell, CountPlacement.of(1), InSquarePlacement.spread(), MOTION_BLOCKING_HEIGHTMAP, BiomeFilter.biome());
+        PlacementUtils.register(context, PATCH_CACTUS_ALPHA, patchCactus, CountPlacement.of(2), InSquarePlacement.spread(), HEIGHTMAP_SPREAD_DOUBLE, BiomeFilter.biome());
+        PlacementUtils.register(context, PATCH_CACTUS_PE, patchCactus, CountPlacement.of(5), InSquarePlacement.spread(), HEIGHTMAP_SPREAD_DOUBLE, BiomeFilter.biome());
+        PlacementUtils.register(context, MUSHROOM_HELL, mushroomHell, CountPlacement.of(1), InSquarePlacement.spread(), MOTION_BLOCKING_HEIGHTMAP, BiomeFilter.biome());
         
-        PlacementUtils.register(featureRegisterable, PATCH_DANDELION_2, patchDandelion, CountPlacement.of(2), InSquarePlacement.spread(), HEIGHT_RANGE_128, BiomeFilter.biome());
-        PlacementUtils.register(featureRegisterable, PATCH_DANDELION_3, patchDandelion, CountPlacement.of(3), InSquarePlacement.spread(), HEIGHT_RANGE_128, BiomeFilter.biome());
-        PlacementUtils.register(featureRegisterable, PATCH_DANDELION_4, patchDandelion, CountPlacement.of(4), InSquarePlacement.spread(), HEIGHT_RANGE_128, BiomeFilter.biome());
-        PlacementUtils.register(featureRegisterable, PATCH_DANDELION, patchDandelion, withCountExtraModifier(0, 0.5f, 1), InSquarePlacement.spread(), HEIGHT_RANGE_128, BiomeFilter.biome());
-        PlacementUtils.register(featureRegisterable, PATCH_POPPY, patchPoppy, withCountExtraModifier(0, 0.5f, 1), InSquarePlacement.spread(), HEIGHT_RANGE_128, BiomeFilter.biome());
-        PlacementUtils.register(featureRegisterable, PATCH_FLOWER_PARADISE, flowerDefault, CountPlacement.of(20), InSquarePlacement.spread(), HEIGHT_RANGE_128, BiomeFilter.biome());
-        PlacementUtils.register(featureRegisterable, PATCH_DANDELION_INFDEV_227, patchDandelionInfdev227, CountPlacement.of(UniformInt.of(0, 10)), InSquarePlacement.spread(), SURFACE_WATER_DEPTH, PlacementUtils.HEIGHTMAP_OCEAN_FLOOR, BiomeFilter.biome());
+        PlacementUtils.register(context, PATCH_DANDELION_2, patchDandelion, CountPlacement.of(2), InSquarePlacement.spread(), HEIGHT_RANGE_128, BiomeFilter.biome());
+        PlacementUtils.register(context, PATCH_DANDELION_3, patchDandelion, CountPlacement.of(3), InSquarePlacement.spread(), HEIGHT_RANGE_128, BiomeFilter.biome());
+        PlacementUtils.register(context, PATCH_DANDELION_4, patchDandelion, CountPlacement.of(4), InSquarePlacement.spread(), HEIGHT_RANGE_128, BiomeFilter.biome());
+        PlacementUtils.register(context, PATCH_DANDELION, patchDandelion, withCountExtraModifier(0, 0.5f, 1), InSquarePlacement.spread(), HEIGHT_RANGE_128, BiomeFilter.biome());
+        PlacementUtils.register(context, PATCH_POPPY, patchPoppy, withCountExtraModifier(0, 0.5f, 1), InSquarePlacement.spread(), HEIGHT_RANGE_128, BiomeFilter.biome());
+        PlacementUtils.register(context, PATCH_FLOWER_PARADISE, flowerDefault, CountPlacement.of(20), InSquarePlacement.spread(), HEIGHT_RANGE_128, BiomeFilter.biome());
+        PlacementUtils.register(context, PATCH_DANDELION_INFDEV_227, patchDandelionInfdev227, CountPlacement.of(UniformInt.of(0, 10)), InSquarePlacement.spread(), SURFACE_WATER_DEPTH, PlacementUtils.HEIGHTMAP_OCEAN_FLOOR, BiomeFilter.biome());
     
-        PlacementUtils.register(featureRegisterable, PATCH_GRASS_PLAINS_10, patchGrass, CountPlacement.of(10), InSquarePlacement.spread(), WORLD_SURFACE_WG_HEIGHTMAP, BiomeFilter.biome());
-        PlacementUtils.register(featureRegisterable, PATCH_GRASS_TAIGA_1, patchGrass, CountPlacement.of(1), InSquarePlacement.spread(), WORLD_SURFACE_WG_HEIGHTMAP, BiomeFilter.biome());
-        PlacementUtils.register(featureRegisterable, PATCH_GRASS_RAINFOREST_10, patchGrassLush, CountPlacement.of(10), InSquarePlacement.spread(), WORLD_SURFACE_WG_HEIGHTMAP, BiomeFilter.biome());
-        PlacementUtils.register(featureRegisterable, PATCH_GRASS_ALPHA_2, patchGrass, withCountExtraModifier(0, 0.05f, 1), InSquarePlacement.spread(), WORLD_SURFACE_WG_HEIGHTMAP, BiomeFilter.biome());
+        PlacementUtils.register(context, PATCH_GRASS_PLAINS_10, patchGrass, CountPlacement.of(10), InSquarePlacement.spread(), WORLD_SURFACE_WG_HEIGHTMAP, BiomeFilter.biome());
+        PlacementUtils.register(context, PATCH_GRASS_TAIGA_1, patchGrass, CountPlacement.of(1), InSquarePlacement.spread(), WORLD_SURFACE_WG_HEIGHTMAP, BiomeFilter.biome());
+        PlacementUtils.register(context, PATCH_GRASS_RAINFOREST_10, patchGrassLush, CountPlacement.of(10), InSquarePlacement.spread(), WORLD_SURFACE_WG_HEIGHTMAP, BiomeFilter.biome());
+        PlacementUtils.register(context, PATCH_GRASS_ALPHA_2, patchGrass, withCountExtraModifier(0, 0.05f, 1), InSquarePlacement.spread(), WORLD_SURFACE_WG_HEIGHTMAP, BiomeFilter.biome());
         
-        PlacementUtils.register(featureRegisterable, TREES_ALPHA, treesAlpha, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_ALPHA, NoiseBasedCountPlacementModifierAlpha.of(0, 0.1f, 1)));
-        PlacementUtils.register(featureRegisterable, TREES_INFDEV_611, treesInfdev611, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_INFDEV_611, NoiseBasedCountPlacementModifierInfdev611.of(0, 0.1f, 1)));
-        PlacementUtils.register(featureRegisterable, TREES_INFDEV_420, treesInfdev420, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_INFDEV_420, NoiseBasedCountPlacementModifierInfdev420.of(0, 0.01f, 1)));
-        PlacementUtils.register(featureRegisterable, TREES_INFDEV_415, treesInfdev415, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_INFDEV_415, NoiseBasedCountPlacementModifierInfdev415.of(0, 0, 0)));
-        PlacementUtils.register(featureRegisterable, TREES_INFDEV_325, treesInfdev325, withBaseTreeModifiers(NoiseBasedCountPlacementModifierInfdev325.of(0, 0, 0)).add(INFDEV_325_TREE_PREDICATES).build());
-        PlacementUtils.register(featureRegisterable, TREES_INFDEV_227, treesInfdev227, withCountExtraAndTreeModifier(0, 0.1f, 1));
+        PlacementUtils.register(context, TREES_ALPHA, treesAlpha, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_ALPHA, NoiseBasedCountPlacementModifierAlpha.of(0, 0.1f, 1)));
+        PlacementUtils.register(context, TREES_INFDEV_611, treesInfdev611, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_INFDEV_611, NoiseBasedCountPlacementModifierInfdev611.of(0, 0.1f, 1)));
+        PlacementUtils.register(context, TREES_INFDEV_420, treesInfdev420, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_INFDEV_420, NoiseBasedCountPlacementModifierInfdev420.of(0, 0.01f, 1)));
+        PlacementUtils.register(context, TREES_INFDEV_415, treesInfdev415, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_INFDEV_415, NoiseBasedCountPlacementModifierInfdev415.of(0, 0, 0)));
+        PlacementUtils.register(context, TREES_INFDEV_325, treesInfdev325, withBaseTreeModifiers(NoiseBasedCountPlacementModifierInfdev325.of(0, 0, 0)).add(INFDEV_325_TREE_PREDICATES).build());
+        PlacementUtils.register(context, TREES_INFDEV_227, treesInfdev227, withCountExtraAndTreeModifier(0, 0.1f, 1));
 
-        PlacementUtils.register(featureRegisterable, TREES_ALPHA_BEES, treesAlphaBees, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_ALPHA_BEES, NoiseBasedCountPlacementModifierAlpha.of(0, 0.1f, 1)));
-        PlacementUtils.register(featureRegisterable, TREES_INFDEV_611_BEES, treesInfdev611Bees, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_INFDEV_611_BEES, NoiseBasedCountPlacementModifierInfdev611.of(0, 0.1f, 1)));
-        PlacementUtils.register(featureRegisterable, TREES_INFDEV_420_BEES, treesInfdev420Bees, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_INFDEV_420_BEES, NoiseBasedCountPlacementModifierInfdev420.of(0, 0.01f, 1)));
-        PlacementUtils.register(featureRegisterable, TREES_INFDEV_415_BEES, treesInfdev415Bees, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_INFDEV_415_BEES, NoiseBasedCountPlacementModifierInfdev415.of(0, 0, 0)));
-        PlacementUtils.register(featureRegisterable, TREES_INFDEV_325_BEES, treesInfdev325Bees, withBaseTreeModifiers(NoiseBasedCountPlacementModifierInfdev325.of(0, 0, 0)).add(INFDEV_325_TREE_PREDICATES).build());
-        PlacementUtils.register(featureRegisterable, TREES_INFDEV_227_BEES, treesInfdev227Bees, withCountExtraAndTreeModifier(0, 0.1f, 1));
+        PlacementUtils.register(context, TREES_ALPHA_BEES, treesAlphaBees, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_ALPHA_BEES, NoiseBasedCountPlacementModifierAlpha.of(0, 0.1f, 1)));
+        PlacementUtils.register(context, TREES_INFDEV_611_BEES, treesInfdev611Bees, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_INFDEV_611_BEES, NoiseBasedCountPlacementModifierInfdev611.of(0, 0.1f, 1)));
+        PlacementUtils.register(context, TREES_INFDEV_420_BEES, treesInfdev420Bees, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_INFDEV_420_BEES, NoiseBasedCountPlacementModifierInfdev420.of(0, 0.01f, 1)));
+        PlacementUtils.register(context, TREES_INFDEV_415_BEES, treesInfdev415Bees, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_INFDEV_415_BEES, NoiseBasedCountPlacementModifierInfdev415.of(0, 0, 0)));
+        PlacementUtils.register(context, TREES_INFDEV_325_BEES, treesInfdev325Bees, withBaseTreeModifiers(NoiseBasedCountPlacementModifierInfdev325.of(0, 0, 0)).add(INFDEV_325_TREE_PREDICATES).build());
+        PlacementUtils.register(context, TREES_INFDEV_227_BEES, treesInfdev227Bees, withCountExtraAndTreeModifier(0, 0.1f, 1));
              
-        PlacementUtils.register(featureRegisterable, TREES_BETA_FOREST, treesBetaForest, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_BETA_FOREST, NoiseBasedCountPlacementModifierBeta.of(5, 0.1f, 1)));
-        PlacementUtils.register(featureRegisterable, TREES_BETA_RAINFOREST, treesBetaRainforest, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_BETA_RAINFOREST, NoiseBasedCountPlacementModifierBeta.of(5, 0.1f, 1)));
-        PlacementUtils.register(featureRegisterable, TREES_BETA_SEASONAL_FOREST, treesBetaSeasonalForest, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_BETA_SEASONAL_FOREST, NoiseBasedCountPlacementModifierBeta.of(2, 0.1f, 1)));
-        PlacementUtils.register(featureRegisterable, TREES_BETA_SPARSE, treesBetaSparse, withCountExtraAndTreeModifier(0, 0.1f, 1));
-        PlacementUtils.register(featureRegisterable, TREES_BETA_TAIGA, treesBetaTaiga, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_BETA_TAIGA, NoiseBasedCountPlacementModifierBeta.of(5, 0.1f, 1)));
-        PlacementUtils.register(featureRegisterable, TREES_BETA_OAK_FOREST, treesBetaOakForest, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_BETA_OAK_FOREST, NoiseBasedCountPlacementModifierBeta.of(5, 0.1f, 1)));
+        PlacementUtils.register(context, TREES_BETA_FOREST, treesBetaForest, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_BETA_FOREST, NoiseBasedCountPlacementModifierBeta.of(5, 0.1f, 1)));
+        PlacementUtils.register(context, TREES_BETA_RAINFOREST, treesBetaRainforest, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_BETA_RAINFOREST, NoiseBasedCountPlacementModifierBeta.of(5, 0.1f, 1)));
+        PlacementUtils.register(context, TREES_BETA_SEASONAL_FOREST, treesBetaSeasonalForest, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_BETA_SEASONAL_FOREST, NoiseBasedCountPlacementModifierBeta.of(2, 0.1f, 1)));
+        PlacementUtils.register(context, TREES_BETA_SPARSE, treesBetaSparse, withCountExtraAndTreeModifier(0, 0.1f, 1));
+        PlacementUtils.register(context, TREES_BETA_TAIGA, treesBetaTaiga, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_BETA_TAIGA, NoiseBasedCountPlacementModifierBeta.of(5, 0.1f, 1)));
+        PlacementUtils.register(context, TREES_BETA_OAK_FOREST, treesBetaOakForest, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_BETA_OAK_FOREST, NoiseBasedCountPlacementModifierBeta.of(5, 0.1f, 1)));
 
-        PlacementUtils.register(featureRegisterable, TREES_BETA_FOREST_BEES, treesBetaForestBees, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_BETA_FOREST_BEES, NoiseBasedCountPlacementModifierBeta.of(5, 0.1f, 1)));
-        PlacementUtils.register(featureRegisterable, TREES_BETA_RAINFOREST_BEES, treesBetaRainforestBees, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_BETA_RAINFOREST_BEES, NoiseBasedCountPlacementModifierBeta.of(5, 0.1f, 1)));
-        PlacementUtils.register(featureRegisterable, TREES_BETA_SEASONAL_FOREST_BEES, treesBetaSeasonalForestBees, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_BETA_SEASONAL_FOREST_BEES, NoiseBasedCountPlacementModifierBeta.of(2, 0.1f, 1)));
-        PlacementUtils.register(featureRegisterable, TREES_BETA_SPARSE_BEES, treesBetaSparseBees, withCountExtraAndTreeModifier(0, 0.1f, 1));
-        PlacementUtils.register(featureRegisterable, TREES_BETA_OAK_FOREST_BEES, treesBetaOakForestBees, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_BETA_OAK_FOREST_BEES, NoiseBasedCountPlacementModifierBeta.of(5, 0.1f, 1)));
+        PlacementUtils.register(context, TREES_BETA_FOREST_BEES, treesBetaForestBees, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_BETA_FOREST_BEES, NoiseBasedCountPlacementModifierBeta.of(5, 0.1f, 1)));
+        PlacementUtils.register(context, TREES_BETA_RAINFOREST_BEES, treesBetaRainforestBees, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_BETA_RAINFOREST_BEES, NoiseBasedCountPlacementModifierBeta.of(5, 0.1f, 1)));
+        PlacementUtils.register(context, TREES_BETA_SEASONAL_FOREST_BEES, treesBetaSeasonalForestBees, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_BETA_SEASONAL_FOREST_BEES, NoiseBasedCountPlacementModifierBeta.of(2, 0.1f, 1)));
+        PlacementUtils.register(context, TREES_BETA_SPARSE_BEES, treesBetaSparseBees, withCountExtraAndTreeModifier(0, 0.1f, 1));
+        PlacementUtils.register(context, TREES_BETA_OAK_FOREST_BEES, treesBetaOakForestBees, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_BETA_OAK_FOREST_BEES, NoiseBasedCountPlacementModifierBeta.of(5, 0.1f, 1)));
 
-        PlacementUtils.register(featureRegisterable, TREES_PE_FOREST, treesPEForest, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_PE_FOREST_BEES, NoiseBasedCountPlacementModifierBeta.of(2, 0.1f, 1)));
-        PlacementUtils.register(featureRegisterable, TREES_PE_RAINFOREST, treesPERainforest, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_PE_RAINFOREST_BEES, NoiseBasedCountPlacementModifierBeta.of(2, 0.1f, 1)));
-        PlacementUtils.register(featureRegisterable, TREES_PE_SEASONAL_FOREST, treesPESeasonalForest, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_PE_SEASONAL_FOREST_BEES, NoiseBasedCountPlacementModifierBeta.of(1, 0.1f, 1)));
-        PlacementUtils.register(featureRegisterable, TREES_PE_SPARSE, treesPESparse, withCountExtraAndTreeModifier(0, 0.1f, 1));
-        PlacementUtils.register(featureRegisterable, TREES_PE_TAIGA, treesPETaiga, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_PE_TAIGA, NoiseBasedCountPlacementModifierBeta.of(1, 0.1f, 1)));
+        PlacementUtils.register(context, TREES_PE_FOREST, treesPEForest, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_PE_FOREST_BEES, NoiseBasedCountPlacementModifierBeta.of(2, 0.1f, 1)));
+        PlacementUtils.register(context, TREES_PE_RAINFOREST, treesPERainforest, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_PE_RAINFOREST_BEES, NoiseBasedCountPlacementModifierBeta.of(2, 0.1f, 1)));
+        PlacementUtils.register(context, TREES_PE_SEASONAL_FOREST, treesPESeasonalForest, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_PE_SEASONAL_FOREST_BEES, NoiseBasedCountPlacementModifierBeta.of(1, 0.1f, 1)));
+        PlacementUtils.register(context, TREES_PE_SPARSE, treesPESparse, withCountExtraAndTreeModifier(0, 0.1f, 1));
+        PlacementUtils.register(context, TREES_PE_TAIGA, treesPETaiga, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_PE_TAIGA, NoiseBasedCountPlacementModifierBeta.of(1, 0.1f, 1)));
 
-        PlacementUtils.register(featureRegisterable, TREES_PE_FOREST_BEES, treesPEForestBees, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_PE_FOREST_BEES, NoiseBasedCountPlacementModifierBeta.of(2, 0.1f, 1)));
-        PlacementUtils.register(featureRegisterable, TREES_PE_RAINFOREST_BEES, treesPERainforestBees, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_PE_RAINFOREST_BEES, NoiseBasedCountPlacementModifierBeta.of(2, 0.1f, 1)));
-        PlacementUtils.register(featureRegisterable, TREES_PE_SEASONAL_FOREST_BEES, treesPESeasonalForestBees, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_PE_SEASONAL_FOREST_BEES, NoiseBasedCountPlacementModifierBeta.of(1, 0.1f, 1)));
-        PlacementUtils.register(featureRegisterable, TREES_PE_SPARSE_BEES, treesPESparseBees, withCountExtraAndTreeModifier(0, 0.1f, 1));
+        PlacementUtils.register(context, TREES_PE_FOREST_BEES, treesPEForestBees, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_PE_FOREST_BEES, NoiseBasedCountPlacementModifierBeta.of(2, 0.1f, 1)));
+        PlacementUtils.register(context, TREES_PE_RAINFOREST_BEES, treesPERainforestBees, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_PE_RAINFOREST_BEES, NoiseBasedCountPlacementModifierBeta.of(2, 0.1f, 1)));
+        PlacementUtils.register(context, TREES_PE_SEASONAL_FOREST_BEES, treesPESeasonalForestBees, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_PE_SEASONAL_FOREST_BEES, NoiseBasedCountPlacementModifierBeta.of(1, 0.1f, 1)));
+        PlacementUtils.register(context, TREES_PE_SPARSE_BEES, treesPESparseBees, withCountExtraAndTreeModifier(0, 0.1f, 1));
         
-        PlacementUtils.register(featureRegisterable, TREES_INDEV, treesIndev, RarityFilter.onAverageOnceEvery(3), withCountExtraModifier(5, 0.1f, 1), InSquarePlacement.spread(), SURFACE_WATER_DEPTH, PlacementUtils.HEIGHTMAP_OCEAN_FLOOR, BiomeFilter.biome());
-        PlacementUtils.register(featureRegisterable, TREES_INDEV_WOODS, treesIndevWoods, withCountExtraModifier(30, 0.1f, 1), InSquarePlacement.spread(), SURFACE_WATER_DEPTH, PlacementUtils.HEIGHTMAP_OCEAN_FLOOR, BiomeFilter.biome());
-        PlacementUtils.register(featureRegisterable, TREES_CLASSIC_14A_08, treesClassic14a08, RarityFilter.onAverageOnceEvery(5), withCountExtraModifier(20, 0.1f, 1), InSquarePlacement.spread(), SURFACE_WATER_DEPTH, PlacementUtils.HEIGHTMAP_OCEAN_FLOOR, BiomeFilter.biome());
+        PlacementUtils.register(context, TREES_INDEV, treesIndev, RarityFilter.onAverageOnceEvery(3), withCountExtraModifier(5, 0.1f, 1), InSquarePlacement.spread(), SURFACE_WATER_DEPTH, PlacementUtils.HEIGHTMAP_OCEAN_FLOOR, BiomeFilter.biome());
+        PlacementUtils.register(context, TREES_INDEV_WOODS, treesIndevWoods, withCountExtraModifier(30, 0.1f, 1), InSquarePlacement.spread(), SURFACE_WATER_DEPTH, PlacementUtils.HEIGHTMAP_OCEAN_FLOOR, BiomeFilter.biome());
+        PlacementUtils.register(context, TREES_CLASSIC_14A_08, treesClassic14a08, RarityFilter.onAverageOnceEvery(5), withCountExtraModifier(20, 0.1f, 1), InSquarePlacement.spread(), SURFACE_WATER_DEPTH, PlacementUtils.HEIGHTMAP_OCEAN_FLOOR, BiomeFilter.biome());
 
-        PlacementUtils.register(featureRegisterable, TREES_INDEV_BEES, treesIndevBees, RarityFilter.onAverageOnceEvery(3), withCountExtraModifier(5, 0.1f, 1), InSquarePlacement.spread(), SURFACE_WATER_DEPTH, PlacementUtils.HEIGHTMAP_OCEAN_FLOOR, BiomeFilter.biome());
-        PlacementUtils.register(featureRegisterable, TREES_INDEV_WOODS_BEES, treesIndevWoodsBees, withCountExtraModifier(30, 0.1f, 1), InSquarePlacement.spread(), SURFACE_WATER_DEPTH, PlacementUtils.HEIGHTMAP_OCEAN_FLOOR, BiomeFilter.biome());
-        PlacementUtils.register(featureRegisterable, TREES_CLASSIC_14A_08_BEES, treesClassic14a08Bees, RarityFilter.onAverageOnceEvery(5), withCountExtraModifier(20, 0.1f, 1), InSquarePlacement.spread(), SURFACE_WATER_DEPTH, PlacementUtils.HEIGHTMAP_OCEAN_FLOOR, BiomeFilter.biome());
+        PlacementUtils.register(context, TREES_INDEV_BEES, treesIndevBees, RarityFilter.onAverageOnceEvery(3), withCountExtraModifier(5, 0.1f, 1), InSquarePlacement.spread(), SURFACE_WATER_DEPTH, PlacementUtils.HEIGHTMAP_OCEAN_FLOOR, BiomeFilter.biome());
+        PlacementUtils.register(context, TREES_INDEV_WOODS_BEES, treesIndevWoodsBees, withCountExtraModifier(30, 0.1f, 1), InSquarePlacement.spread(), SURFACE_WATER_DEPTH, PlacementUtils.HEIGHTMAP_OCEAN_FLOOR, BiomeFilter.biome());
+        PlacementUtils.register(context, TREES_CLASSIC_14A_08_BEES, treesClassic14a08Bees, RarityFilter.onAverageOnceEvery(5), withCountExtraModifier(20, 0.1f, 1), InSquarePlacement.spread(), SURFACE_WATER_DEPTH, PlacementUtils.HEIGHTMAP_OCEAN_FLOOR, BiomeFilter.biome());
     }
 }

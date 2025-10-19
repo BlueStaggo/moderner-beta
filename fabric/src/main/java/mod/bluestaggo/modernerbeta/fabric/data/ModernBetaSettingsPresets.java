@@ -6,7 +6,7 @@ import it.unimi.dsi.fastutil.doubles.DoubleList;
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.api.world.biome.climate.TemperatureHeightScaling;
-import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistryKeys;
+import mod.bluestaggo.modernerbeta.registry.ModernBetaResourceKeys;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.settings.component.*;
@@ -117,7 +117,7 @@ public final class ModernBetaSettingsPresets {
     }
 
     private static ResourceKey<ModernBetaSettingsPreset> keyOf(String id) {
-        return ResourceKey.create(ModernBetaRegistryKeys.SETTINGS_PRESET, ModernerBeta.createId(id));
+        return ResourceKey.create(ModernBetaResourceKeys.SETTINGS_PRESET, ModernerBeta.createId(id));
     }
 
     private static ModernBetaSettingsPreset presetBeta() {

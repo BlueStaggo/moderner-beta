@@ -169,7 +169,7 @@ public abstract class ChunkProviderFinite extends ChunkProvider implements Chunk
     }
 
     @Override
-    public int getHeight(LevelHeightAccessor world, int x, int z, Types type) {
+    public int getHeight(LevelHeightAccessor level, int x, int z, Types type) {
         int seaLevel = this.getSeaLevel();
         
         x += this.levelWidth / 2;

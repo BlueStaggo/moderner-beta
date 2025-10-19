@@ -31,12 +31,12 @@ public class ModernBetaGraphicalProviderSettingsScreen extends ModernBetaGraphic
     public ModernBetaGraphicalProviderSettingsScreen(
         String title,
         Screen parent,
-        WorldCreationContext generatorOptionsHolder,
+        WorldCreationContext context,
         CompoundTag settings,
         Consumer<CompoundTag> onDone,
         Registry<? extends ProviderType> providerRegistry
     ) {
-        super(title, parent, generatorOptionsHolder, null, settings, onDone);
+        super(title, parent, context, null, settings, onDone);
         this.providerRegistry = providerRegistry;
         this.providers = providerRegistry.listElements()
             .map(Holder::unwrapKey)
@@ -45,7 +45,7 @@ public class ModernBetaGraphicalProviderSettingsScreen extends ModernBetaGraphic
             .sorted()
             .toArray(ResourceLocation[]::new);
 
-        ChunkGenerator chunkGenerator = generatorOptionsHolder.selectedDimensions().get(LevelStem.OVERWORLD)
+        ChunkGenerator chunkGenerator = context.selectedDimensions().get(LevelStem.OVERWORLD)
             .map(LevelStem::generator).orElse(null);
         if (chunkGenerator != null) {
             this.worldMinY = chunkGenerator.getMinY();

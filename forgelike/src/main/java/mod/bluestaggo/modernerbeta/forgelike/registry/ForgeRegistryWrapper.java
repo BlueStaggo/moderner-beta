@@ -3,7 +3,7 @@
 
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Lifecycle;
-import mod.bluestaggo.modernerbeta.forgelike.mixin.AccessorRegistryEntryReference;
+import mod.bluestaggo.modernerbeta.forgelike.mixin.HolderReferenceMixin;
 import net.minecraft.core.*;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -177,7 +177,7 @@ public class ForgeRegistryWrapper<T> implements Registry<T> {
     @SuppressWarnings("unchecked")
     public Holder.Reference<T> createIntrusiveHolder(ResourceKey<T> key, T value) {
         Holder.Reference<T> entry = Holder.Reference.createStandAlone(this.wrapper, key);
-        ((AccessorRegistryEntryReference<T>)entry).invokeBindValue(value);
+        ((HolderReferenceMixin<T>)entry).invokeBindValue(value);
         return entry;
     }
 

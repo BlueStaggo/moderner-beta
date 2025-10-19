@@ -9,6 +9,7 @@ import net.minecraft.world.level.LevelSimulatedReader;
 import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
 import net.minecraft.world.level.levelgen.feature.foliageplacers.BlobFoliagePlacer;
 import net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacerType;
+import org.jetbrains.annotations.NotNull;
 
 public class BetaLargeOakFoliagePlacer extends BlobFoliagePlacer {
     public static final com.mojang.serialization.MapCodec<BetaLargeOakFoliagePlacer> CODEC = VersionCompat.createMaybeMapCodec(
@@ -19,17 +20,17 @@ public class BetaLargeOakFoliagePlacer extends BlobFoliagePlacer {
     }
 
     @Override
-    protected FoliagePlacerType<?> type() {
-        return ModernBetaFoliagePlacers.BETA_LARGE_OAK_FOLIAGE_PLACER;
+    protected @NotNull FoliagePlacerType<?> type() {
+        return ModernBetaFoliagePlacers.BETA_LARGE_OAK;
     }
 
     @Override
-    protected void createFoliage(LevelSimulatedReader world, FoliageSetter placer, RandomSource random, TreeConfiguration config, int trunkHeight, FoliageAttachment treeNode, int foliageHeight, int radius, int offset) {
+    protected void createFoliage(LevelSimulatedReader level, FoliageSetter placer, RandomSource random, TreeConfiguration config, int trunkHeight, FoliageAttachment treeNode, int foliageHeight, int radius, int offset) {
         for (int curY = offset; curY >= offset - foliageHeight; curY--) {
             float blobRadius = curY != offset && curY != offset - foliageHeight ? radius + 1 : radius;
 
             // Generate blob layer at curY
-            this.placeLeavesRow(world, placer, random, config, treeNode.pos(), (int) (blobRadius + 0.618D), curY, treeNode.doubleTrunk());
+            this.placeLeavesRow(level, placer, random, config, treeNode.pos(), (int) (blobRadius + 0.618D), curY, treeNode.doubleTrunk());
         }
     }
 

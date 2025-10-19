@@ -15,8 +15,8 @@ import java.util.function.Consumer;
 
 @Environment(EnvType.CLIENT)
 public class VoronoiPointCaveBiomeListScreen extends ModernBetaGraphicalListSettingsScreen {
-    public VoronoiPointCaveBiomeListScreen(String title, Screen parent, WorldCreationContext generatorOptionsHolder, ListTag settings, Consumer<ListTag> onDone) {
-        super(title, parent, generatorOptionsHolder, settings, onDone);
+    public VoronoiPointCaveBiomeListScreen(String title, Screen parent, WorldCreationContext context, ListTag settings, Consumer<ListTag> onDone) {
+        super(title, parent, context, settings, onDone);
     }
 
     @Override

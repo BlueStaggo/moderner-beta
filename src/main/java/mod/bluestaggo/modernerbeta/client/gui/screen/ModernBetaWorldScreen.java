@@ -4,7 +4,7 @@ package mod.bluestaggo.modernerbeta.client.gui.screen;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.client.gui.screen.config.ModernBetaGraphicalProviderSettingsScreen;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
-import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistryKeys;
+import mod.bluestaggo.modernerbeta.registry.ModernBetaResourceKeys;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPresetCategory;
@@ -38,7 +38,7 @@ import java.util.Optional;
 import java.util.Random;
 
 @Environment(EnvType.CLIENT)
-public class ModernBetaWorldScreen extends ModernBetaScreen {
+public class ModernBetaLevelScreen extends ModernBetaScreen {
     private static final String TEXT_TITLE = "createWorld.customize.modern_beta.title"; 
     private static final String TEXT_TITLE_CHUNK = "createWorld.customize.modern_beta.title.chunk"; 
     private static final String TEXT_TITLE_BIOME = "createWorld.customize.modern_beta.title.biome"; 
@@ -65,22 +65,22 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
     
     private final TriConsumer<CompoundTag, CompoundTag, CompoundTag> onDone;
     private final String hintString;
-    private final WorldCreationContext generatorOptionsHolder;
+    private final WorldCreationContext context;
     private final Registry<ModernBetaSettingsPreset> presetRegistry;
     private final Registry<ModernBetaSettingsPresetCategory> presetCategoryRegistry;
 
     private ModernBetaSettingsPreset preset;
     private Button buttonPreset;
 
-    public ModernBetaWorldScreen(Screen parent, WorldCreationContext generatorOptionsHolder, TriConsumer<CompoundTag, CompoundTag, CompoundTag> onDone) {
+    public ModernBetaLevelScreen(Screen parent, WorldCreationContext context, TriConsumer<CompoundTag, CompoundTag, CompoundTag> onDone) {
         super(Component.translatable(TEXT_TITLE), parent);
         
-        ChunkGenerator chunkGenerator = generatorOptionsHolder.selectedDimensions().overworld();
+        ChunkGenerator chunkGenerator = context.selectedDimensions().overworld();
         ModernBetaChunkGenerator modernBetaChunkGenerator = (ModernBetaChunkGenerator)chunkGenerator;
         ModernBetaBiomeSource modernBetaBiomeSource = (ModernBetaBiomeSource)modernBetaChunkGenerator.getBiomeSource();
 
-        this.presetRegistry = generatorOptionsHolder.worldgenLoadContext().lookupOrThrow(ModernBetaRegistryKeys.SETTINGS_PRESET);
-        this.presetCategoryRegistry = generatorOptionsHolder.worldgenLoadContext().lookupOrThrow(ModernBetaRegistryKeys.SETTINGS_PRESET_CATEGORY);
+        this.presetRegistry = context.worldgenLoadContext().lookupOrThrow(ModernBetaResourceKeys.SETTINGS_PRESET);
+        this.presetCategoryRegistry = context.worldgenLoadContext().lookupOrThrow(ModernBetaResourceKeys.SETTINGS_PRESET_CATEGORY);
 
         this.onDone = onDone;
         this.hintString = TEXT_HINTS[new Random().nextInt(TEXT_HINTS.length)];
@@ -90,7 +90,7 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
             modernBetaBiomeSource.getBiomeSettings(),
             modernBetaBiomeSource.getCaveBiomeSettings()
         );
-        this.generatorOptionsHolder = generatorOptionsHolder;
+        this.context = context;
     }
     
     public void setPreset(ModernBetaSettingsPreset preset) {
@@ -169,7 +169,7 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
             button -> this.minecraft.setScreen(new ModernBetaGraphicalProviderSettingsScreen(
                 TEXT_TITLE_CHUNK,
                 this,
-                this.generatorOptionsHolder,
+                this.context,
                 this.preset.chunkSettings().mapPreset(presetLookup, ModernBetaSettingsPreset::chunkSettings).toCompound(),
                 nbtCompound -> {
                     Tuple<ModernBetaSettingsPreset, Boolean> updatedPreset = this.preset.setNbt(nbtCompound, null, null);
@@ -197,7 +197,7 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
             button -> this.minecraft.setScreen(new ModernBetaGraphicalProviderSettingsScreen(
                 TEXT_TITLE_CHUNK,
                 this,
-                this.generatorOptionsHolder,
+                this.context,
                 this.preset.biomeSettings().mapPreset(presetLookup, ModernBetaSettingsPreset::biomeSettings).toCompound(),
                 nbtCompound -> {
                     Tuple<ModernBetaSettingsPreset, Boolean> updatedPreset = this.preset.setNbt(null, nbtCompound, null);
@@ -225,7 +225,7 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
             button -> this.minecraft.setScreen(new ModernBetaGraphicalProviderSettingsScreen(
                 TEXT_TITLE_CHUNK,
                 this,
-                this.generatorOptionsHolder,
+                this.context,
                 this.preset.caveBiomeSettings().mapPreset(presetLookup, ModernBetaSettingsPreset::caveBiomeSettings).toCompound(),
                 nbtCompound -> {
                     Tuple<ModernBetaSettingsPreset, Boolean> updatedPreset = this.preset.setNbt(null, null, nbtCompound);
@@ -263,7 +263,7 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
             button -> this.minecraft.setScreen(new ModernBetaBiomePreviewScreen(
                 Component.translatable(TEXT_SETTINGS_PREVIEW),
                 this,
-                this.generatorOptionsHolder,
+                this.context,
                 this.preset.biomeSettings().mapPreset(presetLookup, ModernBetaSettingsPreset::biomeSettings)
             ))
         ).build();

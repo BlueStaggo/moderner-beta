@@ -27,11 +27,11 @@ public abstract class ModernBetaGraphicalMapSettingsScreen extends ModernBetaGra
     public ModernBetaGraphicalMapSettingsScreen(
         String title,
         Screen parent,
-        WorldCreationContext generatorOptionsHolder,
+        WorldCreationContext context,
         CompoundTag settings,
         Consumer<CompoundTag> onDone
     ) {
-        super(title, parent, generatorOptionsHolder, "list", settings, onDone);
+        super(title, parent, context, "list", settings, onDone);
 
         int i = 0;
         for (String key : this.settings./*? >=1.21.5 {*/keySet/*?} else {*//*getAllKeys*//*?}*/()) {

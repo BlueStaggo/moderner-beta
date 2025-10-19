@@ -2,7 +2,7 @@ package mod.bluestaggo.modernerbeta.fabric.data;
 
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
-import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistryKeys;
+import mod.bluestaggo.modernerbeta.registry.ModernBetaResourceKeys;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPresetCategory;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
@@ -140,6 +140,6 @@ public final class ModernBetaSettingsPresetCategories {
     }
 
     private static ResourceKey<ModernBetaSettingsPresetCategory> keyOf(String id) {
-        return ResourceKey.create(ModernBetaRegistryKeys.SETTINGS_PRESET_CATEGORY, ModernerBeta.createId(id));
+        return ResourceKey.create(ModernBetaResourceKeys.SETTINGS_PRESET_CATEGORY, ModernerBeta.createId(id));
     }
 }

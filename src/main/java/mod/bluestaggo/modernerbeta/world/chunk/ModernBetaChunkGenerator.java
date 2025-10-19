@@ -6,19 +6,19 @@ import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.api.world.chunk.ChunkProvider;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
-import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistryKeys;
+import mod.bluestaggo.modernerbeta.registry.ModernBetaResourceKeys;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.settings.component.CaveGeneration;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
-import mod.bluestaggo.modernerbeta.util.random.BedrockCheckedRandom;
-import mod.bluestaggo.modernerbeta.util.random.BedrockChunkRandom;
+import mod.bluestaggo.modernerbeta.util.random.BedrockRandomSource;
+import mod.bluestaggo.modernerbeta.util.random.BedrockWorldgenRandom;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.world.biome.injector.BiomeInjector;
 import mod.bluestaggo.modernerbeta.world.biome.injector.BiomeInjector.BiomeInjectionStep;
-import mod.bluestaggo.modernerbeta.world.carver.BetaCaveCarverConfig;
+import mod.bluestaggo.modernerbeta.world.carver.BetaCaveCarverConfiguration;
 import mod.bluestaggo.modernerbeta.world.carver.configured.ModernBetaConfiguredCarvers;
 import net.minecraft.Util;
 import net.minecraft.core.Holder;
@@ -72,7 +72,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
     public static final com.mojang.serialization.MapCodec<ModernBetaChunkGenerator> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> instance.group(
             BiomeSource.CODEC.fieldOf("biome_source").forGetter(generator -> generator.biomeSource),
-            RegistryOps.retrieveGetter(ModernBetaRegistryKeys.SETTINGS_PRESET),
+            RegistryOps.retrieveGetter(ModernBetaResourceKeys.SETTINGS_PRESET),
             NoiseGeneratorSettings.CODEC.fieldOf("settings").forGetter(generator -> generator.settings),
             CompoundTag.CODEC.fieldOf("provider_settings").forGetter(generator -> generator.chunkSettings)
         ).apply(instance, instance.stable(ModernBetaChunkGenerator::new))
@@ -204,7 +204,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
 
         RandomSource random = switch (seedMethod) {
             case MODERN -> new WorldgenRandom(new LegacyRandomSource(RandomSupport.generateUniqueSeed()));
-            case BEDROCK -> new BedrockChunkRandom(new BedrockCheckedRandom((int) RandomSupport.generateUniqueSeed()));
+            case BEDROCK -> new BedrockWorldgenRandom(new BedrockRandomSource((int) RandomSupport.generateUniqueSeed()));
             default -> new SingleThreadedRandomSource(seed);
         };
 
@@ -282,7 +282,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
                     }
 
                     if (configuredCarver.isStartChunk(random)) {
-                        if (configuredCarver.config() instanceof BetaCaveCarverConfig betaCaveCarverConfig) {
+                        if (configuredCarver.config() instanceof BetaCaveCarverConfiguration betaCaveCarverConfig) {
                             betaCaveCarverConfig.useFixedCaves = Optional.of(this.caveSettings.fixCaveBorders());
                             betaCaveCarverConfig.useSurfaceRules = Optional.of(this.useSurfaceRules);
                         }
@@ -299,13 +299,13 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
     }
 
     @Override
-    public void applyBiomeDecoration(WorldGenLevel world, ChunkAccess chunk, StructureManager structureAccessor) {
+    public void applyBiomeDecoration(WorldGenLevel level, ChunkAccess chunk, StructureManager structureAccessor) {
         ChunkPos pos = chunk.getPos();
         
         if (this.chunkProvider.skipChunk(pos.x, pos.z, ModernBetaGenerationStep.FEATURES)) 
             return;
 
-        super.applyBiomeDecoration(world, chunk, structureAccessor);
+        super.applyBiomeDecoration(level, chunk, structureAccessor);
     }
     
     @Override
@@ -319,17 +319,17 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
     }
     
     @Override
-    public int getBaseHeight(int x, int z, Heightmap.Types type, LevelHeightAccessor world, RandomState noiseConfig) {
-        return this.chunkProvider.getHeight(world, x, z, type);
+    public int getBaseHeight(int x, int z, Heightmap.Types type, LevelHeightAccessor level, RandomState noiseConfig) {
+        return this.chunkProvider.getHeight(level, x, z, type);
     }
     
-    public int getHeight(int x, int z, Heightmap.Types type, LevelHeightAccessor world) {
-        return this.chunkProvider.getHeight(world, x, z, type);
+    public int getHeight(int x, int z, Heightmap.Types type, LevelHeightAccessor level) {
+        return this.chunkProvider.getHeight(level, x, z, type);
     }
   
     @Override
-    public NoiseColumn getBaseColumn(int x, int z, LevelHeightAccessor world, RandomState noiseConfig) {
-        int height = this.chunkProvider.getHeight(world, x, z, Heightmap.Types.OCEAN_FLOOR_WG);
+    public NoiseColumn getBaseColumn(int x, int z, LevelHeightAccessor level, RandomState noiseConfig) {
+        int height = this.chunkProvider.getHeight(level, x, z, Heightmap.Types.OCEAN_FLOOR_WG);
         int worldHeight = this.chunkProvider.getWorldHeight();
         int minY = this.chunkProvider.getWorldMinY();
         
@@ -376,7 +376,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
     }
 
     @Override
-    protected NoiseChunk createNoiseChunk(ChunkAccess chunk, StructureManager world, Blender blender, RandomState noiseConfig) {
+    protected NoiseChunk createNoiseChunk(ChunkAccess chunk, StructureManager manager, Blender blender, RandomState noiseConfig) {
         return ModernBetaChunkNoiseSampler.create(
             chunk,
             noiseConfig,

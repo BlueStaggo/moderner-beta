@@ -35,7 +35,7 @@ public class SpawnLocatorRelease implements SpawnLocator {
     }
 
     @Override
-    public Optional<BlockPos> locateSpawn(LevelHeightAccessor world) {
+    public Optional<BlockPos> locateSpawn(LevelHeightAccessor level) {
         ModernerBeta.log(Level.INFO, "Setting a grass spawn..");
 
         int x = 0;
@@ -50,7 +50,7 @@ public class SpawnLocatorRelease implements SpawnLocator {
             ModernerBeta.log(Level.INFO, "Unable to find spawn biome");
         }
         
-        while(!this.isGrassAt(world, x, z)) {
+        while(!this.isGrassAt(level, x, z)) {
             if (attempts > 10000) {
                 ModernerBeta.log(Level.INFO, "Exceeded spawn attempts, spawning anyway at 0,0..");
                 
@@ -65,9 +65,9 @@ public class SpawnLocatorRelease implements SpawnLocator {
             attempts++;
         }
         
-        int y = (this.chunkProvider instanceof ChunkProviderNoise noiseChunkProvider) ?
-            noiseChunkProvider.getHeight(world, x, z, ChunkHeightmap.Type.SURFACE_FLOOR) :
-            this.chunkProvider.getHeight(world, x, z, Heightmap.Types.WORLD_SURFACE_WG);
+        int y = (this.chunkProvider instanceof ChunkProviderNoise chunkProviderNoise) ?
+            chunkProviderNoise.getHeight(level, x, z, ChunkHeightmap.Type.SURFACE_FLOOR) :
+            this.chunkProvider.getHeight(level, x, z, Heightmap.Types.WORLD_SURFACE_WG);
         
         return Optional.of(new BlockPos(x, y, z));
     }
@@ -96,12 +96,12 @@ public class SpawnLocatorRelease implements SpawnLocator {
         return position;
     }
 
-    private boolean isGrassAt(LevelHeightAccessor world, int x, int z) {
+    private boolean isGrassAt(LevelHeightAccessor level, int x, int z) {
         int seaLevel = this.chunkProvider.getSeaLevel();
 
-        int y = (this.chunkProvider instanceof ChunkProviderNoise noiseChunkProvider) ?
-            noiseChunkProvider.getHeight(world, x, z, ChunkHeightmap.Type.SURFACE_FLOOR) :
-            this.chunkProvider.getHeight(world, x, z, Heightmap.Types.OCEAN_FLOOR_WG);
+        int y = (this.chunkProvider instanceof ChunkProviderNoise chunkProviderNoise) ?
+            chunkProviderNoise.getHeight(level, x, z, ChunkHeightmap.Type.SURFACE_FLOOR) :
+            this.chunkProvider.getHeight(level, x, z, Heightmap.Types.OCEAN_FLOOR_WG);
 
         return y >= seaLevel;
     }

@@ -6,7 +6,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import com.mojang.serialization.JsonOps;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
-import mod.bluestaggo.modernerbeta.mixin.client.AccessorEditBoxWidget;
+import mod.bluestaggo.modernerbeta.mixin.client.MultiLineEditBoxAccessor;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import net.fabricmc.api.EnvType;
@@ -103,7 +103,7 @@ public class ModernBetaSettingsScreen extends ModernBetaScreen {
         gridWidget.visitWidgets(this::addRenderableWidget);
         
         // Set cursor to beginning of edit box
-        MultilineTextField editBox = ((AccessorEditBoxWidget) this.widgetSettings).getTextField();
+        MultilineTextField editBox = ((MultiLineEditBoxAccessor) this.widgetSettings).getTextField();
         editBox.seekCursor(Whence.ABSOLUTE, 0);
         
         this.onChange();

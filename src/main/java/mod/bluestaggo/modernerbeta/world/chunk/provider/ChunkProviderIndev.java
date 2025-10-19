@@ -81,7 +81,7 @@ public class ChunkProviderIndev extends ChunkProviderFinite {
         return this.levelTheme;
     }
     
-    public void generateIndevHouse(ServerLevel world, BlockPos spawnPos) {
+    public void generateIndevHouse(ServerLevel level, BlockPos spawnPos) {
         if (!this.chunkSettings.getOrDefault(SettingsComponentTypes.SPAWN_INDEV_HOUSE)) {
             return;
         }
@@ -111,13 +111,13 @@ public class ChunkProviderIndev extends ChunkProviderFinite {
                         block = Blocks.AIR;
                     }
                     
-                    world.setBlockAndUpdate(pos.set(x, y, z), block.defaultBlockState());
+                    level.setBlockAndUpdate(pos.set(x, y, z), block.defaultBlockState());
                 }
             }
         }
         
-        world.setBlockAndUpdate(pos.set(spawnX - 3 + 1, spawnY, spawnZ), Blocks.WALL_TORCH.defaultBlockState().rotate(Rotation.CLOCKWISE_90));
-        world.setBlockAndUpdate(pos.set(spawnX + 3 - 1, spawnY, spawnZ), Blocks.WALL_TORCH.defaultBlockState().rotate(Rotation.COUNTERCLOCKWISE_90));
+        level.setBlockAndUpdate(pos.set(spawnX - 3 + 1, spawnY, spawnZ), Blocks.WALL_TORCH.defaultBlockState().rotate(Rotation.CLOCKWISE_90));
+        level.setBlockAndUpdate(pos.set(spawnX + 3 - 1, spawnY, spawnZ), Blocks.WALL_TORCH.defaultBlockState().rotate(Rotation.COUNTERCLOCKWISE_90));
     }
     
     @Override

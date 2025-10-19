@@ -1,6 +1,6 @@
 package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.intlayers;
 
-import mod.bluestaggo.modernerbeta.mixin.AccessorBiome;
+import mod.bluestaggo.modernerbeta.mixin.BiomeAccessor;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.Layer;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.world.level.biome.Biome;
@@ -38,7 +38,7 @@ public class IntClimateSampleLayer extends IntLayer {
             return 32768;
         }
 
-        Biome.ClimateSettings weather = ((AccessorBiome)(Object)biome).getClimateSettings();
+        Biome.ClimateSettings weather = ((BiomeAccessor)(Object)biome).getClimateSettings();
         float floatValue = downfall ? weather.downfall() : weather.temperature();
         int intValue = (int)(floatValue * 65536.0F);
 

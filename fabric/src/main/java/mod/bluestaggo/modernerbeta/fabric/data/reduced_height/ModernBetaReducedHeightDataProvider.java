@@ -1,9 +1,7 @@
 package mod.bluestaggo.modernerbeta.fabric.data.reduced_height;
 
 import com.mojang.datafixers.util.Either;
-import mod.bluestaggo.modernerbeta.fabric.mixin.AccessorDensityFunctionsFabric;
-import mod.bluestaggo.modernerbeta.mixin.AccessorDensityFunctions;
-import mod.bluestaggo.modernerbeta.util.VersionCompat;
+import mod.bluestaggo.modernerbeta.mixin.NoiseRouterDataAccessor;
 import mod.bluestaggo.modernerbeta.world.carver.configured.ModernBetaConfiguredCarvers;
 import mod.bluestaggo.modernerbeta.world.feature.configured.ModernBetaConfiguredFeatures;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -41,6 +39,7 @@ import net.minecraft.world.level.levelgen.placement.*;
 import net.minecraft.world.level.levelgen.structure.templatesystem.RuleTest;
 import net.minecraft.world.level.levelgen.structure.templatesystem.TagMatchTest;
 import net.minecraft.world.level.levelgen.synth.NormalNoise;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Optional;
@@ -49,7 +48,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import static mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGeneratorSettings.*;
+import static mod.bluestaggo.modernerbeta.world.chunk.ModernBetaNoiseGeneratorSettings.*;
 
 public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryProvider {
     public static final ResourceKey<ConfiguredFeature<?, ?>> ORE_DEEPSLATE_OLD = ModernBetaConfiguredFeatures.of("ore_deepslate_old");
@@ -62,7 +61,7 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
     }
 
     @Override
-    protected void configure(Provider registries, Entries entries) {
+    protected void configure(Provider provider, Entries entries) {
         isGeneratingData = true;
 
         //Dimension types
@@ -90,7 +89,7 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
         );
 
         //Configured carvers
-        HolderLookup.RegistryLookup<Block> registryBlock = registries.lookupOrThrow(Registries.BLOCK);
+        HolderLookup.RegistryLookup<Block> registryBlock = provider.lookupOrThrow(Registries.BLOCK);
         CaveCarverConfiguration configCaveDeep = new CaveCarverConfiguration(
             0.0f,
             ConstantHeight.of(VerticalAnchor.absolute(-2032)),
@@ -129,35 +128,35 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
         ));
 
         //Chunk generator settings
-        entries.add(NoiseGeneratorSettings.OVERWORLD, createVanillaSurfaceSettings(registries, false, false));
-        entries.add(NoiseGeneratorSettings.LARGE_BIOMES, createVanillaSurfaceSettings(registries, false, true));
-        entries.add(NoiseGeneratorSettings.AMPLIFIED, createVanillaSurfaceSettings(registries, true, false));
-        entries.add(NoiseGeneratorSettings.CAVES, createVanillaCavesSettings(registries));
+        entries.add(NoiseGeneratorSettings.OVERWORLD, createVanillaSurfaceSettings(provider, false, false));
+        entries.add(NoiseGeneratorSettings.LARGE_BIOMES, createVanillaSurfaceSettings(provider, false, true));
+        entries.add(NoiseGeneratorSettings.AMPLIFIED, createVanillaSurfaceSettings(provider, true, false));
+        entries.add(NoiseGeneratorSettings.CAVES, createVanillaCavesSettings(provider));
 
-        entries.add(BETA, createGeneratorSettings(registries, ModernBetaShapeReducedHeightConfigs.BETA, 64, true));
-        entries.add(ALPHA, createGeneratorSettings(registries, ModernBetaShapeReducedHeightConfigs.ALPHA, 64, true));
-        entries.add(SKYLANDS, createGeneratorSettings(registries, ModernBetaShapeReducedHeightConfigs.SKYLANDS, 0, false));
-        entries.add(INFDEV_611, createGeneratorSettings(registries, ModernBetaShapeReducedHeightConfigs.INFDEV_611, 64, true));
-        entries.add(INFDEV_420, createGeneratorSettings(registries, ModernBetaShapeReducedHeightConfigs.INFDEV_420, 64, true));
-        entries.add(INFDEV_415, createGeneratorSettings(registries, ModernBetaShapeReducedHeightConfigs.INFDEV_415, 64, true));
-        entries.add(INFDEV_227, createGeneratorSettings(registries, ModernBetaShapeReducedHeightConfigs.INFDEV_227, 64, true));
-        entries.add(INDEV, createGeneratorSettings(registries, ModernBetaShapeReducedHeightConfigs.INDEV, 64, false));
-        entries.add(CLASSIC_0_30, createGeneratorSettings(registries, ModernBetaShapeReducedHeightConfigs.CLASSIC_0_30, 64, false));
-        entries.add(PE, createGeneratorSettings(registries, ModernBetaShapeReducedHeightConfigs.PE, 64, true));
-        entries.add(EARLY_RELEASE, createGeneratorSettings(registries, ModernBetaShapeReducedHeightConfigs.EARLY_RELEASE, 63, true));
-        entries.add(MAJOR_RELEASE, createGeneratorSettings(registries, ModernBetaShapeReducedHeightConfigs.MAJOR_RELEASE, 63, true));
-        entries.add(EARLY_BEDROCK, createGeneratorSettings(registries, ModernBetaShapeReducedHeightConfigs.EARLY_BEDROCK, 63, true));
+        entries.add(BETA, createNoiseGeneratorSettings(provider, ModernBetaReducedHeightNoiseSettings.BETA, 64, true));
+        entries.add(ALPHA, createNoiseGeneratorSettings(provider, ModernBetaReducedHeightNoiseSettings.ALPHA, 64, true));
+        entries.add(SKYLANDS, createNoiseGeneratorSettings(provider, ModernBetaReducedHeightNoiseSettings.SKYLANDS, 0, false));
+        entries.add(INFDEV_611, createNoiseGeneratorSettings(provider, ModernBetaReducedHeightNoiseSettings.INFDEV_611, 64, true));
+        entries.add(INFDEV_420, createNoiseGeneratorSettings(provider, ModernBetaReducedHeightNoiseSettings.INFDEV_420, 64, true));
+        entries.add(INFDEV_415, createNoiseGeneratorSettings(provider, ModernBetaReducedHeightNoiseSettings.INFDEV_415, 64, true));
+        entries.add(INFDEV_227, createNoiseGeneratorSettings(provider, ModernBetaReducedHeightNoiseSettings.INFDEV_227, 64, true));
+        entries.add(INDEV, createNoiseGeneratorSettings(provider, ModernBetaReducedHeightNoiseSettings.INDEV, 64, false));
+        entries.add(CLASSIC_0_30, createNoiseGeneratorSettings(provider, ModernBetaReducedHeightNoiseSettings.CLASSIC_0_30, 64, false));
+        entries.add(PE, createNoiseGeneratorSettings(provider, ModernBetaReducedHeightNoiseSettings.PE, 64, true));
+        entries.add(EARLY_RELEASE, createNoiseGeneratorSettings(provider, ModernBetaReducedHeightNoiseSettings.EARLY_RELEASE, 63, true));
+        entries.add(MAJOR_RELEASE, createNoiseGeneratorSettings(provider, ModernBetaReducedHeightNoiseSettings.MAJOR_RELEASE, 63, true));
+        entries.add(EARLY_BEDROCK, createNoiseGeneratorSettings(provider, ModernBetaReducedHeightNoiseSettings.EARLY_BEDROCK, 63, true));
 
         //Density functions
-        HolderGetter<DensityFunction> densityFunctionLookup = registries.lookupOrThrow(Registries.DENSITY_FUNCTION);
-        HolderGetter<NormalNoise.NoiseParameters> noiseParametersLookup = registries.lookupOrThrow(Registries.NOISE);
+        HolderGetter<DensityFunction> densityFunctionLookup = provider.lookupOrThrow(Registries.DENSITY_FUNCTION);
+        HolderGetter<NormalNoise.NoiseParameters> noiseParametersLookup = provider.lookupOrThrow(Registries.NOISE);
 
-        entries.add(AccessorDensityFunctionsFabric.getSpaghetti2d(), createCavesSpaghetti2dOverworldFunction(densityFunctionLookup, noiseParametersLookup));
-        entries.add(AccessorDensityFunctions.getEntrancesKey(), createCavesEntrancesOverworldFunction(densityFunctionLookup, noiseParametersLookup));
-        entries.add(AccessorDensityFunctions.getNoodleKey(), createCavesNoodleOverworldFunction(densityFunctionLookup, noiseParametersLookup));
+        entries.add(mod.bluestaggo.modernerbeta.fabric.mixin.NoiseRouterDataAccessor.getSpaghetti2d(), createCavesSpaghetti2dOverworldFunction(densityFunctionLookup, noiseParametersLookup));
+        entries.add(NoiseRouterDataAccessor.getEntrancesKey(), createCavesEntrancesOverworldFunction(densityFunctionLookup, noiseParametersLookup));
+        entries.add(NoiseRouterDataAccessor.getNoodleKey(), createCavesNoodleOverworldFunction(densityFunctionLookup, noiseParametersLookup));
 
         //Placed features
-        HolderGetter<ConfiguredFeature<?, ?>> registryConfiguredFeature = registries.lookupOrThrow(Registries.CONFIGURED_FEATURE);
+        HolderGetter<ConfiguredFeature<?, ?>> registryConfiguredFeature = provider.lookupOrThrow(Registries.CONFIGURED_FEATURE);
         Holder<ConfiguredFeature<?, ?>> noOp = new Holder.Direct<>(new ConfiguredFeature<>(Feature.NO_OP, NoneFeatureConfiguration.NONE));
         Holder<ConfiguredFeature<?, ?>> dirt = registryConfiguredFeature.getOrThrow(OreFeatures.ORE_DIRT);
         Holder<ConfiguredFeature<?, ?>> gravel = registryConfiguredFeature.getOrThrow(OreFeatures.ORE_GRAVEL);
@@ -216,13 +215,13 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
         isGeneratingData = false;
     }
 
-    private static NoiseGeneratorSettings createVanillaSurfaceSettings(Provider lookup, boolean amplified, boolean largeBiomes) {
+    private static NoiseGeneratorSettings createVanillaSurfaceSettings(Provider provider, boolean amplified, boolean largeBiomes) {
         return new NoiseGeneratorSettings(
-            ModernBetaShapeReducedHeightConfigs.VANILLA_SURFACE,
+            ModernBetaReducedHeightNoiseSettings.VANILLA_SURFACE,
             Blocks.STONE.defaultBlockState(),
             Blocks.WATER.defaultBlockState(),
-            AccessorDensityFunctionsFabric.invokeOverworld(lookup.lookupOrThrow(Registries.DENSITY_FUNCTION),
-                lookup.lookupOrThrow(Registries.NOISE), largeBiomes, amplified),
+            mod.bluestaggo.modernerbeta.fabric.mixin.NoiseRouterDataAccessor.invokeOverworld(provider.lookupOrThrow(Registries.DENSITY_FUNCTION),
+                provider.lookupOrThrow(Registries.NOISE), largeBiomes, amplified),
             SurfaceRuleData.overworld(),
             (new OverworldBiomeBuilder()).spawnTarget(),
             63,
@@ -233,13 +232,13 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
         );
     }
 
-    private static NoiseGeneratorSettings createVanillaCavesSettings(Provider lookup) {
+    private static NoiseGeneratorSettings createVanillaCavesSettings(Provider provider) {
         return new NoiseGeneratorSettings(
-            ModernBetaShapeReducedHeightConfigs.VANILLA_CAVES,
+            ModernBetaReducedHeightNoiseSettings.VANILLA_CAVES,
             Blocks.STONE.defaultBlockState(),
             Blocks.WATER.defaultBlockState(),
-            AccessorDensityFunctionsFabric.invokeNether(lookup.lookupOrThrow(Registries.DENSITY_FUNCTION),
-                lookup.lookupOrThrow(Registries.NOISE)),
+            mod.bluestaggo.modernerbeta.fabric.mixin.NoiseRouterDataAccessor.invokeNether(provider.lookupOrThrow(Registries.DENSITY_FUNCTION),
+                provider.lookupOrThrow(Registries.NOISE)),
             SurfaceRuleData.overworldLike(false, true, true),
             List.of(),
             32,
@@ -266,7 +265,7 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
 
         DensityFunction mainSpaghetti = DensityFunctions.add(DensityFunctions.max(weirdSpaghetti1, weirdSpaghetti2), spaghettiThickness).clamp(-1.0, 1.0);
         DensityFunction spaghettiRoughness = new DensityFunctions.HolderHolder(
-                densityFunctionLookup.getOrThrow(AccessorDensityFunctionsFabric.getSpaghettiRoughnessFunction()));
+                densityFunctionLookup.getOrThrow(mod.bluestaggo.modernerbeta.fabric.mixin.NoiseRouterDataAccessor.getSpaghettiRoughnessFunction()));
 
         DensityFunction entranceNoise = DensityFunctions.noise(noiseParametersLookup.getOrThrow(
                 Noises.CAVE_ENTRANCE), 0.75, 0.5);
@@ -281,7 +280,7 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
             HolderGetter<NormalNoise.NoiseParameters> noiseParametersLookup
     ) {
         DensityFunction y = new DensityFunctions.HolderHolder(
-                densityFunctionLookup.getOrThrow(AccessorDensityFunctionsFabric.getY()));
+                densityFunctionLookup.getOrThrow(mod.bluestaggo.modernerbeta.fabric.mixin.NoiseRouterDataAccessor.getY()));
 
         int absMin = 0;
         int min = absMin + 4;
@@ -314,7 +313,7 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
         DensityFunction spaghettiElevation = DensityFunctions.mappedNoise(noiseParametersLookup.getOrThrow(
                 Noises.SPAGHETTI_2D_ELEVATION), 0.0, Math.floorDiv(-64, 8), 8.0);
         DensityFunction spaghettiThicknessModulator = new DensityFunctions.HolderHolder(
-                densityFunctionLookup.getOrThrow(AccessorDensityFunctionsFabric.getSpaghetti2dThicknessModulator()));
+                densityFunctionLookup.getOrThrow(mod.bluestaggo.modernerbeta.fabric.mixin.NoiseRouterDataAccessor.getSpaghetti2dThicknessModulator()));
 
         DensityFunction clampedElevation = DensityFunctions.add(spaghettiElevation, DensityFunctions.yClampedGradient(0, 320, 8.0, -40.0)).abs();
         DensityFunction minSpaghetti = DensityFunctions.add(clampedElevation, spaghettiThicknessModulator).cube();
@@ -337,36 +336,36 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
         return modifiers(CountPlacement.of(count), heightModifier);
     }
 
-    protected static <T> Holder<T> alwaysSerializableHolder(Holder<T> entry) {
+    protected static <T> Holder<T> alwaysSerializableHolder(Holder<T> holder) {
         return new Holder<>() {
             @Override
-            public T value() {
-                return entry.value();
+            public @NotNull T value() {
+                return holder.value();
             }
 
             @Override
             public boolean isBound() {
-                return entry.isBound();
+                return holder.isBound();
             }
 
             @Override
             public boolean is(ResourceLocation id) {
-                return entry.is(id);
+                return holder.is(id);
             }
 
             @Override
             public boolean is(ResourceKey<T> key) {
-                return entry.is(key);
+                return holder.is(key);
             }
 
             @Override
             public boolean is(Predicate<ResourceKey<T>> predicate) {
-                return entry.is(predicate);
+                return holder.is(predicate);
             }
 
             @Override
             public boolean is(TagKey<T> tag) {
-                return entry.is(tag);
+                return holder.is(tag);
             }
 
             //? if >=1.21 {
@@ -378,23 +377,23 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
             //?}
 
             @Override
-            public Stream<TagKey<T>> tags() {
-                return entry.tags();
+            public @NotNull Stream<TagKey<T>> tags() {
+                return holder.tags();
             }
 
             @Override
-            public Either<ResourceKey<T>, T> unwrap() {
-                return entry.unwrap();
+            public @NotNull Either<ResourceKey<T>, T> unwrap() {
+                return holder.unwrap();
             }
 
             @Override
-            public Optional<ResourceKey<T>> unwrapKey() {
-                return entry.unwrapKey();
+            public @NotNull Optional<ResourceKey<T>> unwrapKey() {
+                return holder.unwrapKey();
             }
 
             @Override
-            public Kind kind() {
-                return entry.kind();
+            public @NotNull Kind kind() {
+                return holder.kind();
             }
 
             @Override
@@ -409,7 +408,7 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
     }
 
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return "Reduced Height Data";
     }
 }

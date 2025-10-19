@@ -26,7 +26,7 @@ public class SpawnLocatorIndev implements SpawnLocator {
 
     
     @Override
-    public Optional<BlockPos> locateSpawn(LevelHeightAccessor world) {
+    public Optional<BlockPos> locateSpawn(LevelHeightAccessor level) {
         Random random = new Random();
         
         int spawnX;
@@ -44,7 +44,7 @@ public class SpawnLocatorIndev implements SpawnLocator {
             spawnX = random.nextInt(width / 2) + width / 4;
             spawnZ = random.nextInt(length / 2) + length / 4;
             //spawnY = this.chunkProvider.getLevelHighestBlock(spawnX, spawnZ) + 1;
-            spawnY = this.chunkProvider.getHeight(world, spawnX - width / 2, spawnZ - length / 2, Heightmap.Types.OCEAN_FLOOR_WG) + 1;
+            spawnY = this.chunkProvider.getHeight(level, spawnX - width / 2, spawnZ - length / 2, Heightmap.Types.OCEAN_FLOOR_WG) + 1;
             
             if (attempts >= 1000000) {
                 ModernerBeta.log(Level.INFO, "[Indev] Exceeded spawn attempts, spawning anyway..");

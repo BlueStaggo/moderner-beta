@@ -20,6 +20,6 @@ public final class ModernBetaClientRegistries {
     public static void makeRegistries(IRegistryHelper helper) {
         registryHelper = helper;
 
-        SETTINGS_COMPONENT_TYPE_GUI = register(ModernBetaClientRegistryKeys.SETTINGS_COMPONENT_TYPE_GUI);
+        SETTINGS_COMPONENT_TYPE_GUI = register(ModernBetaClientResourceKeys.SETTINGS_COMPONENT_TYPE_GUI);
     }
 }

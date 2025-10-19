@@ -9,6 +9,6 @@ import net.minecraft.world.level.ChunkPos;
 public interface INetworkHelper {
     void sendToServer(ModernBetaPayload payload);
     void sendToPlayer(ServerPlayer player, ModernBetaPayload payload);
-    void sendToPlayersTrackingChunk(ServerLevel world, ChunkPos pos, ModernBetaPayload payload);
+    void sendToPlayersTrackingChunk(ServerLevel level, ChunkPos pos, ModernBetaPayload payload);
     void sendToAllPlayers(MinecraftServer server, ModernBetaPayload payload);
 }

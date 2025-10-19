@@ -17,7 +17,7 @@ public class ModernBetaReducedHeightTagProviderBlock extends FabricTagProvider<B
     }
 
     @Override
-    protected void addTags(Provider lookup) {
+    protected void addTags(Provider provider) {
         this.builder(TagKey.create(Registries.BLOCK, ModernerBeta.createId("air"))).add(
             Blocks.AIR,
             Blocks.CAVE_AIR,

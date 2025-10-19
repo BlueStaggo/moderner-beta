@@ -6,9 +6,9 @@ import net.minecraft.world.level.levelgen.carver.WorldCarver;
 
 public class ModernBetaCarvers {
     private static IRegistryHandler<WorldCarver<?>> registryHandler;
-    public static WorldCarver<BetaCaveCarverConfig> BETA_CAVE;
+    public static WorldCarver<BetaCaveCarverConfiguration> BETA_CAVE;
     
-    private static WorldCarver<BetaCaveCarverConfig> register(String id, WorldCarver<BetaCaveCarverConfig> carver) {
+    private static WorldCarver<BetaCaveCarverConfiguration> register(String id, WorldCarver<BetaCaveCarverConfiguration> carver) {
         return registryHandler.register(ModernerBeta.createId(id), carver);
     }
     
@@ -18,7 +18,7 @@ public class ModernBetaCarvers {
 
         BETA_CAVE = register(
                 "beta_cave",
-                new BetaCaveCarver(BetaCaveCarverConfig.CODEC)
+                new BetaCaveWorldCarver(BetaCaveCarverConfiguration.CODEC)
         );
     }
 }

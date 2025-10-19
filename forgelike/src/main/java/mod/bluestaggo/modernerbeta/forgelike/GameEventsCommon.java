@@ -2,7 +2,7 @@ package mod.bluestaggo.modernerbeta.forgelike;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.command.DebugProviderSettingsCommand;
-import mod.bluestaggo.modernerbeta.world.ModernBetaWorldInitializer;
+import mod.bluestaggo.modernerbeta.world.ModernBetaLevelInitializer;
 //? if neoforge {
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -41,11 +41,11 @@ public class GameEventsCommon {
 
     @SubscribeEvent
     public static void serverStarting(ServerAboutToStartEvent event) {
-        ModernBetaWorldInitializer.initStarting(event.getServer());
+        ModernBetaLevelInitializer.initStarting(event.getServer());
     }
 
     @SubscribeEvent
     public static void serverStarting(ServerStartedEvent event) {
-        ModernBetaWorldInitializer.initStarted(event.getServer());
+        ModernBetaLevelInitializer.initStarted(event.getServer());
     }
 }

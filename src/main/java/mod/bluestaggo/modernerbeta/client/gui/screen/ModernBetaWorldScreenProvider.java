@@ -1,6 +1,6 @@
 package mod.bluestaggo.modernerbeta.client.gui.screen;
 
-import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistryKeys;
+import mod.bluestaggo.modernerbeta.registry.ModernBetaResourceKeys;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
@@ -19,14 +19,14 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
 
 @Environment(EnvType.CLIENT)
-public class ModernBetaWorldScreenProvider {
+public class ModernBetaLevelScreenProvider {
     public static WorldCreationContext.DimensionsUpdater createModifier(
         CompoundTag chunkSettingsCompound,
         CompoundTag biomeSettingsCompound,
         CompoundTag caveBiomeSettingsCompound
     ) {
         return (dynamicRegistryManager, dimensionsRegistryHolder) -> {
-            HolderGetter<ModernBetaSettingsPreset> registryPreset = dynamicRegistryManager.lookupOrThrow(ModernBetaRegistryKeys.SETTINGS_PRESET);
+            HolderGetter<ModernBetaSettingsPreset> registryPreset = dynamicRegistryManager.lookupOrThrow(ModernBetaResourceKeys.SETTINGS_PRESET);
 
             ModernBetaSettings chunkSettings = ModernBetaSettings.fromCompound(chunkSettingsCompound)
                 .mapPreset(registryPreset, ModernBetaSettingsPreset::chunkSettings);

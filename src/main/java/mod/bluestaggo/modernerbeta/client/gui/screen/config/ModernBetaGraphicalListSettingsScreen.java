@@ -28,11 +28,11 @@ public abstract class ModernBetaGraphicalListSettingsScreen extends ModernBetaGr
     public ModernBetaGraphicalListSettingsScreen(
         String title,
         Screen parent,
-        WorldCreationContext generatorOptionsHolder,
+        WorldCreationContext context,
         ListTag settings,
         Consumer<ListTag> onDone
     ) {
-        super(title, parent, generatorOptionsHolder, "list", settings, onDone);
+        super(title, parent, context, "list", settings, onDone);
     }
 
     protected abstract List<OptionInstance<?>> getOptions(int i);
@@ -90,7 +90,7 @@ public abstract class ModernBetaGraphicalListSettingsScreen extends ModernBetaGr
             "",
             OptionInstance.noTooltip(),
             (optionText, value) -> Component.nullToEmpty(stringSupplier.get()),
-            new BiomePickerCallbacks(this.minecraft::setScreen, this, this.generatorOptionsHolder, allowNone),
+            new BiomePickerCallbacks(this.minecraft::setScreen, this, this.context, allowNone),
             stringSupplier.get(),
             value -> {
                 settings.remove(i);
@@ -107,7 +107,7 @@ public abstract class ModernBetaGraphicalListSettingsScreen extends ModernBetaGr
             "",
             OptionInstance.noTooltip(),
             (optionText, value) -> Component.nullToEmpty(stringSupplier.get()),
-            new BiomePickerCallbacks(this.minecraft::setScreen, this, this.generatorOptionsHolder, allowNone),
+            new BiomePickerCallbacks(this.minecraft::setScreen, this, this.context, allowNone),
             stringSupplier.get(),
             value -> {
                 compoundSupplier.get().put(subKey, StringTag.valueOf(value));

@@ -6,8 +6,8 @@ import com.google.common.cache.LoadingCache;
 import it.unimi.dsi.fastutil.longs.Long2ObjectLinkedOpenHashMap;
 import mod.bluestaggo.modernerbeta.api.world.biome.climate.ClimateSampler;
 import mod.bluestaggo.modernerbeta.api.world.biome.climate.Clime;
-import mod.bluestaggo.modernerbeta.mixin.AccessorBiome;
-import mod.bluestaggo.modernerbeta.mixin.client.AccessorChunkRendererRegion;
+import mod.bluestaggo.modernerbeta.mixin.BiomeAccessor;
+import mod.bluestaggo.modernerbeta.mixin.client.RenderSectionRegionAccessor;
 import mod.bluestaggo.modernerbeta.settings.component.ClimateDistribution;
 import mod.bluestaggo.modernerbeta.tags.ModernBetaBiomeTags;
 import net.fabricmc.api.EnvType;
@@ -313,7 +313,7 @@ public final class BlockColorSampler {
 
                 int customColor = optionalCustomColor.get();
 
-                Biome.ClimateSettings weather = ((AccessorBiome)(Object)biome).getClimateSettings();
+                Biome.ClimateSettings weather = ((BiomeAccessor)(Object)biome).getClimateSettings();
 
                 float temperature = Mth.clamp(weather.temperature(), 0.0F, 1.0F);
                 float downfall = Mth.clamp(weather.downfall(), 0.0F, 1.0F);
@@ -340,39 +340,39 @@ public final class BlockColorSampler {
         return finalColor;
     }
 
-    private BiomeManager getBiomeAccessFromView(BlockAndTintGetter view) {
-        if (view instanceof Level world) {
-            return world.getBiomeManager();
+    private BiomeManager getBiomeAccessFromView(BlockAndTintGetter tintGetter) {
+        if (tintGetter instanceof Level level) {
+            return level.getBiomeManager();
         }
 
-        if (view instanceof LevelReader worldView) {
-            return worldView.getBiomeManager();
+        if (tintGetter instanceof LevelReader levelReader) {
+            return levelReader.getBiomeManager();
         }
 
-        if (view instanceof
+        if (tintGetter instanceof
             //? if >=1.21.6 {
             net.minecraft.client.renderer.chunk.RenderSectionRegion
             //?} else {
             /*net.minecraft.client.renderer.chunk.RenderChunkRegion
             *///?}
         ) {
-            return ((AccessorChunkRendererRegion)view).getLevel().getBiomeManager();
+            return ((RenderSectionRegionAccessor)tintGetter).getLevel().getBiomeManager();
         }
 
         Optional<Field> levelField;
         try {
-            levelField = this.viewLevelFieldCache.get(view.getClass());
+            levelField = this.viewLevelFieldCache.get(tintGetter.getClass());
         } catch (ExecutionException e) {
-            this.viewLevelFieldCache.put(view.getClass(), Optional.empty());
+            this.viewLevelFieldCache.put(tintGetter.getClass(), Optional.empty());
             e.printStackTrace();
             return null;
         }
 
         if (levelField.isPresent()) {
             try {
-                return ((LevelReader)levelField.get().get(view)).getBiomeManager();
+                return ((LevelReader)levelField.get().get(tintGetter)).getBiomeManager();
             } catch (IllegalAccessException e) {
-                this.viewLevelFieldCache.put(view.getClass(), Optional.empty());
+                this.viewLevelFieldCache.put(tintGetter.getClass(), Optional.empty());
                 e.printStackTrace();
             }
         }

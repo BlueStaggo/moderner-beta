@@ -43,12 +43,12 @@ public class ModernBetaSelectBiomeScreen extends Screen {
     Holder<Biome> biome;
     private Button confirmButton;
 
-    public ModernBetaSelectBiomeScreen(Screen parent, WorldCreationContext generatorOptionsHolder, Consumer<Holder<Biome>> onDone, boolean allowNone) {
+    public ModernBetaSelectBiomeScreen(Screen parent, WorldCreationContext context, Consumer<Holder<Biome>> onDone, boolean allowNone) {
         super(Component.translatable("createWorld.customize.modern_beta.title.biome_picker"));
         this.parent = parent;
         this.onDone = onDone;
         this.allowNone = allowNone;
-        this.biomeRegistry = generatorOptionsHolder.worldgenLoadContext().lookupOrThrow(Registries.BIOME);
+        this.biomeRegistry = context.worldgenLoadContext().lookupOrThrow(Registries.BIOME);
         Holder<Biome> registryEntry = this.biomeRegistry
             //? if >=1.21.2 {
             .get
@@ -58,7 +58,7 @@ public class ModernBetaSelectBiomeScreen extends Screen {
                 (Biomes.PLAINS)
             .or(() -> this.biomeRegistry.listElements().findAny())
             .orElseThrow();
-        this.biome = generatorOptionsHolder.selectedDimensions()
+        this.biome = context.selectedDimensions()
             .overworld()
             .getBiomeSource()
             .possibleBiomes()
@@ -175,7 +175,7 @@ public class ModernBetaSelectBiomeScreen extends Screen {
             *///? } else {
             render
             //? }
-            (GuiGraphics context,
+            (GuiGraphics graphics,
                 //? if <1.21.9
                 int index, int y, int x, int entryWidth, int entryHeight,
                 int mouseX, int mouseY, boolean hovered, float tickDelta) {
@@ -184,7 +184,7 @@ public class ModernBetaSelectBiomeScreen extends Screen {
                 int y = this.getContentY();
                 *///?}
 
-                context.drawString(ModernBetaSelectBiomeScreen.this.font, this.text, x + 5, y + 2, 0xFFFFFFFF);
+                graphics.drawString(ModernBetaSelectBiomeScreen.this.font, this.text, x + 5, y + 2, 0xFFFFFFFF);
             }
 
             @Override

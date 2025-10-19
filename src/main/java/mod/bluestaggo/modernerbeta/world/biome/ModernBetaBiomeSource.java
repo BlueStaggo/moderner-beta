@@ -9,7 +9,7 @@ import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.api.world.biome.*;
 import mod.bluestaggo.modernerbeta.api.world.cavebiome.CaveBiomeProvider;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
-import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistryKeys;
+import mod.bluestaggo.modernerbeta.registry.ModernBetaResourceKeys;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
@@ -45,7 +45,7 @@ public class ModernBetaBiomeSource extends BiomeSource {
     public static final com.mojang.serialization.MapCodec<ModernBetaBiomeSource> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> instance.group(
             RegistryOps.retrieveGetter(Registries.BIOME),
-            RegistryOps.retrieveGetter(ModernBetaRegistryKeys.SETTINGS_PRESET),
+            RegistryOps.retrieveGetter(ModernBetaResourceKeys.SETTINGS_PRESET),
             CompoundTag.CODEC.fieldOf("provider_settings").forGetter(biomeSource -> biomeSource.biomeSettings),
             CompoundTag.CODEC.fieldOf("cave_provider_settings").forGetter(biomeSource -> biomeSource.caveBiomeSettings)
         ).apply(instance, (instance).stable(ModernBetaBiomeSource::new))
@@ -134,7 +134,7 @@ public class ModernBetaBiomeSource extends BiomeSource {
         int verticalBlockCheckInterval,
         Predicate<Holder<Biome>> predicate,
         Climate.Sampler noiseSampler,
-        LevelReader world
+        LevelReader level
     ) {
         if (this.chunkGenerator == null || true) {
             return super.findClosestBiome3d(
@@ -144,7 +144,7 @@ public class ModernBetaBiomeSource extends BiomeSource {
                 verticalBlockCheckInterval,
                 predicate,
                 noiseSampler,
-                world
+                level
             );
         }
         
@@ -159,7 +159,7 @@ public class ModernBetaBiomeSource extends BiomeSource {
         
         int searchRadius = Math.floorDiv(radius, horizontalBlockCheckInterval);
         int[] sections = Mth
-            .outFromOrigin(origin.getY(), world.getMinY() + 1, VersionCompat.getTopYExclusive(world), verticalBlockCheckInterval)
+            .outFromOrigin(origin.getY(), level.getMinY() + 1, VersionCompat.getTopYExclusive(level), verticalBlockCheckInterval)
             .toArray();
         
         for (BlockPos.MutableBlockPos mutable : BlockPos.spiralAround(BlockPos.ZERO, searchRadius, Direction.EAST, Direction.SOUTH)) {
@@ -174,7 +174,7 @@ public class ModernBetaBiomeSource extends BiomeSource {
                 
                 Holder<Biome> biome = this.chunkGenerator
                     .getBiomeInjector()
-                    .getBiome(world, biomeX, biomeY, biomeZ, noiseSampler, BiomeInjectionStep.ALL);
+                    .getBiome(level, biomeX, biomeY, biomeZ, noiseSampler, BiomeInjectionStep.ALL);
 
                 if (!biomeSet.contains(biome)) continue;
                 

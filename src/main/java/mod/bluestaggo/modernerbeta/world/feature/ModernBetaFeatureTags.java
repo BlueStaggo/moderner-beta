@@ -1,7 +1,7 @@
 package mod.bluestaggo.modernerbeta.world.feature;
 
 public class ModernBetaFeatureTags {
-    public static final String FREEZE_TOP_LAYER = "freeze_top_layer";
+    public static final String SNOW_AND_FREEZE = "freeze_top_layer";
     public static final String FANCY_OAK = "fancy_oak";
     public static final String OAK_14A_08 = "oak_14a_08";
     public static final String OAK_14A_08_BEES_0002 = "oak_14a_08_bees_0002";

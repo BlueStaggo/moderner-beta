@@ -19,7 +19,7 @@ public class AquiferSamplerProvider {
     private static final int FAR_LANDS_BOUNDARY = 12550821;
     
     private final NoiseRouter noiseRouter;
-    private final PositionalRandomFactory randomSplitter;
+    private final PositionalRandomFactory randomFactory;
     
     private final FluidPicker fluidLevelSampler;
     private final FluidPicker lavalessFluidLevelSampler;
@@ -54,7 +54,7 @@ public class AquiferSamplerProvider {
     
     public AquiferSamplerProvider(
         NoiseRouter noiseRouter,
-        PositionalRandomFactory randomSplitter,
+        PositionalRandomFactory randomFactory,
         NoiseChunk chunkSampler,
         BlockState defaultFluid,
         int seaLevel,
@@ -65,7 +65,7 @@ public class AquiferSamplerProvider {
         boolean generateAquifers
     ) {
         this.noiseRouter = noiseRouter;
-        this.randomSplitter = randomSplitter.fromHashOf(ModernerBeta.createId("aquifer")).forkPositional();
+        this.randomFactory = randomFactory.fromHashOf(ModernerBeta.createId("aquifer")).forkPositional();
         
         FluidStatus lavaFluidLevel = new FluidStatus(lavaLevel, BlockStates.LAVA); // Vanilla: -54
         FluidStatus seaFluidLevel = new FluidStatus(seaLevel, defaultFluid);
@@ -104,7 +104,7 @@ public class AquiferSamplerProvider {
             this.chunkSampler,
             chunk.getPos(),
             this.noiseRouter,
-            this.randomSplitter,
+            this.randomFactory,
             noiseMinY * this.noiseResolutionVertical, 
             noiseTopY * this.noiseResolutionVertical, 
             this.fluidLevelSampler

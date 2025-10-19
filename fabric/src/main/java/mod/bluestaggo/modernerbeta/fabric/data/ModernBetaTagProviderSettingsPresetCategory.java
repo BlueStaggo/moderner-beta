@@ -1,6 +1,6 @@
 package mod.bluestaggo.modernerbeta.fabric.data;
 
-import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistryKeys;
+import mod.bluestaggo.modernerbeta.registry.ModernBetaResourceKeys;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPresetCategory;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
@@ -12,7 +12,7 @@ import static mod.bluestaggo.modernerbeta.tags.ModernBetaSettingsPresetCategoryT
 
 public class ModernBetaTagProviderSettingsPresetCategory extends FabricTagProvider<ModernBetaSettingsPresetCategory> {
     public ModernBetaTagProviderSettingsPresetCategory(FabricDataOutput output, CompletableFuture<Provider> registriesFuture) {
-        super(output, ModernBetaRegistryKeys.SETTINGS_PRESET_CATEGORY, registriesFuture);
+        super(output, ModernBetaResourceKeys.SETTINGS_PRESET_CATEGORY, registriesFuture);
     }
 
     @Override

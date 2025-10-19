@@ -3,13 +3,13 @@ package mod.bluestaggo.modernerbeta.fabric.data;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.fabric.data.reduced_height.ModernBetaDeepslateBlobsDataProvider;
 import mod.bluestaggo.modernerbeta.fabric.data.reduced_height.ModernBetaReducedHeightDataProvider;
-import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistryKeys;
+import mod.bluestaggo.modernerbeta.registry.ModernBetaResourceKeys;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomes;
 import mod.bluestaggo.modernerbeta.world.carver.configured.ModernBetaConfiguredCarvers;
-import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGeneratorSettings;
+import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaNoiseGeneratorSettings;
 import mod.bluestaggo.modernerbeta.world.feature.configured.ModernBetaConfiguredFeatures;
 import mod.bluestaggo.modernerbeta.world.feature.placed.ModernBetaPlacedFeatures;
-import mod.bluestaggo.modernerbeta.world.preset.ModernBetaWorldPresets;
+import mod.bluestaggo.modernerbeta.world.preset.ModernBetaLevelPresets;
 import mod.bluestaggo.modernerbeta.world.structure.ModernBetaStructureSets;
 import mod.bluestaggo.modernerbeta.world.structure.ModernBetaStructures;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
@@ -28,9 +28,9 @@ public class ModernBetaDataGeneratorEntrypoint implements DataGeneratorEntrypoin
         FabricDataGenerator.Pack pack = fabricDataGenerator.createPack();
         List<Path> inputs = fabricDataGenerator.getModContainer().getRootPaths();
         
-        pack.addProvider((FabricDataGenerator.Pack.Factory<ModernBetaStructureDatafixApplier>)
-                outputx -> new ModernBetaStructureDatafixApplier(outputx, inputs));
-        pack.addProvider(ModernBetaWorldGenProvider::new);
+        pack.addProvider((FabricDataGenerator.Pack.Factory<ModernBetaStructureDatafixProvider>)
+                outputx -> new ModernBetaStructureDatafixProvider(outputx, inputs));
+        pack.addProvider(ModernBetaLevelGenProvider::new);
         pack.addProvider(ModernBetaTagProviderBiome::new);
         pack.addProvider(ModernBetaTagProviderStructure::new);
         pack.addProvider(ModernBetaTagProviderBlock::new);
@@ -56,11 +56,11 @@ public class ModernBetaDataGeneratorEntrypoint implements DataGeneratorEntrypoin
         registryBuilder.add(Registries.CONFIGURED_FEATURE, ModernBetaConfiguredFeatures::bootstrap);
         registryBuilder.add(Registries.CONFIGURED_CARVER, ModernBetaConfiguredCarvers::bootstrap);
         registryBuilder.add(Registries.BIOME, ModernBetaBiomes::bootstrap);
-        registryBuilder.add(Registries.NOISE_SETTINGS, ModernBetaChunkGeneratorSettings::bootstrap);
+        registryBuilder.add(Registries.NOISE_SETTINGS, ModernBetaNoiseGeneratorSettings::bootstrap);
         registryBuilder.add(Registries.STRUCTURE, ModernBetaStructures::bootstrap);
         registryBuilder.add(Registries.STRUCTURE_SET, ModernBetaStructureSets::bootstrap);
-        registryBuilder.add(Registries.WORLD_PRESET, ModernBetaWorldPresets::bootstrap);
-        registryBuilder.add(ModernBetaRegistryKeys.SETTINGS_PRESET, ModernBetaSettingsPresets::bootstrap);
-        registryBuilder.add(ModernBetaRegistryKeys.SETTINGS_PRESET_CATEGORY, ModernBetaSettingsPresetCategories::bootstrap);
+        registryBuilder.add(Registries.WORLD_PRESET, ModernBetaLevelPresets::bootstrap);
+        registryBuilder.add(ModernBetaResourceKeys.SETTINGS_PRESET, ModernBetaSettingsPresets::bootstrap);
+        registryBuilder.add(ModernBetaResourceKeys.SETTINGS_PRESET_CATEGORY, ModernBetaSettingsPresetCategories::bootstrap);
     }
 }

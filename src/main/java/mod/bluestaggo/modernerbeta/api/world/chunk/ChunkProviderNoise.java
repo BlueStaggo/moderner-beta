@@ -14,7 +14,7 @@ import mod.bluestaggo.modernerbeta.settings.component.NoiseSlide;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkCache;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkHeightmap;
-import mod.bluestaggo.modernerbeta.util.chunk.WorldChunkCache;
+import mod.bluestaggo.modernerbeta.util.chunk.LevelChunkCache;
 import mod.bluestaggo.modernerbeta.util.noise.SimpleNoisePos;
 import mod.bluestaggo.modernerbeta.util.noise.SimplexNoise;
 import mod.bluestaggo.modernerbeta.world.blocksource.BlockSourceRules;
@@ -67,7 +67,7 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
     protected final int noiseTopY;  // Number of positive (y >= 0) vertical subchunks
 
     private final ChunkCache<NoiseProviderBase> chunkCacheNoise;
-    private final WorldChunkCache<ChunkHeightmap> chunkCacheHeightmap;
+    private final LevelChunkCache<ChunkHeightmap> chunkCacheHeightmap;
     
     protected final List<NoisePostProcessor> noisePostProcessors = new ArrayList<>();
     private final SimplexNoise islandNoise;
@@ -122,7 +122,7 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
                 return noiseProviderBase;
             }
         );
-        this.chunkCacheHeightmap = new WorldChunkCache<>("heightmap", this::sampleHeightmap);
+        this.chunkCacheHeightmap = new LevelChunkCache<>("heightmap", this::sampleHeightmap);
 
         this.islandNoise = new SimplexNoise(new Random(this.seed));
 
@@ -177,18 +177,18 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
      * Sample height at given x/z coordinate. Initially generates heightmap for entire chunk,
      * if chunk containing x/z coordinates has never been sampled.
      *
-     * @param world a world context to clamp heights to.
+     * @param level a world context to clamp heights to.
      * @param x     x-coordinate in block coordinates.
      * @param z     z-coordinate in block coordinates.
      * @param type  Vanilla heightmap type.
      * @return The y-coordinate of top block at x/z.
      */
     @Override
-    public int getHeight(LevelHeightAccessor world, int x, int z, Heightmap.Types type) {
+    public int getHeight(LevelHeightAccessor level, int x, int z, Heightmap.Types type) {
         int chunkX = x >> 4;
         int chunkZ = z >> 4;
         
-        return this.chunkCacheHeightmap.get(world, chunkX, chunkZ).getHeight(x, z, type);
+        return this.chunkCacheHeightmap.get(level, chunkX, chunkZ).getHeight(x, z, type);
     }
 
     /**
@@ -203,17 +203,17 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
      * Sample height at given x/z coordinate. Initially generates heightmap for entire chunk,
      * if chunk containing x/z coordinates has never been sampled.
      *
-     * @param world a world context to clamp heights to.
+     * @param level a level context to clamp heights to.
      * @param x     x-coordinate in block coordinates.
      * @param z     z-coordinate in block coordinates.
      * @param type  HeightmapChunk heightmap type.
      * @return The y-coordinate of top block at x/z.
      */
-    public int getHeight(LevelHeightAccessor world, int x, int z, ChunkHeightmap.Type type) {
+    public int getHeight(LevelHeightAccessor level, int x, int z, ChunkHeightmap.Type type) {
         int chunkX = x >> 4;
         int chunkZ = z >> 4;
         
-        return this.chunkCacheHeightmap.get(world, chunkX, chunkZ).getHeight(x, z, type);
+        return this.chunkCacheHeightmap.get(level, chunkX, chunkZ).getHeight(x, z, type);
     }
     
     /**
@@ -226,7 +226,7 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
      */
     @Override
     public Aquifer getAquiferSampler(ChunkAccess chunk, RandomState noiseConfig) {
-        PositionalRandomFactory randomDeriver = this.randomProvider.newInstance(this.seed).forkPositional();
+        PositionalRandomFactory randomDeriver = this.randomSource.newInstance(this.seed).forkPositional();
         NoiseChunk noiseSampler = ModernBetaChunkNoiseSampler.create(
             chunk,
             noiseConfig,
@@ -398,13 +398,13 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
     /**
      * Gets heightmap for given set of chunk coordinates.
      *
-     * @param world
+     * @param level
      * @param chunkX
      * @param chunkZ
      * @return Heightmap for chunk.
      */
-    protected ChunkHeightmap getChunkHeightmap(LevelHeightAccessor world, int chunkX, int chunkZ) {
-        return this.chunkCacheHeightmap.get(world, chunkX, chunkZ);
+    protected ChunkHeightmap getChunkHeightmap(LevelHeightAccessor level, int chunkX, int chunkZ) {
+        return this.chunkCacheHeightmap.get(level, chunkX, chunkZ);
     }
 
     /**
@@ -512,17 +512,17 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
      * and returns to {@link ChunkProvider#getHeight(LevelHeightAccessor, int, int, Heightmap.Types)}
      * to cache and return the height.
      *
-     * @param world  a world context to clamp heights to.
+     * @param level  a level context to clamp heights to.
      * @param chunkX x-coordinate in chunk coordinates to sample all y-values for.
      * @param chunkZ z-coordinate in chunk coordinates to sample all y-values for.
      * 
      * @return A HeightmapChunk, containing an array of ints containing the heights for the entire chunk.
      */
-    private ChunkHeightmap sampleHeightmap(LevelHeightAccessor world, int chunkX, int chunkZ) {
+    private ChunkHeightmap sampleHeightmap(LevelHeightAccessor level, int chunkX, int chunkZ) {
         NoiseSettings shapeConfig = this.generatorSettings.value().noiseSettings();
 
-        if (world != null)
-            shapeConfig = shapeConfig.clampToHeightAccessor(world);
+        if (level != null)
+            shapeConfig = shapeConfig.clampToHeightAccessor(level);
 
         short minHeight = 32;
         short worldMinY = (short) shapeConfig.minY();

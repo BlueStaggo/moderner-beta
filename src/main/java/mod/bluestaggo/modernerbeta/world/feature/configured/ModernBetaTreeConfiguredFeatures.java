@@ -26,12 +26,12 @@ public class ModernBetaTreeConfiguredFeatures {
     public static final ResourceKey<ConfiguredFeature<?, ?>> OAK_14A_08_BEES_0002 = ModernBetaConfiguredFeatures.of(ModernBetaFeatureTags.OAK_14A_08_BEES_0002);
 
     @SuppressWarnings("unchecked")
-    public static void bootstrap(BootstrapContext<?> registerable) {
-        BootstrapContext<ConfiguredFeature<?, ?>> featureRegisterable = (BootstrapContext<ConfiguredFeature<?, ?>>)registerable;
+    public static void bootstrap(BootstrapContext<?> context) {
+        BootstrapContext<ConfiguredFeature<?, ?>> featureContext = (BootstrapContext<ConfiguredFeature<?, ?>>)context;
 
-        FeatureUtils.register(featureRegisterable, FANCY_OAK, Feature.TREE, getOldFancyTreeConfig());
-        FeatureUtils.register(featureRegisterable, OAK_14A_08, Feature.TREE, getOak14a08Config(false));
-        FeatureUtils.register(featureRegisterable, OAK_14A_08_BEES_0002, Feature.TREE, getOak14a08Config(true));
+        FeatureUtils.register(featureContext, FANCY_OAK, Feature.TREE, getOldFancyTreeConfig());
+        FeatureUtils.register(featureContext, OAK_14A_08, Feature.TREE, getOak14a08Config(false));
+        FeatureUtils.register(featureContext, OAK_14A_08_BEES_0002, Feature.TREE, getOak14a08Config(true));
     }
 
     private static TreeConfiguration getOak14a08Config(boolean bees) {

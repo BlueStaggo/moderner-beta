@@ -5,7 +5,7 @@ import com.mojang.blaze3d.platform.NativeImage;
 import it.unimi.dsi.fastutil.ints.Int2IntAVLTreeMap;
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
-import mod.bluestaggo.modernerbeta.mixin.client.AccessorScreenshotRecorder;
+import mod.bluestaggo.modernerbeta.mixin.client.ScreenshotAccessor;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.api.world.biome.BiomeProvider;
 import mod.bluestaggo.modernerbeta.api.world.biome.BiomeResolverExtendedId;
@@ -59,7 +59,7 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
     private BiomeDisplayWidget biomeDisplay;
     private volatile String exceptionMessage;
 
-    public ModernBetaBiomePreviewScreen(Component title, Screen parent, WorldCreationContext generationOptions, ModernBetaSettings biomeSettings) {
+    public ModernBetaBiomePreviewScreen(Component title, Screen parent, WorldCreationContext context, ModernBetaSettings biomeSettings) {
         super(title, parent);
 
         BiomeProvider biomeProvider = null;
@@ -73,8 +73,8 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                     (biomeSettings.getProvider())
                 .apply(
                     biomeSettings,
-                    generationOptions.worldgenLoadContext().lookupOrThrow(Registries.BIOME),
-                    generationOptions.options().seed()
+                    context.worldgenLoadContext().lookupOrThrow(Registries.BIOME),
+                    context.options().seed()
                 );
         } catch (Exception exception) {
             exception.printStackTrace();
@@ -231,7 +231,7 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
             assert minecraft != null;
             File screenshotDirectory = new File(minecraft.gameDirectory, "screenshots");
             screenshotDirectory.mkdir();
-            File screenshotPath = AccessorScreenshotRecorder.invokeGetFile(screenshotDirectory);
+            File screenshotPath = ScreenshotAccessor.invokeGetFile(screenshotDirectory);
 
             Util.ioPool().execute(() -> {
                 try {
@@ -243,7 +243,7 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
         }
 
         @Override
-        protected void renderWidget(GuiGraphics context, int mouseX, int mouseY, float deltaTicks) {
+        protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float deltaTicks) {
             int step = this.step.get();
 
             if (this.renderThread.uploadRequested) {
@@ -252,7 +252,7 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                 }
             }
 
-            context.blit(
+            graphics.blit(
                 //? if >= 1.21.6 {
                 net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED,
                 //?} else if >=1.21.2 {
@@ -268,18 +268,18 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
             if (biomeProvider instanceof BiomeResolverStepped resolverStepped) {
                 MutableComponent stepName = Component.literal((step + 1) + "/" + resolverStepped.getStepCount() + " - ");
                 stepName.append(resolverStepped.getStepName(step));
-                context.fill(this.getX(), this.getY(), this.getX() + font.width(stepName) + 8, this.getY() + 16, 0xAA000000);
-                context.drawString(font, stepName, this.getX() + 4, this.getY() + 4, 0xFFFFFFFF, false);
+                graphics.fill(this.getX(), this.getY(), this.getX() + font.width(stepName) + 8, this.getY() + 16, 0xAA000000);
+                graphics.drawString(font, stepName, this.getX() + 4, this.getY() + 4, 0xFFFFFFFF, false);
             }
 
             double zoomLevel = (double)this.zoomOut.get() * 4.0 / (double)this.zoomIn.get();
             Component zoomLabel = Component.literal("1:" + (zoomLevel % 1.0 == 0.0 ? Integer.toString((int)zoomLevel) : Double.toString(zoomLevel)));
             int zoomLabelWidth = font.width(zoomLabel);
-            context.fill(this.getX() + this.getWidth() - zoomLabelWidth - 8, this.getY(), this.getX() + this.getWidth(), this.getY() + 16, 0xAA000000);
-            context.drawString(font, zoomLabel, this.getX() + this.getWidth() - zoomLabelWidth - 4, this.getY() + 4, 0xFFFFFFFF, false);
+            graphics.fill(this.getX() + this.getWidth() - zoomLabelWidth - 8, this.getY(), this.getX() + this.getWidth(), this.getY() + 16, 0xAA000000);
+            graphics.drawString(font, zoomLabel, this.getX() + this.getWidth() - zoomLabelWidth - 4, this.getY() + 4, 0xFFFFFFFF, false);
 
             if (exceptionMessage != null) {
-                context.drawCenteredString(
+                graphics.drawCenteredString(
                     font,
                     Component.literal(exceptionMessage)
                         .withStyle(ChatFormatting.RED),
@@ -297,7 +297,7 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                 Component biomeName = biomeProvider instanceof BiomeResolverStepped resolverStepped
                     ? resolverStepped.getBiomeNameForStep(sampleX, 64, sampleY, step)
                     : biomeProvider.getBiomeName(sampleX, 64, sampleY);
-                context.
+                graphics.
                 //? if >=1.21.6 {
                 setComponentTooltipForNextFrame
                 //? } else {
@@ -314,7 +314,7 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                 );
 
                 //? if >=1.21.9
-                /*context.requestCursor(com.mojang.blaze3d.platform.cursor.CursorTypes.RESIZE_ALL);*/
+                /*graphics.requestCursor(com.mojang.blaze3d.platform.cursor.CursorTypes.RESIZE_ALL);*/
             }
 
             this.prevMouseX = mouseX;

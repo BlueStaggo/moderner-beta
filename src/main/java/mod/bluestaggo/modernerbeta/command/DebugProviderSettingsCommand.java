@@ -1,7 +1,6 @@
 package mod.bluestaggo.modernerbeta.command;
 
 import com.mojang.brigadier.CommandDispatcher;
-import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
 import net.minecraft.ChatFormatting;
@@ -11,7 +10,7 @@ import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 
 public class DebugProviderSettingsCommand {
-    public static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext registryAccess, Commands.CommandSelection environment) {
+    public static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext context, Commands.CommandSelection selection) {
         dispatcher.register(Commands.literal("printprovidersettings")
             .requires(source -> source.hasPermission(2))
                 .executes(ctx -> execute(ctx.getSource())));

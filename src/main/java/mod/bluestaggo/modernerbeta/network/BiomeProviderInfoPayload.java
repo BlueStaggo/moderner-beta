@@ -11,11 +11,12 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 /*import net.minecraft.network.FriendlyByteBuf;
 *///?}
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
 public record BiomeProviderInfoPayload(
-        boolean isModernBetaWorld,
+        boolean isModernBetaLevel,
         boolean hasBiomeProvider,
         Optional<Long> seed,
         Optional<ResourceLocation> providerId,
@@ -26,7 +27,7 @@ public record BiomeProviderInfoPayload(
     public static final CustomPacketPayload.Type<BiomeProviderInfoPayload> ID = new CustomPacketPayload.Type<>(ModernBetaNetworkConstants.BIOME_PROVIDER_INFO_PACKET_ID);
     public static final StreamCodec<RegistryFriendlyByteBuf, BiomeProviderInfoPayload> CODEC = StreamCodec.composite(
         ByteBufCodecs.BOOL,
-        BiomeProviderInfoPayload::isModernBetaWorld,
+        BiomeProviderInfoPayload::isModernBetaLevel,
         ByteBufCodecs.BOOL,
         BiomeProviderInfoPayload::hasBiomeProvider,
         //? if >=1.21.2 {
@@ -42,7 +43,7 @@ public record BiomeProviderInfoPayload(
     );
 
     @Override
-    public CustomPacketPayload.Type<? extends CustomPacketPayload> type() {
+    public @NotNull CustomPacketPayload.Type<? extends CustomPacketPayload> type() {
         return ID;
     }
 }
@@ -63,7 +64,7 @@ public record BiomeProviderInfoPayload(
 
     @Override
     public void write(FriendlyByteBuf friendlyByteBuf) {
-        friendlyByteBuf.writeBoolean(this.isModernBetaWorld());
+        friendlyByteBuf.writeBoolean(this.isModernBetaLevel());
         friendlyByteBuf.writeBoolean(this.hasBiomeProvider());
         friendlyByteBuf.writeOptional(this.seed(), FriendlyByteBuf::writeLong);
         friendlyByteBuf.writeOptional(this.providerId(), FriendlyByteBuf::writeResourceLocation);

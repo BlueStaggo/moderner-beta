@@ -1,10 +1,9 @@
 package mod.bluestaggo.modernerbeta.fabric.data;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;
-import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistryKeys;
+import mod.bluestaggo.modernerbeta.registry.ModernBetaResourceKeys;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPresetCategory;
-import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;
 import net.minecraft.core.HolderLookup;
@@ -18,11 +17,12 @@ import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.levelgen.presets.WorldPreset;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureSet;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
 
-public class ModernBetaWorldGenProvider extends FabricDynamicRegistryProvider {
-    public ModernBetaWorldGenProvider(FabricDataOutput output, CompletableFuture<Provider> registriesFuture) {
+public class ModernBetaLevelGenProvider extends FabricDynamicRegistryProvider {
+    public ModernBetaLevelGenProvider(FabricDataOutput output, CompletableFuture<Provider> registriesFuture) {
         super(output, registriesFuture);
     }
 
@@ -36,8 +36,8 @@ public class ModernBetaWorldGenProvider extends FabricDynamicRegistryProvider {
         HolderLookup.RegistryLookup<Structure> registryStructure = provider.lookupOrThrow(Registries.STRUCTURE);
         HolderLookup.RegistryLookup<StructureSet> registryStructureSet = provider.lookupOrThrow(Registries.STRUCTURE_SET);
         HolderLookup.RegistryLookup<WorldPreset> registryWorldPreset = provider.lookupOrThrow(Registries.WORLD_PRESET);
-        HolderLookup.RegistryLookup<ModernBetaSettingsPreset> registrySettingsPreset = provider.lookupOrThrow(ModernBetaRegistryKeys.SETTINGS_PRESET);
-        HolderLookup.RegistryLookup<ModernBetaSettingsPresetCategory> registrySettingsPresetCategory= provider.lookupOrThrow(ModernBetaRegistryKeys.SETTINGS_PRESET_CATEGORY);
+        HolderLookup.RegistryLookup<ModernBetaSettingsPreset> registrySettingsPreset = provider.lookupOrThrow(ModernBetaResourceKeys.SETTINGS_PRESET);
+        HolderLookup.RegistryLookup<ModernBetaSettingsPresetCategory> registrySettingsPresetCategory= provider.lookupOrThrow(ModernBetaResourceKeys.SETTINGS_PRESET_CATEGORY);
 
         entries.addAll(registryBiome);
         entries.addAll(registryConfiguredFeature);
@@ -52,7 +52,7 @@ public class ModernBetaWorldGenProvider extends FabricDynamicRegistryProvider {
     }
 
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return ModernerBeta.MOD_NAME;
     }
 }

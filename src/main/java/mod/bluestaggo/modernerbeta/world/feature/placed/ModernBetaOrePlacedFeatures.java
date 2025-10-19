@@ -28,16 +28,16 @@ public class ModernBetaOrePlacedFeatures {
     public static final ResourceKey<PlacedFeature> ORE_EMERALD_Y95 = ModernBetaPlacedFeatures.of(ModernBetaFeatureTags.ORE_EMERALD_Y95);
     public static final ResourceKey<PlacedFeature> CAVE_INFDEV_325 = ModernBetaPlacedFeatures.of(ModernBetaFeatureTags.CAVE_INFDEV_325);
 
-    public static void bootstrap(BootstrapContext<PlacedFeature> featureRegisterable) {
-        HolderGetter<ConfiguredFeature<?, ?>> registryConfigured = featureRegisterable.lookup(Registries.CONFIGURED_FEATURE);
+    public static void bootstrap(BootstrapContext<PlacedFeature> context) {
+        HolderGetter<ConfiguredFeature<?, ?>> registryConfigured = context.lookup(Registries.CONFIGURED_FEATURE);
         
         Holder.Reference<ConfiguredFeature<?, ?>> oreClay = registryConfigured.getOrThrow(ModernBetaOreConfiguredFeatures.ORE_CLAY);
         Holder.Reference<ConfiguredFeature<?, ?>> oreEmeraldY95 = registryConfigured.getOrThrow(ModernBetaOreConfiguredFeatures.ORE_EMERALD_Y95);
         Holder.Reference<ConfiguredFeature<?, ?>> caveInfdev325 = registryConfigured.getOrThrow(ModernBetaOreConfiguredFeatures.CAVE_INFDEV_325);
 
-        PlacementUtils.register(featureRegisterable, ORE_CLAY, oreClay, modifiersWithCount(33, HeightRangePlacement.uniform(VerticalAnchor.absolute(0), VerticalAnchor.absolute(127))));
-        PlacementUtils.register(featureRegisterable, ORE_EMERALD_Y95, oreEmeraldY95, modifiersWithCount(11, HeightRangePlacement.uniform(VerticalAnchor.absolute(95), VerticalAnchor.top())));
-        PlacementUtils.register(featureRegisterable, CAVE_INFDEV_325, caveInfdev325,
+        PlacementUtils.register(context, ORE_CLAY, oreClay, modifiersWithCount(33, HeightRangePlacement.uniform(VerticalAnchor.absolute(0), VerticalAnchor.absolute(127))));
+        PlacementUtils.register(context, ORE_EMERALD_Y95, oreEmeraldY95, modifiersWithCount(11, HeightRangePlacement.uniform(VerticalAnchor.absolute(95), VerticalAnchor.top())));
+        PlacementUtils.register(context, CAVE_INFDEV_325, caveInfdev325,
             Infdev325CavePlacementModifier.of(-4, 15),
             BlockPredicateFilter.forPredicate(BlockPredicate.allOf(
                 BlockPredicate.noFluid(new Vec3i(0, 0, 0)),

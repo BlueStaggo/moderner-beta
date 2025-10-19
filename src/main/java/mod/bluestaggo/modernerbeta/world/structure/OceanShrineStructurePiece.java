@@ -49,11 +49,11 @@ public class OceanShrineStructurePiece extends TemplateStructurePiece {
     }
 
     @Override
-    protected void handleDataMarker(String metadata, BlockPos pos, ServerLevelAccessor world, RandomSource random, BoundingBox boundingBox) {
+    protected void handleDataMarker(String metadata, BlockPos pos, ServerLevelAccessor level, RandomSource random, BoundingBox boundingBox) {
         if (metadata.equals("chest")) {
-            world.setBlock(pos, Blocks.CHEST.defaultBlockState().setValue(ChestBlock.WATERLOGGED, world.getFluidState(pos).is(FluidTags.WATER)), 2);
+            level.setBlock(pos, Blocks.CHEST.defaultBlockState().setValue(ChestBlock.WATERLOGGED, level.getFluidState(pos).is(FluidTags.WATER)), 2);
 
-            if (world.getBlockEntity(pos) instanceof ChestBlockEntity chestBlockEntity) {
+            if (level.getBlockEntity(pos) instanceof ChestBlockEntity chestBlockEntity) {
                 chestBlockEntity.setLootTable(BuiltInLootTables.BURIED_TREASURE, random.nextLong());
             }
         }
@@ -61,11 +61,11 @@ public class OceanShrineStructurePiece extends TemplateStructurePiece {
 
     @Override
     public void postProcess(
-        WorldGenLevel world,
-        StructureManager accessor,
+        WorldGenLevel level,
+        StructureManager manager,
         ChunkGenerator chunkGenerator,
         RandomSource random,
-        BoundingBox blockBox,
+        BoundingBox boundingBox,
         ChunkPos chunkPos,
         BlockPos blockPos
     ) {
@@ -73,6 +73,6 @@ public class OceanShrineStructurePiece extends TemplateStructurePiece {
                 .addProcessor(new BlockRotProcessor(1.0f))
                 .addProcessor(BlockIgnoreProcessor.STRUCTURE_AND_AIR);
 
-        super.postProcess(world, accessor, chunkGenerator, random, blockBox, chunkPos, blockPos);
+        super.postProcess(level, manager, chunkGenerator, random, boundingBox, chunkPos, blockPos);
     }
 }

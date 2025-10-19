@@ -1,13 +1,12 @@
 package mod.bluestaggo.modernerbeta.world.preset;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;
-import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistryKeys;
+import mod.bluestaggo.modernerbeta.registry.ModernBetaResourceKeys;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
-import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
-import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGeneratorSettings;
+import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaNoiseGeneratorSettings;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
@@ -28,21 +27,21 @@ import net.minecraft.world.level.levelgen.presets.WorldPreset;
 
 import java.util.Map;
 
-public class ModernBetaWorldPresets {
+public class ModernBetaLevelPresets {
     public static final ResourceKey<WorldPreset> MODERN_BETA = keyOf(ModernerBeta.createId(ModernerBeta.MOD_ID));
             
-    public static void bootstrap(BootstrapContext<WorldPreset> presetRegisterable) {
-        HolderGetter<DimensionType> registryDimensionType = presetRegisterable.lookup(Registries.DIMENSION_TYPE);
-        HolderGetter<NoiseGeneratorSettings> registrySettings = presetRegisterable.lookup(Registries.NOISE_SETTINGS);
-        HolderGetter<Biome> registryBiome = presetRegisterable.lookup(Registries.BIOME);
-        HolderGetter<ModernBetaSettingsPreset> registryPreset = presetRegisterable.lookup(ModernBetaRegistryKeys.SETTINGS_PRESET);
-        HolderGetter<MultiNoiseBiomeSourceParameterList> registryParameters = presetRegisterable.lookup(Registries.MULTI_NOISE_BIOME_SOURCE_PARAMETER_LIST);
+    public static void bootstrap(BootstrapContext<WorldPreset> context) {
+        HolderGetter<DimensionType> registryDimensionType = context.lookup(Registries.DIMENSION_TYPE);
+        HolderGetter<NoiseGeneratorSettings> registrySettings = context.lookup(Registries.NOISE_SETTINGS);
+        HolderGetter<Biome> registryBiome = context.lookup(Registries.BIOME);
+        HolderGetter<ModernBetaSettingsPreset> registryPreset = context.lookup(ModernBetaResourceKeys.SETTINGS_PRESET);
+        HolderGetter<MultiNoiseBiomeSourceParameterList> registryParameters = context.lookup(Registries.MULTI_NOISE_BIOME_SOURCE_PARAMETER_LIST);
 
         LevelStem overworld = createOverworldOptions(registryDimensionType, registrySettings, registryBiome, registryPreset);
         LevelStem nether = createNetherOptions(registryDimensionType, registrySettings, registryParameters);
         LevelStem end = createEndOptions(registryDimensionType, registrySettings, registryBiome);
         
-        presetRegisterable.register(
+        context.register(
             MODERN_BETA,
             new WorldPreset(Map.of(LevelStem.OVERWORLD, overworld, LevelStem.NETHER, nether, LevelStem.END, end))
         );
@@ -55,7 +54,7 @@ public class ModernBetaWorldPresets {
         HolderGetter<ModernBetaSettingsPreset> registryPreset
     ) {
         Holder.Reference<DimensionType> dimensionType = registryDimensionType.getOrThrow(BuiltinDimensionTypes.OVERWORLD);
-        Holder.Reference<NoiseGeneratorSettings> settings = registrySettings.getOrThrow(ModernBetaChunkGeneratorSettings.BETA);
+        Holder.Reference<NoiseGeneratorSettings> settings = registrySettings.getOrThrow(ModernBetaNoiseGeneratorSettings.BETA);
         
         ModernBetaSettingsPreset defaultPreset = ModernBetaSettingsPreset.referenced(ModernBetaSettings.DEFAULT_PRESET_ID);
 

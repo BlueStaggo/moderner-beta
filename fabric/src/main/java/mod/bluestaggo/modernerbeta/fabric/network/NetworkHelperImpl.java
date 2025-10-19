@@ -30,8 +30,8 @@ public class NetworkHelperImpl implements INetworkHelper {
     }
 
     @Override
-    public void sendToPlayersTrackingChunk(ServerLevel world, ChunkPos pos, ModernBetaPayload payload) {
-        for (ServerPlayer player : PlayerLookup.tracking(world, pos)) {
+    public void sendToPlayersTrackingChunk(ServerLevel level, ChunkPos pos, ModernBetaPayload payload) {
+        for (ServerPlayer player : PlayerLookup.tracking(level, pos)) {
             this.sendToPlayer(player, payload);
         }
     }

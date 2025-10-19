@@ -6,7 +6,7 @@ import net.minecraft.world.level.LevelHeightAccessor;
 import java.util.Optional;
 
 public interface SpawnLocator {
-    Optional<BlockPos> locateSpawn(LevelHeightAccessor world);
+    Optional<BlockPos> locateSpawn(LevelHeightAccessor level);
     
-    SpawnLocator DEFAULT = world -> Optional.empty();
+    SpawnLocator DEFAULT = level -> Optional.empty();
 }

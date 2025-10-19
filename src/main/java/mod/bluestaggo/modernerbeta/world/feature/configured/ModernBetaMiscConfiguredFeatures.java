@@ -8,12 +8,12 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 
 public class ModernBetaMiscConfiguredFeatures {
-    public static final ResourceKey<ConfiguredFeature<?, ?>> FREEZE_TOP_LAYER = ModernBetaConfiguredFeatures.of(ModernBetaFeatureTags.FREEZE_TOP_LAYER);
+    public static final ResourceKey<ConfiguredFeature<?, ?>> FREEZE_TOP_LAYER = ModernBetaConfiguredFeatures.of(ModernBetaFeatureTags.SNOW_AND_FREEZE);
     
     @SuppressWarnings("unchecked")
-    public static void bootstrap(BootstrapContext<?> registerable) {
-        BootstrapContext<ConfiguredFeature<?, ?>> featureRegisterable = (BootstrapContext<ConfiguredFeature<?, ?>>)registerable;
+    public static void bootstrap(BootstrapContext<?> context) {
+        BootstrapContext<ConfiguredFeature<?, ?>> featureContext = (BootstrapContext<ConfiguredFeature<?, ?>>)context;
         
-        FeatureUtils.register(featureRegisterable, FREEZE_TOP_LAYER, ModernBetaFeatures.FREEZE_TOP_LAYER);
+        FeatureUtils.register(featureContext, FREEZE_TOP_LAYER, ModernBetaFeatures.SNOW_AND_FREEZE);
     }
 }

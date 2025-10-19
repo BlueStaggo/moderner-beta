@@ -34,11 +34,11 @@ public abstract class ModernBetaScreen extends Screen {
     }
 
     @Override
-    public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         //? if <1.20.5
-        /*this.renderBackground(context);*/
-        super.render(context, mouseX, mouseY, delta);
-        context.drawCenteredString(this.font, this.title, this.width / 2, 16, 0xFFFFFFFF);
+        /*this.renderBackground(graphics);*/
+        super.render(graphics, mouseX, mouseY, delta);
+        graphics.drawCenteredString(this.font, this.title, this.width / 2, 16, 0xFFFFFFFF);
     }
     
     @Override

@@ -24,14 +24,14 @@ public class ModernBetaStructures {
     public static final ResourceKey<Structure> INDEV_STRONGHOLD = of("indev_stronghold");
     public static final ResourceKey<Structure> OCEAN_SHRINE = of("ocean_shrine");
 
-    public static void bootstrap(BootstrapContext<Structure> structureRegisterable) {
-        HolderGetter<Biome> registryBiome = structureRegisterable.lookup(Registries.BIOME);
+    public static void bootstrap(BootstrapContext<Structure> context) {
+        HolderGetter<Biome> registryBiome = context.lookup(Registries.BIOME);
         
-        structureRegisterable.register(
+        context.register(
             INDEV_STRONGHOLD,
             new StrongholdStructure(createConfig(registryBiome.getOrThrow(ModernBetaBiomeTags.INDEV_STRONGHOLD_HAS_STRUCTURE), TerrainAdjustment.BURY))
         );
-        structureRegisterable.register(
+        context.register(
             OCEAN_SHRINE,
             new OceanShrineStructure(
                 createConfig(

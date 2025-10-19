@@ -1,0 +1,40 @@
+package mod.bluestaggo.modernerbeta.mixin;
+
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import mod.bluestaggo.modernerbeta.imixin.ModernBetaLevel;
+import mod.bluestaggo.modernerbeta.util.VersionCompat;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.biome.Biome;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+
+@Mixin(ServerLevel.class)
+public abstract class ServerLevelMixin implements ModernBetaLevel {
+    @WrapOperation(
+        //? if >=1.20.2 {
+        method = "tickPrecipitation",
+        //?} else {
+        /*method = "tickChunk",
+        *///?}
+        at = @At(
+            value = "INVOKE",
+            target = VersionCompat.BIOME_GET_PRECIPITATION_TARGET
+        )
+    )
+    public Biome.Precipitation modifyTickPrecipitation(
+        Biome biome, BlockPos blockPos
+        /*? if >=1.21.2 {*/, int seaLevel/*?}*/
+        , Operation<Biome.Precipitation> original
+    ) {
+        if (!this.modernerBeta$isModded()) {
+            //? if >=1.21.2 {
+            return original.call(biome, blockPos, seaLevel);
+            //?} else {
+            /*return original.call(biome, blockPos);
+            *///?}
+        }
+        return this.modernerBeta$samplePrecipitation(biome, blockPos);
+    }
+}

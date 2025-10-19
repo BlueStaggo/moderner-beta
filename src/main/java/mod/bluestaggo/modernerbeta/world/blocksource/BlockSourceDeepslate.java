@@ -17,9 +17,9 @@ public class BlockSourceDeepslate implements BlockSource {
     private final int maxY;
     private final boolean useDeepslate;
     private final BlockState deepslateBlock;
-    private final PositionalRandomFactory randomSplitter;
+    private final PositionalRandomFactory randomFactory;
     
-    public BlockSourceDeepslate(ModernBetaSettings chunkSettings, PositionalRandomFactory randomSplitter) {
+    public BlockSourceDeepslate(ModernBetaSettings chunkSettings, PositionalRandomFactory randomFactory) {
         DeepslateGeneration deepslateGeneration = chunkSettings.getOrDefault(SettingsComponentTypes.DEEPSLATE_GENERATION);
         this.minY = deepslateGeneration.minY();
         this.maxY = deepslateGeneration.maxY();
@@ -28,7 +28,7 @@ public class BlockSourceDeepslate implements BlockSource {
             //? if >=1.21.2
             .value()
             .defaultBlockState();
-        this.randomSplitter = randomSplitter;
+        this.randomFactory = randomFactory;
     }
     
     @Override
@@ -40,7 +40,7 @@ public class BlockSourceDeepslate implements BlockSource {
             return this.deepslateBlock;
         
         double yThreshold = Mth.lerp(Mth.inverseLerp(y, minY, maxY), 1.0, 0.0);
-        RandomSource random = this.randomSplitter.at(x, y, z);
+        RandomSource random = this.randomFactory.at(x, y, z);
         
         return (double)random.nextFloat() < yThreshold ? this.deepslateBlock : null;
     }

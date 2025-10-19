@@ -22,7 +22,7 @@ public class CaveInfdev325Feature extends Feature<OreConfiguration> {
 
     @Override
     public boolean place(FeaturePlaceContext<OreConfiguration> context) {
-        WorldGenLevel world = context.level();
+        WorldGenLevel level = context.level();
         BlockPos pos = context.origin();
         OreConfiguration config = context.config();
         RandomSource random = context.random();
@@ -35,7 +35,7 @@ public class CaveInfdev325Feature extends Feature<OreConfiguration> {
 
         BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
 
-        if(world.isStateAtPosition(pos, state -> state.is(Blocks.WATER))) {
+        if(level.isStateAtPosition(pos, state -> state.is(Blocks.WATER))) {
             return false;
         }
 
@@ -52,7 +52,7 @@ public class CaveInfdev325Feature extends Feature<OreConfiguration> {
         double sizeMultiplier = random.nextDouble() * 4D + 2D;
         double fuzz = random.nextDouble() * 0.6D;
 
-        try (BulkSectionAccess chunkSectionCache = new BulkSectionAccess(world)) {
+        try (BulkSectionAccess chunkSectionCache = new BulkSectionAccess(level)) {
             for(int block = 0; block <= numberOfBlocks; block++) {
                 double d6 = x0 + ((x1 - x0) * (double)block) / (double)numberOfBlocks;
                 double d7 = y0 + ((y1 - y0) * (double)block) / (double)numberOfBlocks;
@@ -84,7 +84,7 @@ public class CaveInfdev325Feature extends Feature<OreConfiguration> {
 
                             LevelChunkSection chunkSection = chunkSectionCache.getSection(mutablePos.set(x, y, z));
 
-                            if (!world.isOutsideBuildHeight(y) && chunkSection != null) {
+                            if (!level.isOutsideBuildHeight(y) && chunkSection != null) {
                                 int localX = SectionPos.sectionRelative(x);
                                 int localY = SectionPos.sectionRelative(y);
                                 int localZ = SectionPos.sectionRelative(z);

@@ -4,8 +4,8 @@ import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.api.world.blocksource.BlockSource;
 import mod.bluestaggo.modernerbeta.api.world.chunk.surface.SurfaceBuilder;
 import mod.bluestaggo.modernerbeta.api.world.spawn.SpawnLocator;
-import mod.bluestaggo.modernerbeta.mixin.AccessorChunkGenerator;
-import mod.bluestaggo.modernerbeta.mixin.AccessorPlacedFeature;
+import mod.bluestaggo.modernerbeta.mixin.ChunkGeneratorAccessor;
+import mod.bluestaggo.modernerbeta.mixin.PlacedFeatureAccessor;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
@@ -53,8 +53,8 @@ public abstract class ChunkProvider {
     protected final boolean skipCarvers;
     protected final Random random;
 
-    protected final WorldgenRandom.Algorithm randomProvider;
-    protected final PositionalRandomFactory randomSplitter;
+    protected final WorldgenRandom.Algorithm randomSource;
+    protected final PositionalRandomFactory randomFactory;
     
     protected final List<BlockSource> blockSources;
     protected final SurfaceBuilder surfaceBuilder;
@@ -74,12 +74,12 @@ public abstract class ChunkProvider {
         this.random = new Random(this.seed);
 
         this.defaultFluidLevelSampler = (x, y, z) -> new FluidStatus(this.getSeaLevel(), BlockStates.AIR);
-        this.randomProvider = chunkGenerator.getGeneratorSettings().value().getRandomSource();
-        this.randomSplitter = this.randomProvider.newInstance(this.seed).forkPositional();
+        this.randomSource = chunkGenerator.getGeneratorSettings().value().getRandomSource();
+        this.randomFactory = this.randomSource.newInstance(this.seed).forkPositional();
         
         this.blockSources = ModernBetaRegistries.BLOCKSOURCE
             .listElements()
-            .map(func -> func.value().apply(this.chunkSettings, this.randomSplitter))
+            .map(func -> func.value().apply(this.chunkSettings, this.randomFactory))
             .toList();
         
         this.surfaceBuilder = new SurfaceBuilder(this.chunkGenerator.getBiomeSource());
@@ -124,13 +124,13 @@ public abstract class ChunkProvider {
      * Sample height at given x/z coordinate. Initially generates heightmap for entire chunk,
      * if chunk containing x/z coordinates has never been sampled.
      *
-     * @param world
+     * @param level
      * @param x         x-coordinate in block coordinates.
      * @param z         z-coordinate in block coordinates.
      * @param heightmap Vanilla heightmap type.
      * @return The y-coordinate of top block at x/z.
      */
-    public abstract int getHeight(LevelHeightAccessor world, int x, int z, Heightmap.Types heightmap);
+    public abstract int getHeight(LevelHeightAccessor level, int x, int z, Heightmap.Types heightmap);
     
     /**
      * Determines whether to skip the chunk for some chunk generation step, depending on the x/z chunk coordinates.
@@ -211,13 +211,13 @@ public abstract class ChunkProvider {
      * and if it uses ModernBetaNoiseBasedCountPlacementModifier, replaces the noise sampler.
      */
     public void initForestOctaveNoise() {
-        List<StepFeatureData> generationSteps = ((AccessorChunkGenerator)this.chunkGenerator).getFeaturesPerStep().get();
+        List<StepFeatureData> generationSteps = ((ChunkGeneratorAccessor)this.chunkGenerator).getFeaturesPerStep().get();
         
         for (StepFeatureData step : generationSteps) {
             List<PlacedFeature> featureList = step.features();
             
             for (PlacedFeature placedFeature : featureList) {
-                AccessorPlacedFeature accessor = (AccessorPlacedFeature)(Object)placedFeature;
+                PlacedFeatureAccessor accessor = (PlacedFeatureAccessor)(Object)placedFeature;
                 List<PlacementModifier> modifiers = accessor.getPlacement();
                 
                 for (PlacementModifier modifier : modifiers) {
@@ -249,11 +249,11 @@ public abstract class ChunkProvider {
      * Creates a ModernBetaChunkNoiseSampler
      *
      */
-    public NoiseChunk createChunkNoiseSampler(ChunkAccess chunk, StructureManager world, Blender blender, RandomState noiseConfig) {
+    public NoiseChunk createChunkNoiseSampler(ChunkAccess chunk, StructureManager manager, Blender blender, RandomState noiseConfig) {
         return NoiseChunk.forChunk(
             chunk,
             noiseConfig,
-            Beardifier.forStructuresInChunk(world, chunk.getPos()),
+            Beardifier.forStructuresInChunk(manager, chunk.getPos()),
             this.generatorSettings.value(),
             this.getFluidLevelSampler(),
             blender

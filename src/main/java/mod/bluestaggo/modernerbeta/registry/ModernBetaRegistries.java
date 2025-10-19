@@ -2,7 +2,6 @@ package mod.bluestaggo.modernerbeta.registry;
 
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
 import mod.bluestaggo.modernerbeta.api.world.BlockSourceCreator;
-import mod.bluestaggo.modernerbeta.api.world.chunk.noise.NoisePostProcessor;
 import mod.bluestaggo.modernerbeta.api.world.chunk.surface.SurfaceConfig;
 import mod.bluestaggo.modernerbeta.api.world.provider.BiomeProviderType;
 import mod.bluestaggo.modernerbeta.api.world.provider.CaveBiomeProviderType;
@@ -39,14 +38,14 @@ public final class ModernBetaRegistries {
     public static void makeRegistries(IRegistryHelper helper) {
         registryHelper = helper;
 
-        SETTINGS_COMPONENT_TYPE = register(ModernBetaRegistryKeys.SETTINGS_COMPONENT_TYPE);
-        CHUNK = registerDefaulted(ModernBetaRegistryKeys.CHUNK, ModernBetaBuiltInTypes.Chunk.BETA.id);
-        BIOME = registerDefaulted(ModernBetaRegistryKeys.BIOME, ModernBetaBuiltInTypes.Biome.BETA.id);
-        CAVE_BIOME = registerDefaulted(ModernBetaRegistryKeys.CAVE_BIOME, ModernBetaBuiltInTypes.CaveBiome.NONE.id);
-        SURFACE_CONFIG = register(ModernBetaRegistryKeys.SURFACE_CONFIG);
-        HEIGHT_CONFIG = registerDefaulted(ModernBetaRegistryKeys.HEIGHT_CONFIG, ModernBetaBuiltInTypes.HeightConfig.HEIGHT_CONFIG_DEFAULT.id);
-        BLOCKSOURCE = register(ModernBetaRegistryKeys.BLOCKSOURCE);
-        FRACTAL_LAYER = register(ModernBetaRegistryKeys.FRACTAL_LAYER);
-        BIOME_PREDICATE = register(ModernBetaRegistryKeys.BIOME_PREDICATE);
+        SETTINGS_COMPONENT_TYPE = register(ModernBetaResourceKeys.SETTINGS_COMPONENT_TYPE);
+        CHUNK = registerDefaulted(ModernBetaResourceKeys.CHUNK, ModernBetaBuiltInTypes.Chunk.BETA.id);
+        BIOME = registerDefaulted(ModernBetaResourceKeys.BIOME, ModernBetaBuiltInTypes.Biome.BETA.id);
+        CAVE_BIOME = registerDefaulted(ModernBetaResourceKeys.CAVE_BIOME, ModernBetaBuiltInTypes.CaveBiome.NONE.id);
+        SURFACE_CONFIG = register(ModernBetaResourceKeys.SURFACE_CONFIG);
+        HEIGHT_CONFIG = registerDefaulted(ModernBetaResourceKeys.HEIGHT_CONFIG, ModernBetaBuiltInTypes.HeightConfig.HEIGHT_CONFIG_DEFAULT.id);
+        BLOCKSOURCE = register(ModernBetaResourceKeys.BLOCKSOURCE);
+        FRACTAL_LAYER = register(ModernBetaResourceKeys.FRACTAL_LAYER);
+        BIOME_PREDICATE = register(ModernBetaResourceKeys.BIOME_PREDICATE);
     }
 }

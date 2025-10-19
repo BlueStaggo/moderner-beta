@@ -37,7 +37,7 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
     
     private static final ResourceLocation TEXTURE_PRESET_CUSTOM = createTextureId(ModernerBeta.createId("custom"));
     
-    private final ModernBetaWorldScreen worldScreen;
+    private final ModernBetaLevelScreen worldScreen;
     private final List<ResourceLocation> presets;
     private final boolean displayCategories;
 
@@ -66,14 +66,14 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
         this.presetCategoryRegistry = presetCategoryRegistry;
 
         Screen worldScreen = parent;
-        while (!(worldScreen instanceof ModernBetaWorldScreen)) {
+        while (!(worldScreen instanceof ModernBetaLevelScreen)) {
             if (!(worldScreen instanceof ModernBetaScreen modernBetaScreen)) {
                 worldScreen = null;
                 break;
             }
             worldScreen = modernBetaScreen.parent;
         }
-        this.worldScreen = (ModernBetaWorldScreen)worldScreen;
+        this.worldScreen = (ModernBetaLevelScreen)worldScreen;
     }
     
     @Override
@@ -100,17 +100,17 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
 
     //? if <1.20.5 {
     /*@Override
-    public void renderBackground(GuiGraphics context) {
+    public void renderBackground(GuiGraphics graphics) {
     }
     *///?}
 
     @Override
-    public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         //? if <1.20.5
-        /*this.listWidget.render(context, mouseX, mouseY, delta);*/
-        super.render(context, mouseX, mouseY, delta);
+        /*this.listWidget.render(graphics, mouseX, mouseY, delta);*/
+        super.render(graphics, mouseX, mouseY, delta);
         //? if >=1.20.5
-        this.listWidget.render(context, mouseX, mouseY, delta);
+        this.listWidget.render(graphics, mouseX, mouseY, delta);
     }
 
     private void updateSelectButton(boolean hasSelected) {
@@ -254,7 +254,7 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
             *///? } else {
             render
             //? }
-            (GuiGraphics context,
+            (GuiGraphics graphics,
                 //? if <1.21.9
                 int index, int y, int x, int entryWidth, int entryHeight,
                 int mouseX, int mouseY, boolean hovered, float tickDelta) {
@@ -270,23 +270,23 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
                 int textStartX = x + ICON_SIZE + 3;
                 int textStartY = 1;
                 
-                context.drawString(font, presetNameText, textStartX, y + textStartY, CommonColors.WHITE, false);
+                graphics.drawString(font, presetNameText, textStartX, y + textStartY, CommonColors.WHITE, false);
                 
                 int descSpacing = TEXT_SPACING + textStartY + 1;
                 for (FormattedCharSequence line : presetDescTexts) {
-                    context.drawString(font, line, textStartX, y + descSpacing, CommonColors.GRAY, false);
+                    graphics.drawString(font, line, textStartX, y + descSpacing, CommonColors.GRAY, false);
                     descSpacing += TEXT_SPACING;
                 }
 
-                this.draw(context, x, y, this.presetTexture);
+                this.draw(graphics, x, y, this.presetTexture);
 
                 if (minecraft != null && minecraft.options.touchscreen().get() || hovered) {
                     boolean isMouseHovering = (mouseX - x) < ICON_SIZE;
 
-                    context.fill(x, y, x + ICON_SIZE, y + ICON_SIZE, -1601138544);
+                    graphics.fill(x, y, x + ICON_SIZE, y + ICON_SIZE, -1601138544);
                     //? if >=1.20.2 {
                     ResourceLocation texture = isMouseHovering ? TEXTURE_JOIN_HIGHLIGHTED : TEXTURE_JOIN;
-                    context.blitSprite(
+                    graphics.blitSprite(
                         //? if >=1.21.6 {
                         net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED,
                         //?} else if >=1.21.2 {
@@ -300,7 +300,7 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
                     );
                     //?} else {
                     /*float v = isMouseHovering ? TEXTURE_WORLD_SELECT_SIZE : 0;
-                    context.blit(
+                    graphics.blit(
                         TEXTURE_WORLD_SELECT,
                         x,
                         y,
@@ -346,8 +346,8 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
                 return true;
             }
 
-            private void draw(GuiGraphics context, int x, int y, ResourceLocation textureId) {
-                context.blit(
+            private void draw(GuiGraphics graphics, int x, int y, ResourceLocation textureId) {
+                graphics.blit(
                     //? if >= 1.21.6 {
                     net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED,
                     //?} else if >=1.21.2 {

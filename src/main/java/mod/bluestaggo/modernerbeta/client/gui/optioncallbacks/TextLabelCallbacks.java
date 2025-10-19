@@ -1,7 +1,7 @@
 package mod.bluestaggo.modernerbeta.client.gui.optioncallbacks;
 
 import com.mojang.serialization.Codec;
-import mod.bluestaggo.modernerbeta.client.gui.widget.AlignedTextWidget;
+import mod.bluestaggo.modernerbeta.client.gui.widget.AlignedStringWidget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -24,7 +24,7 @@ public record TextLabelCallbacks(Component text, float alignment) implements Opt
     @Override
     public @NotNull Function<OptionInstance<Void>, AbstractWidget> createButton(OptionInstance.TooltipSupplier<Void> tooltipFactory, Options gameOptions, int x, int y, int width, Consumer<Void> changeCallback) {
         return option -> {
-            AlignedTextWidget textWidget = new AlignedTextWidget(x, y, width, 20, text, Minecraft.getInstance().fontFilterFishy);
+            AlignedStringWidget textWidget = new AlignedStringWidget(x, y, width, 20, text, Minecraft.getInstance().fontFilterFishy);
             textWidget.align(alignment);
             return textWidget;
         };

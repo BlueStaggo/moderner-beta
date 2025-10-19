@@ -26,6 +26,6 @@ public class ModernBetaTagProviderWorldPreset extends FabricTagProvider<WorldPre
     }
     
     private static ResourceKey<WorldPreset> keyOf(String id) {
-        return ResourceKey.create(Registries.WORLD_PRESET, ModernerBeta.createId(ModernerBeta.MOD_ID));
+        return ResourceKey.create(Registries.WORLD_PRESET, ModernerBeta.createId(id));
     }
 }

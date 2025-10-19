@@ -2,7 +2,7 @@ package mod.bluestaggo.modernerbeta.world.carver.configured;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.tags.ModernBetaBlockTags;
-import mod.bluestaggo.modernerbeta.world.carver.BetaCaveCarverConfig;
+import mod.bluestaggo.modernerbeta.world.carver.BetaCaveCarverConfiguration;
 import mod.bluestaggo.modernerbeta.world.carver.ModernBetaCarvers;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
@@ -30,15 +30,15 @@ public class ModernBetaConfiguredCarvers {
     public static final ResourceKey<ConfiguredWorldCarver<?>> BETA_CANYON = of("beta_canyon");
 
     @SuppressWarnings("unchecked")
-    public static void bootstrap(BootstrapContext<?> registerable) {
-        BootstrapContext<ConfiguredWorldCarver<?>> carverRegisterable = (BootstrapContext<ConfiguredWorldCarver<?>>)registerable;
+    public static void bootstrap(BootstrapContext<?> context) {
+        BootstrapContext<ConfiguredWorldCarver<?>> carverRegisterable = (BootstrapContext<ConfiguredWorldCarver<?>>)context;
         HolderGetter<Block> registryBlock = carverRegisterable.lookup(Registries.BLOCK);
         
         boolean useFixedCaves = false;
         boolean useAquifers = false;
         boolean useSurfaceRules = false;
 
-        BetaCaveCarverConfig configCave = new BetaCaveCarverConfig(
+        BetaCaveCarverConfiguration configCave = new BetaCaveCarverConfiguration(
             0.0f,                                                                               // Probability, unused here
             BiasedToBottomHeight.of(VerticalAnchor.absolute(0), VerticalAnchor.absolute(127), 8),       // Y Level
             ConstantFloat.of(0.5f),                                                 // Y scale, for large cave case(?)
@@ -53,7 +53,7 @@ public class ModernBetaConfiguredCarvers {
             Optional.of(useSurfaceRules)
         );
         
-        BetaCaveCarverConfig configCaveDeep = new BetaCaveCarverConfig(
+        BetaCaveCarverConfiguration configCaveDeep = new BetaCaveCarverConfiguration(
             0.15f,                                                                              // Probability, unused here
             UniformHeight.of(VerticalAnchor.aboveBottom(0), VerticalAnchor.absolute(0)),             // Y Level
             UniformFloat.of(0.1f, 0.9f),                                            // Y scale, for large cave case(?)

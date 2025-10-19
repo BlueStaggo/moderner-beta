@@ -30,7 +30,7 @@ public abstract class ModernBetaGraphicalSettingsScreen<T extends Tag> extends O
     protected static final String STRING_PREFIX = "createWorld.customize.modern_beta.settings.";
 
     protected final T settings;
-    protected final WorldCreationContext generatorOptionsHolder;
+    protected final WorldCreationContext context;
     protected final Consumer<T> onDone;
     protected final String type;
 
@@ -44,7 +44,7 @@ public abstract class ModernBetaGraphicalSettingsScreen<T extends Tag> extends O
     public ModernBetaGraphicalSettingsScreen(
         String title,
         Screen parent,
-        WorldCreationContext generatorOptionsHolder,
+        WorldCreationContext context,
         String type,
         T settings,
         Consumer<T> onDone
@@ -54,7 +54,7 @@ public abstract class ModernBetaGraphicalSettingsScreen<T extends Tag> extends O
         this.onDone = onDone;
         this.type = type;
         this.settings = settings;
-        this.generatorOptionsHolder = generatorOptionsHolder;
+        this.context = context;
     }
 
     //? if <1.20.5 {

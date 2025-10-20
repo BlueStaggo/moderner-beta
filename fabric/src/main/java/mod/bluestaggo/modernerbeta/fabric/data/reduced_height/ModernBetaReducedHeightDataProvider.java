@@ -21,6 +21,8 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.valueproviders.ConstantFloat;
 import net.minecraft.util.valueproviders.UniformInt;
+//? if >=1.21.11
+/*import net.minecraft.world.attribute.*;*/
 import net.minecraft.world.level.biome.OverworldBiomeBuilder;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -71,20 +73,37 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
                 OptionalLong.empty(),
                 true,
                 false,
+                //? if <1.21.11
                 false,
                 true,
                 1.0,
+                //? if <1.21.11 {
                 true,
                 false,
+                //? }
                 0,
                 320,
                 320,
                 BlockTags.INFINIBURN_OVERWORLD,
                 BuiltinDimensionTypes.OVERWORLD_EFFECTS,
                 0.0F,
-                //? if >=1.21.6
+                //? if >=1.21.6 && <1.21.11
                 Optional.empty(),
-                new DimensionType.MonsterSettings(false, true, UniformInt.of(0, 7), 0)
+                new DimensionType.MonsterSettings(/*? if <1.21.11 {*/ false, true, /*?}*/ UniformInt.of(0, 7), 0)
+                //? if >=1.21.11 {
+                /*, EnvironmentAttributeMap.builder()
+                    .set(EnvironmentAttributes.FOG_COLOR, -4138753)
+                    .set(EnvironmentAttributes.SKY_COLOR,
+                            net.minecraft.data.worldgen.biome.OverworldBiomes.calculateSkyColor(0.8F))
+                    .set(EnvironmentAttributes.CLOUD_OPACITY, 0.8F)
+                    .set(EnvironmentAttributes.CLOUD_HEIGHT, 192.33F)
+                    .set(EnvironmentAttributes.BACKGROUND_MUSIC, BackgroundMusic.OVERWORLD)
+                    .set(EnvironmentAttributes.BED_RULE, BedRule.CAN_SLEEP_WHEN_DARK)
+                    .set(EnvironmentAttributes.RESPAWN_ANCHOR_WORKS, false)
+                    .set(EnvironmentAttributes.NETHER_PORTAL_SPAWNS_PIGLINS, true)
+                    .set(EnvironmentAttributes.AMBIENT_SOUNDS, AmbientSounds.LEGACY_CAVE_SETTINGS)
+                    .build()
+                *///? }
             )
         );
 

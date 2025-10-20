@@ -1,12 +1,12 @@
 package mod.bluestaggo.modernerbeta.world.biome.biomes.indev;
 
+import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeColors;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeFeatures;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeMobs;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeGenerationSettings;
-import net.minecraft.world.level.biome.BiomeSpecialEffects;
 import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
@@ -20,18 +20,16 @@ public class IndevWoodsBiome {
         BiomeGenerationSettings.Builder genSettings = new BiomeGenerationSettings.Builder(featureLookup, carverLookup);
         ModernBetaBiomeFeatures.addIndevWoodsFeatures(genSettings);
 
-        return (new Biome.BiomeBuilder())
+        return VersionCompat.buildBiomeWithColors(new Biome.BiomeBuilder(),
+                ModernBetaBiomeColors.OLD_GRASS_COLOR,
+                ModernBetaBiomeColors.OLD_FOLIAGE_COLOR,
+                ModernBetaBiomeColors.INDEV_WOODS_SKY_COLOR,
+                ModernBetaBiomeColors.INDEV_WOODS_FOG_COLOR,
+                ModernBetaBiomeColors.OLD_WATER_COLOR,
+                ModernBetaBiomeColors.OLD_WATER_FOG_COLOR)
             .hasPrecipitation(false)
             .temperature(0.6F)
             .downfall(0.6F)
-            .specialEffects((new BiomeSpecialEffects.Builder())
-                .grassColorOverride(ModernBetaBiomeColors.OLD_GRASS_COLOR)
-                .foliageColorOverride(ModernBetaBiomeColors.OLD_FOLIAGE_COLOR)
-                .skyColor(ModernBetaBiomeColors.INDEV_WOODS_SKY_COLOR)
-                .fogColor(ModernBetaBiomeColors.INDEV_WOODS_FOG_COLOR)
-                .waterColor(ModernBetaBiomeColors.OLD_WATER_COLOR)
-                .waterFogColor(ModernBetaBiomeColors.OLD_WATER_FOG_COLOR)
-                .build())
             .mobSpawnSettings(spawnSettings.build())
             .generationSettings(genSettings.build())
             .build();

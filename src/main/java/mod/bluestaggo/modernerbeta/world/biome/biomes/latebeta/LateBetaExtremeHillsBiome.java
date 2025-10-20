@@ -10,7 +10,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeGenerationSettings;
-import net.minecraft.world.level.biome.BiomeSpecialEffects;
 import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
@@ -24,16 +23,14 @@ public class LateBetaExtremeHillsBiome {
         BiomeGenerationSettings.Builder genSettings = new BiomeGenerationSettings.Builder(featureLookup, carverLookup);
         ModernBetaBiomeFeatures.addExtremeHillsFeatures(genSettings);
 
-        return (new Biome.BiomeBuilder())
+        return VersionCompat.buildBiomeWithColors(new Biome.BiomeBuilder(),
+                OverworldBiomes.calculateSkyColor(0.2F),
+                ModernBetaBiomeColors.BETA_FOG_COLOR,
+                ModernBetaBiomeColors.VANILLA_WATER_COLOR,
+                ModernBetaBiomeColors.VANILLA_WATER_FOG_COLOR)
             .hasPrecipitation(true)
             .temperature(0.2F)
             .downfall(0.3F)
-            .specialEffects((new BiomeSpecialEffects.Builder())
-                .skyColor(OverworldBiomes.calculateSkyColor(0.2F))
-                .fogColor(ModernBetaBiomeColors.BETA_FOG_COLOR)
-                .waterColor(ModernBetaBiomeColors.VANILLA_WATER_COLOR)
-                .waterFogColor(ModernBetaBiomeColors.VANILLA_WATER_FOG_COLOR)
-                .build())
             .mobSpawnSettings(spawnSettings.build())
             .generationSettings(genSettings.build())
             .build();

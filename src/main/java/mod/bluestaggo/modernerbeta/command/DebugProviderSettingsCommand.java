@@ -12,8 +12,14 @@ import net.minecraft.network.chat.Component;
 public class DebugProviderSettingsCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext context, Commands.CommandSelection selection) {
         dispatcher.register(Commands.literal("printprovidersettings")
-            .requires(source -> source.hasPermission(2))
-                .executes(ctx -> execute(ctx.getSource())));
+            .requires(
+                //? if >=1.21.11 {
+                /*Commands.hasPermission(Commands.LEVEL_ADMINS)
+                *///? } else {
+                source -> source.hasPermission(2)
+                //? }
+            )
+            .executes(ctx -> execute(ctx.getSource())));
     }
     
     private static int execute(CommandSourceStack source) {

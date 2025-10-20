@@ -46,7 +46,7 @@ public abstract class AirBasedFogEnvironmentMixin {
                     shift = At.Shift.BY,
                     by = 4
             ),
-            index = 16
+            index = /*? >=1.21.11 {*/ /*14 *//*? } else {*/ 16 /*?}*/
     )
     private float modifyFogWeighting(float weight) {
         return modernBeta_isModernBetaLevel && ModernerBeta.config.getOrDefault(SettingsComponentTypes.CONFIG_MISCELLANEOUS).oldFogColorWeighting() ? modernBeta_fogWeight : weight;

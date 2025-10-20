@@ -86,14 +86,14 @@ public class ModernBetaBiomeMobs {
     }
     
     public static void addTundraMobs(MobSpawnSettings.Builder spawnSettings) {
-        BiomeDefaultFeatures.snowySpawns(spawnSettings);
+        BiomeDefaultFeatures.snowySpawns(spawnSettings /*? >=1.21.11 {*//*, true *//*?}*/);
         
         // TODO: Move maybe later
         VersionCompat.addSpawnEntry(spawnSettings, MobCategory.CREATURE, EntityType.GOAT, 5, 4, 6);
     }
     
     public static void addSkyMobs(MobSpawnSettings.Builder spawnSettings) {
-        BiomeDefaultFeatures.monsters(spawnSettings, 95, 5, 20, false);
+        BiomeDefaultFeatures.monsters(spawnSettings, 95, 5, /*? >=1.21.11 {*/ /*0, *//*?}*/ 20, false);
         VersionCompat.addSpawnEntry(spawnSettings, MobCategory.CREATURE, EntityType.CHICKEN, 10, 4, 4);
     }
 }

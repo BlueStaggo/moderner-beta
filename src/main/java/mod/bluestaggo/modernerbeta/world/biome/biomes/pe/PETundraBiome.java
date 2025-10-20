@@ -1,5 +1,6 @@
 package mod.bluestaggo.modernerbeta.world.biome.biomes.pe;
 
+import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeColors;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeFeatures;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeMobs;
@@ -20,18 +21,16 @@ public class PETundraBiome {
         BiomeGenerationSettings.Builder genSettings = new BiomeGenerationSettings.Builder(featureLookup, carverLookup);
         ModernBetaBiomeFeatures.addTundraFeatures(genSettings, true);
         
-        return (new Biome.BiomeBuilder())
+        return VersionCompat.buildBiomeWithColors(new Biome.BiomeBuilder(),
+                ModernBetaBiomeColors.PE_GRASS_COLOR,
+                ModernBetaBiomeColors.PE_FOLIAGE_COLOR,
+                ModernBetaBiomeColors.PE_SKY_COLOR,
+                ModernBetaBiomeColors.PE_FOG_COLOR,
+                ModernBetaBiomeColors.OLD_WATER_COLOR,
+                ModernBetaBiomeColors.OLD_WATER_FOG_COLOR)
             .hasPrecipitation(true)
             .temperature(0.0F)
             .downfall(0.5F)
-            .specialEffects((new BiomeSpecialEffects.Builder())
-                .skyColor(ModernBetaBiomeColors.PE_SKY_COLOR)
-                .fogColor(ModernBetaBiomeColors.PE_FOG_COLOR)
-                .waterColor(ModernBetaBiomeColors.OLD_WATER_COLOR)
-                .waterFogColor(ModernBetaBiomeColors.OLD_WATER_FOG_COLOR)
-                .grassColorOverride(ModernBetaBiomeColors.PE_GRASS_COLOR)
-                .foliageColorOverride(ModernBetaBiomeColors.PE_FOLIAGE_COLOR)
-                .build())
             .mobSpawnSettings(spawnSettings.build())
             .generationSettings(genSettings.build())
             .build();

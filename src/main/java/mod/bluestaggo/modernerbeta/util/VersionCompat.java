@@ -11,9 +11,15 @@ import net.minecraft.util.random.Weighted;
 import net.minecraft.util.random.WeightedList;
 //? if <1.21.5
 /*import net.minecraft.util.random.WeightedEntry;*/
+//? if >=1.21.11 {
+/*import net.minecraft.world.attribute.EnvironmentAttributeMap;
+import net.minecraft.world.attribute.EnvironmentAttributes;
+*///? }
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.LevelHeightAccessor;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.BiomeSpecialEffects;
 import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -159,4 +165,56 @@ public final class VersionCompat {
         return RecordCodecBuilder.create(builder);
     }
     *///?}
+
+    public static Biome.BiomeBuilder buildBiomeWithColors(
+        Biome.BiomeBuilder builder,
+        int grassColor,
+        int foliageColor,
+        int skyColor,
+        int fogColor,
+        int waterColor,
+        int waterFogColor
+    ) {
+        return builder
+            //? if >=1.21.11 {
+            /*.putAttributes(EnvironmentAttributeMap.builder()
+                .set(EnvironmentAttributes.SKY_COLOR, skyColor)
+                .set(EnvironmentAttributes.FOG_COLOR, fogColor)
+                .set(EnvironmentAttributes.WATER_FOG_COLOR, waterFogColor))
+            *///? }
+            .specialEffects((new BiomeSpecialEffects.Builder())
+                .grassColorOverride(grassColor)
+                .foliageColorOverride(foliageColor)
+                //? if <1.21.11 {
+                .skyColor(skyColor)
+                .fogColor(fogColor)
+                .waterFogColor(waterFogColor)
+                //? }
+                .waterColor(waterColor)
+                .build());
+    }
+
+    public static Biome.BiomeBuilder buildBiomeWithColors(
+        Biome.BiomeBuilder builder,
+        int skyColor,
+        int fogColor,
+        int waterColor,
+        int waterFogColor
+    ) {
+        return builder
+            //? if >=1.21.11 {
+            /*.putAttributes(EnvironmentAttributeMap.builder()
+                .set(EnvironmentAttributes.SKY_COLOR, skyColor)
+                .set(EnvironmentAttributes.FOG_COLOR, fogColor)
+                .set(EnvironmentAttributes.WATER_FOG_COLOR, waterFogColor))
+            *///? }
+            .specialEffects((new BiomeSpecialEffects.Builder())
+                //? if <1.21.11 {
+                .skyColor(skyColor)
+                .fogColor(fogColor)
+                .waterFogColor(waterFogColor)
+                //? }
+                .waterColor(waterColor)
+                .build());
+    }
 }

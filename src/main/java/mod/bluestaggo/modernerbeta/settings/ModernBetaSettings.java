@@ -3,6 +3,7 @@ package mod.bluestaggo.modernerbeta.settings;
 import com.google.common.collect.Iterators;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
+import com.mojang.serialization.JsonOps;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
@@ -20,6 +21,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.HashOps;
 import net.minecraft.world.level.biome.Biome;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.event.Level;
@@ -164,6 +166,28 @@ public class ModernBetaSettings implements Iterable<SettingsComponent<?>> {
         return value != null ? new SettingsComponent<>(type, value) : null;
     }
 
+    @SuppressWarnings("unchecked")
+    public ModernBetaSettings getDifference(ModernBetaSettings newSettings, HolderGetter<ModernBetaSettingsPreset> presetRegistry, Function<ModernBetaSettingsPreset, ModernBetaSettings> settingsProvider) {
+        ResourceLocation basePreset = this.get(SettingsComponentTypes.PRESET);
+        if (basePreset == null) {
+            return newSettings;
+        }
+        ModernBetaSettings baseSettings = this.mapPreset(presetRegistry, settingsProvider);
+
+        Builder builder = new Builder();
+        builder.add(SettingsComponentTypes.PRESET, basePreset);
+        newSettings.stream()
+            .filter(component -> {
+                Codec<Object> codec = (Codec<Object>) component.type().codec();
+                return !Objects.equals(
+                    codec.encodeStart(NbtOps.INSTANCE, baseSettings.getOrDefault(component.type())).mapOrElse(Function.identity(), error -> new Object()),
+                    codec.encodeStart(NbtOps.INSTANCE, component.value()).mapOrElse(Function.identity(), error -> new Object())
+                );
+            })
+            .forEach(builder::add);
+        return builder.build();
+    }
+
     public int size() {
         return this.components.size();
     }
@@ -218,6 +242,10 @@ public class ModernBetaSettings implements Iterable<SettingsComponent<?>> {
         public <T> Builder add(SettingsComponentType<T> type, T value) {
             this.components.put(type, value);
             return this;
+        }
+
+        public <T> Builder add(SettingsComponent<T> component) {
+            return this.add(component.type(), component.value());
         }
 
         public Builder addDefault(SettingsComponentType<?>... types) {

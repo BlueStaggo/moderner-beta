@@ -172,7 +172,7 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
                 this.context,
                 this.preset.chunkSettings().mapPreset(presetLookup, ModernBetaSettingsPreset::chunkSettings).toCompound(),
                 nbtCompound -> {
-                    Tuple<ModernBetaSettingsPreset, Boolean> updatedPreset = this.preset.setNbt(nbtCompound, null, null);
+                    Tuple<ModernBetaSettingsPreset, Boolean> updatedPreset = this.preset.setNbt(nbtCompound, null, null, presetLookup);
                     this.preset = updatedPreset.getA();
                 },
                 ModernBetaRegistries.CHUNK
@@ -200,7 +200,7 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
                 this.context,
                 this.preset.biomeSettings().mapPreset(presetLookup, ModernBetaSettingsPreset::biomeSettings).toCompound(),
                 nbtCompound -> {
-                    Tuple<ModernBetaSettingsPreset, Boolean> updatedPreset = this.preset.setNbt(null, nbtCompound, null);
+                    Tuple<ModernBetaSettingsPreset, Boolean> updatedPreset = this.preset.setNbt(null, nbtCompound, null, presetLookup);
                     this.preset = updatedPreset.getA();
                 },
                 ModernBetaRegistries.BIOME
@@ -228,7 +228,7 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
                 this.context,
                 this.preset.caveBiomeSettings().mapPreset(presetLookup, ModernBetaSettingsPreset::caveBiomeSettings).toCompound(),
                 nbtCompound -> {
-                    Tuple<ModernBetaSettingsPreset, Boolean> updatedPreset = this.preset.setNbt(null, null, nbtCompound);
+                    Tuple<ModernBetaSettingsPreset, Boolean> updatedPreset = this.preset.setNbt(null, null, nbtCompound, presetLookup);
                     this.preset = updatedPreset.getA();
                 },
                 ModernBetaRegistries.CAVE_BIOME

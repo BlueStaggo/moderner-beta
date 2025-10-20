@@ -5,17 +5,16 @@ import com.google.gson.JsonElement;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Tuple;
 import org.slf4j.event.Level;
 
 import java.util.List;
-import java.util.function.Supplier;
 
 public record ModernBetaSettingsPreset(ModernBetaSettings chunkSettings, ModernBetaSettings biomeSettings, ModernBetaSettings caveBiomeSettings) {
     public static final Codec<ModernBetaSettingsPreset> CODEC = RecordCodecBuilder.create(
@@ -99,26 +98,39 @@ public record ModernBetaSettingsPreset(ModernBetaSettings chunkSettings, ModernB
         return new Tuple<>(new ModernBetaSettingsPreset(chunkSettings, biomeSettings, caveBiomeSettings), successful);
     }
 
-    public Tuple<ModernBetaSettingsPreset, Boolean> setNbt(CompoundTag nbtChunk, CompoundTag nbtBiome, CompoundTag nbtCaveBiome) {
-        ModernBetaSettings chunkSettings;
-        ModernBetaSettings biomeSettings;
-        ModernBetaSettings caveBiomeSettings;
+    public Tuple<ModernBetaSettingsPreset, Boolean> setNbt(CompoundTag nbtChunk, CompoundTag nbtBiome, CompoundTag nbtCaveBiome,
+                                                           HolderGetter<ModernBetaSettingsPreset> presetRegistry) {
+        ModernBetaSettings chunkSettings = this.chunkSettings;
+        ModernBetaSettings biomeSettings = this.biomeSettings;
+        ModernBetaSettings caveBiomeSettings = this.caveBiomeSettings;
 
         boolean successful = true;
 
         try {
             // Attempt to read settings
-            chunkSettings = nbtChunk != null ?
-                ModernBetaSettings.fromCompound(nbtChunk) :
-                this.chunkSettings;
+            if (nbtChunk != null) {
+                chunkSettings = ModernBetaSettings.fromCompound(nbtChunk);
+                if (presetRegistry != null) {
+                    chunkSettings = this.chunkSettings.getDifference(
+                        chunkSettings, presetRegistry, ModernBetaSettingsPreset::chunkSettings);
+                }
+            }
 
-            biomeSettings = nbtBiome != null ?
-                ModernBetaSettings.fromCompound(nbtBiome) :
-                this.biomeSettings;
+            if (nbtBiome != null) {
+                biomeSettings = ModernBetaSettings.fromCompound(nbtBiome);
+                if (presetRegistry != null) {
+                    biomeSettings = this.biomeSettings.getDifference(
+                        biomeSettings, presetRegistry, ModernBetaSettingsPreset::chunkSettings);
+                }
+            }
 
-            caveBiomeSettings = nbtCaveBiome != null ?
-                ModernBetaSettings.fromCompound(nbtCaveBiome) :
-                this.caveBiomeSettings;
+            if (nbtCaveBiome != null) {
+                caveBiomeSettings = ModernBetaSettings.fromCompound(nbtCaveBiome);
+                if (presetRegistry != null) {
+                    caveBiomeSettings = this.caveBiomeSettings.getDifference(
+                        caveBiomeSettings, presetRegistry, ModernBetaSettingsPreset::chunkSettings);
+                }
+            }
 
             // Test providers
             if (chunkSettings.get(SettingsComponentTypes.PRESET) == null)

@@ -2,6 +2,7 @@
 package mod.bluestaggo.modernerbeta.world.chunk;
 
 import com.google.common.base.Suppliers;
+import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.api.world.chunk.ChunkProvider;
@@ -95,6 +96,14 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
         CompoundTag chunkProviderSettings
     ) {
         super(biomeSource, settings);
+
+        String presetKey = ModernBetaBuiltInTypes.SettingsComponentType.PRESET.id.toString();
+
+        if (ModernBetaSettings.DEFAULT_PRESET_ID.toString().equals(
+            chunkProviderSettings.getString(presetKey).orElse(null))) {
+            chunkProviderSettings.putString(presetKey, ModernerBeta.config.getOrDefault(SettingsComponentTypes.CONFIG_MISCELLANEOUS)
+                .defaultSettingsPreset().toString());
+        }
 
         this.settings = settings;
         this.presetRegistry = presetRegistry;

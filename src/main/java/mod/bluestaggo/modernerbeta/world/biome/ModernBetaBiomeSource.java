@@ -4,6 +4,7 @@ package mod.bluestaggo.modernerbeta.world.biome;
 
 import com.google.common.collect.Sets;
 import com.mojang.datafixers.util.Pair;
+import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.api.world.biome.*;
@@ -12,6 +13,7 @@ import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaResourceKeys;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
+import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.world.biome.injector.BiomeInjector.BiomeInjectionStep;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
@@ -68,7 +70,21 @@ public class ModernBetaBiomeSource extends BiomeSource {
         CompoundTag caveBiomeSettings
     ) {
         super();
-        
+
+        String presetKey = ModernBetaBuiltInTypes.SettingsComponentType.PRESET.id.toString();
+
+        if (ModernBetaSettings.DEFAULT_PRESET_ID.toString().equals(
+            biomeSettings.getString(presetKey).orElse(null))) {
+            biomeSettings.putString(presetKey, ModernerBeta.config.getOrDefault(SettingsComponentTypes.CONFIG_MISCELLANEOUS)
+                .defaultSettingsPreset().toString());
+        }
+
+        if (ModernBetaSettings.DEFAULT_PRESET_ID.toString().equals(
+            caveBiomeSettings.getString(presetKey).orElse(null))) {
+            caveBiomeSettings.putString(presetKey, ModernerBeta.config.getOrDefault(SettingsComponentTypes.CONFIG_MISCELLANEOUS)
+                .defaultSettingsPreset().toString());
+        }
+
         this.biomeRegistry = biomeRegistry;
         this.presetRegistry = presetRegistry;
         this.biomeSettings = biomeSettings;

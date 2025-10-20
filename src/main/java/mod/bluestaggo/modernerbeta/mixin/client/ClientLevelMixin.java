@@ -47,7 +47,7 @@ public abstract class ClientLevelMixin {
         //? }
     ) {
         //? if >=1.21.11 {
-        /*return SkyColorSampler.INSTANCE.getSkyColor(camera.position(), original.call(environmentAttribute, f));
+        /*return SkyColorSampler.INSTANCE.getSkyColor(camera.position(), original.call(instance, environmentAttribute, f));
         *///? } else {
         return SkyColorSampler.INSTANCE.getSkyColor(pos, original.call(instance, j));
         //? }

@@ -7,9 +7,10 @@ import com.mojang.serialization.JsonOps;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.layouts.FrameLayout;
+import net.minecraft.client.gui.layouts.GridLayout;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
@@ -23,7 +24,6 @@ public class ModernBetaImportExportScreen extends ModernBetaScreen {
     private final Consumer<ModernBetaSettingsPreset> onDone;
 
     private EditBox settingsBox;
-    private Component settingsText;
 
     public ModernBetaImportExportScreen(Component title, Screen parent, ModernBetaSettingsPreset settings, Consumer<ModernBetaSettingsPreset> onDone) {
         super(title, parent);
@@ -36,10 +36,26 @@ public class ModernBetaImportExportScreen extends ModernBetaScreen {
     protected void init() {
         super.init();
 
-        this.settingsText = Component.translatable("jfjsj gn");
-        this.settingsBox = new EditBox(this.font, 50, 40, this.width - 100, 20, this.settingsText);
+        GridLayout gridWidgetMain = this.createGridWidget();
+        GridLayout gridWidgetQuick = this.createGridWidget();
+
+        GridLayout.RowHelper gridAdderMain = gridWidgetMain.createRowHelper(1);
+        GridLayout.RowHelper gridAdderQuick = gridWidgetQuick.createRowHelper(2);
+
+        gridAdderMain.addChild(gridWidgetQuick);
+
+        Component copyString = Component.translatable("Copy");
+        int copyStringLen = this.font.width(copyString);
+
+        this.settingsBox = new EditBox(this.font, this.width - copyStringLen - 100, 20, Component.empty());
         this.settingsBox.setMaxLength(2000);
         this.settingsBox.setValue(this.save());
+        Button copyToClipboard = Button.builder(copyString, button -> {
+            this.minecraft.keyboardHandler.setClipboard(this.settingsBox.getValue());
+        }).width(copyStringLen + 40).build();
+
+        gridAdderQuick.addChild(this.settingsBox);
+        gridAdderQuick.addChild(copyToClipboard);
 
         this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, button -> {
             this.onDone.accept(this.fromString(this.settingsBox.getValue()));
@@ -47,17 +63,15 @@ public class ModernBetaImportExportScreen extends ModernBetaScreen {
         }).bounds(this.width / 2 + 4, this.height - 26, BUTTON_LENGTH, BUTTON_HEIGHT).build());
 
 
-        Button copyToClipboard = Button.builder(Component.translatable("copyyy to clipboard"), button -> {
-            this.minecraft.keyboardHandler.setClipboard(this.settingsBox.getValue());
-        }).build();
-        this.addRenderableWidget(copyToClipboard);
-        this.addRenderableWidget(settingsBox);
+        gridWidgetMain.arrangeElements();
+        FrameLayout.alignInRectangle(gridWidgetMain, 0, this.overlayTop + 8, this.width, this.height, 0.5f, 0.0f);
+        gridWidgetMain.visitWidgets(this::addRenderableWidget);
     }
 
     @Override
-    public void resize(Minecraft minecraft, int width, int height) {
+    public void resize(/*? <1.21.11 {*/ net.minecraft.client.Minecraft minecraft, /*?}*/ int width, int height) {
         String temp = this.settingsBox.getValue();
-        this.init(minecraft, width, height);
+        this.init(/*? <1.21.11 {*/ minecraft, /*?}*/ width, height);
         this.settingsBox.setValue(temp);
     }
 

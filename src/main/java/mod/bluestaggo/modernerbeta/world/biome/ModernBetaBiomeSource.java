@@ -74,13 +74,13 @@ public class ModernBetaBiomeSource extends BiomeSource {
         String presetKey = ModernBetaBuiltInTypes.SettingsComponentType.PRESET.id.toString();
 
         if (ModernBetaSettings.DEFAULT_PRESET_ID.toString().equals(
-            biomeSettings.getString(presetKey).orElse(null))) {
+            biomeSettings.getString(presetKey)/*? >=1.21.5 {*/.orElse(null)/*?}*/)) {
             biomeSettings.putString(presetKey, ModernerBeta.config.getOrDefault(SettingsComponentTypes.CONFIG_MISCELLANEOUS)
                 .defaultSettingsPreset().toString());
         }
 
         if (ModernBetaSettings.DEFAULT_PRESET_ID.toString().equals(
-            caveBiomeSettings.getString(presetKey).orElse(null))) {
+            caveBiomeSettings.getString(presetKey)/*? >=1.21.5 {*/.orElse(null)/*?}*/)) {
             caveBiomeSettings.putString(presetKey, ModernerBeta.config.getOrDefault(SettingsComponentTypes.CONFIG_MISCELLANEOUS)
                 .defaultSettingsPreset().toString());
         }

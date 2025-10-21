@@ -178,8 +178,8 @@ public class ModernBetaSettings implements Iterable<SettingsComponent<?>> {
             .filter(component -> {
                 Codec<Object> codec = (Codec<Object>) component.type().codec();
                 return !Objects.equals(
-                    codec.encodeStart(NbtOps.INSTANCE, baseSettings.getOrDefault(component.type())).mapOrElse(Function.identity(), error -> new Object()),
-                    codec.encodeStart(NbtOps.INSTANCE, component.value()).mapOrElse(Function.identity(), error -> new Object())
+                    codec.encodeStart(NbtOps.INSTANCE, baseSettings.getOrDefault(component.type())).map(Function.identity()).mapError(error -> ""),
+                    codec.encodeStart(NbtOps.INSTANCE, component.value()).map(Function.identity()).mapError(error -> "")
                 );
             })
             .forEach(builder::add);

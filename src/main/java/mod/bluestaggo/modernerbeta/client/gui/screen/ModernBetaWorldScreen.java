@@ -291,6 +291,12 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
         gridWidgetMain.arrangeElements();
         FrameLayout.alignInRectangle(gridWidgetMain, 0, this.overlayTop + 8, this.width, this.height, 0.5f, 0.0f);
         gridWidgetMain.visitWidgets(this::addRenderableWidget);
+
+        this.addRenderableWidget(Button.builder(Component.translatable("FHUCKEIFN "), button ->
+            this.minecraft.setScreen(new ModernBetaImportExportScreen(Component.translatable("fsdgs"), this, this.preset, newPreset -> {
+                if (newPreset != null)
+                    this.preset = newPreset;
+            }))).build());
     }
 
     private void resetPreset() {

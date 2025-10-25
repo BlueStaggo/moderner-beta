@@ -39,7 +39,7 @@ public final class ModernBetaRegistries {
         registryHelper = helper;
 
         SETTINGS_COMPONENT_TYPE = register(ModernBetaResourceKeys.SETTINGS_COMPONENT_TYPE);
-        CHUNK = registerDefaulted(ModernBetaResourceKeys.CHUNK, ModernBetaBuiltInTypes.Chunk.BETA.id);
+        CHUNK = registerDefaulted(ModernBetaResourceKeys.CHUNK, ModernBetaBuiltInTypes.Chunk.NOISE_3D.id);
         BIOME = registerDefaulted(ModernBetaResourceKeys.BIOME, ModernBetaBuiltInTypes.Biome.BETA.id);
         CAVE_BIOME = registerDefaulted(ModernBetaResourceKeys.CAVE_BIOME, ModernBetaBuiltInTypes.CaveBiome.NONE.id);
         SURFACE_CONFIG = register(ModernBetaResourceKeys.SURFACE_CONFIG);

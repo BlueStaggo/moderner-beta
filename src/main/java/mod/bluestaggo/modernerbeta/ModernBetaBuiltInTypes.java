@@ -11,9 +11,13 @@ public final class ModernBetaBuiltInTypes {
         USE_SURFACE_RULES("use_surface_rules"),
         SEA_LEVEL_OFFSET("sea_level_offset"),
         CAVE_GENERATION("cave_generation"),
+        NOISE_SETTINGS("noise_settings"),
+        NOISE_3D_SETTINGS("noise_3d_settings"),
         NOISE_SCALE("noise_scale"),
         NOISE_SLIDE("noise_slide"),
+        NOISE_LANDMASS("noise_landmass"),
         FORCED_BIOME_HEIGHT("forced_biome_height"),
+        SURFACE_PROPERTIES("surface_properties"),
         INFDEV_227_STRUCTURES("infdev_227_structures"),
         FINITE_LEVEL_PROPERTIES("finite_level_properties"),
         FINITE_CAVE_GENERATION("finite_cave_generation"),
@@ -47,18 +51,18 @@ public final class ModernBetaBuiltInTypes {
     }
 
     public enum Chunk {
-        BETA("beta"),
+        //BETA("beta"),
         SKYLANDS("skylands"),
-        ALPHA("alpha"),
-        INFDEV_611("infdev_611"),
+        //ALPHA("alpha"),
+        //INFDEV_611("infdev_611"),
         INFDEV_420("infdev_420"),
         INFDEV_415("infdev_415"),
         INFDEV_227("infdev_227"),
         INDEV("indev"),
         CLASSIC_0_30("classic_0_30"),
         PE("pe"),
-        EARLY_RELEASE("early_release"),
-        MAJOR_RELEASE("major_release"),
+        //EARLY_RELEASE("early_release"),
+        NOISE_3D("noise_3d"),
         EARLY_BEDROCK("early_bedrock")
         ;
 

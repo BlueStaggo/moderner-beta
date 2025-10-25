@@ -83,6 +83,42 @@ public class ModernBetaClientBuiltInProviders {
         );
 
         registryHandler.register(
+            NOISE_SETTINGS.id,
+            (screen, options) -> {
+                int minY = -64;
+                int maxY = 320;
+                if (screen instanceof ModernBetaGraphicalProviderSettingsScreen providerSettingsScreen) {
+                    minY = providerSettingsScreen.worldMinY;
+                    maxY = providerSettingsScreen.worldMaxY;
+                }
+
+                addAll(
+                    options,
+                    screen.intRangeOption("min_y", minY, maxY, 16),
+                    screen.intRangeOption("height", 0, maxY - minY, 16),
+                    screen.intRangeOption("size_horizontal", 1, 4),
+                    screen.intRangeOption("size_vertical", 1, 4)
+                );
+            }
+        );
+
+        registryHandler.register(
+            NOISE_3D_SETTINGS.id,
+            (screen, options) -> {
+                addAll(
+                    options,
+                    screen.booleanOption("monoliths"),
+                    screen.booleanOption("farlands"),
+                    screen.booleanOption("alphaNoiseSampling"),
+                    screen.booleanOption("climateHeightScaling"),
+                    screen.booleanOption("randomNoiseOffsets"),
+                    screen.booleanOption("arraySurfaceNoise"),
+                    screen.booleanOption("simplexSurfaceNoise")
+                );
+            }
+        );
+
+        registryHandler.register(
             NOISE_SCALE.id,
             (screen, options) -> {
                 addAll(
@@ -97,8 +133,7 @@ public class ModernBetaClientBuiltInProviders {
                     screen.floatRangeOption("height", 1.0f, 6000.0f),
                     screen.floatRangeOption("stretchY", 0.01f, 50.0f),
                     screen.floatRangeOption("upperLimit", 1.0f, 5000.0f),
-                    screen.floatRangeOption("lowerLimit", 1.0f, 5000.0f),
-                    screen.booleanOption("farlands")
+                    screen.floatRangeOption("lowerLimit", 1.0f, 5000.0f)
                 );
             }
         );
@@ -119,6 +154,25 @@ public class ModernBetaClientBuiltInProviders {
         );
 
         registryHandler.register(
+            NOISE_LANDMASS.id,
+            (screen, options) -> {
+                addAll(
+                    options,
+                    screen.floatRangeOption("variationScale", 0.0f, 2.0f),
+                    screen.floatRangeOption("depthInfluence", 0.0f, 2.0f),
+                    screen.floatRangeOption("negativeDepthInfluence", 0.0f, 2.0f),
+                    screen.booleanOption("negativeDepthFlattening"),
+                    screen.floatRangeOption("depthStretch", 0.0f, 5.0f),
+                    screen.floatRangeOption("depthOffset", -5.0f, 5.0f),
+                    screen.floatRangeOption("positiveDepthDampening", 1.0f, 10.0f),
+                    screen.floatRangeOption("negativeDepthDampening", 1.0f, 10.0f),
+                    screen.floatRangeOption("minDepth", -1.0f, 0.0f),
+                    screen.floatRangeOption("maxDepth", 0.0f, 1.0f)
+                );
+            }
+        );
+
+        registryHandler.register(
             FORCED_BIOME_HEIGHT.id,
             (screen, options) -> {
                 options.addBig(screen.mapEditButton(
@@ -128,11 +182,30 @@ public class ModernBetaClientBuiltInProviders {
                 ));
                 addAll(
                     options,
+                    screen.booleanOption("enabled"),
+                    screen.booleanOption("modifyOnlyPositiveDepth"),
                     screen.floatRangeOption("depthWeight", 1.0f, 20.0f),
                     screen.floatRangeOption("depthOffset", 0.0f, 20.0f),
                     screen.floatRangeOption("scaleWeight", 1.0f, 20.0f),
-                    screen.floatRangeOption("scaleOffset", 0.0f, 20.0f),
-                    screen.booleanOption("modifyOnlyPositiveDepth")
+                    screen.floatRangeOption("scaleOffset", 0.0f, 20.0f)
+                );
+            }
+        );
+
+        registryHandler.register(
+            SURFACE_PROPERTIES.id,
+            (screen, options) -> {
+                addAll(
+                    options,
+                    screen.booleanOption("bedrockHoles"),
+                    screen.booleanOption("flipNoiseCoordinates"),
+                    screen.booleanOption("surfaceBeaches"),
+                    screen.floatRangeOption("sandBeachScale", 0.0f, 1.0f),
+                    screen.floatRangeOption("gravelBeachScale", 0.0f, 1.0f),
+                    screen.floatRangeOption("surfaceNoiseScale", 0.0f, 1.0f),
+                    screen.booleanOption("generateSandstone"),
+                    screen.booleanOption("erosion"),
+                    screen.booleanOption("gravelOceanBed")
                 );
             }
         );

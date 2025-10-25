@@ -7,7 +7,7 @@ import mod.bluestaggo.modernerbeta.world.spawn.SpawnLocatorRelease;
 
 import java.util.Random;
 
-public class ChunkProviderEarlyBedrock extends ChunkProviderMajorRelease {
+public class ChunkProviderEarlyBedrock extends ChunkProviderNoise3D {
     public ChunkProviderEarlyBedrock(ModernBetaChunkGenerator chunkGenerator, long seed) {
         super(chunkGenerator, seed);
     }

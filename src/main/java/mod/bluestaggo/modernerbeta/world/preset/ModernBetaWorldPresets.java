@@ -54,7 +54,7 @@ public class ModernBetaWorldPresets {
         HolderGetter<ModernBetaSettingsPreset> registryPreset
     ) {
         Holder.Reference<DimensionType> dimensionType = registryDimensionType.getOrThrow(BuiltinDimensionTypes.OVERWORLD);
-        Holder.Reference<NoiseGeneratorSettings> settings = registrySettings.getOrThrow(ModernBetaNoiseGeneratorSettings.BETA);
+        Holder.Reference<NoiseGeneratorSettings> settings = registrySettings.getOrThrow(ModernBetaNoiseGeneratorSettings.NOISE_3D);
         
         ModernBetaSettingsPreset defaultPreset = ModernBetaSettingsPreset.referenced(ModernBetaSettings.DEFAULT_PRESET_ID);
 

@@ -19,6 +19,7 @@ public class ModernBetaReducedHeightNoiseSettings {
     public static final NoiseSettings EARLY_RELEASE;
     public static final NoiseSettings MAJOR_RELEASE;
     public static final NoiseSettings EARLY_BEDROCK;
+    public static final NoiseSettings FULL_HEIGHT;
 
     static {
         VANILLA_SURFACE = NoiseSettings.create(0, 320, 1, 2);
@@ -37,5 +38,6 @@ public class ModernBetaReducedHeightNoiseSettings {
         EARLY_RELEASE = NoiseSettings.create(0, 128, 1, 2);
         MAJOR_RELEASE = NoiseSettings.create(0, 256, 1, 2);
         EARLY_BEDROCK = NoiseSettings.create(0, 128, 1, 2);
+        FULL_HEIGHT = NoiseSettings.create(0, 320, 1, 2);
     }
 }

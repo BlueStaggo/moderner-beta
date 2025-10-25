@@ -29,43 +29,10 @@ public class ModernBetaBuiltInProviders {
     public static void registerChunkProviders(IRegistryHandler<?> handler) {
         IRegistryHandler<ChunkProviderType<?>> registryHandler = (IRegistryHandler<ChunkProviderType<?>>) handler;
 
-        registryHandler.register(ModernBetaBuiltInTypes.Chunk.BETA.id, new ChunkProviderType<>(
-            ChunkProviderBeta::new, () -> List.of(
-                SettingsComponentTypes.DEEPSLATE_GENERATION,
-                SettingsComponentTypes.USE_SURFACE_RULES,
-                SettingsComponentTypes.SEA_LEVEL_OFFSET,
-                SettingsComponentTypes.CAVE_GENERATION,
-                SettingsComponentTypes.NOISE_SCALE,
-                SettingsComponentTypes.NOISE_SLIDE,
-                SettingsComponentTypes.ISLES_PROPERTIES
-            )
-        ));
         registryHandler.register(ModernBetaBuiltInTypes.Chunk.SKYLANDS.id, new ChunkProviderType<>(
             ChunkProviderSky::new, () -> List.of(
                 SettingsComponentTypes.DEEPSLATE_GENERATION,
                 SettingsComponentTypes.USE_SURFACE_RULES,
-                SettingsComponentTypes.CAVE_GENERATION,
-                SettingsComponentTypes.NOISE_SCALE,
-                SettingsComponentTypes.NOISE_SLIDE,
-                SettingsComponentTypes.ISLES_PROPERTIES
-            )
-        ));
-        registryHandler.register(ModernBetaBuiltInTypes.Chunk.ALPHA.id, new ChunkProviderType<>(
-            ChunkProviderAlpha::new, () -> List.of(
-                SettingsComponentTypes.DEEPSLATE_GENERATION,
-                SettingsComponentTypes.USE_SURFACE_RULES,
-                SettingsComponentTypes.SEA_LEVEL_OFFSET,
-                SettingsComponentTypes.CAVE_GENERATION,
-                SettingsComponentTypes.NOISE_SCALE,
-                SettingsComponentTypes.NOISE_SLIDE,
-                SettingsComponentTypes.ISLES_PROPERTIES
-            )
-        ));
-        registryHandler.register(ModernBetaBuiltInTypes.Chunk.INFDEV_611.id, new ChunkProviderType<>(
-            ChunkProviderInfdev611::new, () -> List.of(
-                SettingsComponentTypes.DEEPSLATE_GENERATION,
-                SettingsComponentTypes.USE_SURFACE_RULES,
-                SettingsComponentTypes.SEA_LEVEL_OFFSET,
                 SettingsComponentTypes.CAVE_GENERATION,
                 SettingsComponentTypes.NOISE_SCALE,
                 SettingsComponentTypes.NOISE_SLIDE,
@@ -141,26 +108,18 @@ public class ModernBetaBuiltInProviders {
                 SettingsComponentTypes.ISLES_PROPERTIES
             )
         ));
-        registryHandler.register(ModernBetaBuiltInTypes.Chunk.EARLY_RELEASE.id, new ChunkProviderType<>(
-            ChunkProviderEarlyRelease::new, () -> List.of(
+        registryHandler.register(ModernBetaBuiltInTypes.Chunk.NOISE_3D.id, new ChunkProviderType<>(
+            ChunkProviderNoise3D::new, () -> List.of(
                 SettingsComponentTypes.DEEPSLATE_GENERATION,
                 SettingsComponentTypes.USE_SURFACE_RULES,
                 SettingsComponentTypes.SEA_LEVEL_OFFSET,
                 SettingsComponentTypes.CAVE_GENERATION,
+                SettingsComponentTypes.NOISE_SETTINGS,
+                SettingsComponentTypes.NOISE_3D_SETTINGS,
                 SettingsComponentTypes.NOISE_SCALE,
                 SettingsComponentTypes.NOISE_SLIDE,
-                SettingsComponentTypes.FORCED_BIOME_HEIGHT,
-                SettingsComponentTypes.ISLES_PROPERTIES
-            )
-        ));
-        registryHandler.register(ModernBetaBuiltInTypes.Chunk.MAJOR_RELEASE.id, new ChunkProviderType<>(
-            ChunkProviderMajorRelease::new, () -> List.of(
-                SettingsComponentTypes.DEEPSLATE_GENERATION,
-                SettingsComponentTypes.USE_SURFACE_RULES,
-                SettingsComponentTypes.SEA_LEVEL_OFFSET,
-                SettingsComponentTypes.CAVE_GENERATION,
-                SettingsComponentTypes.NOISE_SCALE,
-                SettingsComponentTypes.NOISE_SLIDE,
+                SettingsComponentTypes.NOISE_LANDMASS,
+                SettingsComponentTypes.SURFACE_PROPERTIES,
                 SettingsComponentTypes.FORCED_BIOME_HEIGHT,
                 SettingsComponentTypes.ISLES_PROPERTIES
             )

@@ -5,7 +5,7 @@ import mod.bluestaggo.modernerbeta.api.world.biome.climate.ClimateSampler;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
 import mod.bluestaggo.modernerbeta.world.chunk.provider.ChunkProviderEarlyRelease;
-import mod.bluestaggo.modernerbeta.world.chunk.provider.ChunkProviderMajorRelease;
+import mod.bluestaggo.modernerbeta.world.chunk.provider.ChunkProviderNoise3D;
 import mod.bluestaggo.modernerbeta.world.feature.BetaSnowAndFreezeFeature;
 import mod.bluestaggo.modernerbeta.world.feature.placed.ModernBetaMiscPlacedFeatures;
 import net.minecraft.core.BlockPos;
@@ -53,7 +53,7 @@ public abstract class SnowAndFreezeFeatureMixin {
 
         if (chunkGenerator instanceof ModernBetaChunkGenerator modernBetaChunkGenerator
                 && (modernBetaChunkGenerator.getChunkProvider() instanceof ChunkProviderEarlyRelease
-                        || modernBetaChunkGenerator.getChunkProvider() instanceof ChunkProviderMajorRelease)) {
+                        || modernBetaChunkGenerator.getChunkProvider() instanceof ChunkProviderNoise3D)) {
             BetaSnowAndFreezeFeature.setFreezeTopLayer(level, pos, biomeSource, modernBetaChunkGenerator.allowSurfaceRules());
             info.setReturnValue(true);
             return;

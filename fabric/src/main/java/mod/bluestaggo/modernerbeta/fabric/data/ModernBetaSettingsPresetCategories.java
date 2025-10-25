@@ -23,6 +23,7 @@ public final class ModernBetaSettingsPresetCategories {
     public static void bootstrap(BootstrapContext<ModernBetaSettingsPresetCategory> context) {
         context.register(BETA, new ModernBetaSettingsPresetCategory(
             ModernBetaBuiltInTypes.Preset.BETA_1_7_3.id,
+            ModernBetaBuiltInTypes.PresetCategory.BETA.id,
             List.of(
                 ModernBetaBuiltInTypes.Preset.BETA_1_7_3.id,
                 ModernBetaBuiltInTypes.Preset.BETA_1_1_02.id,
@@ -32,6 +33,7 @@ public final class ModernBetaSettingsPresetCategories {
         ));
         context.register(ALPHA_INFDEV, new ModernBetaSettingsPresetCategory(
             ModernBetaBuiltInTypes.Preset.ALPHA_1_1_2_01.id,
+            ModernBetaBuiltInTypes.PresetCategory.ALPHA_INDEV.id,
             List.of(
                 ModernBetaBuiltInTypes.Preset.ALPHA_1_1_2_01.id,
                 ModernBetaBuiltInTypes.Preset.ALPHA_WINTER.id,
@@ -44,6 +46,7 @@ public final class ModernBetaSettingsPresetCategories {
         ));
         context.register(FINITE, new ModernBetaSettingsPresetCategory(
             ModernBetaBuiltInTypes.Preset.INDEV.id,
+            ModernBetaBuiltInTypes.PresetCategory.FINITE.id,
             List.of(
                 ModernBetaBuiltInTypes.Preset.INDEV.id,
                 ModernBetaBuiltInTypes.Preset.INDEV_PARADISE.id,
@@ -55,6 +58,7 @@ public final class ModernBetaSettingsPresetCategories {
         ));
         context.register(EARLY_RELEASE, new ModernBetaSettingsPresetCategory(
             ModernBetaBuiltInTypes.Preset.RELEASE_1_6_4.id,
+            ModernBetaBuiltInTypes.PresetCategory.EARLY_RELEASE.id,
             List.of(
                 ModernBetaBuiltInTypes.Preset.BETA_1_8_1.id,
                 ModernBetaBuiltInTypes.Preset.BETA_1_9_PRE_3.id,
@@ -66,6 +70,7 @@ public final class ModernBetaSettingsPresetCategories {
         ));
         context.register(EARLY_RELEASE_LARGE_BIOMES, new ModernBetaSettingsPresetCategory(
             ModernBetaBuiltInTypes.Preset.RELEASE_1_1_LARGE_BIOMES.id,
+            ModernBetaBuiltInTypes.PresetCategory.EARLY_RELEASE_LARGE_BIOMES.id,
             List.of(
                 ModernBetaBuiltInTypes.Preset.BETA_1_8_1_LARGE_BIOMES.id,
                 ModernBetaBuiltInTypes.Preset.BETA_1_9_PRE_3_LARGE_BIOMES.id,
@@ -77,6 +82,7 @@ public final class ModernBetaSettingsPresetCategories {
         ));
         context.register(EARLY_RELEASE_AMPLIFIED, new ModernBetaSettingsPresetCategory(
             ModernBetaBuiltInTypes.Preset.RELEASE_1_1_AMPLIFIED.id,
+            ModernBetaBuiltInTypes.PresetCategory.EARLY_RELEASE_AMPLIFIED.id,
             List.of(
                 ModernBetaBuiltInTypes.Preset.BETA_1_8_1_AMPLIFIED.id,
                 ModernBetaBuiltInTypes.Preset.BETA_1_9_PRE_3_AMPLIFIED.id,
@@ -88,6 +94,7 @@ public final class ModernBetaSettingsPresetCategories {
         ));
         context.register(MAJOR_RELEASE, new ModernBetaSettingsPresetCategory(
             ModernBetaBuiltInTypes.Preset.RELEASE_1_12_2.id,
+            ModernBetaBuiltInTypes.PresetCategory.MAJOR_RELEASE.id,
             List.of(
                 ModernBetaBuiltInTypes.Preset.RELEASE_1_12_2.id,
                 ModernBetaBuiltInTypes.Preset.RELEASE_1_12_2_LARGE_BIOMES.id,
@@ -101,6 +108,7 @@ public final class ModernBetaSettingsPresetCategories {
         ));
         context.register(BETA_CUSTOM, new ModernBetaSettingsPresetCategory(
             ModernBetaBuiltInTypes.Preset.BETA_SKYLANDS.id,
+            ModernBetaBuiltInTypes.PresetCategory.BETA_CUSTOM.id,
             List.of(
                 ModernBetaBuiltInTypes.Preset.BETA_SKYLANDS.id,
                 ModernBetaBuiltInTypes.Preset.BETA_ISLES.id,
@@ -118,6 +126,7 @@ public final class ModernBetaSettingsPresetCategories {
         ));
         context.register(RELEASE_CUSTOM, new ModernBetaSettingsPresetCategory(
             ModernBetaBuiltInTypes.Preset.ISLE_LAND.id,
+            ModernBetaBuiltInTypes.PresetCategory.RELEASE_CUSTOM.id,
             List.of(
                 ModernBetaBuiltInTypes.Preset.SNOW_AINT_SNOWIER.id,
                 ModernBetaBuiltInTypes.Preset.SNOW_AINT_SNOWIER_LARGE_BIOMES.id,

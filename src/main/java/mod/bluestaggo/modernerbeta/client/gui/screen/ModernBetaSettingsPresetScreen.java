@@ -3,10 +3,10 @@ package mod.bluestaggo.modernerbeta.client.gui.screen;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPresetCategory;
+import mod.bluestaggo.modernerbeta.settings.NameAndDescriptionItem;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.ChatFormatting;
 //? if <1.21.9
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
@@ -19,7 +19,6 @@ import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.CommonColors;
@@ -30,10 +29,6 @@ import java.util.List;
 @Environment(EnvType.CLIENT)
 public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
     private static final String TEXT_TITLE = "createWorld.customize.modern_beta.title.preset";
-    private static final String TEXT_PRESET_NAME = "createWorld.customize.modern_beta.preset.name";
-    private static final String TEXT_PRESET_DESC = "createWorld.customize.modern_beta.preset.desc";
-    private static final String TEXT_PRESET_CATEGORY_NAME = "createWorld.customize.modern_beta.preset_category.name";
-    private static final String TEXT_PRESET_CATEGORY_DESC = "createWorld.customize.modern_beta.preset_category.desc";
     
     private static final ResourceLocation TEXTURE_PRESET_CUSTOM = createTextureId(ModernerBeta.createId("custom"));
     
@@ -166,7 +161,16 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
                 });
             } else {
                 presets.forEach(key -> {
-                    this.addEntry(new PresetEntry(key));
+                    this.addEntry(new PresetEntry(
+                        key,
+                        presetRegistry
+                            //? if >=1.21.2 {
+                            .getValue
+                            //? } else {
+                            /*.get
+                            *///? }
+                                (key)
+                    ));
                 });
             }
         }
@@ -210,16 +214,16 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
             private static final int TEXT_LENGTH = 240;
             
             private final ResourceLocation presetTexture;
-            private final MutableComponent presetName;
-            private final MutableComponent presetDesc;
+            private final Component presetName;
+            private final Component presetDesc;
 
             //? if <1.21.9
             private long time;
             
-            public AbstractPresetEntry(ResourceLocation presetName) {
+            public AbstractPresetEntry(ResourceLocation presetName, NameAndDescriptionItem preset) {
                 this.presetTexture = this.getPresetTexture(presetName);
-                this.presetName = this.getPresetName(presetName);
-                this.presetDesc = this.getPresetDesc(presetName);
+                this.presetName = preset.makeOrGetTitleComponent(presetName);
+                this.presetDesc = preset.makeOrGetDescriptionComponent(presetName);
             }
 
             protected abstract void setPreset();
@@ -228,18 +232,6 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
 
             protected ResourceLocation getPresetTexture(ResourceLocation presetName) {
                 return createPresetTextureId(presetName);
-            }
-
-            protected MutableComponent getPresetName(ResourceLocation presetName) {
-                return Component.translatable(TEXT_PRESET_NAME + "." + presetName.toLanguageKey());
-            }
-
-            protected MutableComponent getPresetDesc(ResourceLocation presetName) {
-                return Component.translatable(TEXT_PRESET_DESC + "." + presetName.toLanguageKey());
-            }
-
-            protected ChatFormatting getTextFormatting() {
-                return ChatFormatting.YELLOW;
             }
 
             @Override
@@ -263,14 +255,12 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
                 int y = this.getContentY();
                 *///?}
 
-                MutableComponent presetNameText = this.presetName.withStyle(this.getTextFormatting());
-                
                 List<FormattedCharSequence> presetDescTexts = this.splitText(font, this.presetDesc);
 
                 int textStartX = x + ICON_SIZE + 3;
                 int textStartY = 1;
                 
-                graphics.drawString(font, presetNameText, textStartX, y + textStartY, CommonColors.WHITE, false);
+                graphics.drawString(font, this.presetName, textStartX, y + textStartY, CommonColors.WHITE, false);
                 
                 int descSpacing = TEXT_SPACING + textStartY + 1;
                 for (FormattedCharSequence line : presetDescTexts) {
@@ -369,8 +359,8 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
         private class PresetEntry extends AbstractPresetEntry {
             private final ResourceLocation key;
 
-            public PresetEntry(ResourceLocation presetName) {
-                super(presetName);
+            public PresetEntry(ResourceLocation presetName, ModernBetaSettingsPreset preset) {
+                super(presetName, preset);
                 this.key = presetName;
             }
 
@@ -401,7 +391,7 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
             private final ModernBetaSettingsPresetCategory presetCategory;
 
             public PresetCategoryEntry(ResourceLocation presetName, ModernBetaSettingsPresetCategory presetCategory) {
-                super(presetName);
+                super(presetName, presetCategory);
                 this.presetCategory = presetCategory;
             }
 
@@ -416,21 +406,6 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
                         (presetName)
                     .defaultIcon();
                 return super.getPresetTexture(presetName);
-            }
-
-            @Override
-            protected MutableComponent getPresetName(ResourceLocation presetName) {
-                return Component.translatable(TEXT_PRESET_CATEGORY_NAME + "." + presetName.toLanguageKey());
-            }
-
-            @Override
-            protected MutableComponent getPresetDesc(ResourceLocation presetName) {
-                return Component.translatable(TEXT_PRESET_CATEGORY_DESC + "." + presetName.toLanguageKey());
-            }
-
-            @Override
-            protected ChatFormatting getTextFormatting() {
-                return ChatFormatting.AQUA;
             }
 
             @Override

@@ -247,6 +247,24 @@ public final class ModernBetaBuiltInTypes {
         }
     }
 
+    public enum PresetCategory {
+        BETA("beta"),
+        ALPHA_INDEV("alpha_infdev"),
+        FINITE("finite"),
+        EARLY_RELEASE("early_release"),
+        EARLY_RELEASE_LARGE_BIOMES("early_release_large_biomes"),
+        EARLY_RELEASE_AMPLIFIED("early_release_amplified"),
+        MAJOR_RELEASE("major_release"),
+        BETA_CUSTOM("beta_custom"),
+        RELEASE_CUSTOM("release_custom");
+
+        public final ResourceLocation id;
+
+        PresetCategory(String id) {
+            this.id = ModernerBeta.createId(id);
+        }
+    }
+
     public enum LayerOutput {
         BIOME("biome"),
         ;

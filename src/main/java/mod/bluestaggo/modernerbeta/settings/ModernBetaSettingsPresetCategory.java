@@ -4,7 +4,6 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.List;
@@ -19,8 +18,8 @@ public record ModernBetaSettingsPresetCategory(
     public static final Codec<ModernBetaSettingsPresetCategory> CODEC = RecordCodecBuilder.create(
         instance -> instance.group(
             ResourceLocation.CODEC.fieldOf("defaultIcon").forGetter(ModernBetaSettingsPresetCategory::defaultIcon),
-            ComponentSerialization.CODEC.optionalFieldOf("name").forGetter(ModernBetaSettingsPresetCategory::categoryName),
-            ComponentSerialization.CODEC.optionalFieldOf("description").forGetter(ModernBetaSettingsPresetCategory::categoryDescription),
+            net.minecraft.network.chat.ComponentSerialization.CODEC.optionalFieldOf("name").forGetter(ModernBetaSettingsPresetCategory::categoryName),
+            net.minecraft.network.chat.ComponentSerialization.CODEC.optionalFieldOf("description").forGetter(ModernBetaSettingsPresetCategory::categoryDescription),
             ResourceLocation.CODEC.listOf().fieldOf("presets").forGetter(ModernBetaSettingsPresetCategory::presets)
         ).apply(instance, ModernBetaSettingsPresetCategory::new)
     );

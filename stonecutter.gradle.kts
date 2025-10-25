@@ -74,6 +74,11 @@ stonecutter.parameters {
         }
 
         string {
+            direction = eval(current.version, "<1.20.3")
+            replace("net.minecraft.network.chat.ComponentSerialization.CODEC", "net.minecraft.util.ExtraCodecs.COMPONENT")
+        }
+
+        string {
             direction = eval(current.version, "<1.20.5")
             replace("com.mojang.serialization.MapCodec<", "com.mojang.serialization./*Map*/Codec<")
         }

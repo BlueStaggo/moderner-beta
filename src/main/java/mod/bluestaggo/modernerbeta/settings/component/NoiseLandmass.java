@@ -35,7 +35,7 @@ public record NoiseLandmass(
     public static final NoiseLandmass INFDEV611 = new NoiseLandmass(
         1.0f,
         1.0f,
-        0.3f,
+        1.0f,
         true,
         3.0f,
         -3.0f,
@@ -47,7 +47,7 @@ public record NoiseLandmass(
     public static final NoiseLandmass ALPHA = new NoiseLandmass(
         1.0f,
         1.0f,
-        0.3f,
+        1.0f,
         true,
         3.0f,
         -3.0f,

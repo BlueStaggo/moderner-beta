@@ -470,12 +470,11 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
             );
         }
 
-        double modScale = scale;
         double modDepth = 0.0D;
 
         if (this.forcedBiomeHeightEnabled) {
             HeightConfig heightConfig = this.getHeightConfigAt(noiseX, noiseZ);
-            modScale = heightConfig.scale();
+            scale = heightConfig.scale();
             modDepth = heightConfig.depth();
         }
 
@@ -494,15 +493,15 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
             rain *= rain;
             rain = 1.0D - rain;
 
-            modScale *= rain;
+            scale *= rain;
         }
 
-        if (modScale < 0.0D && !this.noise3DSettings.monoliths()) {
-            modScale = 0.0D;
+        if (scale < 0.0D && !this.noise3DSettings.monoliths()) {
+            scale = 0.0D;
         }
 
         if (!this.forcedBiomeHeightEnabled) {
-            modScale = Math.min(modScale, 1.0D) + 0.5D;
+            scale = Math.min(scale, 1.0D) + 0.5D;
         }
 
         depth = modDepth + depth * this.noiseLandmass.depthInfluence();
@@ -515,7 +514,7 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
             double density;
             double heightmapDensity;
             
-            double densityOffset = this.getOffset(noiseY, heightStretch, depth, modScale);
+            double densityOffset = this.getOffset(noiseY, heightStretch, depth, scale);
                        
             double mainNoise = (this.mainOctaveNoise.sample(
                 noiseX, noiseY, noiseZ,

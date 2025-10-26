@@ -109,6 +109,7 @@ public class ModernBetaClientBuiltInProviders {
                     options,
                     screen.booleanOption("monoliths"),
                     screen.booleanOption("farlands"),
+                    screen.booleanOption("oldInfdevTerrainNoise"),
                     screen.booleanOption("alphaNoiseSampling"),
                     screen.booleanOption("climateHeightScaling"),
                     screen.booleanOption("randomNoiseOffsets"),
@@ -133,7 +134,10 @@ public class ModernBetaClientBuiltInProviders {
                     screen.floatRangeOption("height", 1.0f, 6000.0f),
                     screen.floatRangeOption("stretchY", 0.01f, 50.0f),
                     screen.floatRangeOption("upperLimit", 1.0f, 5000.0f),
-                    screen.floatRangeOption("lowerLimit", 1.0f, 5000.0f)
+                    screen.floatRangeOption("lowerLimit", 1.0f, 5000.0f),
+                    screen.floatRangeOption("densityUnderdamp", -10.0f, 10.0f),
+                    screen.floatRangeOption("limitBlending", 0.01f, 100.0f),
+                    screen.intRangeOption("forestNoiseOctaves", 1, 16)
                 );
             }
         );
@@ -158,16 +162,17 @@ public class ModernBetaClientBuiltInProviders {
             (screen, options) -> {
                 addAll(
                     options,
+                    screen.booleanOption("enabled"),
                     screen.floatRangeOption("variationScale", 0.0f, 2.0f),
                     screen.floatRangeOption("depthInfluence", 0.0f, 2.0f),
                     screen.floatRangeOption("negativeDepthInfluence", 0.0f, 2.0f),
-                    screen.booleanOption("negativeDepthFlattening"),
                     screen.floatRangeOption("depthStretch", 0.0f, 5.0f),
                     screen.floatRangeOption("depthOffset", -5.0f, 5.0f),
                     screen.floatRangeOption("positiveDepthDampening", 1.0f, 10.0f),
                     screen.floatRangeOption("negativeDepthDampening", 1.0f, 10.0f),
                     screen.floatRangeOption("minDepth", -1.0f, 0.0f),
-                    screen.floatRangeOption("maxDepth", 0.0f, 1.0f)
+                    screen.floatRangeOption("maxDepth", 0.0f, 1.0f),
+                    screen.booleanOption("negativeDepthFlattening")
                 );
             }
         );

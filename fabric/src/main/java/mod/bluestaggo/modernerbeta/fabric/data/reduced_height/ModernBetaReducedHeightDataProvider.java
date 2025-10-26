@@ -153,8 +153,6 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
         entries.add(NoiseGeneratorSettings.CAVES, createVanillaCavesSettings(provider));
 
         entries.add(SKYLANDS, createNoiseGeneratorSettings(provider, ModernBetaReducedHeightNoiseSettings.SKYLANDS, 0, false));
-        entries.add(INFDEV_420, createNoiseGeneratorSettings(provider, ModernBetaReducedHeightNoiseSettings.INFDEV_420, 64, true));
-        entries.add(INFDEV_415, createNoiseGeneratorSettings(provider, ModernBetaReducedHeightNoiseSettings.INFDEV_415, 64, true));
         entries.add(INFDEV_227, createNoiseGeneratorSettings(provider, ModernBetaReducedHeightNoiseSettings.INFDEV_227, 64, true));
         entries.add(INDEV, createNoiseGeneratorSettings(provider, ModernBetaReducedHeightNoiseSettings.INDEV, 64, false));
         entries.add(CLASSIC_0_30, createNoiseGeneratorSettings(provider, ModernBetaReducedHeightNoiseSettings.CLASSIC_0_30, 64, false));

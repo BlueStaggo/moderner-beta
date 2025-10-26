@@ -26,8 +26,6 @@ public class ModernBetaNoiseGeneratorSettings {
     private static boolean useModernBetaSurfaceRules;
 
     public static final ResourceKey<NoiseGeneratorSettings> SKYLANDS;
-    public static final ResourceKey<NoiseGeneratorSettings> INFDEV_420;
-    public static final ResourceKey<NoiseGeneratorSettings> INFDEV_415;
     public static final ResourceKey<NoiseGeneratorSettings> INFDEV_227;
     public static final ResourceKey<NoiseGeneratorSettings> INDEV;
     public static final ResourceKey<NoiseGeneratorSettings> CLASSIC_0_30;
@@ -37,8 +35,6 @@ public class ModernBetaNoiseGeneratorSettings {
 
     public static void bootstrap(BootstrapContext<NoiseGeneratorSettings> context) {
         context.register(SKYLANDS, createNoiseGeneratorSettings(context, ModernBetaNoiseSettings.SKYLANDS, 0, false));
-        context.register(INFDEV_420, createNoiseGeneratorSettings(context, ModernBetaNoiseSettings.INFDEV_420, 64, true));
-        context.register(INFDEV_415, createNoiseGeneratorSettings(context, ModernBetaNoiseSettings.INFDEV_415, 64, true));
         context.register(INFDEV_227, createNoiseGeneratorSettings(context, ModernBetaNoiseSettings.INFDEV_227, 64, true));
         context.register(INDEV, createNoiseGeneratorSettings(context, ModernBetaNoiseSettings.INDEV, 64, false));
         context.register(CLASSIC_0_30, createNoiseGeneratorSettings(context, ModernBetaNoiseSettings.CLASSIC_0_30, 64, false));
@@ -159,8 +155,6 @@ public class ModernBetaNoiseGeneratorSettings {
 
     static {
         SKYLANDS = ResourceKey.create(Registries.NOISE_SETTINGS, ModernBetaBuiltInTypes.Chunk.SKYLANDS.id);
-        INFDEV_420 = ResourceKey.create(Registries.NOISE_SETTINGS, ModernBetaBuiltInTypes.Chunk.INFDEV_420.id);
-        INFDEV_415 = ResourceKey.create(Registries.NOISE_SETTINGS, ModernBetaBuiltInTypes.Chunk.INFDEV_415.id);
         INFDEV_227 = ResourceKey.create(Registries.NOISE_SETTINGS, ModernBetaBuiltInTypes.Chunk.INFDEV_227.id);
         INDEV = ResourceKey.create(Registries.NOISE_SETTINGS, ModernBetaBuiltInTypes.Chunk.INDEV.id);
         CLASSIC_0_30 = ResourceKey.create(Registries.NOISE_SETTINGS, ModernBetaBuiltInTypes.Chunk.CLASSIC_0_30.id);

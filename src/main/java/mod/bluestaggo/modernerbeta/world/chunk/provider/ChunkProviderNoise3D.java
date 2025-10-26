@@ -26,6 +26,7 @@ import mod.bluestaggo.modernerbeta.world.spawn.SpawnLocatorRelease;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.WorldGenRegion;
+import net.minecraft.util.Mth;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.biome.Biome;
@@ -81,9 +82,16 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
             this.surfaceSimplexOctaveNoise = null;
         }
 
-        this.scaleOctaveNoise = new PerlinOctaveNoise(random, 10, noise3DSettings.randomNoiseOffsets());
-        this.depthOctaveNoise = new PerlinOctaveNoise(random, 16, noise3DSettings.randomNoiseOffsets());
-        this.forestOctaveNoise = new PerlinOctaveNoise(random, 8, noise3DSettings.randomNoiseOffsets());
+        if (noiseLandmass.enabled()) {
+            this.scaleOctaveNoise = new PerlinOctaveNoise(random, 10, noise3DSettings.randomNoiseOffsets());
+            this.depthOctaveNoise = new PerlinOctaveNoise(random, 16, noise3DSettings.randomNoiseOffsets());
+        } else {
+            this.scaleOctaveNoise = null;
+            this.depthOctaveNoise = null;
+            new PerlinOctaveNoise(random, noiseScale.forestNoiseOctaves(), noise3DSettings.randomNoiseOffsets());
+        }
+
+        this.forestOctaveNoise = new PerlinOctaveNoise(random, noiseScale.forestNoiseOctaves(), noise3DSettings.randomNoiseOffsets());
 
         this.climateSampler = !this.noise3DSettings.climateHeightScaling() ? null : (
             this.chunkGenerator.getBiomeSource() instanceof ModernBetaBiomeSource biomeSource &&
@@ -417,7 +425,7 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
     protected void sampleNoiseColumn(double[] primaryBuffer, double[] heightmapBuffer, int startNoiseX, int startNoiseZ, int localNoiseX, int localNoiseZ) {
         int noiseX = startNoiseX + localNoiseX;
         int noiseZ = startNoiseZ + localNoiseZ;
-        
+
         double islandOffset = this.getIslandOffset(noiseX, noiseZ);
 
         double depthNoiseScaleX = this.noiseScale.depthNoiseX();
@@ -437,37 +445,45 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
         double heightStretch = this.noiseScale.stretchY();
 
         boolean wrapped = !this.noise3DSettings.farlands();
+        boolean oldInfdev = this.noise3DSettings.oldInfdevTerrainNoise();
+        boolean landmass = this.noiseLandmass.enabled();
 
-        double scale = this.scaleOctaveNoise != null ? (
-            (this.noise3DSettings.alphaNoiseSampling()
-                ? this.scaleOctaveNoise.sample(noiseX, 0, noiseZ, this.noiseLandmass.variationScale(), 0.0D, this.noiseLandmass.variationScale(), wrapped)
-                : this.scaleOctaveNoise.sampleXZ(noiseX, noiseZ, this.noiseLandmass.variationScale(), this.noiseLandmass.variationScale(), wrapped))
-                + 256D) / 512D : 0.0D;
-        double depth = this.noise3DSettings.alphaNoiseSampling()
-            ? this.depthOctaveNoise.sample(noiseX, 0, noiseZ, depthNoiseScaleX, 0.0D, depthNoiseScaleZ, wrapped)
-            : this.depthOctaveNoise.sampleXZ(noiseX, noiseZ, depthNoiseScaleX, depthNoiseScaleZ, wrapped);
+        double scale = this.scaleOctaveNoise != null
+            ? (
+                (this.noise3DSettings.alphaNoiseSampling()
+                    ? this.scaleOctaveNoise.sample(noiseX, 0, noiseZ, this.noiseLandmass.variationScale(), 0.0D, this.noiseLandmass.variationScale(), wrapped)
+                    : this.scaleOctaveNoise.sampleXZ(noiseX, noiseZ, this.noiseLandmass.variationScale(), this.noiseLandmass.variationScale(), wrapped))
+                + 256D) / 512D
+            : 1.0D;
+        double depth = this.depthOctaveNoise != null
+            ? this.noise3DSettings.alphaNoiseSampling()
+                ? this.depthOctaveNoise.sample(noiseX, 0, noiseZ, depthNoiseScaleX, 0.0D, depthNoiseScaleZ, wrapped)
+                : this.depthOctaveNoise.sampleXZ(noiseX, noiseZ, depthNoiseScaleX, depthNoiseScaleZ, wrapped)
+            : 0.0D;
 
-        depth /= 8000D;
+        if (landmass) {
+            depth /= 8000D;
 
-        if (depth < 0.0D) {
-            depth = -depth * this.noiseLandmass.negativeDepthInfluence();
-        }
-
-        depth = depth * this.noiseLandmass.depthStretch() + this.noiseLandmass.depthOffset();
-
-        if (depth < 0.0D) {
-            depth = Math.max(
-                depth / this.noiseLandmass.negativeDepthDampening(),
-                this.noiseLandmass.minDepth()
-            );
-            if (this.noiseLandmass.negativeDepthFlattening()) {
-                scale = 0.0D;
+            if (depth < 0.0D) {
+                depth = -depth * this.noiseLandmass.negativeDepthInfluence();
             }
-        } else {
-            depth = Math.min(
-                depth / this.noiseLandmass.positiveDepthDampening(),
-                this.noiseLandmass.maxDepth()
-            );
+
+            depth = depth * this.noiseLandmass.depthStretch() + this.noiseLandmass.depthOffset();
+
+            if (depth < 0.0D) {
+                depth = Math.max(
+                    depth / this.noiseLandmass.negativeDepthDampening(),
+                    this.noiseLandmass.minDepth()
+                );
+                if (this.noiseLandmass.negativeDepthFlattening()) {
+                    scale = 0.0D;
+                }
+            } else {
+                depth = Math.min(
+                    depth / this.noiseLandmass.positiveDepthDampening(),
+                    this.noiseLandmass.maxDepth()
+                );
+            }
         }
 
         double modDepth = 0.0D;
@@ -500,81 +516,113 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
             scale = 0.0D;
         }
 
-        if (!this.forcedBiomeHeightEnabled) {
+        if (!this.forcedBiomeHeightEnabled && landmass) {
             scale = Math.min(scale, 1.0D) + 0.5D;
         }
 
         depth = modDepth + depth * this.noiseLandmass.depthInfluence();
         depth *= baseSize / 8.0D;
         depth = baseSize + depth * 4.0D;
-        
+
         for (int y = 0; y < primaryBuffer.length; ++y) {
             int noiseY = y + this.noiseMinY;
-            
+
             double density;
             double heightmapDensity;
-            
+
             double densityOffset = this.getOffset(noiseY, heightStretch, depth, scale);
-                       
-            double mainNoise = (this.mainOctaveNoise.sample(
+
+            double mainNoise = this.mainOctaveNoise.sample(
                 noiseX, noiseY, noiseZ,
-                coordinateScale / mainNoiseScaleX, 
-                heightScale / mainNoiseScaleY, 
+                coordinateScale / mainNoiseScaleX,
+                heightScale / mainNoiseScaleY,
                 coordinateScale / mainNoiseScaleZ,
-                wrapped
-            ) / 10D + 1.0D) / 2D;
-            
-            if (mainNoise < 0.0D) {
+                wrapped,
+                oldInfdev
+            ) / this.noiseScale.limitBlending();
+            if (!oldInfdev) {
+                mainNoise += 1.0D;
+            }
+            mainNoise /= 2D;
+
+            if (mainNoise < (oldInfdev ? -1.0D : 0.0D)) {
                 density = this.minLimitOctaveNoise.sample(
                     noiseX, noiseY, noiseZ,
-                    coordinateScale, 
-                    heightScale, 
                     coordinateScale,
-                    wrapped
+                    heightScale,
+                    coordinateScale,
+                    wrapped,
+                    oldInfdev
                 ) / lowerLimitScale;
-                
+
+                density -= densityOffset;
+                density += islandOffset;
+
+                if (oldInfdev) {
+                    density = Mth.clamp(density, -10.0D, 10.0D);
+                }
             } else if (mainNoise > 1.0D) {
                 density = this.maxLimitOctaveNoise.sample(
                     noiseX, noiseY, noiseZ,
-                    coordinateScale, 
-                    heightScale, 
                     coordinateScale,
-                    wrapped
+                    heightScale,
+                    coordinateScale,
+                    wrapped,
+                    oldInfdev
                 ) / upperLimitScale;
-                
+
+                density -= densityOffset;
+                density += islandOffset;
+
+                if (oldInfdev) {
+                    density = Mth.clamp(density, -10.0D, 10.0D);
+                }
             } else {
                 double minLimitNoise = this.minLimitOctaveNoise.sample(
                     noiseX, noiseY, noiseZ,
-                    coordinateScale, 
-                    heightScale, 
                     coordinateScale,
-                    wrapped
+                    heightScale,
+                    coordinateScale,
+                    wrapped,
+                    oldInfdev
                 ) / lowerLimitScale;
-                
+
                 double maxLimitNoise = this.maxLimitOctaveNoise.sample(
                     noiseX, noiseY, noiseZ,
-                    coordinateScale, 
-                    heightScale, 
                     coordinateScale,
-                    wrapped
+                    heightScale,
+                    coordinateScale,
+                    wrapped,
+                    oldInfdev
                 ) / upperLimitScale;
-                
-                density = minLimitNoise + (maxLimitNoise - minLimitNoise) * mainNoise;
+
+                minLimitNoise -= densityOffset;
+                maxLimitNoise -= densityOffset;
+
+                minLimitNoise += islandOffset;
+                maxLimitNoise += islandOffset;
+
+                double delta = mainNoise;
+
+                if (oldInfdev) {
+                    minLimitNoise = Mth.clamp(minLimitNoise, -10.0D, 10.0D);
+                    maxLimitNoise = Mth.clamp(maxLimitNoise, -10.0D, 10.0D);
+                    delta = (delta + 1.0D) / 2.0D;
+                }
+
+                density = minLimitNoise + (maxLimitNoise - minLimitNoise) * delta;
             }
-            
-            density -= densityOffset;
-            density += islandOffset;
-            
+
             // Sample without post-processing
             heightmapDensity = density;
-            
+
             // Sample with post-processing
             density = this.sampleNoisePostProcessor(density, noiseX, noiseY, noiseZ);
 
             // Apply slides
             density = this.applySlides(density, y);
             heightmapDensity = this.applySlides(heightmapDensity, y);
-            
+
             primaryBuffer[y] = density;
             heightmapBuffer[y] = heightmapDensity;
         }
@@ -591,10 +639,10 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
     
     private double getOffset(int noiseY, double heightStretch, double depth, double scale) {
         double offset = (((double)noiseY - depth) * heightStretch) / scale;
-        
+
         if (offset < 0D)
-            offset *= 4D;
-        
+            offset *= this.noiseScale.densityUnderdamp();
+
         return offset;
     }
 }

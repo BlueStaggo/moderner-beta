@@ -15,7 +15,10 @@ public record NoiseScale(
     float mainNoiseY,
     float mainNoiseZ,
     float baseSize,
-    float stretchY
+    float stretchY,
+    float densityUnderdamp,
+    float limitBlending,
+    int forestNoiseOctaves
 ) {
     public static final Codec<NoiseScale> CODEC = RecordCodecBuilder.create(
         instance -> instance.group(
@@ -29,11 +32,46 @@ public record NoiseScale(
             Codec.FLOAT.fieldOf("mainNoiseY").orElse(160f).forGetter(NoiseScale::mainNoiseY),
             Codec.FLOAT.fieldOf("mainNoiseZ").orElse(80f).forGetter(NoiseScale::mainNoiseZ),
             Codec.FLOAT.fieldOf("baseSize").orElse(8.5f).forGetter(NoiseScale::baseSize),
-            Codec.FLOAT.fieldOf("stretchY").orElse(12.0f).forGetter(NoiseScale::stretchY)
+            Codec.FLOAT.fieldOf("stretchY").orElse(12.0f).forGetter(NoiseScale::stretchY),
+            Codec.FLOAT.fieldOf("densityUnderdamp").orElse(4.0f).forGetter(NoiseScale::densityUnderdamp),
+            Codec.FLOAT.fieldOf("limitBlending").orElse(10.0f).forGetter(NoiseScale::limitBlending),
+            Codec.INT.fieldOf("forestNoiseOctaves").orElse(8).forGetter(NoiseScale::forestNoiseOctaves)
         ).apply(instance, NoiseScale::new)
     );
     public static final NoiseScale DEFAULT = CodecUtil.getDefaultByMap(CODEC);
 
+    public static final NoiseScale INFDEV_415 = new NoiseScale(
+        684.412f,
+        984.412f,
+        512f,
+        512f,
+        100f,
+        100f,
+        80f,
+        575.332986564f,
+        80f,
+        16.0f,
+        4.0f,
+        3.0f,
+        1.0f,
+        5
+    );
+    public static final NoiseScale INFDEV_420 = new NoiseScale(
+        684.412f,
+        684.412f,
+        512f,
+        512f,
+        100f,
+        100f,
+        80f,
+        160f,
+        80f,
+        8.5f,
+        12.0f,
+        2.0f,
+        10.0f,
+        5
+    );
     public static final NoiseScale ALPHA = new NoiseScale(
         684.412f,
         684.412f,
@@ -45,7 +83,10 @@ public record NoiseScale(
         160f,
         80f,
         8.5f,
-        12.0f
+        12.0f,
+        4.0f,
+        10.0f,
+        8
     );
 
     public boolean farlands() {

@@ -225,7 +225,10 @@ public final class ModernBetaSettingsPresets {
                     160f,
                     80f,
                     8.5f,
-                    12.0f
+                    12.0f,
+                    4.0f,
+                    10.0f,
+                    8
                 ))
                 .add(NOISE_SLIDE, new NoiseSlide(
                     -30,
@@ -245,23 +248,15 @@ public final class ModernBetaSettingsPresets {
     private static ModernBetaSettingsPreset presetInfdev415() {
         return new ModernBetaSettingsPreset(
             ModernBetaSettings.builder()
-                .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.INFDEV_415.id)
+                .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.NOISE_3D.id)
                 .add(DEEPSLATE_GENERATION, DeepslateGeneration.DISABLED)
                 .add(CAVE_GENERATION, CaveGeneration.DISABLED)
-                .add(NOISE_SCALE, new NoiseScale(
-                    684.412f,
-                    984.412f,
-                    512f,
-                    512f,
-                    100f,
-                    100f,
-                    80f,
-                    400f,
-                    80f,
-                    8.5f,
-                    12.0f
-                ))
+                .add(NOISE_SETTINGS, ModernBetaNoiseSettings.INFDEV_415)
+                .add(NOISE_3D_SETTINGS, Noise3DSettings.INFDEV_415)
+                .add(NOISE_SCALE, NoiseScale.INFDEV_415)
                 .add(NOISE_SLIDE, NoiseSlide.DISABLED)
+                .add(NOISE_LANDMASS, NoiseLandmass.DISABLED)
+                .add(SURFACE_PROPERTIES, SurfaceProperties.ALPHA)
                 .addDefault(USE_SURFACE_RULES, SEA_LEVEL_OFFSET)
                 .build(),
             ModernBetaSettings.singleBiome(ModernBetaBiomes.INFDEV_415),
@@ -272,12 +267,15 @@ public final class ModernBetaSettingsPresets {
     private static ModernBetaSettingsPreset presetInfdev420() {
         return new ModernBetaSettingsPreset(
             ModernBetaSettings.builder()
-                .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.INFDEV_420.id)
+                .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.NOISE_3D.id)
                 .add(DEEPSLATE_GENERATION, DeepslateGeneration.DISABLED)
                 .add(CAVE_GENERATION, CaveGeneration.DISABLED)
-                .add(NOISE_SCALE, NoiseScale.ALPHA)
+                .add(NOISE_3D_SETTINGS, Noise3DSettings.INFDEV_611)
+                .add(NOISE_SCALE, NoiseScale.INFDEV_420)
                 .add(NOISE_SLIDE, NoiseSlide.DISABLED)
-                .addDefault(USE_SURFACE_RULES, SEA_LEVEL_OFFSET)
+                .add(NOISE_LANDMASS, NoiseLandmass.DISABLED)
+                .add(SURFACE_PROPERTIES, SurfaceProperties.ALPHA)
+                .addDefault(USE_SURFACE_RULES, SEA_LEVEL_OFFSET, NOISE_SETTINGS)
                 .build(),
             ModernBetaSettings.singleBiome(ModernBetaBiomes.INFDEV_420),
             ModernBetaSettings.noCaveBiomes()
@@ -290,10 +288,10 @@ public final class ModernBetaSettingsPresets {
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.NOISE_3D.id)
                 .add(DEEPSLATE_GENERATION, DeepslateGeneration.DISABLED)
                 .add(CAVE_GENERATION, CaveGeneration.BETA)
-                .add(NOISE_3D_SETTINGS, Noise3DSettings.INFDEV611)
+                .add(NOISE_3D_SETTINGS, Noise3DSettings.INFDEV_611)
                 .add(NOISE_SCALE, NoiseScale.ALPHA)
                 .add(NOISE_SLIDE, NoiseSlide.DISABLED)
-                .add(NOISE_LANDMASS, NoiseLandmass.INFDEV611)
+                .add(NOISE_LANDMASS, NoiseLandmass.INFDEV_611)
                 .add(SURFACE_PROPERTIES, SurfaceProperties.ALPHA)
                 .addDefault(USE_SURFACE_RULES, SEA_LEVEL_OFFSET, NOISE_SETTINGS)
                 .build(),
@@ -515,7 +513,10 @@ public final class ModernBetaSettingsPresets {
                     1000.0f,
                     5000.0f,
                     baseNoiseScale.baseSize(),
-                    8.0f
+                    8.0f,
+                    baseNoiseScale.densityUnderdamp(),
+                    baseNoiseScale.limitBlending(),
+                    baseNoiseScale.forestNoiseOctaves()
                 ))
                 .add(FORCED_BIOME_HEIGHT, new ForcedBiomeHeight(
                     baseForcedBiomeHeightEnabled,
@@ -553,7 +554,10 @@ public final class ModernBetaSettingsPresets {
                     baseNoiseScale.mainNoiseY(),
                     baseNoiseScale.mainNoiseZ(),
                     baseNoiseScale.baseSize(),
-                    10.0f
+                    10.0f,
+                    baseNoiseScale.densityUnderdamp(),
+                    baseNoiseScale.limitBlending(),
+                    baseNoiseScale.forestNoiseOctaves()
                 ))
                 .build(),
             ModernBetaSettings.builder()
@@ -585,7 +589,10 @@ public final class ModernBetaSettingsPresets {
                     1000.0f,
                     5000.0f,
                     baseNoiseScale.baseSize(),
-                    5.0f
+                    5.0f,
+                    baseNoiseScale.densityUnderdamp(),
+                    baseNoiseScale.limitBlending(),
+                    baseNoiseScale.forestNoiseOctaves()
                 ))
                 .add(FORCED_BIOME_HEIGHT, new ForcedBiomeHeight(
                     baseForcedBiomeHeightEnabled,
@@ -625,7 +632,10 @@ public final class ModernBetaSettingsPresets {
                     745.5343f,
                     1183.464f,
                     modifyBaseSize ? 1.8758626f : baseNoiseScale.baseSize(),
-                    1.7137525f
+                    1.7137525f,
+                    baseNoiseScale.densityUnderdamp(),
+                    baseNoiseScale.limitBlending(),
+                    baseNoiseScale.forestNoiseOctaves()
                 ))
                 .add(FORCED_BIOME_HEIGHT, new ForcedBiomeHeight(
                     baseForcedBiomeHeightEnabled,
@@ -664,7 +674,10 @@ public final class ModernBetaSettingsPresets {
                     3000.0f,
                     1000.0f,
                     baseNoiseScale.baseSize(),
-                    10.0f
+                    10.0f,
+                    baseNoiseScale.densityUnderdamp(),
+                    baseNoiseScale.limitBlending(),
+                    baseNoiseScale.forestNoiseOctaves()
                 ))
                 .build(),
             ModernBetaSettings.builder()
@@ -694,7 +707,10 @@ public final class ModernBetaSettingsPresets {
                     baseNoiseScale.mainNoiseY(),
                     baseNoiseScale.mainNoiseZ(),
                     baseNoiseScale.baseSize(),
-                    8.0f
+                    8.0f,
+                    baseNoiseScale.densityUnderdamp(),
+                    baseNoiseScale.limitBlending(),
+                    baseNoiseScale.forestNoiseOctaves()
                 ))
                 .build(),
             ModernBetaSettings.builder()

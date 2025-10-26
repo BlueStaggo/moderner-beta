@@ -7,6 +7,7 @@ import mod.bluestaggo.modernerbeta.util.CodecUtil;
 public record Noise3DSettings(
     boolean monoliths,
     boolean farlands,
+    boolean oldInfdevTerrainNoise,
     boolean alphaNoiseSampling,
     boolean climateHeightScaling,
     boolean randomNoiseOffsets,
@@ -17,6 +18,7 @@ public record Noise3DSettings(
         instance -> instance.group(
             Codec.BOOL.fieldOf("monoliths").orElse(false).forGetter(Noise3DSettings::monoliths),
             Codec.BOOL.fieldOf("farlands").orElse(true).forGetter(Noise3DSettings::farlands),
+            Codec.BOOL.fieldOf("oldInfdevTerrainNoise").orElse(false).forGetter(Noise3DSettings::oldInfdevTerrainNoise),
             Codec.BOOL.fieldOf("alphaNoiseSampling").orElse(false).forGetter(Noise3DSettings::alphaNoiseSampling),
             Codec.BOOL.fieldOf("climateHeightScaling").orElse(true).forGetter(Noise3DSettings::climateHeightScaling),
             Codec.BOOL.fieldOf("randomNoiseOffsets").orElse(true).forGetter(Noise3DSettings::randomNoiseOffsets),
@@ -26,9 +28,20 @@ public record Noise3DSettings(
     );
     public static final Noise3DSettings DEFAULT = CodecUtil.getDefaultByMap(CODEC);
 
-    public static final Noise3DSettings INFDEV611 = new Noise3DSettings(
+    public static final Noise3DSettings INFDEV_415 = new Noise3DSettings(
         true,
         true,
+        true,
+        true,
+        false,
+        true,
+        false,
+        false
+    );
+    public static final Noise3DSettings INFDEV_611 = new Noise3DSettings(
+        true,
+        true,
+        false,
         true,
         false,
         true,
@@ -38,6 +51,7 @@ public record Noise3DSettings(
     public static final Noise3DSettings ALPHA = new Noise3DSettings(
         true,
         true,
+        false,
         true,
         false,
         true,
@@ -47,6 +61,7 @@ public record Noise3DSettings(
     public static final Noise3DSettings BETA = new Noise3DSettings(
         false,
         true,
+        false,
         false,
         true,
         true,
@@ -58,11 +73,13 @@ public record Noise3DSettings(
         false,
         false,
         false,
+        false,
         true,
         true,
         false
     );
     public static final Noise3DSettings MAJOR_RELEASE = new Noise3DSettings(
+        false,
         false,
         false,
         false,

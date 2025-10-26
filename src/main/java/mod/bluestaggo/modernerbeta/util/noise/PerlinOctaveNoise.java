@@ -173,6 +173,32 @@ public class PerlinOctaveNoise {
     }
 
     /*
+     * Standard 3D Perlin noise sampler. This noise sampler does not overflow.
+     */
+    public final double sampleWrapped(double x, double y, double z) {
+        double total = 0.0;
+        double frequency = 1.0;
+
+        for (int i = 0; i < this.octaves; ++i) {
+            double offX = x / frequency;
+            double offZ = z / frequency;
+            long offXCoord = Mth.lfloor(offX);
+            long offZCoord = Mth.lfloor(offZ);
+            offX -= offXCoord;
+            offZ -= offZCoord;
+            offXCoord %= 16777216L;
+            offZCoord %= 16777216L;
+            offX += offXCoord;
+            offZ += offZCoord;
+
+            total += this.noises[i].sample(offX, y / frequency, offZ) * frequency;
+            frequency *= 2.0;
+        }
+
+        return total;
+    }
+
+    /*
      * Release 2D noise sampler. This noise sampler does not overflow.
      */
     public final double sampleXZWrapped(double x, double z, double scaleX, double scaleZ) {
@@ -287,5 +313,15 @@ public class PerlinOctaveNoise {
         return wrapped
             ? this.sampleWrapped(x, y, z, scaleX, scaleY, scaleZ)
             : this.sample(x, y, z, scaleX, scaleY, scaleZ);
+    }
+
+    public final double sample(double x, double y, double z, double scaleX, double scaleY, double scaleZ, boolean wrapped, boolean infdev) {
+        return wrapped
+            ? infdev
+                ? this.sampleWrapped(x * scaleX, y * scaleY, z * scaleZ)
+                : this.sampleWrapped(x, y, z, scaleX, scaleY, scaleZ)
+            : infdev
+                ? this.sample(x * scaleX, y * scaleY, z * scaleZ)
+                : this.sample(x, y, z, scaleX, scaleY, scaleZ);
     }
 }

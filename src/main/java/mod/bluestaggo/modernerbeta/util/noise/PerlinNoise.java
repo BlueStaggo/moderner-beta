@@ -280,8 +280,6 @@ public class PerlinNoise {
             }
             
             yOffset = Mth.floor(yOffset / yScale + 1.0000000116860974E-7) * yScale;
-        } else {
-            yOffset = 0.0;
         }
         
         return this.sampleXYZ(floorX, floorY, floorZ, x, y - yOffset, z, y);

@@ -39,28 +39,6 @@ public class ModernBetaBuiltInProviders {
                 SettingsComponentTypes.ISLES_PROPERTIES
             )
         ));
-        registryHandler.register(ModernBetaBuiltInTypes.Chunk.INFDEV_420.id, new ChunkProviderType<>(
-            ChunkProviderInfdev420::new, () -> List.of(
-                SettingsComponentTypes.DEEPSLATE_GENERATION,
-                SettingsComponentTypes.USE_SURFACE_RULES,
-                SettingsComponentTypes.SEA_LEVEL_OFFSET,
-                SettingsComponentTypes.CAVE_GENERATION,
-                SettingsComponentTypes.NOISE_SCALE,
-                SettingsComponentTypes.NOISE_SLIDE,
-                SettingsComponentTypes.ISLES_PROPERTIES
-            )
-        ));
-        registryHandler.register(ModernBetaBuiltInTypes.Chunk.INFDEV_415.id, new ChunkProviderType<>(
-            ChunkProviderInfdev415::new, () -> List.of(
-                SettingsComponentTypes.DEEPSLATE_GENERATION,
-                SettingsComponentTypes.USE_SURFACE_RULES,
-                SettingsComponentTypes.SEA_LEVEL_OFFSET,
-                SettingsComponentTypes.CAVE_GENERATION,
-                SettingsComponentTypes.NOISE_SCALE,
-                SettingsComponentTypes.NOISE_SLIDE,
-                SettingsComponentTypes.ISLES_PROPERTIES
-            )
-        ));
         registryHandler.register(ModernBetaBuiltInTypes.Chunk.INFDEV_227.id, new ChunkProviderType<>(
             ChunkProviderInfdev227::new, () -> List.of(
                 SettingsComponentTypes.DEEPSLATE_GENERATION,

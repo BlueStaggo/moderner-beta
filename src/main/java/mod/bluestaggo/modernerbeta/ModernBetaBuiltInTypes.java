@@ -51,17 +51,12 @@ public final class ModernBetaBuiltInTypes {
     }
 
     public enum Chunk {
-        //BETA("beta"),
         SKYLANDS("skylands"),
-        //ALPHA("alpha"),
-        //INFDEV_611("infdev_611"),
-        INFDEV_420("infdev_420"),
         INFDEV_415("infdev_415"),
         INFDEV_227("infdev_227"),
         INDEV("indev"),
         CLASSIC_0_30("classic_0_30"),
         PE("pe"),
-        //EARLY_RELEASE("early_release"),
         NOISE_3D("noise_3d"),
         EARLY_BEDROCK("early_bedrock")
         ;

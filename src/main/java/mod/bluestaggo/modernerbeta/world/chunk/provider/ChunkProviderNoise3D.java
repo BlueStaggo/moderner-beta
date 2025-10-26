@@ -471,7 +471,7 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
         }
 
         double modScale = scale;
-        double modDepth = depth;
+        double modDepth = 0.0D;
 
         if (this.forcedBiomeHeightEnabled) {
             HeightConfig heightConfig = this.getHeightConfigAt(noiseX, noiseZ);

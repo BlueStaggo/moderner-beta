@@ -18,9 +18,9 @@ public record Noise3DSettings(
             Codec.BOOL.fieldOf("monoliths").orElse(false).forGetter(Noise3DSettings::monoliths),
             Codec.BOOL.fieldOf("farlands").orElse(true).forGetter(Noise3DSettings::farlands),
             Codec.BOOL.fieldOf("alphaNoiseSampling").orElse(false).forGetter(Noise3DSettings::alphaNoiseSampling),
-            Codec.BOOL.fieldOf("climateHeightScaling").orElse(false).forGetter(Noise3DSettings::climateHeightScaling),
+            Codec.BOOL.fieldOf("climateHeightScaling").orElse(true).forGetter(Noise3DSettings::climateHeightScaling),
             Codec.BOOL.fieldOf("randomNoiseOffsets").orElse(true).forGetter(Noise3DSettings::randomNoiseOffsets),
-            Codec.BOOL.fieldOf("arraySurfaceNoise").orElse(false).forGetter(Noise3DSettings::arraySurfaceNoise),
+            Codec.BOOL.fieldOf("arraySurfaceNoise").orElse(true).forGetter(Noise3DSettings::arraySurfaceNoise),
             Codec.BOOL.fieldOf("simplexSurfaceNoise").orElse(false).forGetter(Noise3DSettings::simplexSurfaceNoise)
         ).apply(instance, Noise3DSettings::new)
     );

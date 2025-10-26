@@ -596,8 +596,21 @@ public class ModernBetaTagProviderBiome extends FabricTagProvider<Biome> {
             .addTag(IS_BETA)
             .addTag(IS_PE)
             .addTag(IS_ALPHA)
-            .addTag(IS_INFDEV);
-        
+            .addTag(IS_INFDEV)
+            .addTag(IS_LATE_BETA)
+            .addTag(IS_EARLY_RELEASE)
+            .add(
+                ModernBetaBiomes.LATE_BETA_EXTREME_HILLS,
+                ModernBetaBiomes.LATE_BETA_SWAMPLAND,
+                ModernBetaBiomes.LATE_BETA_TAIGA,
+                ModernBetaBiomes.LATE_BETA_ICE_PLAINS,
+
+                ModernBetaBiomes.EARLY_RELEASE_EXTREME_HILLS,
+                ModernBetaBiomes.EARLY_RELEASE_SWAMPLAND,
+                ModernBetaBiomes.EARLY_RELEASE_TAIGA,
+                ModernBetaBiomes.EARLY_RELEASE_ICE_PLAINS
+            );
+
         this.builder(BiomeTags.HAS_SWAMP_HUT)
             .addTag(IS_SWAMP);
 

@@ -1,7 +1,5 @@
 package mod.bluestaggo.modernerbeta.client.gui.widget;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractStringWidget;
@@ -12,7 +10,6 @@ import net.minecraft.network.chat.FormattedText;
 import net.minecraft.util.FormattedCharSequence;
 
 @SuppressWarnings("unused")
-@Environment(EnvType.CLIENT)
 public class AlignedStringWidget extends AbstractStringWidget {
     private float horizontalAlignment = 0.5F;
 

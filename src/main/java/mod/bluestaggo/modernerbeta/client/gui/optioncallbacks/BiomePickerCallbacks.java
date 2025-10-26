@@ -3,8 +3,6 @@ package mod.bluestaggo.modernerbeta.client.gui.optioncallbacks;
 
 import com.mojang.serialization.Codec;
 import mod.bluestaggo.modernerbeta.client.gui.screen.ModernBetaSelectBiomeScreen;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.Options;
@@ -25,7 +23,6 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-@Environment(EnvType.CLIENT)
 public record BiomePickerCallbacks(Consumer<Screen> screenChangeHandler, Screen parentScreen, WorldCreationContext generatorOptionsHolder, boolean allowNone) implements OptionInstance.ValueSet<String> {
     @Override
     public @NotNull Function<OptionInstance<String>, AbstractWidget> createButton(OptionInstance.TooltipSupplier<String> tooltipFactory, Options gameOptions, int x, int y, int width, Consumer<String> changeCallback) {

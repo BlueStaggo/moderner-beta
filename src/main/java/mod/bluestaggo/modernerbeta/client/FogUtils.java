@@ -1,10 +1,7 @@
 package mod.bluestaggo.modernerbeta.client;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.util.Mth;
 
-@Environment(EnvType.CLIENT)
 public class FogUtils {
     public static float calculateFogWeight(int renderDistance) {
         // Old fog formula with old render distance: weight = 1.0F / (float)(4 - renderDistance)

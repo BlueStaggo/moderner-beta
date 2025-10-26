@@ -9,8 +9,6 @@ import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.mixin.client.MultiLineEditBoxAccessor;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.MultiLineEditBox;
@@ -25,7 +23,6 @@ import net.minecraft.network.chat.Component;
 
 import java.util.function.Consumer;
 
-@Environment(EnvType.CLIENT)
 public class ModernBetaSettingsScreen extends ModernBetaScreen {
     private static final String TEXT_NAVIGATION = "createWorld.customize.modern_beta.navigation";
     private static final String TEXT_SETTINGS = "createWorld.customize.modern_beta.settings";

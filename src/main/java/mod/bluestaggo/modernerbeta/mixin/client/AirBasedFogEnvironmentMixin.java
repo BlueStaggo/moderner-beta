@@ -5,8 +5,6 @@ import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.client.FogUtils;
 import mod.bluestaggo.modernerbeta.imixin.ModernBetaLevel;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.fog.environment.AirBasedFogEnvironment;
@@ -17,7 +15,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Environment(EnvType.CLIENT)
 @Mixin(AirBasedFogEnvironment.class)
 public abstract class AirBasedFogEnvironmentMixin {
     @Unique private static int modernBeta_renderDistance = 16;

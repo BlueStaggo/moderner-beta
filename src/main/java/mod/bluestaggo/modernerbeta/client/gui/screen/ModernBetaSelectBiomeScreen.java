@@ -2,8 +2,6 @@
 package mod.bluestaggo.modernerbeta.client.gui.screen;
 
 import com.ibm.icu.text.Collator;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -32,7 +30,6 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-@Environment(EnvType.CLIENT)
 public class ModernBetaSelectBiomeScreen extends Screen {
     private final HeaderAndFooterLayout layout = new HeaderAndFooterLayout(this);
     private final Screen parent;

@@ -3,8 +3,6 @@ package mod.bluestaggo.modernerbeta.mixin.client;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.client.debug.entries.*;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.DebugScreenOverlay;
 import net.minecraft.client.server.IntegratedServer;
@@ -20,7 +18,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
 
-@Environment(EnvType.CLIENT)
 @Mixin(DebugScreenOverlay.class)
 public abstract class DebugScreenOverlayMixin {
     @Shadow @Final private Minecraft minecraft;

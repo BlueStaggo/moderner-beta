@@ -1,8 +1,6 @@
 package mod.bluestaggo.modernerbeta.client.resource;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.resources.LegacyStuffWrapper;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -11,7 +9,6 @@ import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import java.io.IOException;
 import java.util.function.Consumer;
 
-@Environment(EnvType.CLIENT)
 public class ModernBetaColormapResource implements ResourceManagerReloadListener {
     private final ResourceLocation id;
     private final Consumer<int[]> consumer;

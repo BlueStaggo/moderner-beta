@@ -1,14 +1,11 @@
 package mod.bluestaggo.modernerbeta.client.color;
 
 import mod.bluestaggo.modernerbeta.api.world.biome.climate.ClimateSamplerSky;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.Optional;
 
-@Environment(EnvType.CLIENT)
 public class SkyColorSampler {
     public static final SkyColorSampler INSTANCE = new SkyColorSampler();
 

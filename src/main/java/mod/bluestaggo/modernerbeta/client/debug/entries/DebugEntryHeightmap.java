@@ -15,8 +15,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.chunk.LevelChunk;
 import org.jetbrains.annotations.Nullable;
 *///?}
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.ChunkGenerator;
@@ -26,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-@Environment(EnvType.CLIENT)
 public class DebugEntryHeightmap /*? >=1.21.9 {*/ /*implements DebugScreenEntry *//*?}*/ {
     //? if >=1.21.9 {
     /*private static final ResourceLocation SECTION_ID = ModernerBeta.createId("heightmap");

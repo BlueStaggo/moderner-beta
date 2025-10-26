@@ -7,8 +7,6 @@ import mod.bluestaggo.modernerbeta.settings.component.CaveGeneration;
 import mod.bluestaggo.modernerbeta.world.chunk.provider.indev.IndevTheme;
 import mod.bluestaggo.modernerbeta.world.chunk.provider.indev.IndevType;
 import mod.bluestaggo.modernerbeta.world.chunk.provider.island.IslandShape;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.gui.components.OptionsList;
@@ -16,7 +14,6 @@ import net.minecraft.nbt.Tag;
 
 import static mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes.SettingsComponentType.*;
 
-@Environment(EnvType.CLIENT)
 @SuppressWarnings("unchecked")
 public class ModernBetaClientBuiltInProviders {
     private static void addAll(OptionsList list, OptionInstance<?>... options) {

@@ -2,8 +2,6 @@ package mod.bluestaggo.modernerbeta.client.gui.optioncallbacks;
 
 import com.mojang.serialization.Codec;
 import mod.bluestaggo.modernerbeta.client.gui.widget.AlignedStringWidget;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.Options;
@@ -15,7 +13,6 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-@Environment(EnvType.CLIENT)
 public record TextLabelCallbacks(Component text, float alignment) implements OptionInstance.ValueSet<Void> {
     public TextLabelCallbacks(Component text) {
         this(text, 0.5F);

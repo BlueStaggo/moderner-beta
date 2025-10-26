@@ -1,7 +1,5 @@
 package mod.bluestaggo.modernerbeta.client.gui.screen;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.StringWidget;
 import net.minecraft.client.gui.layouts.FrameLayout;
@@ -10,7 +8,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 
-@Environment(EnvType.CLIENT)
 public class ModernBetaSettingsConfirmScreen extends ModernBetaScreen {
     private final Runnable runnable;
     private final Component messageText;

@@ -6,8 +6,6 @@ import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.util.function.FloatSupplier;
 import mod.bluestaggo.modernerbeta.world.biome.HeightConfig;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.Options;
 import net.minecraft.client.gui.screens.Screen;
@@ -26,7 +24,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.*;
 
-@Environment(EnvType.CLIENT)
 public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBetaGraphicalSettingsScreen<CompoundTag> {
     public ModernBetaGraphicalCompoundSettingsScreen(
         String title,

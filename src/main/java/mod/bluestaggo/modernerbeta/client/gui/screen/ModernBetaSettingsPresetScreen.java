@@ -5,8 +5,6 @@ import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPresetCategory;
 import mod.bluestaggo.modernerbeta.settings.NameAndDescriptionItem;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 //? if <1.21.9
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
@@ -26,7 +24,6 @@ import net.minecraft.util.FormattedCharSequence;
 
 import java.util.List;
 
-@Environment(EnvType.CLIENT)
 public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
     private static final String TEXT_TITLE = "createWorld.customize.modern_beta.title.preset";
     

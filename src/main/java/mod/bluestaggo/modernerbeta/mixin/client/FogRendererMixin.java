@@ -9,8 +9,6 @@ import mod.bluestaggo.modernerbeta.client.FogUtils;
 import mod.bluestaggo.modernerbeta.client.color.BlockColorSampler;
 import mod.bluestaggo.modernerbeta.imixin.ModernBetaLevel;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.FogRenderer;
@@ -29,7 +27,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 /^import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 ^///?}
 
-@Environment(EnvType.CLIENT)
 @Mixin(FogRenderer.class)
 public abstract class FogRendererMixin {
     @Unique private static final String GET_FOG_COLOR_METHOD =

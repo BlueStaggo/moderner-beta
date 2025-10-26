@@ -1,15 +1,12 @@
 package mod.bluestaggo.modernerbeta.client.gui.optioncallbacks;
 
 import com.mojang.serialization.Codec;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
-@Environment(EnvType.CLIENT)
 public record ValidatingIntMultipleSliderCallbacks(int minInclusive, int maxInclusive, int multiple) implements OptionInstance.IntRangeBase {
     @Override
     public @NotNull Optional<Integer> validateValue(Integer integer) {

@@ -1,8 +1,6 @@
 package mod.bluestaggo.modernerbeta.client.gui.screen.config;
 
 import mod.bluestaggo.modernerbeta.world.biome.HeightConfig;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.gui.screens.Screen;
@@ -17,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-@Environment(EnvType.CLIENT)
 public class ExtendedBiomeIdToHeightConfigMapScreen extends ModernBetaGraphicalMapSettingsScreen {
     public ExtendedBiomeIdToHeightConfigMapScreen(String title, Screen parent, WorldCreationContext generatorOptionsHolder, CompoundTag settings, Consumer<CompoundTag> onDone) {
         super(title, parent, generatorOptionsHolder, settings, onDone);

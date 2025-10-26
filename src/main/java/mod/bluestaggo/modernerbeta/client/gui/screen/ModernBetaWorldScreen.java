@@ -12,8 +12,6 @@ import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.tags.ModernBetaSettingsPresetCategoryTags;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.StringWidget;
@@ -37,7 +35,6 @@ import org.apache.logging.log4j.util.TriConsumer;
 import java.util.Optional;
 import java.util.Random;
 
-@Environment(EnvType.CLIENT)
 public class ModernBetaWorldScreen extends ModernBetaScreen {
     private static final String TEXT_TITLE = "createWorld.customize.modern_beta.title"; 
     private static final String TEXT_TITLE_CHUNK = "createWorld.customize.modern_beta.title.chunk"; 

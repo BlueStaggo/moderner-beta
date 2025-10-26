@@ -3,8 +3,6 @@ package mod.bluestaggo.modernerbeta.mixin.client;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import mod.bluestaggo.modernerbeta.client.color.SkyColorSampler;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.multiplayer.ClientLevel;
 //? if >=1.21.11 {
 /*import net.minecraft.client.Camera;
@@ -17,7 +15,6 @@ import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Environment(EnvType.CLIENT)
 @Mixin(value = ClientLevel.class, priority = 1)
 public abstract class ClientLevelMixin {
     //? if >=1.21.11

@@ -22,6 +22,6 @@ public record ValidatingIntMultipleSliderCallbacks(int minInclusive, int maxIncl
 
     @Override
     public @NotNull Integer fromSliderValue(double d) {
-        return Mth.quantize(Mth.map(d, 0.0, 1.0, (double)this.minInclusive(), (double)this.maxInclusive()), multiple);
+        return (int) Math.round(Mth.map(d, 0.0, 1.0, (double)this.minInclusive(), (double)this.maxInclusive()) / multiple) * multiple;
     }
 }

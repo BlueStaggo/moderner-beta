@@ -9,7 +9,6 @@ import mod.bluestaggo.modernerbeta.settings.component.*;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.world.biome.provider.climate.ClimateMapping;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ConfiguredLayers;
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import mod.bluestaggo.modernerbeta.world.biome.voronoi.VoronoiPointBiome;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaNoiseSettings;
 import net.minecraft.resources.ResourceLocation;
@@ -105,7 +104,7 @@ public class SettingsComponentTypes {
         NOISE_SETTINGS = register(
             ModernBetaBuiltInTypes.SettingsComponentType.NOISE_SETTINGS.id,
             NoiseSettings.CODEC,
-            ModernBetaNoiseSettings.BETA);
+            ModernBetaNoiseSettings.OVERWORLD_128);
         NOISE_3D_SETTINGS = register(
             ModernBetaBuiltInTypes.SettingsComponentType.NOISE_3D_SETTINGS.id,
             Noise3DSettings.CODEC,

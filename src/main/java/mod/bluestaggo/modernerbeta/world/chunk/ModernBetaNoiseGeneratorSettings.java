@@ -32,11 +32,11 @@ public class ModernBetaNoiseGeneratorSettings {
     public static final ResourceKey<NoiseGeneratorSettings> NOISE_3D;
 
     public static void bootstrap(BootstrapContext<NoiseGeneratorSettings> context) {
-        context.register(SKYLANDS, createNoiseGeneratorSettings(context, ModernBetaNoiseSettings.SKYLANDS, 0, false));
-        context.register(INFDEV_227, createNoiseGeneratorSettings(context, ModernBetaNoiseSettings.INFDEV_227, 64, true));
-        context.register(INDEV, createNoiseGeneratorSettings(context, ModernBetaNoiseSettings.INDEV, 64, false));
-        context.register(CLASSIC_0_30, createNoiseGeneratorSettings(context, ModernBetaNoiseSettings.CLASSIC_0_30, 64, false));
-        context.register(NOISE_3D, createNoiseGeneratorSettings(context, ModernBetaNoiseSettings.FULL_HEIGHT, 64, true));
+        context.register(SKYLANDS, createNoiseGeneratorSettings(context, ModernBetaNoiseSettings.SKY_128, 0, false));
+        context.register(INFDEV_227, createNoiseGeneratorSettings(context, ModernBetaNoiseSettings.OVERWORLD_128, 64, true));
+        context.register(INDEV, createNoiseGeneratorSettings(context, ModernBetaNoiseSettings.FINITE, 64, false));
+        context.register(CLASSIC_0_30, createNoiseGeneratorSettings(context, ModernBetaNoiseSettings.FINITE, 64, false));
+        context.register(NOISE_3D, createNoiseGeneratorSettings(context, ModernBetaNoiseSettings.OVERWORLD_FULL, 64, true));
     }
     
     private static NoiseRouter createDensityFunctions(

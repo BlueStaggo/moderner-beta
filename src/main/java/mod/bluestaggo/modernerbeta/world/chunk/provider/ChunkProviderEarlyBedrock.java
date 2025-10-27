@@ -13,11 +13,6 @@ public class ChunkProviderEarlyBedrock extends ChunkProviderNoise3D {
     }
 
     @Override
-    protected Random getRandom(long seed) {
-        return new MTRandom(seed);
-    }
-
-    @Override
     public SpawnLocator getSpawnLocator() {
         return new SpawnLocatorRelease(this, new MTRandom(this.seed));
     }

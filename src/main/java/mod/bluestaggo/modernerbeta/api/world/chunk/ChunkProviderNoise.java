@@ -124,7 +124,7 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
         );
         this.chunkCacheHeightmap = new LevelChunkCache<>("heightmap", this::sampleHeightmap);
 
-        this.islandNoise = new SimplexNoise(new Random(this.seed));
+        this.islandNoise = new SimplexNoise(this.createRandom(this.seed));
 
         CaveGeneration caveSettings = this.getChunkSettings().getOrDefault(SettingsComponentTypes.CAVE_GENERATION);
         if (caveSettings.useNoiseCaves()) {

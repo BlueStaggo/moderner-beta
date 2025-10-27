@@ -52,13 +52,10 @@ public final class ModernBetaBuiltInTypes {
 
     public enum Chunk {
         SKYLANDS("skylands"),
-        INFDEV_415("infdev_415"),
         INFDEV_227("infdev_227"),
         INDEV("indev"),
         CLASSIC_0_30("classic_0_30"),
-        PE("pe"),
         NOISE_3D("noise_3d"),
-        EARLY_BEDROCK("early_bedrock")
         ;
 
         public final ResourceLocation id;

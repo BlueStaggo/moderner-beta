@@ -271,6 +271,7 @@
     "createWorld.customize.modern_beta.settings.noise_3d_settings.randomNoiseOffsets": "Random Noise Offsets",
     "createWorld.customize.modern_beta.settings.noise_3d_settings.arraySurfaceNoise": "Array Surface Noise",
     "createWorld.customize.modern_beta.settings.noise_3d_settings.simplexSurfaceNoise": "Simplex Surface Noise",
+    "createWorld.customize.modern_beta.settings.noise_3d_settings.pocketEditionRng": "Pocket Edition RNG",
     "createWorld.customize.modern_beta.settings.noise_scale": "Noise Scale",
     "createWorld.customize.modern_beta.settings.noise_scale.coordinate": "Coordinate Scale",
     "createWorld.customize.modern_beta.settings.noise_scale.height": "Height Scale",

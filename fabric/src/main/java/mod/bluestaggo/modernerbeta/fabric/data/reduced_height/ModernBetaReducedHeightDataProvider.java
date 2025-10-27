@@ -156,9 +156,7 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
         entries.add(INFDEV_227, createNoiseGeneratorSettings(provider, ModernBetaReducedHeightNoiseSettings.INFDEV_227, 64, true));
         entries.add(INDEV, createNoiseGeneratorSettings(provider, ModernBetaReducedHeightNoiseSettings.INDEV, 64, false));
         entries.add(CLASSIC_0_30, createNoiseGeneratorSettings(provider, ModernBetaReducedHeightNoiseSettings.CLASSIC_0_30, 64, false));
-        entries.add(PE, createNoiseGeneratorSettings(provider, ModernBetaReducedHeightNoiseSettings.PE, 64, true));
         entries.add(NOISE_3D, createNoiseGeneratorSettings(provider, ModernBetaReducedHeightNoiseSettings.FULL_HEIGHT, 64, true));
-        entries.add(EARLY_BEDROCK, createNoiseGeneratorSettings(provider, ModernBetaReducedHeightNoiseSettings.EARLY_BEDROCK, 63, true));
 
         //Density functions
         HolderGetter<DensityFunction> densityFunctionLookup = provider.lookupOrThrow(Registries.DENSITY_FUNCTION);

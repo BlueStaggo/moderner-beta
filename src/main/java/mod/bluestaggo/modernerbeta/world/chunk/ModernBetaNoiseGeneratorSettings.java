@@ -29,18 +29,14 @@ public class ModernBetaNoiseGeneratorSettings {
     public static final ResourceKey<NoiseGeneratorSettings> INFDEV_227;
     public static final ResourceKey<NoiseGeneratorSettings> INDEV;
     public static final ResourceKey<NoiseGeneratorSettings> CLASSIC_0_30;
-    public static final ResourceKey<NoiseGeneratorSettings> PE;
     public static final ResourceKey<NoiseGeneratorSettings> NOISE_3D;
-    public static final ResourceKey<NoiseGeneratorSettings> EARLY_BEDROCK;
 
     public static void bootstrap(BootstrapContext<NoiseGeneratorSettings> context) {
         context.register(SKYLANDS, createNoiseGeneratorSettings(context, ModernBetaNoiseSettings.SKYLANDS, 0, false));
         context.register(INFDEV_227, createNoiseGeneratorSettings(context, ModernBetaNoiseSettings.INFDEV_227, 64, true));
         context.register(INDEV, createNoiseGeneratorSettings(context, ModernBetaNoiseSettings.INDEV, 64, false));
         context.register(CLASSIC_0_30, createNoiseGeneratorSettings(context, ModernBetaNoiseSettings.CLASSIC_0_30, 64, false));
-        context.register(PE, createNoiseGeneratorSettings(context, ModernBetaNoiseSettings.PE, 64, true));
         context.register(NOISE_3D, createNoiseGeneratorSettings(context, ModernBetaNoiseSettings.FULL_HEIGHT, 64, true));
-        context.register(EARLY_BEDROCK, createNoiseGeneratorSettings(context, ModernBetaNoiseSettings.EARLY_BEDROCK, 63, true));
     }
     
     private static NoiseRouter createDensityFunctions(
@@ -158,8 +154,6 @@ public class ModernBetaNoiseGeneratorSettings {
         INFDEV_227 = ResourceKey.create(Registries.NOISE_SETTINGS, ModernBetaBuiltInTypes.Chunk.INFDEV_227.id);
         INDEV = ResourceKey.create(Registries.NOISE_SETTINGS, ModernBetaBuiltInTypes.Chunk.INDEV.id);
         CLASSIC_0_30 = ResourceKey.create(Registries.NOISE_SETTINGS, ModernBetaBuiltInTypes.Chunk.CLASSIC_0_30.id);
-        PE = ResourceKey.create(Registries.NOISE_SETTINGS, ModernBetaBuiltInTypes.Chunk.PE.id);
         NOISE_3D = ResourceKey.create(Registries.NOISE_SETTINGS, ModernBetaBuiltInTypes.Chunk.NOISE_3D.id);
-        EARLY_BEDROCK = ResourceKey.create(Registries.NOISE_SETTINGS, ModernBetaBuiltInTypes.Chunk.EARLY_BEDROCK.id);
     }
 }

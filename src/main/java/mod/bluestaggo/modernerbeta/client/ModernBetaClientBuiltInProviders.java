@@ -111,7 +111,8 @@ public class ModernBetaClientBuiltInProviders {
                     screen.booleanOption("climateHeightScaling"),
                     screen.booleanOption("randomNoiseOffsets"),
                     screen.booleanOption("arraySurfaceNoise"),
-                    screen.booleanOption("simplexSurfaceNoise")
+                    screen.booleanOption("simplexSurfaceNoise"),
+                    screen.booleanOption("pocketEditionRng")
                 );
             }
         );

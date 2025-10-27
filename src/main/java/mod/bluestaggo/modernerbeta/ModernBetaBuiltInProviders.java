@@ -75,17 +75,6 @@ public class ModernBetaBuiltInProviders {
                 SettingsComponentTypes.FINITE_POOLS
             )
         ));
-        registryHandler.register(ModernBetaBuiltInTypes.Chunk.PE.id, new ChunkProviderType<>(
-            ChunkProviderPE::new, () -> List.of(
-                SettingsComponentTypes.DEEPSLATE_GENERATION,
-                SettingsComponentTypes.USE_SURFACE_RULES,
-                SettingsComponentTypes.SEA_LEVEL_OFFSET,
-                SettingsComponentTypes.CAVE_GENERATION,
-                SettingsComponentTypes.NOISE_SCALE,
-                SettingsComponentTypes.NOISE_SLIDE,
-                SettingsComponentTypes.ISLES_PROPERTIES
-            )
-        ));
         registryHandler.register(ModernBetaBuiltInTypes.Chunk.NOISE_3D.id, new ChunkProviderType<>(
             ChunkProviderNoise3D::new, () -> List.of(
                 SettingsComponentTypes.DEEPSLATE_GENERATION,
@@ -98,18 +87,6 @@ public class ModernBetaBuiltInProviders {
                 SettingsComponentTypes.NOISE_SLIDE,
                 SettingsComponentTypes.NOISE_LANDMASS,
                 SettingsComponentTypes.SURFACE_PROPERTIES,
-                SettingsComponentTypes.FORCED_BIOME_HEIGHT,
-                SettingsComponentTypes.ISLES_PROPERTIES
-            )
-        ));
-        registryHandler.register(ModernBetaBuiltInTypes.Chunk.EARLY_BEDROCK.id, new ChunkProviderType<>(
-            ChunkProviderEarlyBedrock::new, () -> List.of(
-                SettingsComponentTypes.DEEPSLATE_GENERATION,
-                SettingsComponentTypes.USE_SURFACE_RULES,
-                SettingsComponentTypes.SEA_LEVEL_OFFSET,
-                SettingsComponentTypes.CAVE_GENERATION,
-                SettingsComponentTypes.NOISE_SCALE,
-                SettingsComponentTypes.NOISE_SLIDE,
                 SettingsComponentTypes.FORCED_BIOME_HEIGHT,
                 SettingsComponentTypes.ISLES_PROPERTIES
             )

@@ -17,9 +17,11 @@ import mod.bluestaggo.modernerbeta.util.chunk.ChunkHeightmap;
 import mod.bluestaggo.modernerbeta.util.noise.PerlinOctaveNoise;
 import mod.bluestaggo.modernerbeta.util.noise.SimpleNoisePos;
 import mod.bluestaggo.modernerbeta.util.noise.SimplexOctaveNoise;
+import mod.bluestaggo.modernerbeta.util.random.mersenne.MTRandom;
 import mod.bluestaggo.modernerbeta.world.biome.HeightConfig;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.world.biome.provider.BiomeProviderBeta;
+import mod.bluestaggo.modernerbeta.world.biome.provider.BiomeProviderPE;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
 import mod.bluestaggo.modernerbeta.world.spawn.SpawnLocatorBeta;
 import mod.bluestaggo.modernerbeta.world.spawn.SpawnLocatorRelease;
@@ -65,46 +67,47 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
         this.surfaceProperties = this.getChunkSettings().getOrDefault(SettingsComponentTypes.SURFACE_PROPERTIES);
         this.forcedBiomeHeightEnabled = this.getChunkSettings().getOrDefault(SettingsComponentTypes.FORCED_BIOME_HEIGHT).enabled();
 
-        Random random = this.getRandom(seed);
-        this.minLimitOctaveNoise = new PerlinOctaveNoise(random, 16, noise3DSettings.randomNoiseOffsets());
-        this.maxLimitOctaveNoise = new PerlinOctaveNoise(random, 16, noise3DSettings.randomNoiseOffsets());
-        this.mainOctaveNoise = new PerlinOctaveNoise(random, 8, noise3DSettings.randomNoiseOffsets());
+        this.minLimitOctaveNoise = new PerlinOctaveNoise(this.random, 16, noise3DSettings.randomNoiseOffsets());
+        this.maxLimitOctaveNoise = new PerlinOctaveNoise(this.random, 16, noise3DSettings.randomNoiseOffsets());
+        this.mainOctaveNoise = new PerlinOctaveNoise(this.random, 8, noise3DSettings.randomNoiseOffsets());
 
         this.beachOctaveNoise = surfaceProperties.surfaceBeaches()
-            ? new PerlinOctaveNoise(random, 4, noise3DSettings.randomNoiseOffsets())
+            ? new PerlinOctaveNoise(this.random, 4, noise3DSettings.randomNoiseOffsets())
             : null;
 
         if (noise3DSettings.simplexSurfaceNoise()) {
             this.surfacePerlinOctaveNoise = null;
-            this.surfaceSimplexOctaveNoise = new SimplexOctaveNoise(random, 4);
+            this.surfaceSimplexOctaveNoise = new SimplexOctaveNoise(this.random, 4);
         } else {
-            this.surfacePerlinOctaveNoise = new PerlinOctaveNoise(random, 4, noise3DSettings.randomNoiseOffsets());
+            this.surfacePerlinOctaveNoise = new PerlinOctaveNoise(this.random, 4, noise3DSettings.randomNoiseOffsets());
             this.surfaceSimplexOctaveNoise = null;
         }
 
         if (noiseLandmass.enabled()) {
-            this.scaleOctaveNoise = new PerlinOctaveNoise(random, 10, noise3DSettings.randomNoiseOffsets());
-            this.depthOctaveNoise = new PerlinOctaveNoise(random, 16, noise3DSettings.randomNoiseOffsets());
+            this.scaleOctaveNoise = new PerlinOctaveNoise(this.random, 10, noise3DSettings.randomNoiseOffsets());
+            this.depthOctaveNoise = new PerlinOctaveNoise(this.random, 16, noise3DSettings.randomNoiseOffsets());
         } else {
             this.scaleOctaveNoise = null;
             this.depthOctaveNoise = null;
-            new PerlinOctaveNoise(random, noiseScale.forestNoiseOctaves(), noise3DSettings.randomNoiseOffsets());
+            new PerlinOctaveNoise(this.random, noiseScale.forestNoiseOctaves(), noise3DSettings.randomNoiseOffsets());
         }
 
-        this.forestOctaveNoise = new PerlinOctaveNoise(random, noiseScale.forestNoiseOctaves(), noise3DSettings.randomNoiseOffsets());
+        this.forestOctaveNoise = new PerlinOctaveNoise(this.random, noiseScale.forestNoiseOctaves(), noise3DSettings.randomNoiseOffsets());
 
-        this.climateSampler = !this.noise3DSettings.climateHeightScaling() ? null : (
-            this.chunkGenerator.getBiomeSource() instanceof ModernBetaBiomeSource biomeSource &&
-                biomeSource.getBiomeProvider() instanceof BiomeProviderBeta biomeProviderBeta
-        ) ? biomeProviderBeta : new BiomeProviderBeta(ModernBetaSettings.empty(), null, seed);
+        this.climateSampler = !this.noise3DSettings.climateHeightScaling() ? null
+            : (this.chunkGenerator.getBiomeSource() instanceof ModernBetaBiomeSource biomeSource
+                    && biomeSource.getBiomeProvider() instanceof ClimateSampler climateSampler
+            ) ? climateSampler
+            : this.noise3DSettings.pocketEditionRng() ? new BiomeProviderPE(ModernBetaSettings.empty(), null, seed)
+            : new BiomeProviderBeta(ModernBetaSettings.empty(), null, seed);
     }
     
     @Override
     public SpawnLocator getSpawnLocator() {
         if (this.beachOctaveNoise != null) {
-            return new SpawnLocatorBeta(this, this.beachOctaveNoise, new Random(this.seed));
+            return new SpawnLocatorBeta(this, this.beachOctaveNoise, this.createRandom(this.seed));
         }
-        return new SpawnLocatorRelease(this, new Random(this.seed));
+        return new SpawnLocatorRelease(this, this.createRandom(this.seed));
     }
 
     @Override
@@ -633,10 +636,36 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
         return this.forestOctaveNoise;
     }
 
-    protected Random getRandom(long seed) {
-        return this.random;
+    @Override
+    protected Random createRandom(long seed) {
+        if (this.getChunkSettings().getOrDefault(SettingsComponentTypes.NOISE_3D_SETTINGS).pocketEditionRng()) {
+            return new MTRandom(seed);
+        }
+        return super.createRandom(seed);
     }
-    
+
+    @Override
+    protected Random createSurfaceRandom(int chunkX, int chunkZ) {
+        if (this.noise3DSettings.pocketEditionRng()) {
+            long seed = (long)chunkX * 0x14609048 + (long)chunkZ * 0x7ebe2d5;
+            return new MTRandom(seed);
+        }
+        return super.createSurfaceRandom(chunkX, chunkZ);
+    }
+
+    @Override
+    protected int getHeightSampleRadius() {
+        return this.getChunkSettings().getOrDefault(SettingsComponentTypes.NOISE_3D_SETTINGS).pocketEditionRng() ? 1 : 2;
+    }
+
+    @Override
+    protected float calculateBiomeHeightWeight(int x, int z) {
+        if (this.getChunkSettings().getOrDefault(SettingsComponentTypes.NOISE_3D_SETTINGS).pocketEditionRng()) {
+            x = -1; // Weird PE quirk. No idea why Mojang did this.
+        }
+        return super.calculateBiomeHeightWeight(x, z);
+    }
+
     private double getOffset(int noiseY, double heightStretch, double depth, double scale) {
         double offset = (((double)noiseY - depth) * heightStretch) / scale;
 

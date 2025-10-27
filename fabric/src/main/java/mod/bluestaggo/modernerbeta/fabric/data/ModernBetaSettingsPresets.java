@@ -409,7 +409,7 @@ public final class ModernBetaSettingsPresets {
     private static ModernBetaSettingsPreset presetPE() {
         return new ModernBetaSettingsPreset(
             DEFAULT_BETA.chunkSettings().extend()
-                .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.PE.id)
+                .add(NOISE_3D_SETTINGS, Noise3DSettings.PE)
                 .add(DEEPSLATE_GENERATION, DeepslateGeneration.DISABLED)
                 .build(),
             DEFAULT_BETA.biomeSettings().extend()
@@ -2233,13 +2233,13 @@ public final class ModernBetaSettingsPresets {
 
         return new ModernBetaSettingsPreset(
             DEFAULT_BETA.chunkSettings().extend()
-                .add(PROVIDER, bedrock ? ModernBetaBuiltInTypes.Chunk.EARLY_BEDROCK.id : ModernBetaBuiltInTypes.Chunk.NOISE_3D.id)
+                .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.NOISE_3D.id)
                 .add(USE_SURFACE_RULES, true)
                 .add(CAVE_GENERATION, bedrock ? CaveGeneration.BEDROCK : CaveGeneration.RELEASE_1_12_2)
                 .add(FORCED_BIOME_HEIGHT, ForcedBiomeHeight.overridesOnly(heightOverrides, amplified))
                 .add(SEA_LEVEL_OFFSET, -1)
-                .add(NOISE_SETTINGS, ModernBetaNoiseSettings.MAJOR_RELEASE)
-                .add(NOISE_3D_SETTINGS, Noise3DSettings.MAJOR_RELEASE)
+                .add(NOISE_SETTINGS, bedrock ? ModernBetaNoiseSettings.EARLY_BEDROCK : ModernBetaNoiseSettings.MAJOR_RELEASE)
+                .add(NOISE_3D_SETTINGS, bedrock ? Noise3DSettings.BEDROCK : Noise3DSettings.MAJOR_RELEASE)
                 .add(NOISE_LANDMASS, NoiseLandmass.RELEASE)
                 .add(SURFACE_PROPERTIES, SurfaceProperties.MAJOR_RELEASE)
                 .build(),
@@ -2254,13 +2254,13 @@ public final class ModernBetaSettingsPresets {
     private static ModernBetaSettingsPreset preset1171(boolean amplified, int biomeScale, boolean bedrock) {
         return new ModernBetaSettingsPreset(
             DEFAULT_BETA.chunkSettings().extend()
-                .add(PROVIDER, bedrock ? ModernBetaBuiltInTypes.Chunk.EARLY_BEDROCK.id : ModernBetaBuiltInTypes.Chunk.NOISE_3D.id)
+                .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.NOISE_3D.id)
                 .add(USE_SURFACE_RULES, true)
                 .add(CAVE_GENERATION, bedrock ? CaveGeneration.BEDROCK : CaveGeneration.RELEASE_1_17_1)
                 .add(FORCED_BIOME_HEIGHT, ForcedBiomeHeight.overridesOnly(HeightConfig.MAJOR_RELEASE_CONFIGS, amplified))
                 .add(SEA_LEVEL_OFFSET, -1)
-                .add(NOISE_SETTINGS, ModernBetaNoiseSettings.MAJOR_RELEASE)
-                .add(NOISE_3D_SETTINGS, Noise3DSettings.MAJOR_RELEASE)
+                .add(NOISE_SETTINGS, bedrock ? ModernBetaNoiseSettings.EARLY_BEDROCK : ModernBetaNoiseSettings.MAJOR_RELEASE)
+                .add(NOISE_3D_SETTINGS, bedrock ? Noise3DSettings.BEDROCK : Noise3DSettings.MAJOR_RELEASE)
                 .add(NOISE_LANDMASS, NoiseLandmass.RELEASE)
                 .add(SURFACE_PROPERTIES, SurfaceProperties.MAJOR_RELEASE)
                 .build(),

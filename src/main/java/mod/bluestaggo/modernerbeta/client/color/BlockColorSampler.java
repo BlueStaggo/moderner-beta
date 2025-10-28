@@ -129,8 +129,13 @@ public final class BlockColorSampler {
                 return this.sampleModifiedColorMaybeLerped(
                     biomeAccess,
                     pos,
+                    //? if >=1.21.11 {
+                    /*BiomeSpecialEffects::grassColorOverride,
+                    BiomeSpecialEffects::grassColorModifier,
+                    *///? } else {
                     BiomeSpecialEffects::getGrassColorOverride,
                     BiomeSpecialEffects::getGrassColorModifier,
+                    //? }
                     GrassColor::get
                 );
             }
@@ -178,8 +183,13 @@ public final class BlockColorSampler {
                 return this.sampleModifiedColorMaybeLerped(
                     biomeAccess,
                     pos,
+                    //? if >=1.21.11 {
+                    /*BiomeSpecialEffects::grassColorOverride,
+                    BiomeSpecialEffects::grassColorModifier,
+                    *///? } else {
                     BiomeSpecialEffects::getGrassColorOverride,
                     BiomeSpecialEffects::getGrassColorModifier,
+                    //? }
                     GrassColor::get
                 );
             }
@@ -202,7 +212,11 @@ public final class BlockColorSampler {
                 return this.sampleModifiedColorMaybeLerped(
                     biomeAccess,
                     pos,
+                    //? if >=1.21.11 {
+                    /*BiomeSpecialEffects::foliageColorOverride,
+                    *///? } else {
                     BiomeSpecialEffects::getFoliageColorOverride,
+                    //? }
                     effects -> BiomeSpecialEffects.GrassColorModifier.NONE,
                     FoliageColor::get
                 );

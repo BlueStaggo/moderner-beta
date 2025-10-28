@@ -7,7 +7,6 @@ import mod.bluestaggo.modernerbeta.imixin.ModernBetaLevel;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.fog.environment.AirBasedFogEnvironment;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -15,7 +14,13 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(AirBasedFogEnvironment.class)
+@Mixin(
+    //? if >=1.21.11 {
+    /*net.minecraft.client.renderer.fog.environment.AtmosphericFogEnvironment.class
+    *///? } else {
+    net.minecraft.client.renderer.fog.environment.AirBasedFogEnvironment.class
+    //? }
+)
 public abstract class AirBasedFogEnvironmentMixin {
     @Unique private static int modernBeta_renderDistance = 16;
     @Unique private static float modernBeta_fogWeight = FogUtils.calculateFogWeight(16);
@@ -43,7 +48,7 @@ public abstract class AirBasedFogEnvironmentMixin {
                     shift = At.Shift.BY,
                     by = 4
             ),
-            index = /*? >=1.21.11 {*/ /*14 *//*? } else {*/ 16 /*?}*/
+            index = /*? >=1.21.11 {*/ /*15 *//*? } else {*/ 16 /*?}*/
     )
     private float modifyFogWeighting(float weight) {
         return modernBeta_isModernBetaLevel && ModernerBeta.config.getOrDefault(SettingsComponentTypes.CONFIG_MISCELLANEOUS).oldFogColorWeighting() ? modernBeta_fogWeight : weight;

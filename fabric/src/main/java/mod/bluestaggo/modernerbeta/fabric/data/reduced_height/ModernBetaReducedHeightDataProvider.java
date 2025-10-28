@@ -92,10 +92,10 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
                 new DimensionType.MonsterSettings(/*? if <1.21.11 {*/ false, true, /*?}*/ UniformInt.of(0, 7), 0)
                 //? if >=1.21.11 {
                 /*, EnvironmentAttributeMap.builder()
-                    .set(EnvironmentAttributes.FOG_COLOR, -4138753)
+                    .set(EnvironmentAttributes.FOG_COLOR, 0xFFC0D8FF)
                     .set(EnvironmentAttributes.SKY_COLOR,
                             net.minecraft.data.worldgen.biome.OverworldBiomes.calculateSkyColor(0.8F))
-                    .set(EnvironmentAttributes.CLOUD_OPACITY, 0.8F)
+                    .set(EnvironmentAttributes.CLOUD_COLOR, net.minecraft.util.ARGB.white(0.8F))
                     .set(EnvironmentAttributes.CLOUD_HEIGHT, 192.33F)
                     .set(EnvironmentAttributes.BACKGROUND_MUSIC, BackgroundMusic.OVERWORLD)
                     .set(EnvironmentAttributes.BED_RULE, BedRule.CAN_SLEEP_WHEN_DARK)

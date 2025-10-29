@@ -75,14 +75,19 @@ public class ChunkProviderIndev extends ChunkProviderFinite {
             this.generateHeightmap(noiseSettings);
             this.erodeTerrain();
             this.soilTerrain();
-            this.growSurface(beachSettings);
+            if (this.levelType != IndevType.CLASSIC) {
+                this.growSurface(beachSettings);
+            }
         }
         
         this.carveTerrain(this.chunkSettings.getOrDefault(SettingsComponentTypes.FINITE_CAVE_GENERATION));
         this.floodFluid(poolSettings);
         this.floodLava(poolSettings);
-        if (this.levelType != IndevType.CLASSIC)
+        if (this.levelType == IndevType.CLASSIC) {
+            this.growSurface(beachSettings);
+        } else {
             this.plantSurface();
+        }
     }
 
     @Override
@@ -114,9 +119,9 @@ public class ChunkProviderIndev extends ChunkProviderFinite {
         // Replace default block set by structure sampling with topsoil blocks.
         if (terrainState.isTerrainModified() && !inFluid) {
             if (runDepth == 0) {
-                modifiedBlockState = (this.isFloating() || y >= this.waterLevel - 1) ? 
-                    this.topsoilBlock : 
-                    BlockStates.DIRT;
+                modifiedBlockState = (this.isFloating() || y >= this.waterLevel - 1)
+                    ? this.topsoilBlock
+                    : BlockStates.DIRT;
             }
             
             if (runDepth == 1) {

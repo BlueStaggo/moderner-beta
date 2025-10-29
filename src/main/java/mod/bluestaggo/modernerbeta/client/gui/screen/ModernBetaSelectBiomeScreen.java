@@ -5,6 +5,7 @@ import com.ibm.icu.text.Collator;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.client.gui.components.StringWidget;
 //? if <1.20.2
@@ -31,12 +32,14 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 public class ModernBetaSelectBiomeScreen extends Screen {
-    private final HeaderAndFooterLayout layout = new HeaderAndFooterLayout(this);
+    private static final Component SEARCH_HINT = Component.translatable("createWorld.customize.modern_beta.search").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC);
+
+    private final HeaderAndFooterLayout layout = new HeaderAndFooterLayout(this, 13 + 9 + 3 + 15, 33);
     private final Screen parent;
     private final Consumer<Holder<Biome>> onDone;
     private final boolean allowNone;
     final Registry<Biome> biomeRegistry;
-    private BiomeListWidget biomeSelectionList;
+    private BiomeList biomeSelectionList;
     Holder<Biome> biome;
     private Button confirmButton;
 
@@ -72,22 +75,28 @@ public class ModernBetaSelectBiomeScreen extends Screen {
     @Override
     protected void init() {
         //? if >=1.20.2 {
-        LinearLayout header = this.layout.addToHeader(LinearLayout.vertical().spacing(8));
+        LinearLayout header = this.layout.addToHeader(LinearLayout.vertical().spacing(3));
         //?} else {
-        /*GridLayout.RowHelper header = this.layout.addToHeader(new GridLayout().columnSpacing(8)).createRowHelper(1);
+        /*GridLayout.RowHelper header = this.layout.addToHeader(new GridLayout().columnSpacing(3)).createRowHelper(1);
         *///?}
 
         header.defaultCellSetting().alignHorizontallyCenter();
+        //? if <1.20.2
+        /*header.defaultCellSetting().paddingVertical(3);*/
         header.addChild(new StringWidget(this.getTitle(), this.font));
 
         //? if >=1.20.2 {
-        this.biomeSelectionList = this.layout.addToContents(new BiomeListWidget());
+        this.biomeSelectionList = this.layout.addToContents(new BiomeList());
         LinearLayout footer = this.layout.addToFooter(LinearLayout.horizontal().spacing(8));
         //?} else {
-        /*this.biomeSelectionList = new ModernBetaSelectBiomeScreen.BiomeListWidget();
+        /*this.biomeSelectionList = new ModernBetaSelectBiomeScreen.BiomeList();
         this.addRenderableWidget(this.biomeSelectionList);
         GridLayout.RowHelper footer = this.layout.addToFooter(new GridLayout().columnSpacing(8)).createRowHelper(2);
         *///?}
+        EditBox editBox = header.addChild(new EditBox(this.font, 0, 0, 200, 15, Component.empty()));
+        editBox.setHint(SEARCH_HINT);
+        Objects.requireNonNull(this.biomeSelectionList);
+        editBox.setResponder(biomeSelectionList::filterEntries);
 
         this.confirmButton = footer.addChild(Button.builder(CommonComponents.GUI_DONE, button -> {
             this.onDone.accept(this.biome);
@@ -114,42 +123,68 @@ public class ModernBetaSelectBiomeScreen extends Screen {
         this.confirmButton.active = this.biomeSelectionList.getSelected() != null;
     }
 
-    class BiomeListWidget extends ObjectSelectionList<BiomeListWidget.BiomeItem> {
-        BiomeListWidget() {
+    class BiomeList extends ObjectSelectionList<BiomeList.Entry> {
+        BiomeList() {
             //? if >=1.20.2 {
-            super(ModernBetaSelectBiomeScreen.this.minecraft, ModernBetaSelectBiomeScreen.this.width, ModernBetaSelectBiomeScreen.this.height - 77, 40, 16);
+            super(
+                ModernBetaSelectBiomeScreen.this.minecraft,
+                ModernBetaSelectBiomeScreen.this.width,
+                ModernBetaSelectBiomeScreen.this.height - ModernBetaSelectBiomeScreen.this.layout.getHeaderHeight() - ModernBetaSelectBiomeScreen.this.layout.getFooterHeight(),
+                ModernBetaSelectBiomeScreen.this.layout.getHeaderHeight(),
+                15
+            );
             //?} else {
-            /*super(ModernBetaSelectBiomeScreen.this.minecraft, ModernBetaSelectBiomeScreen.this.width, ModernBetaSelectBiomeScreen.this.height, 37, ModernBetaSelectBiomeScreen.this.height - 37, 16);
+            /*super(
+                ModernBetaSelectBiomeScreen.this.minecraft,
+                ModernBetaSelectBiomeScreen.this.width,
+                ModernBetaSelectBiomeScreen.this.height,
+                ModernBetaSelectBiomeScreen.this.layout.getHeaderHeight(),
+                ModernBetaSelectBiomeScreen.this.height - ModernBetaSelectBiomeScreen.this.layout.getHeaderHeight(),
+                15
+            );
             *///?}
-            Collator collator = Collator.getInstance(Locale.getDefault());
-            if (ModernBetaSelectBiomeScreen.this.allowNone)
-                this.addEntry(new BiomeItem());
-            ModernBetaSelectBiomeScreen.this.biomeRegistry
-                    .listElements()
-                    .map(BiomeItem::new)
-                    .sorted(Comparator.comparing(biome -> biome.text.getString(), collator))
-                    .forEach(this::addEntry);
+            this.filterEntries("");
         }
 
-        public void setSelected(@Nullable BiomeItem buffetBiomeItem) {
-            super.setSelected(buffetBiomeItem);
-            if (buffetBiomeItem != null) {
-                ModernBetaSelectBiomeScreen.this.biome = buffetBiomeItem.biome;
+        private void filterEntries(String filter) {
+            Collator collator = Collator.getInstance(Locale.getDefault());
+            String query = filter.toLowerCase(Locale.ROOT);
+            this.clearEntries();
+            if (ModernBetaSelectBiomeScreen.this.allowNone)
+                this.addEntry(new Entry());
+
+            ModernBetaSelectBiomeScreen.this.biomeRegistry
+                .listElements()
+                .map(Entry::new)
+                .sorted(Comparator.comparing(entry -> entry.text.getString(), collator))
+                .filter(entry -> filter.isEmpty() || entry.text.getString().toLowerCase(Locale.ROOT).contains(query))
+                .forEach(this::addEntry);
+            //? if >=1.21.4 {
+            this.refreshScrollAmount();
+            //? } else {
+            /*this.setScrollAmount(this.getScrollAmount());
+            *///? }
+        }
+
+        public void setSelected(@Nullable Entry entry) {
+            super.setSelected(entry);
+            if (entry != null) {
+                ModernBetaSelectBiomeScreen.this.biome = entry.biome;
             }
 
             ModernBetaSelectBiomeScreen.this.refreshConfirmButton();
         }
 
-        class BiomeItem extends ObjectSelectionList.Entry<BiomeItem> {
+        class Entry extends ObjectSelectionList.Entry<Entry> {
             final Holder.Reference<Biome> biome;
             final Component text;
 
-            public BiomeItem() {
+            public Entry() {
                 this.biome = null;
                 this.text = Component.translatable("gui.none").withStyle(ChatFormatting.ITALIC);
             }
 
-            public BiomeItem(final Holder.Reference<Biome> biome) {
+            public Entry(final Holder.Reference<Biome> biome) {
                 this.biome = biome;
                 ResourceLocation id = biome.key().location();
                 String name = id.toLanguageKey("biome");
@@ -186,7 +221,7 @@ public class ModernBetaSelectBiomeScreen extends Screen {
 
             @Override
             public boolean mouseClicked(/*? if <1.21.9 {*/ double mouseX, double mouseY, int button /*?} else {*/ /*net.minecraft.client.input.MouseButtonEvent click, boolean doubleClick *//*?}*/) {
-                BiomeListWidget.this.setSelected(this);
+                BiomeList.this.setSelected(this);
                 return super.mouseClicked(/*? if <1.21.9 {*/ mouseX, mouseY, button /*?} else {*/ /*click, doubleClick *//*?}*/);
             }
         }

@@ -26,6 +26,7 @@
     "createWorld.customize.modern_beta.settings.preview": "Preview biomes",
     "createWorld.customize.modern_beta.settings.preview.extended_biome_id": "%s (%s)",
     "createWorld.customize.modern_beta.settings.screenshot": "Screenshot",
+    "createWorld.customize.modern_beta.search": "Search",
 
     "createWorld.customize.modern_beta.preset": "World Preset",
     "createWorld.customize.modern_beta.preset.custom": "Custom",

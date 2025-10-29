@@ -159,7 +159,7 @@ public class ModernBetaBuiltInProviders {
         ));
         registryHandler.register(ModernBetaBuiltInTypes.CaveBiome.VORONOI.id, new CaveBiomeProviderType<>(
             CaveBiomeProviderVoronoi::new, () -> List.of(
-                SettingsComponentTypes.VORONOI_POINTS
+                SettingsComponentTypes.CAVE_BIOME_VORONOI
             )
         ));
     }

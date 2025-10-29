@@ -344,7 +344,14 @@ public final class ModernBetaSettingsPresets {
     private static ModernBetaSettingsPreset presetClassic() {
         return new ModernBetaSettingsPreset(
             ModernBetaSettings.builder()
-                .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.CLASSIC_0_30.id)
+                .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.INDEV.id)
+                .add(FINITE_LEVEL_PROPERTIES, new FiniteLevelProperties(
+                    IndevType.CLASSIC,
+                    IndevTheme.NORMAL,
+                    256,
+                    256,
+                    128
+                ))
                 .add(DEEPSLATE_GENERATION, DeepslateGeneration.DISABLED)
                 .add(CAVE_GENERATION, CaveGeneration.DISABLED)
                 .add(FINITE_BEACHES, new FiniteBeaches(
@@ -356,7 +363,8 @@ public final class ModernBetaSettingsPresets {
                     true,
                     false
                 ))
-                .addDefault(FINITE_LEVEL_PROPERTIES, FINITE_CAVE_GENERATION, FINITE_NOISE, FINITE_POOLS, SPAWN_INDEV_HOUSE)
+                .add(SPAWN_INDEV_HOUSE, false)
+                .addDefault(FINITE_CAVE_GENERATION, FINITE_NOISE, FINITE_POOLS)
                 .build(),
             ModernBetaSettings.singleBiome(ModernBetaBiomes.INDEV_NORMAL),
             ModernBetaSettings.noCaveBiomes()
@@ -366,7 +374,14 @@ public final class ModernBetaSettingsPresets {
     private static ModernBetaSettingsPreset presetClassic14a08() {
         return new ModernBetaSettingsPreset(
             ModernBetaSettings.builder()
-                .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.CLASSIC_0_30.id)
+                .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.INDEV.id)
+                .add(FINITE_LEVEL_PROPERTIES, new FiniteLevelProperties(
+                    IndevType.CLASSIC,
+                    IndevTheme.NORMAL,
+                    256,
+                    256,
+                    128
+                ))
                 .add(DEEPSLATE_GENERATION, DeepslateGeneration.DISABLED)
                 .add(CAVE_GENERATION, CaveGeneration.DISABLED)
                 .add(FINITE_CAVE_GENERATION, new FiniteCaveGeneration(
@@ -400,6 +415,7 @@ public final class ModernBetaSettingsPresets {
                     10000,
                     true
                 ))
+                .add(SPAWN_INDEV_HOUSE, false)
                 .build(),
             ModernBetaSettings.singleBiome(ModernBetaBiomes.CLASSIC_14A_08),
             ModernBetaSettings.noCaveBiomes()

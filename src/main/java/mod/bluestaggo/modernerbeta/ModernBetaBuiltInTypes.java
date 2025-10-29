@@ -54,7 +54,6 @@ public final class ModernBetaBuiltInTypes {
         SKYLANDS("skylands"),
         INFDEV_227("infdev_227"),
         INDEV("indev"),
-        CLASSIC_0_30("classic_0_30"),
         NOISE_3D("noise_3d"),
         ;
 

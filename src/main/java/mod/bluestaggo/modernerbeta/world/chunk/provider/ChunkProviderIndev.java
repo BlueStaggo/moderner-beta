@@ -81,13 +81,14 @@ public class ChunkProviderIndev extends ChunkProviderFinite {
         this.carveTerrain(this.chunkSettings.getOrDefault(SettingsComponentTypes.FINITE_CAVE_GENERATION));
         this.floodFluid(poolSettings);
         this.floodLava(poolSettings);
-        this.plantSurface();
+        if (this.levelType != IndevType.CLASSIC)
+            this.plantSurface();
     }
 
     @Override
     protected void generateBorder(ChunkAccess chunk) {
-        switch(this.levelType) {
-            case ISLAND -> this.generateWaterBorder(chunk);
+        switch (this.levelType) {
+            case ISLAND, CLASSIC -> this.generateWaterBorder(chunk);
             case INLAND -> this.generateWorldBorder(chunk);
             default -> {}
         }
@@ -184,7 +185,10 @@ public class ChunkProviderIndev extends ChunkProviderFinite {
         this.minHeightOctaveNoise = new PerlinOctaveNoiseCombined(new PerlinOctaveNoise(random, 8, false), new PerlinOctaveNoise(random, 8, false));
         this.maxHeightOctaveNoise = new PerlinOctaveNoiseCombined(new PerlinOctaveNoise(random, 8, false), new PerlinOctaveNoise(random, 8, false));
         this.mainHeightOctaveNoise = new PerlinOctaveNoise(random, noiseSettings.selectorOctaves(), false);
-        this.islandOctaveNoise = new PerlinOctaveNoise(random, 2, false);
+
+        if (this.levelType != IndevType.CLASSIC) {
+            this.islandOctaveNoise = new PerlinOctaveNoise(random, 2, false);
+        }
 
         for (int x = 0; x < this.levelWidth; ++x) {
             double normalizedX = Math.abs((x / (this.levelWidth - 1.0) - 0.5) * 2.0);
@@ -237,7 +241,6 @@ public class ChunkProviderIndev extends ChunkProviderFinite {
         this.erodeOctaveNoise0 = new PerlinOctaveNoiseCombined(new PerlinOctaveNoise(random, 8, false), new PerlinOctaveNoise(random, 8, false));
         this.erodeOctaveNoise1 = new PerlinOctaveNoiseCombined(new PerlinOctaveNoise(random, 8, false), new PerlinOctaveNoise(random, 8, false));
 
-
         for (int x = 0; x < this.levelWidth; ++x) {
             for (int z = 0; z < this.levelLength; ++z) {
                 double erodeSelector = erodeOctaveNoise0.sample(x << 1, z << 1) / 8.0;
@@ -258,7 +261,10 @@ public class ChunkProviderIndev extends ChunkProviderFinite {
         int seaLevel = this.getSeaLevel();
 
         this.dirtOctaveNoise = new PerlinOctaveNoise(random, 8, false);
-        this.floatingOctaveNoise = new PerlinOctaveNoise(random, 8, false);
+
+        if (this.levelType != IndevType.CLASSIC) {
+            this.floatingOctaveNoise = new PerlinOctaveNoise(random, 8, false);
+        }
 
         for (int x = 0; x < this.levelWidth; ++x) {
             double normalizedX = Math.abs((x / (this.levelWidth - 1.0) - 0.5) * 2.0);
@@ -281,14 +287,18 @@ public class ChunkProviderIndev extends ChunkProviderFinite {
                     this.heightmap[x + z * this.levelWidth] = 1;
                 }
              
-                double floatingNoise = floatingOctaveNoise.sampleXY(x * 2.3, z * 2.3) / 24.0;
-             
-                // Rounds out the bottom of terrain to form floating islands
-                int roundedHeight = (int)(Math.sqrt(Math.abs(floatingNoise)) * Math.signum(floatingNoise) * 20.0) + seaLevel;
-                roundedHeight = (int)(roundedHeight * (1.0 - normalizedZ) + normalizedZ * this.levelHeight);
-             
-                if (roundedHeight > seaLevel) {
-                    roundedHeight = this.levelHeight;
+                int roundedHeight = Integer.MIN_VALUE;
+
+                if (this.levelType == IndevType.FLOATING) {
+                    double floatingNoise = floatingOctaveNoise.sampleXY(x * 2.3, z * 2.3) / 24.0;
+
+                    // Rounds out the bottom of terrain to form floating islands
+                    roundedHeight = (int) (Math.sqrt(Math.abs(floatingNoise)) * Math.signum(floatingNoise) * 20.0) + seaLevel;
+                    roundedHeight = (int) (roundedHeight * (1.0 - normalizedZ) + normalizedZ * this.levelHeight);
+
+                    if (roundedHeight > seaLevel) {
+                        roundedHeight = this.levelHeight;
+                    }
                 }
                  
                 for (int y = 0; y < this.levelHeight; ++y) {
@@ -300,7 +310,7 @@ public class ChunkProviderIndev extends ChunkProviderFinite {
                     if (y <= stoneThreshold)
                         block = Blocks.STONE;
                      
-                    if (this.levelType == IndevType.FLOATING && y < roundedHeight)
+                    if (y < roundedHeight)
                         block = Blocks.AIR;
 
                     Block existingBlock = this.getLevelBlock(x, y, z);
@@ -469,7 +479,8 @@ public class ChunkProviderIndev extends ChunkProviderFinite {
 
                 Block surfaceBlock = genSand ? (this.levelTheme == IndevTheme.HELL ? Blocks.GRASS_BLOCK : Blocks.SAND)
                         : genGravel ? Blocks.GRAVEL
-                        : null;
+                        : this.levelType == IndevType.CLASSIC ? (blockUp == this.defaultFluid.getBlock() ? Blocks.DIRT
+                        : Blocks.GRASS_BLOCK) : null;
                 if (surfaceBlock != null) {
                     this.setLevelBlock(x, heightResult, z, surfaceBlock);
                 }

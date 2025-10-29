@@ -62,19 +62,6 @@ public class ModernBetaBuiltInProviders {
                 SettingsComponentTypes.SPAWN_INDEV_HOUSE
             )
         ));
-        registryHandler.register(ModernBetaBuiltInTypes.Chunk.CLASSIC_0_30.id, new ChunkProviderType<>(
-            ChunkProviderClassic030::new, () -> List.of(
-                SettingsComponentTypes.DEEPSLATE_GENERATION,
-                SettingsComponentTypes.USE_SURFACE_RULES,
-                SettingsComponentTypes.SEA_LEVEL_OFFSET,
-                SettingsComponentTypes.CAVE_GENERATION,
-                SettingsComponentTypes.FINITE_LEVEL_PROPERTIES,
-                SettingsComponentTypes.FINITE_CAVE_GENERATION,
-                SettingsComponentTypes.FINITE_NOISE,
-                SettingsComponentTypes.FINITE_BEACHES,
-                SettingsComponentTypes.FINITE_POOLS
-            )
-        ));
         registryHandler.register(ModernBetaBuiltInTypes.Chunk.NOISE_3D.id, new ChunkProviderType<>(
             ChunkProviderNoise3D::new, () -> List.of(
                 SettingsComponentTypes.DEEPSLATE_GENERATION,

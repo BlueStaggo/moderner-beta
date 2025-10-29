@@ -617,7 +617,12 @@ public class ModernBetaTagProviderBiome extends FabricTagProvider<Biome> {
 
         //? if >=1.21 {
         this.builder(BiomeTags.HAS_TRIAL_CHAMBERS)
-            .addTag(IS_MODERN_BETA);
+            .addTag(IS_BETA)
+            .addTag(IS_PE)
+            .addTag(IS_ALPHA)
+            .addTag(IS_INFDEV)
+            .addTag(IS_LATE_BETA)
+            .addTag(IS_EARLY_RELEASE);
         //?}
         
         this.builder(BiomeTags.HAS_VILLAGE_DESERT)

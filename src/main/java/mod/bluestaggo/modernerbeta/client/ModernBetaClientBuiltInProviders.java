@@ -69,7 +69,7 @@ public class ModernBetaClientBuiltInProviders {
             (screen, options) -> {
                 addAll(
                     options,
-                    screen.booleanOption("useCaves"),
+                    screen.booleanOption("useCarvers"),
                     screen.booleanOption("useNoiseCaves"),
                     screen.booleanOption("fixCaveBorders"),
                     screen.booleanOption("forceBetaCaves"),
@@ -250,7 +250,7 @@ public class ModernBetaClientBuiltInProviders {
             (screen, options) -> {
                 addAll(
                     options,
-                    screen.booleanOption("useCarvers"),
+                    screen.booleanOption("useCaves"),
                     screen.booleanOption("use14aCaves"),
                     screen.intRangeOption("rarity", 1024, 40960, 1024),
                     screen.floatRangeOption("radius", 0.01f, 5.0f),

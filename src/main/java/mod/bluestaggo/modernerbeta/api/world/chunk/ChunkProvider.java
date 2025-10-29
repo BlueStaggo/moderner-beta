@@ -1,5 +1,6 @@
 package mod.bluestaggo.modernerbeta.api.world.chunk;
 
+import mod.bluestaggo.modernerbeta.api.world.chunk.surface.SurfaceConfig;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.api.world.blocksource.BlockSource;
 import mod.bluestaggo.modernerbeta.api.world.chunk.surface.SurfaceBuilder;
@@ -17,6 +18,8 @@ import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaGenerationStep;
 import mod.bluestaggo.modernerbeta.world.feature.placement.Infdev325CavePlacementModifier;
 import mod.bluestaggo.modernerbeta.world.feature.placement.NoiseBasedCountPlacementModifier;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderGetter;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.world.level.LevelHeightAccessor;
 import net.minecraft.world.level.StructureManager;
@@ -81,8 +84,10 @@ public abstract class ChunkProvider {
             .listElements()
             .map(func -> func.value().apply(this.chunkSettings, this.randomFactory))
             .toList();
-        
-        this.surfaceBuilder = new SurfaceBuilder(this.chunkGenerator.getBiomeSource());
+
+        HolderGetter<SurfaceConfig> surfaceConfigGetter = chunkGenerator.getSurfaceConfigRegistry();
+        this.surfaceBuilder = new SurfaceBuilder(this.chunkGenerator.getBiomeSource(),
+            surfaceConfigGetter instanceof HolderLookup<SurfaceConfig> lookup ? lookup : null);
         this.skipCarvers = !this.chunkSettings.getOrDefault(SettingsComponentTypes.CAVE_GENERATION).useCarvers();
     }
     

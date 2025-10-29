@@ -1,5 +1,6 @@
 package mod.bluestaggo.modernerbeta.client.gui.screen;
 
+import mod.bluestaggo.modernerbeta.api.world.chunk.surface.SurfaceConfig;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaResourceKeys;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
@@ -24,6 +25,7 @@ public class ModernBetaWorldScreenProvider {
     ) {
         return (dynamicRegistryManager, dimensionsRegistryHolder) -> {
             HolderGetter<ModernBetaSettingsPreset> registryPreset = dynamicRegistryManager.lookupOrThrow(ModernBetaResourceKeys.SETTINGS_PRESET);
+            HolderGetter<SurfaceConfig> registrySurfaceConfig = dynamicRegistryManager.lookupOrThrow(ModernBetaResourceKeys.SURFACE_CONFIG);
 
             ModernBetaSettings chunkSettings = ModernBetaSettings.fromCompound(chunkSettingsCompound)
                 .mapPreset(registryPreset, ModernBetaSettingsPreset::chunkSettings);
@@ -54,6 +56,7 @@ public class ModernBetaWorldScreenProvider {
                     caveBiomeSettingsCompound
                 ),
                 registryPreset,
+                registrySurfaceConfig,
                 settings,
                 chunkSettingsCompound
             );

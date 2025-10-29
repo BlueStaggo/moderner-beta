@@ -19,6 +19,7 @@ import java.util.concurrent.CompletableFuture;
 
 import static mod.bluestaggo.modernerbeta.tags.ModernBetaBiomeTags.*;
 
+@SuppressWarnings("unchecked")
 public class ModernBetaTagProviderBiome extends FabricTagProvider<Biome> {
     public ModernBetaTagProviderBiome(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
         super(output, Registries.BIOME, registriesFuture);

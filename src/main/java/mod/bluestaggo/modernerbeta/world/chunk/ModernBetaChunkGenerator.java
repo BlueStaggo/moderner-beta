@@ -4,6 +4,7 @@ package mod.bluestaggo.modernerbeta.world.chunk;
 import com.google.common.base.Suppliers;
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
+import mod.bluestaggo.modernerbeta.api.world.chunk.surface.SurfaceConfig;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.api.world.chunk.ChunkProvider;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
@@ -74,12 +75,14 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
         instance -> instance.group(
             BiomeSource.CODEC.fieldOf("biome_source").forGetter(generator -> generator.biomeSource),
             RegistryOps.retrieveGetter(ModernBetaResourceKeys.SETTINGS_PRESET),
+            RegistryOps.retrieveGetter(ModernBetaResourceKeys.SURFACE_CONFIG),
             NoiseGeneratorSettings.CODEC.fieldOf("settings").forGetter(generator -> generator.settings),
             CompoundTag.CODEC.fieldOf("provider_settings").forGetter(generator -> generator.chunkSettings)
         ).apply(instance, instance.stable(ModernBetaChunkGenerator::new))
     );
 
     private final HolderGetter<ModernBetaSettingsPreset> presetRegistry;
+    private final HolderGetter<SurfaceConfig> surfaceConfigRegistry;
     private final Holder<NoiseGeneratorSettings> settings;
     private final CompoundTag chunkSettings;
     private final Supplier<BiomeInjector> biomeInjector;
@@ -92,6 +95,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
     public ModernBetaChunkGenerator(
         BiomeSource biomeSource,
         HolderGetter<ModernBetaSettingsPreset> presetRegistry,
+        HolderGetter<SurfaceConfig> surfaceConfigRegistry,
         Holder<NoiseGeneratorSettings> settings,
         CompoundTag chunkProviderSettings
     ) {
@@ -107,6 +111,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
 
         this.settings = settings;
         this.presetRegistry = presetRegistry;
+        this.surfaceConfigRegistry = surfaceConfigRegistry;
         this.chunkSettings = chunkProviderSettings;
         this.biomeInjector = Suppliers.memoize(() ->
             this.biomeSource instanceof ModernBetaBiomeSource modernBetaBiomeSource
@@ -133,7 +138,6 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
         this.chunkProvider.initForestOctaveNoise();
 
         this.useSurfaceRules = chunkSettings.getOrDefault(SettingsComponentTypes.USE_SURFACE_RULES);
-
         this.caveSettings = chunkSettings.getOrDefault(SettingsComponentTypes.CAVE_GENERATION);
     }
 
@@ -401,6 +405,10 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
 
     public HolderGetter<ModernBetaSettingsPreset> getPresetRegistry() {
         return this.presetRegistry;
+    }
+
+    public HolderGetter<SurfaceConfig> getSurfaceConfigRegistry() {
+        return this.surfaceConfigRegistry;
     }
 
     public ChunkProvider getChunkProvider() {

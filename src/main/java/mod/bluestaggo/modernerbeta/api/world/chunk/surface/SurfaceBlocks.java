@@ -1,9 +1,18 @@
 package mod.bluestaggo.modernerbeta.api.world.chunk.surface;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
 import net.minecraft.world.level.block.state.BlockState;
 
 public record SurfaceBlocks(BlockState topBlock, BlockState fillerBlock) {
+    public static final Codec<SurfaceBlocks> CODEC = RecordCodecBuilder.create(
+        instance -> instance.group(
+            BlockState.CODEC.fieldOf("topBlock").forGetter(SurfaceBlocks::topBlock),
+            BlockState.CODEC.fieldOf("fillerBlock").forGetter(SurfaceBlocks::fillerBlock)
+        ).apply(instance, SurfaceBlocks::new)
+    );
+
     public static final SurfaceBlocks GRASS = new SurfaceBlocks(BlockStates.GRASS_BLOCK, BlockStates.DIRT);
     public static final SurfaceBlocks SAND = new SurfaceBlocks(BlockStates.SAND, BlockStates.SAND);
     public static final SurfaceBlocks RED_SAND = new SurfaceBlocks(BlockStates.RED_SAND, BlockStates.RED_SAND);

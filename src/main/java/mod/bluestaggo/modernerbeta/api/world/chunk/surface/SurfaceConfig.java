@@ -1,7 +1,12 @@
 package mod.bluestaggo.modernerbeta.api.world.chunk.surface;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
+import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderGetter;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.biome.Biome;
@@ -9,39 +14,38 @@ import net.minecraft.world.level.biome.Biome;
 import java.util.Optional;
 
 public record SurfaceConfig(SurfaceBlocks normal, SurfaceBlocks beachSand, SurfaceBlocks beachGravel) {
-    private SurfaceConfig(SurfaceBlocks surfaceBlocks) {
+    public static final Codec<SurfaceConfig> CODEC = RecordCodecBuilder.create(
+        instance -> instance.group(
+            SurfaceBlocks.CODEC.fieldOf("normal").forGetter(SurfaceConfig::normal),
+            SurfaceBlocks.CODEC.fieldOf("beachSand").forGetter(SurfaceConfig::beachSand),
+            SurfaceBlocks.CODEC.fieldOf("beachGravel").forGetter(SurfaceConfig::beachGravel)
+        ).apply(instance, SurfaceConfig::new)
+    );
+
+    public SurfaceConfig(SurfaceBlocks surfaceBlocks) {
         this(surfaceBlocks, surfaceBlocks, surfaceBlocks);
     }
     
     public static final SurfaceConfig DEFAULT = new SurfaceConfig(SurfaceBlocks.GRASS, SurfaceBlocks.SAND, SurfaceBlocks.GRAVEL);
-    public static final SurfaceConfig SAND = new SurfaceConfig(SurfaceBlocks.SAND, SurfaceBlocks.SAND, SurfaceBlocks.GRAVEL);
-    public static final SurfaceConfig RED_SAND = new SurfaceConfig(SurfaceBlocks.RED_SAND, SurfaceBlocks.RED_SAND, SurfaceBlocks.GRAVEL);
-    public static final SurfaceConfig BADLANDS = new SurfaceConfig(SurfaceBlocks.BADLANDS, SurfaceBlocks.RED_SAND, SurfaceBlocks.GRAVEL);
-    public static final SurfaceConfig NETHER = new SurfaceConfig(SurfaceBlocks.NETHER, SurfaceBlocks.NETHER_SOUL_SAND, SurfaceBlocks.NETHER_GRAVEL);
-    public static final SurfaceConfig WARPED_NYLIUM = new SurfaceConfig(SurfaceBlocks.WARPED_NYLIUM, SurfaceBlocks.NETHER_SOUL_SAND, SurfaceBlocks.NETHER_GRAVEL);
-    public static final SurfaceConfig CRIMSON_NYLIUM = new SurfaceConfig(SurfaceBlocks.CRIMSON_NYLIUM, SurfaceBlocks.NETHER_SOUL_SAND, SurfaceBlocks.NETHER_GRAVEL);
-    public static final SurfaceConfig BASALT = new SurfaceConfig(SurfaceBlocks.BASALT);
-    public static final SurfaceConfig SOUL_SOIL = new SurfaceConfig(SurfaceBlocks.SOUL_SOIL);
-    public static final SurfaceConfig THEEND = new SurfaceConfig(SurfaceBlocks.THEEND);
-    public static final SurfaceConfig GRASS = new SurfaceConfig(SurfaceBlocks.GRASS);
-    public static final SurfaceConfig MUD = new SurfaceConfig(SurfaceBlocks.MUD);
-    public static final SurfaceConfig MYCELIUM = new SurfaceConfig(SurfaceBlocks.MYCELIUM);
-    public static final SurfaceConfig PODZOL = new SurfaceConfig(SurfaceBlocks.PODZOL);
-    public static final SurfaceConfig STONE = new SurfaceConfig(SurfaceBlocks.STONE);
-    public static final SurfaceConfig SNOW = new SurfaceConfig(SurfaceBlocks.SNOW);
-    public static final SurfaceConfig SNOW_DIRT = new SurfaceConfig(SurfaceBlocks.SNOW_DIRT);
-    public static final SurfaceConfig SNOW_PACKED_ICE = new SurfaceConfig(SurfaceBlocks.SNOW_PACKED_ICE);
-    public static final SurfaceConfig SNOW_STONE = new SurfaceConfig(SurfaceBlocks.SNOW_STONE);
-    
-    public static SurfaceConfig getSurfaceConfig(Holder<Biome> biome) {
-        Optional<Holder.Reference<SurfaceConfig>> optionalKey = ModernBetaRegistries.SURFACE_CONFIG.listElements()
-            .filter(entry -> entry.isBound() && biome.is(TagKey.create(Registries.BIOME, entry.key().location())))
+
+    public static SurfaceConfig getSurfaceConfig(Holder<Biome> biome, HolderLookup<SurfaceConfig> surfaceConfigLookup) {
+        if (surfaceConfigLookup == null) {
+            return DEFAULT;
+        }
+
+        Optional<Holder.Reference<SurfaceConfig>> optionalKey = surfaceConfigLookup.listElements()
+            .filter(entry -> entry.isBound() && biome.is(
+                TagKey.create(Registries.BIOME, VersionCompat.id(
+                    entry.key().location().getNamespace()
+                    + ":surface_config/"
+                    + entry.key().location().getPath()
+                ))))
             .findFirst();
-        
+
         if (optionalKey.isPresent()) {
             return optionalKey.get().value();
         }
-        
+
         return DEFAULT;
     }
 }

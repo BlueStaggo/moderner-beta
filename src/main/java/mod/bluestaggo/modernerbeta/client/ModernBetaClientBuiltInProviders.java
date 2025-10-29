@@ -69,7 +69,7 @@ public class ModernBetaClientBuiltInProviders {
             (screen, options) -> {
                 addAll(
                     options,
-                    screen.booleanOption("useCarvers"),
+                    screen.booleanOption("useCaves"),
                     screen.booleanOption("useNoiseCaves"),
                     screen.booleanOption("fixCaveBorders"),
                     screen.booleanOption("forceBetaCaves"),

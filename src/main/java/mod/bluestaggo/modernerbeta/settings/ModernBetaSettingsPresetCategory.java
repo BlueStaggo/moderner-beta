@@ -47,10 +47,12 @@ public record ModernBetaSettingsPresetCategory(
         );
     }
 
+    @Override
     public Component makeOrGetTitleComponent(ResourceLocation fallbackId) {
         return categoryName.orElseGet(() -> makeTitleComponent(fallbackId));
     }
 
+    @Override
     public Component makeOrGetDescriptionComponent(ResourceLocation fallbackId) {
         return categoryDescription.orElseGet(() -> makeDescriptionComponent(fallbackId));
     }

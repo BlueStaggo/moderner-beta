@@ -31,7 +31,7 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
     private static final String TEXT_TITLE = "createWorld.customize.modern_beta.title.preset";
     
     private static final ResourceLocation TEXTURE_PRESET_CUSTOM = createTextureId(ModernerBeta.createId("custom"));
-    
+
     private final ModernBetaWorldScreen worldScreen;
     private final List<ResourceLocation> presets;
     private final boolean displayCategories;
@@ -379,7 +379,7 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
                     SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0f)
                 );
 
-            presetScreen.worldScreen.setPreset(ModernBetaSettingsPreset.referenced(this.key));
+                presetScreen.worldScreen.setPreset(ModernBetaSettingsPreset.referenced(this.key));
 
                 while (minecraftClient.screen instanceof ModernBetaSettingsPresetScreen subPresetScreen) {
                     minecraftClient.setScreen(subPresetScreen.parent);

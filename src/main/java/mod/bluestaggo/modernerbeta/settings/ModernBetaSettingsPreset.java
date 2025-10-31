@@ -206,10 +206,12 @@ public record ModernBetaSettingsPreset(
         return List.of(this.chunkSettings, this.biomeSettings, this.caveBiomeSettings);
     }
 
+    @Override
     public Component makeOrGetTitleComponent(ResourceLocation fallbackId) {
         return presetName.orElseGet(() -> makeTitleComponent(fallbackId));
     }
 
+    @Override
     public Component makeOrGetDescriptionComponent(ResourceLocation fallbackId) {
         return presetDescription.orElseGet(() -> makeDescriptionComponent(fallbackId));
     }

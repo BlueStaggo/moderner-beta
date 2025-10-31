@@ -14,15 +14,18 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.CommonColors;
 import net.minecraft.util.FormattedCharSequence;
 
 import java.util.List;
+import java.util.Optional;
 
 public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
     private static final String TEXT_TITLE = "createWorld.customize.modern_beta.title.preset";
@@ -71,7 +74,7 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
     @Override
     protected void init() {
         super.init();
-        
+
         this.listWidget = new PresetsListWidget(this.presets);
         this.addWidget(this.listWidget);
 
@@ -422,7 +425,18 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
                     ModernBetaSettingsPresetScreen.this,
                     presetRegistry,
                     presetCategoryRegistry,
-                    presetCategory.presets(),
+                    presetRegistry
+                        //? if >=1.21.2 {
+                        .getOrThrow
+                        //?} else {
+                        /*.getOrCreateTag
+                         *///?}
+                        (presetCategory.presetTag())
+                        .stream()
+                        .map(Holder::unwrapKey)
+                        .flatMap(Optional::stream)
+                        .map(ResourceKey::location)
+                        .toList(),
                     preset,
                     false
                 ));

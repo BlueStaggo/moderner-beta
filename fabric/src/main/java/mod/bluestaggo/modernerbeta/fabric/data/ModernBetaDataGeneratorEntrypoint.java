@@ -35,6 +35,7 @@ public class ModernBetaDataGeneratorEntrypoint implements DataGeneratorEntrypoin
         pack.addProvider(ModernBetaTagProviderStructure::new);
         pack.addProvider(ModernBetaTagProviderBlock::new);
         pack.addProvider(ModernBetaTagProviderWorldPreset::new);
+        pack.addProvider(ModernBetaTagProviderSettingsPreset::new);
         pack.addProvider(ModernBetaTagProviderSettingsPresetCategory::new);
 
         FabricDataGenerator.Pack reducedHeightPack = fabricDataGenerator.createBuiltinResourcePack(ModernerBeta.createId("reduced_height"));

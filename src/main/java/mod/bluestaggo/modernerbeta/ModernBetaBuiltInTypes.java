@@ -1,6 +1,9 @@
 package mod.bluestaggo.modernerbeta;
 
+import mod.bluestaggo.modernerbeta.registry.ModernBetaResourceKeys;
+import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.tags.ModernBetaBiomeTags;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 
 public final class ModernBetaBuiltInTypes {
@@ -236,9 +239,11 @@ public final class ModernBetaBuiltInTypes {
         ;
         
         public final ResourceLocation id;
-        
+        public final ResourceKey<ModernBetaSettingsPreset> key;
+
         Preset(String id) {
             this.id = ModernerBeta.createId(id);
+            this.key = ResourceKey.create(ModernBetaResourceKeys.SETTINGS_PRESET, ModernerBeta.createId(id));
         }
     }
 

@@ -2,47 +2,48 @@ package mod.bluestaggo.modernerbeta.settings;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import mod.bluestaggo.modernerbeta.registry.ModernBetaResourceKeys;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 
-import java.util.List;
 import java.util.Optional;
 
 public record ModernBetaSettingsPresetCategory(
     ResourceLocation defaultIcon,
     Optional<Component> categoryName,
     Optional<Component> categoryDescription,
-    List<ResourceLocation> presets
+    TagKey<ModernBetaSettingsPreset> presetTag
 ) implements NameAndDescriptionItem {
     public static final Codec<ModernBetaSettingsPresetCategory> CODEC = RecordCodecBuilder.create(
         instance -> instance.group(
             ResourceLocation.CODEC.fieldOf("defaultIcon").forGetter(ModernBetaSettingsPresetCategory::defaultIcon),
             net.minecraft.network.chat.ComponentSerialization.CODEC.optionalFieldOf("name").forGetter(ModernBetaSettingsPresetCategory::categoryName),
             net.minecraft.network.chat.ComponentSerialization.CODEC.optionalFieldOf("description").forGetter(ModernBetaSettingsPresetCategory::categoryDescription),
-            ResourceLocation.CODEC.listOf().fieldOf("presets").forGetter(ModernBetaSettingsPresetCategory::presets)
+            TagKey.codec(ModernBetaResourceKeys.SETTINGS_PRESET).fieldOf("presetTag").forGetter(ModernBetaSettingsPresetCategory::presetTag)
         ).apply(instance, ModernBetaSettingsPresetCategory::new)
     );
 
-    public ModernBetaSettingsPresetCategory(ResourceLocation defaultIcon, List<ResourceLocation> presets) {
+    public ModernBetaSettingsPresetCategory(ResourceLocation defaultIcon, TagKey<ModernBetaSettingsPreset> presetTag) {
         this(
             defaultIcon,
             Optional.empty(),
             Optional.empty(),
-            presets
+            presetTag
         );
     }
 
     public ModernBetaSettingsPresetCategory(
             ResourceLocation defaultIcon,
             ResourceLocation id,
-            List<ResourceLocation> presets
+            TagKey<ModernBetaSettingsPreset> presetTag
     ) {
         this(
             defaultIcon,
             Optional.of(makeTitleComponent(id)),
             Optional.of(makeDescriptionComponent(id)),
-            presets
+            presetTag
         );
     }
 

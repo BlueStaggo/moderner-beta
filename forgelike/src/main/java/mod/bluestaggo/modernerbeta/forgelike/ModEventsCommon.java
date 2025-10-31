@@ -2,6 +2,7 @@ package mod.bluestaggo.modernerbeta.forgelike;
 
 import com.mojang.serialization.Codec;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
+import mod.bluestaggo.modernerbeta.compat.ModCompat;
 import mod.bluestaggo.modernerbeta.forgelike.network.NetworkHelperImpl;
 import mod.bluestaggo.modernerbeta.forgelike.registry.RegistryHelperImpl;
 import mod.bluestaggo.modernerbeta.network.BiomeProviderInfoPayload;
@@ -70,6 +71,7 @@ public class ModEventsCommon {
     @SubscribeEvent
     public static void commonInit(FMLConstructModEvent event) {
         ModernerBeta.init();
+        ModCompat.initialise(ModernerBetaForgeLike::isModPresent);
 
         if (!FMLLoader/*? >=1.21.9 {*//*.getCurrent()*//*?}*/.isProduction())
             ModernerBeta.DEV_ENV = true;

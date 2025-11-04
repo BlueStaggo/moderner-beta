@@ -1,6 +1,6 @@
 //~registryGet
 //~minBuild
-//~dotResourceLocation
+//~dotLocation
 package mod.bluestaggo.modernerbeta.world.biome;
 
 import com.google.common.collect.Sets;

@@ -1,4 +1,4 @@
-//~dotResourceLocation
+//~dotLocation
 package mod.bluestaggo.modernerbeta.mixin;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;

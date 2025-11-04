@@ -1,4 +1,4 @@
-//~dotResourceLocation
+//~dotLocation
 package mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers;
 
 import com.mojang.datafixers.Products;

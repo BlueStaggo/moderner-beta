@@ -1,5 +1,5 @@
 //~registryOr
-//~dotResourceLocation
+//~dotLocation
 package mod.bluestaggo.modernerbeta.client.gui.optioncallbacks;
 
 import com.mojang.serialization.Codec;

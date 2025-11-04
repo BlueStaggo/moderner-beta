@@ -102,7 +102,7 @@ stonecutter.parameters {
             replace("ResourceKey::location", "ResourceKey::identifier")
         }
 
-        string("dotIdentifier") {
+        string("dotLocation") {
             direction = eval(current.version, ">=1.21.11")
             replace(".location()", ".identifier()")
         }

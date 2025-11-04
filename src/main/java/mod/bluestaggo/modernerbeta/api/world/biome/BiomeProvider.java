@@ -1,4 +1,4 @@
-//~dotResourceLocation
+//~dotLocation
 package mod.bluestaggo.modernerbeta.api.world.biome;
 
 import mod.bluestaggo.modernerbeta.api.world.biome.climate.TemperatureHeightScaling;

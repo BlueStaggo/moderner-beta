@@ -5,6 +5,8 @@ import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeColors;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeFeatures;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeMobs;
 import net.minecraft.core.HolderGetter;
+//? if >=1.21.11
+/*import net.minecraft.world.attribute.*;*/
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeGenerationSettings;
 import net.minecraft.world.level.biome.MobSpawnSettings;
@@ -31,6 +33,12 @@ public class IndevHellBiome {
             .downfall(0.6F)
             .mobSpawnSettings(spawnSettings.build())
             .generationSettings(genSettings.build())
+            //? if >=1.21.11 {
+            /*.putAttributes(EnvironmentAttributeMap.builder()
+                .set(EnvironmentAttributes.SKY_LIGHT_FACTOR, 4.0F / 15.0F)
+                .set(EnvironmentAttributes.CLOUD_COLOR, 0xFF210800)
+                .build())
+            *///? }
             .build();
     }
 }

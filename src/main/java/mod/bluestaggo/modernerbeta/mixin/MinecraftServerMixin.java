@@ -113,15 +113,19 @@ public abstract class MinecraftServerMixin {
         switch(theme) {
             case HELL -> {
                 disableWeatherCycle(level);
+                //? if <1.21.11 {
                 disableDayCycle(level);
                 level.setDayTime(18000);
+                //? }
             } case PARADISE -> {
                 disableWeatherCycle(level);
                 disableDayCycle(level);
                 level.setDayTime(6000);
+            //? if <1.21.11 {
             } case WOODS -> {
                 disableWeatherCycle(level);
                 level.setWeatherParameters(0, Integer.MAX_VALUE, true, false);
+            //? }
             } default -> {}
         }
     }

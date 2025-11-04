@@ -12,6 +12,7 @@ import mod.bluestaggo.modernerbeta.settings.component.IslesProperties;
 import mod.bluestaggo.modernerbeta.settings.component.NoiseScale;
 import mod.bluestaggo.modernerbeta.settings.component.NoiseSlide;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
+import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkCache;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkHeightmap;
 import mod.bluestaggo.modernerbeta.util.chunk.LevelChunkCache;
@@ -334,7 +335,7 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
         double outerIslandNoiseOffset = this.islesProperties.outerIslandNoiseOffset();
         
         double islandDelta = (distance - centerIslandRadius) / centerIslandFalloffDistance;
-        double islandOffset = Mth.clampedLerp(0.0, oceanSlideTarget, islandDelta);
+        double islandOffset = VersionCompat.clampedLerp(0.0, oceanSlideTarget, islandDelta);
             
         if (this.islesProperties.useOuterIslands() && distance > centerOceanRadius) {
             double islandAddition = (float)this.islandNoise.sample(
@@ -350,7 +351,7 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
             
             // Interpolate noise addition so there isn't a sharp cutoff at start of ocean ring edge.
             double oceanDelta = (distance - centerOceanRadius) / centerOceanFalloffDistance;
-            islandAddition = Mth.clampedLerp(0.0F, islandAddition, oceanDelta);
+            islandAddition = VersionCompat.clampedLerp(0.0F, islandAddition, oceanDelta);
             
             islandOffset += islandAddition * -oceanSlideTarget;
             islandOffset = Mth.clamp(islandOffset, oceanSlideTarget, 0.0F);
@@ -370,12 +371,12 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
     protected double applySlides(double density, int noiseY) {
         if (this.noiseSlide.topSize() > 0) {
             double delta = ((double)(this.noiseSizeY - noiseY) - this.noiseSlide.topOffset()) / this.noiseSlide.topSize();
-            density = Mth.clampedLerp(this.noiseSlide.topTarget(), density, delta);
+            density = VersionCompat.clampedLerp(this.noiseSlide.topTarget(), density, delta);
         }
         
         if (this.noiseSlide.bottomSize() > 0) {
             double delta = ((double)noiseY - this.noiseSlide.bottomOffset()) / this.noiseSlide.bottomSize();
-            density = Mth.clampedLerp(this.noiseSlide.bottomTarget(), density, delta);
+            density = VersionCompat.clampedLerp(this.noiseSlide.bottomTarget(), density, delta);
         }
         
         return density;

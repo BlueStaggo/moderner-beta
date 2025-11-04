@@ -1,3 +1,4 @@
+//~dotResourceLocation
 package mod.bluestaggo.modernerbeta.api.world.biome;
 
 import net.minecraft.core.Holder;

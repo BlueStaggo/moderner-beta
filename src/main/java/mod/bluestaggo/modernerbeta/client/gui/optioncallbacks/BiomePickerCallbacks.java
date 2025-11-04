@@ -1,4 +1,5 @@
 //~registryOr
+//~dotResourceLocation
 package mod.bluestaggo.modernerbeta.client.gui.optioncallbacks;
 
 import com.mojang.serialization.Codec;
@@ -27,18 +28,18 @@ public record BiomePickerCallbacks(Consumer<Screen> screenChangeHandler, Screen 
     @Override
     public @NotNull Function<OptionInstance<String>, AbstractWidget> createButton(OptionInstance.TooltipSupplier<String> tooltipFactory, Options gameOptions, int x, int y, int width, Consumer<String> changeCallback) {
         return option -> {
-            ResourceLocation biomeIdentifier = ResourceLocation.tryParse(option.get());
-            if (biomeIdentifier == null) {
-                biomeIdentifier = Biomes.PLAINS.location();
+            ResourceLocation biomeId = ResourceLocation.tryParse(option.get());
+            if (biomeId == null) {
+                biomeId = Biomes.PLAINS.location();
             }
-            String biomeTranslationKey = biomeIdentifier.toLanguageKey("biome");
+            String biomeTranslationKey = biomeId.toLanguageKey("biome");
 
             return Button.builder(
                 "".equals(option.get())
                     ? Component.translatable("gui.none").withStyle(ChatFormatting.ITALIC)
                     : Language.getInstance().has(biomeTranslationKey)
                         ? Component.translatable(biomeTranslationKey)
-                        : Component.literal(biomeIdentifier.toString()),
+                        : Component.literal(biomeId.toString()),
                 onPress -> {
                     screenChangeHandler.accept(new ModernBetaSelectBiomeScreen(
                         parentScreen,

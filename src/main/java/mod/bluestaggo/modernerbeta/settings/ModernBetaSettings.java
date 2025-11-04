@@ -1,3 +1,4 @@
+//~dotResourceLocation
 package mod.bluestaggo.modernerbeta.settings;
 
 import com.google.common.collect.Iterators;

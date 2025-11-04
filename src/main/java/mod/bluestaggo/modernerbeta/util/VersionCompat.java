@@ -5,6 +5,7 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 //? if >=1.21.5
 import net.minecraft.util.random.Weighted;
@@ -216,5 +217,13 @@ public final class VersionCompat {
                 //? }
                 .waterColor(waterColor)
                 .build());
+    }
+
+    public static double clampedLerp(double start, double end, double delta) {
+        //? if >=1.21.11 {
+        /*return Mth.clampedLerp(delta, start, end);
+        *///? } else {
+        return Mth.clampedLerp(start, end, delta);
+        //? }
     }
 }

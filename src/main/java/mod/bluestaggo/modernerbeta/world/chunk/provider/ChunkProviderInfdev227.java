@@ -280,14 +280,14 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
     
     private int sampleHeightmap(int x, int z) {
         float noiseA = (float)(
-            this.octaveNoiseA.sample(x / 0.03125f, 0.0, z / 0.03125f) - 
-            this.octaveNoiseB.sample(x / 0.015625f, 0.0, z / 0.015625f)) / 512.0f / 4.0f;
+            this.octaveNoiseA.sample(x * 32.0f, 0.0, z * 32.0f) - 
+            this.octaveNoiseB.sample(x * 64.0f, 0.0, z * 64.0f)) / 512.0f / 4.0f;
         float noiseB = (float)this.octaveNoiseE.sampleXY(x / 4.0f, z / 4.0f);
         float noiseC = (float)this.octaveNoiseF.sampleXY(x / 8.0f, z / 8.0f) / 8.0f;
         
         noiseB = noiseB > 0.0f ? 
-            ((float)(this.octaveNoiseC.sampleXY(x * 0.25714284f * 2.0f, z * 0.25714284f * 2.0f) * noiseC / 4.0)) :
-            ((float)(this.octaveNoiseD.sampleXY(x * 0.25714284f, z * 0.25714284f) * noiseC));
+            ((float)(this.octaveNoiseC.sampleXY(x / 3.888889f * 2.0f, z / 3.888889f * 2.0f) * noiseC / 4.0)) :
+            ((float)(this.octaveNoiseD.sampleXY(x / 3.888889f, z / 3.888889f) * noiseC));
             
         int heightVal = (int)(noiseA + this.seaLevel + noiseB);
 

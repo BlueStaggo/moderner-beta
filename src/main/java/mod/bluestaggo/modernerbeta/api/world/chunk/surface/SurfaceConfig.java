@@ -1,3 +1,4 @@
+//~dotResourceLocation
 package mod.bluestaggo.modernerbeta.api.world.chunk.surface;
 
 import com.mojang.serialization.Codec;

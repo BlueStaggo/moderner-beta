@@ -91,5 +91,25 @@ stonecutter.parameters {
             direction = eval(current.version, "<1.20.5")
             replace("com.mojang.serialization.MapCodec.", "com.mojang.serialization./*Map*/Codec.")
         }
+
+        string {
+            direction = eval(current.version, ">=1.21.11")
+            replace("ResourceLocation", "Identifier")
+        }
+
+        string {
+            direction = eval(current.version, ">=1.21.11")
+            replace("ResourceKey::location", "ResourceKey::identifier")
+        }
+
+        string("dotIdentifier") {
+            direction = eval(current.version, ">=1.21.11")
+            replace(".location()", ".identifier()")
+        }
+
+        string {
+            direction = eval(current.version, ">=1.21.11")
+            replace("net.minecraft.Util", "net.minecraft.util.Util")
+        }
     }
 }

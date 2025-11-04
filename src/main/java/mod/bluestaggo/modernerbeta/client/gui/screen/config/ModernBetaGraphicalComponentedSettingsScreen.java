@@ -1,4 +1,5 @@
 //~registryGet
+//~dotResourceLocation
 package mod.bluestaggo.modernerbeta.client.gui.screen.config;
 
 import com.mojang.serialization.Codec;

@@ -15,7 +15,7 @@ public class CompoundTagBuilder {
         this.compound = initial.copy();
     }
 
-    public CompoundTagBuilder putIdentifier(String key, ResourceLocation value) {
+    public CompoundTagBuilder putResourceLocation(String key, ResourceLocation value) {
         this.compound.putString(key, value.toString());
 
         return this;

@@ -1,3 +1,4 @@
+//~dotResourceLocation
 package mod.bluestaggo.modernerbeta.world.biome.provider;
 
 import com.google.common.base.Supplier;

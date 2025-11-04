@@ -1,3 +1,4 @@
+//~dotResourceLocation
 package mod.bluestaggo.modernerbeta.world.biome.provider.climate;
 
 import com.mojang.serialization.Codec;

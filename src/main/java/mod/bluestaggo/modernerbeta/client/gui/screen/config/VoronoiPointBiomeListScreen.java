@@ -1,3 +1,4 @@
+//~dotResourceLocation
 package mod.bluestaggo.modernerbeta.client.gui.screen.config;
 
 import mod.bluestaggo.modernerbeta.util.CompoundTagBuilder;

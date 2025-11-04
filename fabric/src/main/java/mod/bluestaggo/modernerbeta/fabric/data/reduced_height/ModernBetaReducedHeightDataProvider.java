@@ -70,6 +70,7 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
         entries.add(
             BuiltinDimensionTypes.OVERWORLD,
             new DimensionType(
+                //? if <1.21.11
                 OptionalLong.empty(),
                 true,
                 false,
@@ -85,13 +86,16 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
                 320,
                 320,
                 BlockTags.INFINIBURN_OVERWORLD,
+                //? if <1.21.11
                 BuiltinDimensionTypes.OVERWORLD_EFFECTS,
                 0.0F,
                 //? if >=1.21.6 && <1.21.11
                 Optional.empty(),
                 new DimensionType.MonsterSettings(/*? if <1.21.11 {*/ false, true, /*?}*/ UniformInt.of(0, 7), 0)
                 //? if >=1.21.11 {
-                /*, EnvironmentAttributeMap.builder()
+                /*, DimensionType.Skybox.OVERWORLD,
+                DimensionType.CardinalLightType.DEFAULT,
+                EnvironmentAttributeMap.builder()
                     .set(EnvironmentAttributes.FOG_COLOR, 0xFFC0D8FF)
                     .set(EnvironmentAttributes.SKY_COLOR,
                             net.minecraft.data.worldgen.biome.OverworldBiomes.calculateSkyColor(0.8F))
@@ -102,7 +106,8 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
                     .set(EnvironmentAttributes.RESPAWN_ANCHOR_WORKS, false)
                     .set(EnvironmentAttributes.NETHER_PORTAL_SPAWNS_PIGLINS, true)
                     .set(EnvironmentAttributes.AMBIENT_SOUNDS, AmbientSounds.LEGACY_CAVE_SETTINGS)
-                    .build()
+                    .build(),
+                provider.lookupOrThrow(Registries.TIMELINE).getOrThrow(net.minecraft.tags.TimelineTags.IN_OVERWORLD)
                 *///? }
             )
         );

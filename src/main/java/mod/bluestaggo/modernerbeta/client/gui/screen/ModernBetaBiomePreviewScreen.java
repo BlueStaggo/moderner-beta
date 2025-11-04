@@ -1,3 +1,4 @@
+//~dotResourceLocation
 package mod.bluestaggo.modernerbeta.client.gui.screen;
 
 import com.google.common.util.concurrent.AtomicDouble;

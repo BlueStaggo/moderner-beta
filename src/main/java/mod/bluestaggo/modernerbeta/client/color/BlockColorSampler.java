@@ -10,8 +10,6 @@ import mod.bluestaggo.modernerbeta.mixin.BiomeAccessor;
 import mod.bluestaggo.modernerbeta.mixin.client.RenderSectionRegionAccessor;
 import mod.bluestaggo.modernerbeta.settings.component.ClimateDistribution;
 import mod.bluestaggo.modernerbeta.tags.ModernBetaBiomeTags;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -36,7 +34,6 @@ import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
 
-@Environment(EnvType.CLIENT)
 public final class BlockColorSampler {
     private static final int CLIME_CACHE_CAPACITY = 128;
 
@@ -132,8 +129,13 @@ public final class BlockColorSampler {
                 return this.sampleModifiedColorMaybeLerped(
                     biomeAccess,
                     pos,
+                    //? if >=1.21.11 {
+                    /*BiomeSpecialEffects::grassColorOverride,
+                    BiomeSpecialEffects::grassColorModifier,
+                    *///? } else {
                     BiomeSpecialEffects::getGrassColorOverride,
                     BiomeSpecialEffects::getGrassColorModifier,
+                    //? }
                     GrassColor::get
                 );
             }
@@ -181,8 +183,13 @@ public final class BlockColorSampler {
                 return this.sampleModifiedColorMaybeLerped(
                     biomeAccess,
                     pos,
+                    //? if >=1.21.11 {
+                    /*BiomeSpecialEffects::grassColorOverride,
+                    BiomeSpecialEffects::grassColorModifier,
+                    *///? } else {
                     BiomeSpecialEffects::getGrassColorOverride,
                     BiomeSpecialEffects::getGrassColorModifier,
+                    //? }
                     GrassColor::get
                 );
             }
@@ -205,7 +212,11 @@ public final class BlockColorSampler {
                 return this.sampleModifiedColorMaybeLerped(
                     biomeAccess,
                     pos,
+                    //? if >=1.21.11 {
+                    /*BiomeSpecialEffects::foliageColorOverride,
+                    *///? } else {
                     BiomeSpecialEffects::getFoliageColorOverride,
+                    //? }
                     effects -> BiomeSpecialEffects.GrassColorModifier.NONE,
                     FoliageColor::get
                 );

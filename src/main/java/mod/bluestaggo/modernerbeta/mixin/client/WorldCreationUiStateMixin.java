@@ -3,8 +3,6 @@ package mod.bluestaggo.modernerbeta.mixin.client;
 import mod.bluestaggo.modernerbeta.client.gui.screen.ModernBetaWorldScreen;
 import mod.bluestaggo.modernerbeta.client.gui.screen.ModernBetaWorldScreenProvider;
 import mod.bluestaggo.modernerbeta.world.preset.ModernBetaWorldPresets;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screens.worldselection.PresetEditor;
 import net.minecraft.client.gui.screens.worldselection.WorldCreationUiState;
 import net.minecraft.core.Holder;
@@ -16,7 +14,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Environment(EnvType.CLIENT)
 @Mixin(WorldCreationUiState.class)
 public abstract class WorldCreationUiStateMixin {
     @Inject(method = "getPresetEditor", at = @At("RETURN"), cancellable = true)

@@ -9,10 +9,11 @@ import mod.bluestaggo.modernerbeta.settings.component.*;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.world.biome.provider.climate.ClimateMapping;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ConfiguredLayers;
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import mod.bluestaggo.modernerbeta.world.biome.voronoi.VoronoiPointBiome;
+import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaNoiseSettings;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.level.levelgen.NoiseSettings;
 
 import java.util.HashMap;
 import java.util.List;
@@ -29,9 +30,13 @@ public class SettingsComponentTypes {
     public static SettingsComponentType<Boolean> USE_SURFACE_RULES;
     public static SettingsComponentType<Integer> SEA_LEVEL_OFFSET;
     public static SettingsComponentType<CaveGeneration> CAVE_GENERATION;
+    public static SettingsComponentType<NoiseSettings> NOISE_SETTINGS;
+    public static SettingsComponentType<Noise3DSettings> NOISE_3D_SETTINGS;
     public static SettingsComponentType<NoiseScale> NOISE_SCALE;
     public static SettingsComponentType<NoiseSlide> NOISE_SLIDE;
+    public static SettingsComponentType<NoiseLandmass> NOISE_LANDMASS;
     public static SettingsComponentType<ForcedBiomeHeight> FORCED_BIOME_HEIGHT;
+    public static SettingsComponentType<SurfaceProperties> SURFACE_PROPERTIES;
     public static SettingsComponentType<Infdev227Structures> INFDEV_227_STRUCTURES;
     public static SettingsComponentType<FiniteLevelProperties> FINITE_LEVEL_PROPERTIES;
     public static SettingsComponentType<FiniteCaveGeneration> FINITE_CAVE_GENERATION;
@@ -96,6 +101,14 @@ public class SettingsComponentTypes {
             ModernBetaBuiltInTypes.SettingsComponentType.CAVE_GENERATION.id,
             CaveGeneration.CODEC,
             CaveGeneration.DEFAULT);
+        NOISE_SETTINGS = register(
+            ModernBetaBuiltInTypes.SettingsComponentType.NOISE_SETTINGS.id,
+            NoiseSettings.CODEC,
+            ModernBetaNoiseSettings.OVERWORLD_128);
+        NOISE_3D_SETTINGS = register(
+            ModernBetaBuiltInTypes.SettingsComponentType.NOISE_3D_SETTINGS.id,
+            Noise3DSettings.CODEC,
+            Noise3DSettings.DEFAULT);
         NOISE_SCALE = register(
             ModernBetaBuiltInTypes.SettingsComponentType.NOISE_SCALE.id,
             NoiseScale.CODEC,
@@ -104,10 +117,18 @@ public class SettingsComponentTypes {
             ModernBetaBuiltInTypes.SettingsComponentType.NOISE_SLIDE.id,
             NoiseSlide.CODEC,
             NoiseSlide.DEFAULT);
+        NOISE_LANDMASS = register(
+            ModernBetaBuiltInTypes.SettingsComponentType.NOISE_LANDMASS.id,
+            NoiseLandmass.CODEC,
+            NoiseLandmass.DEFAULT);
         FORCED_BIOME_HEIGHT = register(
             ModernBetaBuiltInTypes.SettingsComponentType.FORCED_BIOME_HEIGHT.id,
             ForcedBiomeHeight.CODEC,
             ForcedBiomeHeight.DEFAULT);
+        SURFACE_PROPERTIES = register(
+            ModernBetaBuiltInTypes.SettingsComponentType.SURFACE_PROPERTIES.id,
+            SurfaceProperties.CODEC,
+            SurfaceProperties.DEFAULT);
         INFDEV_227_STRUCTURES = register(
             ModernBetaBuiltInTypes.SettingsComponentType.INFDEV_227_STRUCTURES.id,
             Infdev227Structures.CODEC,

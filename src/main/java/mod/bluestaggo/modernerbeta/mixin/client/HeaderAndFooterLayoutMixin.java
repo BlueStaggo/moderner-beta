@@ -1,15 +1,12 @@
 package mod.bluestaggo.modernerbeta.mixin.client;
 
 import mod.bluestaggo.modernerbeta.imixin.ModernBetaClearableWidget;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.layouts.FrameLayout;
 import net.minecraft.client.gui.layouts.HeaderAndFooterLayout;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
-@Environment(EnvType.CLIENT)
 @Mixin(HeaderAndFooterLayout.class)
 public class HeaderAndFooterLayoutMixin implements ModernBetaClearableWidget {
     @Shadow @Final private FrameLayout headerFrame;

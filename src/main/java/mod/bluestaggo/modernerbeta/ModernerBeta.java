@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
+import mod.bluestaggo.modernerbeta.api.world.chunk.surface.SurfaceConfig;
 import mod.bluestaggo.modernerbeta.network.INetworkHelper;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
@@ -85,7 +86,6 @@ public class ModernerBeta {
             new Tuple<>(ModernBetaRegistries.CHUNK, ModernBetaBuiltInProviders::registerChunkProviders),
             new Tuple<>(ModernBetaRegistries.BIOME, ModernBetaBuiltInProviders::registerBiomeProviders),
             new Tuple<>(ModernBetaRegistries.CAVE_BIOME, ModernBetaBuiltInProviders::registerCaveBiomeProviders),
-            new Tuple<>(ModernBetaRegistries.SURFACE_CONFIG, ModernBetaBuiltInProviders::registerSurfaceConfigs),
             new Tuple<>(ModernBetaRegistries.HEIGHT_CONFIG, ModernBetaBuiltInProviders::registerHeightConfigs),
             new Tuple<>(ModernBetaRegistries.BLOCKSOURCE, ModernBetaBuiltInProviders::registerBlockSources),
             new Tuple<>(ModernBetaRegistries.FRACTAL_LAYER, LayerType::init),
@@ -96,7 +96,8 @@ public class ModernerBeta {
     public static void setupCustomDynamicRegistries() {
         CUSTOM_DYNAMIC_REGISTRIES = List.of(
             new Tuple<>(ModernBetaResourceKeys.SETTINGS_PRESET, ModernBetaSettingsPreset.CODEC),
-            new Tuple<>(ModernBetaResourceKeys.SETTINGS_PRESET_CATEGORY, ModernBetaSettingsPresetCategory.CODEC)
+            new Tuple<>(ModernBetaResourceKeys.SETTINGS_PRESET_CATEGORY, ModernBetaSettingsPresetCategory.CODEC),
+            new Tuple<>(ModernBetaResourceKeys.SURFACE_CONFIG, SurfaceConfig.CODEC)
         );
     }
 

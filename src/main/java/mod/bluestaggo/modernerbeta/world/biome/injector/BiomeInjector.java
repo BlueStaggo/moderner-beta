@@ -1,3 +1,4 @@
+//~dotLocation
 package mod.bluestaggo.modernerbeta.world.biome.injector;
 
 import mod.bluestaggo.modernerbeta.api.world.chunk.ChunkProvider;

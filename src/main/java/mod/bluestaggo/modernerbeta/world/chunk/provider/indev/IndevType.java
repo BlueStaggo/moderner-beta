@@ -5,7 +5,8 @@ import net.minecraft.util.StringRepresentable;
 public enum IndevType implements StringRepresentable {
     ISLAND("island"),
     FLOATING("floating"),
-    INLAND("inland");
+    INLAND("inland"),
+    CLASSIC("classic");
     
     private final String id;
     

@@ -2,8 +2,6 @@ package mod.bluestaggo.modernerbeta.client.gui.screen.config;
 
 import mod.bluestaggo.modernerbeta.client.gui.optioncallbacks.*;
 import mod.bluestaggo.modernerbeta.imixin.ModernBetaClearableWidget;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.OptionInstance;
 //? if <1.21
@@ -25,7 +23,6 @@ import net.minecraft.resources.ResourceLocation;
 
 import java.util.function.Consumer;
 
-@Environment(EnvType.CLIENT)
 public abstract class ModernBetaGraphicalSettingsScreen<T extends Tag> extends OptionsSubScreen {
     protected static final String STRING_PREFIX = "createWorld.customize.modern_beta.settings.";
 

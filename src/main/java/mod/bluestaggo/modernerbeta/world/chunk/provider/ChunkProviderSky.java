@@ -2,6 +2,9 @@ package mod.bluestaggo.modernerbeta.world.chunk.provider;
 
 import mod.bluestaggo.modernerbeta.api.world.chunk.ChunkProviderNoise;
 import mod.bluestaggo.modernerbeta.api.world.chunk.surface.SurfaceConfig;
+import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
+import mod.bluestaggo.modernerbeta.settings.component.Noise3DSettings;
+import mod.bluestaggo.modernerbeta.settings.component.SurfaceProperties;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkHeightmap;
@@ -28,10 +31,16 @@ public class ChunkProviderSky extends ChunkProviderNoise {
     private final PerlinOctaveNoise mainOctaveNoise;
     private final PerlinOctaveNoise surfaceOctaveNoise;
     private final PerlinOctaveNoise forestOctaveNoise;
-    
+
+    private final Noise3DSettings noise3DSettings;
+    private final SurfaceProperties surfaceProperties;
+
     public ChunkProviderSky(ModernBetaChunkGenerator chunkGenerator, long seed) {
         super(chunkGenerator, seed);
-        
+
+        this.noise3DSettings = this.getChunkSettings().getOrDefault(SettingsComponentTypes.NOISE_3D_SETTINGS);
+        this.surfaceProperties = this.getChunkSettings().getOrDefault(SettingsComponentTypes.SURFACE_PROPERTIES);
+
         this.minLimitOctaveNoise = new PerlinOctaveNoise(this.random, 16, true);
         this.maxLimitOctaveNoise = new PerlinOctaveNoise(this.random, 16, true);
         this.mainOctaveNoise = new PerlinOctaveNoise(this.random, 8, true);
@@ -69,6 +78,9 @@ public class ChunkProviderSky extends ChunkProviderNoise {
                 int surfaceTopY = chunk.getOrCreateHeightmapUnprimed(Heightmap.Types.OCEAN_FLOOR_WG).getFirstAvailable(localX, localZ) - 1;
 
                 int surfaceDepth = (int) (surfaceNoise[localZ + localX * 16] / 3D + 3D + rand.nextDouble() * 0.25D);
+                if (!this.surfaceProperties.erosion() && surfaceDepth < 1) {
+                    surfaceDepth = 1;
+                }
                 
                 int runDepth = -1;
 
@@ -167,7 +179,7 @@ public class ChunkProviderSky extends ChunkProviderNoise {
 
                 int surfaceDepth = (int) (surfaceNoise[localZ + localX * 16] / 3D + 3D + rand.nextDouble() * 0.25D);
 
-                if (surfaceDepth <= 0) {
+                if (surfaceDepth <= 0 && this.surfaceProperties.erosion()) {
                     int y = surfaceTopY;
                     pos.setY(y);
 
@@ -204,7 +216,7 @@ public class ChunkProviderSky extends ChunkProviderNoise {
         double lowerLimitScale = this.noiseScale.lowerLimit();
         double upperLimitScale = this.noiseScale.upperLimit();
 
-        boolean wrapped = !this.noiseScale.farlands();
+        boolean wrapped = this.noise3DSettings.wrapped();
 
         for (int y = 0; y < primaryBuffer.length; ++y) {
             int noiseY = y + this.noiseMinY;

@@ -1,13 +1,10 @@
 package mod.bluestaggo.modernerbeta.client.color;
 
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
-@Environment(EnvType.CLIENT)
 public final class BlockColors {
     @FunctionalInterface
     public interface BlockColorRegisterer {

@@ -3,6 +3,7 @@ package mod.bluestaggo.modernerbeta.fabric;
 import com.mojang.serialization.Codec;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.command.DebugProviderSettingsCommand;
+import mod.bluestaggo.modernerbeta.compat.ModCompat;
 import mod.bluestaggo.modernerbeta.fabric.network.NetworkHelperImpl;
 import mod.bluestaggo.modernerbeta.fabric.registry.RegistryHelperImpl;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
@@ -39,6 +40,7 @@ public class ModernerBetaFabric implements ModInitializer {
         }
 
         ModernerBeta.init();
+        ModCompat.initialise(FabricLoader.getInstance()::isModLoaded);
         ModernerBetaInitializer.setupRegistryHandlers(ModernerBeta.REGISTRY_HANDLERS);
         ModernerBetaInitializer.setupRegistryHandlers(ModernerBeta.CUSTOM_REGISTRY_HANDLERS);
         ModernerBeta.loadConfig(FabricLoader.getInstance().getConfigDir());

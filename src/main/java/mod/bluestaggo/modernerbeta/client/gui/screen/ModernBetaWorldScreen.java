@@ -12,8 +12,6 @@ import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.tags.ModernBetaSettingsPresetCategoryTags;
 import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.StringWidget;
@@ -21,23 +19,19 @@ import net.minecraft.client.gui.layouts.FrameLayout;
 import net.minecraft.client.gui.layouts.GridLayout;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.worldselection.WorldCreationContext;
-import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import org.apache.logging.log4j.util.TriConsumer;
 
-import java.util.Optional;
 import java.util.Random;
 
-@Environment(EnvType.CLIENT)
 public class ModernBetaWorldScreen extends ModernBetaScreen {
     private static final String TEXT_TITLE = "createWorld.customize.modern_beta.title"; 
     private static final String TEXT_TITLE_CHUNK = "createWorld.customize.modern_beta.title.chunk"; 
@@ -136,10 +130,8 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
 
         this.buttonPreset = Button.builder(
             presetText,
-            button -> this.minecraft.setScreen(new ModernBetaSettingsPresetScreen(
+            button -> this.minecraft.setScreen(new ModernBetaSettingsPresetScreen<>(
                 this,
-                this.presetRegistry,
-                this.presetCategoryRegistry,
                 this.presetCategoryRegistry
                     //? if >=1.21.2 {
                     .getOrThrow
@@ -148,12 +140,30 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
                     *///?}
                     (ModernBetaSettingsPresetCategoryTags.SELECTABLE)
                     .stream()
-                    .map(Holder::unwrapKey)
-                    .flatMap(Optional::stream)
-                    .map(ResourceKey::location)
                     .toList(),
-                this.preset,
-                true
+                    (screen, name, preset) -> {
+                        this.minecraft.setScreen(new ModernBetaSettingsPresetScreen<>(
+                            screen,
+                            this.presetRegistry
+                                //? if >=1.21.2 {
+                                .getOrThrow
+                                //?} else {
+                                /*.getOrCreateTag
+                                 *///?}
+                                (preset.presetTag())
+                                .stream()
+                                .toList(),
+                            (parentScreen, presetName, settingsPreset) -> {
+                                this.setPreset(ModernBetaSettingsPreset.referenced(presetName));
+
+                                while (this.minecraft.screen instanceof ModernBetaSettingsPresetScreen<?> subPresetScreen) {
+                                    this.minecraft.setScreen(subPresetScreen.parent);
+                                }
+                            },
+                            true
+                        ));
+                    },
+                false
             ))
         ).bounds(0, 0, BUTTON_LENGTH_PRESET, BUTTON_HEIGHT_PRESET).build();
 

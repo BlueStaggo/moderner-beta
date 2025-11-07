@@ -35,6 +35,7 @@ public class ModernBetaDataGeneratorEntrypoint implements DataGeneratorEntrypoin
         pack.addProvider(ModernBetaTagProviderStructure::new);
         pack.addProvider(ModernBetaTagProviderBlock::new);
         pack.addProvider(ModernBetaTagProviderWorldPreset::new);
+        pack.addProvider(ModernBetaTagProviderSettingsPreset::new);
         pack.addProvider(ModernBetaTagProviderSettingsPresetCategory::new);
 
         FabricDataGenerator.Pack reducedHeightPack = fabricDataGenerator.createBuiltinResourcePack(ModernerBeta.createId("reduced_height"));
@@ -62,5 +63,6 @@ public class ModernBetaDataGeneratorEntrypoint implements DataGeneratorEntrypoin
         registryBuilder.add(Registries.WORLD_PRESET, ModernBetaWorldPresets::bootstrap);
         registryBuilder.add(ModernBetaResourceKeys.SETTINGS_PRESET, ModernBetaSettingsPresets::bootstrap);
         registryBuilder.add(ModernBetaResourceKeys.SETTINGS_PRESET_CATEGORY, ModernBetaSettingsPresetCategories::bootstrap);
+        registryBuilder.add(ModernBetaResourceKeys.SURFACE_CONFIG, ModernBetaSurfaceConfigs::bootstrap);
     }
 }

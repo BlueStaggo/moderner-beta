@@ -21,7 +21,6 @@ public final class ModernBetaRegistries {
     public static Registry<ChunkProviderType<?>> CHUNK;
     public static Registry<BiomeProviderType<?>> BIOME;
     public static Registry<CaveBiomeProviderType<?>> CAVE_BIOME;
-    public static Registry<SurfaceConfig> SURFACE_CONFIG;
     public static Registry<HeightConfig> HEIGHT_CONFIG;
     public static Registry<BlockSourceCreator> BLOCKSOURCE;
     public static Registry<LayerType<?>> FRACTAL_LAYER;
@@ -39,10 +38,9 @@ public final class ModernBetaRegistries {
         registryHelper = helper;
 
         SETTINGS_COMPONENT_TYPE = register(ModernBetaResourceKeys.SETTINGS_COMPONENT_TYPE);
-        CHUNK = registerDefaulted(ModernBetaResourceKeys.CHUNK, ModernBetaBuiltInTypes.Chunk.BETA.id);
+        CHUNK = registerDefaulted(ModernBetaResourceKeys.CHUNK, ModernBetaBuiltInTypes.Chunk.NOISE_3D.id);
         BIOME = registerDefaulted(ModernBetaResourceKeys.BIOME, ModernBetaBuiltInTypes.Biome.BETA.id);
         CAVE_BIOME = registerDefaulted(ModernBetaResourceKeys.CAVE_BIOME, ModernBetaBuiltInTypes.CaveBiome.NONE.id);
-        SURFACE_CONFIG = register(ModernBetaResourceKeys.SURFACE_CONFIG);
         HEIGHT_CONFIG = registerDefaulted(ModernBetaResourceKeys.HEIGHT_CONFIG, ModernBetaBuiltInTypes.HeightConfig.HEIGHT_CONFIG_DEFAULT.id);
         BLOCKSOURCE = register(ModernBetaResourceKeys.BLOCKSOURCE);
         FRACTAL_LAYER = register(ModernBetaResourceKeys.FRACTAL_LAYER);

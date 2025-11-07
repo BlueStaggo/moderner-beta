@@ -1,3 +1,4 @@
+//~dotLocation
 package mod.bluestaggo.modernerbeta.client.gui.screen;
 
 import com.google.common.util.concurrent.AtomicDouble;
@@ -12,12 +13,11 @@ import mod.bluestaggo.modernerbeta.api.world.biome.BiomeResolverExtendedId;
 import mod.bluestaggo.modernerbeta.api.world.biome.BiomeResolverExtendedIdStepped;
 import mod.bluestaggo.modernerbeta.api.world.biome.BiomeResolverStepped;
 import mod.bluestaggo.modernerbeta.api.world.chunk.surface.SurfaceConfig;
+import mod.bluestaggo.modernerbeta.registry.ModernBetaResourceKeys;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.LayerRandom;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.gui.GuiGraphics;
@@ -32,6 +32,7 @@ import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
@@ -53,9 +54,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Environment(EnvType.CLIENT)
 public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
     private final BiomeProvider biomeProvider;
+    private final HolderLookup<SurfaceConfig> surfaceConfigLookup;
     private BiomeDisplayWidget biomeDisplay;
     private volatile String exceptionMessage;
 
@@ -63,6 +64,7 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
         super(title, parent);
 
         BiomeProvider biomeProvider = null;
+        HolderLookup<SurfaceConfig> surfaceConfigLookup = null;
         try {
             biomeProvider = ModernBetaRegistries.BIOME
                 //? if >=1.21.2 {
@@ -76,12 +78,14 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                     context.worldgenLoadContext().lookupOrThrow(Registries.BIOME),
                     context.options().seed()
                 );
+            surfaceConfigLookup = context.worldgenLoadContext().lookupOrThrow(ModernBetaResourceKeys.SURFACE_CONFIG);
         } catch (Exception exception) {
             exception.printStackTrace();
             this.exceptionMessage = exception.getLocalizedMessage();
         }
 
         this.biomeProvider = biomeProvider;
+        this.surfaceConfigLookup = surfaceConfigLookup;
     }
 
     @Override
@@ -591,7 +595,7 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                         }
                     }
                 } else {
-                    SurfaceConfig surfaceConfig = SurfaceConfig.getSurfaceConfig(biomeEntry);
+                    SurfaceConfig surfaceConfig = SurfaceConfig.getSurfaceConfig(biomeEntry, ModernBetaBiomePreviewScreen.this.surfaceConfigLookup);
                     BlockState topBlock = surfaceConfig.normal().topBlock();
                     if (topBlock.is(Blocks.GRASS_BLOCK)) {
                         color = biome.getGrassColor(x, y);

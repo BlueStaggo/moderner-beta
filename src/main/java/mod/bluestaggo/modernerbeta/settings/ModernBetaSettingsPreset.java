@@ -8,22 +8,62 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Tuple;
 import org.slf4j.event.Level;
 
 import java.util.List;
+import java.util.Optional;
 
-public record ModernBetaSettingsPreset(ModernBetaSettings chunkSettings, ModernBetaSettings biomeSettings, ModernBetaSettings caveBiomeSettings) {
+public record ModernBetaSettingsPreset(
+    Optional<Component> presetName,
+    Optional<Component> presetDescription,
+    ModernBetaSettings chunkSettings,
+    ModernBetaSettings biomeSettings,
+    ModernBetaSettings caveBiomeSettings
+) implements NameAndDescriptionItem {
     public static final Codec<ModernBetaSettingsPreset> CODEC = RecordCodecBuilder.create(
         instance -> instance.group(
+            net.minecraft.network.chat.ComponentSerialization.CODEC.optionalFieldOf("name").forGetter(ModernBetaSettingsPreset::presetName),
+            net.minecraft.network.chat.ComponentSerialization.CODEC.optionalFieldOf("description").forGetter(ModernBetaSettingsPreset::presetDescription),
             ModernBetaSettings.CODEC.fieldOf("chunkSettings").forGetter(ModernBetaSettingsPreset::chunkSettings),
             ModernBetaSettings.CODEC.fieldOf("biomeSettings").forGetter(ModernBetaSettingsPreset::biomeSettings),
             ModernBetaSettings.CODEC.fieldOf("caveBiomeSettings").forGetter(ModernBetaSettingsPreset::caveBiomeSettings)
         ).apply(instance, ModernBetaSettingsPreset::new)
     );
+
+    public ModernBetaSettingsPreset(
+        ModernBetaSettings chunkSettings,
+        ModernBetaSettings biomeSettings,
+        ModernBetaSettings caveBiomeSettings
+    ) {
+        this(
+            Optional.empty(),
+            Optional.empty(),
+            chunkSettings,
+            biomeSettings,
+            caveBiomeSettings
+        );
+    }
+
+    public ModernBetaSettingsPreset(
+            ResourceLocation presetId,
+            ModernBetaSettings chunkSettings,
+            ModernBetaSettings biomeSettings,
+            ModernBetaSettings caveBiomeSettings
+    ) {
+        this(
+            Optional.of(makeTitleComponent(presetId)),
+            Optional.of(makeDescriptionComponent(presetId)),
+            chunkSettings,
+            biomeSettings,
+            caveBiomeSettings
+        );
+    }
 
     public static ModernBetaSettingsPreset referenced(ResourceLocation presetId) {
         return new ModernBetaSettingsPreset(
@@ -151,9 +191,37 @@ public record ModernBetaSettingsPreset(ModernBetaSettings chunkSettings, ModernB
 
         return new Tuple<>(new ModernBetaSettingsPreset(chunkSettings, biomeSettings, caveBiomeSettings), successful);
     }
+
+    public ModernBetaSettingsPreset withNameAndDesc(ResourceLocation id) {
+        return new ModernBetaSettingsPreset(
+            Optional.of(makeTitleComponent(id)),
+            Optional.of(makeDescriptionComponent(id)),
+            this.chunkSettings,
+            this.biomeSettings,
+            this.caveBiomeSettings
+        );
+    }
     
     public List<ModernBetaSettings> asList() {
         return List.of(this.chunkSettings, this.biomeSettings, this.caveBiomeSettings);
+    }
+
+    @Override
+    public Component makeOrGetTitleComponent(ResourceLocation fallbackId) {
+        return presetName.orElseGet(() -> makeTitleComponent(fallbackId));
+    }
+
+    @Override
+    public Component makeOrGetDescriptionComponent(ResourceLocation fallbackId) {
+        return presetDescription.orElseGet(() -> makeDescriptionComponent(fallbackId));
+    }
+
+    private static Component makeTitleComponent(ResourceLocation id) {
+        return Component.translatable("createWorld.customize.modern_beta.preset.name." + id.toLanguageKey()).withStyle(ChatFormatting.YELLOW);
+    }
+
+    private static Component makeDescriptionComponent(ResourceLocation id) {
+        return Component.translatable("createWorld.customize.modern_beta.preset.desc." + id.toLanguageKey());
     }
 
     @Override

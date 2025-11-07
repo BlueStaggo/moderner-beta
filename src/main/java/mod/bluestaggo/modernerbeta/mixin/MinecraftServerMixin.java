@@ -12,7 +12,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.storage.ServerLevelData;
 import org.slf4j.event.Level;
@@ -74,8 +73,13 @@ public abstract class MinecraftServerMixin {
         
         if (chunkGenerator instanceof ModernBetaChunkGenerator modernBetaChunkGenerator) {
             ChunkProvider chunkProvider = modernBetaChunkGenerator.getChunkProvider();
-            
-            level.getGameRules().getRule(GameRules.RULE_SPAWN_RADIUS).set(0, level.getServer()); // Ensure a centered spawn
+
+            //? if >=1.21.11 {
+            /*level.getGameRules().set(net.minecraft.world.level.gamerules.GameRules.RESPAWN_RADIUS,
+            *///? } else {
+            level.getGameRules().getRule(net.minecraft.world.level.GameRules.RULE_SPAWN_RADIUS).set(
+            //? }
+                0, level.getServer()); // Ensure a centered spawn
             BlockPos spawnPos = chunkProvider.getSpawnLocator().locateSpawn(level).orElseGet(() -> original.call(level, chunkPos));
             
             if (spawnPos != null && ModernerBeta.DEV_ENV) {
@@ -108,17 +112,39 @@ public abstract class MinecraftServerMixin {
     private static void setIndevProperties(ServerLevel level, IndevTheme theme) {
         switch(theme) {
             case HELL -> {
-                level.getGameRules().getRule(GameRules.RULE_DAYLIGHT).set(false, null); 
-                level.getGameRules().getRule(GameRules.RULE_WEATHER_CYCLE).set(false, null); 
+                disableWeatherCycle(level);
+                //? if <1.21.11 {
+                disableDayCycle(level);
                 level.setDayTime(18000);
+                //? }
             } case PARADISE -> {
-                level.getGameRules().getRule(GameRules.RULE_DAYLIGHT).set(false, null); 
-                level.getGameRules().getRule(GameRules.RULE_WEATHER_CYCLE).set(false, null); 
+                disableWeatherCycle(level);
+                disableDayCycle(level);
                 level.setDayTime(6000);
+            //? if <1.21.11 {
             } case WOODS -> {
-                level.getGameRules().getRule(GameRules.RULE_WEATHER_CYCLE).set(false, null); 
+                disableWeatherCycle(level);
                 level.setWeatherParameters(0, Integer.MAX_VALUE, true, false);
+            //? }
             } default -> {}
         }
+    }
+
+    @Unique
+    private static void disableWeatherCycle(ServerLevel level) {
+        //? if >=1.21.11 {
+        /*level.getGameRules().set(net.minecraft.world.level.gamerules.GameRules.ADVANCE_WEATHER, false, null);
+        *///? } else {
+        level.getGameRules().getRule(net.minecraft.world.level.GameRules.RULE_WEATHER_CYCLE).set(false, null);
+        //? }
+    }
+
+    @Unique
+    private static void disableDayCycle(ServerLevel level) {
+        //? if >=1.21.11 {
+        /*level.getGameRules().set(net.minecraft.world.level.gamerules.GameRules.ADVANCE_TIME, false, null);
+        *///? } else {
+        level.getGameRules().getRule(net.minecraft.world.level.GameRules.RULE_DAYLIGHT).set(false, null);
+        //? }
     }
 }

@@ -1,6 +1,7 @@
 package mod.bluestaggo.modernerbeta.fabric.data;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;
+import mod.bluestaggo.modernerbeta.api.world.chunk.surface.SurfaceConfig;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaResourceKeys;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPresetCategory;
@@ -38,6 +39,7 @@ public class ModernBetaWorldGenProvider extends FabricDynamicRegistryProvider {
         HolderLookup.RegistryLookup<WorldPreset> registryWorldPreset = provider.lookupOrThrow(Registries.WORLD_PRESET);
         HolderLookup.RegistryLookup<ModernBetaSettingsPreset> registrySettingsPreset = provider.lookupOrThrow(ModernBetaResourceKeys.SETTINGS_PRESET);
         HolderLookup.RegistryLookup<ModernBetaSettingsPresetCategory> registrySettingsPresetCategory= provider.lookupOrThrow(ModernBetaResourceKeys.SETTINGS_PRESET_CATEGORY);
+        HolderLookup.RegistryLookup<SurfaceConfig> registrySurfaceConfig = provider.lookupOrThrow(ModernBetaResourceKeys.SURFACE_CONFIG);
 
         entries.addAll(registryBiome);
         entries.addAll(registryConfiguredFeature);
@@ -49,6 +51,7 @@ public class ModernBetaWorldGenProvider extends FabricDynamicRegistryProvider {
         entries.addAll(registryWorldPreset);
         entries.addAll(registrySettingsPreset);
         entries.addAll(registrySettingsPresetCategory);
+        entries.addAll(registrySurfaceConfig);
     }
 
     @Override

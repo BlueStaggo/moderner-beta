@@ -25,34 +25,16 @@ import java.util.List;
 public class ModernBetaNoiseGeneratorSettings {
     private static boolean useModernBetaSurfaceRules;
 
-    public static final ResourceKey<NoiseGeneratorSettings> BETA;
-    public static final ResourceKey<NoiseGeneratorSettings> ALPHA;
     public static final ResourceKey<NoiseGeneratorSettings> SKYLANDS;
-    public static final ResourceKey<NoiseGeneratorSettings> INFDEV_611;
-    public static final ResourceKey<NoiseGeneratorSettings> INFDEV_420;
-    public static final ResourceKey<NoiseGeneratorSettings> INFDEV_415;
     public static final ResourceKey<NoiseGeneratorSettings> INFDEV_227;
     public static final ResourceKey<NoiseGeneratorSettings> INDEV;
-    public static final ResourceKey<NoiseGeneratorSettings> CLASSIC_0_30;
-    public static final ResourceKey<NoiseGeneratorSettings> PE;
-    public static final ResourceKey<NoiseGeneratorSettings> EARLY_RELEASE;
-    public static final ResourceKey<NoiseGeneratorSettings> MAJOR_RELEASE;
-    public static final ResourceKey<NoiseGeneratorSettings> EARLY_BEDROCK;
+    public static final ResourceKey<NoiseGeneratorSettings> NOISE_3D;
 
     public static void bootstrap(BootstrapContext<NoiseGeneratorSettings> context) {
-        context.register(BETA, createNoiseGeneratorSettings(context, ModernBetaNoiseSettings.BETA, 64, true));
-        context.register(ALPHA, createNoiseGeneratorSettings(context, ModernBetaNoiseSettings.ALPHA, 64, true));
-        context.register(SKYLANDS, createNoiseGeneratorSettings(context, ModernBetaNoiseSettings.SKYLANDS, 0, false));
-        context.register(INFDEV_611, createNoiseGeneratorSettings(context, ModernBetaNoiseSettings.INFDEV_611, 64, true));
-        context.register(INFDEV_420, createNoiseGeneratorSettings(context, ModernBetaNoiseSettings.INFDEV_420, 64, true));
-        context.register(INFDEV_415, createNoiseGeneratorSettings(context, ModernBetaNoiseSettings.INFDEV_415, 64, true));
-        context.register(INFDEV_227, createNoiseGeneratorSettings(context, ModernBetaNoiseSettings.INFDEV_227, 64, true));
-        context.register(INDEV, createNoiseGeneratorSettings(context, ModernBetaNoiseSettings.INDEV, 64, false));
-        context.register(CLASSIC_0_30, createNoiseGeneratorSettings(context, ModernBetaNoiseSettings.CLASSIC_0_30, 64, false));
-        context.register(PE, createNoiseGeneratorSettings(context, ModernBetaNoiseSettings.PE, 64, true));
-        context.register(EARLY_RELEASE, createNoiseGeneratorSettings(context, ModernBetaNoiseSettings.EARLY_RELEASE, 63, true));
-        context.register(MAJOR_RELEASE, createNoiseGeneratorSettings(context, ModernBetaNoiseSettings.MAJOR_RELEASE, 63, true));
-        context.register(EARLY_BEDROCK, createNoiseGeneratorSettings(context, ModernBetaNoiseSettings.EARLY_BEDROCK, 63, true));
+        context.register(SKYLANDS, createNoiseGeneratorSettings(context, ModernBetaNoiseSettings.SKY_128, 0, false));
+        context.register(INFDEV_227, createNoiseGeneratorSettings(context, ModernBetaNoiseSettings.OVERWORLD_128, 64, true));
+        context.register(INDEV, createNoiseGeneratorSettings(context, ModernBetaNoiseSettings.FINITE, 64, false));
+        context.register(NOISE_3D, createNoiseGeneratorSettings(context, ModernBetaNoiseSettings.OVERWORLD_FULL, 64, true));
     }
     
     private static NoiseRouter createDensityFunctions(
@@ -166,18 +148,9 @@ public class ModernBetaNoiseGeneratorSettings {
     }
 
     static {
-        BETA = ResourceKey.create(Registries.NOISE_SETTINGS, ModernBetaBuiltInTypes.Chunk.BETA.id);
-        ALPHA = ResourceKey.create(Registries.NOISE_SETTINGS, ModernBetaBuiltInTypes.Chunk.ALPHA.id);
         SKYLANDS = ResourceKey.create(Registries.NOISE_SETTINGS, ModernBetaBuiltInTypes.Chunk.SKYLANDS.id);
-        INFDEV_611 = ResourceKey.create(Registries.NOISE_SETTINGS, ModernBetaBuiltInTypes.Chunk.INFDEV_611.id);
-        INFDEV_420 = ResourceKey.create(Registries.NOISE_SETTINGS, ModernBetaBuiltInTypes.Chunk.INFDEV_420.id);
-        INFDEV_415 = ResourceKey.create(Registries.NOISE_SETTINGS, ModernBetaBuiltInTypes.Chunk.INFDEV_415.id);
         INFDEV_227 = ResourceKey.create(Registries.NOISE_SETTINGS, ModernBetaBuiltInTypes.Chunk.INFDEV_227.id);
         INDEV = ResourceKey.create(Registries.NOISE_SETTINGS, ModernBetaBuiltInTypes.Chunk.INDEV.id);
-        CLASSIC_0_30 = ResourceKey.create(Registries.NOISE_SETTINGS, ModernBetaBuiltInTypes.Chunk.CLASSIC_0_30.id);
-        PE = ResourceKey.create(Registries.NOISE_SETTINGS, ModernBetaBuiltInTypes.Chunk.PE.id);
-        EARLY_RELEASE = ResourceKey.create(Registries.NOISE_SETTINGS, ModernBetaBuiltInTypes.Chunk.EARLY_RELEASE.id);
-        MAJOR_RELEASE = ResourceKey.create(Registries.NOISE_SETTINGS, ModernBetaBuiltInTypes.Chunk.MAJOR_RELEASE.id);
-        EARLY_BEDROCK = ResourceKey.create(Registries.NOISE_SETTINGS, ModernBetaBuiltInTypes.Chunk.EARLY_BEDROCK.id);
+        NOISE_3D = ResourceKey.create(Registries.NOISE_SETTINGS, ModernBetaBuiltInTypes.Chunk.NOISE_3D.id);
     }
 }

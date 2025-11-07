@@ -1,6 +1,7 @@
 package mod.bluestaggo.modernerbeta.world.preset;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;
+import mod.bluestaggo.modernerbeta.api.world.chunk.surface.SurfaceConfig;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaResourceKeys;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
@@ -35,9 +36,10 @@ public class ModernBetaWorldPresets {
         HolderGetter<NoiseGeneratorSettings> registrySettings = context.lookup(Registries.NOISE_SETTINGS);
         HolderGetter<Biome> registryBiome = context.lookup(Registries.BIOME);
         HolderGetter<ModernBetaSettingsPreset> registryPreset = context.lookup(ModernBetaResourceKeys.SETTINGS_PRESET);
+        HolderGetter<SurfaceConfig> registrySurfaceConfig = context.lookup(ModernBetaResourceKeys.SURFACE_CONFIG);
         HolderGetter<MultiNoiseBiomeSourceParameterList> registryParameters = context.lookup(Registries.MULTI_NOISE_BIOME_SOURCE_PARAMETER_LIST);
 
-        LevelStem overworld = createOverworldOptions(registryDimensionType, registrySettings, registryBiome, registryPreset);
+        LevelStem overworld = createOverworldOptions(registryDimensionType, registrySettings, registryBiome, registryPreset, registrySurfaceConfig);
         LevelStem nether = createNetherOptions(registryDimensionType, registrySettings, registryParameters);
         LevelStem end = createEndOptions(registryDimensionType, registrySettings, registryBiome);
         
@@ -51,10 +53,11 @@ public class ModernBetaWorldPresets {
         HolderGetter<DimensionType> registryDimensionType,
         HolderGetter<NoiseGeneratorSettings> registrySettings,
         HolderGetter<Biome> registryBiome,
-        HolderGetter<ModernBetaSettingsPreset> registryPreset
+        HolderGetter<ModernBetaSettingsPreset> registryPreset,
+        HolderGetter<SurfaceConfig> registrySurfaceConfig
     ) {
         Holder.Reference<DimensionType> dimensionType = registryDimensionType.getOrThrow(BuiltinDimensionTypes.OVERWORLD);
-        Holder.Reference<NoiseGeneratorSettings> settings = registrySettings.getOrThrow(ModernBetaNoiseGeneratorSettings.BETA);
+        Holder.Reference<NoiseGeneratorSettings> settings = registrySettings.getOrThrow(ModernBetaNoiseGeneratorSettings.NOISE_3D);
         
         ModernBetaSettingsPreset defaultPreset = ModernBetaSettingsPreset.referenced(ModernBetaSettings.DEFAULT_PRESET_ID);
 
@@ -68,6 +71,7 @@ public class ModernBetaWorldPresets {
                     defaultPreset.caveBiomeSettings().toCompound()
                 ),
                 registryPreset,
+                registrySurfaceConfig,
                 settings,
                 defaultPreset.chunkSettings().toCompound()
             )

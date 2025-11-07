@@ -4,6 +4,8 @@ package mod.bluestaggo.modernerbeta.world.chunk;
 import com.google.common.base.Suppliers;
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
+import mod.bluestaggo.modernerbeta.api.world.chunk.surface.SurfaceConfig;
+import mod.bluestaggo.modernerbeta.compat.ModCompat;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.api.world.chunk.ChunkProvider;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
@@ -74,12 +76,14 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
         instance -> instance.group(
             BiomeSource.CODEC.fieldOf("biome_source").forGetter(generator -> generator.biomeSource),
             RegistryOps.retrieveGetter(ModernBetaResourceKeys.SETTINGS_PRESET),
+            RegistryOps.retrieveGetter(ModernBetaResourceKeys.SURFACE_CONFIG),
             NoiseGeneratorSettings.CODEC.fieldOf("settings").forGetter(generator -> generator.settings),
             CompoundTag.CODEC.fieldOf("provider_settings").forGetter(generator -> generator.chunkSettings)
         ).apply(instance, instance.stable(ModernBetaChunkGenerator::new))
     );
 
     private final HolderGetter<ModernBetaSettingsPreset> presetRegistry;
+    private final HolderGetter<SurfaceConfig> surfaceConfigRegistry;
     private final Holder<NoiseGeneratorSettings> settings;
     private final CompoundTag chunkSettings;
     private final Supplier<BiomeInjector> biomeInjector;
@@ -92,6 +96,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
     public ModernBetaChunkGenerator(
         BiomeSource biomeSource,
         HolderGetter<ModernBetaSettingsPreset> presetRegistry,
+        HolderGetter<SurfaceConfig> surfaceConfigRegistry,
         Holder<NoiseGeneratorSettings> settings,
         CompoundTag chunkProviderSettings
     ) {
@@ -100,13 +105,14 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
         String presetKey = ModernBetaBuiltInTypes.SettingsComponentType.PRESET.id.toString();
 
         if (ModernBetaSettings.DEFAULT_PRESET_ID.toString().equals(
-            chunkProviderSettings.getString(presetKey).orElse(null))) {
+            chunkProviderSettings.getString(presetKey)/*? >=1.21.5 {*/.orElse(null)/*?}*/)) {
             chunkProviderSettings.putString(presetKey, ModernerBeta.config.getOrDefault(SettingsComponentTypes.CONFIG_MISCELLANEOUS)
                 .defaultSettingsPreset().toString());
         }
 
         this.settings = settings;
         this.presetRegistry = presetRegistry;
+        this.surfaceConfigRegistry = surfaceConfigRegistry;
         this.chunkSettings = chunkProviderSettings;
         this.biomeInjector = Suppliers.memoize(() ->
             this.biomeSource instanceof ModernBetaBiomeSource modernBetaBiomeSource
@@ -133,7 +139,6 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
         this.chunkProvider.initForestOctaveNoise();
 
         this.useSurfaceRules = chunkSettings.getOrDefault(SettingsComponentTypes.USE_SURFACE_RULES);
-
         this.caveSettings = chunkSettings.getOrDefault(SettingsComponentTypes.CAVE_GENERATION);
     }
 
@@ -157,14 +162,23 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
         /*Executor executor,*/
         Blender blender, RandomState noiseConfig, StructureManager structureAccessor, ChunkAccess chunk
     ) {
+        ChunkPos pos = chunk.getPos();
+        if (ModCompat.skipGeneratingChunk(pos.x, pos.z))
+            return CompletableFuture.completedFuture(chunk);
+
         return this.chunkProvider.provideChunk(Blender.empty(), structureAccessor, chunk, noiseConfig);
     }
 
     @Override
     public void buildSurface(WorldGenRegion chunkRegion, StructureManager structureAccessor, RandomState noiseConfig, ChunkAccess chunk) {
+        ChunkPos pos = chunk.getPos();
+
+        if (ModCompat.skipGeneratingChunk(pos.x, pos.z))
+            return;
+
         this.injectBiomes(chunk, noiseConfig.sampler(), BiomeInjectionStep.PRE);
 
-        if (!this.chunkProvider.skipChunk(chunk.getPos().x, chunk.getPos().z, ModernBetaGenerationStep.SURFACE)) {
+        if (!this.chunkProvider.skipChunk(pos.x, pos.z, ModernBetaGenerationStep.SURFACE)) {
             if (this.biomeSource instanceof ModernBetaBiomeSource modernBetaBiomeSource) {
                 if (this.useSurfaceRules) {
                     this.buildDefaultSurface(chunkRegion, structureAccessor, noiseConfig, chunk);
@@ -189,7 +203,11 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
                       //? if <1.21.2
                       /*, GenerationStep.Carving carverStep*/
     ) {
-        if (this.chunkProvider.skipChunk(chunk.getPos().x, chunk.getPos().z, ModernBetaGenerationStep.CARVERS)) return;
+        ChunkPos pos = chunk.getPos();
+
+        if (ModCompat.skipGeneratingChunk(pos.x, pos.z) ||
+            this.chunkProvider.skipChunk(pos.x, pos.z, ModernBetaGenerationStep.CARVERS))
+            return;
 
         BiomeManager biomeAccessWithSource = biomeAccess.withDifferentSource((biomeX, biomeY, biomeZ) -> this.biomeSource.getNoiseBiome(biomeX, biomeY, biomeZ, noiseConfig.sampler()));
         ChunkPos chunkPos = chunk.getPos();
@@ -321,7 +339,8 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
     public void spawnOriginalMobs(WorldGenRegion region) {
         ChunkPos pos = region.getCenter();
         
-        if (this.chunkProvider.skipChunk(pos.x, pos.z, ModernBetaGenerationStep.ENTITY_SPAWN))
+        if (ModCompat.skipGeneratingChunk(pos.x, pos.z) ||
+            this.chunkProvider.skipChunk(pos.x, pos.z, ModernBetaGenerationStep.ENTITY_SPAWN))
             return;
         
         super.spawnOriginalMobs(region);
@@ -338,10 +357,13 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
   
     @Override
     public NoiseColumn getBaseColumn(int x, int z, LevelHeightAccessor level, RandomState noiseConfig) {
-        int height = this.chunkProvider.getHeight(level, x, z, Heightmap.Types.OCEAN_FLOOR_WG);
-        int worldHeight = this.chunkProvider.getWorldHeight();
         int minY = this.chunkProvider.getWorldMinY();
-        
+        if (ModCompat.skipGeneratingChunk(x, z))
+            return new NoiseColumn(minY, new BlockState[0]);
+
+        int worldHeight = this.chunkProvider.getWorldHeight();
+        int height = this.chunkProvider.getHeight(level, x, z, Heightmap.Types.OCEAN_FLOOR_WG);
+
         BlockState[] column = new BlockState[worldHeight];
         
         for (int y = worldHeight - 1; y >= 0; --y) {
@@ -401,6 +423,10 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
 
     public HolderGetter<ModernBetaSettingsPreset> getPresetRegistry() {
         return this.presetRegistry;
+    }
+
+    public HolderGetter<SurfaceConfig> getSurfaceConfigRegistry() {
+        return this.surfaceConfigRegistry;
     }
 
     public ChunkProvider getChunkProvider() {

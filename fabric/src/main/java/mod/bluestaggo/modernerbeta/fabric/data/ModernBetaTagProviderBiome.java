@@ -19,6 +19,7 @@ import java.util.concurrent.CompletableFuture;
 
 import static mod.bluestaggo.modernerbeta.tags.ModernBetaBiomeTags.*;
 
+@SuppressWarnings("unchecked")
 public class ModernBetaTagProviderBiome extends FabricTagProvider<Biome> {
     public ModernBetaTagProviderBiome(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
         super(output, Registries.BIOME, registriesFuture);
@@ -596,14 +597,32 @@ public class ModernBetaTagProviderBiome extends FabricTagProvider<Biome> {
             .addTag(IS_BETA)
             .addTag(IS_PE)
             .addTag(IS_ALPHA)
-            .addTag(IS_INFDEV);
-        
+            .addTag(IS_INFDEV)
+            .addTag(IS_LATE_BETA)
+            .addTag(IS_EARLY_RELEASE)
+            .add(
+                ModernBetaBiomes.LATE_BETA_EXTREME_HILLS,
+                ModernBetaBiomes.LATE_BETA_SWAMPLAND,
+                ModernBetaBiomes.LATE_BETA_TAIGA,
+                ModernBetaBiomes.LATE_BETA_ICE_PLAINS,
+
+                ModernBetaBiomes.EARLY_RELEASE_EXTREME_HILLS,
+                ModernBetaBiomes.EARLY_RELEASE_SWAMPLAND,
+                ModernBetaBiomes.EARLY_RELEASE_TAIGA,
+                ModernBetaBiomes.EARLY_RELEASE_ICE_PLAINS
+            );
+
         this.builder(BiomeTags.HAS_SWAMP_HUT)
             .addTag(IS_SWAMP);
 
         //? if >=1.21 {
         this.builder(BiomeTags.HAS_TRIAL_CHAMBERS)
-            .addTag(IS_MODERN_BETA);
+            .addTag(IS_BETA)
+            .addTag(IS_PE)
+            .addTag(IS_ALPHA)
+            .addTag(IS_INFDEV)
+            .addTag(IS_LATE_BETA)
+            .addTag(IS_EARLY_RELEASE);
         //?}
         
         this.builder(BiomeTags.HAS_VILLAGE_DESERT)

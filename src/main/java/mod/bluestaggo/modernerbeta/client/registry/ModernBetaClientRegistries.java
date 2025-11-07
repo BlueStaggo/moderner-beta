@@ -2,12 +2,9 @@ package mod.bluestaggo.modernerbeta.client.registry;
 
 import mod.bluestaggo.modernerbeta.client.gui.screen.config.GraphicalConfigBuilder;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHelper;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 
-@Environment(EnvType.CLIENT)
 public final class ModernBetaClientRegistries {
     private static IRegistryHelper registryHelper;
 

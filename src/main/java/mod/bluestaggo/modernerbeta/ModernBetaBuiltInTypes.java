@@ -1,6 +1,9 @@
 package mod.bluestaggo.modernerbeta;
 
+import mod.bluestaggo.modernerbeta.registry.ModernBetaResourceKeys;
+import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.tags.ModernBetaBiomeTags;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 
 public final class ModernBetaBuiltInTypes {
@@ -11,9 +14,13 @@ public final class ModernBetaBuiltInTypes {
         USE_SURFACE_RULES("use_surface_rules"),
         SEA_LEVEL_OFFSET("sea_level_offset"),
         CAVE_GENERATION("cave_generation"),
+        NOISE_SETTINGS("noise_settings"),
+        NOISE_3D_SETTINGS("noise_3d_settings"),
         NOISE_SCALE("noise_scale"),
         NOISE_SLIDE("noise_slide"),
+        NOISE_LANDMASS("noise_landmass"),
         FORCED_BIOME_HEIGHT("forced_biome_height"),
+        SURFACE_PROPERTIES("surface_properties"),
         INFDEV_227_STRUCTURES("infdev_227_structures"),
         FINITE_LEVEL_PROPERTIES("finite_level_properties"),
         FINITE_CAVE_GENERATION("finite_cave_generation"),
@@ -47,19 +54,10 @@ public final class ModernBetaBuiltInTypes {
     }
 
     public enum Chunk {
-        BETA("beta"),
         SKYLANDS("skylands"),
-        ALPHA("alpha"),
-        INFDEV_611("infdev_611"),
-        INFDEV_420("infdev_420"),
-        INFDEV_415("infdev_415"),
         INFDEV_227("infdev_227"),
         INDEV("indev"),
-        CLASSIC_0_30("classic_0_30"),
-        PE("pe"),
-        EARLY_RELEASE("early_release"),
-        MAJOR_RELEASE("major_release"),
-        EARLY_BEDROCK("early_bedrock")
+        NOISE_3D("noise_3d"),
         ;
 
         public final ResourceLocation id;
@@ -241,8 +239,28 @@ public final class ModernBetaBuiltInTypes {
         ;
         
         public final ResourceLocation id;
-        
+        public final ResourceKey<ModernBetaSettingsPreset> key;
+
         Preset(String id) {
+            this.id = ModernerBeta.createId(id);
+            this.key = ResourceKey.create(ModernBetaResourceKeys.SETTINGS_PRESET, ModernerBeta.createId(id));
+        }
+    }
+
+    public enum PresetCategory {
+        BETA("beta"),
+        ALPHA_INDEV("alpha_infdev"),
+        FINITE("finite"),
+        EARLY_RELEASE("early_release"),
+        EARLY_RELEASE_LARGE_BIOMES("early_release_large_biomes"),
+        EARLY_RELEASE_AMPLIFIED("early_release_amplified"),
+        MAJOR_RELEASE("major_release"),
+        BETA_CUSTOM("beta_custom"),
+        RELEASE_CUSTOM("release_custom");
+
+        public final ResourceLocation id;
+
+        PresetCategory(String id) {
             this.id = ModernerBeta.createId(id);
         }
     }

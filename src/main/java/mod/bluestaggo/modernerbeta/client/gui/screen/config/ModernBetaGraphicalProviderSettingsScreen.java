@@ -3,8 +3,6 @@ package mod.bluestaggo.modernerbeta.client.gui.screen.config;
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
 import mod.bluestaggo.modernerbeta.api.world.provider.ProviderType;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.components.OptionsList;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.worldselection.WorldCreationContext;
@@ -20,7 +18,6 @@ import net.minecraft.world.level.dimension.LevelStem;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-@Environment(EnvType.CLIENT)
 public class ModernBetaGraphicalProviderSettingsScreen extends ModernBetaGraphicalComponentedSettingsScreen {
     private final Registry<? extends ProviderType> providerRegistry;
     private final ResourceLocation[] providers;

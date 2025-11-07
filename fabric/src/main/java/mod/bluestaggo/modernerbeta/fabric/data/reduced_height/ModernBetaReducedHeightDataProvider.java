@@ -70,6 +70,7 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
         entries.add(
             BuiltinDimensionTypes.OVERWORLD,
             new DimensionType(
+                //? if <1.21.11
                 OptionalLong.empty(),
                 true,
                 false,
@@ -85,24 +86,28 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
                 320,
                 320,
                 BlockTags.INFINIBURN_OVERWORLD,
+                //? if <1.21.11
                 BuiltinDimensionTypes.OVERWORLD_EFFECTS,
                 0.0F,
                 //? if >=1.21.6 && <1.21.11
                 Optional.empty(),
                 new DimensionType.MonsterSettings(/*? if <1.21.11 {*/ false, true, /*?}*/ UniformInt.of(0, 7), 0)
                 //? if >=1.21.11 {
-                /*, EnvironmentAttributeMap.builder()
-                    .set(EnvironmentAttributes.FOG_COLOR, -4138753)
+                /*, DimensionType.Skybox.OVERWORLD,
+                DimensionType.CardinalLightType.DEFAULT,
+                EnvironmentAttributeMap.builder()
+                    .set(EnvironmentAttributes.FOG_COLOR, 0xFFC0D8FF)
                     .set(EnvironmentAttributes.SKY_COLOR,
                             net.minecraft.data.worldgen.biome.OverworldBiomes.calculateSkyColor(0.8F))
-                    .set(EnvironmentAttributes.CLOUD_OPACITY, 0.8F)
+                    .set(EnvironmentAttributes.CLOUD_COLOR, net.minecraft.util.ARGB.white(0.8F))
                     .set(EnvironmentAttributes.CLOUD_HEIGHT, 192.33F)
                     .set(EnvironmentAttributes.BACKGROUND_MUSIC, BackgroundMusic.OVERWORLD)
                     .set(EnvironmentAttributes.BED_RULE, BedRule.CAN_SLEEP_WHEN_DARK)
                     .set(EnvironmentAttributes.RESPAWN_ANCHOR_WORKS, false)
                     .set(EnvironmentAttributes.NETHER_PORTAL_SPAWNS_PIGLINS, true)
                     .set(EnvironmentAttributes.AMBIENT_SOUNDS, AmbientSounds.LEGACY_CAVE_SETTINGS)
-                    .build()
+                    .build(),
+                provider.lookupOrThrow(Registries.TIMELINE).getOrThrow(net.minecraft.tags.TimelineTags.IN_OVERWORLD)
                 *///? }
             )
         );
@@ -152,19 +157,10 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
         entries.add(NoiseGeneratorSettings.AMPLIFIED, createVanillaSurfaceSettings(provider, true, false));
         entries.add(NoiseGeneratorSettings.CAVES, createVanillaCavesSettings(provider));
 
-        entries.add(BETA, createNoiseGeneratorSettings(provider, ModernBetaReducedHeightNoiseSettings.BETA, 64, true));
-        entries.add(ALPHA, createNoiseGeneratorSettings(provider, ModernBetaReducedHeightNoiseSettings.ALPHA, 64, true));
         entries.add(SKYLANDS, createNoiseGeneratorSettings(provider, ModernBetaReducedHeightNoiseSettings.SKYLANDS, 0, false));
-        entries.add(INFDEV_611, createNoiseGeneratorSettings(provider, ModernBetaReducedHeightNoiseSettings.INFDEV_611, 64, true));
-        entries.add(INFDEV_420, createNoiseGeneratorSettings(provider, ModernBetaReducedHeightNoiseSettings.INFDEV_420, 64, true));
-        entries.add(INFDEV_415, createNoiseGeneratorSettings(provider, ModernBetaReducedHeightNoiseSettings.INFDEV_415, 64, true));
         entries.add(INFDEV_227, createNoiseGeneratorSettings(provider, ModernBetaReducedHeightNoiseSettings.INFDEV_227, 64, true));
         entries.add(INDEV, createNoiseGeneratorSettings(provider, ModernBetaReducedHeightNoiseSettings.INDEV, 64, false));
-        entries.add(CLASSIC_0_30, createNoiseGeneratorSettings(provider, ModernBetaReducedHeightNoiseSettings.CLASSIC_0_30, 64, false));
-        entries.add(PE, createNoiseGeneratorSettings(provider, ModernBetaReducedHeightNoiseSettings.PE, 64, true));
-        entries.add(EARLY_RELEASE, createNoiseGeneratorSettings(provider, ModernBetaReducedHeightNoiseSettings.EARLY_RELEASE, 63, true));
-        entries.add(MAJOR_RELEASE, createNoiseGeneratorSettings(provider, ModernBetaReducedHeightNoiseSettings.MAJOR_RELEASE, 63, true));
-        entries.add(EARLY_BEDROCK, createNoiseGeneratorSettings(provider, ModernBetaReducedHeightNoiseSettings.EARLY_BEDROCK, 63, true));
+        entries.add(NOISE_3D, createNoiseGeneratorSettings(provider, ModernBetaReducedHeightNoiseSettings.FULL_HEIGHT, 64, true));
 
         //Density functions
         HolderGetter<DensityFunction> densityFunctionLookup = provider.lookupOrThrow(Registries.DENSITY_FUNCTION);

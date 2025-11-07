@@ -1,3 +1,4 @@
+//~dotLocation
 package mod.bluestaggo.modernerbeta.world.biome.voronoi;
 
 import com.mojang.serialization.Codec;

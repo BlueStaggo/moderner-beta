@@ -9,6 +9,7 @@ import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
 import java.util.Map;
 
 public record ForcedBiomeHeight(
+    boolean enabled,
     Map<ExtendedBiomeId, HeightConfig> heightOverrides,
     float depthWeight,
     float depthOffset,
@@ -18,6 +19,7 @@ public record ForcedBiomeHeight(
 ) {
     public static final Codec<ForcedBiomeHeight> CODEC = RecordCodecBuilder.create(
         instance -> instance.group(
+            Codec.BOOL.fieldOf("enabled").orElse(false).forGetter(ForcedBiomeHeight::enabled),
             Codec.unboundedMap(ExtendedBiomeId.CODEC, HeightConfig.CODEC).fieldOf("heightOverrides").orElse(Map.of()).forGetter(ForcedBiomeHeight::heightOverrides),
             Codec.FLOAT.fieldOf("depthWeight").orElse(1.0f).forGetter(ForcedBiomeHeight::depthWeight),
             Codec.FLOAT.fieldOf("depthOffset").orElse(0.0f).forGetter(ForcedBiomeHeight::depthOffset),
@@ -27,7 +29,8 @@ public record ForcedBiomeHeight(
         ).apply(instance, ForcedBiomeHeight::new)
     );
     public static final ForcedBiomeHeight DEFAULT = CodecUtil.getDefaultByMap(CODEC);
-    public static final ForcedBiomeHeight AMPLIFIED = new ForcedBiomeHeight(Map.of(), 2.0f, 1.0f, 4.0f, 1.0f, true);
+    public static final ForcedBiomeHeight ENABLED = new ForcedBiomeHeight(true, Map.of(), 1.0f, 1.0f, 1.0f, 1.0f, false);
+    public static final ForcedBiomeHeight AMPLIFIED = new ForcedBiomeHeight(true, Map.of(), 2.0f, 1.0f, 4.0f, 1.0f, true);
 
     public static ForcedBiomeHeight overridesOnly(Map<ExtendedBiomeId, HeightConfig> heightOverrides) {
         return overridesOnly(heightOverrides, false);
@@ -35,6 +38,7 @@ public record ForcedBiomeHeight(
 
     public static ForcedBiomeHeight overridesOnly(Map<ExtendedBiomeId, HeightConfig> heightOverrides, boolean amplified) {
         return new ForcedBiomeHeight(
+            true,
             heightOverrides,
             amplified ? 2.0f : 1.0f,
             amplified ? 1.0f : 0.0f,

@@ -7,8 +7,6 @@ import mod.bluestaggo.modernerbeta.settings.component.CaveGeneration;
 import mod.bluestaggo.modernerbeta.world.chunk.provider.indev.IndevTheme;
 import mod.bluestaggo.modernerbeta.world.chunk.provider.indev.IndevType;
 import mod.bluestaggo.modernerbeta.world.chunk.provider.island.IslandShape;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.gui.components.OptionsList;
@@ -16,7 +14,6 @@ import net.minecraft.nbt.Tag;
 
 import static mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes.SettingsComponentType.*;
 
-@Environment(EnvType.CLIENT)
 @SuppressWarnings("unchecked")
 public class ModernBetaClientBuiltInProviders {
     private static void addAll(OptionsList list, OptionInstance<?>... options) {
@@ -83,6 +80,44 @@ public class ModernBetaClientBuiltInProviders {
         );
 
         registryHandler.register(
+            NOISE_SETTINGS.id,
+            (screen, options) -> {
+                int minY = -64;
+                int maxY = 320;
+                if (screen instanceof ModernBetaGraphicalProviderSettingsScreen providerSettingsScreen) {
+                    minY = providerSettingsScreen.worldMinY;
+                    maxY = providerSettingsScreen.worldMaxY;
+                }
+
+                addAll(
+                    options,
+                    screen.intRangeOption("min_y", minY, maxY, 16),
+                    screen.intRangeOption("height", 0, maxY - minY, 16),
+                    screen.intRangeOption("size_horizontal", 1, 4),
+                    screen.intRangeOption("size_vertical", 1, 4)
+                );
+            }
+        );
+
+        registryHandler.register(
+            NOISE_3D_SETTINGS.id,
+            (screen, options) -> {
+                addAll(
+                    options,
+                    screen.booleanOption("monoliths"),
+                    screen.booleanOption("farlands"),
+                    screen.booleanOption("oldInfdevTerrainNoise"),
+                    screen.booleanOption("alphaNoiseSampling"),
+                    screen.booleanOption("climateHeightScaling"),
+                    screen.booleanOption("randomNoiseOffsets"),
+                    screen.booleanOption("arraySurfaceNoise"),
+                    screen.booleanOption("simplexSurfaceNoise"),
+                    screen.booleanOption("pocketEditionRng")
+                );
+            }
+        );
+
+        registryHandler.register(
             NOISE_SCALE.id,
             (screen, options) -> {
                 addAll(
@@ -98,7 +133,9 @@ public class ModernBetaClientBuiltInProviders {
                     screen.floatRangeOption("stretchY", 0.01f, 50.0f),
                     screen.floatRangeOption("upperLimit", 1.0f, 5000.0f),
                     screen.floatRangeOption("lowerLimit", 1.0f, 5000.0f),
-                    screen.booleanOption("farlands")
+                    screen.floatRangeOption("densityUnderdamp", -10.0f, 10.0f),
+                    screen.floatRangeOption("limitBlending", 0.01f, 100.0f),
+                    screen.intRangeOption("forestNoiseOctaves", 1, 16)
                 );
             }
         );
@@ -119,6 +156,26 @@ public class ModernBetaClientBuiltInProviders {
         );
 
         registryHandler.register(
+            NOISE_LANDMASS.id,
+            (screen, options) -> {
+                addAll(
+                    options,
+                    screen.booleanOption("enabled"),
+                    screen.floatRangeOption("variationScale", 0.0f, 2.0f),
+                    screen.floatRangeOption("depthInfluence", 0.0f, 2.0f),
+                    screen.floatRangeOption("negativeDepthInfluence", 0.0f, 2.0f),
+                    screen.floatRangeOption("depthStretch", 0.0f, 5.0f),
+                    screen.floatRangeOption("depthOffset", -5.0f, 5.0f),
+                    screen.floatRangeOption("positiveDepthDampening", 1.0f, 10.0f),
+                    screen.floatRangeOption("negativeDepthDampening", 1.0f, 10.0f),
+                    screen.floatRangeOption("minDepth", -1.0f, 0.0f),
+                    screen.floatRangeOption("maxDepth", 0.0f, 1.0f),
+                    screen.booleanOption("negativeDepthFlattening")
+                );
+            }
+        );
+
+        registryHandler.register(
             FORCED_BIOME_HEIGHT.id,
             (screen, options) -> {
                 options.addBig(screen.mapEditButton(
@@ -128,11 +185,30 @@ public class ModernBetaClientBuiltInProviders {
                 ));
                 addAll(
                     options,
+                    screen.booleanOption("enabled"),
+                    screen.booleanOption("modifyOnlyPositiveDepth"),
                     screen.floatRangeOption("depthWeight", 1.0f, 20.0f),
                     screen.floatRangeOption("depthOffset", 0.0f, 20.0f),
                     screen.floatRangeOption("scaleWeight", 1.0f, 20.0f),
-                    screen.floatRangeOption("scaleOffset", 0.0f, 20.0f),
-                    screen.booleanOption("modifyOnlyPositiveDepth")
+                    screen.floatRangeOption("scaleOffset", 0.0f, 20.0f)
+                );
+            }
+        );
+
+        registryHandler.register(
+            SURFACE_PROPERTIES.id,
+            (screen, options) -> {
+                addAll(
+                    options,
+                    screen.booleanOption("bedrockHoles"),
+                    screen.booleanOption("flipNoiseCoordinates"),
+                    screen.booleanOption("surfaceBeaches"),
+                    screen.floatRangeOption("sandBeachScale", 0.0f, 1.0f),
+                    screen.floatRangeOption("gravelBeachScale", 0.0f, 1.0f),
+                    screen.floatRangeOption("surfaceNoiseScale", 0.0f, 1.0f),
+                    screen.booleanOption("generateSandstone"),
+                    screen.booleanOption("erosion"),
+                    screen.booleanOption("gravelOceanBed")
                 );
             }
         );
@@ -174,7 +250,7 @@ public class ModernBetaClientBuiltInProviders {
             (screen, options) -> {
                 addAll(
                     options,
-                    screen.booleanOption("useCarvers"),
+                    screen.booleanOption("useCaves"),
                     screen.booleanOption("use14aCaves"),
                     screen.intRangeOption("rarity", 1024, 40960, 1024),
                     screen.floatRangeOption("radius", 0.01f, 5.0f),

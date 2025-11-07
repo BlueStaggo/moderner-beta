@@ -1,6 +1,10 @@
 plugins {
     id("dev.kikugie.stonecutter")
     id("dev.architectury.loom").apply(false)
+
+    (id("org.jetbrains.kotlin.jvm") version "2.2.0").apply(false)
+    (id("com.google.devtools.ksp") version "2.2.0-2.0.2").apply(false)
+    (id("dev.kikugie.fletching-table") version "0.1.0-alpha.13").apply(false)
 }
 
 plugins.apply("dev.kikugie.stonecutter")
@@ -74,6 +78,11 @@ stonecutter.parameters {
         }
 
         string {
+            direction = eval(current.version, "<1.20.3")
+            replace("net.minecraft.network.chat.ComponentSerialization.CODEC", "net.minecraft.util.ExtraCodecs.COMPONENT")
+        }
+
+        string {
             direction = eval(current.version, "<1.20.5")
             replace("com.mojang.serialization.MapCodec<", "com.mojang.serialization./*Map*/Codec<")
         }
@@ -81,6 +90,26 @@ stonecutter.parameters {
         string {
             direction = eval(current.version, "<1.20.5")
             replace("com.mojang.serialization.MapCodec.", "com.mojang.serialization./*Map*/Codec.")
+        }
+
+        string {
+            direction = eval(current.version, ">=1.21.11")
+            replace("ResourceLocation", "Identifier")
+        }
+
+        string {
+            direction = eval(current.version, ">=1.21.11")
+            replace("ResourceKey::location", "ResourceKey::identifier")
+        }
+
+        string("dotLocation") {
+            direction = eval(current.version, ">=1.21.11")
+            replace(".location()", ".identifier()")
+        }
+
+        string {
+            direction = eval(current.version, ">=1.21.11")
+            replace("net.minecraft.Util", "net.minecraft.util.Util")
         }
     }
 }

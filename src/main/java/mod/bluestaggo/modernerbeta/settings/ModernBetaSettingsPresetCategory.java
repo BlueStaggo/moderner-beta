@@ -57,6 +57,11 @@ public record ModernBetaSettingsPresetCategory(
         return categoryDescription.orElseGet(() -> makeDescriptionComponent(fallbackId));
     }
 
+    @Override
+    public ResourceLocation getTextureLocation(ResourceLocation fallbackId) {
+        return NameAndDescriptionItem.super.getTextureLocation(this.defaultIcon);
+    }
+
     private static Component makeTitleComponent(ResourceLocation id) {
         return Component.translatable("createWorld.customize.modern_beta.preset_category.name." + id.toLanguageKey()).withStyle(ChatFormatting.AQUA);
     }

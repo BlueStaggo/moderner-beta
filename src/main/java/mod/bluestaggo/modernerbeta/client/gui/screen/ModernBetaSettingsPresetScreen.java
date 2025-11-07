@@ -1,74 +1,48 @@
+//~dotLocation
 package mod.bluestaggo.modernerbeta.client.gui.screen;
 
-import mod.bluestaggo.modernerbeta.ModernerBeta;
-import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
-import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPresetCategory;
 import mod.bluestaggo.modernerbeta.settings.NameAndDescriptionItem;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 //? if <1.21.9
 import net.minecraft.Util;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ObjectSelectionList;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.CommonColors;
 import net.minecraft.util.FormattedCharSequence;
+import org.apache.logging.log4j.util.TriConsumer;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Optional;
 
-public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
+public class ModernBetaSettingsPresetScreen<T extends NameAndDescriptionItem> extends ModernBetaScreen {
     private static final String TEXT_TITLE = "createWorld.customize.modern_beta.title.preset";
-    
-    private static final ResourceLocation TEXTURE_PRESET_CUSTOM = createTextureId(ModernerBeta.createId("custom"));
 
-    private final ModernBetaWorldScreen worldScreen;
-    private final List<ResourceLocation> presets;
-    private final boolean displayCategories;
+    private final List<Holder<T>> presets;
+    private final boolean enableSelect;
+    private final TriConsumer<ModernBetaSettingsPresetScreen<?>, ResourceLocation, T> onSelected;
 
-    private final Registry<ModernBetaSettingsPreset> presetRegistry;
-    private final Registry<ModernBetaSettingsPresetCategory> presetCategoryRegistry;
-
-    private ModernBetaSettingsPreset preset;
     private PresetsListWidget listWidget;
     private Button selectPresetButton;
 
     public ModernBetaSettingsPresetScreen(
         ModernBetaScreen parent,
-        Registry<ModernBetaSettingsPreset> presetRegistry,
-        Registry<ModernBetaSettingsPresetCategory> presetCategoryRegistry,
-        List<ResourceLocation> presets,
-        ModernBetaSettingsPreset preset,
-        boolean displayCategories
+        List<Holder<T>> presets,
+        TriConsumer<ModernBetaSettingsPresetScreen<?>, ResourceLocation, T> onSelected,
+        boolean enableSelect
     ) {
         super(Component.translatable(TEXT_TITLE), parent);
 
         this.presets = presets;
-        this.preset = preset;
-        this.displayCategories = displayCategories;
-
-        this.presetRegistry = presetRegistry;
-        this.presetCategoryRegistry = presetCategoryRegistry;
-
-        Screen worldScreen = parent;
-        while (!(worldScreen instanceof ModernBetaWorldScreen)) {
-            if (!(worldScreen instanceof ModernBetaScreen modernBetaScreen)) {
-                worldScreen = null;
-                break;
-            }
-            worldScreen = modernBetaScreen.parent;
-        }
-        this.worldScreen = (ModernBetaWorldScreen)worldScreen;
+        this.enableSelect = enableSelect;
+        this.onSelected = onSelected;
     }
     
     @Override
@@ -81,13 +55,21 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
         this.selectPresetButton = this.addRenderableWidget(Button.builder(
             Component.translatable("createWorld.customize.presets.select"),
             onPress -> {
-                this.worldScreen.setPreset(this.preset);
-                this.minecraft.setScreen(this.parent);
-        }).bounds(this.width / 2 - 154, this.height - 26, 150, 20).build());
-        this.selectPresetButton.active = !this.displayCategories;
+                PresetsListWidget.PresetEntry entry = this.listWidget.getSelected();
+
+                if (entry != null) {
+                    this.onSelected.accept(this, entry.presetName, entry.preset);
+                }
+            }
+        ).bounds(this.width / 2 - 154, this.height - 26, 150, 20).build());
+        this.selectPresetButton.active = this.enableSelect;
         this.addRenderableWidget(Button.builder(
-            this.displayCategories ? CommonComponents.GUI_CANCEL : CommonComponents.GUI_BACK,
-            button -> this.minecraft.setScreen(this.parent)
+            !this.enableSelect ? CommonComponents.GUI_CANCEL : CommonComponents.GUI_BACK,
+            button -> {
+                if (this.minecraft != null) {
+                    this.minecraft.setScreen(this.parent);
+                }
+            }
         ).bounds(this.width / 2 + 4, this.height - 26, 150, 20).build());
 
         this.updateSelectButton(this.listWidget.getSelected() instanceof PresetsListWidget.PresetEntry);
@@ -111,22 +93,12 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
     private void updateSelectButton(boolean hasSelected) {
         this.selectPresetButton.active = hasSelected;
     }
-    
-    private static ResourceLocation createTextureId(ResourceLocation id) {
-        return id.withPath("textures/gui/moderner_beta_settings_preset/" + id.getPath() + ".png");
-    }
 
-    private static ResourceLocation createPresetTextureId(ResourceLocation id) {
-        ResourceLocation idObj = createTextureId(id);
-        return Minecraft.getInstance().getResourceManager().getResource(idObj).isPresent()
-            ? idObj : TEXTURE_PRESET_CUSTOM;
-    }
-
-    private class PresetsListWidget extends ObjectSelectionList<PresetsListWidget.AbstractPresetEntry> {
+    private class PresetsListWidget extends ObjectSelectionList<PresetsListWidget.PresetEntry> {
         private static final int ITEM_HEIGHT = 60;
         private static final int ICON_SIZE = 56;
 
-        public PresetsListWidget(List<ResourceLocation> presets) {
+        public PresetsListWidget(List<Holder<T>> presets) {
             //? if >=1.20.3 {
             super(
                 ModernBetaSettingsPresetScreen.this.minecraft,
@@ -146,40 +118,16 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
             );
             *///?}
 
-            if (ModernBetaSettingsPresetScreen.this.displayCategories) {
-                presets.forEach(key -> {
-                    this.addEntry(new PresetCategoryEntry(
-                        key,
-                        presetCategoryRegistry
-                            //? if >=1.21.2 {
-                            .getValue
-                            //? } else {
-                            /*.get
-                            *///? }
-                                (key)
-                    ));
-                });
-            } else {
-                presets.forEach(key -> {
-                    this.addEntry(new PresetEntry(
-                        key,
-                        presetRegistry
-                            //? if >=1.21.2 {
-                            .getValue
-                            //? } else {
-                            /*.get
-                            *///? }
-                                (key)
-                    ));
-                });
-            }
+            presets.forEach(holder ->
+                this.addEntry(new PresetEntry(holder.unwrapKey().orElseThrow().location(), holder.value())));
         }
         
         @Override
-        public void setSelected(AbstractPresetEntry entry) {
+        public void setSelected(PresetEntry entry) {
             super.setSelected(entry);
 
-            ModernBetaSettingsPresetScreen.this.updateSelectButton(entry instanceof PresetEntry);
+            ModernBetaSettingsPresetScreen.this.updateSelectButton(entry != null &&
+                ModernBetaSettingsPresetScreen.this.enableSelect);
         }
 
         private static final int SCROLLBAR_X_OFFSET = 30;
@@ -200,7 +148,7 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
             return super.getRowWidth() + 85;
         }
         
-        private abstract class AbstractPresetEntry extends ObjectSelectionList.Entry<AbstractPresetEntry> {
+        private class PresetEntry extends ObjectSelectionList.Entry<PresetEntry> {
             //? if >=1.20.2 {
             private static final ResourceLocation TEXTURE_JOIN = VersionCompat.vanillaId("world_list/join");
             private static final ResourceLocation TEXTURE_JOIN_HIGHLIGHTED =  VersionCompat.vanillaId("world_list/join_highlighted");
@@ -214,28 +162,26 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
             private static final int TEXT_LENGTH = 240;
             
             private final ResourceLocation presetTexture;
-            private final Component presetName;
+            private final Component presetTitle;
             private final Component presetDesc;
+
+            protected final T preset;
+            protected final ResourceLocation presetName;
 
             //? if <1.21.9
             private long time;
             
-            public AbstractPresetEntry(ResourceLocation presetName, NameAndDescriptionItem preset) {
-                this.presetTexture = this.getPresetTexture(presetName);
-                this.presetName = preset.makeOrGetTitleComponent(presetName);
+            public PresetEntry(ResourceLocation presetName, T preset) {
+                this.preset = preset;
+                this.presetName = presetName;
+
+                this.presetTexture = preset.getTextureLocation(presetName);
+                this.presetTitle = preset.makeOrGetTitleComponent(presetName);
                 this.presetDesc = preset.makeOrGetDescriptionComponent(presetName);
             }
 
-            protected abstract void setPreset();
-
-            protected abstract void selectPreset();
-
-            protected ResourceLocation getPresetTexture(ResourceLocation presetName) {
-                return createPresetTextureId(presetName);
-            }
-
             @Override
-            public Component getNarration() {
+            public @NotNull Component getNarration() {
                 return Component.empty();
             }
 
@@ -260,7 +206,7 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
                 int textStartX = x + ICON_SIZE + 3;
                 int textStartY = 1;
                 
-                graphics.drawString(font, this.presetName, textStartX, y + textStartY, CommonColors.WHITE, false);
+                graphics.drawString(font, this.presetTitle, textStartX, y + textStartY, CommonColors.WHITE, false);
                 
                 int descSpacing = TEXT_SPACING + textStartY + 1;
                 for (FormattedCharSequence line : presetDescTexts) {
@@ -270,7 +216,7 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
 
                 this.draw(graphics, x, y, this.presetTexture);
 
-                if (minecraft != null && minecraft.options.touchscreen().get() || hovered) {
+                if (minecraft.options.touchscreen().get() || hovered) {
                     boolean isMouseHovering = (mouseX - x) < ICON_SIZE;
 
                     graphics.fill(x, y, x + ICON_SIZE, y + ICON_SIZE, -1601138544);
@@ -319,15 +265,17 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
                 if (button != 0) {
                     return false;
                 }
+
+                PresetsListWidget.this.setSelected(this);
                 
-                this.setPreset();
-                
-                if (mouseX - PresetsListWidget.this.getRowLeft() <= ICON_SIZE) {
-                    this.selectPreset();
-                }
-                
-                if (/*? >=1.21.9 {*/ /*doubleClick *//*?} else {*/ Util.getMillis() - this.time < 250L /*?}*/) {
-                    this.selectPreset();
+                if (mouseX - PresetsListWidget.this.getRowLeft() <= ICON_SIZE ||
+                        /*? >=1.21.9 {*/ /*doubleClick *//*?} else {*/ Util.getMillis() - this.time < 250L /*?}*/) {
+                    minecraft.getSoundManager().play(
+                        SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0f)
+                    );
+
+                    ModernBetaSettingsPresetScreen.this.onSelected
+                        .accept(ModernBetaSettingsPresetScreen.this, this.presetName, this.preset);
                 }
 
                 //? if <1.21.9
@@ -353,93 +301,6 @@ public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
             
             private List<FormattedCharSequence> splitText(Font textRenderer, Component text) {
                 return textRenderer.split(text, TEXT_LENGTH);
-            }
-        }
-
-        private class PresetEntry extends AbstractPresetEntry {
-            private final ResourceLocation key;
-
-            public PresetEntry(ResourceLocation presetName, ModernBetaSettingsPreset preset) {
-                super(presetName, preset);
-                this.key = presetName;
-            }
-
-            @Override
-            protected void setPreset() {
-                PresetsListWidget.this.setSelected(this);
-                ModernBetaSettingsPresetScreen.this.preset = ModernBetaSettingsPreset.referenced(this.key);
-            }
-
-            @Override
-            protected void selectPreset() {
-                ModernBetaSettingsPresetScreen presetScreen = ModernBetaSettingsPresetScreen.this;
-                Minecraft minecraftClient = presetScreen.minecraft;
-
-                minecraftClient.getSoundManager().play(
-                    SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0f)
-                );
-
-                presetScreen.worldScreen.setPreset(ModernBetaSettingsPreset.referenced(this.key));
-
-                while (minecraftClient.screen instanceof ModernBetaSettingsPresetScreen subPresetScreen) {
-                    minecraftClient.setScreen(subPresetScreen.parent);
-                }
-            }
-        }
-
-        private class PresetCategoryEntry extends AbstractPresetEntry {
-            private final ModernBetaSettingsPresetCategory presetCategory;
-
-            public PresetCategoryEntry(ResourceLocation presetName, ModernBetaSettingsPresetCategory presetCategory) {
-                super(presetName, presetCategory);
-                this.presetCategory = presetCategory;
-            }
-
-            @Override
-            protected ResourceLocation getPresetTexture(ResourceLocation presetName) {
-                presetName = presetCategoryRegistry
-                    //? if >=1.21.2 {
-                    .getValue
-                    //? } else {
-                    /*.get
-                    *///? }
-                        (presetName)
-                    .defaultIcon();
-                return super.getPresetTexture(presetName);
-            }
-
-            @Override
-            protected void setPreset() {
-                PresetsListWidget.this.setSelected(this);
-            }
-
-            @Override
-            protected void selectPreset() {
-                assert minecraft != null;
-
-                minecraft.getSoundManager().play(
-                    SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0f)
-                );
-
-                minecraft.setScreen(new ModernBetaSettingsPresetScreen(
-                    ModernBetaSettingsPresetScreen.this,
-                    presetRegistry,
-                    presetCategoryRegistry,
-                    presetRegistry
-                        //? if >=1.21.2 {
-                        .getOrThrow
-                        //?} else {
-                        /*.getOrCreateTag
-                         *///?}
-                        (presetCategory.presetTag())
-                        .stream()
-                        .map(Holder::unwrapKey)
-                        .flatMap(Optional::stream)
-                        .map(ResourceKey::location)
-                        .toList(),
-                    preset,
-                    false
-                ));
             }
         }
     }

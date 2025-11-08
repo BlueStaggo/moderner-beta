@@ -215,6 +215,7 @@ public final class ModernBetaSettingsPresets {
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.SKYLANDS.id)
                 .add(DEEPSLATE_GENERATION, DeepslateGeneration.DISABLED)
                 .add(CAVE_GENERATION, CaveGeneration.BETA)
+                .add(NOISE_SETTINGS, ModernBetaNoiseSettings.SKY_128)
                 .add(NOISE_SCALE, new NoiseScale(
                     1368.824f,
                     684.412f,

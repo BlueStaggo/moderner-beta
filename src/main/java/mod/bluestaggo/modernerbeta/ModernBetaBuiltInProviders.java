@@ -34,6 +34,7 @@ public class ModernBetaBuiltInProviders {
                 SettingsComponentTypes.DEEPSLATE_GENERATION,
                 SettingsComponentTypes.USE_SURFACE_RULES,
                 SettingsComponentTypes.CAVE_GENERATION,
+                SettingsComponentTypes.NOISE_SETTINGS,
                 SettingsComponentTypes.NOISE_SCALE,
                 SettingsComponentTypes.NOISE_SLIDE,
                 SettingsComponentTypes.ISLES_PROPERTIES

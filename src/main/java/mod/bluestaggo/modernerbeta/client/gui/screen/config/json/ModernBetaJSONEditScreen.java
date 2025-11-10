@@ -42,16 +42,16 @@ public abstract class ModernBetaJSONEditScreen extends ModernBetaScreen {
 
         //? if >=1.21.6 {
         this.widgetSettings = MultiLineEditBox.builder().build(
-                //?} else {
-                /*this.widgetSettings = new MultiLineEditBox(
-                 *///?}
-                this.font,
-                //? if <1.21.6
-                /*0, 0,*/
-                editBoxWidth, editBoxHeight,
-                //? if <1.21.6
-                /*Component.literal(""),*/
-                Component.translatable(TEXT_SETTINGS)
+        //?} else {
+        /*this.widgetSettings = new MultiLineEditBox(
+         *///?}
+            this.font,
+            //? if <1.21.6
+            /*0, 0,*/
+            editBoxWidth, editBoxHeight,
+            //? if <1.21.6
+            /*Component.literal(""),*/
+            Component.translatable(TEXT_SETTINGS)
         );
         this.widgetSettings.setValue(this.settingsString);
         this.widgetSettings.setValueListener(string -> {

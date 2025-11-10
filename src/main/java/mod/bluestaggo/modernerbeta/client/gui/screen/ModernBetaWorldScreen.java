@@ -2,6 +2,7 @@
 package mod.bluestaggo.modernerbeta.client.gui.screen;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;
+import mod.bluestaggo.modernerbeta.client.gui.screen.config.ModernBetaDataPackExportScreen;
 import mod.bluestaggo.modernerbeta.client.gui.screen.config.graphical.ModernBetaGraphicalProviderSettingsScreen;
 import mod.bluestaggo.modernerbeta.client.gui.screen.config.json.ModernBetaImportExportScreen;
 import mod.bluestaggo.modernerbeta.client.gui.screen.config.json.ModernBetaSettingsScreen;
@@ -311,7 +312,11 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
 
                 if (read.getB())
                     this.preset = read.getA();
-            }))).build());
+            }))
+        ).build());
+        this.addRenderableWidget(Button.builder(Component.translatable(TEXT_SETTINGS_DATA_PACK_EXPORT), button ->
+            this.minecraft.setScreen(new ModernBetaDataPackExportScreen(TEXT_SETTINGS_DATA_PACK_EXPORT, this, this.presetCategoryRegistry))
+        ).pos(0, 20).build());
     }
 
     private void resetPreset() {

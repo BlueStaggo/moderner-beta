@@ -149,6 +149,14 @@ public final class VersionCompat {
         *///?}
     }
 
+    public static ResourceLocation id(String namespace, String location) {
+        //? if >=1.21 {
+        return ResourceLocation.fromNamespaceAndPath(namespace, location);
+        //?} else {
+        /*return new ResourceLocation(namespace, location);
+        *///?}
+    }
+
     public static ResourceLocation vanillaId(String string) {
         //? if >=1.21 {
         return ResourceLocation.withDefaultNamespace(string);

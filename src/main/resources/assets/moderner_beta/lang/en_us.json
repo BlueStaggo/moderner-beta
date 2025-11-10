@@ -184,6 +184,8 @@
     "createWorld.customize.modern_beta.preset.desc.moderner_beta.release_hybrid_amplified": "Explore a world with the terrain generation of Minecraft 1.6.4 and most vanilla biomes, with amplified terrain.",
     "createWorld.customize.modern_beta.preset.desc.moderner_beta.snow_aint_snowier_amplified": "Explore a world with the terrain generation of Minecraft 1.17.1 with newer biomes, and amplified terrain.",
 
+    "createWorld.customize.modern_beta.preset_category": "Preset Category",
+
     "createWorld.customize.modern_beta.preset_category.name.moderner_beta.beta": "Beta",
     "createWorld.customize.modern_beta.preset_category.name.moderner_beta.alpha_infdev": "Alpha / Infdev",
     "createWorld.customize.modern_beta.preset_category.name.moderner_beta.finite": "Finite",

@@ -317,9 +317,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
                         configuredCarver.carve(carverContext, chunk, biomeAccessWithSource::getBiome, random, aquiferSampler, carverPos, carvingMask);
                     }
 
-                    if (seedMethod != CaveGeneration.SeedMethod.BEDROCK) {
-                        ++salt;
-                    }
+                    ++salt;
                 }
             }
         }

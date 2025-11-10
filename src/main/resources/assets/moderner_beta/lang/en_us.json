@@ -19,6 +19,10 @@
 
     "createWorld.customize.modern_beta.hint.settings": "Hint: Settings can be copied and pasted into a text editor for easier editing.",
 
+    "createWorld.customize.modern_beta.settings.import_export": "Quick Import/Export",
+    "createWorld.customize.modern_beta.settings.import_export.hint": "Copy and paste JSON code into this text box",
+    "createWorld.customize.modern_beta.settings.data_pack_export": "Data Pack Export",
+
     "createWorld.customize.modern_beta.settings.json": "✎",
     "createWorld.customize.modern_beta.settings.reset": "Reset settings",
     "createWorld.customize.modern_beta.settings.reset.message": "Reset world settings to default?",

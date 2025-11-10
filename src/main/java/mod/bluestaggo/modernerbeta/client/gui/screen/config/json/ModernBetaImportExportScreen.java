@@ -18,6 +18,7 @@ import java.util.function.Consumer;
 
 public class ModernBetaImportExportScreen extends ModernBetaJSONEditScreen {
     private static final String TEXT_SETTINGS_SAVE = "createWorld.customize.modern_beta.settings.save";
+    private static final String COPY_PASTE_HINT = "createWorld.customize.modern_beta.settings.import_export.hint";
     public static final int BUTTON_LENGTH = 100;
 
     private Button widgetDone;
@@ -31,7 +32,7 @@ public class ModernBetaImportExportScreen extends ModernBetaJSONEditScreen {
 
     @Override
     protected void makeHeader(GridLayout.RowHelper content) {
-        Component textPasting = Component.translatable("Copy and paste JSON code into this text box");
+        Component textPasting = Component.translatable(COPY_PASTE_HINT);
         StringWidget widgetPasting = new StringWidget(textPasting, this.font);
 
         content.addChild(widgetPasting);
@@ -46,7 +47,7 @@ public class ModernBetaImportExportScreen extends ModernBetaJSONEditScreen {
             this.minecraft.setScreen(this.parent);
         }).bounds(0, 0, BUTTON_LENGTH, ModernBetaScreen.BUTTON_HEIGHT).build();
 
-        row.addChild(Button.builder(Component.translatable("Copy to clipboard"), button ->
+        row.addChild(Button.builder(Component.translatable("chat.copy"), button ->
             this.minecraft.keyboardHandler.setClipboard(this.settingsString)
         ).bounds(0, 0, BUTTON_LENGTH, ModernBetaScreen.BUTTON_HEIGHT).build());
         row.addChild(this.widgetDone);

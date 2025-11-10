@@ -50,10 +50,11 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
 
     private static final String TEXT_SETTINGS = "createWorld.customize.modern_beta.settings";
     private static final String TEXT_SETTINGS_JSON = "createWorld.customize.modern_beta.settings.json";
+    private static final String TEXT_SETTINGS_IMPORT_EXPORT = "createWorld.customize.modern_beta.settings.import_export";
+    private static final String TEXT_SETTINGS_DATA_PACK_EXPORT = "createWorld.customize.modern_beta.settings.data_pack_export";
     private static final String TEXT_SETTINGS_RESET = "createWorld.customize.modern_beta.settings.reset";
     private static final String TEXT_SETTINGS_RESET_MESSAGE = "createWorld.customize.modern_beta.settings.reset.message";
     private static final String TEXT_SETTINGS_PREVIEW = "createWorld.customize.modern_beta.settings.preview";
-    //private static final String TEXT_INVALID_SETTINGS = "createWorld.customize.modern_beta.invalid_settings";
     
     private static final String[] TEXT_HINTS = new String[] {
         "createWorld.customize.modern_beta.hint.settings"
@@ -304,8 +305,8 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
         FrameLayout.alignInRectangle(gridWidgetMain, 0, this.overlayTop + 8, this.width, this.height, 0.5f, 0.0f);
         gridWidgetMain.visitWidgets(this::addRenderableWidget);
 
-        this.addRenderableWidget(Button.builder(Component.translatable("FHUCKEIFN "), button ->
-            this.minecraft.setScreen(new ModernBetaImportExportScreen("fsdgs", this, this.preset, str -> {
+        this.addRenderableWidget(Button.builder(Component.translatable(TEXT_SETTINGS_IMPORT_EXPORT), button ->
+            this.minecraft.setScreen(new ModernBetaImportExportScreen(TEXT_SETTINGS_IMPORT_EXPORT, this, this.preset, str -> {
                 Tuple<ModernBetaSettingsPreset, Boolean> read = ModernBetaSettingsPreset.fromJson(str);
 
                 if (read.getB())

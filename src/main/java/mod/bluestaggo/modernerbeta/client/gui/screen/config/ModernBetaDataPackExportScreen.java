@@ -58,7 +58,7 @@ public class ModernBetaDataPackExportScreen extends ModernBetaScreen {
         Component idText = Component.translatable("Preset ID:");
         StringWidget idLabel = new StringWidget(idText, this.font);
         //noinspection ExtractMethodRecommender
-        EditBox idBox = new EditBox(this.minecraft.fontFilterFishy, this.width - 200, 20, Component.empty());
+        EditBox idBox = new EditBox(this.minecraft.fontFilterFishy, 0, 0, this.width - 200, 20, Component.empty());
         idBox.setValue(this.presetID.toString());
         idBox.setResponder(string -> {
             ResourceLocation parsed = ResourceLocation.tryParse(string);
@@ -76,7 +76,7 @@ public class ModernBetaDataPackExportScreen extends ModernBetaScreen {
 
         Component nameText = Component.translatable("Preset Name:");
         StringWidget nameLabel = new StringWidget(nameText, this.font);
-        EditBox nameBox = new EditBox(this.minecraft.fontFilterFishy, this.width - 200, 20, Component.empty());
+        EditBox nameBox = new EditBox(this.minecraft.fontFilterFishy, 0, 0, this.width - 200, 20, Component.empty());
         nameBox.setValue(this.presetName);
         nameBox.setResponder(string -> {
             this.canExport = string.isEmpty();

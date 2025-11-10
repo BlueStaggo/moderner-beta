@@ -24,16 +24,14 @@ public class ModernBetaDataPackExportScreen extends ModernBetaScreen {
     private static final String TEXT_PRESET_CATEGORY_NAME = "createWorld.customize.modern_beta.preset_category.name";
 
     private final HeaderAndFooterLayout layout = new HeaderAndFooterLayout(this, 8, 40);
+    private final Registry<ModernBetaSettingsPresetCategory> presetCategoryRegistry;
 
     private ResourceLocation presetID;
     private String presetName = "";
     private String presetDescription = "";
-
     private ResourceLocation presetCategory;
 
     private boolean canExport;
-
-    private final Registry<ModernBetaSettingsPresetCategory> presetCategoryRegistry;
 
     public ModernBetaDataPackExportScreen(String title, Screen parent, Registry<ModernBetaSettingsPresetCategory> presetCategoryRegistry) {
         super(Component.translatable(title), parent);

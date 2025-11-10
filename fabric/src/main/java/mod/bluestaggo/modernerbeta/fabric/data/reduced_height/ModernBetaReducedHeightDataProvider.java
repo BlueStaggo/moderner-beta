@@ -1,9 +1,9 @@
 package mod.bluestaggo.modernerbeta.fabric.data.reduced_height;
 
 import com.mojang.datafixers.util.Either;
-import mod.bluestaggo.modernerbeta.mixin.NoiseRouterDataAccessor;
 import mod.bluestaggo.modernerbeta.level.carver.configured.ModernBetaConfiguredCarvers;
 import mod.bluestaggo.modernerbeta.level.feature.configured.ModernBetaConfiguredFeatures;
+import mod.bluestaggo.modernerbeta.mixin.NoiseRouterDataAccessor;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;
 import net.minecraft.core.Holder;

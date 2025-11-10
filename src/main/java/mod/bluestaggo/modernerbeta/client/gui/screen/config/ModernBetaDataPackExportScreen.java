@@ -16,6 +16,9 @@ import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
+import org.lwjgl.PointerBuffer;
+import org.lwjgl.system.MemoryStack;
+import org.lwjgl.util.tinyfd.TinyFileDialogs;
 
 import java.util.Locale;
 
@@ -125,6 +128,25 @@ public class ModernBetaDataPackExportScreen extends ModernBetaScreen {
 
         Button widgetDone = Button.builder(Component.translatable("Export"), button -> {
             //TODO
+            String writeTo;
+
+            try (MemoryStack stack = MemoryStack.stackPush()) {
+                PointerBuffer pointers = stack.mallocPointer(1);
+                pointers.put(stack.UTF8("*.zip"));
+                pointers.flip();
+
+                writeTo = TinyFileDialogs.tinyfd_saveFileDialog(
+                    "Select where you want to export to",
+                    this.minecraft.gameDirectory.toString(),
+                    pointers,
+                    null
+                );
+                System.out.println("Output path: " + writeTo);
+            }
+
+            if (writeTo != null) {
+
+            }
         }).bounds(0, 0, BUTTON_LENGTH, BUTTON_HEIGHT).build();
 
         Button widgetCancel = Button.builder(CommonComponents.GUI_CANCEL, button ->

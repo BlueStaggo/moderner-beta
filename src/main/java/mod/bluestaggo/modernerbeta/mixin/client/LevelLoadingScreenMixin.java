@@ -1,6 +1,6 @@
 package mod.bluestaggo.modernerbeta.mixin.client;
 
-import mod.bluestaggo.modernerbeta.api.world.chunk.ChunkProviderFinite;
+import mod.bluestaggo.modernerbeta.api.level.chunk.ChunkProviderFinite;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.LevelLoadingScreen;
 import net.minecraft.client.gui.screens.Screen;

@@ -2,7 +2,7 @@ package mod.bluestaggo.modernerbeta.mixin.client;
 
 import mod.bluestaggo.modernerbeta.client.gui.screen.ModernBetaWorldScreen;
 import mod.bluestaggo.modernerbeta.client.gui.screen.ModernBetaWorldScreenProvider;
-import mod.bluestaggo.modernerbeta.world.preset.ModernBetaWorldPresets;
+import mod.bluestaggo.modernerbeta.level.preset.ModernBetaWorldPresets;
 import net.minecraft.client.gui.screens.worldselection.PresetEditor;
 import net.minecraft.client.gui.screens.worldselection.WorldCreationUiState;
 import net.minecraft.core.Holder;

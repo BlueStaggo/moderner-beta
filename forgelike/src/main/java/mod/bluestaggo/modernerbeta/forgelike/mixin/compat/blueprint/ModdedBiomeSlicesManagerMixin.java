@@ -1,7 +1,7 @@
 package mod.bluestaggo.modernerbeta.forgelike.mixin.compat.blueprint;
 
 import mod.bluestaggo.modernerbeta.forgelike.mixin.ChunkGeneratorAccessor;
-import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
+import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomeSource;
 import net.minecraft.world.level.biome.BiomeSource;
 import net.minecraft.world.level.biome.FeatureSorter;
 import net.minecraft.world.level.chunk.ChunkGenerator;

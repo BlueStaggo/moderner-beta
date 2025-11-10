@@ -3,7 +3,7 @@ package mod.bluestaggo.modernerbeta.settings.component;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.util.CodecUtil;
-import mod.bluestaggo.modernerbeta.world.chunk.provider.island.IslandShape;
+import mod.bluestaggo.modernerbeta.level.chunk.provider.island.IslandShape;
 import net.minecraft.util.StringRepresentable;
 
 public record IslesProperties(

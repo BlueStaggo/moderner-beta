@@ -2,7 +2,7 @@ package mod.bluestaggo.modernerbeta.client.debug.entries;
 
 import mod.bluestaggo.modernerbeta.api.debug.DebugTextProvider2D;
 import mod.bluestaggo.modernerbeta.api.debug.DebugTextProvider3D;
-import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
+import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomeSource;
 //? if >=1.21.9 {
 /*import mod.bluestaggo.modernerbeta.ModernerBeta;
 import net.minecraft.client.Minecraft;

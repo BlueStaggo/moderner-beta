@@ -1,6 +1,6 @@
 package mod.bluestaggo.modernerbeta.fabric.data;
 
-import mod.bluestaggo.modernerbeta.world.structure.ModernBetaStructures;
+import mod.bluestaggo.modernerbeta.level.structure.ModernBetaStructures;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.core.HolderLookup;

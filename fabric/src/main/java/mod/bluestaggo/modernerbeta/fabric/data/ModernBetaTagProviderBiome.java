@@ -1,6 +1,6 @@
 package mod.bluestaggo.modernerbeta.fabric.data;
 
-import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomes;
+import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomes;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 //? if >=1.20.5 {

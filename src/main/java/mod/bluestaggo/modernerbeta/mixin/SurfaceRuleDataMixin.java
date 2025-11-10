@@ -8,7 +8,7 @@ import net.minecraft.data.worldgen.SurfaceRuleData;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-import static mod.bluestaggo.modernerbeta.world.chunk.ModernBetaNoiseGeneratorSettings.useModernBetaSurfaceRules;
+import static mod.bluestaggo.modernerbeta.level.chunk.ModernBetaNoiseGeneratorSettings.useModernBetaSurfaceRules;
 
 @Mixin(SurfaceRuleData.class)
 public class SurfaceRuleDataMixin {

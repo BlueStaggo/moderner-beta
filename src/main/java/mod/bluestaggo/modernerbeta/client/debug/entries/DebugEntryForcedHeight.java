@@ -1,9 +1,9 @@
 package mod.bluestaggo.modernerbeta.client.debug.entries;
 
-import mod.bluestaggo.modernerbeta.api.world.chunk.ChunkProvider;
-import mod.bluestaggo.modernerbeta.api.world.chunk.ChunkProviderForcedHeight;
-import mod.bluestaggo.modernerbeta.world.biome.HeightConfig;
-import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
+import mod.bluestaggo.modernerbeta.api.level.chunk.ChunkProvider;
+import mod.bluestaggo.modernerbeta.api.level.chunk.ChunkProviderForcedHeight;
+import mod.bluestaggo.modernerbeta.level.biome.HeightConfig;
+import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaChunkGenerator;
 //? if >=1.21.9 {
 /*import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.debug.DebugScreenDisplayer;

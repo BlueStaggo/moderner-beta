@@ -3,7 +3,7 @@ package mod.bluestaggo.modernerbeta.mixin.client;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import mod.bluestaggo.modernerbeta.api.world.biome.climate.Clime;
+import mod.bluestaggo.modernerbeta.api.level.biome.climate.Clime;
 import mod.bluestaggo.modernerbeta.client.color.BlockColorSampler;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;

@@ -2,7 +2,7 @@ package mod.bluestaggo.modernerbeta.forgelike;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.command.DebugProviderSettingsCommand;
-import mod.bluestaggo.modernerbeta.world.ModernBetaLevelInitializer;
+import mod.bluestaggo.modernerbeta.level.ModernBetaLevelInitializer;
 //? if neoforge {
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;

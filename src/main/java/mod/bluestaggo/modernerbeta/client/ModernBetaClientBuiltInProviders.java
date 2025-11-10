@@ -1,12 +1,12 @@
 package mod.bluestaggo.modernerbeta.client;
 
-import mod.bluestaggo.modernerbeta.api.world.biome.climate.TemperatureHeightScaling;
+import mod.bluestaggo.modernerbeta.api.level.biome.climate.TemperatureHeightScaling;
 import mod.bluestaggo.modernerbeta.client.gui.screen.config.*;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import mod.bluestaggo.modernerbeta.settings.component.CaveGeneration;
-import mod.bluestaggo.modernerbeta.world.chunk.provider.indev.IndevTheme;
-import mod.bluestaggo.modernerbeta.world.chunk.provider.indev.IndevType;
-import mod.bluestaggo.modernerbeta.world.chunk.provider.island.IslandShape;
+import mod.bluestaggo.modernerbeta.level.chunk.provider.indev.IndevTheme;
+import mod.bluestaggo.modernerbeta.level.chunk.provider.indev.IndevType;
+import mod.bluestaggo.modernerbeta.level.chunk.provider.island.IslandShape;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.gui.components.OptionsList;

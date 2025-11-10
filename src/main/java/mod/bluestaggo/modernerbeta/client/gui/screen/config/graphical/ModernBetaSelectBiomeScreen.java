@@ -1,6 +1,6 @@
 //~registryOr
 //~dotLocation
-package mod.bluestaggo.modernerbeta.client.gui.screen;
+package mod.bluestaggo.modernerbeta.client.gui.screen.config.graphical;
 
 import com.ibm.icu.text.Collator;
 import net.minecraft.ChatFormatting;

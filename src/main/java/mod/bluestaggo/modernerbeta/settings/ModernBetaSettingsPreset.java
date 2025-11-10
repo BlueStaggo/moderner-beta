@@ -90,7 +90,29 @@ public record ModernBetaSettingsPreset(
             ModernBetaSettings.fromCompound(newCaveBiomeSettings)
         );
     }
-    
+
+    public static Tuple<ModernBetaSettingsPreset, Boolean> fromJson(String jsonString) {
+        if (jsonString == null || jsonString.isBlank())
+            return new Tuple<>(null, false);
+
+        ModernBetaSettingsPreset newPreset = null;
+        boolean success = false;
+
+        try {
+            Gson gson = ModernerBeta.getSettingsGson().create();
+            JsonElement json = gson.fromJson(jsonString, JsonElement.class);
+
+            newPreset = json != null ?
+                    VersionCompat.getOrThrow(ModernBetaSettingsPreset.CODEC.decode(JsonOps.INSTANCE, json)).getFirst() : null;
+            success = true;
+        } catch (Exception e) {
+            ModernerBeta.log(Level.ERROR, "Unable to read settings JSON! Reverting to previous settings..");
+            ModernerBeta.log(Level.ERROR, String.format("Reason: %s", e.getMessage()));
+        }
+
+        return new Tuple<>(newPreset, success);
+    }
+
     public Tuple<ModernBetaSettingsPreset, Boolean> setJson(String stringChunk, String stringBiome, String stringCaveBiome) {
         ModernBetaSettings chunkSettings;
         ModernBetaSettings biomeSettings;

@@ -1,4 +1,4 @@
-package mod.bluestaggo.modernerbeta.client.gui.screen.config;
+package mod.bluestaggo.modernerbeta.client.gui.screen.config.graphical;
 
 import mod.bluestaggo.modernerbeta.client.gui.optioncallbacks.*;
 import mod.bluestaggo.modernerbeta.imixin.ModernBetaClearableWidget;

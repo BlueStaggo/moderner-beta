@@ -1,6 +1,6 @@
 //~registryGet
 //~dotLocation
-package mod.bluestaggo.modernerbeta.client.gui.screen.config;
+package mod.bluestaggo.modernerbeta.client.gui.screen.config.graphical;
 
 import com.mojang.serialization.Codec;
 import mod.bluestaggo.modernerbeta.ModernerBeta;

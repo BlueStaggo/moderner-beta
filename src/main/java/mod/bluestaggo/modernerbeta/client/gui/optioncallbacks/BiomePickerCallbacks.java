@@ -3,7 +3,7 @@
 package mod.bluestaggo.modernerbeta.client.gui.optioncallbacks;
 
 import com.mojang.serialization.Codec;
-import mod.bluestaggo.modernerbeta.client.gui.screen.ModernBetaSelectBiomeScreen;
+import mod.bluestaggo.modernerbeta.client.gui.screen.config.graphical.ModernBetaSelectBiomeScreen;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.Options;

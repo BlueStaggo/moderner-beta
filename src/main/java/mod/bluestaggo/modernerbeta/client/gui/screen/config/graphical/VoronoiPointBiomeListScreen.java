@@ -1,5 +1,5 @@
 //~dotLocation
-package mod.bluestaggo.modernerbeta.client.gui.screen.config;
+package mod.bluestaggo.modernerbeta.client.gui.screen.config.graphical;
 
 import mod.bluestaggo.modernerbeta.util.CompoundTagBuilder;
 import net.minecraft.client.OptionInstance;

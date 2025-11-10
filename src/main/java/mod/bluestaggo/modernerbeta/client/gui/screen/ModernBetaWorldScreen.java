@@ -2,7 +2,9 @@
 package mod.bluestaggo.modernerbeta.client.gui.screen;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;
-import mod.bluestaggo.modernerbeta.client.gui.screen.config.ModernBetaGraphicalProviderSettingsScreen;
+import mod.bluestaggo.modernerbeta.client.gui.screen.config.graphical.ModernBetaGraphicalProviderSettingsScreen;
+import mod.bluestaggo.modernerbeta.client.gui.screen.config.json.ModernBetaImportExportScreen;
+import mod.bluestaggo.modernerbeta.client.gui.screen.config.json.ModernBetaSettingsScreen;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaResourceKeys;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
@@ -303,9 +305,11 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
         gridWidgetMain.visitWidgets(this::addRenderableWidget);
 
         this.addRenderableWidget(Button.builder(Component.translatable("FHUCKEIFN "), button ->
-            this.minecraft.setScreen(new ModernBetaImportExportScreen(Component.translatable("fsdgs"), this, this.preset, newPreset -> {
-                if (newPreset != null)
-                    this.preset = newPreset;
+            this.minecraft.setScreen(new ModernBetaImportExportScreen("fsdgs", this, this.preset, str -> {
+                Tuple<ModernBetaSettingsPreset, Boolean> read = ModernBetaSettingsPreset.fromJson(str);
+
+                if (read.getB())
+                    this.preset = read.getA();
             }))).build());
     }
 

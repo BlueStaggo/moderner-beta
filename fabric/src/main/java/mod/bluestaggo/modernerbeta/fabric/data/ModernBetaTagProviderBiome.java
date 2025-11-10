@@ -1,6 +1,7 @@
 package mod.bluestaggo.modernerbeta.fabric.data;
 
 import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomes;
+import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 //? if >=1.20.5 {
@@ -12,6 +13,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.BiomeTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
 
@@ -30,6 +32,7 @@ public class ModernBetaTagProviderBiome extends FabricTagProvider<Biome> {
         this.configureModernBeta(provider);
         this.configureVanilla(provider);
         this.configureConventional(provider);
+        this.configureModded(provider);
     }
     
     private void configureModernBeta(Provider provider) {
@@ -945,5 +948,22 @@ public class ModernBetaTagProviderBiome extends FabricTagProvider<Biome> {
             .addTag(IS_SHRUBLAND)
             .addTag(IS_TUNDRA)
             .addTag(IS_EXTREME_HILLS);
+    }
+
+    private void configureModded(Provider provider) {
+        //TODO: maybe clean these up?
+        this.builder(TagKey.create(Registries.BIOME, VersionCompat.id("sereneseasons:blacklisted_biomes")))
+            .addTag(IS_INDEV)
+            .addTag(IS_INFDEV)
+            .addTag(IS_ALPHA);
+
+        this.builder(TagKey.create(Registries.BIOME, VersionCompat.id("sereneseasons:lesser_color_change_biomes")))
+            .add(ModernBetaBiomes.EARLY_RELEASE_SWAMPLAND);
+
+        this.builder(TagKey.create(Registries.BIOME, VersionCompat.id("sereneseasons:tropical_biomes")))
+            .addTag(IS_RAINFOREST)
+            .addTag(IS_DESERT)
+            .addTag(IS_SAVANNA)
+            .addTag(IS_SWAMP);
     }
 }

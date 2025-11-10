@@ -6,6 +6,7 @@ import com.google.common.cache.LoadingCache;
 import it.unimi.dsi.fastutil.longs.Long2ObjectLinkedOpenHashMap;
 import mod.bluestaggo.modernerbeta.api.level.biome.climate.ClimateSampler;
 import mod.bluestaggo.modernerbeta.api.level.biome.climate.Clime;
+import mod.bluestaggo.modernerbeta.compat.client.ModCompatClient;
 import mod.bluestaggo.modernerbeta.mixin.BiomeAccessor;
 import mod.bluestaggo.modernerbeta.mixin.client.RenderSectionRegionAccessor;
 import mod.bluestaggo.modernerbeta.settings.component.ClimateDistribution;
@@ -136,7 +137,8 @@ public final class BlockColorSampler {
                     BiomeSpecialEffects::getGrassColorOverride,
                     BiomeSpecialEffects::getGrassColorModifier,
                     //? }
-                    GrassColor::get
+                    GrassColor::get,
+                    ModCompatClient::modifyGrassColor
                 );
             }
 
@@ -190,7 +192,8 @@ public final class BlockColorSampler {
                     BiomeSpecialEffects::getGrassColorOverride,
                     BiomeSpecialEffects::getGrassColorModifier,
                     //? }
-                    GrassColor::get
+                    GrassColor::get,
+                    ModCompatClient::modifyGrassColor
                 );
             }
 
@@ -218,7 +221,8 @@ public final class BlockColorSampler {
                     BiomeSpecialEffects::getFoliageColorOverride,
                     //? }
                     effects -> BiomeSpecialEffects.GrassColorModifier.NONE,
-                    FoliageColor::get
+                    FoliageColor::get,
+                    ModCompatClient::modifyFoliageColor
                 );
             }
 
@@ -272,18 +276,20 @@ public final class BlockColorSampler {
     private int sampleModifiedColorMaybeLerped(BiomeManager biomeAccess, BlockPos pos,
                                                Function<BiomeSpecialEffects, Optional<Integer>> customColorAccessor,
                                                Function<BiomeSpecialEffects, BiomeSpecialEffects.GrassColorModifier> grassColorModifierAccessor,
-                                               ClimateToColorOperator baseColorAccessor) {
+                                               ClimateToColorOperator baseColorAccessor,
+                                               PostSampleModifier postSampleModifier) {
         if (this.getClimateDistribution().smoothBorders()) {
-            return this.sampleModifiedColorLerped(biomeAccess, pos, customColorAccessor, grassColorModifierAccessor, baseColorAccessor);
+            return this.sampleModifiedColorLerped(biomeAccess, pos, customColorAccessor, grassColorModifierAccessor, baseColorAccessor, postSampleModifier);
         } else {
-            return this.sampleModifiedColor(biomeAccess, pos, customColorAccessor, grassColorModifierAccessor, baseColorAccessor);
+            return this.sampleModifiedColor(biomeAccess, pos, customColorAccessor, grassColorModifierAccessor, baseColorAccessor, postSampleModifier);
         }
     }
 
     private int sampleModifiedColorLerped(BiomeManager biomeAccess, BlockPos pos,
                                           Function<BiomeSpecialEffects, Optional<Integer>> customColorAccessor,
                                           Function<BiomeSpecialEffects, BiomeSpecialEffects.GrassColorModifier> grassColorModifierAccessor,
-                                          ClimateToColorOperator baseColorAccessor) {
+                                          ClimateToColorOperator baseColorAccessor,
+                                          PostSampleModifier postSampleModifier) {
         int r = 0;
         int g = 0;
         int b = 0;
@@ -291,7 +297,7 @@ public final class BlockColorSampler {
         for (int x = -1; x <= 1; x++) {
             for (int y = -1; y <= 1; y++) {
                 for (int z = -1; z <= 1; z++) {
-                    int color = this.sampleModifiedColor(biomeAccess, pos.offset(x, y, z), customColorAccessor, grassColorModifierAccessor, baseColorAccessor);
+                    int color = this.sampleModifiedColor(biomeAccess, pos.offset(x, y, z), customColorAccessor, grassColorModifierAccessor, baseColorAccessor, postSampleModifier);
                     r += (color >> 16) & 255;
                     g += (color >> 8) & 255;
                     b += color & 255;
@@ -305,7 +311,8 @@ public final class BlockColorSampler {
     private int sampleModifiedColor(BiomeManager biomeAccess, BlockPos pos,
                                     Function<BiomeSpecialEffects, Optional<Integer>> customColorAccessor,
                                     Function<BiomeSpecialEffects, BiomeSpecialEffects.GrassColorModifier> grassColorModifierAccessor,
-                                    ClimateToColorOperator baseColorAccessor) {
+                                    ClimateToColorOperator baseColorAccessor,
+                                    PostSampleModifier postSampleModifier) {
         Clime clime = this.sampleClime(pos);
         int climateColor = baseColorAccessor.apply(clime.temp(), clime.rain());
 
@@ -348,7 +355,7 @@ public final class BlockColorSampler {
             }
         }
 
-        return finalColor;
+        return postSampleModifier.apply(finalColor, biomeEntry, pos);
     }
 
     private BiomeManager getBiomeAccessFromView(BlockAndTintGetter tintGetter) {
@@ -394,5 +401,10 @@ public final class BlockColorSampler {
     @FunctionalInterface
     private interface ClimateToColorOperator {
         int apply(double temperature, double downfall);
+    }
+
+    @FunctionalInterface
+    private interface PostSampleModifier {
+        int apply(int original, Holder<Biome> biome, BlockPos pos);
     }
 }

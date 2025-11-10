@@ -1,9 +1,9 @@
-package mod.bluestaggo.modernerbeta.compat;
+package mod.bluestaggo.modernerbeta.compat.levelgen;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-public class ValkyrienSkiesCompat implements WorldGenCompatHelper {
+public class ValkyrienSkiesCompat implements LevelGenCompatHelper {
     private final Object chunkAllocator;
     private final Method isChunkInShipyardMethod;
 

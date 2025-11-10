@@ -7,6 +7,7 @@ import mod.bluestaggo.modernerbeta.client.color.BlockColors;
 import mod.bluestaggo.modernerbeta.client.gui.screen.config.ModernBetaGraphicalConfigSettingsScreen;
 import mod.bluestaggo.modernerbeta.client.registry.ModernBetaClientRegistries;
 import mod.bluestaggo.modernerbeta.client.resource.ModernBetaColormapResource;
+import mod.bluestaggo.modernerbeta.compat.client.ModCompatClient;
 import mod.bluestaggo.modernerbeta.forgelike.registry.RegistryHelperImpl;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHelper;
@@ -67,6 +68,7 @@ public class ModEventsClient {
     @SubscribeEvent
     public static void clientInit(FMLClientSetupEvent event) {
         ModernerBetaClient.init();
+        ModCompatClient.initialise(ModernerBetaForgeLike::isModPresent);
 
         ModLoadingContext.get().registerExtensionPoint(
                 //? if neoforge {

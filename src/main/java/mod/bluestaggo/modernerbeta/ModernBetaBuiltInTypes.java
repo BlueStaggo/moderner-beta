@@ -93,34 +93,6 @@ public final class ModernBetaBuiltInTypes {
             this.id = ModernerBeta.createId(id);
         }
     }
-    
-    public enum SurfaceConfig {
-        SAND(ModernBetaBiomeTags.SURFACE_CONFIG_SAND.location().getPath()),
-        RED_SAND(ModernBetaBiomeTags.SURFACE_CONFIG_RED_SAND.location().getPath()),
-        BADLANDS(ModernBetaBiomeTags.SURFACE_CONFIG_BADLANDS.location().getPath()),
-        NETHER(ModernBetaBiomeTags.SURFACE_CONFIG_NETHER.location().getPath()),
-        WARPED_NYLIUM(ModernBetaBiomeTags.SURFACE_CONFIG_WARPED_NYLIUM.location().getPath()),
-        CRIMSON_NYLIUM(ModernBetaBiomeTags.SURFACE_CONFIG_CRIMSON_NYLIUM.location().getPath()),
-        BASALT(ModernBetaBiomeTags.SURFACE_CONFIG_BASALT.location().getPath()),
-        SOUL_SOIL(ModernBetaBiomeTags.SURFACE_CONFIG_SOUL_SOIL.location().getPath()),
-        THEEND(ModernBetaBiomeTags.SURFACE_CONFIG_END.location().getPath()),
-        GRASS(ModernBetaBiomeTags.SURFACE_CONFIG_GRASS.location().getPath()),
-        MUD(ModernBetaBiomeTags.SURFACE_CONFIG_MUD.location().getPath()),
-        MYCELIUM(ModernBetaBiomeTags.SURFACE_CONFIG_MYCELIUM.location().getPath()),
-        PODZOL(ModernBetaBiomeTags.SURFACE_CONFIG_PODZOL.location().getPath()),
-        STONE(ModernBetaBiomeTags.SURFACE_CONFIG_STONE.location().getPath()),
-        SNOW(ModernBetaBiomeTags.SURFACE_CONFIG_SNOW.location().getPath()),
-        SNOW_DIRT(ModernBetaBiomeTags.SURFACE_CONFIG_SNOW_DIRT.location().getPath()),
-        SNOW_PACKED_ICE(ModernBetaBiomeTags.SURFACE_CONFIG_SNOW_PACKED_ICE.location().getPath()),
-        SNOW_STONE(ModernBetaBiomeTags.SURFACE_CONFIG_SNOW_STONE.location().getPath()),
-        ;
-        
-        public final ResourceLocation id;
-        
-        SurfaceConfig(String id) {
-            this.id = ModernerBeta.createId(id);
-        }
-    }
 
     public enum HeightConfig {
         HEIGHT_CONFIG_DEFAULT(ModernBetaBiomeTags.HEIGHT_CONFIG_DEFAULT.location().getPath()),

@@ -1469,7 +1469,7 @@ public final class ModernBetaSettingsPresets {
         return new ModernBetaSettingsPreset(
             DEFAULT_BETA.chunkSettings().extend()
                 .add(CAVE_GENERATION, CaveGeneration.EARLY_RELEASE)
-                .add(FORCED_BIOME_HEIGHT, amplified ? ForcedBiomeHeight.AMPLIFIED : ForcedBiomeHeight.DEFAULT)
+                .add(FORCED_BIOME_HEIGHT, amplified ? ForcedBiomeHeight.AMPLIFIED : ForcedBiomeHeight.ENABLED)
                 .add(SEA_LEVEL_OFFSET, -1)
                 .add(NOISE_3D_SETTINGS, Noise3DSettings.EARLY_RELEASE)
                 .add(NOISE_LANDMASS, NoiseLandmass.RELEASE)
@@ -1486,7 +1486,7 @@ public final class ModernBetaSettingsPresets {
         return new ModernBetaSettingsPreset(
             DEFAULT_BETA.chunkSettings().extend()
                 .add(CAVE_GENERATION, CaveGeneration.EARLY_RELEASE)
-                .add(FORCED_BIOME_HEIGHT, amplified ? ForcedBiomeHeight.AMPLIFIED : ForcedBiomeHeight.DEFAULT)
+                .add(FORCED_BIOME_HEIGHT, amplified ? ForcedBiomeHeight.AMPLIFIED : ForcedBiomeHeight.ENABLED)
                 .add(SEA_LEVEL_OFFSET, -1)
                 .add(NOISE_3D_SETTINGS, Noise3DSettings.EARLY_RELEASE)
                 .add(NOISE_LANDMASS, NoiseLandmass.RELEASE)
@@ -1640,7 +1640,7 @@ public final class ModernBetaSettingsPresets {
         return new ModernBetaSettingsPreset(
             DEFAULT_BETA.chunkSettings().extend()
                 .add(CAVE_GENERATION, CaveGeneration.EARLY_RELEASE)
-                .add(FORCED_BIOME_HEIGHT, amplified ? ForcedBiomeHeight.AMPLIFIED : ForcedBiomeHeight.DEFAULT)
+                .add(FORCED_BIOME_HEIGHT, amplified ? ForcedBiomeHeight.AMPLIFIED : ForcedBiomeHeight.ENABLED)
                 .add(SEA_LEVEL_OFFSET, -1)
                 .add(NOISE_3D_SETTINGS, Noise3DSettings.EARLY_RELEASE)
                 .add(NOISE_LANDMASS, NoiseLandmass.RELEASE)
@@ -1657,7 +1657,7 @@ public final class ModernBetaSettingsPresets {
         return new ModernBetaSettingsPreset(
             DEFAULT_BETA.chunkSettings().extend()
                 .add(CAVE_GENERATION, CaveGeneration.EARLY_RELEASE)
-                .add(FORCED_BIOME_HEIGHT, amplified ? ForcedBiomeHeight.AMPLIFIED : ForcedBiomeHeight.DEFAULT)
+                .add(FORCED_BIOME_HEIGHT, amplified ? ForcedBiomeHeight.AMPLIFIED : ForcedBiomeHeight.ENABLED)
                 .add(SEA_LEVEL_OFFSET, -1)
                 .add(NOISE_3D_SETTINGS, Noise3DSettings.EARLY_RELEASE)
                 .add(NOISE_LANDMASS, NoiseLandmass.RELEASE)

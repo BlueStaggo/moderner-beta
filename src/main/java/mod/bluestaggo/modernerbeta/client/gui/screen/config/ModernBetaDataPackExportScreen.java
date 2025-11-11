@@ -6,12 +6,14 @@ import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPresetCategory;
 import mod.bluestaggo.modernerbeta.tags.ModernBetaSettingsPresetCategoryTags;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import net.minecraft.ChatFormatting;
+import net.minecraft.Util;
 import net.minecraft.client.gui.components.*;
 import net.minecraft.client.gui.layouts.GridLayout;
 import net.minecraft.client.gui.layouts.HeaderAndFooterLayout;
 import net.minecraft.client.gui.layouts.LayoutSettings;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.Registry;
+import net.minecraft.locale.Language;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -20,11 +22,19 @@ import org.lwjgl.PointerBuffer;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.util.tinyfd.TinyFileDialogs;
 
+import java.io.File;
 import java.util.Locale;
 
 public class ModernBetaDataPackExportScreen extends ModernBetaScreen {
     private static final String TEXT_PRESET_CATEGORY = "createWorld.customize.modern_beta.preset_category";
     private static final String TEXT_PRESET_CATEGORY_NAME = "createWorld.customize.modern_beta.preset_category.name";
+
+    private static final String DATA_PACK_EXPORT_PRESET_ID = "createWorld.customize.modern_beta.settings.data_pack_export.preset_id";
+    private static final String DATA_PACK_EXPORT_PRESET_NAME = "createWorld.customize.modern_beta.settings.data_pack_export.preset_name";
+    private static final String DATA_PACK_EXPORT_PRESET_DESCRIPTION = "createWorld.customize.modern_beta.settings.data_pack_export.preset_description";
+
+    private static final String DATA_PACK_EXPORT = "createWorld.customize.modern_beta.settings.data_pack_export.export";
+    private static final String DATA_PACK_EXPORT_SAVE_AS_TITLE = "createWorld.customize.modern_beta.settings.data_pack_export.save_as_title";
 
     private final HeaderAndFooterLayout layout = new HeaderAndFooterLayout(this, 8, 40);
     private final Registry<ModernBetaSettingsPresetCategory> presetCategoryRegistry;
@@ -55,7 +65,7 @@ public class ModernBetaDataPackExportScreen extends ModernBetaScreen {
             Component.translatable(TEXT_PRESET_CATEGORY_NAME + "." + presetCategory.toLanguageKey()).withStyle(ChatFormatting.YELLOW)
         );
 
-        Component idText = Component.translatable("Preset ID:");
+        Component idText = Component.translatable(DATA_PACK_EXPORT_PRESET_ID);
         StringWidget idLabel = new StringWidget(idText, this.font);
         //noinspection ExtractMethodRecommender
         EditBox idBox = new EditBox(this.minecraft.fontFilterFishy, 0, 0, this.width - 200, 20, Component.empty());
@@ -74,7 +84,7 @@ public class ModernBetaDataPackExportScreen extends ModernBetaScreen {
             }
         });
 
-        Component nameText = Component.translatable("Preset Name:");
+        Component nameText = Component.translatable(DATA_PACK_EXPORT_PRESET_NAME);
         StringWidget nameLabel = new StringWidget(nameText, this.font);
         EditBox nameBox = new EditBox(this.minecraft.fontFilterFishy, 0, 0, this.width - 200, 20, Component.empty());
         nameBox.setValue(this.presetName);
@@ -83,7 +93,7 @@ public class ModernBetaDataPackExportScreen extends ModernBetaScreen {
             this.presetName = string;
         });
 
-        Component descriptionText = Component.translatable("Preset Description:");
+        Component descriptionText = Component.translatable(DATA_PACK_EXPORT_PRESET_DESCRIPTION);
         StringWidget descriptionLabel = new StringWidget(descriptionText, this.font);
         //? if >=1.21.6 {
         MultiLineEditBox descriptionBox = MultiLineEditBox.builder().build(
@@ -126,9 +136,18 @@ public class ModernBetaDataPackExportScreen extends ModernBetaScreen {
             ))
         ).bounds(0, 0, BUTTON_LENGTH_PRESET, BUTTON_HEIGHT_PRESET).build();
 
-        Button widgetDone = Button.builder(Component.translatable("Export"), button -> {
+        Button widgetDone = Button.builder(Component.translatable(DATA_PACK_EXPORT), button -> {
             //TODO
+            Language language = Language.getInstance();
+            String title = language.getOrDefault(DATA_PACK_EXPORT_SAVE_AS_TITLE);
+
             String writeTo;
+            File path = this.minecraft.gameDirectory;
+
+            //TODO: investigate behaviour on other operating systems
+            if (Util.getPlatform() == Util.OS.WINDOWS) {
+                path = new File(path, presetID.getPath());
+            }
 
             try (MemoryStack stack = MemoryStack.stackPush()) {
                 PointerBuffer pointers = stack.mallocPointer(1);
@@ -136,8 +155,8 @@ public class ModernBetaDataPackExportScreen extends ModernBetaScreen {
                 pointers.flip();
 
                 writeTo = TinyFileDialogs.tinyfd_saveFileDialog(
-                    "Select where you want to export to",
-                    this.minecraft.gameDirectory.toString(),
+                    title,
+                    path.toString(),
                     pointers,
                     null
                 );

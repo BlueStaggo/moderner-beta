@@ -21,7 +21,13 @@
 
     "createWorld.customize.modern_beta.settings.import_export": "Quick Import/Export",
     "createWorld.customize.modern_beta.settings.import_export.hint": "Copy and paste JSON code into this text box",
+
     "createWorld.customize.modern_beta.settings.data_pack_export": "Data Pack Export",
+    "createWorld.customize.modern_beta.settings.data_pack_export.preset_id": "Preset ID:",
+    "createWorld.customize.modern_beta.settings.data_pack_export.preset_name": "Preset Name:",
+    "createWorld.customize.modern_beta.settings.data_pack_export.preset_description": "Preset Description:",
+    "createWorld.customize.modern_beta.settings.data_pack_export.export": "Export",
+    "createWorld.customize.modern_beta.settings.data_pack_export.save_as_title": "Select where you want to export to",
 
     "createWorld.customize.modern_beta.settings.json": "✎",
     "createWorld.customize.modern_beta.settings.reset": "Reset settings",

@@ -115,7 +115,11 @@ public class ModernBetaSelectBiomeScreen extends ModernBetaScreen {
         super.repositionElements();
         this.biomeSelectionList.setSize(this.width, this.layout.getContentHeight());
         this.biomeSelectionList.setPosition(0, this.layout.getHeaderHeight());
+        //? if >=1.21.4 {
         this.biomeSelectionList.refreshScrollAmount();
+        //? } else {
+        /*this.biomeSelectionList.setScrollAmount(this.biomeSelectionList.getScrollAmount());
+        *///? }
     }
     //? }
 

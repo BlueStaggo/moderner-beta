@@ -9,6 +9,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ObjectSelectionList;
+import net.minecraft.client.gui.layouts.GridLayout;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.CommonComponents;
@@ -49,10 +50,25 @@ public class ModernBetaSettingsPresetScreen<T extends NameAndDescriptionItem> ex
     protected void init() {
         super.init();
 
-        this.listWidget = new PresetsListWidget(this.presets);
-        this.addWidget(this.listWidget);
+        this.updateSelectButton(this.listWidget.getSelected() instanceof PresetsListWidget.PresetEntry);
+    }
 
-        this.selectPresetButton = this.addRenderableWidget(Button.builder(
+    @Override
+    protected void initContent(GridLayout contentLayout) {
+        this.listWidget = new PresetsListWidget(this.presets);
+
+        //? if >=1.20.2 {
+        this.layout.addToContents(this.listWidget);
+        //? } else {
+        /*this.addRenderableWidget(this.listWidget);
+        *///? }
+    }
+
+    @Override
+    protected void initFooter(GridLayout footerLayout) {
+        GridLayout.RowHelper row = footerLayout.createRowHelper(2);
+
+        this.selectPresetButton = Button.builder(
             Component.translatable("createWorld.customize.presets.select"),
             onPress -> {
                 PresetsListWidget.PresetEntry entry = this.listWidget.getSelected();
@@ -61,18 +77,21 @@ public class ModernBetaSettingsPresetScreen<T extends NameAndDescriptionItem> ex
                     this.onSelected.accept(this, entry.presetName, entry.preset);
                 }
             }
-        ).bounds(this.width / 2 - 154, this.height - 26, 150, 20).build());
-        this.selectPresetButton.active = this.enableSelect;
-        this.addRenderableWidget(Button.builder(
+        ).bounds(0, 0, 150, 20).build();
+
+        Button cancelButton = Button.builder(
             !this.enableSelect ? CommonComponents.GUI_CANCEL : CommonComponents.GUI_BACK,
             button -> {
                 if (this.minecraft != null) {
                     this.minecraft.setScreen(this.parent);
                 }
             }
-        ).bounds(this.width / 2 + 4, this.height - 26, 150, 20).build());
+        ).bounds(0, 0, 150, 20).build();
 
-        this.updateSelectButton(this.listWidget.getSelected() instanceof PresetsListWidget.PresetEntry);
+        this.selectPresetButton.active = this.enableSelect;
+
+        row.addChild(this.selectPresetButton);
+        row.addChild(cancelButton);
     }
 
     //? if <1.20.5 {
@@ -84,7 +103,7 @@ public class ModernBetaSettingsPresetScreen<T extends NameAndDescriptionItem> ex
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         //? if <1.20.5
-        /*this.listWidget.render(graphics, mouseX, mouseY, delta);*/
+        //this.listWidget.render(graphics, mouseX, mouseY, delta);
         super.render(graphics, mouseX, mouseY, delta);
         //? if >=1.20.5
         this.listWidget.render(graphics, mouseX, mouseY, delta);
@@ -99,12 +118,12 @@ public class ModernBetaSettingsPresetScreen<T extends NameAndDescriptionItem> ex
         private static final int ICON_SIZE = 56;
 
         public PresetsListWidget(List<Holder<T>> presets) {
-            //? if >=1.20.3 {
+            //? if >=1.20.2 {
             super(
                 ModernBetaSettingsPresetScreen.this.minecraft,
                 ModernBetaSettingsPresetScreen.this.width,
-                ModernBetaSettingsPresetScreen.this.height - 64,
-                32,
+                ModernBetaSettingsPresetScreen.this.layout.getContentHeight(),
+                ModernBetaSettingsPresetScreen.this.layout.getHeaderHeight(),
                 ITEM_HEIGHT
             );
             //?} else {
@@ -112,8 +131,8 @@ public class ModernBetaSettingsPresetScreen<T extends NameAndDescriptionItem> ex
                 ModernBetaSettingsPresetScreen.this.minecraft,
                 ModernBetaSettingsPresetScreen.this.width,
                 ModernBetaSettingsPresetScreen.this.height,
-                32,
-                ModernBetaSettingsPresetScreen.this.height - 32,
+                ModernBetaSettingsPresetScreen.this.layout.getHeaderHeight(),
+                ModernBetaSettingsPresetScreen.this.height - ModernBetaSettingsPresetScreen.this.layout.getHeaderHeight(),
                 ITEM_HEIGHT
             );
             *///?}

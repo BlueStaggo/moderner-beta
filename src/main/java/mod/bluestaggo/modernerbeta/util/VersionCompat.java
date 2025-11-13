@@ -11,7 +11,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.util.random.Weighted;
 import net.minecraft.util.random.WeightedList;
 //? if <1.21.5
-/*import net.minecraft.util.random.WeightedEntry;*/
+//import net.minecraft.util.random.WeightedEntry;
 //? if >=1.21.11 {
 /*import net.minecraft.world.attribute.EnvironmentAttributeMap;
 import net.minecraft.world.attribute.EnvironmentAttributes;

@@ -359,7 +359,7 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
         Supplier<ListTag> listSupplier = () -> VersionCompat.unwrap(settings.getList(
             subKey
             //? if <1.21.5
-            /*, type*/
+            //, type
         ));
 
         return this.customButton(

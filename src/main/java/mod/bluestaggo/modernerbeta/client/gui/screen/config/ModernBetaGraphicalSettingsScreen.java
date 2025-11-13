@@ -5,12 +5,12 @@ import mod.bluestaggo.modernerbeta.imixin.ModernBetaClearableWidget;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.OptionInstance;
 //? if <1.21
-/*import net.minecraft.client.gui.GuiGraphics;*/
+//import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.OptionsList;
 import net.minecraft.client.gui.layouts.GridLayout;
 //? if <1.20.5
-/*import net.minecraft.client.gui.layouts.HeaderAndFooterLayout;*/
+//import net.minecraft.client.gui.layouts.HeaderAndFooterLayout;
 import net.minecraft.client.gui.screens.options.OptionsSubScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.worldselection.WorldCreationContext;
@@ -34,9 +34,9 @@ public abstract class ModernBetaGraphicalSettingsScreen<T extends Tag> extends O
     private double prevScroll = -1.0D;
 
     //? if <1.21
-    /*protected OptionsList list;*/
+    //protected OptionsList list;
     //? if <1.20.5
-    /*public final HeaderAndFooterLayout layout = new HeaderAndFooterLayout(this);*/
+    //public final HeaderAndFooterLayout layout = new HeaderAndFooterLayout(this);
 
     public ModernBetaGraphicalSettingsScreen(
         String title,
@@ -116,7 +116,7 @@ public abstract class ModernBetaGraphicalSettingsScreen<T extends Tag> extends O
             *///?}
         this.addOptions(this.list);
         //? if <1.21
-        /*this.addWidget(this.list);*/
+        //this.addWidget(this.list);
 
         if (this.prevScroll >= 0.0D && this.list != null) {
             //? if >=1.21.4 {

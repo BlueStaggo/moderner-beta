@@ -8,12 +8,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.ObjectSelectionList;
-import net.minecraft.client.gui.components.StringWidget;
-//? if <1.20.2
-/*import net.minecraft.client.gui.layouts.GridLayout;*/
-import net.minecraft.client.gui.layouts.HeaderAndFooterLayout;
-//? if >=1.20.2
-import net.minecraft.client.gui.layouts.LinearLayout;
+import net.minecraft.client.gui.layouts.GridLayout;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.worldselection.WorldCreationContext;
 import net.minecraft.core.Holder;
@@ -32,11 +27,9 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-public class ModernBetaSelectBiomeScreen extends Screen {
+public class ModernBetaSelectBiomeScreen extends ModernBetaScreen {
     private static final Component SEARCH_HINT = Component.translatable("createWorld.customize.modern_beta.search").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC);
 
-    private final HeaderAndFooterLayout layout = new HeaderAndFooterLayout(this, 13 + 9 + 3 + 15, 33);
-    private final Screen parent;
     private final Consumer<Holder<Biome>> onDone;
     private final boolean allowNone;
     final Registry<Biome> biomeRegistry;
@@ -45,8 +38,7 @@ public class ModernBetaSelectBiomeScreen extends Screen {
     private Button confirmButton;
 
     public ModernBetaSelectBiomeScreen(Screen parent, WorldCreationContext context, Consumer<Holder<Biome>> onDone, boolean allowNone) {
-        super(Component.translatable("createWorld.customize.modern_beta.title.biome_picker"));
-        this.parent = parent;
+        super(Component.translatable("createWorld.customize.modern_beta.title.biome_picker"), parent, 13 + 9 + 3 + 15, 33);
         this.onDone = onDone;
         this.allowNone = allowNone;
         this.biomeRegistry = context.worldgenLoadContext().lookupOrThrow(Registries.BIOME);
@@ -75,50 +67,57 @@ public class ModernBetaSelectBiomeScreen extends Screen {
 
     @Override
     protected void init() {
-        //? if >=1.20.2 {
-        LinearLayout header = this.layout.addToHeader(LinearLayout.vertical().spacing(3));
-        //?} else {
-        /*GridLayout.RowHelper header = this.layout.addToHeader(new GridLayout().columnSpacing(3)).createRowHelper(1);
-        *///?}
+        this.biomeSelectionList = new BiomeList();
 
-        header.defaultCellSetting().alignHorizontallyCenter();
-        //? if <1.20.2
-        /*header.defaultCellSetting().paddingVertical(3);*/
-        header.addChild(new StringWidget(this.getTitle(), this.font));
-
-        //? if >=1.20.2 {
-        this.biomeSelectionList = this.layout.addToContents(new BiomeList());
-        LinearLayout footer = this.layout.addToFooter(LinearLayout.horizontal().spacing(8));
-        //?} else {
-        /*this.biomeSelectionList = new ModernBetaSelectBiomeScreen.BiomeList();
-        this.addRenderableWidget(this.biomeSelectionList);
-        GridLayout.RowHelper footer = this.layout.addToFooter(new GridLayout().columnSpacing(8)).createRowHelper(2);
-        *///?}
-        EditBox editBox = header.addChild(new EditBox(this.font, 0, 0, 200, 15, Component.empty()));
-        editBox.setHint(SEARCH_HINT);
-        Objects.requireNonNull(this.biomeSelectionList);
-        editBox.setResponder(biomeSelectionList::filterEntries);
-
-        this.confirmButton = footer.addChild(Button.builder(CommonComponents.GUI_DONE, button -> {
-            this.onDone.accept(this.biome);
-            this.onClose();
-        }).build());
-        footer.addChild(Button.builder(CommonComponents.GUI_CANCEL, button -> this.onClose()).build());
+        super.init();
         this.biomeSelectionList.setSelected(this.biomeSelectionList
                 .children()
                 .stream()
                 .filter(entry -> Objects.equals(entry.biome, this.biome))
                 .findFirst()
                 .orElse(null));
-        this.layout.visitWidgets(this::addRenderableWidget);
-        this.repositionElements();
     }
 
-    protected void repositionElements() {
-        this.layout.arrangeElements();
-        //? if >=1.20.2
-        this.biomeSelectionList.updateSize(this.width, this.layout);
+    @Override
+    protected void initHeader(GridLayout headerLayout) {
+        headerLayout.columnSpacing(3);
+        headerLayout.defaultCellSetting().paddingVertical(3);
+
+        super.initHeader(headerLayout);
+
+        EditBox editBox = headerLayout.addChild(new EditBox(this.font, 0, 0, 200, 15, Component.empty()), 1, 0);
+        editBox.setHint(SEARCH_HINT);
+        editBox.setResponder(biomeSelectionList::filterEntries);
     }
+
+    @Override
+    protected void initContent(GridLayout contentLayout) {
+        //? if >=1.20.2 {
+        this.layout.addToContents(this.biomeSelectionList);
+        //? } else {
+        /*this.addRenderableWidget(this.biomeSelectionList);
+        *///? }
+    }
+
+    @Override
+    protected void initFooter(GridLayout footerLayout) {
+        GridLayout.RowHelper row = footerLayout.createRowHelper(2);
+
+        this.confirmButton = row.addChild(Button.builder(CommonComponents.GUI_DONE, button -> {
+            this.onDone.accept(this.biome);
+            this.onClose();
+        }).build());
+        row.addChild(Button.builder(CommonComponents.GUI_CANCEL, button -> this.onClose()).build());
+    }
+
+    //? if >=1.20.2 {
+    protected void repositionElements() {
+        super.repositionElements();
+        this.biomeSelectionList.setSize(this.width, this.layout.getContentHeight());
+        this.biomeSelectionList.setPosition(0, this.layout.getHeaderHeight());
+        this.biomeSelectionList.refreshScrollAmount();
+    }
+    //? }
 
     void refreshConfirmButton() {
         this.confirmButton.active = this.biomeSelectionList.getSelected() != null;
@@ -130,7 +129,7 @@ public class ModernBetaSelectBiomeScreen extends Screen {
             super(
                 ModernBetaSelectBiomeScreen.this.minecraft,
                 ModernBetaSelectBiomeScreen.this.width,
-                ModernBetaSelectBiomeScreen.this.height - ModernBetaSelectBiomeScreen.this.layout.getHeaderHeight() - ModernBetaSelectBiomeScreen.this.layout.getFooterHeight(),
+                ModernBetaSelectBiomeScreen.this.layout.getContentHeight(),
                 ModernBetaSelectBiomeScreen.this.layout.getHeaderHeight(),
                 15
             );

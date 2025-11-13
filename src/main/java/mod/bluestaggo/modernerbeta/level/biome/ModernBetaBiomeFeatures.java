@@ -562,7 +562,7 @@ public class ModernBetaBiomeFeatures {
     private static void addCarver(BiomeGenerationSettings.Builder builder, ResourceKey<ConfiguredWorldCarver<?>> carver) {
         builder.addCarver(
             //? if <1.21.2
-            /*GenerationStep.Carving.AIR,*/
+            //GenerationStep.Carving.AIR,
             carver
         );
     }

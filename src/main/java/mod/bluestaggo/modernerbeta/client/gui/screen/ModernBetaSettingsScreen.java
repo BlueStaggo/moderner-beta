@@ -7,6 +7,7 @@ import com.google.gson.JsonSyntaxException;
 import com.mojang.serialization.JsonOps;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.mixin.client.MultiLineEditBoxAccessor;
+import mod.bluestaggo.modernerbeta.mixin.client.MultilineTextFieldAccessor;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import net.minecraft.ChatFormatting;
@@ -15,7 +16,6 @@ import net.minecraft.client.gui.components.MultiLineEditBox;
 import net.minecraft.client.gui.components.MultilineTextField;
 import net.minecraft.client.gui.components.StringWidget;
 import net.minecraft.client.gui.components.Whence;
-import net.minecraft.client.gui.layouts.FrameLayout;
 import net.minecraft.client.gui.layouts.GridLayout;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
@@ -38,7 +38,7 @@ public class ModernBetaSettingsScreen extends ModernBetaScreen {
     private StringWidget widgetInvalid;
     
     public ModernBetaSettingsScreen(String title, Screen parent, ModernBetaSettings settings, Consumer<String> onDone) {
-        super(Component.translatable(title), parent);
+        super(Component.translatable(title), parent, 40, 33);
 
         this.onDone = onDone;
         this.gson = ModernerBeta.getSettingsGson().setPrettyPrinting().create();
@@ -50,62 +50,91 @@ public class ModernBetaSettingsScreen extends ModernBetaScreen {
     protected void init() {
         super.init();
         
-        this.widgetDone = Button.builder(Component.translatable(TEXT_SETTINGS_SAVE), button -> {
-            this.onDone.accept(this.settingsString);
-            this.minecraft.setScreen(this.parent);
-        }).bounds(this.width / 2 - 154, this.height - 26, BUTTON_LENGTH, BUTTON_HEIGHT).build();
+        // Set cursor to beginning of edit box
+        MultilineTextField textField = ((MultiLineEditBoxAccessor) this.widgetSettings).getTextField();
+        textField.seekCursor(Whence.ABSOLUTE, 0);
         
-        this.addRenderableWidget(this.widgetDone);
-        this.addRenderableWidget(Button.builder(CommonComponents.GUI_CANCEL, button -> 
-            this.minecraft.setScreen(this.parent)
-        ).bounds(this.width / 2 + 4, this.height - 26, BUTTON_LENGTH, BUTTON_HEIGHT).build());
-        
-        int editBoxWidth = this.width - 16;
-        int editBoxHeight = this.height - 96;
+        this.onChange();
+    }
+
+    @Override
+    protected void initHeader(GridLayout headerLayout) {
+        super.initHeader(headerLayout);
+        Component textNavigation = Component.translatable(TEXT_NAVIGATION);
+        StringWidget widgetNavigation = new StringWidget(textNavigation, this.font);
+
+        headerLayout.addChild(widgetNavigation, 1, 0);
+    }
+
+    @Override
+    protected void initContent(GridLayout contentLayout) {
+        GridLayout.RowHelper row = contentLayout.createRowHelper(1);
 
         //? if >=1.21.6 {
         this.widgetSettings = MultiLineEditBox.builder().build(
         //?} else {
         /*this.widgetSettings = new MultiLineEditBox(
         *///?}
-                this.font,
-                //? if <1.21.6
-                /*0, 0,*/
-                editBoxWidth, editBoxHeight,
-                //? if <1.21.6
-                /*Component.literal(""),*/
-                Component.translatable(TEXT_SETTINGS)
+            this.font,
+            //? if <1.21.6
+            //0, 0,
+            100, 100,
+            //? if <1.21.6
+            //Component.literal(""),
+            Component.translatable(TEXT_SETTINGS)
         );
         this.widgetSettings.setValue(this.settingsString);
         this.widgetSettings.setValueListener(string -> {
             this.settingsString = string;
             this.onChange();
         });
-        
+
         Component textInvalid = Component.translatable(TEXT_INVALID_JSON).withStyle(ChatFormatting.RED);
         this.widgetInvalid = new StringWidget(textInvalid, this.font);
-        
-        Component textNavigation = Component.translatable(TEXT_NAVIGATION);
-        StringWidget widgetNavigation = new StringWidget(textNavigation, this.font);
-        
-        GridLayout gridWidget = this.createGridWidget();
-        
-        GridLayout.RowHelper gridWidgetAdder = gridWidget.createRowHelper(1);
-        gridWidgetAdder.addChild(widgetNavigation);
-        gridWidgetAdder.addChild(this.widgetSettings);
-        gridWidgetAdder.addChild(this.widgetInvalid);
-        
-        gridWidget.arrangeElements();
-        FrameLayout.alignInRectangle(gridWidget, 0, this.overlayTop + 8, this.width, this.height, 0.5f, 0.0f);
-        gridWidget.visitWidgets(this::addRenderableWidget);
-        
-        // Set cursor to beginning of edit box
-        MultilineTextField editBox = ((MultiLineEditBoxAccessor) this.widgetSettings).getTextField();
-        editBox.seekCursor(Whence.ABSOLUTE, 0);
-        
-        this.onChange();
+
+        row.addChild(this.widgetSettings);
+        row.addChild(this.widgetInvalid);
     }
-    
+
+    @Override
+    protected void initFooter(GridLayout footerLayout) {
+        GridLayout.RowHelper row = footerLayout.createRowHelper(2);
+
+        this.widgetDone = Button.builder(Component.translatable(TEXT_SETTINGS_SAVE), button -> {
+            this.onDone.accept(this.settingsString);
+            this.minecraft.setScreen(this.parent);
+        }).bounds(this.width / 2 - 154, this.height - 26, BUTTON_LENGTH, BUTTON_HEIGHT).build();
+
+        Button cancelButton = Button.builder(CommonComponents.GUI_CANCEL, button ->
+                this.minecraft.setScreen(this.parent)
+        ).bounds(this.width / 2 + 4, this.height - 26, BUTTON_LENGTH, BUTTON_HEIGHT).build();
+
+        row.addChild(this.widgetDone);
+        row.addChild(cancelButton);
+    }
+
+    @Override
+    protected void repositionElements() {
+        int editBoxWidth = this.width - 16;
+        int editBoxHeight = this.layout.getContentHeight() - 16;
+        MultilineTextField textField = ((MultiLineEditBoxAccessor) this.widgetSettings).getTextField();
+
+        int textWidth = ((MultilineTextFieldAccessor) textField).getWidth();
+        int boxWidth = this.widgetSettings.getWidth();
+        int totalPadding = boxWidth - textWidth;
+
+        //? if >=1.20.3 {
+        this.widgetSettings.setSize(editBoxWidth, editBoxHeight);
+        //? } else {
+        /*this.widgetSettings.setWidth(editBoxWidth);
+        ((mod.bluestaggo.modernerbeta.mixin.client.AbstractWidgetAccessor) this.widgetSettings).setHeight(editBoxHeight);
+        *///? }
+        ((MultilineTextFieldAccessor) textField).setWidth(editBoxWidth + totalPadding);
+        ((MultilineTextFieldAccessor) textField).invokeReflowDisplayLines();
+
+        super.repositionElements();
+    }
+
     private void onChange() {
         boolean isValid = this.isValidJson(this.settingsString);
         

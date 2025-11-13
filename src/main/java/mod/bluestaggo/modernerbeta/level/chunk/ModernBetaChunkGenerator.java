@@ -51,7 +51,7 @@ import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.chunk.ProtoChunk;
 import net.minecraft.world.level.levelgen.Aquifer;
 //? if <1.21.2
-/*import net.minecraft.world.level.levelgen.GenerationStep;*/
+//import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.LegacyRandomSource;
 import net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator;
@@ -69,7 +69,7 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 //? if <1.21
-/*import java.util.concurrent.Executor;*/
+//import java.util.concurrent.Executor;
 
 public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
     public static final com.mojang.serialization.MapCodec<ModernBetaChunkGenerator> CODEC = VersionCompat.createMaybeMapCodec(
@@ -145,7 +145,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
     @Override
     public CompletableFuture<ChunkAccess> createBiomes(
         //? if <1.21
-        /*Executor executor,*/
+        //Executor executor,
         RandomState noiseConfig, Blender blender, StructureManager structureAccessor, ChunkAccess chunk
     ) {
         return CompletableFuture.supplyAsync(Util.name(() -> {
@@ -159,7 +159,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
     @Override
     public CompletableFuture<ChunkAccess> fillFromNoise(
         //? if <1.21
-        /*Executor executor,*/
+        //Executor executor,
         Blender blender, RandomState noiseConfig, StructureManager structureAccessor, ChunkAccess chunk
     ) {
         ChunkPos pos = chunk.getPos();
@@ -201,7 +201,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
     @Override
     public void applyCarvers(WorldGenRegion chunkRegion, long seed, RandomState noiseConfig, BiomeManager biomeAccess, StructureManager structureAccessor, ChunkAccess chunk
                       //? if <1.21.2
-                      /*, GenerationStep.Carving carverStep*/
+                      //, GenerationStep.Carving carverStep
     ) {
         ChunkPos pos = chunk.getPos();
 
@@ -224,7 +224,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
         CarvingContext carverContext = new CarvingContext(this, chunkRegion.registryAccess(), chunk.getHeightAccessorForGeneration(), chunkNoiseSampler, noiseConfig, this.settings.value().surfaceRule());
         CarvingMask carvingMask = ((ProtoChunk)chunk).getOrCreateCarvingMask(
             //? if <1.21.2
-            /*carverStep*/
+            //carverStep
         );
 
         CaveGeneration.SeedMethod seedMethod = this.caveSettings.seedMethod();
@@ -257,7 +257,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
                 );
                 Iterable<Holder<ConfiguredWorldCarver<?>>> carverList = genSettings.getCarvers(
                     //? if <1.21.2
-                    /*carverStep*/
+                    //carverStep
                 );
 
                 int salt = 0;

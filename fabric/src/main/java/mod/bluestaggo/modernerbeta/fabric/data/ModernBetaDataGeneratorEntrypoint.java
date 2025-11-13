@@ -41,7 +41,7 @@ public class ModernBetaDataGeneratorEntrypoint implements DataGeneratorEntrypoin
         FabricDataGenerator.Pack reducedHeightPack = fabricDataGenerator.createBuiltinResourcePack(ModernerBeta.createId("reduced_height"));
         reducedHeightPack.addProvider(ModernBetaReducedHeightDataProvider::new);
         //? if <1.21
-        /*reducedHeightPack.addProvider(mod.bluestaggo.modernerbeta.fabric.data.reduced_height.ModernBetaReducedHeightTagProviderBlock::new);*/
+        //reducedHeightPack.addProvider(mod.bluestaggo.modernerbeta.fabric.data.reduced_height.ModernBetaReducedHeightTagProviderBlock::new);
         reducedHeightPack.addProvider((FabricDataGenerator.Pack.Factory<PackMetadataGenerator>) output -> PackMetadataGenerator.forFeaturePack(
                 output, Component.translatable("dataPack.moderner_beta.reduced_height.desc")));
 

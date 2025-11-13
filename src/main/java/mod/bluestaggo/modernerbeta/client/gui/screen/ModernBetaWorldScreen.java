@@ -15,8 +15,8 @@ import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaChunkGenerator;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.StringWidget;
-import net.minecraft.client.gui.layouts.FrameLayout;
 import net.minecraft.client.gui.layouts.GridLayout;
+import net.minecraft.client.gui.screens.ConfirmScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.worldselection.WorldCreationContext;
 import net.minecraft.core.HolderGetter;
@@ -67,7 +67,8 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
     private Button buttonPreset;
 
     public ModernBetaWorldScreen(Screen parent, WorldCreationContext context, TriConsumer<CompoundTag, CompoundTag, CompoundTag> onDone) {
-        super(Component.translatable(TEXT_TITLE), parent);
+        super(Component.translatable(TEXT_TITLE), parent, 33, 40);
+        this.layout.setContentMarginTop(0);
         
         ChunkGenerator chunkGenerator = context.selectedDimensions().overworld();
         ModernBetaChunkGenerator modernBetaChunkGenerator = (ModernBetaChunkGenerator)chunkGenerator;
@@ -90,36 +91,16 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
     public void setPreset(ModernBetaSettingsPreset preset) {
         this.preset = preset;
     }
-    
+
     @Override
-    protected void init() {
-        super.init();
-        
-        this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, button -> {
-            this.onDone.accept(
-                this.preset.chunkSettings().toCompound(),
-                this.preset.biomeSettings().toCompound(),
-                this.preset.caveBiomeSettings().toCompound()
-            );
-            this.minecraft.setScreen(this.parent);
-        }).bounds(this.width / 2 - 154, this.height - 26, BUTTON_LENGTH, BUTTON_HEIGHT).build());
-        
-        this.addRenderableWidget(Button.builder(CommonComponents.GUI_CANCEL, button -> 
-            this.minecraft.setScreen(this.parent)
-        ).bounds(this.width / 2 + 4, this.height - 26, BUTTON_LENGTH, BUTTON_HEIGHT).build());
-        
-        Component hintText = Component.translatable(this.hintString).withStyle(ChatFormatting.GRAY);
-        int hintTextWidth = this.font.width(hintText.getVisualOrderText());
-        int hintTextHeight = this.font.lineHeight;
-        
-        this.addRenderableWidget(new StringWidget(
-            this.width / 2 - hintTextWidth / 2,
-            this.height - 46,
-            hintTextWidth,
-            hintTextHeight,
-            hintText,
-            this.font
-        ));
+    protected void initContent(GridLayout contentLayout) {
+        GridLayout gridWidgetSettings = this.createGridWidget();
+        GridLayout gridWidgetActions = this.createGridWidget();
+
+        GridLayout.RowHelper mainRows = contentLayout.createRowHelper(1);
+        GridLayout.RowHelper settingsRows = gridWidgetSettings.createRowHelper(3);
+        GridLayout.RowHelper actionRow = gridWidgetActions.createRowHelper(2);
+        settingsRows.defaultCellSetting().alignVerticallyMiddle();
 
         MutableComponent presetText = Component.translatable(TEXT_PRESET).append(": ");
         ResourceLocation presetKey = this.getPresetKey();
@@ -257,14 +238,21 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
                 }
             ))
         ).size(20, 20).build();
-        
+
         Button buttonReset = Button.builder(
             Component.translatable(TEXT_SETTINGS_RESET),
-            button -> this.minecraft.setScreen(new ModernBetaSettingsConfirmScreen(
-                this,
-                this::resetPreset,
+            button -> this.minecraft.setScreen(new ConfirmScreen(
+                confirmed -> {
+                    if (confirmed) {
+                        this.resetPreset();
+                    }
+
+                    this.minecraft.setScreen(this);
+                },
+                Component.empty(),
                 Component.translatable(TEXT_SETTINGS_RESET_MESSAGE),
-                Component.translatable(TEXT_SETTINGS_RESET)
+                Component.translatable(TEXT_SETTINGS_RESET),
+                CommonComponents.GUI_CANCEL
             ))
         ).build();
 
@@ -278,29 +266,52 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
             ))
         ).build();
 
-        GridLayout gridWidgetMain = this.createGridWidget();
-        GridLayout gridWidgetSettings = this.createGridWidget();
+        mainRows.addChild(this.buttonPreset);
+        mainRows.addChild(gridWidgetSettings);
+        mainRows.addChild(gridWidgetActions);
+
+        this.addGridTextButtonTriplet(settingsRows, TEXT_CHUNK, buttonChunk, buttonChunkAdvanced);
+        this.addGridTextButtonTriplet(settingsRows, TEXT_BIOME, buttonBiome, buttonBiomeAdvanced);
+        this.addGridTextButtonTriplet(settingsRows, TEXT_CAVE_BIOME, buttonCaveBiome, buttonCaveBiomeAdvanced);
+
+        actionRow.addChild(buttonReset);
+        actionRow.addChild(buttonPreview);
+    }
+
+    @Override
+    protected void initFooter(GridLayout footerLayout) {
         GridLayout gridWidgetActions = this.createGridWidget();
 
-        GridLayout.RowHelper gridAdderMain = gridWidgetMain.createRowHelper(1);
-        GridLayout.RowHelper gridAdderSettings = gridWidgetSettings.createRowHelper(3);
-        GridLayout.RowHelper gridAdderActions = gridWidgetActions.createRowHelper(2);
-        gridAdderSettings.defaultCellSetting().alignVerticallyMiddle();
+        GridLayout.RowHelper mainRow = footerLayout.createRowHelper(1);
+        GridLayout.RowHelper actionRow = gridWidgetActions.createRowHelper(2);
 
-        gridAdderMain.addChild(this.buttonPreset);
-        gridAdderMain.addChild(gridWidgetSettings);
-        gridAdderMain.addChild(gridWidgetActions);
-        
-        this.addGridTextButtonTriplet(gridAdderSettings, TEXT_CHUNK, buttonChunk, buttonChunkAdvanced);
-        this.addGridTextButtonTriplet(gridAdderSettings, TEXT_BIOME, buttonBiome, buttonBiomeAdvanced);
-        this.addGridTextButtonTriplet(gridAdderSettings, TEXT_CAVE_BIOME, buttonCaveBiome, buttonCaveBiomeAdvanced);
+        Component hintText = Component.translatable(this.hintString).withStyle(ChatFormatting.GRAY);
+        int hintTextWidth = this.font.width(hintText.getVisualOrderText());
+        int hintTextHeight = this.font.lineHeight;
 
-        gridAdderActions.addChild(buttonReset);
-        gridAdderActions.addChild(buttonPreview);
+        mainRow.addChild(new StringWidget(
+            hintTextWidth,
+            hintTextHeight,
+            hintText,
+            this.font
+        ));
+        mainRow.addChild(gridWidgetActions);
 
-        gridWidgetMain.arrangeElements();
-        FrameLayout.alignInRectangle(gridWidgetMain, 0, this.overlayTop + 8, this.width, this.height, 0.5f, 0.0f);
-        gridWidgetMain.visitWidgets(this::addRenderableWidget);
+        Button doneButton = Button.builder(CommonComponents.GUI_DONE, button -> {
+            this.onDone.accept(
+                this.preset.chunkSettings().toCompound(),
+                this.preset.biomeSettings().toCompound(),
+                this.preset.caveBiomeSettings().toCompound()
+            );
+            this.minecraft.setScreen(this.parent);
+        }).bounds(0, 0, BUTTON_LENGTH, BUTTON_HEIGHT).build();
+
+        Button cancelButton = Button.builder(CommonComponents.GUI_CANCEL, button ->
+            this.minecraft.setScreen(this.parent)
+        ).bounds(0, 0, BUTTON_LENGTH, BUTTON_HEIGHT).build();
+
+        actionRow.addChild(doneButton);
+        actionRow.addChild(cancelButton);
     }
 
     private void resetPreset() {

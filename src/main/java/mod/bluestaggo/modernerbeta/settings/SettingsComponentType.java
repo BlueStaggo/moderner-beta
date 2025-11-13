@@ -21,7 +21,7 @@ public record SettingsComponentType<T>(Codec<T> codec, T defaultValue) {
         /*ModernBetaRegistries.SETTINGS_COMPONENT_TYPE.byNameCodec();
         *///?}
     //? if <1.20.5
-    /*@SuppressWarnings("unchecked")*/
+    //@SuppressWarnings("unchecked")
     public static final Codec<Map<SettingsComponentType<?>, Object>> TYPE_TO_VALUE_MAP_CODEC =
         //? if >=1.20.5 {
         Codec.dispatchedMap(CODEC, SettingsComponentType::codec);

@@ -216,14 +216,14 @@ public class ModernBetaDataPackExportScreen extends ModernBetaScreen {
                         ModernBetaSettingsPresetCategory category = this.presetCategoryRegistry.getValue(this.presetCategory);
                         TagKey<ModernBetaSettingsPreset> tagKey = category.presetTag();
 
-                        FileToIdConverter converter = FileToIdConverter.json(Registries.tagsDirPath(ModernBetaResourceKeys.SETTINGS_PRESET));
+                        FileToIdConverter converter = FileToIdConverter.json("data/" + Registries.tagsDirPath(ModernBetaResourceKeys.SETTINGS_PRESET));
                         ResourceLocation pathLocation = converter.idToFile(tagKey.location());
 
                         TagFile tagFile = new TagFile(List.of(TagEntry.element(this.presetID)), false);
                         exporter.addJson(objectToJson(tagFile, TagFile.CODEC), pathLocation);
                     }
 
-                    FileToIdConverter converter = FileToIdConverter.json(Registries.elementsDirPath(ModernBetaResourceKeys.SETTINGS_PRESET));
+                    FileToIdConverter converter = FileToIdConverter.json("data/" + Registries.elementsDirPath(ModernBetaResourceKeys.SETTINGS_PRESET));
                     ResourceLocation pathLocation = converter.idToFile(this.presetID);
 
                     ModernBetaSettingsPreset expanded = this.preset

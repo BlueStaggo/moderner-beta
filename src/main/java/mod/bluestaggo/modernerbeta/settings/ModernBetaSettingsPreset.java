@@ -214,14 +214,26 @@ public record ModernBetaSettingsPreset(
         return new Tuple<>(new ModernBetaSettingsPreset(chunkSettings, biomeSettings, caveBiomeSettings), successful);
     }
 
-    public ModernBetaSettingsPreset withNameAndDesc(ResourceLocation id) {
+    public ModernBetaSettingsPreset mapped(HolderGetter<ModernBetaSettingsPreset> presetRegistry) {
         return new ModernBetaSettingsPreset(
-            Optional.of(makeTitleComponent(id)),
-            Optional.of(makeDescriptionComponent(id)),
+            this.chunkSettings.mapPreset(presetRegistry, ModernBetaSettingsPreset::chunkSettings),
+            this.biomeSettings.mapPreset(presetRegistry, ModernBetaSettingsPreset::biomeSettings),
+            this.caveBiomeSettings.mapPreset(presetRegistry, ModernBetaSettingsPreset::caveBiomeSettings)
+        );
+    }
+
+    public ModernBetaSettingsPreset withNameAndDesc(Component title, Component description) {
+        return new ModernBetaSettingsPreset(
+            Optional.of(title),
+            Optional.of(description),
             this.chunkSettings,
             this.biomeSettings,
             this.caveBiomeSettings
         );
+    }
+
+    public ModernBetaSettingsPreset withNameAndDesc(ResourceLocation id) {
+        return this.withNameAndDesc(makeTitleComponent(id), makeDescriptionComponent(id));
     }
     
     public List<ModernBetaSettings> asList() {

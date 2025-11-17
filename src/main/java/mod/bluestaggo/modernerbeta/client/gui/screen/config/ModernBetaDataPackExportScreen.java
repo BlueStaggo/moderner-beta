@@ -1,11 +1,23 @@
 package mod.bluestaggo.modernerbeta.client.gui.screen.config;
 
+import com.google.common.hash.Hashing;
+import com.google.common.hash.HashingOutputStream;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.stream.JsonWriter;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.JsonOps;
+import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.client.gui.screen.ModernBetaScreen;
 import mod.bluestaggo.modernerbeta.client.gui.screen.ModernBetaSettingsPresetScreen;
+import mod.bluestaggo.modernerbeta.registry.ModernBetaResourceKeys;
+import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPresetCategory;
 import mod.bluestaggo.modernerbeta.tags.ModernBetaSettingsPresetCategoryTags;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import net.minecraft.ChatFormatting;
+import net.minecraft.DetectedVersion;
 import net.minecraft.Util;
 import net.minecraft.client.gui.components.*;
 import net.minecraft.client.gui.layouts.GridLayout;
@@ -13,17 +25,35 @@ import net.minecraft.client.gui.layouts.HeaderAndFooterLayout;
 import net.minecraft.client.gui.layouts.LayoutSettings;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.DataProvider;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.metadata.pack.PackMetadataSection;
+import net.minecraft.tags.TagEntry;
+import net.minecraft.tags.TagFile;
+import net.minecraft.tags.TagKey;
+import net.minecraft.util.GsonHelper;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.util.tinyfd.TinyFileDialogs;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.File;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipOutputStream;
 
 public class ModernBetaDataPackExportScreen extends ModernBetaScreen {
     private static final String TEXT_PRESET_CATEGORY = "createWorld.customize.modern_beta.preset_category";
@@ -36,9 +66,14 @@ public class ModernBetaDataPackExportScreen extends ModernBetaScreen {
     private static final String DATA_PACK_EXPORT = "createWorld.customize.modern_beta.settings.data_pack_export.export";
     private static final String DATA_PACK_EXPORT_SAVE_AS_TITLE = "createWorld.customize.modern_beta.settings.data_pack_export.save_as_title";
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ModernerBeta.MOD_NAME);
+
     private final HeaderAndFooterLayout layout = new HeaderAndFooterLayout(this, 8, 40);
+
+    private final Registry<ModernBetaSettingsPreset> presetRegistry;
     private final Registry<ModernBetaSettingsPresetCategory> presetCategoryRegistry;
 
+    private final ModernBetaSettingsPreset preset;
     private ResourceLocation presetID;
     private String presetName = "";
     private String presetDescription = "";
@@ -50,9 +85,17 @@ public class ModernBetaDataPackExportScreen extends ModernBetaScreen {
 
     private Button exportButton;
 
-    public ModernBetaDataPackExportScreen(String title, Screen parent, Registry<ModernBetaSettingsPresetCategory> presetCategoryRegistry) {
+    public ModernBetaDataPackExportScreen(
+        String title,
+        Screen parent,
+        ModernBetaSettingsPreset preset,
+        Registry<ModernBetaSettingsPreset> presetRegistry,
+        Registry<ModernBetaSettingsPresetCategory> presetCategoryRegistry
+    ) {
         super(Component.translatable(title), parent);
 
+        this.preset = preset;
+        this.presetRegistry = presetRegistry;
         this.presetCategoryRegistry = presetCategoryRegistry;
     }
 
@@ -166,8 +209,45 @@ public class ModernBetaDataPackExportScreen extends ModernBetaScreen {
                 );
             }
 
+            //TODO: maybe make this async?
             if (writeTo != null) {
+                try (DataPackExporter exporter = new DataPackExporter(writeTo)) {
+                    if (this.presetCategory != null) {
+                        ModernBetaSettingsPresetCategory category = this.presetCategoryRegistry.getValue(this.presetCategory);
+                        TagKey<ModernBetaSettingsPreset> tagKey = category.presetTag();
 
+                        FileToIdConverter converter = FileToIdConverter.json(Registries.tagsDirPath(ModernBetaResourceKeys.SETTINGS_PRESET));
+                        ResourceLocation pathLocation = converter.idToFile(tagKey.location());
+
+                        TagFile tagFile = new TagFile(List.of(TagEntry.element(this.presetID)), false);
+                        exporter.addJson(objectToJson(tagFile, TagFile.CODEC), pathLocation);
+                    }
+
+                    FileToIdConverter converter = FileToIdConverter.json(Registries.elementsDirPath(ModernBetaResourceKeys.SETTINGS_PRESET));
+                    ResourceLocation pathLocation = converter.idToFile(this.presetID);
+
+                    ModernBetaSettingsPreset expanded = this.preset
+                            .mapped(this.presetRegistry)
+                            .withNameAndDesc(
+                                Component.literal(this.presetName).withStyle(ChatFormatting.YELLOW),
+                                Component.literal(this.presetDescription)
+                            );
+                    exporter.addJson(objectToJson(expanded, ModernBetaSettingsPreset.CODEC), pathLocation);
+
+                    PackMetadataSection metadataSection = new PackMetadataSection(
+                        //TODO: maybe autogenerated string?
+                        Component.literal("Moderner Beta exported preset"),
+                        DetectedVersion.BUILT_IN.packVersion(PackType.SERVER_DATA),
+                        Optional.empty()
+                    );
+                    JsonElement metadataElement = objectToJson(metadataSection, PackMetadataSection.CODEC);
+                    JsonObject packObject = new JsonObject();
+                    packObject.add("pack", metadataElement);
+
+                    exporter.addJson(packObject, "pack.mcmeta");
+                } catch (Exception e) {
+                    LOGGER.error("Failed to export datapack!", e);
+                }
             }
         }).bounds(0, 0, BUTTON_LENGTH, BUTTON_HEIGHT).build();
         this.exportButton.active = false;
@@ -223,5 +303,56 @@ public class ModernBetaDataPackExportScreen extends ModernBetaScreen {
     private boolean canExport() {
         return this.presetID != null && !this.nameBox.getValue().isEmpty() &&
                 !this.descriptionBox.getValue().isEmpty();
+    }
+
+    private <T> JsonElement objectToJson(T value, Codec<T> codec) {
+        DataResult<JsonElement> result = codec.encodeStart(JsonOps.INSTANCE, value);
+        return result.getOrThrow();
+    }
+
+    private static class DataPackExporter implements AutoCloseable {
+        private final ZipOutputStream stream;
+
+        public DataPackExporter(String path) {
+            FileOutputStream fileOutputStream;
+            try {
+                fileOutputStream = new FileOutputStream(path);
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+
+            this.stream = new ZipOutputStream(fileOutputStream);
+        }
+
+        private void addJson(JsonElement json, ResourceLocation path) throws IOException {
+            this.addJson(json, path.getNamespace() + "/" + path.getPath());
+        }
+
+        private void addJson(JsonElement json, String path) throws IOException {
+            ZipEntry entry = new ZipEntry(path);
+
+            byte[] b = new byte[0];
+            try (
+                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                JsonWriter jsonWriter = new JsonWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8))
+            ) {
+                jsonWriter.setSerializeNulls(false);
+                jsonWriter.setIndent("  ");
+                GsonHelper.writeValue(jsonWriter, json, DataProvider.KEY_COMPARATOR);
+
+                jsonWriter.flush();
+                b = outputStream.toByteArray();
+            } catch (IOException var10) {
+                LOGGER.error("Failed to save JSON file {}", path, var10);
+            }
+
+            this.stream.putNextEntry(entry);
+            this.stream.write(b);
+        }
+
+        @Override
+        public void close() throws Exception {
+            this.stream.close();
+        }
     }
 }

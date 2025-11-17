@@ -315,7 +315,7 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
             }))
         ).build());
         this.addRenderableWidget(Button.builder(Component.translatable(TEXT_SETTINGS_DATA_PACK_EXPORT), button ->
-            this.minecraft.setScreen(new ModernBetaDataPackExportScreen(TEXT_SETTINGS_DATA_PACK_EXPORT, this, this.presetCategoryRegistry))
+            this.minecraft.setScreen(new ModernBetaDataPackExportScreen(TEXT_SETTINGS_DATA_PACK_EXPORT, this, this.preset, this.presetRegistry, this.presetCategoryRegistry))
         ).pos(0, 20).build());
     }
 

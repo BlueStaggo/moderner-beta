@@ -25,6 +25,8 @@ import java.util.List;
 public class ModernBetaDataGeneratorEntrypoint implements DataGeneratorEntrypoint {
     @Override
     public void onInitializeDataGenerator(FabricDataGenerator fabricDataGenerator) {
+        ModernerBeta.GENERATING_DATA = true;
+
         FabricDataGenerator.Pack pack = fabricDataGenerator.createPack();
         List<Path> inputs = fabricDataGenerator.getModContainer().getRootPaths();
         

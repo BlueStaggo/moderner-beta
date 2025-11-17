@@ -104,7 +104,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
 
         String presetKey = ModernBetaBuiltInTypes.SettingsComponentType.PRESET.id.toString();
 
-        if (ModernBetaSettings.DEFAULT_PRESET_ID.toString().equals(
+        if (!ModernerBeta.GENERATING_DATA && ModernBetaSettings.DEFAULT_PRESET_ID.toString().equals(
             chunkProviderSettings.getString(presetKey)/*? >=1.21.5 {*/.orElse(null)/*?}*/)) {
             chunkProviderSettings.putString(presetKey, ModernerBeta.config.getOrDefault(SettingsComponentTypes.CONFIG_MISCELLANEOUS)
                 .defaultSettingsPreset().toString());

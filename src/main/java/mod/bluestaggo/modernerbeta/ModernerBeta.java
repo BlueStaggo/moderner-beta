@@ -51,6 +51,7 @@ public class ModernerBeta {
     public static final String MOD_NAME = "Moderner Beta";
 
     public static boolean DEV_ENV;
+    public static boolean GENERATING_DATA;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MOD_NAME);
 

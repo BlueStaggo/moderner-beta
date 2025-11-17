@@ -16,10 +16,7 @@ public class FogUtils {
         /*oldRenderDistance = Math.min(camera.attributeProbe()
                 .getValue(net.minecraft.world.attribute.EnvironmentAttributes.SKY_FOG_END_DISTANCE, partialTick) / 16.0F, oldRenderDistance);
         *///? }
-
-        float weight = 1.0F / (4 - oldRenderDistance);
-        weight = 1.0F - (float)Math.pow(weight, 0.25);
-
-        return weight;
+        
+        return 1.0F / (4 - oldRenderDistance);
     }
 }

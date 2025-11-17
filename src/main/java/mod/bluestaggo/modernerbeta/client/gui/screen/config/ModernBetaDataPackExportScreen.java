@@ -44,7 +44,11 @@ public class ModernBetaDataPackExportScreen extends ModernBetaScreen {
     private String presetDescription = "";
     private ResourceLocation presetCategory;
 
-    private boolean canExport;
+    private EditBox idBox;
+    private EditBox nameBox;
+    private MultiLineEditBox descriptionBox;
+
+    private Button exportButton;
 
     public ModernBetaDataPackExportScreen(String title, Screen parent, Registry<ModernBetaSettingsPresetCategory> presetCategoryRegistry) {
         super(Component.translatable(title), parent);
@@ -56,6 +60,7 @@ public class ModernBetaDataPackExportScreen extends ModernBetaScreen {
     protected void init() {
         super.init();
 
+        assert this.minecraft != null;
         if (this.presetID == null)
             this.presetID = getDefaultPresetID();
 
@@ -67,38 +72,37 @@ public class ModernBetaDataPackExportScreen extends ModernBetaScreen {
 
         Component idText = Component.translatable(DATA_PACK_EXPORT_PRESET_ID);
         StringWidget idLabel = new StringWidget(idText, this.font);
-        //noinspection ExtractMethodRecommender
-        EditBox idBox = new EditBox(this.minecraft.fontFilterFishy, 0, 0, this.width - 200, 20, Component.empty());
-        idBox.setValue(this.presetID.toString());
-        idBox.setResponder(string -> {
+        this.idBox = new EditBox(this.minecraft.fontFilterFishy, 0, 0, this.width - 200, 20, Component.empty());
+        this.idBox.setValue(this.presetID.toString());
+        this.idBox.setResponder(string -> {
             ResourceLocation parsed = ResourceLocation.tryParse(string);
 
             if (parsed != null) {
-                this.presetID = parsed;
-                this.canExport = true;
-                idBox.setTextColor(EditBox.DEFAULT_TEXT_COLOR);
+                this.idBox.setTextColor(EditBox.DEFAULT_TEXT_COLOR);
             } else {
-                this.canExport = false;
                 //noinspection DataFlowIssue
-                idBox.setTextColor(ChatFormatting.RED.getColor() | 0xFF000000);
+                this.idBox.setTextColor(ChatFormatting.RED.getColor() | 0xFF000000);
             }
+
+            this.presetID = parsed;
+            this.exportButton.active = this.canExport();
         });
 
         Component nameText = Component.translatable(DATA_PACK_EXPORT_PRESET_NAME);
         StringWidget nameLabel = new StringWidget(nameText, this.font);
-        EditBox nameBox = new EditBox(this.minecraft.fontFilterFishy, 0, 0, this.width - 200, 20, Component.empty());
-        nameBox.setValue(this.presetName);
-        nameBox.setResponder(string -> {
-            this.canExport = string.isEmpty();
+        this.nameBox = new EditBox(this.minecraft.fontFilterFishy, 0, 0, this.width - 200, 20, Component.empty());
+        this.nameBox.setValue(this.presetName);
+        this.nameBox.setResponder(string -> {
             this.presetName = string;
+            this.exportButton.active = this.canExport();
         });
 
         Component descriptionText = Component.translatable(DATA_PACK_EXPORT_PRESET_DESCRIPTION);
         StringWidget descriptionLabel = new StringWidget(descriptionText, this.font);
         //? if >=1.21.6 {
-        MultiLineEditBox descriptionBox = MultiLineEditBox.builder().build(
+        this.descriptionBox = MultiLineEditBox.builder().build(
         //?} else {
-        /*MultiLineEditBox descriptionBox = new MultiLineEditBox(
+        /*this.descriptionBox = new MultiLineEditBox(
          *///?}
             this.font,
             //? if <1.21.6
@@ -108,11 +112,11 @@ public class ModernBetaDataPackExportScreen extends ModernBetaScreen {
             /*Component.literal(""),*/
             Component.literal("")
         );
-        descriptionBox.setValue(this.presetDescription);
-        descriptionBox.setCharacterLimit(175);
-        descriptionBox.setValueListener(string -> {
-            this.canExport = string.isEmpty();
+        this.descriptionBox.setValue(this.presetDescription);
+        this.descriptionBox.setCharacterLimit(175);
+        this.descriptionBox.setValueListener(string -> {
             this.presetDescription = string;
+            this.exportButton.active = this.canExport();
         });
 
         Button categoryButton = Button.builder(
@@ -136,7 +140,7 @@ public class ModernBetaDataPackExportScreen extends ModernBetaScreen {
             ))
         ).bounds(0, 0, BUTTON_LENGTH_PRESET, BUTTON_HEIGHT_PRESET).build();
 
-        Button widgetDone = Button.builder(Component.translatable(DATA_PACK_EXPORT), button -> {
+        this.exportButton = Button.builder(Component.translatable(DATA_PACK_EXPORT), button -> {
             //TODO
             Language language = Language.getInstance();
             String title = language.getOrDefault(DATA_PACK_EXPORT_SAVE_AS_TITLE);
@@ -160,13 +164,13 @@ public class ModernBetaDataPackExportScreen extends ModernBetaScreen {
                     pointers,
                     null
                 );
-                System.out.println("Output path: " + writeTo);
             }
 
             if (writeTo != null) {
 
             }
         }).bounds(0, 0, BUTTON_LENGTH, BUTTON_HEIGHT).build();
+        this.exportButton.active = false;
 
         Button widgetCancel = Button.builder(CommonComponents.GUI_CANCEL, button ->
                 this.minecraft.setScreen(this.parent)
@@ -194,7 +198,7 @@ public class ModernBetaDataPackExportScreen extends ModernBetaScreen {
         optionsContent.addChild(descriptionLabel, 1, layoutSettings);
         optionsContent.addChild(descriptionBox, 1, layoutSettings.copy().paddingTop(0));
 
-        footerContent.addChild(widgetDone);
+        footerContent.addChild(this.exportButton);
         footerContent.addChild(widgetCancel);
 
         this.layout.addToContents(gridWidgetMain);
@@ -210,7 +214,14 @@ public class ModernBetaDataPackExportScreen extends ModernBetaScreen {
     }
 
     private ResourceLocation getDefaultPresetID() {
+        assert this.minecraft != null;
+
         String playerName = this.minecraft.getUser().getName().toLowerCase(Locale.ROOT);
         return VersionCompat.id(playerName, "custom_preset");
+    }
+
+    private boolean canExport() {
+        return this.presetID != null && !this.nameBox.getValue().isEmpty() &&
+                !this.descriptionBox.getValue().isEmpty();
     }
 }

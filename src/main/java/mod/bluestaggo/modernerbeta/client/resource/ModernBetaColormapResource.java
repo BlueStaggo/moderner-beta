@@ -16,8 +16,9 @@ public class ModernBetaColormapResource implements SynchronousResourceReloader {
     private final Identifier id;
     private final Consumer<int[]> consumer;
     
-    public ModernBetaColormapResource(String path, Consumer<int[]> consumer) {
-        this.id = ModernerBeta.createId(path);
+    // CHANGED: Now accepts Identifier instead of String
+    public ModernBetaColormapResource(Identifier id, Consumer<int[]> consumer) {
+        this.id = id;
         this.consumer = consumer;
     }
 
@@ -29,7 +30,7 @@ public class ModernBetaColormapResource implements SynchronousResourceReloader {
         try {
             map = RawTextureDataLoader.loadRawTextureData(resourceManager, this.id);
         } catch (IOException exception) {
-            throw new IllegalStateException("[Modern Beta] Failed to load colormap texture!", exception);
+            throw new IllegalStateException("[Modern Beta] Failed to load colormap texture: " + this.id, exception);
         }
 
         this.consumer.accept(map);

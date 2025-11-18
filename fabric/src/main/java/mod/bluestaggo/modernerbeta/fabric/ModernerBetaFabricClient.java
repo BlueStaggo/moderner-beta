@@ -31,15 +31,18 @@ public class ModernerBetaFabricClient implements ClientModInitializer {
         BlockColors.register(ColorProviderRegistry.BLOCK::register);
 
         ResourceManagerHelper resourceManager = ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES);
+        
+        // FIX: Use ModernerBeta.createId() to ensure the path includes the mod namespace.
+        // This prevents the game from searching for "minecraft:textures/..." on the first launch.
         resourceManager.registerReloadListener(new ModernBetaFabricColormapResource(
                 ModernerBeta.createId("water_colormap"),
-                "textures/colormap/water.png",
+                ModernerBeta.createId("textures/colormap/water.png"), 
                 BlockColorSampler.INSTANCE.colormapWater::setColormap
         ));
 
         resourceManager.registerReloadListener(new ModernBetaFabricColormapResource(
                 ModernerBeta.createId("underwater_colormap"),
-                "textures/colormap/underwater.png",
+                ModernerBeta.createId("textures/colormap/underwater.png"),
                 BlockColorSampler.INSTANCE.colormapUnderwater::setColormap
         ));
 

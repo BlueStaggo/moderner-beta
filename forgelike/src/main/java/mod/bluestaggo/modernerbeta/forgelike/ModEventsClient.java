@@ -127,13 +127,14 @@ public class ModEventsClient {
             *///?}
         };
 
+        // FIX: Wrapped paths in ModernerBeta.createId() to use correct namespace and Type
         addListener.accept(ModernerBeta.createId("water_colormap"), new ModernBetaColormapResource(
-                "textures/colormap/water.png",
+                ModernerBeta.createId("textures/colormap/water.png"),
                 BlockColorSampler.INSTANCE.colormapWater::setColormap
         ));
 
         addListener.accept(ModernerBeta.createId("underwater_colormap"), new ModernBetaColormapResource(
-                "textures/colormap/underwater.png",
+                ModernerBeta.createId("textures/colormap/underwater.png"),
                 BlockColorSampler.INSTANCE.colormapUnderwater::setColormap
         ));
     }

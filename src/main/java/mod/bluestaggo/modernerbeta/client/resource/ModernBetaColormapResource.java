@@ -15,13 +15,12 @@ import java.util.function.Consumer;
 
 @Environment(EnvType.CLIENT)
 public class ModernBetaColormapResource implements SynchronousResourceReloader {
-    // REFACTOR: Use SLF4J Logger for professional error tracking
     private static final Logger LOGGER = LoggerFactory.getLogger("moderner_beta");
-    
+
     private final Identifier id;
     private final Consumer<int[]> consumer;
 
-    // REFACTOR: Removed String constructor to enforce strict namespace usage.
+    // REFACTOR: Removed String constructor. All callers must now provide a valid Identifier.
     public ModernBetaColormapResource(Identifier id, Consumer<int[]> consumer) {
         this.id = id;
         this.consumer = consumer;
@@ -34,13 +33,12 @@ public class ModernBetaColormapResource implements SynchronousResourceReloader {
         try {
             map = RawTextureDataLoader.loadRawTextureData(resourceManager, this.id);
         } catch (IOException exception) {
-            // REFACTOR: Catch race condition errors gracefully.
-            // This prevents the "First Launch" crash by falling back to a default color.
+            // REFACTOR: Use proper logging instead of System.out
             LOGGER.warn("[Modern Beta] Failed to load colormap '{}' during reload. Using fallback blue texture.", this.id);
             
             // Create a fallback blank map (Blue) to prevent crash
             map = new int[256 * 256]; 
-            Arrays.fill(map, 0xFF0000FF); // AARRGGBB (Blue)
+            Arrays.fill(map, 0xFF0000FF); // AARRGGBB
         }
 
         this.consumer.accept(map);

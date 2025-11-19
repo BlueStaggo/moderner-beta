@@ -94,6 +94,7 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
     
     public void setPreset(ModernBetaSettingsPreset preset) {
         this.preset = preset;
+        this.buttonPreset.setMessage(this.getPresetButtonLabel());
     }
 
     @Override
@@ -106,15 +107,8 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
         GridLayout.RowHelper actionRow = gridWidgetActions.createRowHelper(2);
         settingsRows.defaultCellSetting().alignVerticallyMiddle();
 
-        MutableComponent presetText = Component.translatable(TEXT_PRESET).append(": ");
-        ResourceLocation presetKey = this.getPresetKey();
-        presetText.append(presetKey == null ?
-            Component.translatable(TEXT_PRESET_CUSTOM).withStyle(ChatFormatting.AQUA) :
-            Component.translatable(TEXT_PRESET_NAME + "." + presetKey.toLanguageKey()).withStyle(ChatFormatting.YELLOW)
-        );
-
         this.buttonPreset = Button.builder(
-            presetText,
+            this.getPresetButtonLabel(),
             button -> this.minecraft.setScreen(new ModernBetaSettingsPresetScreen<>(
                 this,
                 this.presetCategoryRegistry
@@ -348,5 +342,16 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
             presetKey = subPresetKey;
         }
         return presetKey;
+    }
+
+    private Component getPresetButtonLabel() {
+        MutableComponent presetText = Component.translatable(TEXT_PRESET).append(": ");
+        ResourceLocation presetKey = this.getPresetKey();
+        presetText.append(presetKey == null ?
+            Component.translatable(TEXT_PRESET_CUSTOM).withStyle(ChatFormatting.AQUA) :
+            Component.translatable(TEXT_PRESET_NAME + "." + presetKey.toLanguageKey()).withStyle(ChatFormatting.YELLOW)
+        );
+
+        return presetText;
     }
 }

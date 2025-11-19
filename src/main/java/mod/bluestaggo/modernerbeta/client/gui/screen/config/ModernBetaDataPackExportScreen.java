@@ -77,6 +77,7 @@ public class ModernBetaDataPackExportScreen extends ModernBetaScreen {
     private MultiLineEditBox descriptionBox;
 
     private Button exportButton;
+    private Button categoryButton;
 
     public ModernBetaDataPackExportScreen(
         String title,
@@ -110,14 +111,8 @@ public class ModernBetaDataPackExportScreen extends ModernBetaScreen {
         GridLayout.RowHelper optionsContent = gridWidgetOptions.createRowHelper(2);
         optionsContent.defaultCellSetting().alignHorizontallyRight().alignVerticallyMiddle();
 
-        MutableComponent presetText = Component.translatable(TEXT_PRESET_CATEGORY).append(": ");
-        presetText.append(this.presetCategory == null ?
-            Component.translatable("gui.none").withStyle(ChatFormatting.AQUA) :
-            Component.translatable(TEXT_PRESET_CATEGORY_NAME + "." + presetCategory.toLanguageKey()).withStyle(ChatFormatting.YELLOW)
-        );
-
-        Button categoryButton = Button.builder(
-            presetText,
+        this.categoryButton = Button.builder(
+            this.getCategoryButtonLabel(),
             button -> this.minecraft.setScreen(new ModernBetaSettingsPresetScreen<>(
                 this,
                 this.presetCategoryRegistry
@@ -131,6 +126,8 @@ public class ModernBetaDataPackExportScreen extends ModernBetaScreen {
                     .toList(),
                     (screen, category, preset) -> {
                         this.presetCategory = category;
+                        this.categoryButton.setMessage(this.getCategoryButtonLabel());
+
                         screen.onClose();
                     },
                 false
@@ -234,6 +231,16 @@ public class ModernBetaDataPackExportScreen extends ModernBetaScreen {
     private boolean canExport() {
         return this.presetID != null && !this.nameBox.getValue().isEmpty() &&
                 !this.descriptionBox.getValue().isEmpty();
+    }
+
+    private Component getCategoryButtonLabel() {
+        MutableComponent category = Component.translatable(TEXT_PRESET_CATEGORY).append(": ");
+        category.append(this.presetCategory == null ?
+            Component.translatable("gui.none").withStyle(ChatFormatting.AQUA) :
+            Component.translatable(TEXT_PRESET_CATEGORY_NAME + "." + presetCategory.toLanguageKey()).withStyle(ChatFormatting.YELLOW)
+        );
+
+        return category;
     }
 
     private static  <T> JsonElement objectToJson(T value, Codec<T> codec) {

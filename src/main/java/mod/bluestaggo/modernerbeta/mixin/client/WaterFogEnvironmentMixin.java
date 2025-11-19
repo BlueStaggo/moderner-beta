@@ -27,7 +27,7 @@ public abstract class WaterFogEnvironmentMixin {
     private static Vec3 modernBeta_pos;
 
     //? if >=1.21.11
-    /*@SuppressWarnings("rawtypes")*/
+    //@SuppressWarnings("rawtypes")
     @WrapOperation(
         method = "getBaseColor",
         at = @At(

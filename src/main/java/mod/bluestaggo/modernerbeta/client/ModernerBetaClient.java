@@ -12,7 +12,7 @@ public class ModernerBetaClient {
 
     public static void init() {
         //? if >=1.21.9
-        /*mod.bluestaggo.modernerbeta.client.debug.ModernBetaDebugScreenEntries.register();*/
+        //mod.bluestaggo.modernerbeta.client.debug.ModernBetaDebugScreenEntries.register();
     }
 
     public static void setupCustomRegistryHandlers() {

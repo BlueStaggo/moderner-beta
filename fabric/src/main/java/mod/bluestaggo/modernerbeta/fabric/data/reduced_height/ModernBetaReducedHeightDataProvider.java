@@ -22,7 +22,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.util.valueproviders.ConstantFloat;
 import net.minecraft.util.valueproviders.UniformInt;
 //? if >=1.21.11
-/*import net.minecraft.world.attribute.*;*/
+//import net.minecraft.world.attribute.*;
 import net.minecraft.world.level.biome.OverworldBiomeBuilder;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;

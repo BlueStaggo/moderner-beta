@@ -302,12 +302,21 @@ public class ModernBetaDataPackExportScreen extends ModernBetaScreen {
                 /*.getPackVersion
                 *///? }
                 (PackType.SERVER_DATA)
-                //? if >=1.20.2
+                //? if >=1.21.9
+                    //.minorRange()
+                //? if >=1.20.2 && <1.21.9
                 , Optional.empty()
             );
             JsonElement metadataElement =
                     //? if >=1.20.2 {
-                    objectToJson(metadataSection, PackMetadataSection.CODEC);
+                    objectToJson(
+                        metadataSection,
+                        //? if >=1.21.9 {
+                        /*PackMetadataSection.SERVER_TYPE.codec()
+                        *///? } else {
+                        PackMetadataSection.CODEC
+                        //? }
+                    );
                     //? } else {
                     /*PackMetadataSection.TYPE.toJson(metadataSection);
                     *///? }

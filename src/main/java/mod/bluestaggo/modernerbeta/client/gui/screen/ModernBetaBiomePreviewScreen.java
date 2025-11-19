@@ -339,7 +339,7 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                 );
 
                 //? if >=1.21.9
-                /*graphics.requestCursor(com.mojang.blaze3d.platform.cursor.CursorTypes.RESIZE_ALL);*/
+                //graphics.requestCursor(com.mojang.blaze3d.platform.cursor.CursorTypes.RESIZE_ALL);
             }
 
             this.prevMouseX = mouseX;

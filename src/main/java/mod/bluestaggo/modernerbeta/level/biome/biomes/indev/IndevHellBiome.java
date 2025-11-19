@@ -6,7 +6,7 @@ import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomeFeatures;
 import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomeMobs;
 import net.minecraft.core.HolderGetter;
 //? if >=1.21.11
-/*import net.minecraft.world.attribute.*;*/
+//import net.minecraft.world.attribute.*;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeGenerationSettings;
 import net.minecraft.world.level.biome.MobSpawnSettings;

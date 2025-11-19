@@ -5,25 +5,25 @@ import com.google.common.collect.ImmutableMap;
 import it.unimi.dsi.fastutil.doubles.DoubleList;
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
-import mod.bluestaggo.modernerbeta.api.world.biome.climate.TemperatureHeightScaling;
+import mod.bluestaggo.modernerbeta.api.level.biome.climate.TemperatureHeightScaling;
+import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers.*;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaResourceKeys;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.settings.component.*;
-import mod.bluestaggo.modernerbeta.world.biome.HeightConfig;
-import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomes;
-import mod.bluestaggo.modernerbeta.world.biome.provider.climate.ClimateMapping;
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ConfiguredLayers;
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.LayerTarget;
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.*;
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.predicates.BiomePredicate;
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.predicates.InRangeBiomePredicate;
-import mod.bluestaggo.modernerbeta.world.biome.voronoi.VoronoiPointBiome;
-import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaNoiseSettings;
-import mod.bluestaggo.modernerbeta.world.chunk.provider.indev.IndevTheme;
-import mod.bluestaggo.modernerbeta.world.chunk.provider.indev.IndevType;
-import mod.bluestaggo.modernerbeta.world.chunk.provider.island.IslandShape;
+import mod.bluestaggo.modernerbeta.level.biome.HeightConfig;
+import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomes;
+import mod.bluestaggo.modernerbeta.level.biome.provider.climate.ClimateMapping;
+import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ConfiguredLayers;
+import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeId;
+import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.LayerTarget;
+import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.predicates.BiomePredicate;
+import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.predicates.InRangeBiomePredicate;
+import mod.bluestaggo.modernerbeta.level.biome.voronoi.VoronoiPointBiome;
+import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaNoiseSettings;
+import mod.bluestaggo.modernerbeta.level.chunk.provider.indev.IndevTheme;
+import mod.bluestaggo.modernerbeta.level.chunk.provider.indev.IndevType;
+import mod.bluestaggo.modernerbeta.level.chunk.provider.island.IslandShape;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -215,6 +215,7 @@ public final class ModernBetaSettingsPresets {
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.SKYLANDS.id)
                 .add(DEEPSLATE_GENERATION, DeepslateGeneration.DISABLED)
                 .add(CAVE_GENERATION, CaveGeneration.BETA)
+                .add(NOISE_SETTINGS, ModernBetaNoiseSettings.SKY_128)
                 .add(NOISE_SCALE, new NoiseScale(
                     1368.824f,
                     684.412f,
@@ -1468,7 +1469,7 @@ public final class ModernBetaSettingsPresets {
         return new ModernBetaSettingsPreset(
             DEFAULT_BETA.chunkSettings().extend()
                 .add(CAVE_GENERATION, CaveGeneration.EARLY_RELEASE)
-                .add(FORCED_BIOME_HEIGHT, amplified ? ForcedBiomeHeight.AMPLIFIED : ForcedBiomeHeight.DEFAULT)
+                .add(FORCED_BIOME_HEIGHT, amplified ? ForcedBiomeHeight.AMPLIFIED : ForcedBiomeHeight.ENABLED)
                 .add(SEA_LEVEL_OFFSET, -1)
                 .add(NOISE_3D_SETTINGS, Noise3DSettings.EARLY_RELEASE)
                 .add(NOISE_LANDMASS, NoiseLandmass.RELEASE)
@@ -1485,7 +1486,7 @@ public final class ModernBetaSettingsPresets {
         return new ModernBetaSettingsPreset(
             DEFAULT_BETA.chunkSettings().extend()
                 .add(CAVE_GENERATION, CaveGeneration.EARLY_RELEASE)
-                .add(FORCED_BIOME_HEIGHT, amplified ? ForcedBiomeHeight.AMPLIFIED : ForcedBiomeHeight.DEFAULT)
+                .add(FORCED_BIOME_HEIGHT, amplified ? ForcedBiomeHeight.AMPLIFIED : ForcedBiomeHeight.ENABLED)
                 .add(SEA_LEVEL_OFFSET, -1)
                 .add(NOISE_3D_SETTINGS, Noise3DSettings.EARLY_RELEASE)
                 .add(NOISE_LANDMASS, NoiseLandmass.RELEASE)
@@ -1639,7 +1640,7 @@ public final class ModernBetaSettingsPresets {
         return new ModernBetaSettingsPreset(
             DEFAULT_BETA.chunkSettings().extend()
                 .add(CAVE_GENERATION, CaveGeneration.EARLY_RELEASE)
-                .add(FORCED_BIOME_HEIGHT, amplified ? ForcedBiomeHeight.AMPLIFIED : ForcedBiomeHeight.DEFAULT)
+                .add(FORCED_BIOME_HEIGHT, amplified ? ForcedBiomeHeight.AMPLIFIED : ForcedBiomeHeight.ENABLED)
                 .add(SEA_LEVEL_OFFSET, -1)
                 .add(NOISE_3D_SETTINGS, Noise3DSettings.EARLY_RELEASE)
                 .add(NOISE_LANDMASS, NoiseLandmass.RELEASE)
@@ -1656,7 +1657,7 @@ public final class ModernBetaSettingsPresets {
         return new ModernBetaSettingsPreset(
             DEFAULT_BETA.chunkSettings().extend()
                 .add(CAVE_GENERATION, CaveGeneration.EARLY_RELEASE)
-                .add(FORCED_BIOME_HEIGHT, amplified ? ForcedBiomeHeight.AMPLIFIED : ForcedBiomeHeight.DEFAULT)
+                .add(FORCED_BIOME_HEIGHT, amplified ? ForcedBiomeHeight.AMPLIFIED : ForcedBiomeHeight.ENABLED)
                 .add(SEA_LEVEL_OFFSET, -1)
                 .add(NOISE_3D_SETTINGS, Noise3DSettings.EARLY_RELEASE)
                 .add(NOISE_LANDMASS, NoiseLandmass.RELEASE)

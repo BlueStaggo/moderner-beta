@@ -4,7 +4,7 @@
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
-import mod.bluestaggo.modernerbeta.api.world.biome.climate.Clime;
+import mod.bluestaggo.modernerbeta.api.level.biome.climate.Clime;
 import mod.bluestaggo.modernerbeta.client.FogUtils;
 import mod.bluestaggo.modernerbeta.client.color.BlockColorSampler;
 import mod.bluestaggo.modernerbeta.imixin.ModernBetaLevel;
@@ -18,7 +18,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 //? if >=1.21.2 {
 import org.joml.Vector4f;
@@ -80,20 +79,19 @@ public abstract class FogRendererMixin {
         modernBeta_isModernBetaLevel = ((ModernBetaLevel)world).modernerBeta$isModded();
     }
 
-    @ModifyVariable(
+    @WrapOperation(
         method = GET_FOG_COLOR_METHOD,
         at = @At(
             value = "INVOKE",
-            //? if >=1.21.2 {
-            target = "Lnet/minecraft/client/multiplayer/ClientLevel;getSkyColor(Lnet/minecraft/world/phys/Vec3;F)I"
-            //?} else {
-            /^target = "Lnet/minecraft/client/multiplayer/ClientLevel;getSkyColor(Lnet/minecraft/world/phys/Vec3;F)Lnet/minecraft/world/phys/Vec3;"
-            ^///?}
-        ),
-        index = /^? if >=1.21.2 {^/10/^?} else {^/ /^7 ^//^?}^/
+            target = "Ljava/lang/Math;pow(DD)D",
+            remap = false
+        )
     )
-    private static float modifyFogWeighting(float weight) {
-        return modernBeta_isModernBetaLevel && ModernerBeta.config.getOrDefault(SettingsComponentTypes.CONFIG_MISCELLANEOUS).oldFogColorWeighting() ? modernBeta_fogWeight : weight;
+    private static double modifyFogWeighting(double a, double b, Operation<Double> original) {
+        double baseWeight = modernBeta_isModernBetaLevel && ModernerBeta.config.getOrDefault(SettingsComponentTypes.CONFIG_MISCELLANEOUS).oldFogColorWeighting() ?
+                modernBeta_fogWeight : a;
+
+        return original.call(baseWeight, b);
     }
 }
 *///?}

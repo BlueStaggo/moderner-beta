@@ -1,6 +1,6 @@
 package mod.bluestaggo.modernerbeta.util.chunk;
 
-import mod.bluestaggo.modernerbeta.api.world.biome.climate.Clime;
+import mod.bluestaggo.modernerbeta.api.level.biome.climate.Clime;
 
 import java.util.function.BiFunction;
 

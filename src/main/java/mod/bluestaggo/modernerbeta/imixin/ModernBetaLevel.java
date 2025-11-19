@@ -1,7 +1,7 @@
 package mod.bluestaggo.modernerbeta.imixin;
 
-import mod.bluestaggo.modernerbeta.api.world.biome.climate.ClimateSampler;
-import mod.bluestaggo.modernerbeta.api.world.biome.climate.TemperatureHeightScaling;
+import mod.bluestaggo.modernerbeta.api.level.biome.climate.ClimateSampler;
+import mod.bluestaggo.modernerbeta.api.level.biome.climate.TemperatureHeightScaling;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.biome.Biome;
 

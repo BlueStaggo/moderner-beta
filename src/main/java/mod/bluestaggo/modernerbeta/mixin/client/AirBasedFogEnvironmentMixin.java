@@ -1,6 +1,8 @@
 //? if >=1.21.6 {
 package mod.bluestaggo.modernerbeta.mixin.client;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.client.FogUtils;
 import mod.bluestaggo.modernerbeta.imixin.ModernBetaLevel;
@@ -11,7 +13,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(
@@ -40,28 +41,23 @@ public abstract class AirBasedFogEnvironmentMixin {
     }
     //? }
 
-    @SuppressWarnings("DiscouragedShift")
-    @ModifyVariable(
+    @WrapOperation(
         method = "getBaseColor",
         at = @At(
             value = "INVOKE",
             target = "Ljava/lang/Math;pow(DD)D",
-            remap = false,
-            shift = At.Shift.BY,
-            by = 4
-        ),
-        index = /*? >=1.21.11 {*/ /*8 *//*? } else {*/ 16 /*?}*/
+            remap = false
+        )
     )
-    private float modifyFogWeighting(float weight, ClientLevel level, Camera camera, int renderDistance, float partialTick) {
+    private double modifyFogWeighting(double a, double b, Operation<Double> original, ClientLevel level, Camera camera, int renderDistance, float partialTick) {
         //? if >=1.21.11 {
-        /*return ((ModernBetaLevel)level).modernerBeta$isModded() && ModernerBeta.config.getOrDefault(SettingsComponentTypes.CONFIG_MISCELLANEOUS).oldFogColorWeighting() ?
-                FogUtils.calculateFogWeight(renderDistance, camera, partialTick) :
-                weight;
+        /*double baseWeight = ((ModernBetaLevel)level).modernerBeta$isModded() && ModernerBeta.config.getOrDefault(SettingsComponentTypes.CONFIG_MISCELLANEOUS).oldFogColorWeighting() ?
+                FogUtils.calculateFogWeight(renderDistance, camera, partialTick) : a;
         *///? } else {
-        return modernBeta_isModernBetaLevel && ModernerBeta.config.getOrDefault(SettingsComponentTypes.CONFIG_MISCELLANEOUS).oldFogColorWeighting() ?
-                modernBeta_fogWeight :
-                weight;
+        double baseWeight = modernBeta_isModernBetaLevel && ModernerBeta.config.getOrDefault(SettingsComponentTypes.CONFIG_MISCELLANEOUS).oldFogColorWeighting() ?
+                modernBeta_fogWeight : a;
         //? }
+        return original.call(baseWeight, b);
     }
 }
 //?}

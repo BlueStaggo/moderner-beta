@@ -1,6 +1,7 @@
 package mod.bluestaggo.modernerbeta.fabric.data;
 
-import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomes;
+import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomes;
+import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 //? if >=1.20.5 {
@@ -12,6 +13,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.BiomeTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
 
@@ -30,6 +32,7 @@ public class ModernBetaTagProviderBiome extends FabricTagProvider<Biome> {
         this.configureModernBeta(provider);
         this.configureVanilla(provider);
         this.configureConventional(provider);
+        this.configureModded(provider);
     }
     
     private void configureModernBeta(Provider provider) {
@@ -279,7 +282,6 @@ public class ModernBetaTagProviderBiome extends FabricTagProvider<Biome> {
         /* Modern Beta Surface Config Tags */
         
         this.builder(SURFACE_CONFIG_SAND)
-            .addOptionalTag(SURFACE_CONFIG_IS_DESERT)
             .add(
                 ModernBetaBiomes.BETA_DESERT,
                 ModernBetaBiomes.PE_DESERT,
@@ -287,79 +289,6 @@ public class ModernBetaTagProviderBiome extends FabricTagProvider<Biome> {
                 Biomes.BEACH,
                 Biomes.SNOWY_BEACH
             );
-        
-        this.builder(SURFACE_CONFIG_RED_SAND);
-        
-        this.builder(SURFACE_CONFIG_BADLANDS)
-            .addOptionalTag(SURFACE_CONFIG_IS_BADLANDS)
-            .add(
-                Biomes.BADLANDS,
-                Biomes.ERODED_BADLANDS,
-                Biomes.WOODED_BADLANDS
-            );
-    
-        this.builder(SURFACE_CONFIG_NETHER)
-            .addOptionalTag(SURFACE_CONFIG_IS_NETHER)
-            .add(Biomes.NETHER_WASTES);
-        
-        this.builder(SURFACE_CONFIG_WARPED_NYLIUM)
-            .add(Biomes.WARPED_FOREST);
-        
-        this.builder(SURFACE_CONFIG_CRIMSON_NYLIUM)
-            .add(Biomes.CRIMSON_FOREST);
-        
-        this.builder(SURFACE_CONFIG_BASALT)
-            .add(Biomes.BASALT_DELTAS);
-        
-        this.builder(SURFACE_CONFIG_SOUL_SOIL)
-            .add(Biomes.SOUL_SAND_VALLEY);
-        
-        this.builder(SURFACE_CONFIG_END)
-            .addOptionalTag(SURFACE_CONFIG_IS_END)
-            .add(
-                Biomes.THE_END,
-                Biomes.END_BARRENS,
-                Biomes.END_HIGHLANDS,
-                Biomes.END_MIDLANDS,
-                Biomes.SMALL_END_ISLANDS
-            );
-        
-        this.builder(SURFACE_CONFIG_GRASS)
-            .addOptionalTag(SURFACE_CONFIG_SWAMP)
-            .add(Biomes.SWAMP);
-        
-        this.builder(SURFACE_CONFIG_MUD)
-            .add(Biomes.MANGROVE_SWAMP);
-        
-        this.builder(SURFACE_CONFIG_MYCELIUM)
-            .add(Biomes.MUSHROOM_FIELDS);
-        
-        this.builder(SURFACE_CONFIG_PODZOL)
-            .add(
-                Biomes.OLD_GROWTH_PINE_TAIGA,
-                Biomes.OLD_GROWTH_SPRUCE_TAIGA
-            );
-        
-        this.builder(SURFACE_CONFIG_STONE)
-            .add(
-                Biomes.STONY_PEAKS,
-                Biomes.STONY_SHORE
-            );
-        
-        this.builder(SURFACE_CONFIG_SNOW)
-            .add(Biomes.SNOWY_SLOPES);
-        
-        this.builder(SURFACE_CONFIG_SNOW_DIRT)
-            .add(
-                Biomes.GROVE,
-                Biomes.ICE_SPIKES
-            );
-        
-        this.builder(SURFACE_CONFIG_SNOW_PACKED_ICE)
-            .add(Biomes.FROZEN_PEAKS);
-
-        this.builder(SURFACE_CONFIG_SNOW_STONE)
-            .add(Biomes.JAGGED_PEAKS);
 
         /* Modern Beta Biome Height Tags */
 
@@ -945,5 +874,22 @@ public class ModernBetaTagProviderBiome extends FabricTagProvider<Biome> {
             .addTag(IS_SHRUBLAND)
             .addTag(IS_TUNDRA)
             .addTag(IS_EXTREME_HILLS);
+    }
+
+    private void configureModded(Provider provider) {
+        //TODO: maybe clean these up?
+        this.builder(TagKey.create(Registries.BIOME, VersionCompat.id("sereneseasons:blacklisted_biomes")))
+            .addTag(IS_INDEV)
+            .addTag(IS_INFDEV)
+            .addTag(IS_ALPHA);
+
+        this.builder(TagKey.create(Registries.BIOME, VersionCompat.id("sereneseasons:lesser_color_change_biomes")))
+            .add(ModernBetaBiomes.EARLY_RELEASE_SWAMPLAND);
+
+        this.builder(TagKey.create(Registries.BIOME, VersionCompat.id("sereneseasons:tropical_biomes")))
+            .addTag(IS_RAINFOREST)
+            .addTag(IS_DESERT)
+            .addTag(IS_SAVANNA)
+            .addTag(IS_SWAMP);
     }
 }

@@ -1,8 +1,8 @@
 package mod.bluestaggo.modernerbeta.command;
 
 import com.mojang.brigadier.CommandDispatcher;
-import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
-import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
+import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomeSource;
+import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaChunkGenerator;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;

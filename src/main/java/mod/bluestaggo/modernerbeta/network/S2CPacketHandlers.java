@@ -1,12 +1,13 @@
 //~registryGet
 package mod.bluestaggo.modernerbeta.network;
 
-import mod.bluestaggo.modernerbeta.api.world.biome.BiomeProvider;
-import mod.bluestaggo.modernerbeta.api.world.biome.climate.ClimateSampler;
-import mod.bluestaggo.modernerbeta.api.world.biome.climate.ClimateSamplerSky;
-import mod.bluestaggo.modernerbeta.api.world.provider.BiomeProviderType;
+import mod.bluestaggo.modernerbeta.api.level.biome.BiomeProvider;
+import mod.bluestaggo.modernerbeta.api.level.biome.climate.ClimateSampler;
+import mod.bluestaggo.modernerbeta.api.level.biome.climate.ClimateSamplerSky;
+import mod.bluestaggo.modernerbeta.api.level.provider.BiomeProviderType;
 import mod.bluestaggo.modernerbeta.client.color.BlockColorSampler;
 import mod.bluestaggo.modernerbeta.client.color.SkyColorSampler;
+import mod.bluestaggo.modernerbeta.compat.client.ModCompatClient;
 import mod.bluestaggo.modernerbeta.imixin.ModernBetaLevel;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;

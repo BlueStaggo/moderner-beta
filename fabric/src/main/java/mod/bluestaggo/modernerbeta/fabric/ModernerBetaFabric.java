@@ -7,7 +7,7 @@ import mod.bluestaggo.modernerbeta.compat.ModCompat;
 import mod.bluestaggo.modernerbeta.fabric.network.NetworkHelperImpl;
 import mod.bluestaggo.modernerbeta.fabric.registry.RegistryHelperImpl;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
-import mod.bluestaggo.modernerbeta.world.ModernBetaLevelInitializer;
+import mod.bluestaggo.modernerbeta.level.ModernBetaLevelInitializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;

@@ -1,8 +1,8 @@
 package mod.bluestaggo.modernerbeta.mixin;
 
-import mod.bluestaggo.modernerbeta.api.world.biome.climate.ClimateSampler;
+import mod.bluestaggo.modernerbeta.api.level.biome.climate.ClimateSampler;
 import mod.bluestaggo.modernerbeta.imixin.ModernBetaLevel;
-import mod.bluestaggo.modernerbeta.world.feature.BetaSnowAndFreezeFeature;
+import mod.bluestaggo.modernerbeta.level.feature.BetaSnowAndFreezeFeature;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.biome.Biome;

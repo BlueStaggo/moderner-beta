@@ -3,8 +3,8 @@ package mod.bluestaggo.modernerbeta.settings.component;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.util.CodecUtil;
-import mod.bluestaggo.modernerbeta.world.biome.HeightConfig;
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
+import mod.bluestaggo.modernerbeta.level.biome.HeightConfig;
+import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeId;
 
 import java.util.Map;
 

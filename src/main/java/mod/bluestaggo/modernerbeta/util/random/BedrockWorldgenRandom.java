@@ -11,9 +11,9 @@ public class BedrockWorldgenRandom extends WorldgenRandom {
     @Override
     public void setLargeFeatureSeed(long worldSeed, int chunkX, int chunkZ) {
         this.setSeed(worldSeed);
-        int randX = this.nextInt();
-        int randZ = this.nextInt();
-        long seed = (long)chunkX * randX ^ (long)chunkZ * randZ ^ worldSeed;
+        long randX = this.nextInt() >>> 1;
+        long randZ = this.nextInt() >>> 1;
+        long seed = chunkX * randX ^ chunkZ * randZ ^ worldSeed;
         this.setSeed(seed);
     }
 }

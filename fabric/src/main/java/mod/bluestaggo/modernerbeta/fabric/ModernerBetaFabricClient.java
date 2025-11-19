@@ -5,6 +5,7 @@ import mod.bluestaggo.modernerbeta.client.ModernerBetaClient;
 import mod.bluestaggo.modernerbeta.client.color.BlockColorSampler;
 import mod.bluestaggo.modernerbeta.client.color.BlockColors;
 import mod.bluestaggo.modernerbeta.client.registry.ModernBetaClientRegistries;
+import mod.bluestaggo.modernerbeta.compat.client.ModCompatClient;
 import mod.bluestaggo.modernerbeta.fabric.client.resource.ModernBetaFabricColormapResource;
 import mod.bluestaggo.modernerbeta.fabric.registry.RegistryHelperImpl;
 import mod.bluestaggo.modernerbeta.network.BiomeProviderInfoPayload;
@@ -13,6 +14,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.packs.PackType;
 
@@ -20,6 +22,7 @@ public class ModernerBetaFabricClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         ModernerBetaClient.init();
+        ModCompatClient.initialise(FabricLoader.getInstance()::isModLoaded);
         ModernBetaClientRegistries.makeRegistries(new RegistryHelperImpl());
         ModernerBetaClient.setupCustomRegistryHandlers();
 

@@ -4,7 +4,7 @@ import mod.bluestaggo.modernerbeta.client.gui.optioncallbacks.FloatSliderCallbac
 import mod.bluestaggo.modernerbeta.client.gui.optioncallbacks.BiomePickerCallbacks;
 import mod.bluestaggo.modernerbeta.client.gui.optioncallbacks.TextFieldCallbacks;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
+import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeId;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.Options;
 import net.minecraft.client.gui.components.OptionsList;

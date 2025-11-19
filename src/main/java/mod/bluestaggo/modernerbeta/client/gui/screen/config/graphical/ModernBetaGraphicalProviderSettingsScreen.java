@@ -1,7 +1,7 @@
 package mod.bluestaggo.modernerbeta.client.gui.screen.config.graphical;
 
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
-import mod.bluestaggo.modernerbeta.api.world.provider.ProviderType;
+import mod.bluestaggo.modernerbeta.api.level.provider.ProviderType;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import net.minecraft.client.gui.components.OptionsList;
 import net.minecraft.client.gui.screens.Screen;

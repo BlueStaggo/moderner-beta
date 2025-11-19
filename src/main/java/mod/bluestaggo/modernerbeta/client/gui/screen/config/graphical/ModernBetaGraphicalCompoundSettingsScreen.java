@@ -4,8 +4,8 @@ import com.mojang.serialization.Codec;
 import mod.bluestaggo.modernerbeta.client.gui.optioncallbacks.*;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.util.function.FloatSupplier;
-import mod.bluestaggo.modernerbeta.world.biome.HeightConfig;
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ExtendedBiomeId;
+import mod.bluestaggo.modernerbeta.level.biome.HeightConfig;
+import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeId;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.Options;
 import net.minecraft.client.gui.screens.Screen;
@@ -359,7 +359,7 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
         Supplier<ListTag> listSupplier = () -> VersionCompat.unwrap(settings.getList(
             subKey
             //? if <1.21.5
-            /*, type*/
+            //, type
         ));
 
         return this.customButton(

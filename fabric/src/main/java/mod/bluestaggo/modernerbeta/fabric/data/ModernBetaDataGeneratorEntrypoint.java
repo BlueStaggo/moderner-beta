@@ -4,14 +4,14 @@ import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.fabric.data.reduced_height.ModernBetaDeepslateBlobsDataProvider;
 import mod.bluestaggo.modernerbeta.fabric.data.reduced_height.ModernBetaReducedHeightDataProvider;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaResourceKeys;
-import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomes;
-import mod.bluestaggo.modernerbeta.world.carver.configured.ModernBetaConfiguredCarvers;
-import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaNoiseGeneratorSettings;
-import mod.bluestaggo.modernerbeta.world.feature.configured.ModernBetaConfiguredFeatures;
-import mod.bluestaggo.modernerbeta.world.feature.placed.ModernBetaPlacedFeatures;
-import mod.bluestaggo.modernerbeta.world.preset.ModernBetaWorldPresets;
-import mod.bluestaggo.modernerbeta.world.structure.ModernBetaStructureSets;
-import mod.bluestaggo.modernerbeta.world.structure.ModernBetaStructures;
+import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomes;
+import mod.bluestaggo.modernerbeta.level.carver.configured.ModernBetaConfiguredCarvers;
+import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaNoiseGeneratorSettings;
+import mod.bluestaggo.modernerbeta.level.feature.configured.ModernBetaConfiguredFeatures;
+import mod.bluestaggo.modernerbeta.level.feature.placed.ModernBetaPlacedFeatures;
+import mod.bluestaggo.modernerbeta.level.preset.ModernBetaWorldPresets;
+import mod.bluestaggo.modernerbeta.level.structure.ModernBetaStructureSets;
+import mod.bluestaggo.modernerbeta.level.structure.ModernBetaStructures;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.minecraft.core.RegistrySetBuilder;
@@ -25,6 +25,8 @@ import java.util.List;
 public class ModernBetaDataGeneratorEntrypoint implements DataGeneratorEntrypoint {
     @Override
     public void onInitializeDataGenerator(FabricDataGenerator fabricDataGenerator) {
+        ModernerBeta.GENERATING_DATA = true;
+
         FabricDataGenerator.Pack pack = fabricDataGenerator.createPack();
         List<Path> inputs = fabricDataGenerator.getModContainer().getRootPaths();
         
@@ -41,7 +43,7 @@ public class ModernBetaDataGeneratorEntrypoint implements DataGeneratorEntrypoin
         FabricDataGenerator.Pack reducedHeightPack = fabricDataGenerator.createBuiltinResourcePack(ModernerBeta.createId("reduced_height"));
         reducedHeightPack.addProvider(ModernBetaReducedHeightDataProvider::new);
         //? if <1.21
-        /*reducedHeightPack.addProvider(mod.bluestaggo.modernerbeta.fabric.data.reduced_height.ModernBetaReducedHeightTagProviderBlock::new);*/
+        //reducedHeightPack.addProvider(mod.bluestaggo.modernerbeta.fabric.data.reduced_height.ModernBetaReducedHeightTagProviderBlock::new);
         reducedHeightPack.addProvider((FabricDataGenerator.Pack.Factory<PackMetadataGenerator>) output -> PackMetadataGenerator.forFeaturePack(
                 output, Component.translatable("dataPack.moderner_beta.reduced_height.desc")));
 

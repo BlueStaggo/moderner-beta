@@ -18,7 +18,7 @@ public class MersenneTwister {
     private static final int DEFAULT_SEED = 4357;
     private static final int[] MAG_01 = { 0x0, MATRIX_A };
     
-    private final int mt[];
+    private final int[] mt;
     public int mti;
     private int mtiFast;
     
@@ -78,6 +78,7 @@ public class MersenneTwister {
         for (this.mti = 1; this.mti < N; this.mti++) {
             this.mt[this.mti] = (1812433253 * (this.mt[this.mti-1] ^ (this.mt[this.mti-1] >>> 30)) + this.mti);
         }
+        this.mtiFast = N;
     }
 
     public synchronized void initFast(int seed) {

@@ -1,12 +1,12 @@
 //~registryOr
 package mod.bluestaggo.modernerbeta.mixin;
 
-import mod.bluestaggo.modernerbeta.api.world.biome.climate.ClimateSampler;
-import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
-import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
-import mod.bluestaggo.modernerbeta.world.chunk.provider.ChunkProviderNoise3D;
-import mod.bluestaggo.modernerbeta.world.feature.BetaSnowAndFreezeFeature;
-import mod.bluestaggo.modernerbeta.world.feature.placed.ModernBetaMiscPlacedFeatures;
+import mod.bluestaggo.modernerbeta.api.level.biome.climate.ClimateSampler;
+import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomeSource;
+import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaChunkGenerator;
+import mod.bluestaggo.modernerbeta.level.chunk.provider.ChunkProviderNoise3D;
+import mod.bluestaggo.modernerbeta.level.feature.BetaSnowAndFreezeFeature;
+import mod.bluestaggo.modernerbeta.level.feature.placed.ModernBetaMiscPlacedFeatures;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Holder.Reference;

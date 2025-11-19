@@ -3,7 +3,7 @@ package mod.bluestaggo.modernerbeta.settings.component;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.util.CodecUtil;
-import mod.bluestaggo.modernerbeta.world.biome.voronoi.VoronoiPointCaveBiome;
+import mod.bluestaggo.modernerbeta.level.biome.voronoi.VoronoiPointCaveBiome;
 
 import java.util.List;
 

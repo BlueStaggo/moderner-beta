@@ -1,7 +1,7 @@
 package mod.bluestaggo.modernerbeta.mixin;
 
-import mod.bluestaggo.modernerbeta.api.world.spawn.SpawnLocator;
-import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
+import mod.bluestaggo.modernerbeta.api.level.spawn.SpawnLocator;
+import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaChunkGenerator;
 import net.minecraft.core.BlockPos;
 //? if >=1.21.9 {
 /*import net.minecraft.server.level.PlayerSpawnFinder;

@@ -1,0 +1,36 @@
+package mod.bluestaggo.modernerbeta.level.feature.placement;
+
+import com.mojang.serialization.Codec;
+import mod.bluestaggo.modernerbeta.util.VersionCompat;
+import mod.bluestaggo.modernerbeta.util.noise.PerlinOctaveNoise;
+import mod.bluestaggo.modernerbeta.level.feature.placement.noise.NoiseBasedCountAlpha;
+import net.minecraft.world.level.levelgen.placement.PlacementModifierType;
+import org.jetbrains.annotations.NotNull;
+
+public class NoiseBasedCountPlacementModifierAlpha extends NoiseBasedCountPlacementModifier {
+    public static final com.mojang.serialization.MapCodec<NoiseBasedCountPlacementModifierAlpha> MODIFIER_CODEC = VersionCompat.createMaybeMapCodec(
+        instance -> instance.group(
+            Codec.INT.fieldOf("count").forGetter(arg -> arg.count),
+            Codec.DOUBLE.fieldOf("extra_chance").forGetter(arg -> arg.extraChance),
+            Codec.INT.fieldOf("extra_count").forGetter(arg -> arg.extraCount)
+        ).apply(instance, NoiseBasedCountPlacementModifierAlpha::of));
+    
+    protected NoiseBasedCountPlacementModifierAlpha(int count, double extraChance, int extraCount) {
+        super(count, extraChance, extraCount);
+    }
+    
+    public static NoiseBasedCountPlacementModifierAlpha of(int count, double extraChance, int extraCount) {
+        return new NoiseBasedCountPlacementModifierAlpha(count, extraChance, extraCount);
+    }
+    
+    @Override
+    public void setOctaves(PerlinOctaveNoise octaves) {
+        this.noiseDecorator = new NoiseBasedCountAlpha(octaves);
+    }
+    
+    @Override
+    public @NotNull PlacementModifierType<?> type() {
+        return ModernBetaPlacementTypes.ALPHA_NOISE_BASED_COUNT;
+    }
+
+}

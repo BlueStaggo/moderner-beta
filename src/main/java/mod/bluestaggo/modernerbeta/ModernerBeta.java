@@ -6,7 +6,7 @@ import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
-import mod.bluestaggo.modernerbeta.api.world.chunk.surface.SurfaceConfig;
+import mod.bluestaggo.modernerbeta.api.level.chunk.surface.SurfaceConfig;
 import mod.bluestaggo.modernerbeta.network.INetworkHelper;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
@@ -16,18 +16,18 @@ import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPresetCategory;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.util.CodecUtil;
-import mod.bluestaggo.modernerbeta.world.biome.ModernBetaBiomeSource;
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.ConfiguredLayers;
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.LayerType;
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.predicates.BiomePredicateType;
-import mod.bluestaggo.modernerbeta.world.carver.ModernBetaCarvers;
-import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
-import mod.bluestaggo.modernerbeta.world.feature.ModernBetaFeatures;
-import mod.bluestaggo.modernerbeta.world.feature.ModernBetaFoliagePlacers;
-import mod.bluestaggo.modernerbeta.world.feature.ModernBetaTrunkPlacers;
-import mod.bluestaggo.modernerbeta.world.feature.placement.ModernBetaPlacementTypes;
-import mod.bluestaggo.modernerbeta.world.structure.ModernBetaStructurePieceTypes;
-import mod.bluestaggo.modernerbeta.world.structure.ModernBetaStructureTypes;
+import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomeSource;
+import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ConfiguredLayers;
+import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers.LayerType;
+import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.predicates.BiomePredicateType;
+import mod.bluestaggo.modernerbeta.level.carver.ModernBetaCarvers;
+import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaChunkGenerator;
+import mod.bluestaggo.modernerbeta.level.feature.ModernBetaFeatures;
+import mod.bluestaggo.modernerbeta.level.feature.ModernBetaFoliagePlacers;
+import mod.bluestaggo.modernerbeta.level.feature.ModernBetaTrunkPlacers;
+import mod.bluestaggo.modernerbeta.level.feature.placement.ModernBetaPlacementTypes;
+import mod.bluestaggo.modernerbeta.level.structure.ModernBetaStructurePieceTypes;
+import mod.bluestaggo.modernerbeta.level.structure.ModernBetaStructureTypes;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
@@ -51,6 +51,7 @@ public class ModernerBeta {
     public static final String MOD_NAME = "Moderner Beta";
 
     public static boolean DEV_ENV;
+    public static boolean GENERATING_DATA;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MOD_NAME);
 

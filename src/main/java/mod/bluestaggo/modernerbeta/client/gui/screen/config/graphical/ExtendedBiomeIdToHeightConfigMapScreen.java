@@ -1,7 +1,7 @@
 //~dotLocation
 package mod.bluestaggo.modernerbeta.client.gui.screen.config.graphical;
 
-import mod.bluestaggo.modernerbeta.world.biome.HeightConfig;
+import mod.bluestaggo.modernerbeta.level.biome.HeightConfig;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.gui.screens.Screen;

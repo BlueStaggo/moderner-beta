@@ -1,7 +1,7 @@
 package mod.bluestaggo.modernerbeta.client.debug.entries;
 
-import mod.bluestaggo.modernerbeta.world.biome.injector.BiomeInjector;
-import mod.bluestaggo.modernerbeta.world.chunk.ModernBetaChunkGenerator;
+import mod.bluestaggo.modernerbeta.level.biome.injector.BiomeInjector;
+import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaChunkGenerator;
 //? if >=1.21.9 {
 /*import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.debug.DebugScreenDisplayer;

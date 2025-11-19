@@ -1,17 +1,17 @@
 package mod.bluestaggo.modernerbeta.registry;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;
-import mod.bluestaggo.modernerbeta.api.world.BlockSourceCreator;
-import mod.bluestaggo.modernerbeta.api.world.chunk.surface.SurfaceConfig;
-import mod.bluestaggo.modernerbeta.api.world.provider.BiomeProviderType;
-import mod.bluestaggo.modernerbeta.api.world.provider.CaveBiomeProviderType;
-import mod.bluestaggo.modernerbeta.api.world.provider.ChunkProviderType;
+import mod.bluestaggo.modernerbeta.api.level.BlockSourceCreator;
+import mod.bluestaggo.modernerbeta.api.level.chunk.surface.SurfaceConfig;
+import mod.bluestaggo.modernerbeta.api.level.provider.BiomeProviderType;
+import mod.bluestaggo.modernerbeta.api.level.provider.CaveBiomeProviderType;
+import mod.bluestaggo.modernerbeta.api.level.provider.ChunkProviderType;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPresetCategory;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentType;
-import mod.bluestaggo.modernerbeta.world.biome.HeightConfig;
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.layers.LayerType;
-import mod.bluestaggo.modernerbeta.world.biome.provider.fractal.predicates.BiomePredicateType;
+import mod.bluestaggo.modernerbeta.level.biome.HeightConfig;
+import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers.LayerType;
+import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.predicates.BiomePredicateType;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 

@@ -32,8 +32,7 @@ public class ModernerBetaFabricClient implements ClientModInitializer {
 
         ResourceManagerHelper resourceManager = ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES);
         
-        // FIX: Use ModernerBeta.createId() to ensure the path includes the mod namespace.
-        // This prevents the game from searching for "minecraft:textures/..." on the first launch.
+        // REFACTOR: Strict typing using createId()
         resourceManager.registerReloadListener(new ModernBetaFabricColormapResource(
                 ModernerBeta.createId("water_colormap"),
                 ModernerBeta.createId("textures/colormap/water.png"), 

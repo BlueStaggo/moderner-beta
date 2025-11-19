@@ -6,7 +6,7 @@ import mod.bluestaggo.modernerbeta.client.color.BlockColorSampler;
 import mod.bluestaggo.modernerbeta.client.color.BlockColors;
 import mod.bluestaggo.modernerbeta.client.registry.ModernBetaClientRegistries;
 import mod.bluestaggo.modernerbeta.compat.client.ModCompatClient;
-import mod.bluestaggo.modernerbeta.fabric.client.resource.ModernBetaFabricColormapResource;
+import mod.bluestaggo.modernerbeta.fabric.client.resource.ModernBetaFabricColormapReloadListener;
 import mod.bluestaggo.modernerbeta.fabric.registry.RegistryHelperImpl;
 import mod.bluestaggo.modernerbeta.network.BiomeProviderInfoPayload;
 import mod.bluestaggo.modernerbeta.network.S2CPacketHandlers;
@@ -31,13 +31,13 @@ public class ModernerBetaFabricClient implements ClientModInitializer {
         BlockColors.register(ColorProviderRegistry.BLOCK::register);
 
         ResourceManagerHelper resourceManager = ResourceManagerHelper.get(PackType.CLIENT_RESOURCES);
-        resourceManager.registerReloadListener(new ModernBetaFabricColormapResource(
+        resourceManager.registerReloadListener(new ModernBetaFabricColormapReloadListener(
                 ModernerBeta.createId("water_colormap"),
                 "textures/colormap/water.png",
                 BlockColorSampler.INSTANCE.colormapWater::setColormap
         ));
 
-        resourceManager.registerReloadListener(new ModernBetaFabricColormapResource(
+        resourceManager.registerReloadListener(new ModernBetaFabricColormapReloadListener(
                 ModernerBeta.createId("underwater_colormap"),
                 "textures/colormap/underwater.png",
                 BlockColorSampler.INSTANCE.colormapUnderwater::setColormap

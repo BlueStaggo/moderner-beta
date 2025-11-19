@@ -4,6 +4,8 @@ import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -163,6 +165,22 @@ public final class VersionCompat {
          //?} else {
         /*return new ResourceLocation(string);
         *///?}
+    }
+
+    public static String tagsDirPath(ResourceKey<? extends Registry<?>> resourceKey) {
+        //? if >=1.21 {
+        return net.minecraft.core.registries.Registries.tagsDirPath(resourceKey);
+        //? } else {
+        /*return net.minecraft.tags.TagManager.getTagDir(resourceKey);
+        *///? }
+    }
+
+    public static String elementsDirPath(ResourceKey<? extends Registry<?>> resourceKey) {
+        //? if >=1.21 {
+        return net.minecraft.core.registries.Registries.elementsDirPath(resourceKey);
+        //? } else {
+        /*return resourceKey.location().getPath();
+        *///? }
     }
 
     //? if >=1.20.5 {

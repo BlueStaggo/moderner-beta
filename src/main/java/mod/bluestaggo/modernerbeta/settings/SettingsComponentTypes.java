@@ -166,7 +166,7 @@ public class SettingsComponentTypes {
         SINGLE_BIOME = register(
             ModernBetaBuiltInTypes.SettingsComponentType.SINGLE_BIOME.id,
             ResourceLocation.CODEC,
-            VersionCompat.id("moderner_beta:beta_plains"));
+            ModernerBeta.createId("beta_plains"));
         CLIMATE_SCALE = register(
             ModernBetaBuiltInTypes.SettingsComponentType.CLIMATE_SCALE.id,
             ClimateScale.CODEC,

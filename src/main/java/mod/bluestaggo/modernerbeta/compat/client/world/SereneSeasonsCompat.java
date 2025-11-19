@@ -14,7 +14,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 public class SereneSeasonsCompat implements ColorModifierHelper {
-    private static final TagKey<Biome> TROPICAL_BIOMES = TagKey.create(Registries.BIOME, VersionCompat.id("sereneseasons:tropical_biomes"));
+    private static final TagKey<Biome> TROPICAL_BIOMES = TagKey.create(Registries.BIOME, VersionCompat.id("sereneseasons", "tropical_biomes"));
     private final Multimap<Object, Object> resolverOverrides;
 
     private final Object grassResolverType;

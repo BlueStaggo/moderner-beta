@@ -16,8 +16,6 @@ import net.minecraft.world.level.levelgen.PositionalRandomFactory;
 import net.minecraft.world.level.levelgen.SingleThreadedRandomSource;
 
 public class AquiferSamplerProvider {
-    private static final int FAR_LANDS_BOUNDARY = 12550821;
-    
     private final NoiseRouter noiseRouter;
     private final PositionalRandomFactory randomFactory;
     
@@ -70,14 +68,7 @@ public class AquiferSamplerProvider {
         FluidStatus lavaFluidLevel = new FluidStatus(lavaLevel, BlockStates.LAVA); // Vanilla: -54
         FluidStatus seaFluidLevel = new FluidStatus(seaLevel, defaultFluid);
         
-        this.fluidLevelSampler = (x, y, z) -> {
-            // Do not generate lava past Far Lands boundary
-            if (Math.abs(x) >= FAR_LANDS_BOUNDARY || Math.abs(z) >= FAR_LANDS_BOUNDARY)
-                return seaFluidLevel;
-            
-            return y < lavaLevel ? lavaFluidLevel : seaFluidLevel;
-        };
-        
+        this.fluidLevelSampler = (x, y, z) -> y < lavaLevel ? lavaFluidLevel : seaFluidLevel;
         this.lavalessFluidLevelSampler = (x, y, z) -> seaFluidLevel;
         
         this.chunkSampler = chunkSampler;

@@ -2,7 +2,7 @@ package mod.bluestaggo.modernerbeta.fabric.config;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
-import mod.bluestaggo.modernerbeta.client.gui.screen.config.ModernBetaGraphicalConfigSettingsScreen;
+import mod.bluestaggo.modernerbeta.client.gui.screen.config.graphical.ModernBetaGraphicalConfigSettingsScreen;
 import net.fabricmc.loader.api.FabricLoader;
 
 public class ModernBetaModMenu implements ModMenuApi {

@@ -1,4 +1,4 @@
-package mod.bluestaggo.modernerbeta.client.gui.screen.config;
+package mod.bluestaggo.modernerbeta.client.gui.screen.config.graphical;
 
 import net.minecraft.client.gui.components.OptionsList;
 

@@ -90,7 +90,29 @@ public record ModernBetaSettingsPreset(
             ModernBetaSettings.fromCompound(newCaveBiomeSettings)
         );
     }
-    
+
+    public static Tuple<ModernBetaSettingsPreset, Boolean> fromJson(String jsonString) {
+        if (jsonString == null || jsonString.isBlank())
+            return new Tuple<>(null, false);
+
+        ModernBetaSettingsPreset newPreset = null;
+        boolean success = false;
+
+        try {
+            Gson gson = ModernerBeta.getSettingsGson().create();
+            JsonElement json = gson.fromJson(jsonString, JsonElement.class);
+
+            newPreset = json != null ?
+                    VersionCompat.getOrThrow(ModernBetaSettingsPreset.CODEC.decode(JsonOps.INSTANCE, json)).getFirst() : null;
+            success = true;
+        } catch (Exception e) {
+            ModernerBeta.log(Level.ERROR, "Unable to read settings JSON! Reverting to previous settings..");
+            ModernerBeta.log(Level.ERROR, String.format("Reason: %s", e.getMessage()));
+        }
+
+        return new Tuple<>(newPreset, success);
+    }
+
     public Tuple<ModernBetaSettingsPreset, Boolean> setJson(String stringChunk, String stringBiome, String stringCaveBiome) {
         ModernBetaSettings chunkSettings;
         ModernBetaSettings biomeSettings;
@@ -192,14 +214,26 @@ public record ModernBetaSettingsPreset(
         return new Tuple<>(new ModernBetaSettingsPreset(chunkSettings, biomeSettings, caveBiomeSettings), successful);
     }
 
-    public ModernBetaSettingsPreset withNameAndDesc(ResourceLocation id) {
+    public ModernBetaSettingsPreset mapped(HolderGetter<ModernBetaSettingsPreset> presetRegistry) {
         return new ModernBetaSettingsPreset(
-            Optional.of(makeTitleComponent(id)),
-            Optional.of(makeDescriptionComponent(id)),
+            this.chunkSettings.mapPreset(presetRegistry, ModernBetaSettingsPreset::chunkSettings),
+            this.biomeSettings.mapPreset(presetRegistry, ModernBetaSettingsPreset::biomeSettings),
+            this.caveBiomeSettings.mapPreset(presetRegistry, ModernBetaSettingsPreset::caveBiomeSettings)
+        );
+    }
+
+    public ModernBetaSettingsPreset withNameAndDesc(Component title, Component description) {
+        return new ModernBetaSettingsPreset(
+            Optional.of(title),
+            Optional.of(description),
             this.chunkSettings,
             this.biomeSettings,
             this.caveBiomeSettings
         );
+    }
+
+    public ModernBetaSettingsPreset withNameAndDesc(ResourceLocation id) {
+        return this.withNameAndDesc(makeTitleComponent(id), makeDescriptionComponent(id));
     }
     
     public List<ModernBetaSettings> asList() {

@@ -1,7 +1,7 @@
 package mod.bluestaggo.modernerbeta.client.registry;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;
-import mod.bluestaggo.modernerbeta.client.gui.screen.config.GraphicalConfigBuilder;
+import mod.bluestaggo.modernerbeta.client.gui.screen.config.graphical.GraphicalConfigBuilder;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 

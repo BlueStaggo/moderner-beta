@@ -1,7 +1,7 @@
 package mod.bluestaggo.modernerbeta.client;
 
 import mod.bluestaggo.modernerbeta.api.level.biome.climate.TemperatureHeightScaling;
-import mod.bluestaggo.modernerbeta.client.gui.screen.config.*;
+import mod.bluestaggo.modernerbeta.client.gui.screen.config.graphical.*;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import mod.bluestaggo.modernerbeta.settings.component.CaveGeneration;
 import mod.bluestaggo.modernerbeta.level.chunk.provider.indev.IndevTheme;

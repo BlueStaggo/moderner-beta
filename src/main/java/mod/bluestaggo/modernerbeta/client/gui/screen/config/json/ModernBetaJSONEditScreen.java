@@ -1,69 +1,46 @@
-package mod.bluestaggo.modernerbeta.client.gui.screen;
+package mod.bluestaggo.modernerbeta.client.gui.screen.config.json;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
-import com.mojang.serialization.JsonOps;
-import mod.bluestaggo.modernerbeta.ModernerBeta;
+import mod.bluestaggo.modernerbeta.client.gui.screen.ModernBetaScreen;
 import mod.bluestaggo.modernerbeta.mixin.client.MultiLineEditBoxAccessor;
 import mod.bluestaggo.modernerbeta.mixin.client.MultilineTextFieldAccessor;
-import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
-import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.MultiLineEditBox;
-import net.minecraft.client.gui.components.MultilineTextField;
-import net.minecraft.client.gui.components.StringWidget;
-import net.minecraft.client.gui.components.Whence;
+import net.minecraft.client.gui.components.*;
 import net.minecraft.client.gui.layouts.GridLayout;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 
 import java.util.function.Consumer;
 
-public class ModernBetaSettingsScreen extends ModernBetaScreen {
-    private static final String TEXT_NAVIGATION = "createWorld.customize.modern_beta.navigation";
+public abstract class ModernBetaJSONEditScreen extends ModernBetaScreen {
     private static final String TEXT_SETTINGS = "createWorld.customize.modern_beta.settings";
-    private static final String TEXT_SETTINGS_SAVE = "createWorld.customize.modern_beta.settings.save";
     private static final String TEXT_INVALID_JSON = "createWorld.customize.modern_beta.invalid_json";
-    
-    private final Consumer<String> onDone;
-    private final Gson gson;
-    private String settingsString;
-    
-    private Button widgetDone;
+
+    protected final Consumer<String> onDone;
+    protected final Gson gson;
+    protected String settingsString;
+
     private MultiLineEditBox widgetSettings;
     private StringWidget widgetInvalid;
-    
-    public ModernBetaSettingsScreen(String title, Screen parent, ModernBetaSettings settings, Consumer<String> onDone) {
-        super(Component.translatable(title), parent, 40, 33);
+
+    public ModernBetaJSONEditScreen(Component title, Screen parent, Consumer<String> onDone) {
+        super(title, parent, 40, 33);
 
         this.onDone = onDone;
-        this.gson = ModernerBeta.getSettingsGson().setPrettyPrinting().create();
-        this.settingsString = this.gson.toJson(VersionCompat.getOrThrow(
-            ModernBetaSettings.CODEC.encode(settings, JsonOps.INSTANCE, new JsonObject())));
+        this.gson = makeGson();
     }
-    
+
     @Override
     protected void init() {
         super.init();
-        
+
         // Set cursor to beginning of edit box
-        MultilineTextField textField = ((MultiLineEditBoxAccessor) this.widgetSettings).getTextField();
-        textField.seekCursor(Whence.ABSOLUTE, 0);
-        
-        this.onChange();
-    }
+        MultilineTextField editBox = ((MultiLineEditBoxAccessor) this.widgetSettings).getTextField();
+        editBox.seekCursor(Whence.ABSOLUTE, 0);
 
-    @Override
-    protected void initHeader(GridLayout headerLayout) {
-        super.initHeader(headerLayout);
-        Component textNavigation = Component.translatable(TEXT_NAVIGATION);
-        StringWidget widgetNavigation = new StringWidget(textNavigation, this.font);
-
-        headerLayout.addChild(widgetNavigation, 1, 0);
+        this.onChange(this.isValidJson(this.settingsString));
     }
 
     @Override
@@ -74,7 +51,7 @@ public class ModernBetaSettingsScreen extends ModernBetaScreen {
         this.widgetSettings = MultiLineEditBox.builder().build(
         //?} else {
         /*this.widgetSettings = new MultiLineEditBox(
-        *///?}
+         *///?}
             this.font,
             //? if <1.21.6
             //0, 0,
@@ -86,7 +63,7 @@ public class ModernBetaSettingsScreen extends ModernBetaScreen {
         this.widgetSettings.setValue(this.settingsString);
         this.widgetSettings.setValueListener(string -> {
             this.settingsString = string;
-            this.onChange();
+            this.onChange(this.isValidJson(this.settingsString));
         });
 
         Component textInvalid = Component.translatable(TEXT_INVALID_JSON).withStyle(ChatFormatting.RED);
@@ -96,22 +73,7 @@ public class ModernBetaSettingsScreen extends ModernBetaScreen {
         row.addChild(this.widgetInvalid);
     }
 
-    @Override
-    protected void initFooter(GridLayout footerLayout) {
-        GridLayout.RowHelper row = footerLayout.createRowHelper(2);
-
-        this.widgetDone = Button.builder(Component.translatable(TEXT_SETTINGS_SAVE), button -> {
-            this.onDone.accept(this.settingsString);
-            this.minecraft.setScreen(this.parent);
-        }).bounds(this.width / 2 - 154, this.height - 26, BUTTON_LENGTH, BUTTON_HEIGHT).build();
-
-        Button cancelButton = Button.builder(CommonComponents.GUI_CANCEL, button ->
-                this.minecraft.setScreen(this.parent)
-        ).bounds(this.width / 2 + 4, this.height - 26, BUTTON_LENGTH, BUTTON_HEIGHT).build();
-
-        row.addChild(this.widgetDone);
-        row.addChild(cancelButton);
-    }
+    protected abstract Gson makeGson();
 
     @Override
     protected void repositionElements() {
@@ -135,21 +97,17 @@ public class ModernBetaSettingsScreen extends ModernBetaScreen {
         super.repositionElements();
     }
 
-    private void onChange() {
-        boolean isValid = this.isValidJson(this.settingsString);
-        
-        this.widgetDone.active = isValid;
+    protected void onChange(boolean isValid) {
         this.widgetInvalid.visible = !isValid;
     }
-    
+
     private boolean isValidJson(String json) {
         try {
             JsonParser.parseString(json);
         } catch (JsonSyntaxException e) {
             return false;
         }
-        
+
         return true;
     }
 }
-

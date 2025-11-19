@@ -1,7 +1,5 @@
 package mod.bluestaggo.modernerbeta.client.gui.screen.config;
 
-import com.google.common.hash.Hashing;
-import com.google.common.hash.HashingOutputStream;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
@@ -18,10 +16,8 @@ import mod.bluestaggo.modernerbeta.tags.ModernBetaSettingsPresetCategoryTags;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import net.minecraft.ChatFormatting;
 import net.minecraft.DetectedVersion;
-import net.minecraft.Util;
 import net.minecraft.client.gui.components.*;
 import net.minecraft.client.gui.layouts.GridLayout;
-import net.minecraft.client.gui.layouts.HeaderAndFooterLayout;
 import net.minecraft.client.gui.layouts.LayoutSettings;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.Registry;
@@ -47,15 +43,15 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
 public class ModernBetaDataPackExportScreen extends ModernBetaScreen {
+    public static final int TEXT_BOX_LENGTH = 227;
+    
     private static final String TEXT_PRESET_CATEGORY = "createWorld.customize.modern_beta.preset_category";
     private static final String TEXT_PRESET_CATEGORY_NAME = "createWorld.customize.modern_beta.preset_category.name";
 
@@ -67,8 +63,6 @@ public class ModernBetaDataPackExportScreen extends ModernBetaScreen {
     private static final String DATA_PACK_EXPORT_SAVE_AS_TITLE = "createWorld.customize.modern_beta.settings.data_pack_export.save_as_title";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ModernerBeta.MOD_NAME);
-
-    private final HeaderAndFooterLayout layout = new HeaderAndFooterLayout(this, 8, 40);
 
     private final Registry<ModernBetaSettingsPreset> presetRegistry;
     private final Registry<ModernBetaSettingsPresetCategory> presetCategoryRegistry;
@@ -93,6 +87,7 @@ public class ModernBetaDataPackExportScreen extends ModernBetaScreen {
         Registry<ModernBetaSettingsPresetCategory> presetCategoryRegistry
     ) {
         super(Component.translatable(title), parent);
+        this.layout.setContentMarginTop(0);
 
         this.preset = preset;
         this.presetRegistry = presetRegistry;
@@ -101,66 +96,26 @@ public class ModernBetaDataPackExportScreen extends ModernBetaScreen {
 
     @Override
     protected void init() {
-        super.init();
-
         assert this.minecraft != null;
         if (this.presetID == null)
             this.presetID = getDefaultPresetID();
+
+        super.init();
+    }
+
+    @Override
+    protected void initContent(GridLayout contentLayout) {
+        GridLayout gridWidgetOptions = this.createGridWidget();
+
+        GridLayout.RowHelper mainContent = contentLayout.createRowHelper(1);
+        GridLayout.RowHelper optionsContent = gridWidgetOptions.createRowHelper(2);
+        optionsContent.defaultCellSetting().alignHorizontallyRight().alignVerticallyMiddle();
 
         MutableComponent presetText = Component.translatable(TEXT_PRESET_CATEGORY).append(": ");
         presetText.append(this.presetCategory == null ?
             Component.translatable("gui.none").withStyle(ChatFormatting.AQUA) :
             Component.translatable(TEXT_PRESET_CATEGORY_NAME + "." + presetCategory.toLanguageKey()).withStyle(ChatFormatting.YELLOW)
         );
-
-        Component idText = Component.translatable(DATA_PACK_EXPORT_PRESET_ID);
-        StringWidget idLabel = new StringWidget(idText, this.font);
-        this.idBox = new EditBox(this.minecraft.fontFilterFishy, 0, 0, this.width - 200, 20, Component.empty());
-        this.idBox.setValue(this.presetID.toString());
-        this.idBox.setResponder(string -> {
-            ResourceLocation parsed = ResourceLocation.tryParse(string);
-
-            if (parsed != null) {
-                this.idBox.setTextColor(EditBox.DEFAULT_TEXT_COLOR);
-            } else {
-                //noinspection DataFlowIssue
-                this.idBox.setTextColor(ChatFormatting.RED.getColor() | 0xFF000000);
-            }
-
-            this.presetID = parsed;
-            this.exportButton.active = this.canExport();
-        });
-
-        Component nameText = Component.translatable(DATA_PACK_EXPORT_PRESET_NAME);
-        StringWidget nameLabel = new StringWidget(nameText, this.font);
-        this.nameBox = new EditBox(this.minecraft.fontFilterFishy, 0, 0, this.width - 200, 20, Component.empty());
-        this.nameBox.setValue(this.presetName);
-        this.nameBox.setResponder(string -> {
-            this.presetName = string;
-            this.exportButton.active = this.canExport();
-        });
-
-        Component descriptionText = Component.translatable(DATA_PACK_EXPORT_PRESET_DESCRIPTION);
-        StringWidget descriptionLabel = new StringWidget(descriptionText, this.font);
-        //? if >=1.21.6 {
-        this.descriptionBox = MultiLineEditBox.builder().build(
-        //?} else {
-        /*this.descriptionBox = new MultiLineEditBox(
-         *///?}
-            this.font,
-            //? if <1.21.6
-            /*0, 0,*/
-            this.width - 200, 60,
-            //? if <1.21.6
-            /*Component.literal(""),*/
-            Component.literal("")
-        );
-        this.descriptionBox.setValue(this.presetDescription);
-        this.descriptionBox.setCharacterLimit(175);
-        this.descriptionBox.setValueListener(string -> {
-            this.presetDescription = string;
-            this.exportButton.active = this.canExport();
-        });
 
         Button categoryButton = Button.builder(
             presetText,
@@ -183,87 +138,54 @@ public class ModernBetaDataPackExportScreen extends ModernBetaScreen {
             ))
         ).bounds(0, 0, BUTTON_LENGTH_PRESET, BUTTON_HEIGHT_PRESET).build();
 
-        this.exportButton = Button.builder(Component.translatable(DATA_PACK_EXPORT), button -> {
-            //TODO
-            Language language = Language.getInstance();
-            String title = language.getOrDefault(DATA_PACK_EXPORT_SAVE_AS_TITLE);
+        Component idText = Component.translatable(DATA_PACK_EXPORT_PRESET_ID);
+        StringWidget idLabel = new StringWidget(idText, this.font);
+        this.idBox = new EditBox(this.minecraft.fontFilterFishy, 0, 0, TEXT_BOX_LENGTH, 20, Component.empty());
+        this.idBox.setValue(this.presetID.toString());
+        this.idBox.setResponder(string -> {
+            ResourceLocation parsed = ResourceLocation.tryParse(string);
 
-            String writeTo;
-            File path = this.minecraft.gameDirectory;
-
-            //TODO: investigate behaviour on other operating systems
-            if (Util.getPlatform() == Util.OS.WINDOWS) {
-                path = new File(path, presetID.getPath());
+            if (parsed != null) {
+                this.idBox.setTextColor(EditBox.DEFAULT_TEXT_COLOR);
+            } else {
+                //noinspection DataFlowIssue
+                this.idBox.setTextColor(ChatFormatting.RED.getColor() | 0xFF000000);
             }
 
-            try (MemoryStack stack = MemoryStack.stackPush()) {
-                PointerBuffer pointers = stack.mallocPointer(1);
-                pointers.put(stack.UTF8("*.zip"));
-                pointers.flip();
+            this.presetID = parsed;
+            this.exportButton.active = this.canExport();
+        });
 
-                writeTo = TinyFileDialogs.tinyfd_saveFileDialog(
-                    title,
-                    path.toString(),
-                    pointers,
-                    null
-                );
-            }
+        Component nameText = Component.translatable(DATA_PACK_EXPORT_PRESET_NAME);
+        StringWidget nameLabel = new StringWidget(nameText, this.font);
+        this.nameBox = new EditBox(this.minecraft.fontFilterFishy, 0, 0, TEXT_BOX_LENGTH, 20, Component.empty());
+        this.nameBox.setValue(this.presetName);
+        this.nameBox.setResponder(string -> {
+            this.presetName = string;
+            this.exportButton.active = this.canExport();
+        });
 
-            //TODO: maybe make this async?
-            if (writeTo != null) {
-                try (DataPackExporter exporter = new DataPackExporter(writeTo)) {
-                    if (this.presetCategory != null) {
-                        ModernBetaSettingsPresetCategory category = this.presetCategoryRegistry.getValue(this.presetCategory);
-                        TagKey<ModernBetaSettingsPreset> tagKey = category.presetTag();
-
-                        FileToIdConverter converter = FileToIdConverter.json("data/" + Registries.tagsDirPath(ModernBetaResourceKeys.SETTINGS_PRESET));
-                        ResourceLocation pathLocation = converter.idToFile(tagKey.location());
-
-                        TagFile tagFile = new TagFile(List.of(TagEntry.element(this.presetID)), false);
-                        exporter.addJson(objectToJson(tagFile, TagFile.CODEC), pathLocation);
-                    }
-
-                    FileToIdConverter converter = FileToIdConverter.json("data/" + Registries.elementsDirPath(ModernBetaResourceKeys.SETTINGS_PRESET));
-                    ResourceLocation pathLocation = converter.idToFile(this.presetID);
-
-                    ModernBetaSettingsPreset expanded = this.preset
-                            .mapped(this.presetRegistry)
-                            .withNameAndDesc(
-                                Component.literal(this.presetName).withStyle(ChatFormatting.YELLOW),
-                                Component.literal(this.presetDescription)
-                            );
-                    exporter.addJson(objectToJson(expanded, ModernBetaSettingsPreset.CODEC), pathLocation);
-
-                    PackMetadataSection metadataSection = new PackMetadataSection(
-                        //TODO: maybe autogenerated string?
-                        Component.literal("Moderner Beta exported preset"),
-                        DetectedVersion.BUILT_IN.packVersion(PackType.SERVER_DATA),
-                        Optional.empty()
-                    );
-                    JsonElement metadataElement = objectToJson(metadataSection, PackMetadataSection.CODEC);
-                    JsonObject packObject = new JsonObject();
-                    packObject.add("pack", metadataElement);
-
-                    exporter.addJson(packObject, "pack.mcmeta");
-                } catch (Exception e) {
-                    LOGGER.error("Failed to export datapack!", e);
-                }
-            }
-        }).bounds(0, 0, BUTTON_LENGTH, BUTTON_HEIGHT).build();
-        this.exportButton.active = false;
-
-        Button widgetCancel = Button.builder(CommonComponents.GUI_CANCEL, button ->
-                this.minecraft.setScreen(this.parent)
-        ).bounds(0, 0, BUTTON_LENGTH, BUTTON_HEIGHT).build();
-
-        GridLayout gridWidgetMain = this.createGridWidget();
-        GridLayout gridWidgetOptions = this.createGridWidget();
-        GridLayout gridWidgetFooter = this.createGridWidget();
-
-        GridLayout.RowHelper mainContent = gridWidgetMain.createRowHelper(1);
-        GridLayout.RowHelper optionsContent = gridWidgetOptions.createRowHelper(2);
-        GridLayout.RowHelper footerContent = gridWidgetFooter.createRowHelper(2);
-        optionsContent.defaultCellSetting().alignHorizontallyRight().alignVerticallyMiddle();
+        Component descriptionText = Component.translatable(DATA_PACK_EXPORT_PRESET_DESCRIPTION);
+        StringWidget descriptionLabel = new StringWidget(descriptionText, this.font);
+        //? if >=1.21.6 {
+        this.descriptionBox = MultiLineEditBox.builder().build(
+        //?} else {
+        /*this.descriptionBox = new MultiLineEditBox(
+         *///?}
+            this.font,
+            //? if <1.21.6
+            /*0, 0,*/
+            TEXT_BOX_LENGTH, 60,
+            //? if <1.21.6
+            /*Component.literal(""),*/
+            Component.literal("")
+        );
+        this.descriptionBox.setValue(this.presetDescription);
+        this.descriptionBox.setCharacterLimit(175);
+        this.descriptionBox.setValueListener(string -> {
+            this.presetDescription = string;
+            this.exportButton.active = this.canExport();
+        });
 
         mainContent.addChild(categoryButton);
         mainContent.addChild(gridWidgetOptions);
@@ -277,20 +199,30 @@ public class ModernBetaDataPackExportScreen extends ModernBetaScreen {
         LayoutSettings layoutSettings = optionsContent.newCellSettings().alignVerticallyTop().paddingTop(6);
         optionsContent.addChild(descriptionLabel, 1, layoutSettings);
         optionsContent.addChild(descriptionBox, 1, layoutSettings.copy().paddingTop(0));
-
-        footerContent.addChild(this.exportButton);
-        footerContent.addChild(widgetCancel);
-
-        this.layout.addToContents(gridWidgetMain);
-        this.layout.addToFooter(gridWidgetFooter);
-
-        this.layout.arrangeElements();
-        this.layout.visitWidgets(this::addRenderableWidget);
     }
 
     @Override
-    protected void repositionElements() {
-        this.layout.arrangeElements();
+    protected void initFooter(GridLayout footerLayout) {
+        GridLayout.RowHelper footerContent = footerLayout.createRowHelper(2);
+
+        this.exportButton = Button.builder(Component.translatable(DATA_PACK_EXPORT), button -> {
+            Language language = Language.getInstance();
+            String title = language.getOrDefault(DATA_PACK_EXPORT_SAVE_AS_TITLE);
+
+            File path = new File(this.minecraft.gameDirectory, presetID.getPath());
+            String writeTo = getOutputPathFromSelection(path, title, "*.zip");
+
+            this.exportDatapack(writeTo);
+        }).bounds(0, 0, BUTTON_LENGTH, BUTTON_HEIGHT).build();
+        this.exportButton.active = false;
+
+        Button widgetCancel = Button.builder(CommonComponents.GUI_CANCEL, button ->
+            this.minecraft.setScreen(this.parent)
+        ).bounds(0, 0, BUTTON_LENGTH, BUTTON_HEIGHT).build();
+
+
+        footerContent.addChild(this.exportButton);
+        footerContent.addChild(widgetCancel);
     }
 
     private ResourceLocation getDefaultPresetID() {
@@ -305,9 +237,70 @@ public class ModernBetaDataPackExportScreen extends ModernBetaScreen {
                 !this.descriptionBox.getValue().isEmpty();
     }
 
-    private <T> JsonElement objectToJson(T value, Codec<T> codec) {
+    private static  <T> JsonElement objectToJson(T value, Codec<T> codec) {
         DataResult<JsonElement> result = codec.encodeStart(JsonOps.INSTANCE, value);
         return result.getOrThrow();
+    }
+
+    private static String getOutputPathFromSelection(File path, String title, String... filterPatterns) {
+        try (MemoryStack stack = MemoryStack.stackPush()) {
+            PointerBuffer pointers = stack.mallocPointer(filterPatterns.length);
+            for (String pattern : filterPatterns) {
+                pointers.put(stack.UTF8(pattern));
+                pointers.flip();
+            }
+
+            return TinyFileDialogs.tinyfd_saveFileDialog(
+                title,
+                path.toString(),
+                pointers,
+                null
+            );
+        }
+    }
+
+    private void exportDatapack(String outputPath) {
+        //TODO: maybe make this async?
+        if (outputPath == null)
+            return;
+
+        try (DataPackExporter exporter = new DataPackExporter(outputPath)) {
+            if (this.presetCategory != null) {
+                ModernBetaSettingsPresetCategory category = this.presetCategoryRegistry.getValue(this.presetCategory);
+                TagKey<ModernBetaSettingsPreset> tagKey = category.presetTag();
+
+                FileToIdConverter converter = FileToIdConverter.json("data/" + Registries.tagsDirPath(ModernBetaResourceKeys.SETTINGS_PRESET));
+                ResourceLocation pathLocation = converter.idToFile(tagKey.location());
+
+                TagFile tagFile = new TagFile(List.of(TagEntry.element(this.presetID)), false);
+                exporter.addJson(objectToJson(tagFile, TagFile.CODEC), pathLocation);
+            }
+
+            FileToIdConverter converter = FileToIdConverter.json("data/" + Registries.elementsDirPath(ModernBetaResourceKeys.SETTINGS_PRESET));
+            ResourceLocation pathLocation = converter.idToFile(this.presetID);
+
+            ModernBetaSettingsPreset expanded = this.preset
+                    .mapped(this.presetRegistry)
+                    .withNameAndDesc(
+                        Component.literal(this.presetName).withStyle(ChatFormatting.YELLOW),
+                        Component.literal(this.presetDescription)
+                    );
+            exporter.addJson(objectToJson(expanded, ModernBetaSettingsPreset.CODEC), pathLocation);
+
+            PackMetadataSection metadataSection = new PackMetadataSection(
+                //TODO: maybe autogenerated string?
+                Component.literal("Moderner Beta exported preset"),
+                DetectedVersion.BUILT_IN.packVersion(PackType.SERVER_DATA),
+                Optional.empty()
+            );
+            JsonElement metadataElement = objectToJson(metadataSection, PackMetadataSection.CODEC);
+            JsonObject packObject = new JsonObject();
+            packObject.add("pack", metadataElement);
+
+            exporter.addJson(packObject, "pack.mcmeta");
+        } catch (Exception e) {
+            LOGGER.error("Failed to export datapack!", e);
+        }
     }
 
     private static class DataPackExporter implements AutoCloseable {

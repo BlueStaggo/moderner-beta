@@ -7,6 +7,7 @@ import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.StringWidget;
 import net.minecraft.client.gui.layouts.GridLayout;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
@@ -15,6 +16,7 @@ import net.minecraft.network.chat.Component;
 import java.util.function.Consumer;
 
 public class ModernBetaSettingsScreen extends ModernBetaJSONEditScreen {
+    private static final String TEXT_NAVIGATION = "createWorld.customize.modern_beta.navigation";
     private static final String TEXT_SETTINGS_SAVE = "createWorld.customize.modern_beta.settings.save";
 
     private Button widgetDone;
@@ -27,8 +29,18 @@ public class ModernBetaSettingsScreen extends ModernBetaJSONEditScreen {
     }
 
     @Override
-    protected void makeFooter(GridLayout grid) {
-        GridLayout.RowHelper row = grid.createRowHelper(2);
+    protected void initHeader(GridLayout headerLayout) {
+        super.initHeader(headerLayout);
+
+        Component textNavigation = Component.translatable(TEXT_NAVIGATION);
+        StringWidget widgetNavigation = new StringWidget(textNavigation, this.font);
+
+        headerLayout.addChild(widgetNavigation, 1, 0);
+    }
+
+    @Override
+    protected void initFooter(GridLayout footerLayout) {
+        GridLayout.RowHelper row = footerLayout.createRowHelper(2);
 
         this.widgetDone = Button.builder(Component.translatable(TEXT_SETTINGS_SAVE), button -> {
             this.onDone.accept(this.settingsString);

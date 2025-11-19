@@ -31,16 +31,18 @@ public class ModernBetaImportExportScreen extends ModernBetaJSONEditScreen {
     }
 
     @Override
-    protected void makeHeader(GridLayout.RowHelper content) {
+    protected void initHeader(GridLayout headerLayout) {
+        super.initHeader(headerLayout);
+
         Component textPasting = Component.translatable(COPY_PASTE_HINT);
         StringWidget widgetPasting = new StringWidget(textPasting, this.font);
 
-        content.addChild(widgetPasting);
+        headerLayout.addChild(widgetPasting, 1, 0);
     }
 
     @Override
-    protected void makeFooter(GridLayout grid) {
-        GridLayout.RowHelper row = grid.createRowHelper(3);
+    protected void initFooter(GridLayout footerLayout) {
+        GridLayout.RowHelper row = footerLayout.createRowHelper(3);
 
         this.widgetDone = Button.builder(Component.translatable(TEXT_SETTINGS_SAVE), button -> {
             this.onDone.accept(this.settingsString);

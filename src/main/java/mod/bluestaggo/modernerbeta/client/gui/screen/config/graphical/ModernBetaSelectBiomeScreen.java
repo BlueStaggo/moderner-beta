@@ -3,6 +3,7 @@
 package mod.bluestaggo.modernerbeta.client.gui.screen.config.graphical;
 
 import com.ibm.icu.text.Collator;
+import mod.bluestaggo.modernerbeta.client.gui.screen.ModernBetaScreen;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;

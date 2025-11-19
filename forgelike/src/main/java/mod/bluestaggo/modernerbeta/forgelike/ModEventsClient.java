@@ -127,7 +127,7 @@ public class ModEventsClient {
             *///?}
         };
 
-        // FIX: Wrapped paths in ModernerBeta.createId() to use correct namespace and Type
+        // REFACTOR: Strict typing using createId() guarantees correct namespace
         addListener.accept(ModernerBeta.createId("water_colormap"), new ModernBetaColormapResource(
                 ModernerBeta.createId("textures/colormap/water.png"),
                 BlockColorSampler.INSTANCE.colormapWater::setColormap

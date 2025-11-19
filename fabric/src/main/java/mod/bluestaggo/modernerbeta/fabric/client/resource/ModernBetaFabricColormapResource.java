@@ -12,7 +12,7 @@ import java.util.function.Consumer;
 public class ModernBetaFabricColormapResource extends ModernBetaColormapResource implements IdentifiableResourceReloadListener {
     private final Identifier id;
 
-    // CHANGED: Now takes two Identifiers (one for the listener ID, one for the texture location)
+    // REFACTOR: now takes Identifier to match the strict parent class
     public ModernBetaFabricColormapResource(Identifier id, Identifier resourceId, Consumer<int[]> consumer) {
         super(resourceId, consumer);
         this.id = id;

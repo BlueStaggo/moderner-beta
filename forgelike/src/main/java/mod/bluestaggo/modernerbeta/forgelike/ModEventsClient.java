@@ -6,7 +6,7 @@ import mod.bluestaggo.modernerbeta.client.color.BlockColorSampler;
 import mod.bluestaggo.modernerbeta.client.color.BlockColors;
 import mod.bluestaggo.modernerbeta.client.gui.screen.config.graphical.ModernBetaGraphicalConfigSettingsScreen;
 import mod.bluestaggo.modernerbeta.client.registry.ModernBetaClientRegistries;
-import mod.bluestaggo.modernerbeta.client.resource.ModernBetaColormapResource;
+import mod.bluestaggo.modernerbeta.client.resource.ModernBetaColormapReloadListener;
 import mod.bluestaggo.modernerbeta.compat.client.ModCompatClient;
 import mod.bluestaggo.modernerbeta.forgelike.registry.RegistryHelperImpl;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
@@ -129,12 +129,12 @@ public class ModEventsClient {
             *///?}
         };
 
-        addListener.accept(ModernerBeta.createId("water_colormap"), new ModernBetaColormapResource(
+        addListener.accept(ModernerBeta.createId("water_colormap"), new ModernBetaColormapReloadListener(
                 "textures/colormap/water.png",
                 BlockColorSampler.INSTANCE.colormapWater::setColormap
         ));
 
-        addListener.accept(ModernerBeta.createId("underwater_colormap"), new ModernBetaColormapResource(
+        addListener.accept(ModernerBeta.createId("underwater_colormap"), new ModernBetaColormapReloadListener(
                 "textures/colormap/underwater.png",
                 BlockColorSampler.INSTANCE.colormapUnderwater::setColormap
         ));

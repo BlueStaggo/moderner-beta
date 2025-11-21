@@ -38,7 +38,7 @@ public record ModernBetaSettingsPreset(
         ).apply(instance, ModernBetaSettingsPreset::new)
     );
 
-    public static final Codec<ModernBetaSettingsPreset> SETTINGS_TEXT_CODEC = Codec.xor(CODEC, ResourceLocation.CODEC.fieldOf("preset").codec())
+    public static final Codec<ModernBetaSettingsPreset> SETTINGS_TEXT_CODEC = Codec.either(CODEC, ResourceLocation.CODEC.fieldOf("preset").codec())
             .xmap(e -> e.map(Function.identity(), ModernBetaSettingsPreset::referenced), Either::left);
 
     public ModernBetaSettingsPreset(

@@ -13,7 +13,6 @@ import mod.bluestaggo.modernerbeta.registry.ModernBetaResourceKeys;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.server.dedicated.DedicatedServerProperties;
@@ -37,34 +36,35 @@ public abstract class WorldDimensionDataMixin {
     @Unique private final static Logger modernBeta$LOGGER = LoggerFactory.getLogger(DedicatedServerProperties.class.getName());
     @Shadow public abstract JsonObject generatorSettings();
 
+    //? if >=1.21.2
     @SuppressWarnings("InvalidInjectorMethodSignature")
     @Inject(method = "create", at = @At("TAIL"), cancellable = true)
     private void injectCustomSettings(
-        HolderLookup.Provider provider,
+        net.minecraft.core./*? >=1.21.2 {*/HolderLookup.Provider/*?} else {*//*RegistryAccess*//*?}*/ registries,
         CallbackInfoReturnable<WorldDimensions> cir,
         @Local Holder<WorldPreset> presetHolder,
         @Local WorldDimensions worldDimensions
     ) {
         if (presetHolder.is(ModernBetaWorldPresets.MODERN_BETA)) {
-            RegistryOps<JsonElement> registryOps = provider.createSerializationContext(JsonOps.INSTANCE);
+            RegistryOps<JsonElement> registryOps = RegistryOps.create(JsonOps.INSTANCE, registries);
             Optional<ModernBetaSettingsPreset> optional = ModernBetaSettingsPreset.SETTINGS_TEXT_CODEC
                     .parse(new Dynamic<>(registryOps, this.generatorSettings()))
                     .resultOrPartial(modernBeta$LOGGER::error);
 
             optional.ifPresent(settingsPreset -> {
-                HolderGetter<NoiseGeneratorSettings> noiseSettingRegistry = provider.lookupOrThrow(Registries.NOISE_SETTINGS);
-                HolderGetter<ModernBetaSettingsPreset> presetRegistry = provider.lookupOrThrow(ModernBetaResourceKeys.SETTINGS_PRESET);
+                HolderGetter<NoiseGeneratorSettings> noiseSettingRegistry = registries.lookupOrThrow(Registries.NOISE_SETTINGS);
+                HolderGetter<ModernBetaSettingsPreset> presetRegistry = registries.lookupOrThrow(ModernBetaResourceKeys.SETTINGS_PRESET);
 
-                cir.setReturnValue(worldDimensions.replaceOverworldGenerator(provider,
+                cir.setReturnValue(worldDimensions.replaceOverworldGenerator(registries,
                     new ModernBetaChunkGenerator(
                         new ModernBetaBiomeSource(
-                            provider.lookupOrThrow(Registries.BIOME),
+                            registries.lookupOrThrow(Registries.BIOME),
                             presetRegistry,
                             settingsPreset.biomeSettings().toCompound(),
                             settingsPreset.caveBiomeSettings().toCompound()
                         ),
                         presetRegistry,
-                        provider.lookupOrThrow(ModernBetaResourceKeys.SURFACE_CONFIG),
+                        registries.lookupOrThrow(ModernBetaResourceKeys.SURFACE_CONFIG),
                         noiseSettingRegistry.getOrThrow(ModernBetaNoiseGeneratorSettings.NOISE_3D),
                         settingsPreset.chunkSettings().toCompound()
                     )

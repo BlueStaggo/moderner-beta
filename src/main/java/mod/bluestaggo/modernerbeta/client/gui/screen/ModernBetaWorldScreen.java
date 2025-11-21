@@ -144,7 +144,7 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
                     },
                 false
             ))
-        ).bounds(0, 0, BUTTON_LENGTH_PRESET, BUTTON_HEIGHT_PRESET).build();
+        ).size(BUTTON_LENGTH_PRESET, BUTTON_HEIGHT_PRESET).build();
 
         HolderGetter<ModernBetaSettingsPreset> presetLookup =
             //? if >=1.21.2 {
@@ -302,11 +302,11 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
                 this.preset.caveBiomeSettings().toCompound()
             );
             this.minecraft.setScreen(this.parent);
-        }).bounds(0, 0, BUTTON_LENGTH, BUTTON_HEIGHT).build();
+        }).size(BUTTON_LENGTH, BUTTON_HEIGHT).build();
 
         Button cancelButton = Button.builder(CommonComponents.GUI_CANCEL, button ->
             this.minecraft.setScreen(this.parent)
-        ).bounds(0, 0, BUTTON_LENGTH, BUTTON_HEIGHT).build();
+        ).size(BUTTON_LENGTH, BUTTON_HEIGHT).build();
 
         actionRow.addChild(doneButton);
         actionRow.addChild(cancelButton);

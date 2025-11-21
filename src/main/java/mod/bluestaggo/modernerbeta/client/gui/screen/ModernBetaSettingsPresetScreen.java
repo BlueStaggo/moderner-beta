@@ -77,7 +77,7 @@ public class ModernBetaSettingsPresetScreen<T extends NameAndDescriptionItem> ex
                     this.onSelected.accept(this, entry.presetName, entry.preset);
                 }
             }
-        ).bounds(0, 0, 150, 20).build();
+        ).size(150, 20).build();
 
         Button cancelButton = Button.builder(
             !this.enableSelect ? CommonComponents.GUI_CANCEL : CommonComponents.GUI_BACK,
@@ -86,7 +86,7 @@ public class ModernBetaSettingsPresetScreen<T extends NameAndDescriptionItem> ex
                     this.minecraft.setScreen(this.parent);
                 }
             }
-        ).bounds(0, 0, 150, 20).build();
+        ).size(150, 20).build();
 
         this.selectPresetButton.active = this.enableSelect;
 

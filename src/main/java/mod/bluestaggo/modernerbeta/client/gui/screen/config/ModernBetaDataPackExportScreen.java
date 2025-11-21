@@ -132,7 +132,7 @@ public class ModernBetaDataPackExportScreen extends ModernBetaScreen {
                     },
                 false
             ))
-        ).bounds(0, 0, BUTTON_LENGTH_PRESET, BUTTON_HEIGHT_PRESET).build();
+        ).size(BUTTON_LENGTH_PRESET, BUTTON_HEIGHT_PRESET).build();
 
         Component idText = Component.translatable(DATA_PACK_EXPORT_PRESET_ID);
         StringWidget idLabel = new StringWidget(idText, this.font);
@@ -209,12 +209,12 @@ public class ModernBetaDataPackExportScreen extends ModernBetaScreen {
             String writeTo = getOutputPathFromSelection(path, title, "*.zip");
 
             this.exportDatapack(writeTo);
-        }).bounds(0, 0, BUTTON_LENGTH, BUTTON_HEIGHT).build();
+        }).size(BUTTON_LENGTH, BUTTON_HEIGHT).build();
         this.exportButton.active = false;
 
         Button widgetCancel = Button.builder(CommonComponents.GUI_CANCEL, button ->
             this.minecraft.setScreen(this.parent)
-        ).bounds(0, 0, BUTTON_LENGTH, BUTTON_HEIGHT).build();
+        ).size(BUTTON_LENGTH, BUTTON_HEIGHT).build();
 
 
         footerContent.addChild(this.exportButton);

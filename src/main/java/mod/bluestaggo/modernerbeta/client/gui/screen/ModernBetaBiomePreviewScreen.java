@@ -109,16 +109,16 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
         boolean hasSteps = this.biomeProvider instanceof BiomeResolverStepped;
         Button buttonZoomOut = Button.builder(Component.literal("-"), button ->
                 this.biomeDisplay.zoomOut()
-        ).bounds(0, 0, 20, 20).build();
+        ).size(20, 20).build();
         Button buttonZoomIn = Button.builder(Component.literal("+"), button ->
                 this.biomeDisplay.zoomIn()
-        ).bounds(0, 0, 20, 20).build();
+        ).size(20, 20).build();
         Button buttonScreenshot = Button.builder(Component.translatable("createWorld.customize.modern_beta.settings.screenshot"), button ->
                 this.biomeDisplay.saveScreenshot()
-        ).bounds(0, 0, 100, 20).build();
+        ).size(100, 20).build();
         Button buttonBack = Button.builder(CommonComponents.GUI_BACK, button ->
                 this.minecraft.setScreen(this.parent)
-        ).bounds(0, 0, 100, 20).build();
+        ).size(100, 20).build();
 
         GridLayout.RowHelper row = footerLayout.createRowHelper(hasSteps ? 6 : 4);
 
@@ -133,11 +133,11 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
             Button buttonPrevStep = Button.builder(Component.literal("◀"), button -> {
                 this.biomeDisplay.step.getAndUpdate(i -> Math.floorMod(i - 1, stepCount));
                 this.biomeDisplay.clear();
-            }).bounds(0, 0, 20, 20).build();
+            }).size(20, 20).build();
             Button buttonNextStep = Button.builder(Component.literal("▶"), button -> {
                 this.biomeDisplay.step.getAndUpdate(i -> Math.floorMod(i + 1, stepCount));
                 this.biomeDisplay.clear();
-            }).bounds(0, 0, 20, 20).build();
+            }).size(20, 20).build();
 
             row.addChild(buttonPrevStep);
             row.addChild(buttonNextStep);

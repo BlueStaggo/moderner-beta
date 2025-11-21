@@ -47,6 +47,7 @@ fletchingTable {
 		mixin("default", "moderner_beta-common.mixins.json") {
 			env("DEFAULT")
 			env("CLIENT", "mod.bluestaggo.modernerbeta.mixin.client")
+			env("SERVER", "mod.bluestaggo.modernerbeta.mixin.server")
 		}
 	}
 

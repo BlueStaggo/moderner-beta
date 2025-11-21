@@ -2,6 +2,7 @@ package mod.bluestaggo.modernerbeta.settings;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -18,6 +19,7 @@ import org.slf4j.event.Level;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 public record ModernBetaSettingsPreset(
     Optional<Component> presetName,
@@ -35,6 +37,9 @@ public record ModernBetaSettingsPreset(
             ModernBetaSettings.CODEC.fieldOf("caveBiomeSettings").forGetter(ModernBetaSettingsPreset::caveBiomeSettings)
         ).apply(instance, ModernBetaSettingsPreset::new)
     );
+
+    public static final Codec<ModernBetaSettingsPreset> SETTINGS_TEXT_CODEC = Codec.xor(CODEC, ResourceLocation.CODEC.fieldOf("preset").codec())
+            .xmap(e -> e.map(Function.identity(), ModernBetaSettingsPreset::referenced), Either::left);
 
     public ModernBetaSettingsPreset(
         ModernBetaSettings chunkSettings,
@@ -117,9 +122,9 @@ public record ModernBetaSettingsPreset(
         ModernBetaSettings chunkSettings;
         ModernBetaSettings biomeSettings;
         ModernBetaSettings caveBiomeSettings;
-        
+
         boolean successful = true;
-        
+
         try {
             Gson gson = ModernerBeta.getSettingsGson().create();
 
@@ -131,15 +136,15 @@ public record ModernBetaSettingsPreset(
             chunkSettings = jsonChunk != null ?
                 VersionCompat.getOrThrow(ModernBetaSettings.CODEC.decode(JsonOps.INSTANCE, jsonChunk)).getFirst() :
                 this.chunkSettings;
-            
+
             biomeSettings = jsonBiome != null ?
                 VersionCompat.getOrThrow(ModernBetaSettings.CODEC.decode(JsonOps.INSTANCE, jsonBiome)).getFirst() :
                 this.biomeSettings;
-            
+
             caveBiomeSettings = jsonCaveBiome != null ?
                 VersionCompat.getOrThrow(ModernBetaSettings.CODEC.decode(JsonOps.INSTANCE, jsonCaveBiome)).getFirst() :
                 this.caveBiomeSettings;
-            
+
             // Test providers
             if (chunkSettings.get(SettingsComponentTypes.PRESET) == null)
                 ModernBetaRegistries.CHUNK.get(chunkSettings.getProvider());
@@ -151,12 +156,12 @@ public record ModernBetaSettingsPreset(
             ModernerBeta.log(Level.ERROR, "Unable to read settings JSON! Reverting to previous settings..");
             ModernerBeta.log(Level.ERROR, String.format("Reason: %s", e.getMessage()));
             successful = false;
-            
+
             chunkSettings = this.chunkSettings;
             biomeSettings = this.biomeSettings;
             caveBiomeSettings = this.caveBiomeSettings;
         }
-        
+
         return new Tuple<>(new ModernBetaSettingsPreset(chunkSettings, biomeSettings, caveBiomeSettings), successful);
     }
 
@@ -235,7 +240,7 @@ public record ModernBetaSettingsPreset(
     public ModernBetaSettingsPreset withNameAndDesc(ResourceLocation id) {
         return this.withNameAndDesc(makeTitleComponent(id), makeDescriptionComponent(id));
     }
-    
+
     public List<ModernBetaSettings> asList() {
         return List.of(this.chunkSettings, this.biomeSettings, this.caveBiomeSettings);
     }

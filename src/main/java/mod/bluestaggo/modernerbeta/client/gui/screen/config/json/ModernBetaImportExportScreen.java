@@ -47,15 +47,15 @@ public class ModernBetaImportExportScreen extends ModernBetaJSONEditScreen {
         this.widgetDone = Button.builder(Component.translatable(TEXT_SETTINGS_SAVE), button -> {
             this.onDone.accept(this.settingsString);
             this.minecraft.setScreen(this.parent);
-        }).bounds(0, 0, BUTTON_LENGTH, ModernBetaScreen.BUTTON_HEIGHT).build();
+        }).size(BUTTON_LENGTH, ModernBetaScreen.BUTTON_HEIGHT).build();
 
         row.addChild(Button.builder(Component.translatable("chat.copy"), button ->
             this.minecraft.keyboardHandler.setClipboard(this.settingsString)
-        ).bounds(0, 0, BUTTON_LENGTH, ModernBetaScreen.BUTTON_HEIGHT).build());
+        ).size(BUTTON_LENGTH, ModernBetaScreen.BUTTON_HEIGHT).build());
         row.addChild(this.widgetDone);
         row.addChild(Button.builder(CommonComponents.GUI_CANCEL, button ->
             this.minecraft.setScreen(this.parent)
-        ).bounds(0, 0, BUTTON_LENGTH, ModernBetaScreen.BUTTON_HEIGHT).build());
+        ).size(BUTTON_LENGTH, ModernBetaScreen.BUTTON_HEIGHT).build());
     }
 
     @Override

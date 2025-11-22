@@ -162,7 +162,7 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
                 this.preset.chunkSettings().mapPreset(presetLookup, ModernBetaSettingsPreset::chunkSettings).toCompound(),
                 nbtCompound -> {
                     Tuple<ModernBetaSettingsPreset, Boolean> updatedPreset = this.preset.setNbt(nbtCompound, null, null, presetLookup);
-                    this.preset = updatedPreset.getA();
+                    this.setPreset(updatedPreset.getA());
                 },
                 ModernBetaRegistries.CHUNK
             ))
@@ -176,7 +176,7 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
                 this.preset.chunkSettings().mapPreset(presetLookup, ModernBetaSettingsPreset::chunkSettings),
                 string -> {
                     Tuple<ModernBetaSettingsPreset, Boolean> updatedPreset = this.preset.setJson(string, "", "");
-                    this.preset = updatedPreset.getA();
+                    this.setPreset(updatedPreset.getA());
                 }
             ))
         ).size(20, 20).build();
@@ -190,7 +190,7 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
                 this.preset.biomeSettings().mapPreset(presetLookup, ModernBetaSettingsPreset::biomeSettings).toCompound(),
                 nbtCompound -> {
                     Tuple<ModernBetaSettingsPreset, Boolean> updatedPreset = this.preset.setNbt(null, nbtCompound, null, presetLookup);
-                    this.preset = updatedPreset.getA();
+                    this.setPreset(updatedPreset.getA());
                 },
                 ModernBetaRegistries.BIOME
             ))
@@ -204,7 +204,7 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
                 this.preset.biomeSettings().mapPreset(presetLookup, ModernBetaSettingsPreset::biomeSettings),
                 string -> {
                     Tuple<ModernBetaSettingsPreset, Boolean> updatedPreset = this.preset.setJson("", string, "");
-                    this.preset = updatedPreset.getA();
+                    this.setPreset(updatedPreset.getA());
                 }
             ))
         ).size(20, 20).build();
@@ -218,7 +218,7 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
                 this.preset.caveBiomeSettings().mapPreset(presetLookup, ModernBetaSettingsPreset::caveBiomeSettings).toCompound(),
                 nbtCompound -> {
                     Tuple<ModernBetaSettingsPreset, Boolean> updatedPreset = this.preset.setNbt(null, null, nbtCompound, presetLookup);
-                    this.preset = updatedPreset.getA();
+                    this.setPreset(updatedPreset.getA());
                 },
                 ModernBetaRegistries.CAVE_BIOME
             ))
@@ -232,7 +232,7 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
                 this.preset.caveBiomeSettings().mapPreset(presetLookup, ModernBetaSettingsPreset::caveBiomeSettings),
                 string -> {
                     Tuple<ModernBetaSettingsPreset, Boolean> updatedPreset = this.preset.setJson("", "", string);
-                    this.preset = updatedPreset.getA();
+                    this.setPreset(updatedPreset.getA());
                 }
             ))
         ).size(20, 20).build();
@@ -316,7 +316,7 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
                 Tuple<ModernBetaSettingsPreset, Boolean> read = ModernBetaSettingsPreset.fromJson(str);
 
                 if (read.getB())
-                    this.preset = read.getA();
+                    this.setPreset(read.getA());
             }))
         ).build());
         this.addRenderableWidget(Button.builder(Component.translatable(TEXT_SETTINGS_DATA_PACK_EXPORT), button ->
@@ -325,7 +325,8 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
     }
 
     private void resetPreset() {
-        this.preset = ModernBetaSettingsPreset.referenced(ModernBetaSettings.DEFAULT_PRESET_ID);
+        this.setPreset(ModernBetaSettingsPreset.referenced(
+                ModernerBeta.config.getOrDefault(SettingsComponentTypes.CONFIG_MISCELLANEOUS).defaultSettingsPreset()));
     }
 
     private ResourceLocation getPresetKey() {

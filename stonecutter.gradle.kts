@@ -1,3 +1,5 @@
+import dev.kikugie.stonecutter.data.tree.struct.ProjectNode
+
 plugins {
     id("dev.kikugie.stonecutter")
     id("dev.architectury.loom").apply(false)
@@ -9,6 +11,12 @@ plugins {
 
 plugins.apply("dev.kikugie.stonecutter")
 stonecutter.active("1.21.6")
+
+stonecutter.tasks {
+    order("runDatagen", filter = { this.branch.id == "fabric" })
+    order("build")
+    order("modrinth", filter = { this.branch.id == "fabric" || this.branch.id == "forgelike" })
+}
 
 stonecutter.parameters {
     replacements {

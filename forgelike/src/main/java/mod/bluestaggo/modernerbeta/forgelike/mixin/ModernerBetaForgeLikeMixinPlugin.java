@@ -1,7 +1,7 @@
 package mod.bluestaggo.modernerbeta.forgelike.mixin;
 
 import com.google.common.collect.ImmutableMap;
-import mod.bluestaggo.modernerbeta.forgelike.ModernerBetaForgeLike;
+import mod.bluestaggo.modernerbeta.forgelike.FMLUtils;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
@@ -14,7 +14,7 @@ import java.util.function.Supplier;
 public class ModernerBetaForgeLikeMixinPlugin implements IMixinConfigPlugin {
     private static final Supplier<Boolean> TRUE = () -> true;
     private static final Map<String, Supplier<Boolean>> CONDITIONS = ImmutableMap.of(
-        "mod.bluestaggo.modernerbeta.forgelike.mixin.compat.blueprint.ModdedBiomeSlicesManagerMixin", () -> ModernerBetaForgeLike.isModPresent("blueprint")
+        "mod.bluestaggo.modernerbeta.forgelike.mixin.compat.blueprint.ModdedBiomeSlicesManagerMixin", () -> FMLUtils.isModPresent("blueprint")
     );
 
     @Override

@@ -71,7 +71,7 @@ public class ModEventsCommon {
     @SubscribeEvent
     public static void commonInit(FMLConstructModEvent event) {
         ModernerBeta.init();
-        ModCompat.initialise(ModernerBetaForgeLike::isModPresent);
+        ModCompat.initialise(FMLUtils::isModPresent);
 
         if (!FMLLoader/*? >=1.21.9 {*//*.getCurrent()*//*?}*/.isProduction())
             ModernerBeta.DEV_ENV = true;

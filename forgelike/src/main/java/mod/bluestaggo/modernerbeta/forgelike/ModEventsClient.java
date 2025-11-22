@@ -68,7 +68,7 @@ public class ModEventsClient {
     @SubscribeEvent
     public static void clientInit(FMLClientSetupEvent event) {
         ModernerBetaClient.init();
-        ModCompatClient.initialise(ModernerBetaForgeLike::isModPresent);
+        ModCompatClient.initialise(FMLUtils::isModPresent);
 
         ModLoadingContext.get().registerExtensionPoint(
                 //? if neoforge {

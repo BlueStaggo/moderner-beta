@@ -40,8 +40,6 @@ public final class BlockColorSampler {
 
     public static final BlockColorSampler INSTANCE = new BlockColorSampler();
 
-    public final BlockColormap colormapGrass;
-    public final BlockColormap colormapFoliage;
     public final BlockColormap colormapWater;
     public final BlockColormap colormapUnderwater;
     
@@ -80,8 +78,6 @@ public final class BlockColorSampler {
 
 
     private BlockColorSampler() {
-        this.colormapGrass = new BlockColormap();
-        this.colormapFoliage = new BlockColormap();
         this.colormapWater = new BlockColormap();
         this.colormapUnderwater = new BlockColormap();
         

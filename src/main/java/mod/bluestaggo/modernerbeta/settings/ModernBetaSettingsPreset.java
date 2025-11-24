@@ -190,7 +190,7 @@ public record ModernBetaSettingsPreset(
                 biomeSettings = ModernBetaSettings.fromCompound(nbtBiome);
                 if (presetRegistry != null) {
                     biomeSettings = this.biomeSettings.getDifference(
-                        biomeSettings, presetRegistry, ModernBetaSettingsPreset::chunkSettings);
+                        biomeSettings, presetRegistry, ModernBetaSettingsPreset::biomeSettings);
                 }
             }
 
@@ -198,7 +198,7 @@ public record ModernBetaSettingsPreset(
                 caveBiomeSettings = ModernBetaSettings.fromCompound(nbtCaveBiome);
                 if (presetRegistry != null) {
                     caveBiomeSettings = this.caveBiomeSettings.getDifference(
-                        caveBiomeSettings, presetRegistry, ModernBetaSettingsPreset::chunkSettings);
+                        caveBiomeSettings, presetRegistry, ModernBetaSettingsPreset::caveBiomeSettings);
                 }
             }
 

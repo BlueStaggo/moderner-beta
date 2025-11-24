@@ -114,26 +114,25 @@ public class ModernBetaSettings implements Iterable<SettingsComponent<?>> {
 
         while (true) {
             ResourceLocation presetId = settings.get(SettingsComponentTypes.PRESET);
-            if (presetId == null) {
+            Optional<ModernBetaSettingsPreset> preset = ModernBetaSettingsPreset.getPreset(presetId, presetRegistry);
+
+            if (preset.isEmpty())
                 return settings;
-            }
 
-            if (presetId.equals(DEFAULT_PRESET_ID)) {
-                presetId = ModernerBeta.config.getOrDefault(SettingsComponentTypes.CONFIG_MISCELLANEOUS).defaultSettingsPreset();
-            }
-
-            Optional<Holder.Reference<ModernBetaSettingsPreset>> preset = presetRegistry.get(ResourceKey.create(ModernBetaResourceKeys.SETTINGS_PRESET, presetId));
-            if (preset.isEmpty()) {
-                ModernerBeta.log(Level.WARN, "Modern beta settings reference preset \"" + presetId + "\" which is not registered.");
-                return settings;
-            }
-
-            settings = settingsProvider.apply(preset.get().value())
+            settings = settingsProvider.apply(preset.get())
                 .extend()
                 .addAll(settings.extend()
                     .remove(SettingsComponentTypes.PRESET))
                 .build();
         }
+    }
+
+    public Optional<ModernBetaSettings> getBasePresetSettings(HolderGetter<ModernBetaSettingsPreset> presetRegistry, Function<ModernBetaSettingsPreset, ModernBetaSettings> settingsProvider) {
+        ResourceLocation presetId = this.get(SettingsComponentTypes.PRESET);
+        Optional<ModernBetaSettingsPreset> preset = ModernBetaSettingsPreset.getPreset(presetId, presetRegistry);
+
+        return preset.map(settingsPreset -> settingsProvider.apply(settingsPreset)
+                .mapPreset(presetRegistry, settingsProvider));
     }
 
     @SuppressWarnings("unchecked")
@@ -168,19 +167,22 @@ public class ModernBetaSettings implements Iterable<SettingsComponent<?>> {
     @SuppressWarnings("unchecked")
     public ModernBetaSettings getDifference(ModernBetaSettings newSettings, HolderGetter<ModernBetaSettingsPreset> presetRegistry, Function<ModernBetaSettingsPreset, ModernBetaSettings> settingsProvider) {
         ResourceLocation basePreset = this.get(SettingsComponentTypes.PRESET);
-        if (basePreset == null) {
+        if (basePreset == null)
             return newSettings;
-        }
-        ModernBetaSettings baseSettings = this.mapPreset(presetRegistry, settingsProvider);
 
+        Optional<ModernBetaSettings> basePresetSettings = this.getBasePresetSettings(presetRegistry, settingsProvider);
+        if (basePresetSettings.isEmpty())
+            return newSettings;
+
+        ModernBetaSettings baseSettings = basePresetSettings.get();
         Builder builder = new Builder();
         builder.add(SettingsComponentTypes.PRESET, basePreset);
         newSettings.stream()
             .filter(component -> {
                 Codec<Object> codec = (Codec<Object>) component.type().codec();
                 return !Objects.equals(
-                    codec.encodeStart(NbtOps.INSTANCE, baseSettings.getOrDefault(component.type())).map(Function.identity()).mapError(error -> ""),
-                    codec.encodeStart(NbtOps.INSTANCE, component.value()).map(Function.identity()).mapError(error -> "")
+                    codec.encodeStart(NbtOps.INSTANCE, baseSettings.getOrDefault(component.type())).map(Function.identity()).result().orElse(null),
+                    codec.encodeStart(NbtOps.INSTANCE, component.value()).map(Function.identity()).result().orElse(null)
                 );
             })
             .forEach(builder::add);

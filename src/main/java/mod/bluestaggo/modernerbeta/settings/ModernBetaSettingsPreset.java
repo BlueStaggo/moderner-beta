@@ -8,11 +8,14 @@ import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
+import mod.bluestaggo.modernerbeta.registry.ModernBetaResourceKeys;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Tuple;
 import org.slf4j.event.Level;
@@ -217,6 +220,24 @@ public record ModernBetaSettingsPreset(
         }
 
         return new Tuple<>(new ModernBetaSettingsPreset(chunkSettings, biomeSettings, caveBiomeSettings), successful);
+    }
+
+    public static Optional<ModernBetaSettingsPreset> getPreset(ResourceLocation presetId, HolderGetter<ModernBetaSettingsPreset> presetRegistry) {
+        if (presetId == null) {
+            return Optional.empty();
+        }
+
+        if (presetId.equals(ModernBetaSettings.DEFAULT_PRESET_ID)) {
+            presetId = ModernerBeta.config.getOrDefault(SettingsComponentTypes.CONFIG_MISCELLANEOUS).defaultSettingsPreset();
+        }
+
+        Optional<Holder.Reference<ModernBetaSettingsPreset>> preset = presetRegistry.get(ResourceKey.create(ModernBetaResourceKeys.SETTINGS_PRESET, presetId));
+        if (preset.isEmpty()) {
+            ModernerBeta.log(Level.WARN, "Attempted to get Modern Beta preset \"" + presetId + "\", which is not registered.");
+            return Optional.empty();
+        }
+
+        return Optional.of(preset.get().value());
     }
 
     public ModernBetaSettingsPreset mapped(HolderGetter<ModernBetaSettingsPreset> presetRegistry) {

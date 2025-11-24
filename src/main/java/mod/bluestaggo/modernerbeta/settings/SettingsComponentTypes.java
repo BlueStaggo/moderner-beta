@@ -6,7 +6,6 @@ import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.api.level.biome.climate.TemperatureHeightScaling;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import mod.bluestaggo.modernerbeta.settings.component.*;
-import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.level.biome.provider.climate.ClimateMapping;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ConfiguredLayers;
 import mod.bluestaggo.modernerbeta.level.biome.voronoi.VoronoiPointBiome;

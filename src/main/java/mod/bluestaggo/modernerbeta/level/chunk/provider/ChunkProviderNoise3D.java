@@ -523,6 +523,11 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
             scale = Math.min(scale, 1.0D) + 0.5D;
         }
 
+        if (this.forcedBiomeHeightEnabled) {
+            scale = scale * 0.9F + 0.1F;
+            modDepth = (modDepth * 4.0F - 1.0F) / 8.0F;
+        }
+
         depth = modDepth + depth * this.noiseLandmass.depthInfluence();
         depth *= baseSize / 8.0D;
         depth = baseSize + depth * 4.0D;

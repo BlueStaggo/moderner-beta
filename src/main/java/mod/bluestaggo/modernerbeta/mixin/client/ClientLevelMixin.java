@@ -97,7 +97,7 @@ public abstract class ClientLevelMixin implements LevelReader {
 
             int resolvedColour = resolver.getColor(biomeEntry.value(), pos.getX(), pos.getZ());
             if (biomeEntry.is(ModernBetaBiomeTags.HAS_EARLY_RELEASE_SWAMP_COLORS)) {
-                resolvedColour = ((resolvedColour & 0xFEFEFE) + 0x4E0E4E) / 2;
+                finalColor = ((finalColor & 0xFEFEFE) + 0x4E0E4E) / 2;
             } else {
                 Biome biome = biomeEntry.value();
 
@@ -130,8 +130,9 @@ public abstract class ClientLevelMixin implements LevelReader {
                     finalColor = grassColorModifier.modifyColor(pos.getX(), pos.getZ(), finalColor);
                 }
 
-                return finalColor;
             }
+
+            return finalColor;
         }
 
         return resolver.getColor(biomeEntry.value(), pos.getX(), pos.getZ());

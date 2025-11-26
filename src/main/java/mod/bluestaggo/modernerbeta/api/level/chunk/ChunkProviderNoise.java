@@ -11,10 +11,7 @@ import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaChunkGenerator;
 import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaChunkNoiseSampler;
 import mod.bluestaggo.modernerbeta.level.chunk.provider.island.IslandShape;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
-import mod.bluestaggo.modernerbeta.settings.component.CaveGeneration;
-import mod.bluestaggo.modernerbeta.settings.component.IslesProperties;
-import mod.bluestaggo.modernerbeta.settings.component.NoiseScale;
-import mod.bluestaggo.modernerbeta.settings.component.NoiseSlide;
+import mod.bluestaggo.modernerbeta.settings.component.*;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkCache;
@@ -223,6 +220,8 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
      */
     @Override
     public Aquifer getAquiferSampler(ChunkAccess chunk, RandomState noiseConfig) {
+        SurfaceProperties surfaceProperties = this.getChunkSettings().getOrDefault(SettingsComponentTypes.SURFACE_PROPERTIES);
+
         PositionalRandomFactory randomDeriver = this.randomSource.newInstance(this.seed).forkPositional();
         NoiseChunk noiseSampler = ModernBetaChunkNoiseSampler.create(
             chunk,
@@ -242,7 +241,7 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
             this.worldMinY,
             this.worldHeight,
             this.noiseResolutionVertical,
-            this.generatorSettings.value().aquifersEnabled()
+            this.generatorSettings.value().aquifersEnabled() && surfaceProperties.generateLiquids()
         );
         
         return aquiferSamplerProvider.provideAquiferSampler(chunk);

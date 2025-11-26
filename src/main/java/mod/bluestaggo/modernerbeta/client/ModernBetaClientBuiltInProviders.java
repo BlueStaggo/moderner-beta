@@ -135,6 +135,8 @@ public class ModernBetaClientBuiltInProviders {
                     screen.floatRangeOption("lowerLimit", 1.0f, 5000.0f),
                     screen.floatRangeOption("densityUnderdamp", -10.0f, 10.0f),
                     screen.floatRangeOption("limitBlending", 0.01f, 100.0f),
+                    screen.booleanOption("useFixedOffset"),
+                    screen.floatRangeOption("fixedOffset", 0.01f, 100.0f),
                     screen.intRangeOption("forestNoiseOctaves", 1, 16)
                 );
             }
@@ -160,7 +162,11 @@ public class ModernBetaClientBuiltInProviders {
             (screen, options) -> {
                 addAll(
                     options,
-                    screen.booleanOption("enabled"),
+                    screen.booleanOption("offsetOctaves"),
+                    screen.booleanOption("depthEnabled"),
+                    screen.booleanOption("scaleEnabled"),
+                    screen.booleanOption("sampleDepth"),
+                    screen.booleanOption("sampleScale"),
                     screen.floatRangeOption("variationScale", 0.0f, 2.0f),
                     screen.floatRangeOption("depthInfluence", 0.0f, 2.0f),
                     screen.floatRangeOption("negativeDepthInfluence", 0.0f, 2.0f),
@@ -200,12 +206,15 @@ public class ModernBetaClientBuiltInProviders {
             (screen, options) -> {
                 addAll(
                     options,
+                    screen.booleanOption("generateLiquids"),
+                    screen.booleanOption("generateBedrock"),
                     screen.booleanOption("bedrockHoles"),
                     screen.booleanOption("flipNoiseCoordinates"),
-                    screen.booleanOption("surfaceBeaches"),
+                    screen.booleanOption("enableBeaches"),
                     screen.floatRangeOption("sandBeachScale", 0.0f, 1.0f),
                     screen.floatRangeOption("gravelBeachScale", 0.0f, 1.0f),
                     screen.floatRangeOption("surfaceNoiseScale", 0.0f, 1.0f),
+                    screen.booleanOption("generateBeaches"),
                     screen.booleanOption("generateSandstone"),
                     screen.booleanOption("erosion"),
                     screen.booleanOption("gravelOceanBed")

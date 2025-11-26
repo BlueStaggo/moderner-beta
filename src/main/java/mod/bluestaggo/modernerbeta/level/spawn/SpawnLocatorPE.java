@@ -29,7 +29,7 @@ public class SpawnLocatorPE implements SpawnLocator {
     private final ChunkProvider chunkProvider;
     private final PerlinOctaveNoise beachOctaveNoise;
     
-    public SpawnLocatorPE(ChunkProvider chunkProvider, PerlinOctaveNoise beachOctaveNoise, MTRandom rand) {
+    public SpawnLocatorPE(ChunkProvider chunkProvider, PerlinOctaveNoise beachOctaveNoise, Random rand) {
         this.rand = rand;
         
         this.chunkProvider = chunkProvider;

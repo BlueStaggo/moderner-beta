@@ -5,7 +5,11 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.util.CodecUtil;
 
 public record NoiseLandmass(
-    boolean enabled,
+    boolean offsetOctaves,
+    boolean depthEnabled,
+    boolean scaleEnabled,
+    boolean sampleDepth,
+    boolean sampleScale,
     float variationScale,
     float depthInfluence,
     float negativeDepthInfluence,
@@ -19,7 +23,11 @@ public record NoiseLandmass(
 ) {
     public static final Codec<NoiseLandmass> CODEC = RecordCodecBuilder.create(
         instance -> instance.group(
-            Codec.BOOL.fieldOf("enabled").orElse(true).forGetter(NoiseLandmass::enabled),
+            Codec.BOOL.fieldOf("offsetOctaves").orElse(false).forGetter(NoiseLandmass::offsetOctaves),
+            Codec.BOOL.fieldOf("depthEnabled").orElse(true).forGetter(NoiseLandmass::depthEnabled),
+            Codec.BOOL.fieldOf("scaleEnabled").orElse(true).forGetter(NoiseLandmass::scaleEnabled),
+            Codec.BOOL.fieldOf("sampleDepth").orElse(true).forGetter(NoiseLandmass::sampleDepth),
+            Codec.BOOL.fieldOf("sampleScale").orElse(true).forGetter(NoiseLandmass::sampleScale),
             Codec.FLOAT.fieldOf("variationScale").orElse(1.121f).forGetter(NoiseLandmass::variationScale),
             Codec.FLOAT.fieldOf("depthInfluence").orElse(1.0f).forGetter(NoiseLandmass::depthInfluence),
             Codec.FLOAT.fieldOf("negativeDepthInfluence").orElse(0.3f).forGetter(NoiseLandmass::negativeDepthInfluence),
@@ -35,6 +43,10 @@ public record NoiseLandmass(
     public static final NoiseLandmass DEFAULT = CodecUtil.getDefaultByMap(CODEC);
 
     public static final NoiseLandmass DISABLED = new NoiseLandmass(
+        true,
+        false,
+        false,
+        false,
         false,
         1.0f,
         1.0f,
@@ -48,6 +60,10 @@ public record NoiseLandmass(
         true
     );
     public static final NoiseLandmass INFDEV_611 = new NoiseLandmass(
+        false,
+        true,
+        true,
+        true,
         true,
         1.0f,
         1.0f,
@@ -61,6 +77,27 @@ public record NoiseLandmass(
         true
     );
     public static final NoiseLandmass ALPHA = new NoiseLandmass(
+        false,
+        true,
+        true,
+        true,
+        true,
+        1.0f,
+        1.0f,
+        1.0f,
+        3.0f,
+        -3.0f,
+        6.0f,
+        5.6f,
+        -1.0f / 2.8f,
+        1.0f / 6.0f,
+        true
+    );
+    public static final NoiseLandmass SKYLANDS = new NoiseLandmass(
+        false,
+        true,
+        true,
+        false,
         true,
         1.0f,
         1.0f,
@@ -74,6 +111,10 @@ public record NoiseLandmass(
         true
     );
     public static final NoiseLandmass RELEASE = new NoiseLandmass(
+        false,
+        true,
+        true,
+        true,
         true,
         1.121f,
         0.2f,

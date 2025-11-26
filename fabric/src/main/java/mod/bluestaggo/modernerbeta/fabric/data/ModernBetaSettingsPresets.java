@@ -212,26 +212,13 @@ public final class ModernBetaSettingsPresets {
     private static ModernBetaSettingsPreset presetSkylands() {
         return new ModernBetaSettingsPreset(
             ModernBetaSettings.builder()
-                .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.SKYLANDS.id)
+                .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.NOISE_3D.id)
+                .add(SEA_LEVEL_OFFSET, -64)
                 .add(DEEPSLATE_GENERATION, DeepslateGeneration.DISABLED)
                 .add(CAVE_GENERATION, CaveGeneration.BETA)
                 .add(NOISE_SETTINGS, ModernBetaNoiseSettings.SKY_128)
-                .add(NOISE_SCALE, new NoiseScale(
-                    1368.824f,
-                    684.412f,
-                    512f,
-                    512f,
-                    100f,
-                    100f,
-                    80f,
-                    160f,
-                    80f,
-                    8.5f,
-                    12.0f,
-                    4.0f,
-                    10.0f,
-                    8
-                ))
+                .add(NOISE_SCALE, NoiseScale.SKYLANDS)
+                .add(NOISE_LANDMASS, NoiseLandmass.SKYLANDS)
                 .add(NOISE_SLIDE, new NoiseSlide(
                     -30,
                     31,
@@ -240,6 +227,7 @@ public final class ModernBetaSettingsPresets {
                     7,
                     1
                 ))
+                .add(SURFACE_PROPERTIES, SurfaceProperties.SKYLANDS)
                 .addDefault(USE_SURFACE_RULES)
                 .build(),
             ModernBetaSettings.singleBiome(ModernBetaBiomes.BETA_SKY),
@@ -534,6 +522,8 @@ public final class ModernBetaSettingsPresets {
                     8.0f,
                     baseNoiseScale.densityUnderdamp(),
                     baseNoiseScale.limitBlending(),
+                    baseNoiseScale.useFixedOffset(),
+                    baseNoiseScale.fixedOffset(),
                     baseNoiseScale.forestNoiseOctaves()
                 ))
                 .add(FORCED_BIOME_HEIGHT, new ForcedBiomeHeight(
@@ -575,6 +565,8 @@ public final class ModernBetaSettingsPresets {
                     10.0f,
                     baseNoiseScale.densityUnderdamp(),
                     baseNoiseScale.limitBlending(),
+                    baseNoiseScale.useFixedOffset(),
+                    baseNoiseScale.fixedOffset(),
                     baseNoiseScale.forestNoiseOctaves()
                 ))
                 .build(),
@@ -610,6 +602,8 @@ public final class ModernBetaSettingsPresets {
                     5.0f,
                     baseNoiseScale.densityUnderdamp(),
                     baseNoiseScale.limitBlending(),
+                    baseNoiseScale.useFixedOffset(),
+                    baseNoiseScale.fixedOffset(),
                     baseNoiseScale.forestNoiseOctaves()
                 ))
                 .add(FORCED_BIOME_HEIGHT, new ForcedBiomeHeight(
@@ -653,6 +647,8 @@ public final class ModernBetaSettingsPresets {
                     1.7137525f,
                     baseNoiseScale.densityUnderdamp(),
                     baseNoiseScale.limitBlending(),
+                    baseNoiseScale.useFixedOffset(),
+                    baseNoiseScale.fixedOffset(),
                     baseNoiseScale.forestNoiseOctaves()
                 ))
                 .add(FORCED_BIOME_HEIGHT, new ForcedBiomeHeight(
@@ -695,6 +691,8 @@ public final class ModernBetaSettingsPresets {
                     10.0f,
                     baseNoiseScale.densityUnderdamp(),
                     baseNoiseScale.limitBlending(),
+                    baseNoiseScale.useFixedOffset(),
+                    baseNoiseScale.fixedOffset(),
                     baseNoiseScale.forestNoiseOctaves()
                 ))
                 .build(),
@@ -728,6 +726,8 @@ public final class ModernBetaSettingsPresets {
                     8.0f,
                     baseNoiseScale.densityUnderdamp(),
                     baseNoiseScale.limitBlending(),
+                    baseNoiseScale.useFixedOffset(),
+                    baseNoiseScale.fixedOffset(),
                     baseNoiseScale.forestNoiseOctaves()
                 ))
                 .build(),

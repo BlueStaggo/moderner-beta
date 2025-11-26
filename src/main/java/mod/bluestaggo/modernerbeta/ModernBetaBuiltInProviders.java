@@ -8,7 +8,6 @@ import mod.bluestaggo.modernerbeta.level.biome.provider.*;
 import mod.bluestaggo.modernerbeta.level.chunk.provider.ChunkProviderIndev;
 import mod.bluestaggo.modernerbeta.level.chunk.provider.ChunkProviderInfdev227;
 import mod.bluestaggo.modernerbeta.level.chunk.provider.ChunkProviderNoise3D;
-import mod.bluestaggo.modernerbeta.level.chunk.provider.ChunkProviderSky;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.level.biome.HeightConfig;
@@ -31,17 +30,6 @@ public class ModernBetaBuiltInProviders {
     public static void registerChunkProviders(IRegistryHandler<?> handler) {
         IRegistryHandler<ChunkProviderType<?>> registryHandler = (IRegistryHandler<ChunkProviderType<?>>) handler;
 
-        registryHandler.register(ModernBetaBuiltInTypes.Chunk.SKYLANDS.id, new ChunkProviderType<>(
-            ChunkProviderSky::new, () -> List.of(
-                SettingsComponentTypes.DEEPSLATE_GENERATION,
-                SettingsComponentTypes.USE_SURFACE_RULES,
-                SettingsComponentTypes.CAVE_GENERATION,
-                SettingsComponentTypes.NOISE_SETTINGS,
-                SettingsComponentTypes.NOISE_SCALE,
-                SettingsComponentTypes.NOISE_SLIDE,
-                SettingsComponentTypes.ISLES_PROPERTIES
-            )
-        ));
         registryHandler.register(ModernBetaBuiltInTypes.Chunk.INFDEV_227.id, new ChunkProviderType<>(
             ChunkProviderInfdev227::new, () -> List.of(
                 SettingsComponentTypes.DEEPSLATE_GENERATION,

@@ -54,7 +54,6 @@ public final class ModernBetaBuiltInTypes {
     }
 
     public enum Chunk {
-        SKYLANDS("skylands"),
         INFDEV_227("infdev_227"),
         INDEV("indev"),
         NOISE_3D("noise_3d"),

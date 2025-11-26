@@ -26,12 +26,12 @@ public class ModernBetaNoiseGeneratorSettings {
     private static boolean useModernBetaSurfaceRules;
 
     public static final ResourceKey<NoiseGeneratorSettings> INFDEV_227;
-    public static final ResourceKey<NoiseGeneratorSettings> INDEV;
+    public static final ResourceKey<NoiseGeneratorSettings> FINITE_2D;
     public static final ResourceKey<NoiseGeneratorSettings> NOISE_3D;
 
     public static void bootstrap(BootstrapContext<NoiseGeneratorSettings> context) {
         context.register(INFDEV_227, createNoiseGeneratorSettings(context, ModernBetaNoiseSettings.OVERWORLD_128, 64, true));
-        context.register(INDEV, createNoiseGeneratorSettings(context, ModernBetaNoiseSettings.FINITE, 64, false));
+        context.register(FINITE_2D, createNoiseGeneratorSettings(context, ModernBetaNoiseSettings.FINITE, 64, false));
         context.register(NOISE_3D, createNoiseGeneratorSettings(context, ModernBetaNoiseSettings.OVERWORLD_FULL, 64, true));
     }
     
@@ -147,7 +147,7 @@ public class ModernBetaNoiseGeneratorSettings {
 
     static {
         INFDEV_227 = ResourceKey.create(Registries.NOISE_SETTINGS, ModernBetaBuiltInTypes.Chunk.INFDEV_227.id);
-        INDEV = ResourceKey.create(Registries.NOISE_SETTINGS, ModernBetaBuiltInTypes.Chunk.INDEV.id);
+        FINITE_2D = ResourceKey.create(Registries.NOISE_SETTINGS, ModernBetaBuiltInTypes.Chunk.FINITE_2D.id);
         NOISE_3D = ResourceKey.create(Registries.NOISE_SETTINGS, ModernBetaBuiltInTypes.Chunk.NOISE_3D.id);
     }
 }

@@ -322,7 +322,7 @@ public final class ModernBetaSettingsPresets {
     private static ModernBetaSettingsPreset presetIndev() {
         return new ModernBetaSettingsPreset(
             ModernBetaSettings.builder()
-                .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.INDEV.id)
+                .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.FINITE_2D.id)
                 .add(DEEPSLATE_GENERATION, DeepslateGeneration.DISABLED)
                 .add(CAVE_GENERATION, CaveGeneration.DISABLED)
                 .addDefault(FINITE_LEVEL_PROPERTIES, FINITE_CAVE_GENERATION, FINITE_NOISE, FINITE_BEACHES, FINITE_POOLS)
@@ -335,7 +335,7 @@ public final class ModernBetaSettingsPresets {
     private static ModernBetaSettingsPreset presetClassic() {
         return new ModernBetaSettingsPreset(
             ModernBetaSettings.builder()
-                .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.INDEV.id)
+                .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.FINITE_2D.id)
                 .add(FINITE_LEVEL_PROPERTIES, new FiniteLevelProperties(
                     IndevType.CLASSIC,
                     IndevTheme.NORMAL,
@@ -365,7 +365,7 @@ public final class ModernBetaSettingsPresets {
     private static ModernBetaSettingsPreset presetClassic14a08() {
         return new ModernBetaSettingsPreset(
             ModernBetaSettings.builder()
-                .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.INDEV.id)
+                .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.FINITE_2D.id)
                 .add(FINITE_LEVEL_PROPERTIES, new FiniteLevelProperties(
                     IndevType.CLASSIC,
                     IndevTheme.NORMAL,

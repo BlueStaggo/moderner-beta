@@ -1,6 +1,5 @@
 package mod.bluestaggo.modernerbeta.level.chunk.provider;
 
-import mod.bluestaggo.modernerbeta.api.level.chunk.ChunkProviderFinite;
 import mod.bluestaggo.modernerbeta.api.level.chunk.surface.SurfaceConfig;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.settings.component.FiniteBeaches;
@@ -25,7 +24,7 @@ import net.minecraft.world.level.block.SnowyDirtBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 
-public class ChunkProviderIndev extends ChunkProviderFinite {
+public class ChunkProviderFinite2D extends mod.bluestaggo.modernerbeta.api.level.chunk.ChunkProviderFinite {
     private PerlinOctaveNoiseCombined minHeightOctaveNoise;
     private PerlinOctaveNoiseCombined maxHeightOctaveNoise;
     private PerlinOctaveNoise mainHeightOctaveNoise;
@@ -50,7 +49,7 @@ public class ChunkProviderIndev extends ChunkProviderFinite {
     private int layers;
     private int waterLevel;
 
-    public ChunkProviderIndev(ModernBetaChunkGenerator chunkGenerator, long seed) {
+    public ChunkProviderFinite2D(ModernBetaChunkGenerator chunkGenerator, long seed) {
         super(chunkGenerator, seed);
         
         this.levelTheme = this.levelProperties.theme();

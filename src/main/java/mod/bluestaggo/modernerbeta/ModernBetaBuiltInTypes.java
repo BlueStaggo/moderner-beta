@@ -55,7 +55,7 @@ public final class ModernBetaBuiltInTypes {
 
     public enum Chunk {
         INFDEV_227("infdev_227"),
-        INDEV("indev"),
+        FINITE_2D("finite_2d"),
         NOISE_3D("noise_3d"),
         ;
 

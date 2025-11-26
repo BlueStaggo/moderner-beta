@@ -4,9 +4,8 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.api.level.chunk.ChunkProvider;
-import mod.bluestaggo.modernerbeta.api.level.chunk.ChunkProviderFinite;
 import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaChunkGenerator;
-import mod.bluestaggo.modernerbeta.level.chunk.provider.ChunkProviderIndev;
+import mod.bluestaggo.modernerbeta.level.chunk.provider.ChunkProviderFinite2D;
 import mod.bluestaggo.modernerbeta.level.chunk.provider.indev.IndevTheme;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
@@ -90,7 +89,7 @@ public abstract class MinecraftServerMixin {
                 ModernerBeta.log(Level.INFO, String.format("Spawning at %d/%d/%d", x, y, z));
             }
             
-            if (spawnPos != null && chunkProvider instanceof ChunkProviderIndev chunkProviderIndev) {
+            if (spawnPos != null && chunkProvider instanceof ChunkProviderFinite2D chunkProviderIndev) {
                 // Generate Indev house
                 chunkProviderIndev.generateIndevHouse(level, spawnPos);
                 
@@ -98,8 +97,8 @@ public abstract class MinecraftServerMixin {
                 setIndevProperties(level, chunkProviderIndev.getLevelTheme());
             }
             
-            if (chunkProvider instanceof ChunkProviderFinite) {
-                ChunkProviderFinite.resetPhase();
+            if (chunkProvider instanceof mod.bluestaggo.modernerbeta.api.level.chunk.ChunkProviderFinite) {
+                mod.bluestaggo.modernerbeta.api.level.chunk.ChunkProviderFinite.resetPhase();
             }
 
             return spawnPos;

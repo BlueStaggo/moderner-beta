@@ -158,7 +158,7 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
         entries.add(NoiseGeneratorSettings.CAVES, createVanillaCavesSettings(provider));
 
         entries.add(INFDEV_227, createNoiseGeneratorSettings(provider, ModernBetaReducedHeightNoiseSettings.INFDEV_227, 64, true));
-        entries.add(INDEV, createNoiseGeneratorSettings(provider, ModernBetaReducedHeightNoiseSettings.INDEV, 64, false));
+        entries.add(FINITE_2D, createNoiseGeneratorSettings(provider, ModernBetaReducedHeightNoiseSettings.INDEV, 64, false));
         entries.add(NOISE_3D, createNoiseGeneratorSettings(provider, ModernBetaReducedHeightNoiseSettings.FULL_HEIGHT, 64, true));
 
         //Density functions

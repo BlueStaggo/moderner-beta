@@ -5,7 +5,7 @@ import mod.bluestaggo.modernerbeta.api.level.provider.BiomeProviderType;
 import mod.bluestaggo.modernerbeta.api.level.provider.CaveBiomeProviderType;
 import mod.bluestaggo.modernerbeta.api.level.provider.ChunkProviderType;
 import mod.bluestaggo.modernerbeta.level.biome.provider.*;
-import mod.bluestaggo.modernerbeta.level.chunk.provider.ChunkProviderIndev;
+import mod.bluestaggo.modernerbeta.level.chunk.provider.ChunkProviderFinite2D;
 import mod.bluestaggo.modernerbeta.level.chunk.provider.ChunkProviderInfdev227;
 import mod.bluestaggo.modernerbeta.level.chunk.provider.ChunkProviderNoise3D;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
@@ -39,8 +39,8 @@ public class ModernBetaBuiltInProviders {
                 SettingsComponentTypes.INFDEV_227_STRUCTURES
             )
         ));
-        registryHandler.register(ModernBetaBuiltInTypes.Chunk.INDEV.id, new ChunkProviderType<>(
-            ChunkProviderIndev::new, () -> List.of(
+        registryHandler.register(ModernBetaBuiltInTypes.Chunk.FINITE_2D.id, new ChunkProviderType<>(
+            ChunkProviderFinite2D::new, () -> List.of(
                 SettingsComponentTypes.DEEPSLATE_GENERATION,
                 SettingsComponentTypes.USE_SURFACE_RULES,
                 SettingsComponentTypes.SEA_LEVEL_OFFSET,

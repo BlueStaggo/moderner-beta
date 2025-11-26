@@ -1,4 +1,4 @@
-package mod.bluestaggo.modernerbeta.fabric.data.reduced_height;
+package mod.bluestaggo.modernerbeta.fabric.data.reduced_height.provider;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;
@@ -14,8 +14,8 @@ import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 
 import java.util.concurrent.CompletableFuture;
 
-import static mod.bluestaggo.modernerbeta.fabric.data.reduced_height.ModernBetaReducedHeightDataProvider.alwaysSerializableHolder;
-import static mod.bluestaggo.modernerbeta.fabric.data.reduced_height.ModernBetaReducedHeightDataProvider.modifiersWithCount;
+import static mod.bluestaggo.modernerbeta.fabric.data.reduced_height.provider.ModernBetaReducedHeightDataProvider.alwaysSerializableHolder;
+import static mod.bluestaggo.modernerbeta.fabric.data.reduced_height.provider.ModernBetaReducedHeightDataProvider.modifiersWithCount;
 
 public class ModernBetaDeepslateBlobsDataProvider extends FabricDynamicRegistryProvider {
     public ModernBetaDeepslateBlobsDataProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {

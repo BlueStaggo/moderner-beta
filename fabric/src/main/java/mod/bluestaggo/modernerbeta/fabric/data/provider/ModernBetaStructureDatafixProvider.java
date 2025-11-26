@@ -1,4 +1,4 @@
-package mod.bluestaggo.modernerbeta.fabric.data;
+package mod.bluestaggo.modernerbeta.fabric.data.provider;
 
 import com.google.common.hash.HashCode;
 import com.google.common.hash.Hashing;

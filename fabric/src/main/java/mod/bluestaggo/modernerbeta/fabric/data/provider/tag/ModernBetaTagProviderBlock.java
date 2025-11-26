@@ -1,4 +1,4 @@
-package mod.bluestaggo.modernerbeta.fabric.data;
+package mod.bluestaggo.modernerbeta.fabric.data.provider.tag;
 
 import mod.bluestaggo.modernerbeta.tags.ModernBetaBlockTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;

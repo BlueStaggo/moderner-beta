@@ -1,16 +1,14 @@
-package mod.bluestaggo.modernerbeta.fabric.data.reduced_height;
+package mod.bluestaggo.modernerbeta.fabric.data.reduced_height.provider;
 
 import com.mojang.datafixers.util.Either;
+import mod.bluestaggo.modernerbeta.fabric.data.reduced_height.ModernBetaReducedHeightNoiseSettings;
 import mod.bluestaggo.modernerbeta.level.carver.configured.ModernBetaConfiguredCarvers;
 import mod.bluestaggo.modernerbeta.level.feature.configured.ModernBetaConfiguredFeatures;
 import mod.bluestaggo.modernerbeta.mixin.NoiseRouterDataAccessor;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;
-import net.minecraft.core.Holder;
-import net.minecraft.core.HolderGetter;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.*;
 import net.minecraft.core.HolderLookup.Provider;
-import net.minecraft.core.HolderOwner;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.SurfaceRuleData;
 import net.minecraft.data.worldgen.features.OreFeatures;
@@ -113,19 +111,14 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
         );
 
         //Configured carvers
-        HolderLookup.RegistryLookup<Block> registryBlock = provider.lookupOrThrow(Registries.BLOCK);
+        @SuppressWarnings("deprecation")
         CaveCarverConfiguration configCaveDeep = new CaveCarverConfiguration(
             0.0f,
             ConstantHeight.of(VerticalAnchor.absolute(-2032)),
             ConstantFloat.of(0.0f),
             VerticalAnchor.absolute(-2032),
             CarverDebugSettings.of(false, Blocks.CRIMSON_BUTTON.defaultBlockState()),
-            //? if >=1.21 {
-            registryBlock.getOrThrow(BlockTags.AIR),
-            //?} else {
-            /*net.minecraft.core.HolderSet.emptyNamed(registryBlock,
-                net.minecraft.tags.TagKey.create(Registries.BLOCK, mod.bluestaggo.modernerbeta.ModernerBeta.createId("air"))),
-            *///?}
+            HolderSet.direct(Block::builtInRegistryHolder, Blocks.AIR),
             ConstantFloat.of(0.0f),
             ConstantFloat.of(0.0f),
             ConstantFloat.of(0.0f)

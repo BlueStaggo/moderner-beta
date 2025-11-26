@@ -1,5 +1,6 @@
-package mod.bluestaggo.modernerbeta.fabric.data;
+package mod.bluestaggo.modernerbeta.fabric.data.provider.tag;
 
+import mod.bluestaggo.modernerbeta.fabric.data.ModernBetaSettingsPresetCategories;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaResourceKeys;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPresetCategory;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;

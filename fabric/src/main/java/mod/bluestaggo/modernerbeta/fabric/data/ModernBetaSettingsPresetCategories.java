@@ -1,6 +1,5 @@
 package mod.bluestaggo.modernerbeta.fabric.data;
 
-import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaResourceKeys;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPresetCategory;
@@ -21,48 +20,48 @@ public final class ModernBetaSettingsPresetCategories {
 
     public static void bootstrap(BootstrapContext<ModernBetaSettingsPresetCategory> context) {
         context.register(BETA, new ModernBetaSettingsPresetCategory(
-            ModernBetaBuiltInTypes.Preset.BETA_1_7_3.id,
-            ModernBetaBuiltInTypes.PresetCategory.BETA.id,
+            ModernBetaSettingsPresets.BETA_1_7_3.location(),
+            BETA.location(),
             ModernBetaSettingsPresetTags.BETA
         ));
         context.register(ALPHA_INFDEV, new ModernBetaSettingsPresetCategory(
-            ModernBetaBuiltInTypes.Preset.ALPHA_1_1_2_01.id,
-            ModernBetaBuiltInTypes.PresetCategory.ALPHA_INDEV.id,
+            ModernBetaSettingsPresets.ALPHA_1_1_2_01.location(),
+            ALPHA_INFDEV.location(),
             ModernBetaSettingsPresetTags.ALPHA_INFDEV
         ));
         context.register(FINITE, new ModernBetaSettingsPresetCategory(
-            ModernBetaBuiltInTypes.Preset.INDEV.id,
-            ModernBetaBuiltInTypes.PresetCategory.FINITE.id,
+            ModernBetaSettingsPresets.INDEV.location(),
+            FINITE.location(),
             ModernBetaSettingsPresetTags.FINITE
         ));
         context.register(EARLY_RELEASE, new ModernBetaSettingsPresetCategory(
-            ModernBetaBuiltInTypes.Preset.RELEASE_1_6_4.id,
-            ModernBetaBuiltInTypes.PresetCategory.EARLY_RELEASE.id,
+            ModernBetaSettingsPresets.RELEASE_1_6_4.location(),
+            EARLY_RELEASE.location(),
             ModernBetaSettingsPresetTags.EARLY_RELEASE
         ));
         context.register(EARLY_RELEASE_LARGE_BIOMES, new ModernBetaSettingsPresetCategory(
-            ModernBetaBuiltInTypes.Preset.RELEASE_1_1_LARGE_BIOMES.id,
-            ModernBetaBuiltInTypes.PresetCategory.EARLY_RELEASE_LARGE_BIOMES.id,
+            ModernBetaSettingsPresets.RELEASE_1_1_LARGE_BIOMES.location(),
+            EARLY_RELEASE_LARGE_BIOMES.location(),
             ModernBetaSettingsPresetTags.EARLY_RELEASE_LARGE_BIOMES
         ));
         context.register(EARLY_RELEASE_AMPLIFIED, new ModernBetaSettingsPresetCategory(
-            ModernBetaBuiltInTypes.Preset.RELEASE_1_1_AMPLIFIED.id,
-            ModernBetaBuiltInTypes.PresetCategory.EARLY_RELEASE_AMPLIFIED.id,
+            ModernBetaSettingsPresets.RELEASE_1_1_AMPLIFIED.location(),
+            EARLY_RELEASE_AMPLIFIED.location(),
             ModernBetaSettingsPresetTags.EARLY_RELEASE_AMPLIFIED
         ));
         context.register(MAJOR_RELEASE, new ModernBetaSettingsPresetCategory(
-            ModernBetaBuiltInTypes.Preset.RELEASE_1_12_2.id,
-            ModernBetaBuiltInTypes.PresetCategory.MAJOR_RELEASE.id,
+            ModernBetaSettingsPresets.RELEASE_1_12_2.location(),
+            MAJOR_RELEASE.location(),
             ModernBetaSettingsPresetTags.MAJOR_RELEASE
         ));
         context.register(BETA_CUSTOM, new ModernBetaSettingsPresetCategory(
-            ModernBetaBuiltInTypes.Preset.BETA_SKYLANDS.id,
-            ModernBetaBuiltInTypes.PresetCategory.BETA_CUSTOM.id,
+            ModernBetaSettingsPresets.BETA_SKYLANDS.location(),
+            BETA_CUSTOM.location(),
             ModernBetaSettingsPresetTags.BETA_CUSTOM
         ));
         context.register(RELEASE_CUSTOM, new ModernBetaSettingsPresetCategory(
-            ModernBetaBuiltInTypes.Preset.ISLE_LAND.id,
-            ModernBetaBuiltInTypes.PresetCategory.RELEASE_CUSTOM.id,
+            ModernBetaSettingsPresets.ISLE_LAND.location(),
+            RELEASE_CUSTOM.location(),
             ModernBetaSettingsPresetTags.RELEASE_CUSTOM
         ));
     }

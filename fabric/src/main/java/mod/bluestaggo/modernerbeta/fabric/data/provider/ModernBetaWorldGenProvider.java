@@ -1,4 +1,4 @@
-package mod.bluestaggo.modernerbeta.fabric.data;
+package mod.bluestaggo.modernerbeta.fabric.data.provider;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.api.level.chunk.surface.SurfaceConfig;

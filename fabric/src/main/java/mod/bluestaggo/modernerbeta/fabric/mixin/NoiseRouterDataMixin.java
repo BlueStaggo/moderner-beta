@@ -1,7 +1,7 @@
 package mod.bluestaggo.modernerbeta.fabric.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import mod.bluestaggo.modernerbeta.fabric.data.reduced_height.ModernBetaReducedHeightDataProvider;
+import mod.bluestaggo.modernerbeta.fabric.data.reduced_height.provider.ModernBetaReducedHeightDataProvider;
 import net.minecraft.world.level.levelgen.NoiseRouterData;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

@@ -1,3 +1,4 @@
+//~dotLocation
 package mod.bluestaggo.modernerbeta.fabric.data;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;

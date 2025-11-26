@@ -289,6 +289,75 @@ public class ModernBetaTagProviderBiome extends FabricTagProvider<Biome> {
                 Biomes.BEACH,
                 Biomes.SNOWY_BEACH
             );
+        
+        this.builder(SURFACE_CONFIG_RED_SAND);
+        
+        this.builder(SURFACE_CONFIG_BADLANDS)
+            .add(
+                Biomes.BADLANDS,
+                Biomes.ERODED_BADLANDS,
+                Biomes.WOODED_BADLANDS
+            );
+    
+        this.builder(SURFACE_CONFIG_NETHER)
+            .add(Biomes.NETHER_WASTES);
+        
+        this.builder(SURFACE_CONFIG_WARPED_NYLIUM)
+            .add(Biomes.WARPED_FOREST);
+        
+        this.builder(SURFACE_CONFIG_CRIMSON_NYLIUM)
+            .add(Biomes.CRIMSON_FOREST);
+        
+        this.builder(SURFACE_CONFIG_BASALT)
+            .add(Biomes.BASALT_DELTAS);
+        
+        this.builder(SURFACE_CONFIG_SOUL_SOIL)
+            .add(Biomes.SOUL_SAND_VALLEY);
+        
+        this.builder(SURFACE_CONFIG_END)
+            .add(
+                Biomes.THE_END,
+                Biomes.END_BARRENS,
+                Biomes.END_HIGHLANDS,
+                Biomes.END_MIDLANDS,
+                Biomes.SMALL_END_ISLANDS
+            );
+        
+        this.builder(SURFACE_CONFIG_GRASS)
+            .add(Biomes.SWAMP);
+        
+        this.builder(SURFACE_CONFIG_MUD)
+            .add(Biomes.MANGROVE_SWAMP);
+        
+        this.builder(SURFACE_CONFIG_MYCELIUM)
+            .add(Biomes.MUSHROOM_FIELDS);
+        
+        this.builder(SURFACE_CONFIG_PODZOL)
+            .add(
+                Biomes.OLD_GROWTH_PINE_TAIGA,
+                Biomes.OLD_GROWTH_SPRUCE_TAIGA
+            );
+        
+        this.builder(SURFACE_CONFIG_STONE)
+            .add(
+                Biomes.STONY_PEAKS,
+                Biomes.STONY_SHORE
+            );
+        
+        this.builder(SURFACE_CONFIG_SNOW)
+            .add(Biomes.SNOWY_SLOPES);
+        
+        this.builder(SURFACE_CONFIG_SNOW_DIRT)
+            .add(
+                Biomes.GROVE,
+                Biomes.ICE_SPIKES
+            );
+        
+        this.builder(SURFACE_CONFIG_SNOW_PACKED_ICE)
+            .add(Biomes.FROZEN_PEAKS);
+
+        this.builder(SURFACE_CONFIG_SNOW_STONE)
+            .add(Biomes.JAGGED_PEAKS);
 
         /* Modern Beta Biome Height Tags */
 

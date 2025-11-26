@@ -16,7 +16,7 @@ public class ModernBetaSurfaceConfigs {
     public static final ResourceKey<SurfaceConfig> CRIMSON_NYLIUM = keyOf("crimson_nylium");
     public static final ResourceKey<SurfaceConfig> BASALT = keyOf("basalt");
     public static final ResourceKey<SurfaceConfig> SOUL_SOIL = keyOf("soul_soil");
-    public static final ResourceKey<SurfaceConfig> THEEND = keyOf("theend");
+    public static final ResourceKey<SurfaceConfig> END = keyOf("end");
     public static final ResourceKey<SurfaceConfig> GRASS = keyOf("grass");
     public static final ResourceKey<SurfaceConfig> MUD = keyOf("mud");
     public static final ResourceKey<SurfaceConfig> MYCELIUM = keyOf("mycelium");
@@ -36,7 +36,7 @@ public class ModernBetaSurfaceConfigs {
         context.register(CRIMSON_NYLIUM, new SurfaceConfig(SurfaceBlocks.CRIMSON_NYLIUM, SurfaceBlocks.NETHER_SOUL_SAND, SurfaceBlocks.NETHER_GRAVEL));
         context.register(BASALT, new SurfaceConfig(SurfaceBlocks.BASALT));
         context.register(SOUL_SOIL, new SurfaceConfig(SurfaceBlocks.SOUL_SOIL));
-        context.register(THEEND, new SurfaceConfig(SurfaceBlocks.THEEND));
+        context.register(END, new SurfaceConfig(SurfaceBlocks.END));
         context.register(GRASS, new SurfaceConfig(SurfaceBlocks.GRASS));
         context.register(MUD, new SurfaceConfig(SurfaceBlocks.MUD));
         context.register(MYCELIUM, new SurfaceConfig(SurfaceBlocks.MYCELIUM));

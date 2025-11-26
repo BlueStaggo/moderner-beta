@@ -36,6 +36,6 @@ public record SurfaceBlocks(BlockState topBlock, BlockState fillerBlock) {
     public static final SurfaceBlocks CRIMSON_NYLIUM = new SurfaceBlocks(BlockStates.CRIMSON_NYLIUM, BlockStates.NETHERRACK);
     public static final SurfaceBlocks BASALT = new SurfaceBlocks(BlockStates.BASALT, BlockStates.BASALT);
     public static final SurfaceBlocks SOUL_SOIL = new SurfaceBlocks(BlockStates.SOUL_SOIL, BlockStates.SOUL_SOIL);
-    public static final SurfaceBlocks THEEND = new SurfaceBlocks(BlockStates.END_STONE, BlockStates.END_STONE);
+    public static final SurfaceBlocks END = new SurfaceBlocks(BlockStates.END_STONE, BlockStates.END_STONE);
     
 }

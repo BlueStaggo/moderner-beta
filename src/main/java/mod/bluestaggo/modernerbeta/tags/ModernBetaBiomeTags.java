@@ -35,6 +35,23 @@ public class ModernBetaBiomeTags {
     public static final TagKey<Biome> OCEAN_SHRINE_HAS_STRUCTURE = keyOf("has_structure/ocean_shrine");
 
     public static final TagKey<Biome> SURFACE_CONFIG_SAND = keyOf("surface_config/sand");
+    public static final TagKey<Biome> SURFACE_CONFIG_RED_SAND = keyOf("surface_config/red_sand");
+    public static final TagKey<Biome> SURFACE_CONFIG_BADLANDS = keyOf("surface_config/badlands");
+    public static final TagKey<Biome> SURFACE_CONFIG_NETHER = keyOf("surface_config/nether");
+    public static final TagKey<Biome> SURFACE_CONFIG_WARPED_NYLIUM = keyOf("surface_config/warped_nylium");
+    public static final TagKey<Biome> SURFACE_CONFIG_CRIMSON_NYLIUM = keyOf("surface_config/crimson_nylium");
+    public static final TagKey<Biome> SURFACE_CONFIG_BASALT = keyOf("surface_config/basalt");
+    public static final TagKey<Biome> SURFACE_CONFIG_SOUL_SOIL = keyOf("surface_config/soul_soil");
+    public static final TagKey<Biome> SURFACE_CONFIG_END = keyOf("surface_config/end");
+    public static final TagKey<Biome> SURFACE_CONFIG_GRASS = keyOf("surface_config/grass");
+    public static final TagKey<Biome> SURFACE_CONFIG_MUD = keyOf("surface_config/mud");
+    public static final TagKey<Biome> SURFACE_CONFIG_MYCELIUM = keyOf("surface_config/mycelium");
+    public static final TagKey<Biome> SURFACE_CONFIG_PODZOL = keyOf("surface_config/podzol");
+    public static final TagKey<Biome> SURFACE_CONFIG_STONE = keyOf("surface_config/stone");
+    public static final TagKey<Biome> SURFACE_CONFIG_SNOW = keyOf("surface_config/snow");
+    public static final TagKey<Biome> SURFACE_CONFIG_SNOW_DIRT = keyOf("surface_config/snow_dirt");
+    public static final TagKey<Biome> SURFACE_CONFIG_SNOW_PACKED_ICE = keyOf("surface_config/snow_packed_ice");
+    public static final TagKey<Biome> SURFACE_CONFIG_SNOW_STONE = keyOf("surface_config/snow_stone");
 
     public static final TagKey<Biome> HEIGHT_CONFIG_DEFAULT = keyOf("height_config/default");
     public static final TagKey<Biome> HEIGHT_CONFIG_OCEAN = keyOf("height_config/ocean");

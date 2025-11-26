@@ -162,15 +162,16 @@ public class ModernBetaClientBuiltInProviders {
             (screen, options) -> {
                 addAll(
                     options,
-                    screen.booleanOption("offsetOctaves"),
                     screen.booleanOption("depthEnabled"),
                     screen.booleanOption("scaleEnabled"),
                     screen.booleanOption("sampleDepth"),
                     screen.booleanOption("sampleScale"),
                     screen.floatRangeOption("variationScale", 0.0f, 2.0f),
                     screen.floatRangeOption("depthInfluence", 0.0f, 2.0f),
+                    screen.floatRangeOption("scaleInfluence", 0.0f, 2.0f),
                     screen.floatRangeOption("negativeDepthInfluence", 0.0f, 2.0f),
                     screen.floatRangeOption("depthStretch", 0.0f, 5.0f),
+                    screen.floatRangeOption("scaleOffset", -5.0f, 5.0f),
                     screen.floatRangeOption("depthOffset", -5.0f, 5.0f),
                     screen.floatRangeOption("positiveDepthDampening", 1.0f, 10.0f),
                     screen.floatRangeOption("negativeDepthDampening", 1.0f, 10.0f),

@@ -96,7 +96,7 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
             this.depthOctaveNoise = null;
         }
 
-        if (noiseLandmass.offsetOctaves()) {
+        if (!noiseLandmass.scaleEnabled() && !noiseLandmass.depthEnabled()) {
             new PerlinOctaveNoise(this.random, noiseScale.forestNoiseOctaves(), noise3DSettings.randomNoiseOffsets());
         }
 
@@ -511,11 +511,12 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
             }
         }
 
+        double modScale = 0.0D;
         double modDepth = 0.0D;
 
         if (this.forcedBiomeHeightEnabled) {
             HeightConfig heightConfig = this.getHeightConfigAt(noiseX, noiseZ);
-            scale = heightConfig.scale();
+            modScale = heightConfig.scale();
             modDepth = heightConfig.depth();
         }
 
@@ -537,19 +538,16 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
             scale *= rain;
         }
 
+        scale = modScale + scale * this.noiseLandmass.scaleInfluence();
         if (scale < 0.0D && !this.noise3DSettings.monoliths()) {
             scale = 0.0D;
         }
 
         if (!this.forcedBiomeHeightEnabled && this.noiseLandmass.sampleScale()) {
-            scale = Math.min(scale, 1.0D) + 0.5D;
+            scale = Math.min(scale, 1.0D);
         }
 
-        if (this.forcedBiomeHeightEnabled) {
-            scale = scale * 0.9F + 0.1F;
-            modDepth = (modDepth * 4.0F - 1.0F) / 8.0F;
-        }
-
+        scale += this.noiseLandmass.scaleOffset();
         depth = modDepth + depth * this.noiseLandmass.depthInfluence();
         depth *= baseSize / 8.0D;
         depth = baseSize + depth * 4.0D;

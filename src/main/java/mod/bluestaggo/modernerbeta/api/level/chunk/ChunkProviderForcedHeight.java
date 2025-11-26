@@ -115,6 +115,9 @@ public abstract class ChunkProviderForcedHeight extends ChunkProviderNoise {
         scale /= totalWeight;
         depth /= totalWeight;
 
+        scale = scale * 0.9F + 0.1F;
+        depth = (depth * 4.0F - 1.0F) / 8.0F;
+
         return new HeightConfig(depth, scale);
     }
 

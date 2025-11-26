@@ -217,6 +217,7 @@ public final class ModernBetaSettingsPresets {
                 .add(DEEPSLATE_GENERATION, DeepslateGeneration.DISABLED)
                 .add(CAVE_GENERATION, CaveGeneration.BETA)
                 .add(NOISE_SETTINGS, ModernBetaNoiseSettings.SKY_128)
+                .add(NOISE_3D_SETTINGS, Noise3DSettings.SKYLANDS)
                 .add(NOISE_SCALE, NoiseScale.SKYLANDS)
                 .add(NOISE_LANDMASS, NoiseLandmass.SKYLANDS)
                 .add(NOISE_SLIDE, new NoiseSlide(

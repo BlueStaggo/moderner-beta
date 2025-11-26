@@ -74,6 +74,17 @@ public record Noise3DSettings(
         false,
         false
     );
+    public static final Noise3DSettings SKYLANDS = new Noise3DSettings(
+        false,
+        true,
+        false,
+        false,
+        false,
+        true,
+        true,
+        false,
+        false
+    );
     public static final Noise3DSettings EARLY_RELEASE = new Noise3DSettings(
         false,
         false,

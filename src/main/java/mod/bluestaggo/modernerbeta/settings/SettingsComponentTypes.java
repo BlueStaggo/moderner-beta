@@ -368,7 +368,7 @@ public class SettingsComponentTypes {
 
         CONFIG_BIOME_PREVIEW_COLORS = register(
             ModernBetaBuiltInTypes.SettingsComponentType.CONFIG_BIOME_PREVIEW_COLORS.id,
-            Codec.unboundedMap(Codec.STRING, Codec.INT),
+            Codec.unboundedMap(Codec.STRING, /*? if >=1.21.11 {*/ /*net.minecraft.util.ExtraCodecs.STRING_RGB_COLOR *//*? } else {*/ Codec.INT /*? }*/),
             biomePreviewColors);
         CONFIG_MISCELLANEOUS = register(
             ModernBetaBuiltInTypes.SettingsComponentType.CONFIG_MISCELLANEOUS.id,

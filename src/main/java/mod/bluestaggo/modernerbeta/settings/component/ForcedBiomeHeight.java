@@ -29,7 +29,7 @@ public record ForcedBiomeHeight(
         ).apply(instance, ForcedBiomeHeight::new)
     );
     public static final ForcedBiomeHeight DEFAULT = CodecUtil.getDefaultByMap(CODEC);
-    public static final ForcedBiomeHeight ENABLED = new ForcedBiomeHeight(true, Map.of(), 1.0f, 1.0f, 1.0f, 1.0f, false);
+    public static final ForcedBiomeHeight ENABLED = new ForcedBiomeHeight(true, Map.of(), 1.0f, 0.0f, 1.0f, 0.0f, false);
     public static final ForcedBiomeHeight AMPLIFIED = new ForcedBiomeHeight(true, Map.of(), 2.0f, 1.0f, 4.0f, 1.0f, true);
 
     public static ForcedBiomeHeight overridesOnly(Map<ExtendedBiomeId, HeightConfig> heightOverrides) {

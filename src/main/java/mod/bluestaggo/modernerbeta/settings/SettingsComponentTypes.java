@@ -10,6 +10,9 @@ import mod.bluestaggo.modernerbeta.level.biome.provider.climate.ClimateMapping;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ConfiguredLayers;
 import mod.bluestaggo.modernerbeta.level.biome.voronoi.VoronoiPointBiome;
 import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaNoiseSettings;
+import mod.bluestaggo.modernerbeta.settings.component.validation.ComponentValidator;
+import mod.bluestaggo.modernerbeta.settings.component.validation.ValidationResult;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.levelgen.NoiseSettings;
@@ -66,8 +69,8 @@ public class SettingsComponentTypes {
     public static SettingsComponentType<Map<String, Integer>> CONFIG_BIOME_PREVIEW_COLORS;
     public static SettingsComponentType<MiscConfig> CONFIG_MISCELLANEOUS;
 
-    private static <T> SettingsComponentType<T> register(ResourceLocation id, Codec<T> codec, T defaultValue) {
-        return registryHandler.register(id, new SettingsComponentType<>(codec, defaultValue));
+    private static <T> SettingsComponentType<T> register(ResourceLocation id, Codec<T> codec, T defaultValue, ComponentValidator<T> validator) {
+        return registryHandler.register(id, new SettingsComponentType<>(codec, defaultValue, validator));
     }
 
     @SuppressWarnings("unchecked")
@@ -77,147 +80,210 @@ public class SettingsComponentTypes {
         PRESET = register(
             ModernBetaBuiltInTypes.SettingsComponentType.PRESET.id,
             ResourceLocation.CODEC,
-            null);
+            null,
+            ValidationResult.Valid::new);
         PROVIDER = register(
             ModernBetaBuiltInTypes.SettingsComponentType.PROVIDER.id,
             ResourceLocation.CODEC,
-            null);
+            null,
+            ValidationResult.Valid::new);
 
         // Chunk provider
         DEEPSLATE_GENERATION = register(
             ModernBetaBuiltInTypes.SettingsComponentType.DEEPSLATE_GENERATION.id,
             DeepslateGeneration.CODEC,
-            DeepslateGeneration.DEFAULT);
+            DeepslateGeneration.DEFAULT,
+            ValidationResult.Valid::new);
         USE_SURFACE_RULES = register(
             ModernBetaBuiltInTypes.SettingsComponentType.USE_SURFACE_RULES.id,
             Codec.BOOL,
-            false);
+            false,
+            ValidationResult.Valid::new);
         SEA_LEVEL_OFFSET = register(
             ModernBetaBuiltInTypes.SettingsComponentType.SEA_LEVEL_OFFSET.id,
             Codec.INT,
-            0);
+            0,
+            ValidationResult.Valid::new);
         CAVE_GENERATION = register(
             ModernBetaBuiltInTypes.SettingsComponentType.CAVE_GENERATION.id,
             CaveGeneration.CODEC,
-            CaveGeneration.DEFAULT);
+            CaveGeneration.DEFAULT,
+            ValidationResult.Valid::new);
         NOISE_SETTINGS = register(
             ModernBetaBuiltInTypes.SettingsComponentType.NOISE_SETTINGS.id,
             NoiseSettings.CODEC,
-            ModernBetaNoiseSettings.OVERWORLD_128);
+            ModernBetaNoiseSettings.OVERWORLD_128,
+            ValidationResult.Valid::new);
         NOISE_3D_SETTINGS = register(
             ModernBetaBuiltInTypes.SettingsComponentType.NOISE_3D_SETTINGS.id,
             Noise3DSettings.CODEC,
-            Noise3DSettings.DEFAULT);
+            Noise3DSettings.DEFAULT,
+            ValidationResult.Valid::new);
         NOISE_SCALE = register(
             ModernBetaBuiltInTypes.SettingsComponentType.NOISE_SCALE.id,
             NoiseScale.CODEC,
-            NoiseScale.DEFAULT);
+            NoiseScale.DEFAULT,
+            ValidationResult.Valid::new);
         NOISE_SLIDE = register(
             ModernBetaBuiltInTypes.SettingsComponentType.NOISE_SLIDE.id,
             NoiseSlide.CODEC,
-            NoiseSlide.DEFAULT);
+            NoiseSlide.DEFAULT,
+            ValidationResult.Valid::new);
         NOISE_LANDMASS = register(
             ModernBetaBuiltInTypes.SettingsComponentType.NOISE_LANDMASS.id,
             NoiseLandmass.CODEC,
-            NoiseLandmass.DEFAULT);
+            NoiseLandmass.DEFAULT,
+            ValidationResult.Valid::new);
         FORCED_BIOME_HEIGHT = register(
             ModernBetaBuiltInTypes.SettingsComponentType.FORCED_BIOME_HEIGHT.id,
             ForcedBiomeHeight.CODEC,
-            ForcedBiomeHeight.DEFAULT);
+            ForcedBiomeHeight.DEFAULT,
+            ValidationResult.Valid::new);
         SURFACE_PROPERTIES = register(
             ModernBetaBuiltInTypes.SettingsComponentType.SURFACE_PROPERTIES.id,
             SurfaceProperties.CODEC,
-            SurfaceProperties.DEFAULT);
+            SurfaceProperties.DEFAULT,
+            ValidationResult.Valid::new);
         INFDEV_227_STRUCTURES = register(
             ModernBetaBuiltInTypes.SettingsComponentType.INFDEV_227_STRUCTURES.id,
             Infdev227Structures.CODEC,
-            Infdev227Structures.DEFAULT);
+            Infdev227Structures.DEFAULT,
+            ValidationResult.Valid::new);
         FINITE_LEVEL_PROPERTIES = register(
             ModernBetaBuiltInTypes.SettingsComponentType.FINITE_LEVEL_PROPERTIES.id,
             FiniteLevelProperties.CODEC,
-            FiniteLevelProperties.DEFAULT);
+            FiniteLevelProperties.DEFAULT,
+            ValidationResult.Valid::new);
         FINITE_CAVE_GENERATION = register(
             ModernBetaBuiltInTypes.SettingsComponentType.FINITE_CAVE_GENERATION.id,
             FiniteCaveGeneration.CODEC,
-            FiniteCaveGeneration.DEFAULT);
+            FiniteCaveGeneration.DEFAULT,
+            ValidationResult.Valid::new);
         FINITE_NOISE = register(
             ModernBetaBuiltInTypes.SettingsComponentType.FINITE_NOISE.id,
             FiniteNoise.CODEC,
-            FiniteNoise.DEFAULT);
+            FiniteNoise.DEFAULT,
+            ValidationResult.Valid::new);
         FINITE_BEACHES = register(
             ModernBetaBuiltInTypes.SettingsComponentType.FINITE_BEACHES.id,
             FiniteBeaches.CODEC,
-            FiniteBeaches.DEFAULT);
+            FiniteBeaches.DEFAULT,
+            ValidationResult.Valid::new);
         FINITE_POOLS = register(
             ModernBetaBuiltInTypes.SettingsComponentType.FINITE_POOLS.id,
             FinitePools.CODEC,
-            FinitePools.DEFAULT);
+            FinitePools.DEFAULT,
+            ValidationResult.Valid::new);
         SPAWN_INDEV_HOUSE = register(
             ModernBetaBuiltInTypes.SettingsComponentType.SPAWN_INDEV_HOUSE.id,
             Codec.BOOL,
-            true);
+            true,
+            ValidationResult.Valid::new);
         ISLES_PROPERTIES = register(
             ModernBetaBuiltInTypes.SettingsComponentType.ISLES_PROPERTIES.id,
             IslesProperties.CODEC,
-            IslesProperties.DEFAULT);
+            IslesProperties.DEFAULT,
+            ValidationResult.Valid::new);
 
         // Biome provider
         SINGLE_BIOME = register(
             ModernBetaBuiltInTypes.SettingsComponentType.SINGLE_BIOME.id,
             ResourceLocation.CODEC,
-            ModernerBeta.createId("beta_plains"));
+            ModernerBeta.createId("beta_plains"),
+            ValidationResult.Valid::new);
         CLIMATE_SCALE = register(
             ModernBetaBuiltInTypes.SettingsComponentType.CLIMATE_SCALE.id,
             ClimateScale.CODEC,
-            ClimateScale.DEFAULT);
+            ClimateScale.DEFAULT,
+            ValidationResult.Valid::new);
         CLIMATE_MAPPINGS = register(
             ModernBetaBuiltInTypes.SettingsComponentType.CLIMATE_MAPPINGS.id,
             ClimateMapping.MAP_CODEC,
-            ClimateMapping.DEFAULT_MAPPINGS);
+            ClimateMapping.DEFAULT_MAPPINGS,
+            component -> {
+                for (Map.Entry<String, ClimateMapping> entry : component.entrySet()) {
+                    String base = entry.getKey();
+                    ClimateMapping mapping = entry.getValue();
+
+                    if (mapping.biome() == null) {
+                        return new ValidationResult.Invalid<>(Component.literal("Biome mapping %s contains no biome value!"));
+                    }
+
+                    if (mapping.oceanBiome() == null) {
+                        return new ValidationResult.Invalid<>(Component.literal("Biome mapping %s contains no ocean biome value!"));
+                    }
+
+                    if (mapping.deepOceanBiome() == null) {
+                        return new ValidationResult.Invalid<>(Component.literal("Biome mapping %s contains no deep ocean biome value!"));
+                    }
+                }
+
+                return new ValidationResult.Valid<>(component);
+            });
         CLIMATE_DISTRIBUTION = register(
             ModernBetaBuiltInTypes.SettingsComponentType.CLIMATE_DISTRIBUTION.id,
             ClimateDistribution.CODEC,
-            ClimateDistribution.DEFAULT);
+            ClimateDistribution.DEFAULT,
+            ValidationResult.Valid::new);
         VORONOI_POINTS = register(
             ModernBetaBuiltInTypes.SettingsComponentType.VORONOI_POINTS.id,
             VoronoiPointBiome.CODEC.listOf(),
-            List.of());
+            List.of(),
+            component -> {
+                if (component.isEmpty())
+                    return new ValidationResult.Invalid<>(Component.literal("Voronoi points list is empty!"));
+
+                return new ValidationResult.Valid<>(component);
+            });
         FRACTAL_LAYERS = register(
             ModernBetaBuiltInTypes.SettingsComponentType.FRACTAL_LAYERS.id,
             ConfiguredLayers.CODEC,
-            ConfiguredLayers.DEFAULT);
+            ConfiguredLayers.DEFAULT,
+            component -> {
+                if (component.getPipeline().isEmpty())
+                    return new ValidationResult.Invalid<>(Component.literal("Layer pipeline is empty!"));
+
+                return new ValidationResult.Valid<>(component);
+            });
         USE_32BIT_LAYER_SEED = register(
             ModernBetaBuiltInTypes.SettingsComponentType.USE_32BIT_LAYER_SEED.id,
             Codec.BOOL,
-            false);
+            false,
+            ValidationResult.Valid::new);
         USE_OCEAN_BIOMES = register(
             ModernBetaBuiltInTypes.SettingsComponentType.USE_OCEAN_BIOMES.id,
             Codec.BOOL,
-            false);
+            false,
+            ValidationResult.Valid::new);
         TEMPERATURE_HEIGHT_SCALING = register(
             ModernBetaBuiltInTypes.SettingsComponentType.TEMPERATURE_HEIGHT_SCALING.id,
             StringRepresentable.fromEnum(TemperatureHeightScaling::values),
-            TemperatureHeightScaling.NONE);
+            TemperatureHeightScaling.NONE,
+            ValidationResult.Valid::new);
 
         // Cave biome provider
         CAVE_BIOME_VORONOI = register(
             ModernBetaBuiltInTypes.SettingsComponentType.CAVE_BIOME_VORONOI.id,
             CaveBiomeVoronoi.CODEC,
-            CaveBiomeVoronoi.DEFAULT);
+            CaveBiomeVoronoi.DEFAULT,
+            ValidationResult.Valid::new);
 
         // Config
         CONFIG_BETA_CLIMATIC_COLORS = register(
             ModernBetaBuiltInTypes.SettingsComponentType.CONFIG_BETA_CLIMATIC_COLORS.id,
             ClimaticBiomeColors.CODEC,
-            new ClimaticBiomeColors(true, true, false));
+            new ClimaticBiomeColors(true, true, false),
+            ValidationResult.Valid::new);
         CONFIG_PE_CLIMATIC_COLORS = register(
             ModernBetaBuiltInTypes.SettingsComponentType.CONFIG_PE_CLIMATIC_COLORS.id,
             ClimaticBiomeColors.CODEC,
-            new ClimaticBiomeColors(false, false, false));
+            new ClimaticBiomeColors(false, false, false),
+            ValidationResult.Valid::new);
         CONFIG_BETA_FRACTAL_CLIMATIC_COLORS = register(
             ModernBetaBuiltInTypes.SettingsComponentType.CONFIG_BETA_FRACTAL_CLIMATIC_COLORS.id,
             ClimaticBiomeColors.CODEC,
-            new ClimaticBiomeColors(true, true, false));
+            new ClimaticBiomeColors(true, true, false),
+            ValidationResult.Valid::new);
 
         // Colors sourced from Cubiomes (https://github.com/Cubitect/cubiomes/blob/e61f90580cbdd883214a8054670dacae655e59c0/util.c#L316)
         Map<String, Integer> biomePreviewColors = new HashMap<>();
@@ -369,10 +435,12 @@ public class SettingsComponentTypes {
         CONFIG_BIOME_PREVIEW_COLORS = register(
             ModernBetaBuiltInTypes.SettingsComponentType.CONFIG_BIOME_PREVIEW_COLORS.id,
             Codec.unboundedMap(Codec.STRING, /*? if >=1.21.11 {*/ /*net.minecraft.util.ExtraCodecs.STRING_RGB_COLOR *//*? } else {*/ Codec.INT /*? }*/),
-            biomePreviewColors);
+            biomePreviewColors,
+            ValidationResult.Valid::new);
         CONFIG_MISCELLANEOUS = register(
             ModernBetaBuiltInTypes.SettingsComponentType.CONFIG_MISCELLANEOUS.id,
             MiscConfig.CODEC,
-            new MiscConfig(true, ModernerBeta.createId("beta")));
+            new MiscConfig(true, ModernerBeta.createId("beta")),
+            ValidationResult.Valid::new);
     }
 }

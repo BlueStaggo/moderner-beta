@@ -2,6 +2,7 @@ package mod.bluestaggo.modernerbeta.settings;
 
 import com.mojang.serialization.*;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
+import mod.bluestaggo.modernerbeta.settings.component.validation.ComponentValidator;
 
 import java.util.Map;
 
@@ -13,7 +14,7 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.List;
 *///?}
 
-public record SettingsComponentType<T>(Codec<T> codec, T defaultValue) {
+public record SettingsComponentType<T>(Codec<T> codec, T defaultValue, ComponentValidator<T> validator) {
     public static final Codec<SettingsComponentType<?>> CODEC =
         //? if >=1.20.5 {
         Codec.lazyInitialized(ModernBetaRegistries.SETTINGS_COMPONENT_TYPE::byNameCodec);

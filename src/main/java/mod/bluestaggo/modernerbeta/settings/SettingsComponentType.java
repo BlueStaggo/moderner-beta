@@ -3,8 +3,10 @@ package mod.bluestaggo.modernerbeta.settings;
 import com.mojang.serialization.*;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.settings.component.validation.ComponentValidator;
+import net.minecraft.core.HolderLookup;
 
 import java.util.Map;
+import java.util.function.Function;
 
 //? if <1.20.5 {
 /*import com.google.common.collect.ImmutableMap;
@@ -14,7 +16,7 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.List;
 *///?}
 
-public record SettingsComponentType<T>(Codec<T> codec, T defaultValue, ComponentValidator<T> validator) {
+public record SettingsComponentType<T>(Codec<T> codec, Function<HolderLookup.Provider, T> defaultValueGetter, ComponentValidator<T> validator) {
     public static final Codec<SettingsComponentType<?>> CODEC =
         //? if >=1.20.5 {
         Codec.lazyInitialized(ModernBetaRegistries.SETTINGS_COMPONENT_TYPE::byNameCodec);
@@ -98,6 +100,14 @@ public record SettingsComponentType<T>(Codec<T> codec, T defaultValue, Component
             }
         );
         *///?}
+
+    public SettingsComponentType(Codec<T> codec, T defaultValue, ComponentValidator<T> validator) {
+        this(codec, registries -> defaultValue, validator);
+    }
+
+    public T defaultValue() {
+        return defaultValueGetter.apply(null);
+    }
 
     @Override
     public boolean equals(Object obj) {

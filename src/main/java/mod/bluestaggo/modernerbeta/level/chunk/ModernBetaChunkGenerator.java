@@ -40,6 +40,7 @@ import net.minecraft.world.level.LevelHeightAccessor;
 import net.minecraft.world.level.NoiseColumn;
 import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeGenerationSettings;
 import net.minecraft.world.level.biome.BiomeManager;
 import net.minecraft.world.level.biome.BiomeSource;
@@ -49,21 +50,13 @@ import net.minecraft.world.level.chunk.CarvingMask;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.chunk.ProtoChunk;
-import net.minecraft.world.level.levelgen.Aquifer;
+import net.minecraft.world.level.levelgen.*;
 //? if <1.21.2
 //import net.minecraft.world.level.levelgen.GenerationStep;
-import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.level.levelgen.LegacyRandomSource;
-import net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator;
-import net.minecraft.world.level.levelgen.NoiseChunk;
-import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
-import net.minecraft.world.level.levelgen.RandomState;
-import net.minecraft.world.level.levelgen.RandomSupport;
-import net.minecraft.world.level.levelgen.SingleThreadedRandomSource;
-import net.minecraft.world.level.levelgen.WorldgenRandom;
 import net.minecraft.world.level.levelgen.blending.Blender;
 import net.minecraft.world.level.levelgen.carver.CarvingContext;
 import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -75,16 +68,16 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
     public static final com.mojang.serialization.MapCodec<ModernBetaChunkGenerator> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> instance.group(
             BiomeSource.CODEC.fieldOf("biome_source").forGetter(generator -> generator.biomeSource),
+            RegistryOps.retrieveGetter(Registries.NOISE_SETTINGS),
             RegistryOps.retrieveGetter(ModernBetaResourceKeys.SETTINGS_PRESET),
             RegistryOps.retrieveGetter(ModernBetaResourceKeys.SURFACE_CONFIG),
-            NoiseGeneratorSettings.CODEC.fieldOf("settings").forGetter(generator -> generator.settings),
             CompoundTag.CODEC.fieldOf("provider_settings").forGetter(generator -> generator.chunkSettings)
         ).apply(instance, instance.stable(ModernBetaChunkGenerator::new))
     );
 
     private final HolderGetter<ModernBetaSettingsPreset> presetRegistry;
     private final HolderGetter<SurfaceConfig> surfaceConfigRegistry;
-    private final Holder<NoiseGeneratorSettings> settings;
+//    private final Holder<NoiseGeneratorSettings> settings;
     private final CompoundTag chunkSettings;
     private final Supplier<BiomeInjector> biomeInjector;
 
@@ -95,12 +88,12 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
 
     public ModernBetaChunkGenerator(
         BiomeSource biomeSource,
+        HolderGetter<NoiseGeneratorSettings> generatorSettingsRegistry,
         HolderGetter<ModernBetaSettingsPreset> presetRegistry,
         HolderGetter<SurfaceConfig> surfaceConfigRegistry,
-        Holder<NoiseGeneratorSettings> settings,
         CompoundTag chunkProviderSettings
     ) {
-        super(biomeSource, settings);
+        super(biomeSource, generatorSettings(generatorSettingsRegistry, presetRegistry, chunkProviderSettings));
 
         String presetKey = ModernBetaBuiltInTypes.SettingsComponentType.PRESET.id.toString();
 
@@ -110,7 +103,6 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
                 .defaultSettingsPreset().toString());
         }
 
-        this.settings = settings;
         this.presetRegistry = presetRegistry;
         this.surfaceConfigRegistry = surfaceConfigRegistry;
         this.chunkSettings = chunkProviderSettings;
@@ -121,6 +113,52 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
         if (this.biomeSource instanceof ModernBetaBiomeSource modernBetaBiomeSource) {
             modernBetaBiomeSource.setChunkGenerator(this);
         }
+    }
+
+    private static Holder<NoiseGeneratorSettings> generatorSettings(
+        HolderGetter<NoiseGeneratorSettings> generatorSettingsRegistry,
+        HolderGetter<ModernBetaSettingsPreset> presetRegistry,
+        CompoundTag chunkProviderSettings
+    ) {
+        ModernBetaSettings chunkSettings = ModernBetaSettings.fromCompound(chunkProviderSettings)
+            .mapPreset(presetRegistry, ModernBetaSettingsPreset::chunkSettings);
+
+        Holder<NoiseGeneratorSettings> defaultNoise3D = generatorSettingsRegistry
+            //? if >=1.21.2 {
+            .get
+            //? } else {
+            /*.getHolder
+             *///? }
+                (ModernBetaNoiseGeneratorSettings.NOISE_3D)
+            .orElseThrow();
+
+        Holder<NoiseGeneratorSettings> generatorSettings = chunkSettings.get(SettingsComponentTypes.NOISE_GENERATOR_SETTINGS);
+
+        if (generatorSettings == null)
+            generatorSettings = defaultNoise3D;
+
+        NoiseSettings noiseSettings = chunkSettings.get(SettingsComponentTypes.NOISE_SETTINGS);
+        if (noiseSettings == null)
+            return generatorSettings;
+
+        NoiseGeneratorSettings unboxed = generatorSettings.value();
+        //noinspection deprecation
+        unboxed = new NoiseGeneratorSettings(
+            noiseSettings,
+            unboxed.defaultBlock(),
+            unboxed.defaultFluid(),
+            unboxed.noiseRouter(),
+            unboxed.surfaceRule(),
+            unboxed.spawnTarget(),
+            unboxed.seaLevel(),
+            unboxed.disableMobGeneration(),
+            unboxed.aquifersEnabled(),
+            unboxed.oreVeinsEnabled(),
+            unboxed.useLegacyRandomSource()
+        );
+        generatorSettings = Holder.direct(unboxed);
+
+        return generatorSettings;
     }
 
     public void initProvider(long seed) {
@@ -143,21 +181,21 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
     }
 
     @Override
-    public CompletableFuture<ChunkAccess> createBiomes(
+    public @NotNull CompletableFuture<ChunkAccess> createBiomes(
         //? if <1.21
         //Executor executor,
         RandomState noiseConfig, Blender blender, StructureManager structureAccessor, ChunkAccess chunk
     ) {
         return CompletableFuture.supplyAsync(Util.name(() -> {
             NoiseChunk noiseSampler = chunk.getOrCreateNoiseChunk(c -> this.createNoiseChunk(c, structureAccessor, blender, noiseConfig));
-            chunk.fillBiomesFromNoise(this.biomeSource, noiseSampler.cachedClimateSampler(noiseConfig.router(), this.settings.value().spawnTarget()));
+            chunk.fillBiomesFromNoise(this.biomeSource, noiseSampler.cachedClimateSampler(noiseConfig.router(), this.generatorSettings().value().spawnTarget()));
             
             return chunk;
         }, () -> "init_biomes"), Util.backgroundExecutor());
     }
     
     @Override
-    public CompletableFuture<ChunkAccess> fillFromNoise(
+    public @NotNull CompletableFuture<ChunkAccess> fillFromNoise(
         //? if <1.21
         //Executor executor,
         Blender blender, RandomState noiseConfig, StructureManager structureAccessor, ChunkAccess chunk
@@ -194,6 +232,22 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
         this.injectBiomes(chunk, noiseConfig.sampler(), BiomeInjectionStep.POST);
     }
 
+    @Override
+    public void buildSurface(
+        ChunkAccess chunk,
+        WorldGenerationContext context,
+        RandomState random,
+        StructureManager structureManager,
+        BiomeManager biomeManager,
+        Registry<Biome> biomes,
+        Blender blender
+    ) {
+        NoiseChunk noiseChunk = chunk.getOrCreateNoiseChunk(chunkAccess -> this.createNoiseChunk(chunkAccess, structureManager, blender, random));
+        NoiseGeneratorSettings noiseGeneratorSettings = this.generatorSettings().value();
+        random.surfaceSystem()
+            .buildSurface(random, biomeManager, biomes, noiseGeneratorSettings.useLegacyRandomSource(), context, chunk, noiseChunk, noiseGeneratorSettings.surfaceRule());
+    }
+
     public void buildDefaultSurface(WorldGenRegion chunkRegion, StructureManager structureAccessor, RandomState noiseConfig, ChunkAccess chunk) {
         super.buildSurface(chunkRegion, structureAccessor, noiseConfig, chunk);
     }
@@ -221,7 +275,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
         NoiseChunk chunkNoiseSampler = chunk.getOrCreateNoiseChunk(c -> this.createNoiseChunk(c, structureAccessor, Blender.of(chunkRegion), noiseConfig));
 
         Registry<ConfiguredWorldCarver<?>> configuredCarverRegistry = chunkRegion.registryAccess().lookupOrThrow(Registries.CONFIGURED_CARVER);
-        CarvingContext carverContext = new CarvingContext(this, chunkRegion.registryAccess(), chunk.getHeightAccessorForGeneration(), chunkNoiseSampler, noiseConfig, this.settings.value().surfaceRule());
+        CarvingContext carverContext = new CarvingContext(this, chunkRegion.registryAccess(), chunk.getHeightAccessorForGeneration(), chunkNoiseSampler, noiseConfig, this.generatorSettings().value().surfaceRule());
         CarvingMask carvingMask = ((ProtoChunk)chunk).getOrCreateCarvingMask(
             //? if <1.21.2
             //carverStep
@@ -354,7 +408,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
     }
   
     @Override
-    public NoiseColumn getBaseColumn(int x, int z, LevelHeightAccessor level, RandomState noiseConfig) {
+    public @NotNull NoiseColumn getBaseColumn(int x, int z, LevelHeightAccessor level, RandomState noiseConfig) {
         int minY = this.chunkProvider.getWorldMinY();
         if (ModCompat.skipGeneratingChunk(x, z))
             return new NoiseColumn(minY, new BlockState[0]);
@@ -371,9 +425,9 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
                 if (worldY > this.getSeaLevel())
                     column[y] = BlockStates.AIR;
                 else
-                    column[y] = this.settings.value().defaultFluid();
+                    column[y] = this.generatorSettings().value().defaultFluid();
             } else {
-                column[y] = this.settings.value().defaultBlock();
+                column[y] = this.generatorSettings().value().defaultBlock();
             }
         }
         
@@ -386,7 +440,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
         // Affects both getWorldHeight() and getMinimumY().
         // See: MC-236933 and MC-236723
         if (this.chunkProvider == null)
-            return this.getGeneratorSettings().value().noiseSettings().height();
+            return this.generatorSettings().value().noiseSettings().height();
        
         return this.chunkProvider.getWorldHeight();
     }
@@ -394,7 +448,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
     @Override
     public int getMinY() {
         if (this.chunkProvider == null)
-            return this.getGeneratorSettings().value().noiseSettings().minY();
+            return this.generatorSettings().value().noiseSettings().minY();
         
         return this.chunkProvider.getWorldMinY();
     }
@@ -405,18 +459,14 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
     }
 
     @Override
-    protected NoiseChunk createNoiseChunk(ChunkAccess chunk, StructureManager manager, Blender blender, RandomState noiseConfig) {
+    protected @NotNull NoiseChunk createNoiseChunk(ChunkAccess chunk, StructureManager manager, Blender blender, RandomState noiseConfig) {
         return ModernBetaChunkNoiseSampler.create(
             chunk,
             noiseConfig,
-            this.settings.value(),
+            this.generatorSettings().value(),
             this.chunkProvider.getFluidLevelSampler(),
             this.chunkProvider
         );
-    }
-
-    public Holder<NoiseGeneratorSettings> getGeneratorSettings() {
-        return this.settings;
     }
 
     public HolderGetter<ModernBetaSettingsPreset> getPresetRegistry() {

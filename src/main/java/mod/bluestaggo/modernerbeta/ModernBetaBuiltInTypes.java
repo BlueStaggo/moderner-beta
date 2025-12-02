@@ -14,6 +14,7 @@ public final class ModernBetaBuiltInTypes {
         USE_SURFACE_RULES("use_surface_rules"),
         SEA_LEVEL_OFFSET("sea_level_offset"),
         CAVE_GENERATION("cave_generation"),
+        NOISE_GENERATOR_SETTINGS("noise_generator_settings"),
         NOISE_SETTINGS("noise_settings"),
         NOISE_3D_SETTINGS("noise_3d_settings"),
         NOISE_SCALE("noise_scale"),

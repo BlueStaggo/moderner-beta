@@ -63,7 +63,7 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
     public ChunkProviderInfdev227(ModernBetaChunkGenerator chunkGenerator, long seed) {
         super(chunkGenerator, seed);
         
-        NoiseGeneratorSettings generatorSettings = this.chunkGenerator.getGeneratorSettings().value();
+        NoiseGeneratorSettings generatorSettings = this.chunkGenerator.generatorSettings().value();
         NoiseSettings shapeConfig = generatorSettings.noiseSettings();
         
         this.worldMinY = shapeConfig.minY();

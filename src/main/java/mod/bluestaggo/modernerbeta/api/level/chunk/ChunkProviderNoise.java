@@ -75,7 +75,7 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
     public ChunkProviderNoise(ModernBetaChunkGenerator chunkGenerator, long seed) {
         super(chunkGenerator, seed);
         
-        NoiseGeneratorSettings generatorSettings = chunkGenerator.getGeneratorSettings().value();
+        NoiseGeneratorSettings generatorSettings = chunkGenerator.generatorSettings().value();
         NoiseSettings noiseSettings = this.getNoiseSettings();
 
         this.islesProperties = this.getChunkSettings().getOrDefault(SettingsComponentTypes.ISLES_PROPERTIES);

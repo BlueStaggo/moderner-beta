@@ -52,7 +52,6 @@ public abstract class WorldDimensionDataMixin {
                     .resultOrPartial(modernBeta$LOGGER::error);
 
             optional.ifPresent(settingsPreset -> {
-                HolderGetter<NoiseGeneratorSettings> noiseSettingRegistry = registries.lookupOrThrow(Registries.NOISE_SETTINGS);
                 HolderGetter<ModernBetaSettingsPreset> presetRegistry = registries.lookupOrThrow(ModernBetaResourceKeys.SETTINGS_PRESET);
 
                 cir.setReturnValue(worldDimensions.replaceOverworldGenerator(registries,
@@ -63,9 +62,9 @@ public abstract class WorldDimensionDataMixin {
                             settingsPreset.biomeSettings().toCompound(),
                             settingsPreset.caveBiomeSettings().toCompound()
                         ),
+                        registries.lookupOrThrow(Registries.NOISE_SETTINGS),
                         presetRegistry,
                         registries.lookupOrThrow(ModernBetaResourceKeys.SURFACE_CONFIG),
-                        noiseSettingRegistry.getOrThrow(ModernBetaNoiseGeneratorSettings.NOISE_3D),
                         settingsPreset.chunkSettings().toCompound()
                     )
                 ));

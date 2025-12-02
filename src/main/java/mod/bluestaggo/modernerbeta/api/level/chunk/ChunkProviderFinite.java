@@ -71,7 +71,7 @@ public abstract class ChunkProviderFinite extends ChunkProvider implements Chunk
     public ChunkProviderFinite(ModernBetaChunkGenerator chunkGenerator, long seed) {
         super(chunkGenerator, seed);
 
-        NoiseGeneratorSettings generatorSettings = chunkGenerator.getGeneratorSettings().value();
+        NoiseGeneratorSettings generatorSettings = chunkGenerator.generatorSettings().value();
         NoiseSettings shapeConfig = generatorSettings.noiseSettings();
 
         this.levelProperties = this.getChunkSettings().getOrDefault(SettingsComponentTypes.FINITE_LEVEL_PROPERTIES);

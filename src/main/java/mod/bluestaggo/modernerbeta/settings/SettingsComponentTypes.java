@@ -4,22 +4,28 @@ import com.mojang.serialization.Codec;
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.api.level.biome.climate.TemperatureHeightScaling;
+import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaNoiseGeneratorSettings;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import mod.bluestaggo.modernerbeta.settings.component.*;
 import mod.bluestaggo.modernerbeta.level.biome.provider.climate.ClimateMapping;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ConfiguredLayers;
 import mod.bluestaggo.modernerbeta.level.biome.voronoi.VoronoiPointBiome;
 import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaNoiseSettings;
+import net.minecraft.core.Holder;
 import mod.bluestaggo.modernerbeta.settings.component.validation.ComponentValidator;
 import mod.bluestaggo.modernerbeta.settings.component.validation.ValidationResult;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
 import net.minecraft.world.level.levelgen.NoiseSettings;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 public class SettingsComponentTypes {
     private static IRegistryHandler<SettingsComponentType<?>> registryHandler;
@@ -32,6 +38,7 @@ public class SettingsComponentTypes {
     public static SettingsComponentType<Boolean> USE_SURFACE_RULES;
     public static SettingsComponentType<Integer> SEA_LEVEL_OFFSET;
     public static SettingsComponentType<CaveGeneration> CAVE_GENERATION;
+    public static SettingsComponentType<Holder<NoiseGeneratorSettings>> NOISE_GENERATOR_SETTINGS;
     public static SettingsComponentType<NoiseSettings> NOISE_SETTINGS;
     public static SettingsComponentType<Noise3DSettings> NOISE_3D_SETTINGS;
     public static SettingsComponentType<NoiseScale> NOISE_SCALE;
@@ -73,6 +80,15 @@ public class SettingsComponentTypes {
         return registryHandler.register(id, new SettingsComponentType<>(codec, defaultValue, validator));
     }
 
+    private static <T> SettingsComponentType<T> registerWithDefaultGetter(
+        ResourceLocation id,
+        Codec<T> codec,
+        Function<HolderLookup.Provider, T> defaultValueGetter,
+        ComponentValidator<T> validator
+    ) {
+        return registryHandler.register(id, new SettingsComponentType<>(codec, defaultValueGetter, validator));
+    }
+
     @SuppressWarnings("unchecked")
     public static void init(IRegistryHandler<?> handler) {
         registryHandler = (IRegistryHandler<SettingsComponentType<?>>) handler;
@@ -108,6 +124,11 @@ public class SettingsComponentTypes {
             ModernBetaBuiltInTypes.SettingsComponentType.CAVE_GENERATION.id,
             CaveGeneration.CODEC,
             CaveGeneration.DEFAULT,
+            ValidationResult.Valid::new);
+        NOISE_GENERATOR_SETTINGS = registerWithDefaultGetter(
+            ModernBetaBuiltInTypes.SettingsComponentType.NOISE_GENERATOR_SETTINGS.id,
+            NoiseGeneratorSettings.CODEC,
+            registry -> registry.lookupOrThrow(Registries.NOISE_SETTINGS).getOrThrow(ModernBetaNoiseGeneratorSettings.NOISE_3D),
             ValidationResult.Valid::new);
         NOISE_SETTINGS = register(
             ModernBetaBuiltInTypes.SettingsComponentType.NOISE_SETTINGS.id,

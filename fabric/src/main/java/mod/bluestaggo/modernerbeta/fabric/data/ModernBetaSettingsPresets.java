@@ -201,8 +201,9 @@ public final class ModernBetaSettingsPresets {
         return new ModernBetaSettingsPreset(
             ModernBetaSettings.builder()
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.NOISE_3D.id)
+//                .add(NOISE_GENERATOR_SETTINGS, )
                 .add(CAVE_GENERATION, CaveGeneration.BETA)
-                .addDefault(DEEPSLATE_GENERATION, USE_SURFACE_RULES, SEA_LEVEL_OFFSET, NOISE_SETTINGS, NOISE_3D_SETTINGS, NOISE_SCALE, NOISE_SLIDE, NOISE_LANDMASS, SURFACE_PROPERTIES)
+                .addDefault(DEEPSLATE_GENERATION, USE_SURFACE_RULES, SEA_LEVEL_OFFSET, NOISE_3D_SETTINGS, NOISE_SCALE, NOISE_SLIDE, NOISE_LANDMASS, SURFACE_PROPERTIES)
                 .build(),
             ModernBetaSettings.builder()
                 .add(PROVIDER, ModernBetaBuiltInTypes.Biome.BETA.id)

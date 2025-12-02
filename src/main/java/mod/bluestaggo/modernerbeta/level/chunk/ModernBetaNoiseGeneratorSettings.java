@@ -31,7 +31,7 @@ public class ModernBetaNoiseGeneratorSettings {
 
     public static void bootstrap(BootstrapContext<NoiseGeneratorSettings> context) {
         context.register(INFDEV_227, createNoiseGeneratorSettings(context, ModernBetaNoiseSettings.OVERWORLD_128, 64, true));
-        context.register(FINITE_2D, createNoiseGeneratorSettings(context, ModernBetaNoiseSettings.FINITE, 64, false));
+        context.register(FINITE_2D, createNoiseGeneratorSettings(context, ModernBetaNoiseSettings.FINITE_2D, 64, false));
         context.register(NOISE_3D, createNoiseGeneratorSettings(context, ModernBetaNoiseSettings.OVERWORLD_FULL, 64, true));
     }
     

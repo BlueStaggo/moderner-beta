@@ -38,14 +38,6 @@ public class ModernBetaWorldScreenProvider {
                 /*.registryOrThrow
                 *///? }
                     (Registries.NOISE_SETTINGS);
-            Holder.Reference<NoiseGeneratorSettings> settings = registrySettings
-                //? if >=1.21.2 {
-                .get
-                 //? } else {
-                /*.getHolder
-                *///? }
-                    (modernBetaSettings)
-                .orElseThrow();
             HolderGetter<Biome> registryBiome = dynamicRegistryManager.lookupOrThrow(Registries.BIOME);
 
             ModernBetaChunkGenerator chunkGenerator = new ModernBetaChunkGenerator(
@@ -55,9 +47,9 @@ public class ModernBetaWorldScreenProvider {
                     biomeSettingsCompound,
                     caveBiomeSettingsCompound
                 ),
+                registrySettings,
                 registryPreset,
                 registrySurfaceConfig,
-                settings,
                 chunkSettingsCompound
             );
 

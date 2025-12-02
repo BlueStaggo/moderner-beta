@@ -70,9 +70,9 @@ public class ModernBetaWorldPresets {
                     defaultPreset.biomeSettings().toCompound(),
                     defaultPreset.caveBiomeSettings().toCompound()
                 ),
+                registrySettings,
                 registryPreset,
                 registrySurfaceConfig,
-                settings,
                 defaultPreset.chunkSettings().toCompound()
             )
         );

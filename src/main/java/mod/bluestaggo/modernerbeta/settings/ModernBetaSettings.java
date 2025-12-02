@@ -11,26 +11,20 @@ import it.unimi.dsi.fastutil.objects.Reference2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
-import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaChunkGenerator;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
-import mod.bluestaggo.modernerbeta.registry.ModernBetaResourceKeys;
 import mod.bluestaggo.modernerbeta.settings.component.ClimateDistribution;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ConfiguredLayers;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers.Layer;
-import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.biome.BiomeSource;
-import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.event.Level;
 
 import java.util.*;
 import java.util.function.Function;
@@ -45,17 +39,21 @@ public class ModernBetaSettings implements Iterable<SettingsComponent<?>> {
             settings -> DataResult.success(settings.components)
         );
 
-    public static final Codec<ModernBetaSettings> CODEC__ = RecordCodecBuilder.create(
+    public static final Codec<ModernBetaSettings> CHUNK_SETTINGS = RecordCodecBuilder.create(
         instance -> instance.group(
             MapCodec.assumeMapUnsafe(SettingsComponentType.TYPE_TO_VALUE_MAP_CODEC).forGetter((ModernBetaSettings settings) -> settings.components),
-            RegistryOps.retrieveGetter(Registries.NOISE_SETTINGS)
+            ExtraCodecs.retrieveContext(
+        dynamicOps -> dynamicOps instanceof RegistryOps<?> registryOps
+                ? DataResult.success(registryOps.lookupProvider)
+                : DataResult.error(() -> "Not a registry ops")
+            ).forGetter(object -> null)
         ).apply(instance, ModernBetaSettings::new)
     );
 
     public static final ResourceLocation DEFAULT_PRESET_ID = ModernerBeta.createId("default");
 
     private final Map<SettingsComponentType<?>, Object> components;
-    private HolderGetter<NoiseGeneratorSettings> noiseSettings;
+    private RegistryOps.RegistryInfoLookup registries;
 
     public static ModernBetaSettings empty() {
         return new ModernBetaSettings(Collections.emptyMap());
@@ -120,9 +118,9 @@ public class ModernBetaSettings implements Iterable<SettingsComponent<?>> {
         this.components = components;
     }
 
-    private ModernBetaSettings(Map<SettingsComponentType<?>, Object> components, HolderGetter<NoiseGeneratorSettings> noiseSettings) {
+    private ModernBetaSettings(Map<SettingsComponentType<?>, Object> components, RegistryOps.RegistryInfoLookup registries) {
         this(components);
-        this.noiseSettings = noiseSettings;
+        this.registries = registries;
     }
 
     public ResourceLocation getProvider() {
@@ -162,7 +160,7 @@ public class ModernBetaSettings implements Iterable<SettingsComponent<?>> {
 
     public <T> T getOrDefault(SettingsComponentType<T> type) {
         T value = this.get(type);
-        return value == null ? type.defaultValue() : value;
+        return value == null ? type.defaultValueGetter().apply(registries) : value;
     }
 
     public <T> T getOrElse(SettingsComponentType<T> type, T defaultValue) {

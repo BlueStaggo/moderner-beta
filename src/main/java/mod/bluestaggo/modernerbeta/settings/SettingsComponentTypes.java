@@ -17,6 +17,7 @@ import mod.bluestaggo.modernerbeta.settings.component.validation.ValidationResul
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
@@ -83,7 +84,7 @@ public class SettingsComponentTypes {
     private static <T> SettingsComponentType<T> registerWithDefaultGetter(
         ResourceLocation id,
         Codec<T> codec,
-        Function<HolderLookup.Provider, T> defaultValueGetter,
+        Function<RegistryOps.RegistryInfoLookup, T> defaultValueGetter,
         ComponentValidator<T> validator
     ) {
         return registryHandler.register(id, new SettingsComponentType<>(codec, defaultValueGetter, validator));
@@ -128,7 +129,9 @@ public class SettingsComponentTypes {
         NOISE_GENERATOR_SETTINGS = registerWithDefaultGetter(
             ModernBetaBuiltInTypes.SettingsComponentType.NOISE_GENERATOR_SETTINGS.id,
             NoiseGeneratorSettings.CODEC,
-            registry -> registry.lookupOrThrow(Registries.NOISE_SETTINGS).getOrThrow(ModernBetaNoiseGeneratorSettings.NOISE_3D),
+            registry ->
+                registry.lookup(Registries.NOISE_SETTINGS).orElseThrow().getter()
+                    .getOrThrow(ModernBetaNoiseGeneratorSettings.NOISE_3D),
             ValidationResult.Valid::new);
         NOISE_SETTINGS = register(
             ModernBetaBuiltInTypes.SettingsComponentType.NOISE_SETTINGS.id,

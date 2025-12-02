@@ -35,7 +35,7 @@ public record ModernBetaSettingsPreset(
         instance -> instance.group(
             net.minecraft.network.chat.ComponentSerialization.CODEC.optionalFieldOf("name").forGetter(ModernBetaSettingsPreset::presetName),
             net.minecraft.network.chat.ComponentSerialization.CODEC.optionalFieldOf("description").forGetter(ModernBetaSettingsPreset::presetDescription),
-            ModernBetaSettings.CODEC.fieldOf("chunkSettings").forGetter(ModernBetaSettingsPreset::chunkSettings),
+            ModernBetaSettings.CHUNK_SETTINGS.fieldOf("chunkSettings").forGetter(ModernBetaSettingsPreset::chunkSettings),
             ModernBetaSettings.CODEC.fieldOf("biomeSettings").forGetter(ModernBetaSettingsPreset::biomeSettings),
             ModernBetaSettings.CODEC.fieldOf("caveBiomeSettings").forGetter(ModernBetaSettingsPreset::caveBiomeSettings)
         ).apply(instance, ModernBetaSettingsPreset::new)

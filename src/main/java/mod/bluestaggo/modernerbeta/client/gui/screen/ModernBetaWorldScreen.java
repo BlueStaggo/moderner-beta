@@ -265,7 +265,7 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
         ).build();
 
         Button importExportButton = Button.builder(Component.translatable(TEXT_SETTINGS_IMPORT_EXPORT), button ->
-            this.minecraft.setScreen(new ModernBetaImportExportScreen(TEXT_SETTINGS_IMPORT_EXPORT, this, this.preset, str -> {
+            this.minecraft.setScreen(new ModernBetaImportExportScreen(TEXT_SETTINGS_IMPORT_EXPORT, this, this.preset, this.context.worldgenLoadContext(), str -> {
                 Tuple<ModernBetaSettingsPreset, Boolean> read = ModernBetaSettingsPreset.fromJson(str);
 
                 if (read.getB())
@@ -274,7 +274,7 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
         ).build();
 
         Button dataPackExportButton = Button.builder(Component.translatable(TEXT_SETTINGS_DATA_PACK_EXPORT), button ->
-            this.minecraft.setScreen(new ModernBetaDataPackExportScreen(TEXT_SETTINGS_DATA_PACK_EXPORT, this, this.preset, this.presetRegistry, this.presetCategoryRegistry))
+            this.minecraft.setScreen(new ModernBetaDataPackExportScreen(TEXT_SETTINGS_DATA_PACK_EXPORT, this, this.preset, this.context.worldgenLoadContext()))
         ).pos(0, 20).build();
 
         mainRows.addChild(this.buttonPreset);

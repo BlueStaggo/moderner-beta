@@ -17,6 +17,7 @@ import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Tuple;
@@ -37,7 +38,7 @@ public record ModernBetaSettingsPreset(
         instance -> instance.group(
             net.minecraft.network.chat.ComponentSerialization.CODEC.optionalFieldOf("name").forGetter(ModernBetaSettingsPreset::presetName),
             net.minecraft.network.chat.ComponentSerialization.CODEC.optionalFieldOf("description").forGetter(ModernBetaSettingsPreset::presetDescription),
-            ModernBetaSettings.CHUNK_SETTINGS.fieldOf("chunkSettings").forGetter(ModernBetaSettingsPreset::chunkSettings),
+            ModernBetaSettings.CODEC.fieldOf("chunkSettings").forGetter(ModernBetaSettingsPreset::chunkSettings),
             ModernBetaSettings.CODEC.fieldOf("biomeSettings").forGetter(ModernBetaSettingsPreset::biomeSettings),
             ModernBetaSettings.CODEC.fieldOf("caveBiomeSettings").forGetter(ModernBetaSettingsPreset::caveBiomeSettings)
         ).apply(instance, ModernBetaSettingsPreset::new)
@@ -90,14 +91,15 @@ public record ModernBetaSettingsPreset(
     }
 
     public ModernBetaSettingsPreset(
+        HolderLookup.Provider registries,
         CompoundTag newChunkSettings,
         CompoundTag newBiomeSettings,
         CompoundTag newCaveBiomeSettings
     ) {
         this(
-            ModernBetaSettings.fromCompound(newChunkSettings),
-            ModernBetaSettings.fromCompound(newBiomeSettings),
-            ModernBetaSettings.fromCompound(newCaveBiomeSettings)
+            ModernBetaSettings.fromCompound(registries, newChunkSettings),
+            ModernBetaSettings.fromCompound(registries, newBiomeSettings),
+            ModernBetaSettings.fromCompound(registries, newCaveBiomeSettings)
         );
     }
 
@@ -109,7 +111,7 @@ public record ModernBetaSettingsPreset(
         if (jsonString == null || jsonString.isBlank())
             return new Tuple<>(null, false);
 
-        DynamicOps<JsonElement> ops = registries != null ? registries.createSerializationContext(JsonOps.INSTANCE) : JsonOps.INSTANCE;
+        DynamicOps<JsonElement> ops = registries != null ? RegistryOps.create(JsonOps.INSTANCE, registries) : JsonOps.INSTANCE;
 
         ModernBetaSettingsPreset newPreset = null;
         boolean success = false;
@@ -141,7 +143,7 @@ public record ModernBetaSettingsPreset(
         boolean successful = true;
 
         try {
-            DynamicOps<JsonElement> ops = registries != null ? registries.createSerializationContext(JsonOps.INSTANCE) : JsonOps.INSTANCE;
+            DynamicOps<JsonElement> ops = registries != null ? RegistryOps.create(JsonOps.INSTANCE, registries) : JsonOps.INSTANCE;
             Gson gson = ModernerBeta.getSettingsGson().create();
 
             JsonElement jsonChunk = stringChunk != null && !stringChunk.isBlank() ? gson.fromJson(stringChunk, JsonElement.class) : null;
@@ -181,8 +183,15 @@ public record ModernBetaSettingsPreset(
         return new Tuple<>(new ModernBetaSettingsPreset(chunkSettings, biomeSettings, caveBiomeSettings), successful);
     }
 
-    public Tuple<ModernBetaSettingsPreset, Boolean> setNbt(CompoundTag nbtChunk, CompoundTag nbtBiome, CompoundTag nbtCaveBiome,
-                                                           HolderGetter<ModernBetaSettingsPreset> presetRegistry) {
+    @SuppressWarnings("ConstantValue")
+    public Tuple<ModernBetaSettingsPreset, Boolean> setNbt(
+        HolderLookup.Provider registries,
+        CompoundTag nbtChunk,
+        CompoundTag nbtBiome,
+        CompoundTag nbtCaveBiome
+    ) {
+        HolderGetter<ModernBetaSettingsPreset> presetRegistry = registries.lookupOrThrow(ModernBetaResourceKeys.SETTINGS_PRESET);
+
         ModernBetaSettings chunkSettings = this.chunkSettings;
         ModernBetaSettings biomeSettings = this.biomeSettings;
         ModernBetaSettings caveBiomeSettings = this.caveBiomeSettings;
@@ -192,7 +201,7 @@ public record ModernBetaSettingsPreset(
         try {
             // Attempt to read settings
             if (nbtChunk != null) {
-                chunkSettings = ModernBetaSettings.fromCompound(nbtChunk);
+                chunkSettings = ModernBetaSettings.fromCompound(registries, nbtChunk);
                 if (presetRegistry != null) {
                     chunkSettings = this.chunkSettings.getDifference(
                         chunkSettings, presetRegistry, ModernBetaSettingsPreset::chunkSettings);
@@ -200,7 +209,7 @@ public record ModernBetaSettingsPreset(
             }
 
             if (nbtBiome != null) {
-                biomeSettings = ModernBetaSettings.fromCompound(nbtBiome);
+                biomeSettings = ModernBetaSettings.fromCompound(registries, nbtBiome);
                 if (presetRegistry != null) {
                     biomeSettings = this.biomeSettings.getDifference(
                         biomeSettings, presetRegistry, ModernBetaSettingsPreset::biomeSettings);
@@ -208,7 +217,7 @@ public record ModernBetaSettingsPreset(
             }
 
             if (nbtCaveBiome != null) {
-                caveBiomeSettings = ModernBetaSettings.fromCompound(nbtCaveBiome);
+                caveBiomeSettings = ModernBetaSettings.fromCompound(registries, nbtCaveBiome);
                 if (presetRegistry != null) {
                     caveBiomeSettings = this.caveBiomeSettings.getDifference(
                         caveBiomeSettings, presetRegistry, ModernBetaSettingsPreset::caveBiomeSettings);

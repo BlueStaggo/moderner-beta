@@ -65,7 +65,7 @@ public abstract class ChunkProvider {
         this.seed = seed;
         
         this.generatorSettings = chunkGenerator.generatorSettings();
-        this.chunkSettings = ModernBetaSettings.fromCompound(chunkGenerator.getChunkSettings())
+        this.chunkSettings = chunkGenerator.getChunkSettings()
             .mapPreset(chunkGenerator.getPresetRegistry(), ModernBetaSettingsPreset::chunkSettings);
         this.random = this.createRandom(this.seed);
 

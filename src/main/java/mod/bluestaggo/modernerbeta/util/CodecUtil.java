@@ -7,6 +7,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JsonOps;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.resources.RegistryOps;
 
 import java.lang.reflect.Type;
 import java.util.Set;
@@ -34,7 +35,7 @@ public class CodecUtil {
         @Override
         public JsonElement serialize(T src, Type typeOfSrc, JsonSerializationContext context) {
             DynamicOps<JsonElement> ops = this.registries != null ?
-                    this.registries.createSerializationContext(JsonOps.INSTANCE) : JsonOps.INSTANCE;
+                    RegistryOps.create(JsonOps.INSTANCE, this.registries) : JsonOps.INSTANCE;
             return VersionCompat.getOrThrow(codec.encodeStart(ops, src));
         }
     }
@@ -47,7 +48,7 @@ public class CodecUtil {
         @Override
         public T deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             DynamicOps<JsonElement> ops = this.registries != null ?
-                    this.registries.createSerializationContext(JsonOps.INSTANCE) : JsonOps.INSTANCE;
+                    RegistryOps.create(JsonOps.INSTANCE, this.registries) : JsonOps.INSTANCE;
             return VersionCompat.getOrThrow(codec.decode(ops, json)).getFirst();
         }
     }

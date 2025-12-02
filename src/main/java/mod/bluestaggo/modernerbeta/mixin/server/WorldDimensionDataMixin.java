@@ -59,13 +59,12 @@ public abstract class WorldDimensionDataMixin {
                         new ModernBetaBiomeSource(
                             registries.lookupOrThrow(Registries.BIOME),
                             presetRegistry,
-                            settingsPreset.biomeSettings().toCompound(),
-                            settingsPreset.caveBiomeSettings().toCompound()
+                            settingsPreset.biomeSettings(),
+                            settingsPreset.caveBiomeSettings()
                         ),
-                        registries.lookupOrThrow(Registries.NOISE_SETTINGS),
                         presetRegistry,
                         registries.lookupOrThrow(ModernBetaResourceKeys.SURFACE_CONFIG),
-                        settingsPreset.chunkSettings().toCompound()
+                        settingsPreset.chunkSettings()
                     )
                 ));
             });

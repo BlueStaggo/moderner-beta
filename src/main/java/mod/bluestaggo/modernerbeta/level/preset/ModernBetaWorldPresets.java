@@ -39,7 +39,7 @@ public class ModernBetaWorldPresets {
         HolderGetter<SurfaceConfig> registrySurfaceConfig = context.lookup(ModernBetaResourceKeys.SURFACE_CONFIG);
         HolderGetter<MultiNoiseBiomeSourceParameterList> registryParameters = context.lookup(Registries.MULTI_NOISE_BIOME_SOURCE_PARAMETER_LIST);
 
-        LevelStem overworld = createOverworldOptions(registryDimensionType, registrySettings, registryBiome, registryPreset, registrySurfaceConfig);
+        LevelStem overworld = createOverworldOptions(registryDimensionType, registryBiome, registryPreset, registrySurfaceConfig);
         LevelStem nether = createNetherOptions(registryDimensionType, registrySettings, registryParameters);
         LevelStem end = createEndOptions(registryDimensionType, registrySettings, registryBiome);
         
@@ -51,13 +51,11 @@ public class ModernBetaWorldPresets {
     
     private static LevelStem createOverworldOptions(
         HolderGetter<DimensionType> registryDimensionType,
-        HolderGetter<NoiseGeneratorSettings> registrySettings,
         HolderGetter<Biome> registryBiome,
         HolderGetter<ModernBetaSettingsPreset> registryPreset,
         HolderGetter<SurfaceConfig> registrySurfaceConfig
     ) {
         Holder.Reference<DimensionType> dimensionType = registryDimensionType.getOrThrow(BuiltinDimensionTypes.OVERWORLD);
-        Holder.Reference<NoiseGeneratorSettings> settings = registrySettings.getOrThrow(ModernBetaNoiseGeneratorSettings.OVERWORLD_256);
         
         ModernBetaSettingsPreset defaultPreset = ModernBetaSettingsPreset.referenced(ModernBetaSettings.DEFAULT_PRESET_ID);
 
@@ -67,13 +65,12 @@ public class ModernBetaWorldPresets {
                 new ModernBetaBiomeSource(
                     registryBiome,
                     registryPreset,
-                    defaultPreset.biomeSettings().toCompound(),
-                    defaultPreset.caveBiomeSettings().toCompound()
+                    defaultPreset.biomeSettings(),
+                    defaultPreset.caveBiomeSettings()
                 ),
-                registrySettings,
                 registryPreset,
                 registrySurfaceConfig,
-                defaultPreset.chunkSettings().toCompound()
+                defaultPreset.chunkSettings()
             )
         );
     }

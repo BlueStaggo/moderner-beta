@@ -29,6 +29,7 @@ import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.FileToIdConverter;
+import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.metadata.pack.PackMetadataSection;
@@ -92,8 +93,20 @@ public class ModernBetaDataPackExportScreen extends ModernBetaScreen {
         this.layout.setContentMarginTop(0);
 
         this.preset = preset;
-        this.presetRegistry = registries.lookupOrThrow(ModernBetaResourceKeys.SETTINGS_PRESET);
-        this.presetCategoryRegistry = registries.lookupOrThrow(ModernBetaResourceKeys.SETTINGS_PRESET_CATEGORY);
+        this.presetRegistry = registries
+                //? if >=1.21.2 {
+                .lookupOrThrow
+                //? } else {
+                /*.asGetterLookup
+                *///? }
+                        (ModernBetaResourceKeys.SETTINGS_PRESET);
+        this.presetCategoryRegistry = registries
+                //? if >=1.21.2 {
+                .lookupOrThrow
+                //? } else {
+                /*.asGetterLookup
+                *///? }
+                        (ModernBetaResourceKeys.SETTINGS_PRESET_CATEGORY);
         this.registries = registries;
     }
 
@@ -251,7 +264,7 @@ public class ModernBetaDataPackExportScreen extends ModernBetaScreen {
     }
 
     private <T> JsonElement objectToJson(T value, Codec<T> codec, boolean registries) {
-        DynamicOps<JsonElement> ops = registries ? this.registries.createSerializationContext(JsonOps.INSTANCE) : JsonOps.INSTANCE;
+        DynamicOps<JsonElement> ops = registries ? RegistryOps.create(JsonOps.INSTANCE, this.registries) : JsonOps.INSTANCE;
         DataResult<JsonElement> result = codec.encodeStart(ops, value);
         return VersionCompat.getOrThrow(result);
     }

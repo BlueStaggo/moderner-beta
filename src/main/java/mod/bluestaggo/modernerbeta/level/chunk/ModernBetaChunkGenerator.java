@@ -2,7 +2,6 @@
 package mod.bluestaggo.modernerbeta.level.chunk;
 
 import com.google.common.base.Suppliers;
-import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.api.level.chunk.surface.SurfaceConfig;
 import mod.bluestaggo.modernerbeta.compat.ModCompat;
@@ -24,13 +23,9 @@ import mod.bluestaggo.modernerbeta.level.biome.injector.BiomeInjector.BiomeInjec
 import mod.bluestaggo.modernerbeta.level.carver.BetaCaveCarverConfiguration;
 import mod.bluestaggo.modernerbeta.level.carver.configured.ModernBetaConfiguredCarvers;
 import net.minecraft.Util;
-import net.minecraft.core.Holder;
-import net.minecraft.core.HolderGetter;
-import net.minecraft.core.QuartPos;
-import net.minecraft.core.Registry;
+import net.minecraft.core.*;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.Carvers;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.WorldGenRegion;
@@ -68,17 +63,15 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
     public static final com.mojang.serialization.MapCodec<ModernBetaChunkGenerator> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> instance.group(
             BiomeSource.CODEC.fieldOf("biome_source").forGetter(generator -> generator.biomeSource),
-            RegistryOps.retrieveGetter(Registries.NOISE_SETTINGS),
             RegistryOps.retrieveGetter(ModernBetaResourceKeys.SETTINGS_PRESET),
             RegistryOps.retrieveGetter(ModernBetaResourceKeys.SURFACE_CONFIG),
-            CompoundTag.CODEC.fieldOf("provider_settings").forGetter(generator -> generator.chunkSettings)
+            ModernBetaSettings.CODEC.fieldOf("provider_settings").forGetter(generator -> generator.chunkSettings)
         ).apply(instance, instance.stable(ModernBetaChunkGenerator::new))
     );
 
     private final HolderGetter<ModernBetaSettingsPreset> presetRegistry;
     private final HolderGetter<SurfaceConfig> surfaceConfigRegistry;
-//    private final Holder<NoiseGeneratorSettings> settings;
-    private final CompoundTag chunkSettings;
+    private final ModernBetaSettings chunkSettings;
     private final Supplier<BiomeInjector> biomeInjector;
 
     private boolean useSurfaceRules;
@@ -88,56 +81,48 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
 
     public ModernBetaChunkGenerator(
         BiomeSource biomeSource,
-        HolderGetter<NoiseGeneratorSettings> generatorSettingsRegistry,
         HolderGetter<ModernBetaSettingsPreset> presetRegistry,
         HolderGetter<SurfaceConfig> surfaceConfigRegistry,
-        CompoundTag chunkProviderSettings
+        ModernBetaSettings chunkProviderSettings
     ) {
-        super(biomeSource, generatorSettings(generatorSettingsRegistry, presetRegistry, chunkProviderSettings));
-
-        String presetKey = ModernBetaBuiltInTypes.SettingsComponentType.PRESET.id.toString();
-
-        if (!ModernerBeta.GENERATING_DATA && ModernBetaSettings.DEFAULT_PRESET_ID.toString().equals(
-            chunkProviderSettings.getString(presetKey)/*? >=1.21.5 {*/.orElse(null)/*?}*/)) {
-            chunkProviderSettings.putString(presetKey, ModernerBeta.config.getOrDefault(SettingsComponentTypes.CONFIG_MISCELLANEOUS)
-                .defaultSettingsPreset().toString());
-        }
+        super(biomeSource, generatorSettings(presetRegistry, fixupPreset(chunkProviderSettings)));
 
         this.presetRegistry = presetRegistry;
         this.surfaceConfigRegistry = surfaceConfigRegistry;
-        this.chunkSettings = chunkProviderSettings;
+        this.chunkSettings = fixupPreset(chunkProviderSettings);
         this.biomeInjector = Suppliers.memoize(() ->
             this.biomeSource instanceof ModernBetaBiomeSource modernBetaBiomeSource
                 ? new BiomeInjector(this, modernBetaBiomeSource) : null);
-        
+
         if (this.biomeSource instanceof ModernBetaBiomeSource modernBetaBiomeSource) {
             modernBetaBiomeSource.setChunkGenerator(this);
         }
     }
 
+    private static ModernBetaSettings fixupPreset(ModernBetaSettings chunkProviderSettings) {
+        if (!ModernerBeta.GENERATING_DATA && ModernBetaSettings.DEFAULT_PRESET_ID.equals(
+            chunkProviderSettings.getOrDefault(SettingsComponentTypes.PRESET))) {
+            chunkProviderSettings = chunkProviderSettings
+                .extend()
+                .remove(SettingsComponentTypes.PRESET)
+                .add(SettingsComponentTypes.PRESET, ModernerBeta.config
+                    .getOrDefault(SettingsComponentTypes.CONFIG_MISCELLANEOUS).defaultSettingsPreset())
+                .build();
+        }
+
+        return chunkProviderSettings;
+    }
+
+
     private static Holder<NoiseGeneratorSettings> generatorSettings(
-        HolderGetter<NoiseGeneratorSettings> generatorSettingsRegistry,
         HolderGetter<ModernBetaSettingsPreset> presetRegistry,
-        CompoundTag chunkProviderSettings
+        ModernBetaSettings chunkSettings
     ) {
-        ModernBetaSettings chunkSettings = ModernBetaSettings.fromCompound(chunkProviderSettings)
-            .mapPreset(presetRegistry, ModernBetaSettingsPreset::chunkSettings);
+        ModernBetaSettings mappedChunkSettings = chunkSettings.mapPreset(presetRegistry, ModernBetaSettingsPreset::chunkSettings);
+        Holder<NoiseGeneratorSettings> generatorSettings = mappedChunkSettings.getOrDefault(SettingsComponentTypes.NOISE_GENERATOR_SETTINGS);
 
-        Holder<NoiseGeneratorSettings> defaultNoise3D = generatorSettingsRegistry
-            //? if >=1.21.2 {
-            .get
-            //? } else {
-            /*.getHolder
-             *///? }
-                (ModernBetaNoiseGeneratorSettings.OVERWORLD_128)
-            .orElseThrow();
-
-        Holder<NoiseGeneratorSettings> generatorSettings = chunkSettings.get(SettingsComponentTypes.NOISE_GENERATOR_SETTINGS);
-
-        if (generatorSettings == null)
-            generatorSettings = defaultNoise3D;
-
-        NoiseSettings noiseSettings = chunkSettings.get(SettingsComponentTypes.NOISE_SETTINGS);
+        System.out.println(generatorSettings.unwrapKey().orElse(null) + " " + generatorSettings.value());
+        NoiseSettings noiseSettings = mappedChunkSettings.get(SettingsComponentTypes.NOISE_SETTINGS);
         if (noiseSettings == null)
             return generatorSettings;
 
@@ -162,8 +147,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
     }
 
     public void initProvider(long seed) {
-        ModernBetaSettings chunkSettings = ModernBetaSettings.fromCompound(this.chunkSettings)
-            .mapPreset(this.presetRegistry, ModernBetaSettingsPreset::chunkSettings);
+        ModernBetaSettings chunkSettings = this.chunkSettings.mapPreset(this.presetRegistry, ModernBetaSettingsPreset::chunkSettings);
 
         this.chunkProvider = ModernBetaRegistries.CHUNK
             //? if >=1.21.2 {
@@ -481,7 +465,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
         return this.chunkProvider;
     }
     
-    public CompoundTag getChunkSettings() {
+    public ModernBetaSettings getChunkSettings() {
         return this.chunkSettings;
     }
     

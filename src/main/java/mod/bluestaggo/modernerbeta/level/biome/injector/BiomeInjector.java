@@ -50,7 +50,7 @@ public class BiomeInjector {
         this.modernBetaBiomeSource = modernBetaBiomeSource;
         
         ModernBetaSettings settingsBiome;
-        settingsBiome = ModernBetaSettings.fromCompound(this.modernBetaBiomeSource.getBiomeSettings())
+        settingsBiome = this.modernBetaBiomeSource.getBiomeSettings()
             .mapPreset(modernBetaChunkGenerator.getPresetRegistry(), ModernBetaSettingsPreset::biomeSettings);
 
         boolean useOceanBiomes = settingsBiome.getOrDefault(SettingsComponentTypes.USE_OCEAN_BIOMES);

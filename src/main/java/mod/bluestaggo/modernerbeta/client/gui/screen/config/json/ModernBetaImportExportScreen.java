@@ -14,6 +14,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.RegistryOps;
 
 import java.util.function.Consumer;
 
@@ -28,7 +29,7 @@ public class ModernBetaImportExportScreen extends ModernBetaJSONEditScreen {
         super(Component.translatable(title), parent, onDone);
 
         this.settingsString = this.gson.toJson(VersionCompat.getOrThrow(
-            ModernBetaSettingsPreset.CODEC.encode(settings, registries.createSerializationContext(JsonOps.INSTANCE), new JsonObject())));
+            ModernBetaSettingsPreset.CODEC.encode(settings, RegistryOps.create(JsonOps.INSTANCE, registries), new JsonObject())));
     }
 
     @Override

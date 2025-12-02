@@ -11,12 +11,14 @@ import it.unimi.dsi.fastutil.objects.Reference2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
+import mod.bluestaggo.modernerbeta.mixin.RegistryOpsAccessor;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.settings.component.ClimateDistribution;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ConfiguredLayers;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers.Layer;
 import net.minecraft.core.HolderGetter;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.resources.RegistryOps;
@@ -33,18 +35,12 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 public class ModernBetaSettings implements Iterable<SettingsComponent<?>> {
-    public static final Codec<ModernBetaSettings> CODEC
-        = SettingsComponentType.TYPE_TO_VALUE_MAP_CODEC.flatComapMap(
-            ModernBetaSettings::new,
-            settings -> DataResult.success(settings.components)
-        );
-
-    public static final Codec<ModernBetaSettings> CHUNK_SETTINGS = RecordCodecBuilder.create(
+    public static final Codec<ModernBetaSettings> CODEC = RecordCodecBuilder.create(
         instance -> instance.group(
-            MapCodec.assumeMapUnsafe(SettingsComponentType.TYPE_TO_VALUE_MAP_CODEC).forGetter((ModernBetaSettings settings) -> settings.components),
+            MapCodec.assumeMapUnsafe(SettingsComponentType.TYPE_TO_VALUE_MAP_CODEC).forGetter(settings -> settings.components),
             ExtraCodecs.retrieveContext(
-        dynamicOps -> dynamicOps instanceof RegistryOps<?> registryOps
-                ? DataResult.success(registryOps.lookupProvider)
+                dynamicOps -> dynamicOps instanceof RegistryOps<?> registryOps
+                ? DataResult.success(((RegistryOpsAccessor) registryOps).getLookupProvider())
                 : DataResult.error(() -> "Not a registry ops")
             ).forGetter(object -> null)
         ).apply(instance, ModernBetaSettings::new)
@@ -59,12 +55,16 @@ public class ModernBetaSettings implements Iterable<SettingsComponent<?>> {
         return new ModernBetaSettings(Collections.emptyMap());
     }
 
+    public static Builder builder(RegistryOps.RegistryInfoLookup registries) {
+        return new Builder(registries);
+    }
+
     public static Builder builder() {
         return new Builder();
     }
 
     public static Builder builder(ModernBetaSettings settings) {
-        return new Builder()
+        return new Builder(settings.registries)
             .addAll(settings);
     }
 
@@ -112,6 +112,14 @@ public class ModernBetaSettings implements Iterable<SettingsComponent<?>> {
 
     public static ModernBetaSettings fromCompound(CompoundTag compound) {
         return VersionCompat.getOrThrow(CODEC.decode(NbtOps.INSTANCE, compound)).getFirst();
+    }
+
+    public static ModernBetaSettings fromCompound(HolderLookup.Provider registries, CompoundTag compound) {
+        return VersionCompat.getOrThrow(CODEC.decode(RegistryOps.create(NbtOps.INSTANCE, registries), compound)).getFirst();
+    }
+
+    public static ModernBetaSettings fromCompound(RegistryOps.RegistryInfoLookup registries, CompoundTag compound) {
+        return VersionCompat.getOrThrow(CODEC.decode(RegistryOps.create(NbtOps.INSTANCE, registries), compound)).getFirst();
     }
 
     private ModernBetaSettings(Map<SettingsComponentType<?>, Object> components) {
@@ -193,7 +201,7 @@ public class ModernBetaSettings implements Iterable<SettingsComponent<?>> {
             return newSettings;
 
         ModernBetaSettings baseSettings = basePresetSettings.get();
-        Builder builder = new Builder();
+        Builder builder = new Builder(this.registries);
         builder.add(SettingsComponentTypes.PRESET, basePreset);
         newSettings.stream()
             .filter(component -> {
@@ -232,7 +240,7 @@ public class ModernBetaSettings implements Iterable<SettingsComponent<?>> {
     }
 
     public Builder extend() {
-        return new Builder().addAll(this);
+        return new Builder(this.registries).addAll(this);
     }
 
     @Override
@@ -254,8 +262,14 @@ public class ModernBetaSettings implements Iterable<SettingsComponent<?>> {
 
     public static class Builder {
         private final Reference2ObjectMap<SettingsComponentType<?>, Object> components = new Reference2ObjectArrayMap<>();
+        private final RegistryOps.RegistryInfoLookup registries;
 
         private Builder() {
+            this(null);
+        }
+
+        private Builder(RegistryOps.RegistryInfoLookup registries) {
+            this.registries = registries;
         }
 
         public <T> Builder add(SettingsComponentType<T> type, T value) {
@@ -301,7 +315,8 @@ public class ModernBetaSettings implements Iterable<SettingsComponent<?>> {
         public ModernBetaSettings build() {
             return new ModernBetaSettings(
                 this.components.size() < 8 ? this.components
-                    : new Reference2ObjectOpenHashMap<>(this.components)
+                    : new Reference2ObjectOpenHashMap<>(this.components),
+                registries
             );
         }
     }

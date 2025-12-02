@@ -53,15 +53,15 @@ public class ModernBetaBiomeSource extends BiomeSource {
         instance -> instance.group(
             RegistryOps.retrieveGetter(Registries.BIOME),
             RegistryOps.retrieveGetter(ModernBetaResourceKeys.SETTINGS_PRESET),
-            CompoundTag.CODEC.fieldOf("provider_settings").forGetter(biomeSource -> biomeSource.biomeSettings),
-            CompoundTag.CODEC.fieldOf("cave_provider_settings").forGetter(biomeSource -> biomeSource.caveBiomeSettings)
+            ModernBetaSettings.CODEC.fieldOf("provider_settings").forGetter(biomeSource -> biomeSource.biomeSettings),
+            ModernBetaSettings.CODEC.fieldOf("cave_provider_settings").forGetter(biomeSource -> biomeSource.caveBiomeSettings)
         ).apply(instance, (instance).stable(ModernBetaBiomeSource::new))
     );
 
     private final HolderGetter<Biome> biomeRegistry;
     private final HolderGetter<ModernBetaSettingsPreset> presetRegistry;
-    private final CompoundTag biomeSettings;
-    private final CompoundTag caveBiomeSettings;
+    private final ModernBetaSettings biomeSettings;
+    private final ModernBetaSettings caveBiomeSettings;
     
     private BiomeProvider biomeProvider;
     private CaveBiomeProvider caveBiomeProvider;
@@ -71,23 +71,29 @@ public class ModernBetaBiomeSource extends BiomeSource {
     public ModernBetaBiomeSource(
         HolderGetter<Biome> biomeRegistry,
         HolderGetter<ModernBetaSettingsPreset> presetRegistry,
-        CompoundTag biomeSettings,
-        CompoundTag caveBiomeSettings
+        ModernBetaSettings biomeSettings,
+        ModernBetaSettings caveBiomeSettings
     ) {
         super();
 
-        String presetKey = ModernBetaBuiltInTypes.SettingsComponentType.PRESET.id.toString();
-
-        if (!ModernerBeta.GENERATING_DATA && ModernBetaSettings.DEFAULT_PRESET_ID.toString().equals(
-            biomeSettings.getString(presetKey)/*? >=1.21.5 {*/.orElse(null)/*?}*/)) {
-            biomeSettings.putString(presetKey, ModernerBeta.config.getOrDefault(SettingsComponentTypes.CONFIG_MISCELLANEOUS)
-                .defaultSettingsPreset().toString());
+        if (!ModernerBeta.GENERATING_DATA && ModernBetaSettings.DEFAULT_PRESET_ID.equals(
+            biomeSettings.getOrDefault(SettingsComponentTypes.PRESET))) {
+            biomeSettings = biomeSettings
+                .extend()
+                .remove(SettingsComponentTypes.PRESET)
+                .add(SettingsComponentTypes.PRESET, ModernerBeta.config
+                    .getOrDefault(SettingsComponentTypes.CONFIG_MISCELLANEOUS).defaultSettingsPreset())
+                .build();
         }
 
-        if (!ModernerBeta.GENERATING_DATA && ModernBetaSettings.DEFAULT_PRESET_ID.toString().equals(
-            caveBiomeSettings.getString(presetKey)/*? >=1.21.5 {*/.orElse(null)/*?}*/)) {
-            caveBiomeSettings.putString(presetKey, ModernerBeta.config.getOrDefault(SettingsComponentTypes.CONFIG_MISCELLANEOUS)
-                .defaultSettingsPreset().toString());
+        if (!ModernerBeta.GENERATING_DATA && ModernBetaSettings.DEFAULT_PRESET_ID.equals(
+            caveBiomeSettings.getOrDefault(SettingsComponentTypes.PRESET))) {
+            caveBiomeSettings = caveBiomeSettings
+                .extend()
+                .remove(SettingsComponentTypes.PRESET)
+                .add(SettingsComponentTypes.PRESET, ModernerBeta.config
+                    .getOrDefault(SettingsComponentTypes.CONFIG_MISCELLANEOUS).defaultSettingsPreset())
+                .build();
         }
 
         this.biomeRegistry = biomeRegistry;
@@ -97,10 +103,8 @@ public class ModernBetaBiomeSource extends BiomeSource {
     }
     
     public void initProvider(long seed) {
-        ModernBetaSettings biomeSettings = ModernBetaSettings.fromCompound(this.biomeSettings)
-            .mapPreset(this.presetRegistry, ModernBetaSettingsPreset::biomeSettings);
-        ModernBetaSettings caveBiomeSettings = ModernBetaSettings.fromCompound(this.caveBiomeSettings)
-            .mapPreset(this.presetRegistry, ModernBetaSettingsPreset::caveBiomeSettings);
+        ModernBetaSettings biomeSettings = this.biomeSettings.mapPreset(this.presetRegistry, ModernBetaSettingsPreset::biomeSettings);
+        ModernBetaSettings caveBiomeSettings = this.caveBiomeSettings.mapPreset(this.presetRegistry, ModernBetaSettingsPreset::caveBiomeSettings);
         
         this.biomeProvider = ModernBetaRegistries.BIOME
             .getValue(biomeSettings.getProvider())
@@ -258,11 +262,11 @@ public class ModernBetaBiomeSource extends BiomeSource {
         return this.caveBiomeProvider;
     }
     
-    public CompoundTag getBiomeSettings() {
+    public ModernBetaSettings getBiomeSettings() {
         return this.biomeSettings;
     }
     
-    public CompoundTag getCaveBiomeSettings() {
+    public ModernBetaSettings getCaveBiomeSettings() {
         return this.caveBiomeSettings;
     }
 
@@ -283,10 +287,8 @@ public class ModernBetaBiomeSource extends BiomeSource {
 
     @Override
     protected Stream<Holder<Biome>> collectPossibleBiomes() {
-        ModernBetaSettings biomeSettings = ModernBetaSettings.fromCompound(this.biomeSettings)
-            .mapPreset(this.presetRegistry, ModernBetaSettingsPreset::biomeSettings);
-        ModernBetaSettings caveBiomeSettings = ModernBetaSettings.fromCompound(this.caveBiomeSettings)
-            .mapPreset(this.presetRegistry, ModernBetaSettingsPreset::caveBiomeSettings);
+        ModernBetaSettings biomeSettings = this.biomeSettings.mapPreset(this.presetRegistry, ModernBetaSettingsPreset::biomeSettings);
+        ModernBetaSettings caveBiomeSettings = this.caveBiomeSettings.mapPreset(this.presetRegistry, ModernBetaSettingsPreset::caveBiomeSettings);
         
         BiomeProvider biomeProvider  = ModernBetaRegistries.BIOME
             .getValue(biomeSettings.getProvider())

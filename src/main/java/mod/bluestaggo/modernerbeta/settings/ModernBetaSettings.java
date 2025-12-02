@@ -49,7 +49,7 @@ public class ModernBetaSettings implements Iterable<SettingsComponent<?>> {
     public static final ResourceLocation DEFAULT_PRESET_ID = ModernerBeta.createId("default");
 
     private final Map<SettingsComponentType<?>, Object> components;
-    private RegistryOps.RegistryInfoLookup registries;
+    protected RegistryOps.RegistryInfoLookup registries;
 
     public static ModernBetaSettings empty() {
         return new ModernBetaSettings(Collections.emptyMap());
@@ -283,7 +283,7 @@ public class ModernBetaSettings implements Iterable<SettingsComponent<?>> {
 
         public Builder addDefault(SettingsComponentType<?>... types) {
             for (SettingsComponentType<?> type : types) {
-                this.components.put(type, type.defaultValue());
+                this.components.put(type, type.defaultValueGetter().get(null, this.registries));
             }
             return this;
         }

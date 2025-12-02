@@ -104,13 +104,13 @@ public record SettingsComponentType<T>(Codec<T> codec, DefaultValueGetter<T> def
         this(codec, (settings, registries) -> defaultValue, validator);
     }
 
-    public T defaultValue() {
-        return defaultValueGetter.get(null, null);
-    }
-
     @FunctionalInterface
     public interface DefaultValueGetter<T> {
         T get(ModernBetaSettings settings, RegistryOps.RegistryInfoLookup registries);
+
+        default T get(ModernBetaSettings settings) {
+            return this.get(settings, settings.registries);
+        }
     }
 
     @Override

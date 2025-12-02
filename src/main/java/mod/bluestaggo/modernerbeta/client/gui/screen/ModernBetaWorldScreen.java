@@ -24,7 +24,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.worldselection.WorldCreationContext;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.Registry;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -155,17 +154,22 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
 
         Button buttonChunk = Button.builder(
             Component.translatable(TEXT_SETTINGS),
-            button -> this.minecraft.setScreen(new ModernBetaGraphicalProviderSettingsScreen(
-                TEXT_TITLE_CHUNK,
-                this,
-                this.context,
-                this.preset.chunkSettings().mapPreset(presetLookup, ModernBetaSettingsPreset::chunkSettings).toCompound(),
-                nbtCompound -> {
-                    Tuple<ModernBetaSettingsPreset, Boolean> updatedPreset = this.preset.setNbt(this.context.worldgenLoadContext(), nbtCompound, null, null);
-                    this.setPreset(updatedPreset.getA());
-                },
-                ModernBetaRegistries.CHUNK
-            ))
+            button -> {
+                ModernBetaSettings settings = this.preset.chunkSettings().mapPreset(presetLookup, ModernBetaSettingsPreset::chunkSettings);
+
+                this.minecraft.setScreen(new ModernBetaGraphicalProviderSettingsScreen(
+                    TEXT_TITLE_CHUNK,
+                    this,
+                    this.context,
+                    settings.toCompound(),
+                    settings,
+                    nbtCompound -> {
+                        Tuple<ModernBetaSettingsPreset, Boolean> updatedPreset = this.preset.setNbt(this.context.worldgenLoadContext(), nbtCompound, null, null);
+                        this.setPreset(updatedPreset.getA());
+                    },
+                    ModernBetaRegistries.CHUNK
+                ));
+            }
         ).build();
 
         Button buttonChunkAdvanced = Button.builder(
@@ -185,17 +189,22 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
 
         Button buttonBiome = Button.builder(
             Component.translatable(TEXT_SETTINGS),
-            button -> this.minecraft.setScreen(new ModernBetaGraphicalProviderSettingsScreen(
-                TEXT_TITLE_CHUNK,
-                this,
-                this.context,
-                this.preset.biomeSettings().mapPreset(presetLookup, ModernBetaSettingsPreset::biomeSettings).toCompound(),
-                nbtCompound -> {
-                    Tuple<ModernBetaSettingsPreset, Boolean> updatedPreset = this.preset.setNbt(this.context.worldgenLoadContext(), null, nbtCompound, null);
-                    this.setPreset(updatedPreset.getA());
-                },
-                ModernBetaRegistries.BIOME
-            ))
+            button -> {
+                ModernBetaSettings settings = this.preset.biomeSettings().mapPreset(presetLookup, ModernBetaSettingsPreset::biomeSettings);
+
+                this.minecraft.setScreen(new ModernBetaGraphicalProviderSettingsScreen(
+                    TEXT_TITLE_CHUNK,
+                    this,
+                    this.context,
+                    settings.toCompound(),
+                    settings,
+                    nbtCompound -> {
+                        Tuple<ModernBetaSettingsPreset, Boolean> updatedPreset = this.preset.setNbt(this.context.worldgenLoadContext(), null, nbtCompound, null);
+                        this.setPreset(updatedPreset.getA());
+                    },
+                    ModernBetaRegistries.BIOME
+                ));
+            }
         ).build();
 
         Button buttonBiomeAdvanced = Button.builder(
@@ -215,17 +224,22 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
 
         Button buttonCaveBiome = Button.builder(
             Component.translatable(TEXT_SETTINGS),
-            button -> this.minecraft.setScreen(new ModernBetaGraphicalProviderSettingsScreen(
-                TEXT_TITLE_CHUNK,
-                this,
-                this.context,
-                this.preset.caveBiomeSettings().mapPreset(presetLookup, ModernBetaSettingsPreset::caveBiomeSettings).toCompound(),
-                nbtCompound -> {
-                    Tuple<ModernBetaSettingsPreset, Boolean> updatedPreset = this.preset.setNbt(this.context.worldgenLoadContext(), null, null, nbtCompound);
-                    this.setPreset(updatedPreset.getA());
-                },
-                ModernBetaRegistries.CAVE_BIOME
-            ))
+            button -> {
+                ModernBetaSettings settings = this.preset.caveBiomeSettings().mapPreset(presetLookup, ModernBetaSettingsPreset::caveBiomeSettings);
+
+                this.minecraft.setScreen(new ModernBetaGraphicalProviderSettingsScreen(
+                    TEXT_TITLE_CHUNK,
+                    this,
+                    this.context,
+                    settings.toCompound(),
+                    settings,
+                    nbtCompound -> {
+                        Tuple<ModernBetaSettingsPreset, Boolean> updatedPreset = this.preset.setNbt(this.context.worldgenLoadContext(), null, null, nbtCompound);
+                        this.setPreset(updatedPreset.getA());
+                    },
+                    ModernBetaRegistries.CAVE_BIOME
+                ));
+            }
         ).build();
 
         Button buttonCaveBiomeAdvanced = Button.builder(

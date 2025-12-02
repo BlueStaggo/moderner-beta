@@ -6,6 +6,7 @@ import com.mojang.serialization.Codec;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.client.registry.ModernBetaClientRegistries;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
+import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentType;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import net.minecraft.ChatFormatting;
@@ -81,8 +82,12 @@ public abstract class ModernBetaGraphicalComponentedSettingsScreen extends Moder
         return text;
     }
 
-    @SuppressWarnings("unchecked")
     protected void addOptionsForComponents(OptionsList list, List<SettingsComponentType<?>> componentTypes) {
+        this.addOptionsForComponents(list, null, componentTypes);
+    }
+
+    @SuppressWarnings("unchecked")
+    protected void addOptionsForComponents(OptionsList list, ModernBetaSettings settings, List<SettingsComponentType<?>> componentTypes) {
         for (SettingsComponentType<?> componentType : componentTypes) {
             ModernBetaRegistries.SETTINGS_COMPONENT_TYPE.getResourceKey(componentType)
                 .ifPresent(componentTypeKey -> {
@@ -103,7 +108,7 @@ public abstract class ModernBetaGraphicalComponentedSettingsScreen extends Moder
                             componentTypeId.toString(),
                             VersionCompat.getOrThrow(
                                 ((Codec<Object>)componentType.codec())
-                                    .encodeStart(NbtOps.INSTANCE, componentType.defaultValue())
+                                    .encodeStart(NbtOps.INSTANCE, componentType.defaultValueGetter().get(settings))
                             )
                         );
                     }

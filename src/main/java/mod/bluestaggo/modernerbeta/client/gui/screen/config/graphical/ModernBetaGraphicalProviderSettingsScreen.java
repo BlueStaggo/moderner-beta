@@ -2,6 +2,7 @@ package mod.bluestaggo.modernerbeta.client.gui.screen.config.graphical;
 
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
 import mod.bluestaggo.modernerbeta.api.level.provider.ProviderType;
+import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import net.minecraft.client.gui.components.OptionsList;
 import net.minecraft.client.gui.screens.Screen;
@@ -12,13 +13,15 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.dimension.LevelStem;
 
 import java.util.Optional;
 import java.util.function.Consumer;
 
 public class ModernBetaGraphicalProviderSettingsScreen extends ModernBetaGraphicalComponentedSettingsScreen {
+    private final ModernBetaSettings settingsObject;
+
     private final Registry<? extends ProviderType> providerRegistry;
     private final ResourceLocation[] providers;
 
@@ -29,11 +32,13 @@ public class ModernBetaGraphicalProviderSettingsScreen extends ModernBetaGraphic
         String title,
         Screen parent,
         WorldCreationContext context,
-        CompoundTag settings,
+        CompoundTag settingsTag,
+        ModernBetaSettings settings,
         Consumer<CompoundTag> onDone,
         Registry<? extends ProviderType> providerRegistry
     ) {
-        super(title, parent, context, null, settings, onDone);
+        super(title, parent, context, null, settingsTag, onDone);
+        this.settingsObject = settings;
         this.providerRegistry = providerRegistry;
         this.providers = providerRegistry.listElements()
             .map(Holder::unwrapKey)
@@ -42,11 +47,11 @@ public class ModernBetaGraphicalProviderSettingsScreen extends ModernBetaGraphic
             .sorted()
             .toArray(ResourceLocation[]::new);
 
-        ChunkGenerator chunkGenerator = context.selectedDimensions().get(LevelStem.OVERWORLD)
-            .map(LevelStem::generator).orElse(null);
-        if (chunkGenerator != null) {
-            this.worldMinY = chunkGenerator.getMinY();
-            this.worldMaxY = this.worldMinY + chunkGenerator.getGenDepth();
+        DimensionType dimensionType = context.selectedDimensions().get(LevelStem.OVERWORLD)
+            .map(LevelStem::type).map(Holder::value).orElse(null);
+        if (dimensionType != null) {
+            this.worldMinY = dimensionType.minY();
+            this.worldMaxY = this.worldMinY + dimensionType.height();
         } else {
             this.worldMinY = -64;
             this.worldMaxY = 320;
@@ -70,7 +75,7 @@ public class ModernBetaGraphicalProviderSettingsScreen extends ModernBetaGraphic
         if (providerType == null) {
             list.addBig(this.headerOption(Component.translatable(STRING_PREFIX + "invalidProvider")));
         } else {
-            this.addOptionsForComponents(list, providerType.requiredSettingsComponents().get());
+            this.addOptionsForComponents(list, this.settingsObject, providerType.requiredSettingsComponents().get());
         }
     }
 }

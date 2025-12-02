@@ -129,7 +129,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
             //? } else {
             /*.getHolder
              *///? }
-                (ModernBetaNoiseGeneratorSettings.NOISE_3D)
+                (ModernBetaNoiseGeneratorSettings.OVERWORLD_128)
             .orElseThrow();
 
         Holder<NoiseGeneratorSettings> generatorSettings = chunkSettings.get(SettingsComponentTypes.NOISE_GENERATOR_SETTINGS);

@@ -11,10 +11,9 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.StringWidget;
 import net.minecraft.client.gui.layouts.GridLayout;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.RegistryOps;
 
 import java.util.function.Consumer;
 
@@ -25,7 +24,7 @@ public class ModernBetaImportExportScreen extends ModernBetaJSONEditScreen {
 
     private Button widgetDone;
 
-    public ModernBetaImportExportScreen(String title, Screen parent, ModernBetaSettingsPreset settings, RegistryAccess registries, Consumer<String> onDone) {
+    public ModernBetaImportExportScreen(String title, Screen parent, ModernBetaSettingsPreset settings, HolderLookup.Provider registries, Consumer<String> onDone) {
         super(Component.translatable(title), parent, onDone);
 
         this.settingsString = this.gson.toJson(VersionCompat.getOrThrow(

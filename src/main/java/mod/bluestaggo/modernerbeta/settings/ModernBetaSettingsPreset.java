@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
@@ -13,6 +14,7 @@ import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
@@ -100,8 +102,14 @@ public record ModernBetaSettingsPreset(
     }
 
     public static Tuple<ModernBetaSettingsPreset, Boolean> fromJson(String jsonString) {
+        return fromJson(null, jsonString);
+    }
+
+    public static Tuple<ModernBetaSettingsPreset, Boolean> fromJson(HolderLookup.Provider registries, String jsonString) {
         if (jsonString == null || jsonString.isBlank())
             return new Tuple<>(null, false);
+
+        DynamicOps<JsonElement> ops = registries != null ? registries.createSerializationContext(JsonOps.INSTANCE) : JsonOps.INSTANCE;
 
         ModernBetaSettingsPreset newPreset = null;
         boolean success = false;
@@ -111,7 +119,7 @@ public record ModernBetaSettingsPreset(
             JsonElement json = gson.fromJson(jsonString, JsonElement.class);
 
             newPreset = json != null ?
-                    VersionCompat.getOrThrow(ModernBetaSettingsPreset.CODEC.decode(JsonOps.INSTANCE, json)).getFirst() : null;
+                    VersionCompat.getOrThrow(ModernBetaSettingsPreset.CODEC.decode(ops, json)).getFirst() : null;
             success = true;
         } catch (Exception e) {
             ModernerBeta.log(Level.ERROR, "Unable to read settings JSON! Reverting to previous settings..");
@@ -122,6 +130,10 @@ public record ModernBetaSettingsPreset(
     }
 
     public Tuple<ModernBetaSettingsPreset, Boolean> setJson(String stringChunk, String stringBiome, String stringCaveBiome) {
+        return this.setJson(null, stringChunk, stringBiome, stringCaveBiome);
+    }
+
+    public Tuple<ModernBetaSettingsPreset, Boolean> setJson(HolderLookup.Provider registries, String stringChunk, String stringBiome, String stringCaveBiome) {
         ModernBetaSettings chunkSettings;
         ModernBetaSettings biomeSettings;
         ModernBetaSettings caveBiomeSettings;
@@ -129,6 +141,7 @@ public record ModernBetaSettingsPreset(
         boolean successful = true;
 
         try {
+            DynamicOps<JsonElement> ops = registries != null ? registries.createSerializationContext(JsonOps.INSTANCE) : JsonOps.INSTANCE;
             Gson gson = ModernerBeta.getSettingsGson().create();
 
             JsonElement jsonChunk = stringChunk != null && !stringChunk.isBlank() ? gson.fromJson(stringChunk, JsonElement.class) : null;
@@ -137,15 +150,15 @@ public record ModernBetaSettingsPreset(
 
             // Attempt to read settings
             chunkSettings = jsonChunk != null ?
-                VersionCompat.getOrThrow(ModernBetaSettings.CODEC.decode(JsonOps.INSTANCE, jsonChunk)).getFirst() :
+                VersionCompat.getOrThrow(ModernBetaSettings.CODEC.decode(ops, jsonChunk)).getFirst() :
                 this.chunkSettings;
 
             biomeSettings = jsonBiome != null ?
-                VersionCompat.getOrThrow(ModernBetaSettings.CODEC.decode(JsonOps.INSTANCE, jsonBiome)).getFirst() :
+                VersionCompat.getOrThrow(ModernBetaSettings.CODEC.decode(ops, jsonBiome)).getFirst() :
                 this.biomeSettings;
 
             caveBiomeSettings = jsonCaveBiome != null ?
-                VersionCompat.getOrThrow(ModernBetaSettings.CODEC.decode(JsonOps.INSTANCE, jsonCaveBiome)).getFirst() :
+                VersionCompat.getOrThrow(ModernBetaSettings.CODEC.decode(ops, jsonCaveBiome)).getFirst() :
                 this.caveBiomeSettings;
 
             // Test providers
@@ -232,12 +245,17 @@ public record ModernBetaSettingsPreset(
         }
 
         Optional<Holder.Reference<ModernBetaSettingsPreset>> preset = presetRegistry.get(ResourceKey.create(ModernBetaResourceKeys.SETTINGS_PRESET, presetId));
+
         if (preset.isEmpty()) {
             ModernerBeta.log(Level.WARN, "Attempted to get Modern Beta preset \"" + presetId + "\", which is not registered.");
             return Optional.empty();
         }
 
-        return Optional.of(preset.get().value());
+        Holder.Reference<ModernBetaSettingsPreset> reference = preset.get();
+        if (reference.isBound())
+            return Optional.of(preset.get().value());
+
+        return Optional.empty();
     }
 
     public ModernBetaSettingsPreset mapped(HolderGetter<ModernBetaSettingsPreset> presetRegistry) {

@@ -10,6 +10,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.StringWidget;
 import net.minecraft.client.gui.layouts.GridLayout;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 
@@ -21,11 +22,11 @@ public class ModernBetaSettingsScreen extends ModernBetaJSONEditScreen {
 
     private Button widgetDone;
 
-    public ModernBetaSettingsScreen(String title, Screen parent, ModernBetaSettings settings, Consumer<String> onDone) {
+    public ModernBetaSettingsScreen(String title, Screen parent, ModernBetaSettings settings, HolderLookup.Provider registries, Consumer<String> onDone) {
         super(Component.translatable(title), parent, onDone);
 
         this.settingsString = this.gson.toJson(VersionCompat.getOrThrow(
-            ModernBetaSettings.CODEC.encode(settings, JsonOps.INSTANCE, new JsonObject())));
+            ModernBetaSettings.CODEC.encode(settings, registries.createSerializationContext(JsonOps.INSTANCE), new JsonObject())));
     }
 
     @Override

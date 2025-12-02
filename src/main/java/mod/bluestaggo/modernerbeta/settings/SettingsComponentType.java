@@ -6,7 +6,6 @@ import mod.bluestaggo.modernerbeta.settings.component.validation.ComponentValida
 import net.minecraft.resources.RegistryOps;
 
 import java.util.Map;
-import java.util.function.Function;
 
 //? if <1.20.5 {
 /*import com.google.common.collect.ImmutableMap;
@@ -16,7 +15,7 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.List;
 *///?}
 
-public record SettingsComponentType<T>(Codec<T> codec, Function<RegistryOps.RegistryInfoLookup, T> defaultValueGetter, ComponentValidator<T> validator) {
+public record SettingsComponentType<T>(Codec<T> codec, DefaultValueGetter<T> defaultValueGetter, ComponentValidator<T> validator) {
     public static final Codec<SettingsComponentType<?>> CODEC =
         //? if >=1.20.5 {
         Codec.lazyInitialized(ModernBetaRegistries.SETTINGS_COMPONENT_TYPE::byNameCodec);
@@ -102,11 +101,16 @@ public record SettingsComponentType<T>(Codec<T> codec, Function<RegistryOps.Regi
         *///?}
 
     public SettingsComponentType(Codec<T> codec, T defaultValue, ComponentValidator<T> validator) {
-        this(codec, registries -> defaultValue, validator);
+        this(codec, (settings, registries) -> defaultValue, validator);
     }
 
     public T defaultValue() {
-        return defaultValueGetter.apply(null);
+        return defaultValueGetter.get(null, null);
+    }
+
+    @FunctionalInterface
+    public interface DefaultValueGetter<T> {
+        T get(ModernBetaSettings settings, RegistryOps.RegistryInfoLookup registries);
     }
 
     @Override

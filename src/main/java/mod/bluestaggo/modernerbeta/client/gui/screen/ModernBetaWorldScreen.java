@@ -174,8 +174,10 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
                 TEXT_TITLE_CHUNK,
                 this,
                 this.preset.chunkSettings().mapPreset(presetLookup, ModernBetaSettingsPreset::chunkSettings),
+                this.context.worldgenLoadContext(),
                 string -> {
-                    Tuple<ModernBetaSettingsPreset, Boolean> updatedPreset = this.preset.setJson(string, "", "");
+                    Tuple<ModernBetaSettingsPreset, Boolean> updatedPreset =
+                            this.preset.setJson(this.context.worldgenLoadContext(), string, "", "");
                     this.setPreset(updatedPreset.getA());
                 }
             ))
@@ -202,8 +204,10 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
                 TEXT_TITLE_BIOME,
                 this,
                 this.preset.biomeSettings().mapPreset(presetLookup, ModernBetaSettingsPreset::biomeSettings),
+                this.context.worldgenLoadContext(),
                 string -> {
-                    Tuple<ModernBetaSettingsPreset, Boolean> updatedPreset = this.preset.setJson("", string, "");
+                    Tuple<ModernBetaSettingsPreset, Boolean> updatedPreset =
+                            this.preset.setJson(this.context.worldgenLoadContext(), "", string, "");
                     this.setPreset(updatedPreset.getA());
                 }
             ))
@@ -230,8 +234,10 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
                 TEXT_TITLE_CAVE_BIOME,
                 this,
                 this.preset.caveBiomeSettings().mapPreset(presetLookup, ModernBetaSettingsPreset::caveBiomeSettings),
+                this.context.worldgenLoadContext(),
                 string -> {
-                    Tuple<ModernBetaSettingsPreset, Boolean> updatedPreset = this.preset.setJson("", "", string);
+                    Tuple<ModernBetaSettingsPreset, Boolean> updatedPreset =
+                            this.preset.setJson(this.context.worldgenLoadContext(), "", "", string);
                     this.setPreset(updatedPreset.getA());
                 }
             ))
@@ -266,7 +272,7 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
 
         Button importExportButton = Button.builder(Component.translatable(TEXT_SETTINGS_IMPORT_EXPORT), button ->
             this.minecraft.setScreen(new ModernBetaImportExportScreen(TEXT_SETTINGS_IMPORT_EXPORT, this, this.preset, this.context.worldgenLoadContext(), str -> {
-                Tuple<ModernBetaSettingsPreset, Boolean> read = ModernBetaSettingsPreset.fromJson(str);
+                Tuple<ModernBetaSettingsPreset, Boolean> read = ModernBetaSettingsPreset.fromJson(this.context.worldgenLoadContext(), str);
 
                 if (read.getB())
                     this.setPreset(read.getA());

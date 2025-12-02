@@ -4,7 +4,9 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.gson.*;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JsonOps;
+import net.minecraft.core.HolderLookup;
 
 import java.lang.reflect.Type;
 import java.util.Set;
@@ -24,17 +26,29 @@ public class CodecUtil {
         return VersionCompat.getOrThrow(codec.decode(JsonOps.INSTANCE, new JsonObject())).getFirst();
     }
 
-    public record JsonSerializer<T>(Codec<T> codec) implements com.google.gson.JsonSerializer<T> {
+    public record JsonSerializer<T>(HolderLookup.Provider registries, Codec<T> codec) implements com.google.gson.JsonSerializer<T> {
+        public JsonSerializer(Codec<T> codec) {
+            this(null, codec);
+        }
+
         @Override
         public JsonElement serialize(T src, Type typeOfSrc, JsonSerializationContext context) {
-            return VersionCompat.getOrThrow(codec.encodeStart(JsonOps.INSTANCE, src));
+            DynamicOps<JsonElement> ops = this.registries != null ?
+                    this.registries.createSerializationContext(JsonOps.INSTANCE) : JsonOps.INSTANCE;
+            return VersionCompat.getOrThrow(codec.encodeStart(ops, src));
         }
     }
 
-    public record JsonDeserializer<T>(Codec<T> codec) implements com.google.gson.JsonDeserializer<T> {
+    public record JsonDeserializer<T>(HolderLookup.Provider registries, Codec<T> codec) implements com.google.gson.JsonDeserializer<T> {
+        public JsonDeserializer(Codec<T> codec) {
+            this(null, codec);
+        }
+
         @Override
         public T deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-            return VersionCompat.getOrThrow(codec.decode(JsonOps.INSTANCE, json)).getFirst();
+            DynamicOps<JsonElement> ops = this.registries != null ?
+                    this.registries.createSerializationContext(JsonOps.INSTANCE) : JsonOps.INSTANCE;
+            return VersionCompat.getOrThrow(codec.decode(ops, json)).getFirst();
         }
     }
 }

@@ -160,7 +160,7 @@ public class ModernBetaSettings implements Iterable<SettingsComponent<?>> {
 
     public <T> T getOrDefault(SettingsComponentType<T> type) {
         T value = this.get(type);
-        return value == null ? type.defaultValueGetter().apply(registries) : value;
+        return value == null ? type.defaultValueGetter().get(this, registries) : value;
     }
 
     public <T> T getOrElse(SettingsComponentType<T> type, T defaultValue) {

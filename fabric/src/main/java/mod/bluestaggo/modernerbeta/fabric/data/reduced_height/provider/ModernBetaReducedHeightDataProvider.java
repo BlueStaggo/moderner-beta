@@ -3,6 +3,7 @@ package mod.bluestaggo.modernerbeta.fabric.data.reduced_height.provider;
 import com.mojang.datafixers.util.Either;
 import mod.bluestaggo.modernerbeta.fabric.data.reduced_height.ModernBetaReducedHeightNoiseSettings;
 import mod.bluestaggo.modernerbeta.level.carver.configured.ModernBetaConfiguredCarvers;
+import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaNoiseSettings;
 import mod.bluestaggo.modernerbeta.level.feature.configured.ModernBetaConfiguredFeatures;
 import mod.bluestaggo.modernerbeta.mixin.NoiseRouterDataAccessor;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -150,9 +151,9 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
         entries.add(NoiseGeneratorSettings.AMPLIFIED, createVanillaSurfaceSettings(provider, true, false));
         entries.add(NoiseGeneratorSettings.CAVES, createVanillaCavesSettings(provider));
 
-        entries.add(INFDEV_227, createNoiseGeneratorSettings(provider, ModernBetaReducedHeightNoiseSettings.INFDEV_227, 64, true));
-        entries.add(FINITE_2D, createNoiseGeneratorSettings(provider, ModernBetaReducedHeightNoiseSettings.INDEV, 64, false));
-        entries.add(NOISE_3D, createNoiseGeneratorSettings(provider, ModernBetaReducedHeightNoiseSettings.FULL_HEIGHT, 64, true));
+        entries.add(INFDEV_415, createNoiseGeneratorSettings(provider, ModernBetaReducedHeightNoiseSettings.INFDEV_415, 64, true));
+        entries.add(OVERWORLD_128, createNoiseGeneratorSettings(provider, ModernBetaReducedHeightNoiseSettings.OVERWORLD_128, 64, true));
+        entries.add(OVERWORLD_256, createNoiseGeneratorSettings(provider, ModernBetaReducedHeightNoiseSettings.OVERWORLD_256, 64, true));
 
         //Density functions
         HolderGetter<DensityFunction> densityFunctionLookup = provider.lookupOrThrow(Registries.DENSITY_FUNCTION);

@@ -4,7 +4,6 @@ package mod.bluestaggo.modernerbeta.settings;
 import com.google.common.collect.Iterators;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
-import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectMap;
@@ -14,6 +13,7 @@ import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.mixin.RegistryOpsAccessor;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.settings.component.ClimateDistribution;
+import mod.bluestaggo.modernerbeta.util.CodecUtil;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ConfiguredLayers;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers.Layer;
@@ -37,7 +37,7 @@ import java.util.stream.StreamSupport;
 public class ModernBetaSettings implements Iterable<SettingsComponent<?>> {
     public static final Codec<ModernBetaSettings> CODEC = RecordCodecBuilder.create(
         instance -> instance.group(
-            MapCodec.assumeMapUnsafe(SettingsComponentType.TYPE_TO_VALUE_MAP_CODEC).forGetter(settings -> settings.components),
+            CodecUtil.assumeMapUnsafe(SettingsComponentType.TYPE_TO_VALUE_MAP_CODEC).forGetter(settings -> settings.components),
             ExtraCodecs.retrieveContext(
                 dynamicOps -> dynamicOps instanceof RegistryOps<?> registryOps
                 ? DataResult.success(((RegistryOpsAccessor) registryOps).getLookupProvider())

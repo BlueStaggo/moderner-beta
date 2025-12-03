@@ -97,14 +97,14 @@ public class ModernBetaDataPackExportScreen extends ModernBetaScreen {
                 //? if >=1.21.2 {
                 .lookupOrThrow
                 //? } else {
-                /*.asGetterLookup
+                /*.registryOrThrow
                 *///? }
                         (ModernBetaResourceKeys.SETTINGS_PRESET);
         this.presetCategoryRegistry = registries
                 //? if >=1.21.2 {
                 .lookupOrThrow
                 //? } else {
-                /*.asGetterLookup
+                /*.registryOrThrow
                 *///? }
                         (ModernBetaResourceKeys.SETTINGS_PRESET_CATEGORY);
         this.registries = registries;

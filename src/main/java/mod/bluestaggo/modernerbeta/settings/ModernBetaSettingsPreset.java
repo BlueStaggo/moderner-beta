@@ -77,14 +77,18 @@ public record ModernBetaSettingsPreset(
     }
 
     public static ModernBetaSettingsPreset referenced(ResourceLocation presetId) {
+        return referenced(presetId, null);
+    }
+
+    public static ModernBetaSettingsPreset referenced(ResourceLocation presetId, RegistryOps.RegistryInfoLookup lookup) {
         return new ModernBetaSettingsPreset(
-            ModernBetaSettings.builder()
+            ModernBetaSettings.builder(lookup)
                 .add(SettingsComponentTypes.PRESET, presetId)
                 .build(),
-            ModernBetaSettings.builder()
+            ModernBetaSettings.builder(lookup)
                 .add(SettingsComponentTypes.PRESET, presetId)
                 .build(),
-            ModernBetaSettings.builder()
+            ModernBetaSettings.builder(lookup)
                 .add(SettingsComponentTypes.PRESET, presetId)
                 .build()
         );

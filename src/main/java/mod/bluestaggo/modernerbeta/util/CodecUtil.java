@@ -4,13 +4,24 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.gson.*;
 import com.mojang.serialization.*;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import mod.bluestaggo.modernerbeta.mixin.RegistryOpsAccessor;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.RegistryOps;
+import net.minecraft.util.ExtraCodecs;
 
 import java.lang.reflect.Type;
 import java.util.Set;
 
 public class CodecUtil {
+    public static <T> RecordCodecBuilder<T, RegistryOps.RegistryInfoLookup> registryLookupCodec() {
+        return ExtraCodecs.retrieveContext(
+            dynamicOps -> dynamicOps instanceof RegistryOps<?> registryOps
+                    ? DataResult.success(((RegistryOpsAccessor) registryOps).getLookupProvider())
+                    : DataResult.error(() -> "Not a registry ops")
+        ).forGetter(object -> null);
+    }
+
     public static <T> Codec<Set<T>> set(Codec<T> elementType) {
         return elementType.listOf().xmap(ImmutableSet::copyOf, ImmutableList::copyOf);
     }

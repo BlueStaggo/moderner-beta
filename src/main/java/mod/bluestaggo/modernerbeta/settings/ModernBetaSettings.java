@@ -3,14 +3,12 @@ package mod.bluestaggo.modernerbeta.settings;
 
 import com.google.common.collect.Iterators;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
-import mod.bluestaggo.modernerbeta.mixin.RegistryOpsAccessor;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.settings.component.ClimateDistribution;
 import mod.bluestaggo.modernerbeta.util.CodecUtil;
@@ -24,7 +22,6 @@ import net.minecraft.nbt.NbtOps;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.level.biome.Biome;
 import org.jetbrains.annotations.NotNull;
 
@@ -38,11 +35,7 @@ public class ModernBetaSettings implements Iterable<SettingsComponent<?>> {
     public static final Codec<ModernBetaSettings> CODEC = RecordCodecBuilder.create(
         instance -> instance.group(
             CodecUtil.assumeMapUnsafe(SettingsComponentType.TYPE_TO_VALUE_MAP_CODEC).forGetter(settings -> settings.components),
-            ExtraCodecs.retrieveContext(
-                dynamicOps -> dynamicOps instanceof RegistryOps<?> registryOps
-                ? DataResult.success(((RegistryOpsAccessor) registryOps).getLookupProvider())
-                : DataResult.error(() -> "Not a registry ops")
-            ).forGetter(object -> null)
+            CodecUtil.registryLookupCodec()
         ).apply(instance, ModernBetaSettings::new)
     );
 

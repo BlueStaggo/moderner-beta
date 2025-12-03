@@ -10,6 +10,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaResourceKeys;
+import mod.bluestaggo.modernerbeta.util.CodecUtil;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
@@ -44,8 +45,15 @@ public record ModernBetaSettingsPreset(
         ).apply(instance, ModernBetaSettingsPreset::new)
     );
 
-    public static final Codec<ModernBetaSettingsPreset> SETTINGS_TEXT_CODEC = Codec.either(CODEC, ResourceLocation.CODEC.fieldOf("preset").codec())
-            .xmap(e -> e.map(Function.identity(), ModernBetaSettingsPreset::referenced), Either::left);
+    public static final Codec<ModernBetaSettingsPreset> PRESET_REFERENCE_CODEC = RecordCodecBuilder.create(
+        instance -> instance.group(
+            ResourceLocation.CODEC.fieldOf("preset").forGetter(preset -> null),
+            CodecUtil.registryLookupCodec()
+        ).apply(instance, ModernBetaSettingsPreset::referenced)
+    );
+
+    public static final Codec<ModernBetaSettingsPreset> SETTINGS_TEXT_CODEC = Codec.either(CODEC, PRESET_REFERENCE_CODEC)
+            .xmap(e -> e.map(Function.identity(), Function.identity()), Either::left);
 
     public ModernBetaSettingsPreset(
         ModernBetaSettings chunkSettings,

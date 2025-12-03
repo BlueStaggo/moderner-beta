@@ -106,10 +106,10 @@ public record SettingsComponentType<T>(Codec<T> codec, DefaultValueGetter<T> def
 
     @FunctionalInterface
     public interface DefaultValueGetter<T> {
-        T get(ModernBetaSettings settings, RegistryOps.RegistryInfoLookup registries);
+        T getDefault(ModernBetaSettings settings, RegistryOps.RegistryInfoLookup registries);
 
-        default T get(ModernBetaSettings settings) {
-            return this.get(settings, settings.registries);
+        default T getDefault(ModernBetaSettings settings) {
+            return this.getDefault(settings, settings.registries);
         }
     }
 

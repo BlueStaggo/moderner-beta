@@ -161,7 +161,7 @@ public class ModernBetaSettings implements Iterable<SettingsComponent<?>> {
 
     public <T> T getOrDefault(SettingsComponentType<T> type) {
         T value = this.get(type);
-        return value == null ? type.defaultValueGetter().get(this, registries) : value;
+        return value == null ? type.defaultValueGetter().getDefault(this, registries) : value;
     }
 
     public <T> T getOrElse(SettingsComponentType<T> type, T defaultValue) {
@@ -276,7 +276,7 @@ public class ModernBetaSettings implements Iterable<SettingsComponent<?>> {
 
         public Builder addDefault(SettingsComponentType<?>... types) {
             for (SettingsComponentType<?> type : types) {
-                this.components.put(type, type.defaultValueGetter().get(null, this.registries));
+                this.components.put(type, type.defaultValueGetter().getDefault(null, this.registries));
             }
             return this;
         }

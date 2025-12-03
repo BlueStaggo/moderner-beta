@@ -108,7 +108,7 @@ public abstract class ModernBetaGraphicalComponentedSettingsScreen extends Moder
                             componentTypeId.toString(),
                             VersionCompat.getOrThrow(
                                 ((Codec<Object>)componentType.codec())
-                                    .encodeStart(NbtOps.INSTANCE, componentType.defaultValueGetter().get(settings))
+                                    .encodeStart(NbtOps.INSTANCE, componentType.defaultValueGetter().getDefault(settings))
                             )
                         );
                     }

@@ -121,7 +121,6 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
         ModernBetaSettings mappedChunkSettings = chunkSettings.mapPreset(presetRegistry, ModernBetaSettingsPreset::chunkSettings);
         Holder<NoiseGeneratorSettings> generatorSettings = mappedChunkSettings.getOrDefault(SettingsComponentTypes.NOISE_GENERATOR_SETTINGS);
 
-        System.out.println(generatorSettings.unwrapKey().orElse(null) + " " + generatorSettings.value());
         NoiseSettings noiseSettings = mappedChunkSettings.get(SettingsComponentTypes.NOISE_SETTINGS);
         if (noiseSettings == null)
             return generatorSettings;

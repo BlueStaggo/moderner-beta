@@ -36,8 +36,6 @@ public abstract class WorldDimensionDataMixin {
     @Unique private final static Logger modernBeta$LOGGER = LoggerFactory.getLogger(DedicatedServerProperties.class.getName());
     @Shadow public abstract JsonObject generatorSettings();
 
-    //? if >=1.21.2
-    @SuppressWarnings("InvalidInjectorMethodSignature")
     @Inject(method = "create", at = @At("TAIL"), cancellable = true)
     private void injectCustomSettings(
         net.minecraft.core./*? >=1.21.2 {*/HolderLookup.Provider/*?} else {*//*RegistryAccess*//*?}*/ registries,

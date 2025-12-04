@@ -39,9 +39,9 @@ public record ModernBetaSettingsPreset(
         instance -> instance.group(
             net.minecraft.network.chat.ComponentSerialization.CODEC.optionalFieldOf("name").forGetter(ModernBetaSettingsPreset::presetName),
             net.minecraft.network.chat.ComponentSerialization.CODEC.optionalFieldOf("description").forGetter(ModernBetaSettingsPreset::presetDescription),
-            ModernBetaSettings.CODEC.fieldOf("chunkSettings").forGetter(ModernBetaSettingsPreset::chunkSettings),
-            ModernBetaSettings.CODEC.fieldOf("biomeSettings").forGetter(ModernBetaSettingsPreset::biomeSettings),
-            ModernBetaSettings.CODEC.fieldOf("caveBiomeSettings").forGetter(ModernBetaSettingsPreset::caveBiomeSettings)
+            ModernBetaSettings.WORLD_CODEC.fieldOf("chunkSettings").forGetter(ModernBetaSettingsPreset::chunkSettings),
+            ModernBetaSettings.WORLD_CODEC.fieldOf("biomeSettings").forGetter(ModernBetaSettingsPreset::biomeSettings),
+            ModernBetaSettings.WORLD_CODEC.fieldOf("caveBiomeSettings").forGetter(ModernBetaSettingsPreset::caveBiomeSettings)
         ).apply(instance, ModernBetaSettingsPreset::new)
     );
 
@@ -164,15 +164,15 @@ public record ModernBetaSettingsPreset(
 
             // Attempt to read settings
             chunkSettings = jsonChunk != null ?
-                VersionCompat.getOrThrow(ModernBetaSettings.CODEC.decode(ops, jsonChunk)).getFirst() :
+                VersionCompat.getOrThrow(ModernBetaSettings.WORLD_CODEC.decode(ops, jsonChunk)).getFirst() :
                 this.chunkSettings;
 
             biomeSettings = jsonBiome != null ?
-                VersionCompat.getOrThrow(ModernBetaSettings.CODEC.decode(ops, jsonBiome)).getFirst() :
+                VersionCompat.getOrThrow(ModernBetaSettings.WORLD_CODEC.decode(ops, jsonBiome)).getFirst() :
                 this.biomeSettings;
 
             caveBiomeSettings = jsonCaveBiome != null ?
-                VersionCompat.getOrThrow(ModernBetaSettings.CODEC.decode(ops, jsonCaveBiome)).getFirst() :
+                VersionCompat.getOrThrow(ModernBetaSettings.WORLD_CODEC.decode(ops, jsonCaveBiome)).getFirst() :
                 this.caveBiomeSettings;
 
             // Test providers

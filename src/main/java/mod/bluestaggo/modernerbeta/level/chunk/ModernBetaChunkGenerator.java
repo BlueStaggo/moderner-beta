@@ -65,7 +65,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
             BiomeSource.CODEC.fieldOf("biome_source").forGetter(generator -> generator.biomeSource),
             RegistryOps.retrieveGetter(ModernBetaResourceKeys.SETTINGS_PRESET),
             RegistryOps.retrieveGetter(ModernBetaResourceKeys.SURFACE_CONFIG),
-            ModernBetaSettings.CODEC.fieldOf("provider_settings").forGetter(generator -> generator.chunkSettings)
+            ModernBetaSettings.WORLD_CODEC.fieldOf("provider_settings").forGetter(generator -> generator.chunkSettings)
         ).apply(instance, instance.stable(ModernBetaChunkGenerator::new))
     );
 

@@ -3,6 +3,7 @@ package mod.bluestaggo.modernerbeta.settings;
 
 import com.google.common.collect.Iterators;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectMap;
@@ -32,7 +33,13 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 public class ModernBetaSettings implements Iterable<SettingsComponent<?>> {
-    public static final Codec<ModernBetaSettings> CODEC = RecordCodecBuilder.create(
+    public static final Codec<ModernBetaSettings> CODEC
+        = SettingsComponentType.TYPE_TO_VALUE_MAP_CODEC.flatComapMap(
+            ModernBetaSettings::new,
+            settings -> DataResult.success(settings.components)
+        );
+
+    public static final Codec<ModernBetaSettings> WORLD_CODEC = RecordCodecBuilder.create(
         instance -> instance.group(
             CodecUtil.assumeMapUnsafe(SettingsComponentType.TYPE_TO_VALUE_MAP_CODEC).forGetter(settings -> settings.components),
             CodecUtil.registryLookupCodec()
@@ -108,11 +115,11 @@ public class ModernBetaSettings implements Iterable<SettingsComponent<?>> {
     }
 
     public static ModernBetaSettings fromCompound(HolderLookup.Provider registries, CompoundTag compound) {
-        return VersionCompat.getOrThrow(CODEC.decode(RegistryOps.create(NbtOps.INSTANCE, registries), compound)).getFirst();
+        return VersionCompat.getOrThrow(WORLD_CODEC.decode(RegistryOps.create(NbtOps.INSTANCE, registries), compound)).getFirst();
     }
 
     public static ModernBetaSettings fromCompound(RegistryOps.RegistryInfoLookup registries, CompoundTag compound) {
-        return VersionCompat.getOrThrow(CODEC.decode(RegistryOps.create(NbtOps.INSTANCE, registries), compound)).getFirst();
+        return VersionCompat.getOrThrow(WORLD_CODEC.decode(RegistryOps.create(NbtOps.INSTANCE, registries), compound)).getFirst();
     }
 
     private ModernBetaSettings(Map<SettingsComponentType<?>, Object> components) {

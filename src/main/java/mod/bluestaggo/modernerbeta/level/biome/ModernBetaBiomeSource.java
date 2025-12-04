@@ -5,14 +5,12 @@ package mod.bluestaggo.modernerbeta.level.biome;
 
 import com.google.common.collect.Sets;
 import com.mojang.datafixers.util.Pair;
-import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.api.level.biome.BiomeProvider;
 import mod.bluestaggo.modernerbeta.api.level.biome.BiomeResolverBlock;
 import mod.bluestaggo.modernerbeta.api.level.biome.BiomeResolverExtendedId;
 import mod.bluestaggo.modernerbeta.api.level.biome.BiomeResolverOcean;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
-import mod.bluestaggo.modernerbeta.api.level.biome.*;
 import mod.bluestaggo.modernerbeta.api.level.cavebiome.CaveBiomeProvider;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaResourceKeys;
@@ -29,7 +27,6 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.QuartPos;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.util.Mth;
@@ -53,8 +50,8 @@ public class ModernBetaBiomeSource extends BiomeSource {
         instance -> instance.group(
             RegistryOps.retrieveGetter(Registries.BIOME),
             RegistryOps.retrieveGetter(ModernBetaResourceKeys.SETTINGS_PRESET),
-            ModernBetaSettings.CODEC.fieldOf("provider_settings").forGetter(biomeSource -> biomeSource.biomeSettings),
-            ModernBetaSettings.CODEC.fieldOf("cave_provider_settings").forGetter(biomeSource -> biomeSource.caveBiomeSettings)
+            ModernBetaSettings.WORLD_CODEC.fieldOf("provider_settings").forGetter(biomeSource -> biomeSource.biomeSettings),
+            ModernBetaSettings.WORLD_CODEC.fieldOf("cave_provider_settings").forGetter(biomeSource -> biomeSource.caveBiomeSettings)
         ).apply(instance, (instance).stable(ModernBetaBiomeSource::new))
     );
 

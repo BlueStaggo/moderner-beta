@@ -109,6 +109,9 @@ public record SettingsComponentType<T>(Codec<T> codec, DefaultValueGetter<T> def
         T getDefault(ModernBetaSettings settings, RegistryOps.RegistryInfoLookup registries);
 
         default T getDefault(ModernBetaSettings settings) {
+            if (settings == null)
+                return this.getDefault(null, null);
+
             return this.getDefault(settings, settings.registries);
         }
     }

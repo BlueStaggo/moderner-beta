@@ -273,10 +273,10 @@ public record ModernBetaSettingsPreset(
         }
 
         Holder.Reference<ModernBetaSettingsPreset> reference = preset.get();
-        if (reference.isBound())
-            return Optional.of(preset.get().value());
+        if (!reference.isBound() && ModernerBeta.GENERATING_DATA)
+            return Optional.empty();
 
-        return Optional.empty();
+        return Optional.of(reference.value());
     }
 
     public ModernBetaSettingsPreset mapped(HolderGetter<ModernBetaSettingsPreset> presetRegistry) {

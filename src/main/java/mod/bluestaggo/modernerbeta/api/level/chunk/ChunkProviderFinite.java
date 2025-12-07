@@ -47,7 +47,6 @@ public abstract class ChunkProviderFinite extends ChunkProvider implements Chunk
     protected final int worldMinY;
     protected final int worldHeight;
     protected final int worldTopY;
-    protected final int seaLevel;
     
     protected final int bedrockFloor;
     protected final int bedrockCeiling;
@@ -79,7 +78,6 @@ public abstract class ChunkProviderFinite extends ChunkProvider implements Chunk
         this.worldMinY = shapeConfig.minY();
         this.worldHeight = shapeConfig.height();
         this.worldTopY = this.worldHeight + this.worldMinY;
-        this.seaLevel = generatorSettings.seaLevel() + this.getChunkSettings().getOrDefault(SettingsComponentTypes.SEA_LEVEL_OFFSET);
         this.bedrockFloor = 0;
         this.bedrockCeiling = Integer.MIN_VALUE;
 
@@ -127,6 +125,7 @@ public abstract class ChunkProviderFinite extends ChunkProvider implements Chunk
         int startZ = chunk.getPos().getMinBlockZ();
         
         int worldTopY = this.worldHeight + this.worldMinY;
+        int seaLevel = this.chunkGenerator.getSeaLevel();
         
         for (int localX = 0; localX < 16; ++localX) {
             for (int localZ = 0; localZ < 16; ++localZ) {
@@ -177,14 +176,6 @@ public abstract class ChunkProviderFinite extends ChunkProvider implements Chunk
         int height = this.getLevelHighestBlock(x, z, type);
          
         return height;
-    }
-
-    /**
-     * @return World sea level in block coordinates.
-     */
-    @Override
-    public int getSeaLevel() {
-        return this.seaLevel;
     }
     
     @Override

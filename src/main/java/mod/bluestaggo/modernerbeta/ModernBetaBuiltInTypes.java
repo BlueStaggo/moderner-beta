@@ -12,7 +12,7 @@ public final class ModernBetaBuiltInTypes {
         PROVIDER("provider"),
         DEEPSLATE_GENERATION("deepslate_generation"),
         USE_SURFACE_RULES("use_surface_rules"),
-        SEA_LEVEL_OFFSET("sea_level_offset"),
+        SEA_LEVEL("sea_level"),
         CAVE_GENERATION("cave_generation"),
         NOISE_GENERATOR_SETTINGS("noise_generator_settings"),
         NOISE_SETTINGS("noise_settings"),

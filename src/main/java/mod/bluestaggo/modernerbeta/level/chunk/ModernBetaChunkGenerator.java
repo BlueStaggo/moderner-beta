@@ -122,19 +122,21 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
         Holder<NoiseGeneratorSettings> generatorSettings = mappedChunkSettings.getOrDefault(SettingsComponentTypes.NOISE_GENERATOR_SETTINGS);
 
         NoiseSettings noiseSettings = mappedChunkSettings.get(SettingsComponentTypes.NOISE_SETTINGS);
-        if (noiseSettings == null)
+        Integer seaLevel = mappedChunkSettings.get(SettingsComponentTypes.SEA_LEVEL);
+        if (noiseSettings == null & seaLevel == null)
             return generatorSettings;
+
 
         NoiseGeneratorSettings unboxed = generatorSettings.value();
         //noinspection deprecation
         unboxed = new NoiseGeneratorSettings(
-            noiseSettings,
+            noiseSettings != null ? noiseSettings : unboxed.noiseSettings(),
             unboxed.defaultBlock(),
             unboxed.defaultFluid(),
             unboxed.noiseRouter(),
             unboxed.surfaceRule(),
             unboxed.spawnTarget(),
-            unboxed.seaLevel(),
+            seaLevel != null ? seaLevel : unboxed.seaLevel(),
             unboxed.disableMobGeneration(),
             unboxed.aquifersEnabled(),
             unboxed.oreVeinsEnabled(),

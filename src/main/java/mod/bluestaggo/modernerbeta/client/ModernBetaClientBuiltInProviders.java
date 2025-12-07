@@ -51,7 +51,7 @@ public class ModernBetaClientBuiltInProviders {
         );
 
         registryHandler.register(
-            SEA_LEVEL_OFFSET.id,
+            SEA_LEVEL.id,
             (screen, options) -> {
                 int minY = -64;
                 int maxY = 320;
@@ -60,7 +60,7 @@ public class ModernBetaClientBuiltInProviders {
                     maxY = providerSettingsScreen.worldMaxY;
                 }
 
-                options.addBig(screen.intRangeOption("self", minY - 64, maxY - 64));
+                options.addBig(screen.intRangeOption("self", minY, maxY));
             }
         );
 

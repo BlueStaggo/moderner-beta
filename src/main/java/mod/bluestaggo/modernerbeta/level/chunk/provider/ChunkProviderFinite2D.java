@@ -1,5 +1,6 @@
 package mod.bluestaggo.modernerbeta.level.chunk.provider;
 
+import mod.bluestaggo.modernerbeta.api.level.chunk.ChunkProviderFinite;
 import mod.bluestaggo.modernerbeta.api.level.chunk.surface.SurfaceConfig;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.settings.component.FiniteBeaches;
@@ -24,7 +25,7 @@ import net.minecraft.world.level.block.SnowyDirtBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 
-public class ChunkProviderFinite2D extends mod.bluestaggo.modernerbeta.api.level.chunk.ChunkProviderFinite {
+public class ChunkProviderFinite2D extends ChunkProviderFinite {
     private PerlinOctaveNoiseCombined minHeightOctaveNoise;
     private PerlinOctaveNoiseCombined maxHeightOctaveNoise;
     private PerlinOctaveNoise mainHeightOctaveNoise;
@@ -155,6 +156,8 @@ public class ChunkProviderFinite2D extends mod.bluestaggo.modernerbeta.api.level
         int x = pos.getX();
         int y = pos.getY();
         int z = pos.getZ();
+
+        int seaLevel = this.getSeaLevel();
         
         // Skip replacing surface blocks if this is a Hell level and biome surface is standard grass/dirt.
         if (this.isHell() && topBlock.equals(BlockStates.GRASS_BLOCK) && fillerBlock.equals(BlockStates.DIRT))
@@ -168,12 +171,12 @@ public class ChunkProviderFinite2D extends mod.bluestaggo.modernerbeta.api.level
         
         // Set snow/ice
         if (!this.inWorldBounds(x, z)) {
-            if (y == this.seaLevel) {
+            if (y == seaLevel) {
                 if (isCold && blockState.equals(topBlock)) {
                     blockState = topBlock.setValue(SnowyDirtBlock.SNOWY, true);
                 }
                 
-            } else if (y == this.seaLevel - 1 && this.levelTheme != IndevTheme.HELL) {
+            } else if (y == seaLevel - 1 && this.levelTheme != IndevTheme.HELL) {
                 if (isCold && blockState.equals(BlockStates.WATER)) {
                     blockState = BlockStates.ICE;
                 }

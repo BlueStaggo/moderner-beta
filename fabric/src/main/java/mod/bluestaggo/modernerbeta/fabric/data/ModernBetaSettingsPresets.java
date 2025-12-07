@@ -208,7 +208,7 @@ public final class ModernBetaSettingsPresets {
                 .add(NOISE_GENERATOR_SETTINGS, context.lookup(Registries.NOISE_SETTINGS)
                         .get(ModernBetaNoiseGeneratorSettings.OVERWORLD_128).orElseThrow())
                 .add(CAVE_GENERATION, CaveGeneration.BETA)
-                .addDefault(DEEPSLATE_GENERATION, USE_SURFACE_RULES, SEA_LEVEL_OFFSET, NOISE_3D_SETTINGS, NOISE_SCALE, NOISE_SLIDE, NOISE_LANDMASS, SURFACE_PROPERTIES)
+                .addDefault(DEEPSLATE_GENERATION, USE_SURFACE_RULES, NOISE_3D_SETTINGS, NOISE_SCALE, NOISE_SLIDE, NOISE_LANDMASS, SURFACE_PROPERTIES)
                 .build(),
             ModernBetaSettings.builder()
                 .add(PROVIDER, ModernBetaBuiltInTypes.Biome.BETA.id)
@@ -282,7 +282,7 @@ public final class ModernBetaSettingsPresets {
                 .add(NOISE_SCALE, NoiseScale.ALPHA)
                 .add(NOISE_LANDMASS, NoiseLandmass.ALPHA)
                 .add(SURFACE_PROPERTIES, SurfaceProperties.ALPHA)
-                .addDefault(USE_SURFACE_RULES, SEA_LEVEL_OFFSET, NOISE_SLIDE)
+                .addDefault(USE_SURFACE_RULES, NOISE_SLIDE)
                 .build(),
             ModernBetaSettings.singleBiome(ModernBetaBiomes.ALPHA),
             ModernBetaSettings.noCaveBiomes()
@@ -329,7 +329,7 @@ public final class ModernBetaSettingsPresets {
                 .add(NOISE_SLIDE, NoiseSlide.DISABLED)
                 .add(NOISE_LANDMASS, NoiseLandmass.DISABLED)
                 .add(SURFACE_PROPERTIES, SurfaceProperties.ALPHA)
-                .addDefault(USE_SURFACE_RULES, SEA_LEVEL_OFFSET)
+                .addDefault(USE_SURFACE_RULES)
                 .build(),
             ModernBetaSettings.singleBiome(ModernBetaBiomes.INFDEV_415),
             ModernBetaSettings.noCaveBiomes()
@@ -349,7 +349,7 @@ public final class ModernBetaSettingsPresets {
                 .add(NOISE_SLIDE, NoiseSlide.DISABLED)
                 .add(NOISE_LANDMASS, NoiseLandmass.DISABLED)
                 .add(SURFACE_PROPERTIES, SurfaceProperties.ALPHA)
-                .addDefault(USE_SURFACE_RULES, SEA_LEVEL_OFFSET)
+                .addDefault(USE_SURFACE_RULES)
                 .build(),
             ModernBetaSettings.singleBiome(ModernBetaBiomes.INFDEV_420),
             ModernBetaSettings.noCaveBiomes()
@@ -369,7 +369,7 @@ public final class ModernBetaSettingsPresets {
                 .add(NOISE_SLIDE, NoiseSlide.DISABLED)
                 .add(NOISE_LANDMASS, NoiseLandmass.INFDEV_611)
                 .add(SURFACE_PROPERTIES, SurfaceProperties.ALPHA)
-                .addDefault(USE_SURFACE_RULES, SEA_LEVEL_OFFSET)
+                .addDefault(USE_SURFACE_RULES)
                 .build(),
             ModernBetaSettings.singleBiome(ModernBetaBiomes.INFDEV_611),
             ModernBetaSettings.noCaveBiomes()
@@ -603,7 +603,7 @@ public final class ModernBetaSettingsPresets {
         return new ModernBetaSettingsPreset(
             ModernBetaSettings.builder()
                 .add(PRESET, initialId)
-                .add(SEA_LEVEL_OFFSET, 192)
+                .add(SEA_LEVEL, 63 + 192)
                 .add(NOISE_SCALE, new NoiseScale(
                     baseNoiseScale.coordinate(),
                     baseNoiseScale.height(),
@@ -772,7 +772,7 @@ public final class ModernBetaSettingsPresets {
         return new ModernBetaSettingsPreset(
             ModernBetaSettings.builder()
                 .add(PRESET, initialId)
-                .add(SEA_LEVEL_OFFSET, -43)
+                .add(SEA_LEVEL, 63 - 43)
                 .add(NOISE_SCALE, new NoiseScale(
                     baseNoiseScale.coordinate(),
                     baseNoiseScale.height(),
@@ -807,7 +807,7 @@ public final class ModernBetaSettingsPresets {
         return new ModernBetaSettingsPreset(
             ModernBetaSettings.builder()
                 .add(PRESET, initialId)
-                .add(SEA_LEVEL_OFFSET, -57)
+                .add(SEA_LEVEL, 63 - 57)
                 .add(NOISE_SCALE, new NoiseScale(
                     baseNoiseScale.coordinate(),
                     baseNoiseScale.height(),
@@ -1497,7 +1497,7 @@ public final class ModernBetaSettingsPresets {
                 .add(FORCED_BIOME_HEIGHT, ForcedBiomeHeight.overridesOnly(Map.of(
                     ExtendedBiomeId.OCEAN, new HeightConfig(-1.0f, 0.5f)
                 ), amplified))
-                .add(SEA_LEVEL_OFFSET, -1)
+                .add(SEA_LEVEL, 63)
                 .add(NOISE_3D_SETTINGS, Noise3DSettings.EARLY_RELEASE)
                 .add(NOISE_LANDMASS, NoiseLandmass.RELEASE)
                 .add(SURFACE_PROPERTIES, SurfaceProperties.EARLY_RELEASE)
@@ -1566,7 +1566,7 @@ public final class ModernBetaSettingsPresets {
             DEFAULT_BETA.chunkSettings().extend()
                 .add(CAVE_GENERATION, CaveGeneration.EARLY_RELEASE)
                 .add(FORCED_BIOME_HEIGHT, amplified ? ForcedBiomeHeight.AMPLIFIED : ForcedBiomeHeight.ENABLED)
-                .add(SEA_LEVEL_OFFSET, -1)
+                .add(SEA_LEVEL, 63)
                 .add(NOISE_3D_SETTINGS, Noise3DSettings.EARLY_RELEASE)
                 .add(NOISE_LANDMASS, NoiseLandmass.RELEASE)
                 .add(SURFACE_PROPERTIES, SurfaceProperties.EARLY_RELEASE)
@@ -1583,7 +1583,7 @@ public final class ModernBetaSettingsPresets {
             DEFAULT_BETA.chunkSettings().extend()
                 .add(CAVE_GENERATION, CaveGeneration.EARLY_RELEASE)
                 .add(FORCED_BIOME_HEIGHT, amplified ? ForcedBiomeHeight.AMPLIFIED : ForcedBiomeHeight.ENABLED)
-                .add(SEA_LEVEL_OFFSET, -1)
+                .add(SEA_LEVEL, 63)
                 .add(NOISE_3D_SETTINGS, Noise3DSettings.EARLY_RELEASE)
                 .add(NOISE_LANDMASS, NoiseLandmass.RELEASE)
                 .add(SURFACE_PROPERTIES, SurfaceProperties.EARLY_RELEASE)
@@ -1737,7 +1737,7 @@ public final class ModernBetaSettingsPresets {
             DEFAULT_BETA.chunkSettings().extend()
                 .add(CAVE_GENERATION, CaveGeneration.EARLY_RELEASE)
                 .add(FORCED_BIOME_HEIGHT, amplified ? ForcedBiomeHeight.AMPLIFIED : ForcedBiomeHeight.ENABLED)
-                .add(SEA_LEVEL_OFFSET, -1)
+                .add(SEA_LEVEL, 63)
                 .add(NOISE_3D_SETTINGS, Noise3DSettings.EARLY_RELEASE)
                 .add(NOISE_LANDMASS, NoiseLandmass.RELEASE)
                 .add(SURFACE_PROPERTIES, SurfaceProperties.EARLY_RELEASE)
@@ -1754,7 +1754,7 @@ public final class ModernBetaSettingsPresets {
             DEFAULT_BETA.chunkSettings().extend()
                 .add(CAVE_GENERATION, CaveGeneration.EARLY_RELEASE)
                 .add(FORCED_BIOME_HEIGHT, amplified ? ForcedBiomeHeight.AMPLIFIED : ForcedBiomeHeight.ENABLED)
-                .add(SEA_LEVEL_OFFSET, -1)
+                .add(SEA_LEVEL, 63)
                 .add(NOISE_3D_SETTINGS, Noise3DSettings.EARLY_RELEASE)
                 .add(NOISE_LANDMASS, NoiseLandmass.RELEASE)
                 .add(SURFACE_PROPERTIES, SurfaceProperties.EARLY_RELEASE)
@@ -1778,7 +1778,7 @@ public final class ModernBetaSettingsPresets {
                     ExtendedBiomeId.of("minecraft:jungle*hills"), new HeightConfig(1.8f, 0.5f),
                     ExtendedBiomeId.of("moderner_beta:early_release_taiga*hills"), new HeightConfig(0.3f, 0.8f)
                 ), amplified))
-                .add(SEA_LEVEL_OFFSET, -1)
+                .add(SEA_LEVEL, 63)
                 .add(NOISE_3D_SETTINGS, Noise3DSettings.EARLY_RELEASE)
                 .add(NOISE_LANDMASS, NoiseLandmass.RELEASE)
                 .add(SURFACE_PROPERTIES, SurfaceProperties.EARLY_RELEASE)
@@ -2353,7 +2353,7 @@ public final class ModernBetaSettingsPresets {
                 .add(USE_SURFACE_RULES, true)
                 .add(CAVE_GENERATION, bedrock ? CaveGeneration.BEDROCK : CaveGeneration.RELEASE_1_12_2)
                 .add(FORCED_BIOME_HEIGHT, ForcedBiomeHeight.overridesOnly(heightOverrides, amplified))
-                .add(SEA_LEVEL_OFFSET, -1)
+                .add(SEA_LEVEL, 63)
                 .add(NOISE_3D_SETTINGS, bedrock ? Noise3DSettings.BEDROCK : Noise3DSettings.MAJOR_RELEASE)
                 .add(NOISE_LANDMASS, NoiseLandmass.RELEASE)
                 .add(SURFACE_PROPERTIES, SurfaceProperties.MAJOR_RELEASE)
@@ -2375,7 +2375,7 @@ public final class ModernBetaSettingsPresets {
                 .add(USE_SURFACE_RULES, true)
                 .add(CAVE_GENERATION, bedrock ? CaveGeneration.BEDROCK : CaveGeneration.RELEASE_1_17_1)
                 .add(FORCED_BIOME_HEIGHT, ForcedBiomeHeight.overridesOnly(HeightConfig.MAJOR_RELEASE_CONFIGS, amplified))
-                .add(SEA_LEVEL_OFFSET, -1)
+                .add(SEA_LEVEL, 63)
                 .add(NOISE_3D_SETTINGS, bedrock ? Noise3DSettings.BEDROCK : Noise3DSettings.MAJOR_RELEASE)
                 .add(NOISE_LANDMASS, NoiseLandmass.RELEASE)
                 .add(SURFACE_PROPERTIES, SurfaceProperties.MAJOR_RELEASE)
@@ -2397,7 +2397,7 @@ public final class ModernBetaSettingsPresets {
                 .add(USE_SURFACE_RULES, true)
                 .add(CAVE_GENERATION, CaveGeneration.EARLY_RELEASE)
                 .add(FORCED_BIOME_HEIGHT, ForcedBiomeHeight.overridesOnly(HeightConfig.MAJOR_RELEASE_CONFIGS))
-                .add(SEA_LEVEL_OFFSET, -1)
+                .add(SEA_LEVEL, 63)
                 .add(NOISE_3D_SETTINGS, Noise3DSettings.MAJOR_RELEASE)
                 .add(NOISE_LANDMASS, NoiseLandmass.RELEASE)
                 .add(SURFACE_PROPERTIES, SurfaceProperties.MAJOR_RELEASE)
@@ -2419,7 +2419,7 @@ public final class ModernBetaSettingsPresets {
                 .add(USE_SURFACE_RULES, true)
                 .add(CAVE_GENERATION, CaveGeneration.RELEASE_1_17_1)
                 .add(FORCED_BIOME_HEIGHT, ForcedBiomeHeight.overridesOnly(HeightConfig.MAJOR_RELEASE_CONFIGS, amplified))
-                .add(SEA_LEVEL_OFFSET, -1)
+                .add(SEA_LEVEL, 63)
                 .add(NOISE_3D_SETTINGS, Noise3DSettings.MAJOR_RELEASE)
                 .add(NOISE_LANDMASS, NoiseLandmass.RELEASE)
                 .add(SURFACE_PROPERTIES, SurfaceProperties.MAJOR_RELEASE)
@@ -2508,7 +2508,7 @@ public final class ModernBetaSettingsPresets {
                         Map.entry(ExtendedBiomeId.of("minecraft:windswept_savanna*plateau"), new HeightConfig(1.0f, 1.0f))
                     ), amplified
                 ))
-                .add(SEA_LEVEL_OFFSET, -1)
+                .add(SEA_LEVEL, 63)
                 .add(NOISE_3D_SETTINGS, Noise3DSettings.EARLY_RELEASE)
                 .add(NOISE_LANDMASS, NoiseLandmass.RELEASE)
                 .add(SURFACE_PROPERTIES, SurfaceProperties.EARLY_RELEASE)

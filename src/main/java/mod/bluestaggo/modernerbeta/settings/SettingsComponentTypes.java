@@ -33,7 +33,7 @@ public class SettingsComponentTypes {
     // Chunk provider
     public static SettingsComponentType<DeepslateGeneration> DEEPSLATE_GENERATION;
     public static SettingsComponentType<Boolean> USE_SURFACE_RULES;
-    public static SettingsComponentType<Integer> SEA_LEVEL_OFFSET;
+    public static SettingsComponentType<Integer> SEA_LEVEL;
     public static SettingsComponentType<CaveGeneration> CAVE_GENERATION;
     public static SettingsComponentType<Holder<NoiseGeneratorSettings>> NOISE_GENERATOR_SETTINGS;
     public static SettingsComponentType<NoiseSettings> NOISE_SETTINGS;
@@ -112,10 +112,11 @@ public class SettingsComponentTypes {
             Codec.BOOL,
             false,
             ValidationResult.Valid::new);
-        SEA_LEVEL_OFFSET = register(
-            ModernBetaBuiltInTypes.SettingsComponentType.SEA_LEVEL_OFFSET.id,
+        SEA_LEVEL = registerWithDefaultGetter(
+            ModernBetaBuiltInTypes.SettingsComponentType.SEA_LEVEL.id,
             Codec.INT,
-            0,
+            (settings, registry) ->
+                    settings.getOrDefault(NOISE_GENERATOR_SETTINGS).value().seaLevel(),
             ValidationResult.Valid::new);
         CAVE_GENERATION = register(
             ModernBetaBuiltInTypes.SettingsComponentType.CAVE_GENERATION.id,

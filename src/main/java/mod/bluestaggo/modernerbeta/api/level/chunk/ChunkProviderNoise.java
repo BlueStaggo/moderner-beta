@@ -43,7 +43,6 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
     protected final int worldMinY;
     protected final int worldHeight;
     protected final int worldTopY;
-    protected final int seaLevel;
     
     protected final int bedrockFloor;
     protected final int bedrockCeiling;
@@ -85,7 +84,6 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
         this.worldMinY = noiseSettings.minY();
         this.worldHeight = noiseSettings.height();
         this.worldTopY = this.worldHeight + this.worldMinY;
-        this.seaLevel = generatorSettings.seaLevel() + this.getChunkSettings().getOrDefault(SettingsComponentTypes.SEA_LEVEL_OFFSET);
         
         this.bedrockFloor = this.worldMinY;
         this.bedrockCeiling = this.worldTopY;
@@ -186,14 +184,6 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
     }
 
     /**
-     * @return World sea level in block coordinates.
-     */
-    @Override
-    public int getSeaLevel() {
-        return this.seaLevel;
-    }
-
-    /**
      * Sample height at given x/z coordinate. Initially generates heightmap for entire chunk,
      * if chunk containing x/z coordinates has never been sampled.
      *
@@ -236,7 +226,7 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
             randomDeriver,
             noiseSampler,
             this.defaultFluid,
-            this.seaLevel,
+            this.getSeaLevel(),
             this.worldMinY + 10,
             this.worldMinY,
             this.worldHeight,
@@ -526,6 +516,7 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
 
         int minimumCellY = Mth.floorDiv(worldMinY, noiseSettings.getCellHeight());
         int cellHeight = Mth.floorDiv(noiseSettings.height(), noiseSettings.getCellHeight());
+        int seaLevel = this.getSeaLevel();
 
         //NoiseProviderBase noiseProvider = this.chunkCacheNoise.get(chunkX, chunkZ);
         NoiseProviderBase noiseProvider = new NoiseProviderBase(
@@ -575,7 +566,7 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
                                 int ndx = z + x * 16;
                                 
                                 // Capture topmost solid/fluid block height.
-                                if (y < this.seaLevel || isSolid) {
+                                if (y < seaLevel || isSolid) {
                                     heightmapOcean[ndx] = height;
                                 }
                                 

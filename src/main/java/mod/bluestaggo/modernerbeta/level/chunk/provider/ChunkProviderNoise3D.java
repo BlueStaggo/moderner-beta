@@ -136,6 +136,8 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
         int startX = chunk.getPos().getMinBlockX();
         int startZ = chunk.getPos().getMinBlockZ();
 
+        int seaLevel = this.getSeaLevel();
+
         Random rand = this.createSurfaceRandom(chunkX, chunkZ);
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
 
@@ -261,7 +263,7 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
                         if (surfaceDepth <= 0) { // Generate stone basin if noise permits
                             topBlock = BlockStates.AIR;
                             fillerBlock = this.defaultBlock;
-                        } else if (y >= this.seaLevel - 4 && y <= this.seaLevel + 1) { // Generate beaches at this y range
+                        } else if (y >= seaLevel - 4 && y <= seaLevel + 1) { // Generate beaches at this y range
                             topBlock = surfaceConfig.normal().topBlock();
                             fillerBlock = surfaceConfig.normal().fillerBlock();
 
@@ -278,7 +280,7 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
 
                         runDepth = surfaceDepth;
 
-                        if (this.surfaceProperties.generateLiquids() && y < this.seaLevel && topBlock.isAir()) { // Generate water bodies
+                        if (this.surfaceProperties.generateLiquids() && y < seaLevel && topBlock.isAir()) { // Generate water bodies
                             BlockState fluidBlock = aquiferSampler.computeSubstance(noisePos.set(x, y, z), 0.0);
 
                             boolean isAir = fluidBlock == null;
@@ -287,9 +289,9 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
                             this.scheduleFluidTick(chunk, aquiferSampler, pos, topBlock);
                         }
 
-                        if (y >= this.seaLevel - 1 || (y < this.seaLevel - 1 && chunk.getBlockState(pos.above()).isAir())) {
+                        if (y >= seaLevel - 1 || (y < seaLevel - 1 && chunk.getBlockState(pos.above()).isAir())) {
                             blockState = topBlock;
-                        } else if (surfaceProperties.gravelOceanBed() && y < this.seaLevel - 7 - surfaceDepth) {
+                        } else if (surfaceProperties.gravelOceanBed() && y < seaLevel - 7 - surfaceDepth) {
                             topBlock = BlockStates.AIR;
                             fillerBlock = BlockStates.STONE;
                             blockState = BlockStates.GRAVEL;
@@ -332,6 +334,8 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
 
         int startX = chunk.getPos().getMinBlockX();
         int startZ = chunk.getPos().getMinBlockZ();
+
+        int seaLevel = this.getSeaLevel();
 
         Random rand = this.createSurfaceRandom(chunkX, chunkZ);
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
@@ -420,17 +424,17 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
                 }
 
                 if (surfaceDepth <= 0) {
-                    VersionCompat.setBlockState(chunk, pos, y < this.seaLevel ? this.defaultBlock : BlockStates.AIR);
+                    VersionCompat.setBlockState(chunk, pos, y < seaLevel ? this.defaultBlock : BlockStates.AIR);
                     pos.setY(--y);
 
                     while (this.isBlockSuitableForSurface(chunk.getBlockState(pos))) {
                         VersionCompat.setBlockState(chunk, pos, this.defaultBlock);
                         pos.setY(--y);
                     }
-                } else if (surfaceTopY >= this.seaLevel - 4 && surfaceTopY < this.seaLevel + 1) {
+                } else if (surfaceTopY >= seaLevel - 4 && surfaceTopY < seaLevel + 1) {
                     SurfaceBlocks beach = genSandBeach ? surfaceConfig.beachSand() : genGravelBeach ? surfaceConfig.beachGravel() : null;
                     if (beach != null) {
-                        if (beach.topBlock().isAir() && y < this.seaLevel) {
+                        if (beach.topBlock().isAir() && y < seaLevel) {
                             VersionCompat.setBlockState(chunk, pos, this.defaultFluid);
                         } else {
                             VersionCompat.setBlockState(chunk, pos, beach.topBlock());

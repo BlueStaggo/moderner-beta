@@ -34,7 +34,7 @@ public class ModernBetaBuiltInProviders {
             ChunkProviderInfdev227::new, () -> List.of(
                 SettingsComponentTypes.DEEPSLATE_GENERATION,
                 SettingsComponentTypes.USE_SURFACE_RULES,
-                SettingsComponentTypes.SEA_LEVEL_OFFSET,
+                SettingsComponentTypes.SEA_LEVEL,
                 SettingsComponentTypes.CAVE_GENERATION,
                 SettingsComponentTypes.INFDEV_227_STRUCTURES
             )
@@ -43,7 +43,7 @@ public class ModernBetaBuiltInProviders {
             ChunkProviderFinite2D::new, () -> List.of(
                 SettingsComponentTypes.DEEPSLATE_GENERATION,
                 SettingsComponentTypes.USE_SURFACE_RULES,
-                SettingsComponentTypes.SEA_LEVEL_OFFSET,
+                SettingsComponentTypes.SEA_LEVEL,
                 SettingsComponentTypes.CAVE_GENERATION,
                 SettingsComponentTypes.FINITE_LEVEL_PROPERTIES,
                 SettingsComponentTypes.FINITE_CAVE_GENERATION,
@@ -57,7 +57,7 @@ public class ModernBetaBuiltInProviders {
             ChunkProviderNoise3D::new, () -> List.of(
                 SettingsComponentTypes.DEEPSLATE_GENERATION,
                 SettingsComponentTypes.USE_SURFACE_RULES,
-                SettingsComponentTypes.SEA_LEVEL_OFFSET,
+                SettingsComponentTypes.SEA_LEVEL,
                 SettingsComponentTypes.CAVE_GENERATION,
                 SettingsComponentTypes.NOISE_SETTINGS,
                 SettingsComponentTypes.NOISE_3D_SETTINGS,

@@ -469,8 +469,6 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
 
         boolean oldInfdev = this.noise3DSettings.oldInfdevTerrainNoise();
 
-        boolean alphaLandmass = this.noiseLandmass.alphaSampling();
-
         double scale = this.scaleOctaveNoise != null && this.noiseLandmass.scale().sample()
             ? (
             (this.noiseLandmass.alphaSampling()

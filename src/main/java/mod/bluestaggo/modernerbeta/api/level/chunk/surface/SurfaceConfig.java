@@ -32,7 +32,7 @@ public record SurfaceConfig(SurfaceBlocks normal, SurfaceBlocks beachSand, Surfa
             return DEFAULT;
         }
 
-        Optional<Holder.Reference<SurfaceConfig>> optionalKey = surfaceConfigLookup.listElements()
+        Optional<Holder.Reference<SurfaceConfig>> optionalKey = surfaceConfigLookup./**/listElements()
             .filter(entry -> entry.isBound() &&
                     entry.value().biomeTag != null && biome.is(entry.value().biomeTag))
             .findFirst();

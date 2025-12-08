@@ -17,7 +17,7 @@ public record PerlinNoiseSettings(
             Codec.BOOL.fieldOf("randomNoiseOffsets").orElse(true).forGetter(PerlinNoiseSettings::randomNoiseOffsets),
             Codec.BOOL.fieldOf("alpha2DSampling").orElse(false).forGetter(PerlinNoiseSettings::alpha2DSampling),
             Codec.BOOL.fieldOf("infdevNoiseScaling").orElse(false).forGetter(PerlinNoiseSettings::infdevNoiseScaling),
-            Codec.INT.fieldOf("failurePoint").orElse(Integer.MAX_VALUE).forGetter(PerlinNoiseSettings::failurePoint)
+            Codec.intRange(0, Integer.MAX_VALUE).fieldOf("failurePoint").orElse(Integer.MAX_VALUE).forGetter(PerlinNoiseSettings::failurePoint)
         ).apply(instance, PerlinNoiseSettings::new)
     );
 

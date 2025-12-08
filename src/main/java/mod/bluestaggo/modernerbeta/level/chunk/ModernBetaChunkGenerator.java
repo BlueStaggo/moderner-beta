@@ -14,6 +14,7 @@ import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.settings.component.CaveGeneration;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
+import mod.bluestaggo.modernerbeta.util.CodecUtil;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.util.random.BedrockRandomSource;
 import mod.bluestaggo.modernerbeta.util.random.BedrockWorldgenRandom;
@@ -64,7 +65,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
         instance -> instance.group(
             BiomeSource.CODEC.fieldOf("biome_source").forGetter(generator -> generator.biomeSource),
             RegistryOps.retrieveGetter(ModernBetaResourceKeys.SETTINGS_PRESET),
-            RegistryOps.retrieveGetter(ModernBetaResourceKeys.SURFACE_CONFIG),
+            CodecUtil.retrieveLookup(ModernBetaResourceKeys.SURFACE_CONFIG),
             ModernBetaSettings.WORLD_CODEC.fieldOf("provider_settings").forGetter(generator -> generator.chunkSettings)
         ).apply(instance, instance.stable(ModernBetaChunkGenerator::new))
     );

@@ -420,7 +420,7 @@ public final class ModernBetaSettingsPresets {
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.FINITE_2D.id)
                 .add(NOISE_GENERATOR_SETTINGS, context.lookup(Registries.NOISE_SETTINGS)
                         .get(ModernBetaNoiseGeneratorSettings.FINITE_2D).orElseThrow())
-                .add(PERLIN_NOISE_SETTINGS, PerlinNoiseSettings.NO_OFFSETS)
+                .add(PERLIN_NOISE_SETTINGS, PerlinNoiseSettings.CLASSIC)
                 .add(DEEPSLATE_GENERATION, DeepslateGeneration.DISABLED)
                 .add(CAVE_GENERATION, CaveGeneration.DISABLED)
                 .addDefault(FINITE_LEVEL_PROPERTIES, FINITE_CAVE_GENERATION, FINITE_NOISE, FINITE_BEACHES, FINITE_POOLS)
@@ -436,7 +436,7 @@ public final class ModernBetaSettingsPresets {
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.FINITE_2D.id)
                 .add(NOISE_GENERATOR_SETTINGS, context.lookup(Registries.NOISE_SETTINGS)
                         .get(ModernBetaNoiseGeneratorSettings.FINITE_2D).orElseThrow())
-                .add(PERLIN_NOISE_SETTINGS, PerlinNoiseSettings.NO_OFFSETS)
+                .add(PERLIN_NOISE_SETTINGS, PerlinNoiseSettings.CLASSIC)
                 .add(FINITE_LEVEL_PROPERTIES, new FiniteLevelProperties(
                     IndevType.CLASSIC,
                     IndevTheme.NORMAL,
@@ -469,7 +469,7 @@ public final class ModernBetaSettingsPresets {
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.FINITE_2D.id)
                 .add(NOISE_GENERATOR_SETTINGS, context.lookup(Registries.NOISE_SETTINGS)
                         .get(ModernBetaNoiseGeneratorSettings.FINITE_2D).orElseThrow())
-                .add(PERLIN_NOISE_SETTINGS, PerlinNoiseSettings.NO_OFFSETS)
+                .add(PERLIN_NOISE_SETTINGS, PerlinNoiseSettings.CLASSIC)
                 .add(FINITE_LEVEL_PROPERTIES, new FiniteLevelProperties(
                     IndevType.CLASSIC,
                     IndevTheme.NORMAL,

@@ -9,7 +9,7 @@ public class NoiseBasedCountInfdev325 implements NoiseBasedCount {
     private final PerlinOctaveNoise noiseSampler;
 
     public NoiseBasedCountInfdev325(RandomSource random) {
-        this.noiseSampler = new PerlinOctaveNoise(new java.util.Random(random.nextLong()), 5, PerlinNoiseSettings.NO_OFFSETS);
+        this.noiseSampler = new PerlinOctaveNoise(new java.util.Random(random.nextLong()), 5, PerlinNoiseSettings.INFDEV_415);
     }
 
     public NoiseBasedCountInfdev325(PerlinOctaveNoise noiseSampler) {

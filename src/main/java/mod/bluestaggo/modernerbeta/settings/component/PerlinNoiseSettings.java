@@ -23,11 +23,11 @@ public record PerlinNoiseSettings(
 
     public static final PerlinNoiseSettings DEFAULT = CodecUtil.getDefaultByMap(CODEC);
 
-    public static final PerlinNoiseSettings NO_OFFSETS = new PerlinNoiseSettings(
+    public static final PerlinNoiseSettings CLASSIC = new PerlinNoiseSettings(
         false,
         false,
-        false,
-        false,
+        true,
+        true,
         Integer.MAX_VALUE
     );
 

@@ -115,10 +115,6 @@ public record ModernBetaSettingsPreset(
         );
     }
 
-    public static Tuple<ModernBetaSettingsPreset, Boolean> fromJson(String jsonString) {
-        return fromJson(null, jsonString);
-    }
-
     public static Tuple<ModernBetaSettingsPreset, Boolean> fromJson(HolderLookup.Provider registries, String jsonString) {
         if (jsonString == null || jsonString.isBlank())
             return new Tuple<>(null, false);
@@ -141,10 +137,6 @@ public record ModernBetaSettingsPreset(
         }
 
         return new Tuple<>(newPreset, success);
-    }
-
-    public Tuple<ModernBetaSettingsPreset, Boolean> setJson(String stringChunk, String stringBiome, String stringCaveBiome) {
-        return this.setJson(null, stringChunk, stringBiome, stringCaveBiome);
     }
 
     public Tuple<ModernBetaSettingsPreset, Boolean> setJson(HolderLookup.Provider registries, String stringChunk, String stringBiome, String stringCaveBiome) {

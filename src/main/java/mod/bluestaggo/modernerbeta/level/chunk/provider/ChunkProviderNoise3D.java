@@ -480,13 +480,13 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
         double scale = this.scaleOctaveNoise != null && this.noiseLandmass.sampleScale()
             ? (
                 (this.noise3DSettings.alphaNoiseSampling()
-                    ? this.scaleOctaveNoise.sample(noiseX, 0, noiseZ, this.noiseLandmass.variationScale(), 0.0D, this.noiseLandmass.variationScale(), wrapped)
+                    ? this.scaleOctaveNoise.sample(noiseX, 10.0D, noiseZ, this.noiseLandmass.variationScale(), 1.0D, this.noiseLandmass.variationScale(), wrapped)
                     : this.scaleOctaveNoise.sampleXZ(noiseX, noiseZ, this.noiseLandmass.variationScale(), this.noiseLandmass.variationScale(), wrapped))
                 + 256D) / 512D
             : 1.0D;
         double depth = this.depthOctaveNoise != null && this.noiseLandmass.sampleDepth()
             ? this.noise3DSettings.alphaNoiseSampling()
-                ? this.depthOctaveNoise.sample(noiseX, 0, noiseZ, depthNoiseScaleX, 0.0D, depthNoiseScaleZ, wrapped)
+                ? this.depthOctaveNoise.sample(noiseX, 10.0D, noiseZ, depthNoiseScaleX, 1.0D, depthNoiseScaleZ, wrapped)
                 : this.depthOctaveNoise.sampleXZ(noiseX, noiseZ, depthNoiseScaleX, depthNoiseScaleZ, wrapped)
             : 0.0D;
 

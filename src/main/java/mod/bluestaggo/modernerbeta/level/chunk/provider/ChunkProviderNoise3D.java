@@ -11,6 +11,7 @@ import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.settings.component.Noise3DSettings;
 import mod.bluestaggo.modernerbeta.settings.component.NoiseLandmass;
+import mod.bluestaggo.modernerbeta.settings.component.PerlinNoiseSettings;
 import mod.bluestaggo.modernerbeta.settings.component.SurfaceProperties;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
@@ -63,44 +64,46 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
     public ChunkProviderNoise3D(ModernBetaChunkGenerator chunkGenerator, long seed) {
         super(chunkGenerator, seed);
 
+        PerlinNoiseSettings perlinSettings = this.getChunkSettings().getOrDefault(SettingsComponentTypes.PERLIN_NOISE_SETTINGS);
+
         this.noise3DSettings = this.getChunkSettings().getOrDefault(SettingsComponentTypes.NOISE_3D_SETTINGS);
         this.noiseLandmass = this.getChunkSettings().getOrDefault(SettingsComponentTypes.NOISE_LANDMASS);
         this.surfaceProperties = this.getChunkSettings().getOrDefault(SettingsComponentTypes.SURFACE_PROPERTIES);
         this.forcedBiomeHeightEnabled = this.getChunkSettings().getOrDefault(SettingsComponentTypes.FORCED_BIOME_HEIGHT).enabled();
 
-        this.minLimitOctaveNoise = new PerlinOctaveNoise(this.random, 16, noise3DSettings.randomNoiseOffsets());
-        this.maxLimitOctaveNoise = new PerlinOctaveNoise(this.random, 16, noise3DSettings.randomNoiseOffsets());
-        this.mainOctaveNoise = new PerlinOctaveNoise(this.random, 8, noise3DSettings.randomNoiseOffsets());
+        this.minLimitOctaveNoise = new PerlinOctaveNoise(this.random, 16, perlinSettings);
+        this.maxLimitOctaveNoise = new PerlinOctaveNoise(this.random, 16, perlinSettings);
+        this.mainOctaveNoise = new PerlinOctaveNoise(this.random, 8, perlinSettings);
 
         this.beachOctaveNoise = surfaceProperties.enableBeaches()
-            ? new PerlinOctaveNoise(this.random, 4, noise3DSettings.randomNoiseOffsets())
+            ? new PerlinOctaveNoise(this.random, 4, perlinSettings)
             : null;
 
         if (noise3DSettings.simplexSurfaceNoise()) {
             this.surfacePerlinOctaveNoise = null;
             this.surfaceSimplexOctaveNoise = new SimplexOctaveNoise(this.random, 4);
         } else {
-            this.surfacePerlinOctaveNoise = new PerlinOctaveNoise(this.random, 4, noise3DSettings.randomNoiseOffsets());
+            this.surfacePerlinOctaveNoise = new PerlinOctaveNoise(this.random, 4, perlinSettings);
             this.surfaceSimplexOctaveNoise = null;
         }
 
-        if (noiseLandmass.scaleEnabled()) {
-            this.scaleOctaveNoise = new PerlinOctaveNoise(this.random, 10, noise3DSettings.randomNoiseOffsets());
+        if (noiseLandmass.scale().enabled()) {
+            this.scaleOctaveNoise = new PerlinOctaveNoise(this.random, 10, perlinSettings);
         } else {
             this.scaleOctaveNoise = null;
         }
 
-        if (noiseLandmass.depthEnabled()) {
-            this.depthOctaveNoise = new PerlinOctaveNoise(this.random, 16, noise3DSettings.randomNoiseOffsets());
+        if (noiseLandmass.depth().enabled()) {
+            this.depthOctaveNoise = new PerlinOctaveNoise(this.random, 16, perlinSettings);
         } else {
             this.depthOctaveNoise = null;
         }
 
-        if (!noiseLandmass.scaleEnabled() && !noiseLandmass.depthEnabled()) {
-            new PerlinOctaveNoise(this.random, noiseScale.forestNoiseOctaves(), noise3DSettings.randomNoiseOffsets());
+        if (!noiseLandmass.scale().enabled() && !noiseLandmass.depth().enabled()) {
+            new PerlinOctaveNoise(this.random, noiseScale.forestNoiseOctaves(), perlinSettings);
         }
 
-        this.forestOctaveNoise = new PerlinOctaveNoise(this.random, noiseScale.forestNoiseOctaves(), noise3DSettings.randomNoiseOffsets());
+        this.forestOctaveNoise = new PerlinOctaveNoise(this.random, noiseScale.forestNoiseOctaves(), perlinSettings);
 
         this.climateSampler = !this.noise3DSettings.climateHeightScaling() ? null
             : (this.chunkGenerator.getBiomeSource() instanceof ModernBetaBiomeSource biomeSource
@@ -145,8 +148,6 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
         ChunkHeightmap heightmapChunk = this.getChunkHeightmap(region, chunkX, chunkZ);
         SimpleNoisePos noisePos = new SimpleNoisePos();
 
-        boolean wrapped = this.noise3DSettings.wrapped();
-        boolean alphaSampling = this.noise3DSettings.alphaNoiseSampling();
         boolean generateBeaches = surfaceProperties.generateBeaches();
 
         float sandScale = surfaceProperties.sandBeachScale();
@@ -157,22 +158,19 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
         double[] sandNoise = initBeachArrays ? beachOctaveNoise.sampleArray(
             chunkX * 16, chunkZ * 16, 0.0D,
             16, 16, 1,
-            sandScale, sandScale, 1.0D,
-            wrapped, alphaSampling
+            sandScale, sandScale, 1.0D
         ) : null;
 
         double[] gravelNoise = initBeachArrays ? beachOctaveNoise.sampleArray(
             chunkX * 16, 109.0134D, chunkZ * 16,
             16, 1, 16,
-            gravelScale, 1.0D, gravelScale,
-            wrapped, alphaSampling
+            gravelScale, 1.0D, gravelScale
         ) : null;
 
         double[] surfaceNoise = surfacePerlinOctaveNoise != null && noise3DSettings.arraySurfaceNoise() ? surfacePerlinOctaveNoise.sampleArray(
             chunkX * 16, chunkZ * 16, 0.0D,
             16, 16, 1,
-            surfaceScale, surfaceScale, surfaceScale,
-            wrapped, alphaSampling
+            surfaceScale, surfaceScale, surfaceScale
         ) : null;
 
         for (int localZ = 0; localZ < 16; localZ++) {
@@ -342,8 +340,6 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
 
         ChunkHeightmap heightmapChunk = this.hasNoisePostProcessor() ? this.getChunkHeightmap(region, chunkX, chunkZ) : null;
 
-        boolean wrapped = this.noise3DSettings.wrapped();
-        boolean alphaSampling = this.noise3DSettings.alphaNoiseSampling();
         boolean generateBeaches = surfaceProperties.generateBeaches();
 
         float sandScale = surfaceProperties.sandBeachScale();
@@ -354,22 +350,19 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
         double[] sandNoise = initBeachArrays ? beachOctaveNoise.sampleArray(
             chunkX * 16, chunkZ * 16, 0.0D,
             16, 16, 1,
-            sandScale, sandScale, 1.0D,
-            wrapped, alphaSampling
+            sandScale, sandScale, 1.0D
         ) : null;
 
         double[] gravelNoise = initBeachArrays ? beachOctaveNoise.sampleArray(
             chunkX * 16, 109.0134D, chunkZ * 16,
             16, 1, 16,
-            gravelScale, 1.0D, gravelScale,
-            wrapped, alphaSampling
+            gravelScale, 1.0D, gravelScale
         ) : null;
 
         double[] surfaceNoise = surfacePerlinOctaveNoise != null && noise3DSettings.arraySurfaceNoise() ? surfacePerlinOctaveNoise.sampleArray(
             chunkX * 16, chunkZ * 16, 0.0D,
             16, 16, 1,
-            surfaceScale, surfaceScale, surfaceScale,
-            wrapped, alphaSampling
+            surfaceScale, surfaceScale, surfaceScale
         ) : null;
 
         for (int localZ = 0; localZ < 16; localZ++) {
@@ -474,43 +467,40 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
         double baseSize = this.noiseScale.baseSize();
         double heightStretch = this.noiseScale.stretchY();
 
-        boolean wrapped = !this.noise3DSettings.farlands();
         boolean oldInfdev = this.noise3DSettings.oldInfdevTerrainNoise();
 
-        double scale = this.scaleOctaveNoise != null && this.noiseLandmass.sampleScale()
-            ? (
-                (this.noise3DSettings.alphaNoiseSampling()
-                    ? this.scaleOctaveNoise.sample(noiseX, 10.0D, noiseZ, this.noiseLandmass.variationScale(), 1.0D, this.noiseLandmass.variationScale(), wrapped)
-                    : this.scaleOctaveNoise.sampleXZ(noiseX, noiseZ, this.noiseLandmass.variationScale(), this.noiseLandmass.variationScale(), wrapped))
-                + 256D) / 512D
+        boolean alphaLandmass = this.noiseLandmass.alphaSampling();
+
+        double scale = this.scaleOctaveNoise != null && this.noiseLandmass.scale().sample()
+            ? (this.scaleOctaveNoise.sample(noiseX, alphaLandmass ? 0.0D : 10.0D, noiseZ,
+                this.noiseLandmass.scale().variation(), alphaLandmass ? 0.0D : 1.0D, this.noiseLandmass.scale().variation()) + 256D) / 512D
             : 1.0D;
-        double depth = this.depthOctaveNoise != null && this.noiseLandmass.sampleDepth()
-            ? this.noise3DSettings.alphaNoiseSampling()
-                ? this.depthOctaveNoise.sample(noiseX, 10.0D, noiseZ, depthNoiseScaleX, 1.0D, depthNoiseScaleZ, wrapped)
-                : this.depthOctaveNoise.sampleXZ(noiseX, noiseZ, depthNoiseScaleX, depthNoiseScaleZ, wrapped)
+        double depth = this.depthOctaveNoise != null && this.noiseLandmass.depth().sample()
+            ? this.depthOctaveNoise.sample(noiseX, alphaLandmass ? 0.0D : 10.0D, noiseZ,
+                depthNoiseScaleX, alphaLandmass ? 0.0D : 1.0D, depthNoiseScaleZ)
             : 0.0D;
 
-        if (this.noiseLandmass.sampleDepth()) {
+        if (this.noiseLandmass.depth().sample()) {
             depth /= 8000D;
 
             if (depth < 0.0D) {
-                depth = -depth * this.noiseLandmass.negativeDepthInfluence();
+                depth = -depth * this.noiseLandmass.depth().negativeInfluence();
             }
 
-            depth = depth * this.noiseLandmass.depthStretch() + this.noiseLandmass.depthOffset();
+            depth = depth * this.noiseLandmass.depth().stretch() + this.noiseLandmass.depth().offset();
 
             if (depth < 0.0D) {
                 depth = Math.max(
-                    depth / this.noiseLandmass.negativeDepthDampening(),
-                    this.noiseLandmass.minDepth()
+                    depth / this.noiseLandmass.depth().negativeDampening(),
+                    this.noiseLandmass.depth().minValue()
                 );
-                if (this.noiseLandmass.negativeDepthFlattening()) {
+                if (this.noiseLandmass.depth().negativeFlattening()) {
                     scale = 0.0D;
                 }
             } else {
                 depth = Math.min(
-                    depth / this.noiseLandmass.positiveDepthDampening(),
-                    this.noiseLandmass.maxDepth()
+                    depth / this.noiseLandmass.depth().positiveDampening(),
+                    this.noiseLandmass.depth().maxValue()
                 );
             }
         }
@@ -542,17 +532,17 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
             scale *= rain;
         }
 
-        scale = modScale + scale * this.noiseLandmass.scaleInfluence();
+        scale = modScale + scale * this.noiseLandmass.scale().influence();
         if (scale < 0.0D && !this.noise3DSettings.monoliths()) {
             scale = 0.0D;
         }
 
-        if (!this.forcedBiomeHeightEnabled && this.noiseLandmass.sampleScale()) {
+        if (!this.forcedBiomeHeightEnabled && this.noiseLandmass.scale().sample()) {
             scale = Math.min(scale, 1.0D);
         }
 
-        scale += this.noiseLandmass.scaleOffset();
-        depth = modDepth + depth * this.noiseLandmass.depthInfluence();
+        scale += this.noiseLandmass.scale().offset();
+        depth = modDepth + depth * this.noiseLandmass.depth().influence();
         depth *= baseSize / 8.0D;
         depth = baseSize + depth * 4.0D;
 
@@ -568,9 +558,7 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
                 noiseX, noiseY, noiseZ,
                 coordinateScale / mainNoiseScaleX,
                 heightScale / mainNoiseScaleY,
-                coordinateScale / mainNoiseScaleZ,
-                wrapped,
-                oldInfdev
+                coordinateScale / mainNoiseScaleZ
             ) / this.noiseScale.limitBlending();
             if (!oldInfdev) {
                 mainNoise += 1.0D;
@@ -582,9 +570,7 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
                     noiseX, noiseY, noiseZ,
                     coordinateScale,
                     heightScale,
-                    coordinateScale,
-                    wrapped,
-                    oldInfdev
+                    coordinateScale
                 ) / lowerLimitScale;
 
                 density -= densityOffset;
@@ -598,9 +584,7 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
                     noiseX, noiseY, noiseZ,
                     coordinateScale,
                     heightScale,
-                    coordinateScale,
-                    wrapped,
-                    oldInfdev
+                    coordinateScale
                 ) / upperLimitScale;
 
                 density -= densityOffset;
@@ -614,18 +598,14 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
                     noiseX, noiseY, noiseZ,
                     coordinateScale,
                     heightScale,
-                    coordinateScale,
-                    wrapped,
-                    oldInfdev
+                    coordinateScale
                 ) / lowerLimitScale;
 
                 double maxLimitNoise = this.maxLimitOctaveNoise.sample(
                     noiseX, noiseY, noiseZ,
                     coordinateScale,
                     heightScale,
-                    coordinateScale,
-                    wrapped,
-                    oldInfdev
+                    coordinateScale
                 ) / upperLimitScale;
 
                 minLimitNoise -= densityOffset;

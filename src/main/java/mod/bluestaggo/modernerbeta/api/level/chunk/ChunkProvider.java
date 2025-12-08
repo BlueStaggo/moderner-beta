@@ -15,6 +15,7 @@ import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
+import mod.bluestaggo.modernerbeta.settings.component.PerlinNoiseSettings;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
 import mod.bluestaggo.modernerbeta.util.noise.PerlinOctaveNoise;
 import net.minecraft.core.Holder;
@@ -285,6 +286,6 @@ public abstract class ChunkProvider {
      * @return Perlin octave noise sampler.
      */
     protected PerlinOctaveNoise getForestOctaveNoise() {
-        return new PerlinOctaveNoise(new Random(this.seed), 8, true);
+        return new PerlinOctaveNoise(new Random(this.seed), 8, PerlinNoiseSettings.DEFAULT);
     }
 }

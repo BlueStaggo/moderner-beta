@@ -17,6 +17,7 @@ public final class ModernBetaBuiltInTypes {
         NOISE_GENERATOR_SETTINGS("noise_generator_settings"),
         NOISE_SETTINGS("noise_settings"),
         NOISE_3D_SETTINGS("noise_3d_settings"),
+        PERLIN_NOISE_SETTINGS("perlin_noise_settings"),
         NOISE_SCALE("noise_scale"),
         NOISE_SLIDE("noise_slide"),
         NOISE_LANDMASS("noise_landmass"),

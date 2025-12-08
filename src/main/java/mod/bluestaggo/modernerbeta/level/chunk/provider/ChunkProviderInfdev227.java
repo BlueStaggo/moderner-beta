@@ -5,6 +5,7 @@ import mod.bluestaggo.modernerbeta.api.level.chunk.ChunkProviderNoiseImitable;
 import mod.bluestaggo.modernerbeta.api.level.chunk.surface.SurfaceConfig;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.settings.component.Infdev227Structures;
+import mod.bluestaggo.modernerbeta.settings.component.PerlinNoiseSettings;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkCache;
@@ -76,16 +77,17 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
         this.defaultFluid = generatorSettings.defaultFluid();
 
         Infdev227Structures structures = this.chunkSettings.getOrDefault(SettingsComponentTypes.INFDEV_227_STRUCTURES);
+        PerlinNoiseSettings perlinSettings = this.chunkSettings.getOrDefault(SettingsComponentTypes.PERLIN_NOISE_SETTINGS);
         this.infdevUsePyramid = structures.brickPyramids();
         this.infdevUseWall = structures.obsidianWalls();
         
-        this.octaveNoiseA = new PerlinOctaveNoise(this.random, 16, true); 
-        this.octaveNoiseB = new PerlinOctaveNoise(this.random, 16, true);
-        this.octaveNoiseC = new PerlinOctaveNoise(this.random, 8, true);
-        this.octaveNoiseD = new PerlinOctaveNoise(this.random, 4, true);
-        this.octaveNoiseE = new PerlinOctaveNoise(this.random, 4, true);
-        this.octaveNoiseF = new PerlinOctaveNoise(this.random, 5, true);
-        this.forestOctaveNoise = new PerlinOctaveNoise(this.random, 5, true);
+        this.octaveNoiseA = new PerlinOctaveNoise(this.random, 16, perlinSettings);
+        this.octaveNoiseB = new PerlinOctaveNoise(this.random, 16, perlinSettings);
+        this.octaveNoiseC = new PerlinOctaveNoise(this.random, 8, perlinSettings);
+        this.octaveNoiseD = new PerlinOctaveNoise(this.random, 4, perlinSettings);
+        this.octaveNoiseE = new PerlinOctaveNoise(this.random, 4, perlinSettings);
+        this.octaveNoiseF = new PerlinOctaveNoise(this.random, 5, perlinSettings);
+        this.forestOctaveNoise = new PerlinOctaveNoise(this.random, 5, perlinSettings);
         
         this.chunkCacheHeightmap = new ChunkCache<>("heightmap", this::sampleHeightmapChunk);
     }

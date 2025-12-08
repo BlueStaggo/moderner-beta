@@ -6,6 +6,7 @@ import mod.bluestaggo.modernerbeta.api.level.cavebiome.climate.CaveClime;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.settings.component.CaveBiomeVoronoi;
+import mod.bluestaggo.modernerbeta.settings.component.PerlinNoiseSettings;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.util.noise.PerlinOctaveNoise;
 import mod.bluestaggo.modernerbeta.level.biome.voronoi.VoronoiPointCaveBiome;
@@ -90,9 +91,9 @@ public class CaveBiomeProviderVoronoi extends CaveBiomeProvider implements CaveC
         private final int depthMaxY;
         
         public VoronoiCaveClimateSampler(long seed, float verticalScale, float horizontalScale, int depthMinY, int depthMaxY) {
-            this.tempOctaveNoise = new PerlinOctaveNoise(new Random(seed * 9871L), 2, true);
-            this.rainOctaveNoise = new PerlinOctaveNoise(new Random(seed * 39811L), 2, true);
-            this.detailOctaveNoise = new PerlinOctaveNoise(new Random(seed * 543321L), 1, true);
+            this.tempOctaveNoise = new PerlinOctaveNoise(new Random(seed * 9871L), 2, PerlinNoiseSettings.DEFAULT);
+            this.rainOctaveNoise = new PerlinOctaveNoise(new Random(seed * 39811L), 2, PerlinNoiseSettings.DEFAULT);
+            this.detailOctaveNoise = new PerlinOctaveNoise(new Random(seed * 543321L), 1, PerlinNoiseSettings.DEFAULT);
             
             this.verticalScale = verticalScale;
             this.horizontalScale = horizontalScale;

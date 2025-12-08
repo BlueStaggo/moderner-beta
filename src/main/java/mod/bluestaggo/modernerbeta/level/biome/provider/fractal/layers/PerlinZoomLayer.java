@@ -1,6 +1,7 @@
 package mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers;
 
 import com.mojang.serialization.Codec;
+import mod.bluestaggo.modernerbeta.settings.component.PerlinNoiseSettings;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.util.noise.PerlinNoise;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeId;
@@ -35,15 +36,15 @@ public class PerlinZoomLayer extends SingleParentLayer {
     public void init(long worldSeed) {
         super.init(worldSeed);
         Random noiseRandom = new Random(this.getSaltedSeed());
-        this.xOffsetNoise = new PerlinNoise(noiseRandom, true);
-        this.zOffsetNoise = new PerlinNoise(noiseRandom, true);
+        this.xOffsetNoise = new PerlinNoise(noiseRandom, PerlinNoiseSettings.RELEASE);
+        this.zOffsetNoise = new PerlinNoise(noiseRandom, PerlinNoiseSettings.RELEASE);
     }
 
     public void initUnsalted() {
         super.initUnsalted();
         Random noiseRandom = new Random(this.getSaltedSeed());
-        this.xOffsetNoise = new PerlinNoise(noiseRandom, true);
-        this.zOffsetNoise = new PerlinNoise(noiseRandom, true);
+        this.xOffsetNoise = new PerlinNoise(noiseRandom, PerlinNoiseSettings.RELEASE);
+        this.zOffsetNoise = new PerlinNoise(noiseRandom, PerlinNoiseSettings.RELEASE);
     }
 
     @Override

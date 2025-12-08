@@ -38,6 +38,7 @@ public class SettingsComponentTypes {
     public static SettingsComponentType<Holder<NoiseGeneratorSettings>> NOISE_GENERATOR_SETTINGS;
     public static SettingsComponentType<NoiseSettings> NOISE_SETTINGS;
     public static SettingsComponentType<Noise3DSettings> NOISE_3D_SETTINGS;
+    public static SettingsComponentType<PerlinNoiseSettings> PERLIN_NOISE_SETTINGS;
     public static SettingsComponentType<NoiseScale> NOISE_SCALE;
     public static SettingsComponentType<NoiseSlide> NOISE_SLIDE;
     public static SettingsComponentType<NoiseLandmass> NOISE_LANDMASS;
@@ -140,6 +141,11 @@ public class SettingsComponentTypes {
             ModernBetaBuiltInTypes.SettingsComponentType.NOISE_3D_SETTINGS.id,
             Noise3DSettings.CODEC,
             Noise3DSettings.DEFAULT,
+            ValidationResult.Valid::new);
+        PERLIN_NOISE_SETTINGS = register(
+            ModernBetaBuiltInTypes.SettingsComponentType.PERLIN_NOISE_SETTINGS.id,
+            PerlinNoiseSettings.CODEC,
+            PerlinNoiseSettings.DEFAULT,
             ValidationResult.Valid::new);
         NOISE_SCALE = register(
             ModernBetaBuiltInTypes.SettingsComponentType.NOISE_SCALE.id,

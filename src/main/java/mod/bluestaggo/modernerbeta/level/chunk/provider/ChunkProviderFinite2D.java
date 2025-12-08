@@ -3,10 +3,7 @@ package mod.bluestaggo.modernerbeta.level.chunk.provider;
 import mod.bluestaggo.modernerbeta.api.level.chunk.ChunkProviderFinite;
 import mod.bluestaggo.modernerbeta.api.level.chunk.surface.SurfaceConfig;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
-import mod.bluestaggo.modernerbeta.settings.component.FiniteBeaches;
-import mod.bluestaggo.modernerbeta.settings.component.FiniteCaveGeneration;
-import mod.bluestaggo.modernerbeta.settings.component.FiniteNoise;
-import mod.bluestaggo.modernerbeta.settings.component.FinitePools;
+import mod.bluestaggo.modernerbeta.settings.component.*;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.util.noise.PerlinOctaveNoise;
@@ -40,6 +37,8 @@ public class ChunkProviderFinite2D extends ChunkProviderFinite {
     
     private PerlinOctaveNoise sandOctaveNoise;
     private PerlinOctaveNoise gravelOctaveNoise;
+
+    private final PerlinNoiseSettings perlinSettings;
     
     private final IndevTheme levelTheme;
     private final IndevType levelType;
@@ -52,6 +51,8 @@ public class ChunkProviderFinite2D extends ChunkProviderFinite {
 
     public ChunkProviderFinite2D(ModernBetaChunkGenerator chunkGenerator, long seed) {
         super(chunkGenerator, seed);
+
+        this.perlinSettings = this.getChunkSettings().getOrDefault(SettingsComponentTypes.PERLIN_NOISE_SETTINGS);
         
         this.levelTheme = this.levelProperties.theme();
         this.levelType = this.levelProperties.type();
@@ -189,12 +190,12 @@ public class ChunkProviderFinite2D extends ChunkProviderFinite {
     private void generateHeightmap(FiniteNoise noiseSettings) {
         this.setPhase("Raising");
         
-        this.minHeightOctaveNoise = new PerlinOctaveNoiseCombined(new PerlinOctaveNoise(random, 8, false), new PerlinOctaveNoise(random, 8, false));
-        this.maxHeightOctaveNoise = new PerlinOctaveNoiseCombined(new PerlinOctaveNoise(random, 8, false), new PerlinOctaveNoise(random, 8, false));
-        this.mainHeightOctaveNoise = new PerlinOctaveNoise(random, noiseSettings.selectorOctaves(), false);
+        this.minHeightOctaveNoise = new PerlinOctaveNoiseCombined(new PerlinOctaveNoise(random, 8, this.perlinSettings), new PerlinOctaveNoise(random, 8, this.perlinSettings));
+        this.maxHeightOctaveNoise = new PerlinOctaveNoiseCombined(new PerlinOctaveNoise(random, 8, this.perlinSettings), new PerlinOctaveNoise(random, 8, this.perlinSettings));
+        this.mainHeightOctaveNoise = new PerlinOctaveNoise(random, noiseSettings.selectorOctaves(), this.perlinSettings);
 
         if (this.levelType != IndevType.CLASSIC) {
-            this.islandOctaveNoise = new PerlinOctaveNoise(random, 2, false);
+            this.islandOctaveNoise = new PerlinOctaveNoise(random, 2, this.perlinSettings);
         }
 
         for (int x = 0; x < this.levelWidth; ++x) {
@@ -245,8 +246,8 @@ public class ChunkProviderFinite2D extends ChunkProviderFinite {
     private void erodeTerrain() {
         this.setPhase("Eroding");
         
-        this.erodeOctaveNoise0 = new PerlinOctaveNoiseCombined(new PerlinOctaveNoise(random, 8, false), new PerlinOctaveNoise(random, 8, false));
-        this.erodeOctaveNoise1 = new PerlinOctaveNoiseCombined(new PerlinOctaveNoise(random, 8, false), new PerlinOctaveNoise(random, 8, false));
+        this.erodeOctaveNoise0 = new PerlinOctaveNoiseCombined(new PerlinOctaveNoise(random, 8, this.perlinSettings), new PerlinOctaveNoise(random, 8, this.perlinSettings));
+        this.erodeOctaveNoise1 = new PerlinOctaveNoiseCombined(new PerlinOctaveNoise(random, 8, this.perlinSettings), new PerlinOctaveNoise(random, 8, this.perlinSettings));
 
         for (int x = 0; x < this.levelWidth; ++x) {
             for (int z = 0; z < this.levelLength; ++z) {
@@ -267,10 +268,10 @@ public class ChunkProviderFinite2D extends ChunkProviderFinite {
         this.setPhase("Soiling");
         int seaLevel = this.getSeaLevel();
 
-        this.dirtOctaveNoise = new PerlinOctaveNoise(random, 8, false);
+        this.dirtOctaveNoise = new PerlinOctaveNoise(random, 8, this.perlinSettings);
 
         if (this.levelType != IndevType.CLASSIC) {
-            this.floatingOctaveNoise = new PerlinOctaveNoise(random, 8, false);
+            this.floatingOctaveNoise = new PerlinOctaveNoise(random, 8, this.perlinSettings);
         }
 
         for (int x = 0; x < this.levelWidth; ++x) {
@@ -445,8 +446,8 @@ public class ChunkProviderFinite2D extends ChunkProviderFinite {
 
         int surfaceLevel = this.getSeaLevel() - 1;
 
-        this.sandOctaveNoise = new PerlinOctaveNoise(random, 8, false);
-        this.gravelOctaveNoise = new PerlinOctaveNoise(random, 8, false);
+        this.sandOctaveNoise = new PerlinOctaveNoise(random, 8, this.perlinSettings);
+        this.gravelOctaveNoise = new PerlinOctaveNoise(random, 8, this.perlinSettings);
 
         if (this.levelTheme == IndevTheme.PARADISE) surfaceLevel += 2;
 

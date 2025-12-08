@@ -36,7 +36,8 @@ public class ModernBetaBuiltInProviders {
                 SettingsComponentTypes.USE_SURFACE_RULES,
                 SettingsComponentTypes.SEA_LEVEL,
                 SettingsComponentTypes.CAVE_GENERATION,
-                SettingsComponentTypes.INFDEV_227_STRUCTURES
+                SettingsComponentTypes.INFDEV_227_STRUCTURES,
+                SettingsComponentTypes.PERLIN_NOISE_SETTINGS
             )
         ));
         registryHandler.register(ModernBetaBuiltInTypes.Chunk.FINITE_2D.id, new ChunkProviderType<>(
@@ -50,6 +51,7 @@ public class ModernBetaBuiltInProviders {
                 SettingsComponentTypes.FINITE_NOISE,
                 SettingsComponentTypes.FINITE_BEACHES,
                 SettingsComponentTypes.FINITE_POOLS,
+                SettingsComponentTypes.PERLIN_NOISE_SETTINGS,
                 SettingsComponentTypes.SPAWN_INDEV_HOUSE
             )
         ));
@@ -61,6 +63,7 @@ public class ModernBetaBuiltInProviders {
                 SettingsComponentTypes.CAVE_GENERATION,
                 SettingsComponentTypes.NOISE_SETTINGS,
                 SettingsComponentTypes.NOISE_3D_SETTINGS,
+                SettingsComponentTypes.PERLIN_NOISE_SETTINGS,
                 SettingsComponentTypes.NOISE_SCALE,
                 SettingsComponentTypes.NOISE_SLIDE,
                 SettingsComponentTypes.NOISE_LANDMASS,

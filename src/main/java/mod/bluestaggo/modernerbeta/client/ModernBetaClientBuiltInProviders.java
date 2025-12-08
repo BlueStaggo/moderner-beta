@@ -105,14 +105,25 @@ public class ModernBetaClientBuiltInProviders {
                 addAll(
                     options,
                     screen.booleanOption("monoliths"),
-                    screen.booleanOption("farlands"),
                     screen.booleanOption("oldInfdevTerrainNoise"),
-                    screen.booleanOption("alphaNoiseSampling"),
                     screen.booleanOption("climateHeightScaling"),
-                    screen.booleanOption("randomNoiseOffsets"),
                     screen.booleanOption("arraySurfaceNoise"),
                     screen.booleanOption("simplexSurfaceNoise"),
                     screen.booleanOption("pocketEditionRng")
+                );
+            }
+        );
+
+        registryHandler.register(
+            PERLIN_NOISE_SETTINGS.id,
+            (screen, options) -> {
+                addAll(
+                    options,
+                    screen.booleanOption("wrapped"),
+                    screen.booleanOption("randomNoiseOffsets"),
+                    screen.booleanOption("alpha2DSampling"),
+                    screen.booleanOption("infdevNoiseScaling"),
+                    screen.intRangeOption("failurePoint", 0, Integer.MAX_VALUE)
                 );
             }
         );
@@ -162,22 +173,23 @@ public class ModernBetaClientBuiltInProviders {
             (screen, options) -> {
                 addAll(
                     options,
-                    screen.booleanOption("depthEnabled"),
-                    screen.booleanOption("scaleEnabled"),
-                    screen.booleanOption("sampleDepth"),
-                    screen.booleanOption("sampleScale"),
-                    screen.floatRangeOption("variationScale", 0.0f, 2.0f),
-                    screen.floatRangeOption("depthInfluence", 0.0f, 2.0f),
-                    screen.floatRangeOption("scaleInfluence", 0.0f, 2.0f),
-                    screen.floatRangeOption("negativeDepthInfluence", 0.0f, 2.0f),
-                    screen.floatRangeOption("depthStretch", 0.0f, 5.0f),
-                    screen.floatRangeOption("scaleOffset", -5.0f, 5.0f),
-                    screen.floatRangeOption("depthOffset", -5.0f, 5.0f),
-                    screen.floatRangeOption("positiveDepthDampening", 1.0f, 10.0f),
-                    screen.floatRangeOption("negativeDepthDampening", 1.0f, 10.0f),
-                    screen.floatRangeOption("minDepth", -1.0f, 0.0f),
-                    screen.floatRangeOption("maxDepth", 0.0f, 1.0f),
-                    screen.booleanOption("negativeDepthFlattening")
+                    screen.booleanOption("depth.enabled"),
+                    screen.booleanOption("scale.enabled"),
+                    screen.booleanOption("depth.sample"),
+                    screen.booleanOption("scale.sample"),
+                    screen.floatRangeOption("scale.variation", 0.0f, 2.0f),
+                    screen.floatRangeOption("depth.influence", 0.0f, 2.0f),
+                    screen.floatRangeOption("scale.influence", 0.0f, 2.0f),
+                    screen.floatRangeOption("depth.negativeInfluence", 0.0f, 2.0f),
+                    screen.floatRangeOption("depth.stretch", 0.0f, 5.0f),
+                    screen.floatRangeOption("scale.offset", -5.0f, 5.0f),
+                    screen.floatRangeOption("depth.offset", -5.0f, 5.0f),
+                    screen.floatRangeOption("depth.positiveDampening", 1.0f, 10.0f),
+                    screen.floatRangeOption("depth.negativeDampening", 1.0f, 10.0f),
+                    screen.floatRangeOption("depth.minValue", -1.0f, 0.0f),
+                    screen.floatRangeOption("depth.maxValue", 0.0f, 1.0f),
+                    screen.booleanOption("depth.negativeFlattening"),
+                    screen.booleanOption("alphaSampling")
                 );
             }
         );

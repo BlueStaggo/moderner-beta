@@ -208,7 +208,7 @@ public final class ModernBetaSettingsPresets {
                 .add(NOISE_GENERATOR_SETTINGS, context.lookup(Registries.NOISE_SETTINGS)
                         .get(ModernBetaNoiseGeneratorSettings.OVERWORLD_128).orElseThrow())
                 .add(CAVE_GENERATION, CaveGeneration.BETA)
-                .addDefault(DEEPSLATE_GENERATION, USE_SURFACE_RULES, NOISE_3D_SETTINGS, NOISE_SCALE, NOISE_SLIDE, NOISE_LANDMASS, SURFACE_PROPERTIES)
+                .addDefault(DEEPSLATE_GENERATION, USE_SURFACE_RULES, NOISE_3D_SETTINGS, PERLIN_NOISE_SETTINGS, NOISE_SCALE, NOISE_SLIDE, NOISE_LANDMASS, SURFACE_PROPERTIES)
                 .build(),
             ModernBetaSettings.builder()
                 .add(PROVIDER, ModernBetaBuiltInTypes.Biome.BETA.id)
@@ -279,6 +279,7 @@ public final class ModernBetaSettingsPresets {
                 .add(DEEPSLATE_GENERATION, DeepslateGeneration.DISABLED)
                 .add(CAVE_GENERATION, CaveGeneration.BETA)
                 .add(NOISE_3D_SETTINGS, Noise3DSettings.ALPHA)
+                .add(PERLIN_NOISE_SETTINGS, PerlinNoiseSettings.ALPHA)
                 .add(NOISE_SCALE, NoiseScale.ALPHA)
                 .add(NOISE_LANDMASS, NoiseLandmass.ALPHA)
                 .add(SURFACE_PROPERTIES, SurfaceProperties.ALPHA)
@@ -309,7 +310,7 @@ public final class ModernBetaSettingsPresets {
                     1
                 ))
                 .add(SURFACE_PROPERTIES, SurfaceProperties.SKYLANDS)
-                .addDefault(USE_SURFACE_RULES)
+                .addDefault(USE_SURFACE_RULES, PERLIN_NOISE_SETTINGS)
                 .build(),
             ModernBetaSettings.singleBiome(ModernBetaBiomes.BETA_SKY),
             ModernBetaSettings.noCaveBiomes()
@@ -325,6 +326,7 @@ public final class ModernBetaSettingsPresets {
                 .add(DEEPSLATE_GENERATION, DeepslateGeneration.DISABLED)
                 .add(CAVE_GENERATION, CaveGeneration.DISABLED)
                 .add(NOISE_3D_SETTINGS, Noise3DSettings.INFDEV_415)
+                .add(PERLIN_NOISE_SETTINGS, PerlinNoiseSettings.INFDEV_415)
                 .add(NOISE_SCALE, NoiseScale.INFDEV_415)
                 .add(NOISE_SLIDE, NoiseSlide.DISABLED)
                 .add(NOISE_LANDMASS, NoiseLandmass.DISABLED)
@@ -345,6 +347,7 @@ public final class ModernBetaSettingsPresets {
                 .add(DEEPSLATE_GENERATION, DeepslateGeneration.DISABLED)
                 .add(CAVE_GENERATION, CaveGeneration.DISABLED)
                 .add(NOISE_3D_SETTINGS, Noise3DSettings.INFDEV_611)
+                .add(PERLIN_NOISE_SETTINGS, PerlinNoiseSettings.ALPHA)
                 .add(NOISE_SCALE, NoiseScale.INFDEV_420)
                 .add(NOISE_SLIDE, NoiseSlide.DISABLED)
                 .add(NOISE_LANDMASS, NoiseLandmass.DISABLED)
@@ -365,6 +368,7 @@ public final class ModernBetaSettingsPresets {
                 .add(DEEPSLATE_GENERATION, DeepslateGeneration.DISABLED)
                 .add(CAVE_GENERATION, CaveGeneration.BETA)
                 .add(NOISE_3D_SETTINGS, Noise3DSettings.INFDEV_611)
+                .add(PERLIN_NOISE_SETTINGS, PerlinNoiseSettings.ALPHA)
                 .add(NOISE_SCALE, NoiseScale.ALPHA)
                 .add(NOISE_SLIDE, NoiseSlide.DISABLED)
                 .add(NOISE_LANDMASS, NoiseLandmass.INFDEV_611)
@@ -382,6 +386,7 @@ public final class ModernBetaSettingsPresets {
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.INFDEV_227.id)
                 .add(NOISE_GENERATOR_SETTINGS, context.lookup(Registries.NOISE_SETTINGS)
                         .get(ModernBetaNoiseGeneratorSettings.OVERWORLD_128).orElseThrow())
+                .add(PERLIN_NOISE_SETTINGS, PerlinNoiseSettings.INFDEV_415)
                 .add(DEEPSLATE_GENERATION, DeepslateGeneration.DISABLED)
                 .add(USE_SURFACE_RULES, false)
                 .add(CAVE_GENERATION, CaveGeneration.DISABLED)
@@ -398,6 +403,7 @@ public final class ModernBetaSettingsPresets {
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.INFDEV_227.id)
                 .add(NOISE_GENERATOR_SETTINGS, context.lookup(Registries.NOISE_SETTINGS)
                         .get(ModernBetaNoiseGeneratorSettings.OVERWORLD_128).orElseThrow())
+                .add(PERLIN_NOISE_SETTINGS, PerlinNoiseSettings.INFDEV_415)
                 .add(DEEPSLATE_GENERATION, DeepslateGeneration.DISABLED)
                 .add(USE_SURFACE_RULES, false)
                 .add(CAVE_GENERATION, CaveGeneration.DISABLED)
@@ -414,6 +420,7 @@ public final class ModernBetaSettingsPresets {
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.FINITE_2D.id)
                 .add(NOISE_GENERATOR_SETTINGS, context.lookup(Registries.NOISE_SETTINGS)
                         .get(ModernBetaNoiseGeneratorSettings.FINITE_2D).orElseThrow())
+                .add(PERLIN_NOISE_SETTINGS, PerlinNoiseSettings.NO_OFFSETS)
                 .add(DEEPSLATE_GENERATION, DeepslateGeneration.DISABLED)
                 .add(CAVE_GENERATION, CaveGeneration.DISABLED)
                 .addDefault(FINITE_LEVEL_PROPERTIES, FINITE_CAVE_GENERATION, FINITE_NOISE, FINITE_BEACHES, FINITE_POOLS)
@@ -429,6 +436,7 @@ public final class ModernBetaSettingsPresets {
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.FINITE_2D.id)
                 .add(NOISE_GENERATOR_SETTINGS, context.lookup(Registries.NOISE_SETTINGS)
                         .get(ModernBetaNoiseGeneratorSettings.FINITE_2D).orElseThrow())
+                .add(PERLIN_NOISE_SETTINGS, PerlinNoiseSettings.NO_OFFSETS)
                 .add(FINITE_LEVEL_PROPERTIES, new FiniteLevelProperties(
                     IndevType.CLASSIC,
                     IndevTheme.NORMAL,
@@ -461,6 +469,7 @@ public final class ModernBetaSettingsPresets {
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.FINITE_2D.id)
                 .add(NOISE_GENERATOR_SETTINGS, context.lookup(Registries.NOISE_SETTINGS)
                         .get(ModernBetaNoiseGeneratorSettings.FINITE_2D).orElseThrow())
+                .add(PERLIN_NOISE_SETTINGS, PerlinNoiseSettings.NO_OFFSETS)
                 .add(FINITE_LEVEL_PROPERTIES, new FiniteLevelProperties(
                     IndevType.CLASSIC,
                     IndevTheme.NORMAL,
@@ -1499,6 +1508,7 @@ public final class ModernBetaSettingsPresets {
                 ), amplified))
                 .add(SEA_LEVEL, 63)
                 .add(NOISE_3D_SETTINGS, Noise3DSettings.EARLY_RELEASE)
+                .add(PERLIN_NOISE_SETTINGS, PerlinNoiseSettings.RELEASE)
                 .add(NOISE_LANDMASS, NoiseLandmass.RELEASE)
                 .add(SURFACE_PROPERTIES, SurfaceProperties.EARLY_RELEASE)
                 .build(),
@@ -1568,6 +1578,7 @@ public final class ModernBetaSettingsPresets {
                 .add(FORCED_BIOME_HEIGHT, amplified ? ForcedBiomeHeight.AMPLIFIED : ForcedBiomeHeight.ENABLED)
                 .add(SEA_LEVEL, 63)
                 .add(NOISE_3D_SETTINGS, Noise3DSettings.EARLY_RELEASE)
+                .add(PERLIN_NOISE_SETTINGS, PerlinNoiseSettings.RELEASE)
                 .add(NOISE_LANDMASS, NoiseLandmass.RELEASE)
                 .add(SURFACE_PROPERTIES, SurfaceProperties.EARLY_RELEASE)
                 .build(),
@@ -1585,6 +1596,7 @@ public final class ModernBetaSettingsPresets {
                 .add(FORCED_BIOME_HEIGHT, amplified ? ForcedBiomeHeight.AMPLIFIED : ForcedBiomeHeight.ENABLED)
                 .add(SEA_LEVEL, 63)
                 .add(NOISE_3D_SETTINGS, Noise3DSettings.EARLY_RELEASE)
+                .add(PERLIN_NOISE_SETTINGS, PerlinNoiseSettings.RELEASE)
                 .add(NOISE_LANDMASS, NoiseLandmass.RELEASE)
                 .add(SURFACE_PROPERTIES, SurfaceProperties.EARLY_RELEASE)
                 .build(),
@@ -1739,6 +1751,7 @@ public final class ModernBetaSettingsPresets {
                 .add(FORCED_BIOME_HEIGHT, amplified ? ForcedBiomeHeight.AMPLIFIED : ForcedBiomeHeight.ENABLED)
                 .add(SEA_LEVEL, 63)
                 .add(NOISE_3D_SETTINGS, Noise3DSettings.EARLY_RELEASE)
+                .add(PERLIN_NOISE_SETTINGS, PerlinNoiseSettings.RELEASE)
                 .add(NOISE_LANDMASS, NoiseLandmass.RELEASE)
                 .add(SURFACE_PROPERTIES, SurfaceProperties.EARLY_RELEASE)
                 .build(),
@@ -1756,6 +1769,7 @@ public final class ModernBetaSettingsPresets {
                 .add(FORCED_BIOME_HEIGHT, amplified ? ForcedBiomeHeight.AMPLIFIED : ForcedBiomeHeight.ENABLED)
                 .add(SEA_LEVEL, 63)
                 .add(NOISE_3D_SETTINGS, Noise3DSettings.EARLY_RELEASE)
+                .add(PERLIN_NOISE_SETTINGS, PerlinNoiseSettings.RELEASE)
                 .add(NOISE_LANDMASS, NoiseLandmass.RELEASE)
                 .add(SURFACE_PROPERTIES, SurfaceProperties.EARLY_RELEASE)
                 .build(),
@@ -1780,6 +1794,7 @@ public final class ModernBetaSettingsPresets {
                 ), amplified))
                 .add(SEA_LEVEL, 63)
                 .add(NOISE_3D_SETTINGS, Noise3DSettings.EARLY_RELEASE)
+                .add(PERLIN_NOISE_SETTINGS, PerlinNoiseSettings.RELEASE)
                 .add(NOISE_LANDMASS, NoiseLandmass.RELEASE)
                 .add(SURFACE_PROPERTIES, SurfaceProperties.EARLY_RELEASE)
                 .build(),
@@ -2355,6 +2370,7 @@ public final class ModernBetaSettingsPresets {
                 .add(FORCED_BIOME_HEIGHT, ForcedBiomeHeight.overridesOnly(heightOverrides, amplified))
                 .add(SEA_LEVEL, 63)
                 .add(NOISE_3D_SETTINGS, bedrock ? Noise3DSettings.BEDROCK : Noise3DSettings.MAJOR_RELEASE)
+                .add(PERLIN_NOISE_SETTINGS, PerlinNoiseSettings.RELEASE)
                 .add(NOISE_LANDMASS, NoiseLandmass.RELEASE)
                 .add(SURFACE_PROPERTIES, SurfaceProperties.MAJOR_RELEASE)
                 .build(),
@@ -2377,6 +2393,7 @@ public final class ModernBetaSettingsPresets {
                 .add(FORCED_BIOME_HEIGHT, ForcedBiomeHeight.overridesOnly(HeightConfig.MAJOR_RELEASE_CONFIGS, amplified))
                 .add(SEA_LEVEL, 63)
                 .add(NOISE_3D_SETTINGS, bedrock ? Noise3DSettings.BEDROCK : Noise3DSettings.MAJOR_RELEASE)
+                .add(PERLIN_NOISE_SETTINGS, PerlinNoiseSettings.RELEASE)
                 .add(NOISE_LANDMASS, NoiseLandmass.RELEASE)
                 .add(SURFACE_PROPERTIES, SurfaceProperties.MAJOR_RELEASE)
                 .build(),
@@ -2399,6 +2416,7 @@ public final class ModernBetaSettingsPresets {
                 .add(FORCED_BIOME_HEIGHT, ForcedBiomeHeight.overridesOnly(HeightConfig.MAJOR_RELEASE_CONFIGS))
                 .add(SEA_LEVEL, 63)
                 .add(NOISE_3D_SETTINGS, Noise3DSettings.MAJOR_RELEASE)
+                .add(PERLIN_NOISE_SETTINGS, PerlinNoiseSettings.RELEASE)
                 .add(NOISE_LANDMASS, NoiseLandmass.RELEASE)
                 .add(SURFACE_PROPERTIES, SurfaceProperties.MAJOR_RELEASE)
                 .add(ISLES_PROPERTIES, IslesProperties.xboxLegacy(finiteSize))
@@ -2421,6 +2439,7 @@ public final class ModernBetaSettingsPresets {
                 .add(FORCED_BIOME_HEIGHT, ForcedBiomeHeight.overridesOnly(HeightConfig.MAJOR_RELEASE_CONFIGS, amplified))
                 .add(SEA_LEVEL, 63)
                 .add(NOISE_3D_SETTINGS, Noise3DSettings.MAJOR_RELEASE)
+                .add(PERLIN_NOISE_SETTINGS, PerlinNoiseSettings.RELEASE)
                 .add(NOISE_LANDMASS, NoiseLandmass.RELEASE)
                 .add(SURFACE_PROPERTIES, SurfaceProperties.MAJOR_RELEASE)
                 .build(),
@@ -2510,6 +2529,7 @@ public final class ModernBetaSettingsPresets {
                 ))
                 .add(SEA_LEVEL, 63)
                 .add(NOISE_3D_SETTINGS, Noise3DSettings.EARLY_RELEASE)
+                .add(PERLIN_NOISE_SETTINGS, PerlinNoiseSettings.RELEASE)
                 .add(NOISE_LANDMASS, NoiseLandmass.RELEASE)
                 .add(SURFACE_PROPERTIES, SurfaceProperties.EARLY_RELEASE)
                 .build(),

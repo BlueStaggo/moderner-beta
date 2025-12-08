@@ -1,5 +1,6 @@
 package mod.bluestaggo.modernerbeta.util.noise;
 
+import mod.bluestaggo.modernerbeta.settings.component.PerlinNoiseSettings;
 import net.minecraft.util.Mth;
 
 import java.util.Random;
@@ -14,17 +15,21 @@ public class PerlinNoise {
     public double offsetY;
     public double offsetZ;
 
+    private final PerlinNoiseSettings settings;
+
     public PerlinNoise() {
-        this(new Random(), false); 
+        this(new Random(), PerlinNoiseSettings.DEFAULT);
     }
 
-    public PerlinNoise(Random random, boolean useOffset) {
+    public PerlinNoise(Random random, PerlinNoiseSettings settings) {
+        this.settings = settings;
+
         // Generate permutation array
         this.permutations = new int[512];
 
         this.offsetX = this.offsetY = this.offsetZ = 0;
         
-        if (useOffset) {
+        if (settings.randomNoiseOffsets()) {
             this.offsetX = random.nextDouble() * 256D;
             this.offsetY = random.nextDouble() * 256D;
             this.offsetZ = random.nextDouble() * 256D; 
@@ -107,7 +112,7 @@ public class PerlinNoise {
         );
     }
    
-    public void sampleAlpha(
+    public void sample(
         double[] arr,
         double x, double y, double z, 
         int sizeX, int sizeY, int sizeZ, 
@@ -192,37 +197,17 @@ public class PerlinNoise {
             }
         }
     }
-
-    public void sampleBeta(
-        double[] arr,
-        double x, double y, double z, 
-        int sizeX, int sizeY, int sizeZ, 
-        double scaleX, double scaleY, double scaleZ, 
-        double frequency
-    ) {
-        if (sizeY != 1) {
-            this.sampleAlpha(arr, x, y, z, sizeX, sizeY, sizeZ, scaleX, scaleY, scaleZ, frequency);
-        } else {
-            int ndx = 0;
-            for (int sX = 0; sX < sizeX; sX++) {
-                for (int sZ = 0; sZ < sizeZ; sZ++) {
-                    double curX = (x + (double)sX) * scaleX;
-                    double curZ = (z + (double)sZ) * scaleZ;
-                    
-                    arr[ndx++] += this.sampleXZ(curX, curZ, frequency);
-                }
-            }
-        }
-    }
     
     public double sampleXZ(double x, double z, double frequency) {
         frequency = 1.0D / frequency;
         
         x = x + this.offsetX;
         z = z + this.offsetZ;
+
+        int failurePoint = settings.failurePoint();
         
-        int floorX = Mth.floor(x);
-        int floorZ = Mth.floor(z);
+        int floorX = Mth.floor(Mth.clamp(x, -failurePoint - 1, failurePoint));
+        int floorZ = Mth.floor(Mth.clamp(z, -failurePoint - 1, failurePoint));
         
         // Find unit cube that contains point.
         int X = floorX & 0xFF;
@@ -262,10 +247,12 @@ public class PerlinNoise {
         x += this.offsetX;
         y += this.offsetY;
         z += this.offsetZ;
-        
-        int floorX = Mth.floor(x);
-        int floorY = Mth.floor(y);
-        int floorZ = Mth.floor(z);
+
+        int failurePoint = settings.failurePoint();
+
+        int floorX = Mth.floor(Mth.clamp(x, -failurePoint - 1, failurePoint));
+        int floorY = Mth.floor(Mth.clamp(y, -failurePoint - 1, failurePoint));
+        int floorZ = Mth.floor(Mth.clamp(z, -failurePoint - 1, failurePoint));
         
         x -= floorX;
         y -= floorY;

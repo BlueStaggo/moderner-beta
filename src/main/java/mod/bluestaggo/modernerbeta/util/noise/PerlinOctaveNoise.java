@@ -56,7 +56,7 @@ public class PerlinOctaveNoise {
                 offZ /= frequency * scaleX;
             }
 
-            if (!settings.alpha2DSampling() && y == 1) {
+            if (!settings.alpha2DSampling() && sizeY == 1) {
                 int ndx = 0;
                 for (int sX = 0; sX < sizeX; sX++) {
                     for (int sZ = 0; sZ < sizeZ; sZ++) {
@@ -133,15 +133,15 @@ public class PerlinOctaveNoise {
     }
 
     /*
-     * Release 2D noise sampler. This noise sampler does not overflow.
+     * 2D noise sampler. This noise sampler does not overflow.
      */
     public final double sampleXZ(double x, double z, double scaleX, double scaleZ) {
         double total = 0.0;
         double frequency = 1.0;
 
         for (int i = 0; i < this.octaves; ++i) {
-            double offX = x * frequency * scaleX;
-            double offZ = z * frequency * scaleZ;
+            double offX = x * scaleX * frequency;
+            double offZ = z * scaleZ * frequency;
 
             if (settings.wrapped()) {
                 long offXCoord = Mth.lfloor(offX);
@@ -166,7 +166,7 @@ public class PerlinOctaveNoise {
     }
 
     /*
-     * Release 3D noise sampler. This noise sampler does not overflow horizontally.
+     * 3D noise sampler. This noise sampler does not overflow horizontally.
      */
     public final double sample(double x, double y, double z, double scaleX, double scaleY, double scaleZ) {
         if (settings.infdevNoiseScaling()) {
@@ -177,8 +177,8 @@ public class PerlinOctaveNoise {
         double frequency = 1.0;
 
         for (int i = 0; i < this.octaves; ++i) {
-            double offX = x * frequency * scaleX;
-            double offZ = z * frequency * scaleZ;
+            double offX = x * scaleX * frequency;
+            double offZ = z * scaleZ * frequency;
 
             if (settings.wrapped()) {
                 long offXCoord = Mth.lfloor(offX);

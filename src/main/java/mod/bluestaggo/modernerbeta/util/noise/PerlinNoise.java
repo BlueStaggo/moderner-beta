@@ -59,10 +59,12 @@ public class PerlinNoise {
         x += this.offsetX;
         y += this.offsetY;
         z += this.offsetZ;
+
+        int failurePoint = settings.failurePoint();
         
-        int floorX = Mth.floor(x);
-        int floorY = Mth.floor(y);
-        int floorZ = Mth.floor(z);
+        int floorX = Mth.floor(Mth.clamp(x, -failurePoint - 1, failurePoint));
+        int floorY = Mth.floor(Mth.clamp(y, -failurePoint - 1, failurePoint));
+        int floorZ = Mth.floor(Mth.clamp(z, -failurePoint - 1, failurePoint));
         
         // Find unit cube that contains point.
         int X = floorX & 0xFF;
@@ -127,6 +129,8 @@ public class PerlinNoise {
         double lerp1 = 0.0D;
         double lerp2 = 0.0D;
         double lerp3 = 0.0D;
+
+        int failurePoint = settings.failurePoint();
         
         // Iterate over a collection of noise points
         for (int sX = 0; sX < sizeX; sX++) {
@@ -136,9 +140,9 @@ public class PerlinNoise {
                     double curY = (y + (double)sY) * scaleY + this.offsetY;
                     double curZ = (z + (double)sZ) * scaleZ + this.offsetZ;
 
-                    int floorX = Mth.floor(curX);
-                    int floorY = Mth.floor(curY);
-                    int floorZ = Mth.floor(curZ);
+                    int floorX = Mth.floor(Mth.clamp(curX, -failurePoint - 1, failurePoint));
+                    int floorY = Mth.floor(Mth.clamp(curY, -failurePoint - 1, failurePoint));
+                    int floorZ = Mth.floor(Mth.clamp(curZ, -failurePoint - 1, failurePoint));
                     
                     // Find unit cube that contains point.
                     int X = floorX & 0xFF;

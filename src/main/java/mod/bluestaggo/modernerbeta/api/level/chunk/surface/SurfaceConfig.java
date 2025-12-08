@@ -3,7 +3,6 @@ package mod.bluestaggo.modernerbeta.api.level.chunk.surface;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
@@ -33,7 +32,7 @@ public record SurfaceConfig(SurfaceBlocks normal, SurfaceBlocks beachSand, Surfa
             return DEFAULT;
         }
 
-        Optional<Holder.Reference<SurfaceConfig>> optionalKey = surfaceConfigLookup./**/listElements()
+        Optional<Holder.Reference<SurfaceConfig>> optionalKey = surfaceConfigLookup.listElements()
             .filter(entry -> entry.isBound() &&
                     entry.value().biomeTag != null && biome.is(entry.value().biomeTag))
             .findFirst();

@@ -472,12 +472,16 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
         boolean alphaLandmass = this.noiseLandmass.alphaSampling();
 
         double scale = this.scaleOctaveNoise != null && this.noiseLandmass.scale().sample()
-            ? (this.scaleOctaveNoise.sample(noiseX, alphaLandmass ? 0.0D : 10.0D, noiseZ,
-                this.noiseLandmass.scale().variation(), alphaLandmass ? 0.0D : 1.0D, this.noiseLandmass.scale().variation()) + 256D) / 512D
+            ? (
+            (this.noiseLandmass.alphaSampling()
+                ? this.scaleOctaveNoise.sample(noiseX, 0, noiseZ, this.noiseLandmass.scale().variation(), 0.0D, this.noiseLandmass.scale().variation())
+                : this.scaleOctaveNoise.sampleXZ(noiseX, noiseZ, this.noiseLandmass.scale().variation(), this.noiseLandmass.scale().variation()))
+                + 256D) / 512D
             : 1.0D;
         double depth = this.depthOctaveNoise != null && this.noiseLandmass.depth().sample()
-            ? this.depthOctaveNoise.sample(noiseX, alphaLandmass ? 0.0D : 10.0D, noiseZ,
-                depthNoiseScaleX, alphaLandmass ? 0.0D : 1.0D, depthNoiseScaleZ)
+            ? this.noiseLandmass.alphaSampling()
+            ? this.depthOctaveNoise.sample(noiseX, 0, noiseZ, depthNoiseScaleX, 0.0D, depthNoiseScaleZ)
+            : this.depthOctaveNoise.sampleXZ(noiseX, noiseZ, depthNoiseScaleX, depthNoiseScaleZ)
             : 0.0D;
 
         if (this.noiseLandmass.depth().sample()) {

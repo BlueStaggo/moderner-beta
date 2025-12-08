@@ -38,7 +38,7 @@ public record NoiseLandmass(
                 Codec.BOOL.fieldOf("sample").orElse(true).forGetter(DepthSettings::sample),
                 Codec.FLOAT.fieldOf("influence").orElse(1.0F).forGetter(DepthSettings::influence),
                 Codec.FLOAT.fieldOf("negativeInfluence").orElse(0.3F).forGetter(DepthSettings::negativeInfluence),
-                Codec.FLOAT.fieldOf("stretch").orElse(0.3F).forGetter(DepthSettings::stretch),
+                Codec.FLOAT.fieldOf("stretch").orElse(3.0F).forGetter(DepthSettings::stretch),
                 Codec.FLOAT.fieldOf("offset").orElse(-2.0F).forGetter(DepthSettings::offset),
                 Codec.FLOAT.fieldOf("positiveDampening").orElse(8.0F).forGetter(DepthSettings::positiveDampening),
                 Codec.FLOAT.fieldOf("negativeDampening").orElse(5.6F).forGetter(DepthSettings::negativeDampening),

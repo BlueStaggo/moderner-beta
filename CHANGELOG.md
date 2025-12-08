@@ -9,6 +9,8 @@ within `server.properties`
 Quick Import/Export screen, or a shorter format which just takes the preset (example: `{"preset": "moderner_beta:beta_vanilla"}`)
 - Added Moderner Beta biomes to tags used by Serene Seasons.
 - Added a component to change noise generation parameters, including total terrain height and starting height.
+- Added a component to control perlin noise generator properties, including the ability to set the point noise 
+generation breaks down, allowing to move the Farlands nearer to world origin.
 
 ## Changes
 - Ported the mod to 1.21.11.
@@ -35,9 +37,12 @@ updates
 - Surface Configs are now data driven.
 - Major Release LCE presets now use Early Release style cave generation.
 - Biome colour configuration now can take hex colour codes in 1.21.11
+- Replaced the sea level offset component with one that directly changes sea level, instead of offsetting it
 
 ## Fixes
 - Fixed the Voronoi Cave Biome provider having wrong components be used in the GUI
 - Removed Trial Chamber generation in Indev presets
 - Fixed incompatibility with Valkyrien Skies
 - Fixed Serene Seasons not having seasonal grass tinting with Beta and Beta Fractal biome providers
+- Fixed surface generation going down to underground structures like Ancient Cities in the Infdev 227 chunk provider, 
+when surface rules are disabled.

@@ -122,6 +122,7 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
                 int surfaceTopY = chunk.getOrCreateHeightmapUnprimed(Types.OCEAN_FLOOR_WG).getFirstAvailable(localX, localZ) - 1;
                 
                 Holder<Biome> biome = biomeSource.getBiomeForSurfaceGen(region, pos.set(x, surfaceTopY, z));
+                int surfaceMinY = this.getHeight(region, x, z, Types.OCEAN_FLOOR_WG) - 8;
                 
                 SurfaceConfig surfaceConfig = this.surfaceBuilder.getSurfaceConfig(biome);
                 BlockState topBlock = surfaceConfig.normal().topBlock();
@@ -138,6 +139,11 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
                     // Place bedrock
                     if (y <= bedrockFloor + bedrockRand.nextInt(5)) {
                         VersionCompat.setBlockState(chunk, pos, BlockStates.BEDROCK);
+                        continue;
+                    }
+
+                    // Skip if at surface min y
+                    if (y < surfaceMinY) {
                         continue;
                     }
 

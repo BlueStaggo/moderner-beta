@@ -43,7 +43,7 @@ stonecutter {
     create(getRootProject()) {
         versions("1.20.1", "1.21.1", "1.21.4", "1.21.5", "1.21.6", "1.21.9", "1.21.11")
         branch("fabric")
-        branch("forgelike") { versions("1.20.1", "1.21.1", "1.21.4", "1.21.5", "1.21.6", "1.21.9") }
+        branch("forgelike")
 
         vcsVersion = "1.21.6"
     }

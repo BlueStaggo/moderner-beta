@@ -52,4 +52,6 @@ This project is licensed under LGPLv3, up to and including commit 55519d1.
 
 Thanks to [icanttellyou](https://github.com/forkiesassds) for porting the mod to various platforms.
 
+The Nintendo Switch Edition [decompilation project](https://github.com/GRAnimated/MinecraftLCE/) has been referenced to implement accurate LCE terrain generation.
+
 In addition see Modern Beta credits [here](https://github.com/b3spectacled/modern-beta-fabric/wiki/Credits).

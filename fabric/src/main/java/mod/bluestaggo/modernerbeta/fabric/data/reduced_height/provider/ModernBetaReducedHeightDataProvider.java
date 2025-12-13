@@ -69,13 +69,17 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
         entries.add(
             BuiltinDimensionTypes.OVERWORLD,
             new DimensionType(
-                //? if <1.21.11
+                //? if <1.21.11 {
                 OptionalLong.empty(),
                 true,
                 false,
-                //? if <1.21.11
                 false,
                 true,
+                //? } else {
+                /*false,
+                true,
+                false,
+                *///? }
                 1.0,
                 //? if <1.21.11 {
                 true,

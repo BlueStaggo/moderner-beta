@@ -33,6 +33,7 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 	private final BiomeManager biomeAccess;
 	private final List<Holder<Biome>> allBiomes;
 	private final Layer layer;
+	private final Layer heightLayer;
 
 	public BiomeProviderFractal(ModernBetaSettings settings, HolderGetter<Biome> biomeRegistry, long seed) {
 		super(settings, biomeRegistry, seed);
@@ -49,6 +50,10 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 
 		this.layer = this.configuredLayers.getOutputOrThrow(ModernBetaBuiltInTypes.LayerOutput.BIOME.id);
 		this.layer.init(seed);
+
+		this.heightLayer = this.configuredLayers.getOutput(ModernBetaBuiltInTypes.LayerOutput.HEIGHT.id)
+			.orElse(this.layer);
+		this.heightLayer.init(seed);
 
 		Set<ExtendedBiomeId> allExtendedBiomes = new HashSet<>();
 		this.layer.addPossibleBiomesRecursive(allExtendedBiomes);
@@ -68,13 +73,17 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 
 	@Override
 	public Holder<Biome> getBiome(int biomeX, int biomeY, int biomeZ) {
-		ResourceLocation baseId = this.getExtendedBiomeId(biomeX, biomeY, biomeZ).baseId();
+		ResourceLocation baseId = this.getBaseExtendedBiomeId(biomeX, biomeY, biomeZ).baseId();
 		return this.getBiomeEntry(baseId)
 			.orElseThrow(() -> new NoSuchElementException("Biome \"" + baseId + "\" does not exist."));
 	}
 
 	@Override
 	public ExtendedBiomeId getExtendedBiomeId(int biomeX, int biomeY, int biomeZ) {
+		return this.heightLayer.sample(biomeX, biomeZ);
+	}
+
+	public ExtendedBiomeId getBaseExtendedBiomeId(int biomeX, int biomeY, int biomeZ) {
 		return this.layer.sample(biomeX, biomeZ);
 	}
 
@@ -107,7 +116,7 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 
 	@Override
 	public Component getBiomeName(int biomeX, int biomeY, int biomeZ) {
-		return this.getExtendedBiomeName(this.getExtendedBiomeId(biomeX, biomeY, biomeZ));
+		return this.getExtendedBiomeName(this.getBaseExtendedBiomeId(biomeX, biomeY, biomeZ));
 	}
 
 	@Override

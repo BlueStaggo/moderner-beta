@@ -63,6 +63,7 @@ public class SettingsComponentTypes {
     public static SettingsComponentType<Boolean> USE_32BIT_LAYER_SEED;
     public static SettingsComponentType<Boolean> USE_OCEAN_BIOMES;
     public static SettingsComponentType<TemperatureHeightScaling> TEMPERATURE_HEIGHT_SCALING;
+    public static SettingsComponentType<BiomeInjectionThresholds> BIOME_INJECTION_THRESHOLDS;
 
     // Cave biome provider
     public static SettingsComponentType<CaveBiomeVoronoi> CAVE_BIOME_VORONOI;
@@ -287,6 +288,11 @@ public class SettingsComponentTypes {
             ModernBetaBuiltInTypes.SettingsComponentType.TEMPERATURE_HEIGHT_SCALING.id,
             StringRepresentable.fromEnum(TemperatureHeightScaling::values),
             TemperatureHeightScaling.NONE,
+            ValidationResult.Valid::new);
+        BIOME_INJECTION_THRESHOLDS = register(
+            ModernBetaBuiltInTypes.SettingsComponentType.BIOME_INJECTION_THRESHOLDS.id,
+            BiomeInjectionThresholds.CODEC,
+            BiomeInjectionThresholds.DEFAULT,
             ValidationResult.Valid::new);
 
         // Cave biome provider

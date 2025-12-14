@@ -7,6 +7,7 @@ import mod.bluestaggo.modernerbeta.mixin.LevelChunkSectionAccessor;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
+import mod.bluestaggo.modernerbeta.settings.component.BiomeInjectionThresholds;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkHeightmap;
 import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.level.biome.injector.BiomeInjectionRules.BiomeInjectionContext;
@@ -33,11 +34,7 @@ public class BiomeInjector {
         POST, // Injects after surface generation step.
         ALL   // Injects for structure generation, spawn location.
     }
-    
-    public static final int OCEAN_START_DEPTH = 4;
-    public static final int OCEAN_DEEP_START_DEPTH = 16;
-    public static final int CAVE_START_DEPTH = 8;
-    
+
     private final ModernBetaChunkGenerator modernBetaChunkGenerator;
     private final ModernBetaBiomeSource modernBetaBiomeSource;
     
@@ -54,15 +51,16 @@ public class BiomeInjector {
             .mapPreset(modernBetaChunkGenerator.getPresetRegistry(), ModernBetaSettingsPreset::biomeSettings);
 
         boolean useOceanBiomes = settingsBiome.getOrDefault(SettingsComponentTypes.USE_OCEAN_BIOMES);
-        
+        BiomeInjectionThresholds thresholds = settingsBiome.getOrDefault(SettingsComponentTypes.BIOME_INJECTION_THRESHOLDS);
+
         Predicate<BiomeInjectionContext> cavePredicate = context -> 
-            context.getY() >= context.worldMinY && context.getY() + CAVE_START_DEPTH < context.minHeight;
+            context.getY() >= context.worldMinY && context.getY() + thresholds.caveDepth() < context.minHeight;
 
         Predicate<BiomeInjectionContext> oceanPredicate = context -> 
-            modernBetaBiomeSource.hasOceanBiomes() && this.atOceanDepth(context.topHeight, OCEAN_START_DEPTH);
+            modernBetaBiomeSource.hasOceanBiomes() && this.atOceanDepth(context.topHeight, thresholds.oceanDepth());
 
         Predicate<BiomeInjectionContext> deepOceanPredicate = context -> 
-            modernBetaBiomeSource.hasOceanBiomes() && this.atOceanDepth(context.topHeight, OCEAN_DEEP_START_DEPTH);
+            modernBetaBiomeSource.hasOceanBiomes() && this.atOceanDepth(context.topHeight, thresholds.deepOceanDepth());
         
         BiomeInjectionRules.Builder builderPre = new BiomeInjectionRules.Builder();
         BiomeInjectionRules.Builder builderPost = new BiomeInjectionRules.Builder();

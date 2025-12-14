@@ -413,6 +413,18 @@ public class ModernBetaClientBuiltInProviders {
         );
 
         registryHandler.register(
+            BIOME_INJECTION_THRESHOLDS.id,
+            (screen, options) -> {
+                addAll(
+                    options,
+                    screen.intRangeOption("oceanDepth", 0, 64),
+                    screen.intRangeOption("deepOceanDepth", 0, 64),
+                    screen.intRangeOption("caveDepth", 0, 64)
+                );
+            }
+        );
+
+        registryHandler.register(
             VORONOI_POINTS.id,
             (screen, options) -> {
                 options.addBig(screen.listEditButton(

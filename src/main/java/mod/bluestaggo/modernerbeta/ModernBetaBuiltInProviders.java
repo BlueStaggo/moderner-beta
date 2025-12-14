@@ -82,6 +82,7 @@ public class ModernBetaBuiltInProviders {
             BiomeProviderBeta::new, BiomeProviderBeta.class, () -> List.of(
                 SettingsComponentTypes.TEMPERATURE_HEIGHT_SCALING,
                 SettingsComponentTypes.USE_OCEAN_BIOMES,
+                SettingsComponentTypes.BIOME_INJECTION_THRESHOLDS,
                 SettingsComponentTypes.CLIMATE_DISTRIBUTION,
                 SettingsComponentTypes.CLIMATE_SCALE,
                 SettingsComponentTypes.CLIMATE_MAPPINGS
@@ -97,6 +98,7 @@ public class ModernBetaBuiltInProviders {
             BiomeProviderPE::new, BiomeProviderPE.class, () -> List.of(
                 SettingsComponentTypes.TEMPERATURE_HEIGHT_SCALING,
                 SettingsComponentTypes.USE_OCEAN_BIOMES,
+                SettingsComponentTypes.BIOME_INJECTION_THRESHOLDS,
                 SettingsComponentTypes.CLIMATE_DISTRIBUTION,
                 SettingsComponentTypes.CLIMATE_SCALE,
                 SettingsComponentTypes.CLIMATE_MAPPINGS
@@ -106,6 +108,7 @@ public class ModernBetaBuiltInProviders {
             BiomeProviderVoronoi::new, BiomeProviderVoronoi.class, () -> List.of(
                 SettingsComponentTypes.TEMPERATURE_HEIGHT_SCALING,
                 SettingsComponentTypes.USE_OCEAN_BIOMES,
+                SettingsComponentTypes.BIOME_INJECTION_THRESHOLDS,
                 SettingsComponentTypes.VORONOI_POINTS,
                 SettingsComponentTypes.CLIMATE_SCALE
             )
@@ -113,7 +116,9 @@ public class ModernBetaBuiltInProviders {
         registryHandler.register(ModernBetaBuiltInTypes.Biome.FRACTAL.id, new BiomeProviderType<>(
             BiomeProviderFractal::new, BiomeProviderFractal.class, () -> List.of(
                 SettingsComponentTypes.TEMPERATURE_HEIGHT_SCALING,
-                SettingsComponentTypes.FRACTAL_LAYERS
+                SettingsComponentTypes.FRACTAL_LAYERS,
+                SettingsComponentTypes.USE_OCEAN_BIOMES,
+                SettingsComponentTypes.BIOME_INJECTION_THRESHOLDS
             )
         ));
         registryHandler.register(ModernBetaBuiltInTypes.Biome.BETA_FRACTAL.id, new BiomeProviderType<>(

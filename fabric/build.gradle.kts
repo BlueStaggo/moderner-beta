@@ -53,3 +53,9 @@ dependencies {
     }
 }
 
+modrinth {
+    dependencies {
+        required.project("fabric-api")
+    }
+    uploadFile.set(tasks.remapJar)
+}

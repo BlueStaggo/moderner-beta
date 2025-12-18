@@ -1,13 +1,16 @@
 plugins {
-    `multiloader-loader`
+    id("multiloader-loader").apply(false)
     id("net.neoforged.moddev.legacyforge")
     kotlin("jvm")
     id("com.google.devtools.ksp")
     id("dev.kikugie.fletching-table")
+    id("com.modrinth.minotaur")
 }
 
-project.extra["loader"] = "forge"
-project.extra["supported_loaders"] = "forge"
+project.ext["loader"] = "forge"
+project.ext["supported_loaders"] = "forge"
+
+apply(plugin = "multiloader-loader")
 
 stonecutter.constants.put("forge", true)
 stonecutter.constants.put("neoforge", false)
@@ -57,6 +60,7 @@ legacyForge {
             ideName = "Minecraft Client (${project.path})"
             gameDirectory = project.file("../run")
         }
+
         register("server") {
             server()
             ideName = "Minecraft Server (${project.path})"
@@ -88,4 +92,8 @@ tasks {
             "MixinConfigs" to "moderner_beta-common.mixins.json,moderner_beta-forgelike.mixins.json"
         ))
     }
+}
+
+modrinth {
+    uploadFile.set(tasks.jar)
 }

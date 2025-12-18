@@ -1,13 +1,16 @@
 plugins {
-    `multiloader-loader`
+    id("multiloader-loader").apply(false)
     id("net.neoforged.moddev")
     kotlin("jvm")
     id("com.google.devtools.ksp")
     id("dev.kikugie.fletching-table")
+    id("com.modrinth.minotaur")
 }
 
-project.extra["loader"] = "neoforge"
-project.extra["supported_loaders"] = "neoforge"
+project.ext["loader"] = "neoforge"
+project.ext["supported_loaders"] = "neoforge"
+
+apply(plugin = "multiloader-loader")
 
 stonecutter.constants.put("forge", false)
 stonecutter.constants.put("neoforge", true)
@@ -45,6 +48,7 @@ neoForge {
             ideName = "Minecraft Client (${project.path})"
             gameDirectory = project.file("../run")
         }
+
         register("server") {
             server()
             ideName = "Minecraft Server (${project.path})"
@@ -66,4 +70,8 @@ neoForge {
             sourceSet(sourceSets.main.get())
         }
     }
+}
+
+modrinth {
+    uploadFile.set(tasks.jar)
 }

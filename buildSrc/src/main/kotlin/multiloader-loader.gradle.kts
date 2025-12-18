@@ -2,7 +2,7 @@ plugins {
     id("java")
     id("idea")
     id("multiloader-common")
-//    id("com.modrinth.minotaur") version "2.+"
+    id("com.modrinth.minotaur")
 }
 
 val commonJava: Configuration by configurations.creating {
@@ -19,16 +19,15 @@ dependencies {
     commonResources(project(path = commonPath, configuration = "commonResources"))
 }
 
-/*modrinth {
-    token = System.getenv("MODRINTH_TOKEN")
-    projectId = commonMod.prop("modrinth_project_id")
-    versionName = "Moderner Beta " + commonMod.version
-    versionNumber = commonMod.version
-    gameVersions = commonMod.prop("supported_versions").split(",").toList()
-    changelog = rootProject.file("CHANGELOG.md").text
-    loaders = supported_loaders
-    uploadFile = tasks.remapJar
-}*/
+modrinth {
+    token.set(System.getenv("MODRINTH_TOKEN"))
+    projectId.set(commonMod.prop("modrinth_project_id"))
+    versionName.set("Moderner Beta " + commonMod.version)
+    versionNumber.set(version.toString())
+    gameVersions.addAll(commonMod.prop("supported_versions").split(",").toList())
+    changelog.set(rootProject.file("CHANGELOG.md").readText())
+    loaders.addAll(supported_loaders!!)
+}
 
 tasks {
     compileJava {

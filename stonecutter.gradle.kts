@@ -1,12 +1,5 @@
-import dev.kikugie.stonecutter.data.tree.struct.ProjectNode
-
 plugins {
     id("dev.kikugie.stonecutter")
-    id("dev.architectury.loom").apply(false)
-
-    (id("org.jetbrains.kotlin.jvm") version "2.2.0").apply(false)
-    (id("com.google.devtools.ksp") version "2.2.0-2.0.2").apply(false)
-    (id("dev.kikugie.fletching-table") version "0.1.0-alpha.13").apply(false)
 }
 
 plugins.apply("dev.kikugie.stonecutter")
@@ -15,7 +8,7 @@ stonecutter.active("1.21.6")
 stonecutter.tasks {
     order("runDatagen", filter = { this.branch.id == "fabric" })
     order("build")
-    order("modrinth", filter = { this.branch.id == "fabric" || this.branch.id == "forgelike" })
+//    order("modrinth", filter = { this.branch.id == "fabric" || this.branch.id == "forgelike" })
 }
 
 stonecutter.parameters {

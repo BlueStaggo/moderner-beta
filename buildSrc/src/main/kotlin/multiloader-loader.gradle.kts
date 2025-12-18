@@ -43,7 +43,7 @@ tasks {
             exclude(".cache")
         }
 
-        from(commonResources) {
+        from(commonProject.tasks.processResources.map { it.outputs }) {
             filesMatching("**/*.nbt") {
                 duplicatesStrategy = DuplicatesStrategy.EXCLUDE
             }

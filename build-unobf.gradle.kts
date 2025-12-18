@@ -1,6 +1,9 @@
 plugins {
     id("multiloader-common")
     id("net.fabricmc.fabric-loom")
+    kotlin("jvm")
+    id("com.google.devtools.ksp")
+    id("dev.kikugie.fletching-table")
 }
 
 loom {
@@ -14,6 +17,21 @@ loom {
         named("vineflower") { // Adds names to lambdas - useful for mixins
             options.put("mark-corresponding-synthetics", "1")
         }
+    }
+}
+
+fletchingTable {
+    mixins.create("main") {
+        mixin("default", "moderner_beta-common.mixins.json") {
+            env("DEFAULT")
+            env("CLIENT", "mod.bluestaggo.modernerbeta.mixin.client")
+            env("SERVER", "mod.bluestaggo.modernerbeta.mixin.server")
+        }
+    }
+
+    j52j.register("main") {
+        extension("mcmeta", "resourcepacks/*/pack.json5")
+        extension("json", "resourcepacks/*/data/**/*.json5")
     }
 }
 

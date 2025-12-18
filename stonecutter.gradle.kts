@@ -1,5 +1,9 @@
 plugins {
     id("dev.kikugie.stonecutter")
+
+    (kotlin("jvm") version "2.2.0").apply(false)
+    (id("com.google.devtools.ksp") version "2.2.0-2.0.2").apply(false)
+    (id("dev.kikugie.fletching-table") version "0.1.0-alpha.22").apply(false)
 }
 
 plugins.apply("dev.kikugie.stonecutter")

@@ -1,6 +1,9 @@
 plugins {
     `multiloader-loader`
     id("net.neoforged.moddev.legacyforge")
+    kotlin("jvm")
+    id("com.google.devtools.ksp")
+    id("dev.kikugie.fletching-table")
 }
 
 project.extra["loader"] = "forge"
@@ -30,9 +33,9 @@ fletchingTable {
         add("moderner_beta.accesswidener")
     }
 
-//    mixins.create("main") {
-//        mixin("default", "moderner_beta-forgelike.mixins.json")
-//    }
+    mixins.create("main") {
+        mixin("default", "moderner_beta-forgelike.mixins.json")
+    }
 }
 
 mixin {
@@ -43,10 +46,10 @@ mixin {
 }
 
 legacyForge {
-    val at = project.file("build/resources/main/META-INF/accesstransformer.cfg");
-
-    accessTransformers.from(at.absolutePath)
-    validateAccessTransformers = true
+//    val at = project.file("build/resources/main/META-INF/accesstransformer.cfg");
+//
+//    accessTransformers.from(at.absolutePath)
+//    validateAccessTransformers = true
 
     runs {
         register("client") {

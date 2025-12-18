@@ -1,6 +1,9 @@
 plugins {
     `multiloader-loader`
     id("net.fabricmc.fabric-loom-remap")
+    kotlin("jvm")
+    id("com.google.devtools.ksp")
+    id("dev.kikugie.fletching-table")
 }
 
 project.extra["loader"] = "fabric"
@@ -24,11 +27,11 @@ loom {
     }
 }
 
-//fletchingTable {
-//    mixins.create("main") {
-//        mixin("default", "moderner_beta-fabric.mixins.json")
-//    }
-//}
+fletchingTable {
+    mixins.create("main") {
+        mixin("default", "moderner_beta-fabric.mixins.json")
+    }
+}
 
 
 dependencies {

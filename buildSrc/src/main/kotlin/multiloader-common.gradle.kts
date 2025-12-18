@@ -2,9 +2,6 @@ plugins {
     id("java")
     id("idea")
     id("java-library")
-    kotlin("jvm")
-    id("com.google.devtools.ksp")
-    id("dev.kikugie.fletching-table")
 }
 
 version = "${commonMod.version}+${commonMod.mc}"
@@ -36,21 +33,6 @@ repositories {
     maven("https://maven.kikugie.dev/snapshots") { name = "KikuGie Snapshots" }
 }
 
-fletchingTable {
-    mixins.create("main") {
-        mixin("default", "moderner_beta-common.mixins.json") {
-            env("DEFAULT")
-            env("CLIENT", "mod.bluestaggo.modernerbeta.mixin.client")
-            env("SERVER", "mod.bluestaggo.modernerbeta.mixin.server")
-        }
-    }
-
-    j52j.register("main") {
-        extension("mcmeta", "resourcepacks/*/pack.json5")
-        extension("json", "resourcepacks/*/data/**/*.json5")
-    }
-}
-
 tasks {
     processResources {
         val expandProps = mapOf(
@@ -80,8 +62,4 @@ tasks {
 
         inputs.properties(expandProps)
     }
-}
-
-tasks.named("processResources") {
-    dependsOn(":${project.stonecutterBuild.current.version}:stonecutterGenerate")
 }

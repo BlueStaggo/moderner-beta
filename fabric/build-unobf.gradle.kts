@@ -7,7 +7,7 @@ plugins {
 }
 
 loom {
-    accessWidenerPath = getRootProject().file("src/main/resources/moderner_beta.accesswidener")
+    accessWidenerPath = commonProject.file("../../src/main/resources/moderner_beta.accesswidener")
 
     runConfigs.all {
         ideConfigGenerated(true)

@@ -6,10 +6,8 @@ plugins {
     id("dev.kikugie.fletching-table")
 }
 
-project.extra["loader"] = "fabric"
-
 loom {
-    accessWidenerPath = getRootProject().file("src/main/resources/moderner_beta.accesswidener")
+    accessWidenerPath = commonProject.file("../../src/main/resources/moderner_beta.accesswidener")
 
     runConfigs.all {
         ideConfigGenerated(true)
@@ -32,7 +30,6 @@ fletchingTable {
         mixin("default", "moderner_beta-fabric.mixins.json")
     }
 }
-
 
 dependencies {
     minecraft("com.mojang:minecraft:${commonMod.mc}")

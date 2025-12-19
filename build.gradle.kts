@@ -11,7 +11,7 @@ loom {
         useLegacyMixinAp = false
     }
 
-    accessWidenerPath = getRootProject().file("src/main/resources/moderner_beta.accesswidener")
+    accessWidenerPath = file("../../src/main/resources/moderner_beta.accesswidener")
 
     decompilers {
         named("vineflower") { // Adds names to lambdas - useful for mixins

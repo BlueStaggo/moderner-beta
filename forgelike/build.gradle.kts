@@ -79,6 +79,11 @@ tasks.processResources {
         }
     }
 
+    filesMatching("META-INF/at.cfg") {
+        name = "accesstransformer.cfg"
+    }
+
+    exclude("assets/moderner_beta/icon.png")
     exclude("moderner_beta.accesswidener")
     exclude("META-INF/at-forge.cfg")
 }

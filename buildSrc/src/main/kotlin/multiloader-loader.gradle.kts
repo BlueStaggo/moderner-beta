@@ -1,3 +1,5 @@
+import gradle.kotlin.dsl.accessors._bb7407e43c252c8005654a0b9f579d81.base
+
 plugins {
     id("java")
     id("idea")
@@ -10,6 +12,10 @@ val commonJava: Configuration by configurations.creating {
 }
 val commonResources: Configuration by configurations.creating {
     isCanBeResolved = true
+}
+
+base {
+    archivesName.set("${commonMod.id}-$loader")
 }
 
 dependencies {
@@ -47,5 +53,9 @@ tasks {
                 duplicatesStrategy = DuplicatesStrategy.EXCLUDE
             }
         }
+    }
+
+    withType<Jar> {
+        destinationDirectory = rootProject.layout.buildDirectory.dir("libs/$loader")
     }
 }

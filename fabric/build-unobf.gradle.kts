@@ -44,6 +44,10 @@ dependencies {
     }
 }
 
+tasks.processResources {
+    exclude("assets/moderner_beta/banner.png")
+}
+
 modrinth {
     dependencies {
         required.project("fabric-api")

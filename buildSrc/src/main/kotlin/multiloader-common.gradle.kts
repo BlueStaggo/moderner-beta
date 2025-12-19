@@ -6,6 +6,10 @@ plugins {
 
 version = "${commonMod.version}+${commonMod.mc}"
 
+base {
+    archivesName.set(commonMod.id)
+}
+
 java {
     toolchain.languageVersion = JavaLanguageVersion.of(commonProject.prop("java_version")!!)
     // withSourcesJar()

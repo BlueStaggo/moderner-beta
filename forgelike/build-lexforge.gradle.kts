@@ -97,6 +97,11 @@ tasks {
     }
 
     processResources {
+        filesMatching("META-INF/at-forge.cfg") {
+            name = "accesstransformer.cfg"
+        }
+
+        exclude("assets/moderner_beta/icon.png")
         exclude("moderner_beta.accesswidener")
         exclude("META-INF/at.cfg")
     }

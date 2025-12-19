@@ -53,6 +53,16 @@ dependencies {
     }
 }
 
+tasks {
+    processResources {
+        exclude("assets/moderner_beta/banner.png")
+    }
+
+    remapJar {
+        destinationDirectory = rootProject.layout.buildDirectory.dir("libs/$loader")
+    }
+}
+
 modrinth {
     dependencies {
         required.project("fabric-api")

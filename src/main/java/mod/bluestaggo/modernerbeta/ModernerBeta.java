@@ -118,7 +118,27 @@ public class ModernerBeta {
     }
 
     public static void log(Level level, String message) {
-        LOGGER.atLevel(level).log("[" + MOD_NAME + "] {}", message);
+        String template = "[" + MOD_NAME + "] {}";
+
+        switch (level) {
+            case TRACE:
+                LOGGER.trace(template, message);
+                break;
+            case DEBUG:
+                LOGGER.debug(template, message);
+                break;
+            case INFO:
+                LOGGER.info(template, message);
+                break;
+            case WARN:
+                LOGGER.warn(template, message);
+                break;
+            case ERROR:
+                LOGGER.error(template, message);
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown logging level: " + level);
+        }
     }
 
     public static void log(String message) {

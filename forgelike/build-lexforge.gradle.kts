@@ -1,3 +1,6 @@
+import org.gradle.kotlin.dsl.accessTransformers
+import org.gradle.kotlin.dsl.from
+
 plugins {
     id("multiloader-loader").apply(false)
     id("net.neoforged.moddev.legacyforge")
@@ -32,9 +35,9 @@ dependencies {
 }
 
 fletchingTable {
-    accessConverter.register("main") {
+    /*accessConverter.register("main") {
         add("moderner_beta.accesswidener")
-    }
+    }*/
 
     mixins.create("main") {
         mixin("default", "moderner_beta-forgelike.mixins.json")
@@ -44,27 +47,27 @@ fletchingTable {
 mixin {
     add(sourceSets.main.get(), "moderner_beta.mixin.refmap.json")
 
-    config("moderner_beta-common.mixin.json")
-    config("moderner_beta-forgelike.mixin.json")
+    config("moderner_beta-common.mixins.json")
+    config("moderner_beta-forgelike.mixins.json")
 }
 
 legacyForge {
-//    val at = project.file("build/resources/main/META-INF/accesstransformer.cfg");
-//
-//    accessTransformers.from(at.absolutePath)
-//    validateAccessTransformers = true
+    val at = rootProject.file("forgelike/src/main/resources/META-INF/at-forge.cfg") //project.file("build/resources/main/META-INF/accesstransformer.cfg")
+
+    accessTransformers.from(at.absolutePath)
+    validateAccessTransformers = true
 
     runs {
         register("client") {
             client()
             ideName = "Minecraft Client (${project.path})"
-            gameDirectory = project.file("../run")
+            gameDirectory = project.file("../../../run")
         }
 
         register("server") {
             server()
             ideName = "Minecraft Server (${project.path})"
-            gameDirectory = project.file("../run")
+            gameDirectory = project.file("../../../run")
         }
     }
 
@@ -91,6 +94,11 @@ tasks {
         manifest.attributes(mapOf(
             "MixinConfigs" to "moderner_beta-common.mixins.json,moderner_beta-forgelike.mixins.json"
         ))
+    }
+
+    processResources {
+        exclude("moderner_beta.accesswidener")
+        exclude("META-INF/at.cfg")
     }
 }
 

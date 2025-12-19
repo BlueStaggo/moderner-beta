@@ -27,9 +27,9 @@ dependencies {
 }
 
 fletchingTable {
-    accessConverter.register("main") {
+    /*accessConverter.register("main") {
         add("moderner_beta.accesswidener")
-    }
+    }*/
 
     mixins.create("main") {
         mixin("default", "moderner_beta-forgelike.mixins.json")
@@ -37,22 +37,22 @@ fletchingTable {
 }
 
 neoForge {
-//    val at = project.file("build/resources/main/META-INF/accesstransformer.cfg");
-//
-//    accessTransformers.from(at.absolutePath)
-//    validateAccessTransformers = true
+    val at = rootProject.file("forgelike/src/main/resources/META-INF/at.cfg") //project.file("build/resources/main/META-INF/accesstransformer.cfg")
+
+    accessTransformers.from(at.absolutePath)
+    validateAccessTransformers = true
 
     runs {
         register("client") {
             client()
             ideName = "Minecraft Client (${project.path})"
-            gameDirectory = project.file("../run")
+            gameDirectory = project.file("../../../run")
         }
 
         register("server") {
             server()
             ideName = "Minecraft Server (${project.path})"
-            gameDirectory = project.file("../run")
+            gameDirectory = project.file("../../../run")
         }
     }
 
@@ -70,6 +70,17 @@ neoForge {
             sourceSet(sourceSets.main.get())
         }
     }
+}
+
+tasks.processResources {
+    filesMatching("META-INF/mods.toml") {
+        if (stonecutter.eval(stonecutter.current.version, ">=1.20.5")) {
+            name = "neoforge.mods.toml"
+        }
+    }
+
+    exclude("moderner_beta.accesswidener")
+    exclude("META-INF/at-forge.cfg")
 }
 
 modrinth {

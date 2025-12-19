@@ -46,7 +46,7 @@ jobs:
       id: get-branch
       shell: bash
       run: |
-        echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+        echo "branch=$(echo ${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}} | sed -e 's/[ \t:\/\\"<>|*?]/-/g' -e 's/--*/-/g')" >> $GITHUB_OUTPUT
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4.3.3
       with:

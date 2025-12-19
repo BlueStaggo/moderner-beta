@@ -45,7 +45,7 @@ fletchingTable {
 }
 
 mixin {
-    add(sourceSets.main.get(), "moderner_beta.mixin.refmap.json")
+    add(sourceSets.main.get(), "moderner_beta.refmap.json")
 
     config("moderner_beta-common.mixins.json")
     config("moderner_beta-forgelike.mixins.json")

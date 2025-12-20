@@ -872,7 +872,7 @@ public final class ModernBetaSettingsPresets {
     private static ModernBetaSettingsPreset presetBetaXboxLegacy() {
         return new ModernBetaSettingsPreset(
             DEFAULT_BETA.chunkSettings().extend()
-                .add(ISLES_PROPERTIES, IslesProperties.xboxLegacy(864))
+                .add(WORLD_BORDER, WorldBorderLocation.xboxLegacy(864))
                 .build(),
             DEFAULT_BETA.biomeSettings(),
             DEFAULT_BETA.caveBiomeSettings()

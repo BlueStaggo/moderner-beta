@@ -47,9 +47,10 @@ public class BiomeInjector {
         this.modernBetaChunkGenerator = modernBetaChunkGenerator;
         this.modernBetaBiomeSource = modernBetaBiomeSource;
         
-        ModernBetaSettings settingsBiome;
-        settingsBiome = this.modernBetaBiomeSource.getBiomeSettings()
+        ModernBetaSettings settingsBiome = this.modernBetaBiomeSource.getBiomeSettings()
             .mapPreset(modernBetaChunkGenerator.getPresetRegistry(), ModernBetaSettingsPreset::biomeSettings);
+        ModernBetaSettings settingsChunk = this.modernBetaChunkGenerator.getChunkSettings()
+            .mapPreset(modernBetaChunkGenerator.getPresetRegistry(), ModernBetaSettingsPreset::chunkSettings);
 
         boolean useOceanBiomes = settingsBiome.getOrDefault(SettingsComponentTypes.USE_OCEAN_BIOMES);
         BiomeInjectionThresholds thresholds = settingsBiome.getOrDefault(SettingsComponentTypes.BIOME_INJECTION_THRESHOLDS);
@@ -63,7 +64,7 @@ public class BiomeInjector {
         Predicate<BiomeInjectionContext> deepOceanPredicate = context -> 
             modernBetaBiomeSource.hasOceanBiomes() && this.atOceanDepth(context.topHeight, thresholds.deepOceanDepth());
 
-        WorldBorderLocation worldBorderLocation = modernBetaChunkGenerator.getChunkSettings().getOrDefault(SettingsComponentTypes.WORLD_BORDER);
+        WorldBorderLocation worldBorderLocation = settingsChunk.getOrDefault(SettingsComponentTypes.WORLD_BORDER);
         Predicate<BiomeInjectionContext> outOfBoundsPredicate = context ->
             !worldBorderLocation.containsPoint(context.getX(), context.getZ());
         

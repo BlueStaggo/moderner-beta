@@ -82,7 +82,7 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
         this.islesProperties = this.getChunkSettings().getOrDefault(SettingsComponentTypes.ISLES_PROPERTIES);
         this.noiseScale = this.getChunkSettings().getOrDefault(SettingsComponentTypes.NOISE_SCALE);
         this.noiseSlide = this.getChunkSettings().getOrElse(SettingsComponentTypes.NOISE_SLIDE, NoiseSlide.DISABLED);
-        this.worldBorderLocation = this.getChunkSettings().getOrElse(SettingsComponentTypes.WORLD_BORDER, WorldBorderLocation.DEFAULT);
+        this.worldBorderLocation = this.getChunkSettings().getOrDefault(SettingsComponentTypes.WORLD_BORDER);
 
         this.worldMinY = noiseSettings.minY();
         this.worldHeight = noiseSettings.height();

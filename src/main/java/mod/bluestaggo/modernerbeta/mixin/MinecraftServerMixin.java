@@ -108,7 +108,7 @@ public abstract class MinecraftServerMixin {
             ChunkProviderFinite.resetPhase();
         }
 
-        WorldBorderLocation worldBorderLocation = modernBetaChunkGenerator.getChunkSettings().getOrDefault(SettingsComponentTypes.WORLD_BORDER);
+        WorldBorderLocation worldBorderLocation = chunkProvider.getChunkSettings().getOrDefault(SettingsComponentTypes.WORLD_BORDER);
         if (worldBorderLocation.enabled()) {
             WorldBorder worldBorder = level.getWorldBorder();
             int width = worldBorderLocation.width();

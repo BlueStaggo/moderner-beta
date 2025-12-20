@@ -52,6 +52,7 @@ public class SettingsComponentTypes {
     public static SettingsComponentType<FinitePools> FINITE_POOLS;
     public static SettingsComponentType<Boolean> SPAWN_INDEV_HOUSE;
     public static SettingsComponentType<IslesProperties> ISLES_PROPERTIES;
+    public static SettingsComponentType<WorldBorderLocation> WORLD_BORDER;
 
     // Biome provider
     public static SettingsComponentType<ResourceLocation> SINGLE_BIOME;
@@ -212,6 +213,11 @@ public class SettingsComponentTypes {
             ModernBetaBuiltInTypes.SettingsComponentType.ISLES_PROPERTIES.id,
             IslesProperties.CODEC,
             IslesProperties.DEFAULT,
+            ValidationResult.Valid::new);
+        WORLD_BORDER = register(
+            ModernBetaBuiltInTypes.SettingsComponentType.WORLD_BORDER.id,
+            WorldBorderLocation.CODEC,
+            WorldBorderLocation.DEFAULT,
             ValidationResult.Valid::new);
 
         // Biome provider

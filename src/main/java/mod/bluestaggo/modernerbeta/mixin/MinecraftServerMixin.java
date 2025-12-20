@@ -7,10 +7,13 @@ import mod.bluestaggo.modernerbeta.api.level.chunk.ChunkProvider;
 import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaChunkGenerator;
 import mod.bluestaggo.modernerbeta.level.chunk.provider.ChunkProviderFinite2D;
 import mod.bluestaggo.modernerbeta.level.chunk.provider.indev.IndevTheme;
+import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
+import mod.bluestaggo.modernerbeta.settings.component.WorldBorderLocation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.border.WorldBorder;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.storage.ServerLevelData;
 import org.slf4j.event.Level;
@@ -69,42 +72,49 @@ public abstract class MinecraftServerMixin {
     )
     private static BlockPos redirectPlayerSpawnFinder(ServerLevel level, ChunkPos chunkPos, Operation<BlockPos> original) {
         ChunkGenerator chunkGenerator = level.getChunkSource().getGenerator();
-        
-        if (chunkGenerator instanceof ModernBetaChunkGenerator modernBetaChunkGenerator) {
-            ChunkProvider chunkProvider = modernBetaChunkGenerator.getChunkProvider();
-
-            //? if >=1.21.11 {
-            /*level.getGameRules().set(net.minecraft.world.level.gamerules.GameRules.RESPAWN_RADIUS,
-            *///? } else {
-            level.getGameRules().getRule(net.minecraft.world.level.GameRules.RULE_SPAWN_RADIUS).set(
-            //? }
-                0, level.getServer()); // Ensure a centered spawn
-            BlockPos spawnPos = chunkProvider.getSpawnLocator().locateSpawn(level).orElseGet(() -> original.call(level, chunkPos));
-            
-            if (spawnPos != null && ModernerBeta.DEV_ENV) {
-                int x = spawnPos.getX();
-                int y = spawnPos.getY();
-                int z = spawnPos.getZ();
-                
-                ModernerBeta.log(Level.INFO, String.format("Spawning at %d/%d/%d", x, y, z));
-            }
-            
-            if (spawnPos != null && chunkProvider instanceof ChunkProviderFinite2D chunkProviderIndev) {
-                // Generate Indev house
-                chunkProviderIndev.generateIndevHouse(level, spawnPos);
-                
-                // Set Indev world properties.
-                setIndevProperties(level, chunkProviderIndev.getLevelTheme());
-            }
-            
-            if (chunkProvider instanceof mod.bluestaggo.modernerbeta.api.level.chunk.ChunkProviderFinite) {
-                mod.bluestaggo.modernerbeta.api.level.chunk.ChunkProviderFinite.resetPhase();
-            }
-
-            return spawnPos;
+        if (!(chunkGenerator instanceof ModernBetaChunkGenerator modernBetaChunkGenerator)) {
+            return original.call(level, chunkPos);
         }
 
-        return original.call(level, chunkPos);
+        ChunkProvider chunkProvider = modernBetaChunkGenerator.getChunkProvider();
+
+        // Ensure a centered spawn
+        //? if >=1.21.11 {
+        /*level.getGameRules().set(net.minecraft.world.level.gamerules.GameRules.RESPAWN_RADIUS,
+        *///? } else {
+        level.getGameRules().getRule(net.minecraft.world.level.GameRules.RULE_SPAWN_RADIUS).set(
+        //? }
+            0, level.getServer());
+        BlockPos spawnPos = chunkProvider.getSpawnLocator().locateSpawn(level).orElseGet(() -> original.call(level, chunkPos));
+
+        if (spawnPos != null && ModernerBeta.DEV_ENV) {
+            int x = spawnPos.getX();
+            int y = spawnPos.getY();
+            int z = spawnPos.getZ();
+
+            ModernerBeta.log(Level.INFO, String.format("Spawning at %d/%d/%d", x, y, z));
+        }
+
+        if (spawnPos != null && chunkProvider instanceof ChunkProviderFinite2D chunkProviderIndev) {
+            // Generate Indev house
+            chunkProviderIndev.generateIndevHouse(level, spawnPos);
+
+            // Set Indev world properties.
+            setIndevProperties(level, chunkProviderIndev.getLevelTheme());
+        }
+
+        if (chunkProvider instanceof mod.bluestaggo.modernerbeta.api.level.chunk.ChunkProviderFinite) {
+            mod.bluestaggo.modernerbeta.api.level.chunk.ChunkProviderFinite.resetPhase();
+        }
+
+        WorldBorderLocation worldBorderLocation = modernBetaChunkGenerator.getChunkSettings().getOrDefault(SettingsComponentTypes.WORLD_BORDER);
+        if (worldBorderLocation.enabled()) {
+            WorldBorder worldBorder = level.getWorldBorder();
+            worldBorder.setCenter(worldBorderLocation.center(), worldBorderLocation.center());
+            worldBorder.setSize(worldBorderLocation.width());
+        }
+
+        return spawnPos;
     }
     
     @Unique

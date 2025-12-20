@@ -25,6 +25,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.LevelHeightAccessor;
 import net.minecraft.world.level.StructureManager;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.LevelChunkSection;
@@ -68,6 +69,7 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
     private final IslesProperties islesProperties;
     protected final NoiseScale noiseScale;
     private final NoiseSlide noiseSlide;
+    protected final WorldBorderLocation worldBorderLocation;
 
     private final AtomicReference<RandomState> noiseConfig = new AtomicReference<>();
 
@@ -80,6 +82,7 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
         this.islesProperties = this.getChunkSettings().getOrDefault(SettingsComponentTypes.ISLES_PROPERTIES);
         this.noiseScale = this.getChunkSettings().getOrDefault(SettingsComponentTypes.NOISE_SCALE);
         this.noiseSlide = this.getChunkSettings().getOrElse(SettingsComponentTypes.NOISE_SLIDE, NoiseSlide.DISABLED);
+        this.worldBorderLocation = this.getChunkSettings().getOrElse(SettingsComponentTypes.WORLD_BORDER, WorldBorderLocation.DEFAULT);
 
         this.worldMinY = noiseSettings.minY();
         this.worldHeight = noiseSettings.height();
@@ -614,6 +617,10 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
     ) {
         SimpleNoisePos noisePos = new SimpleNoisePos();
         return (x, y, z) -> {
+            if (!worldBorderLocation.containsPoint(x, z)) {
+                return BlockStates.AIR;
+            }
+
             double density = noiseSampler.sample();
             double clampedDensity = Mth.clamp(density / 200.0, -1.0, 1.0);
             

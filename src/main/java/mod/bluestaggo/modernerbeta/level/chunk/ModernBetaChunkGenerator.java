@@ -5,6 +5,7 @@ import com.google.common.base.Suppliers;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.api.level.chunk.surface.SurfaceConfig;
 import mod.bluestaggo.modernerbeta.compat.ModCompat;
+import mod.bluestaggo.modernerbeta.mixin.NoiseBasedChunkGeneratorAccessor;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.api.level.chunk.ChunkProvider;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
@@ -80,13 +81,14 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
 
     private ChunkProvider chunkProvider;
 
+    @SuppressWarnings("DataFlowIssue")
     public ModernBetaChunkGenerator(
         BiomeSource biomeSource,
         HolderGetter<ModernBetaSettingsPreset> presetRegistry,
         HolderGetter<SurfaceConfig> surfaceConfigRegistry,
         ModernBetaSettings chunkProviderSettings
     ) {
-        super(biomeSource, generatorSettings(presetRegistry, fixupPreset(chunkProviderSettings)));
+        super(biomeSource, null);
 
         this.presetRegistry = presetRegistry;
         this.surfaceConfigRegistry = surfaceConfigRegistry;
@@ -114,16 +116,11 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
         return chunkProviderSettings;
     }
 
+    private static Holder<NoiseGeneratorSettings> generatorSettings(ModernBetaSettings chunkSettings) {
+        Holder<NoiseGeneratorSettings> generatorSettings = chunkSettings.getOrDefault(SettingsComponentTypes.NOISE_GENERATOR_SETTINGS);
 
-    private static Holder<NoiseGeneratorSettings> generatorSettings(
-        HolderGetter<ModernBetaSettingsPreset> presetRegistry,
-        ModernBetaSettings chunkSettings
-    ) {
-        ModernBetaSettings mappedChunkSettings = chunkSettings.mapPreset(presetRegistry, ModernBetaSettingsPreset::chunkSettings);
-        Holder<NoiseGeneratorSettings> generatorSettings = mappedChunkSettings.getOrDefault(SettingsComponentTypes.NOISE_GENERATOR_SETTINGS);
-
-        NoiseSettings noiseSettings = mappedChunkSettings.get(SettingsComponentTypes.NOISE_SETTINGS);
-        Integer seaLevel = mappedChunkSettings.get(SettingsComponentTypes.SEA_LEVEL);
+        NoiseSettings noiseSettings = chunkSettings.get(SettingsComponentTypes.NOISE_SETTINGS);
+        Integer seaLevel = chunkSettings.get(SettingsComponentTypes.SEA_LEVEL);
         if (noiseSettings == null & seaLevel == null)
             return generatorSettings;
 
@@ -150,6 +147,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
 
     public void initProvider(long seed) {
         ModernBetaSettings chunkSettings = this.chunkSettings.mapPreset(this.presetRegistry, ModernBetaSettingsPreset::chunkSettings);
+        ((NoiseBasedChunkGeneratorAccessor) this).setSettings(generatorSettings(chunkSettings));
 
         this.chunkProvider = ModernBetaRegistries.CHUNK
             //? if >=1.21.2 {

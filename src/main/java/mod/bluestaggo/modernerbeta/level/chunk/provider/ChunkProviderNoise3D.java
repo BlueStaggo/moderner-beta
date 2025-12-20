@@ -174,8 +174,7 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
             for (int localX = 0; localX < 16; localX++) {
                 int x = startX + localX;
                 int z = startZ + localZ;
-                if (!this.worldBorderLocation.containsPoint(x, z)
-                    && this.worldBorderLocation.falloffType() == WorldBorderLocation.FalloffType.VOID) {
+                if (!this.worldBorderLocation.containsPoint(x, z)) {
                     continue;
                 }
 
@@ -371,8 +370,7 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
             for (int localX = 0; localX < 16; localX++) {
                 int x = startX + localX;
                 int z = startZ + localZ;
-                if (!this.worldBorderLocation.containsPoint(x, z)
-                    && this.worldBorderLocation.falloffType() == WorldBorderLocation.FalloffType.VOID) {
+                if (!this.worldBorderLocation.containsPoint(x, z)) {
                     continue;
                 }
 

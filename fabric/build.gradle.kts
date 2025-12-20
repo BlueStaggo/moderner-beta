@@ -53,6 +53,7 @@ dependencies {
 tasks {
     processResources {
         exclude("assets/moderner_beta/banner.png")
+        exclude("moderner_beta-unobf.accesswidener")
     }
 
     remapJar {

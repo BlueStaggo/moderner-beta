@@ -1,11 +1,11 @@
 package mod.bluestaggo.modernerbeta.client.gui.optioncallbacks;
 
 import com.mojang.serialization.Codec;
+import mod.bluestaggo.modernerbeta.client.gui.widget.FilteredEditBox;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.Options;
 import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,7 +19,7 @@ public record IntegerFieldCallbacks(String prefix, IntFunction<String> serialize
     @Override
     public @NotNull Function<OptionInstance<Integer>, AbstractWidget> createButton(OptionInstance.TooltipSupplier<Integer> tooltipFactory, Options gameOptions, int x, int y, int width, Consumer<Integer> changeCallback) {
         return option -> {
-            var widget = new EditBox(
+            var widget = new FilteredEditBox(
                 Minecraft.getInstance().fontFilterFishy,
                 x, y, width, 20, Component.nullToEmpty(option.toString())
             );

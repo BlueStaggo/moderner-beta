@@ -7,7 +7,7 @@ plugins {
 }
 
 loom {
-    accessWidenerPath = commonProject.file("../../src/main/resources/moderner_beta.accesswidener")
+    accessWidenerPath = commonProject.file("../../src/main/resources/moderner_beta-unobf.accesswidener")
 
     runConfigs.all {
         ideConfigGenerated(true)
@@ -34,23 +34,28 @@ fletchingTable {
 dependencies {
     minecraft("com.mojang:minecraft:${commonMod.mc}")
 
-    modImplementation("net.fabricmc:fabric-loader:${commonMod.prop("fabric_loader_version")}")
-    modApi("net.fabricmc.fabric-api:fabric-api:${commonMod.prop("fabric_api_version")}")
+    implementation("net.fabricmc:fabric-loader:${commonMod.prop("fabric_loader_version")}")
+    api("net.fabricmc.fabric-api:fabric-api:${commonMod.prop("fabric_api_version")}")
 
     if (commonMod.prop("mod_menu_supported").toBoolean()) {
-        modImplementation("com.terraformersmc:modmenu:${commonMod.prop("mod_menu_version")}")
+        implementation("com.terraformersmc:modmenu:${commonMod.prop("mod_menu_version")}")
     } else {
-        modCompileOnly("com.terraformersmc:modmenu:${commonMod.prop("mod_menu_version")}")
+        compileOnly("com.terraformersmc:modmenu:${commonMod.prop("mod_menu_version")}")
     }
 }
 
 tasks.processResources {
     exclude("assets/moderner_beta/banner.png")
+
+    exclude("moderner_beta.accesswidener")
+    filesMatching("moderner_beta-unobf.accesswidener") {
+        name = "moderner_beta.accesswidener"
+    }
 }
 
 modrinth {
     dependencies {
         required.project("fabric-api")
     }
-    uploadFile.set(tasks.remapJar)
+    uploadFile.set(tasks.jar)
 }

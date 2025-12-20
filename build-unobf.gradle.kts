@@ -11,7 +11,7 @@ loom {
         useLegacyMixinAp = false
     }
 
-    accessWidenerPath = file("../../src/main/resources/moderner_beta.accesswidener")
+    accessWidenerPath = file("../../src/main/resources/moderner_beta-unobf.accesswidener")
 
     decompilers {
         named("vineflower") { // Adds names to lambdas - useful for mixins
@@ -38,7 +38,7 @@ fletchingTable {
 dependencies {
     minecraft("com.mojang:minecraft:${commonMod.mc}")
 
-    modCompileOnly("net.fabricmc:fabric-loader:${commonMod.propOrNull("fabric_loader_version")}")
+    compileOnly("net.fabricmc:fabric-loader:${commonMod.propOrNull("fabric_loader_version")}")
 }
 
 val commonJava: Configuration by configurations.creating {

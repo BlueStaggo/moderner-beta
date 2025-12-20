@@ -14,4 +14,7 @@ dependencies {
     //FIXME: This is hardcoded! Bad!
     implementation("dev.kikugie:stonecutter:0.8-beta.3")
     implementation(plugin("com.modrinth.minotaur", "2.+"))
+
+    implementation("org.ow2.asm:asm:9.9")
+    implementation("org.ow2.asm:asm-tree:9.9")
 }

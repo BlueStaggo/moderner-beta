@@ -56,8 +56,8 @@ neoForge {
         }
     }
 
-    parchment {
-        commonMod.propOrNull("parchment_mappings")?.let {
+    commonMod.propOrNull("parchment_mappings")?.let {
+        parchment {
             val parts = it.split(":")
 
             minecraftVersion = parts[0]
@@ -84,7 +84,7 @@ tasks.processResources {
     }
 
     exclude("assets/moderner_beta/icon.png")
-    exclude("moderner_beta.accesswidener")
+    exclude("moderner_beta*.accesswidener")
     exclude("META-INF/at-forge.cfg")
 }
 

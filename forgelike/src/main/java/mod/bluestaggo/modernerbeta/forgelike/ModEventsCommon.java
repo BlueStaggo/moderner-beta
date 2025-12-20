@@ -171,7 +171,7 @@ public class ModEventsCommon {
                     .findFirst()
                     .orElseThrow();
 
-            dataPackRegistries.add(index, registryData);
+            dataPackRegistries.add(index + 1, registryData);
         }
     }
 

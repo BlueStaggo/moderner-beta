@@ -26,7 +26,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.LevelHeightAccessor;
 import net.minecraft.world.level.StructureManager;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.LevelChunkSection;
@@ -111,7 +110,8 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
                     this.noiseSizeX,
                     this.noiseSizeY,
                     this.noiseSizeZ,
-                    this::sampleNoiseColumn
+                    this::sampleNoiseColumn,
+                    this.isDensityModified() ? this::modifyEdgeDensity : null
                 );
 
                 noiseProviderBase.sampleInitialNoise(chunkX * this.noiseSizeX, chunkZ * this.noiseSizeZ);
@@ -172,7 +172,7 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
     @Override
     public boolean skipChunk(int chunkX, int chunkZ, ModernBetaGenerationStep step) {
         return super.skipChunk(chunkX, chunkX, step)
-            || !this.worldBorderLocation.containsChunk(chunkX, chunkZ);
+            || step == ModernBetaGenerationStep.CARVERS && !this.worldBorderLocation.containsChunk(chunkX, chunkZ);
     }
 
     /**
@@ -269,7 +269,7 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
         int localNoiseX,
         int localNoiseZ
     );
-    
+
     /**
      * Check if default noise post processor (i.e. NONE) is being used.
      * 
@@ -533,7 +533,8 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
             this.noiseSizeX,
             this.noiseSizeY,
             this.noiseSizeZ,
-            this::sampleNoiseColumn
+            this::sampleNoiseColumn,
+            this.isDensityModified() ? this::modifyEdgeDensity : null
         );
         noiseProvider.sampleInitialNoise(chunkX * this.noiseSizeX, chunkZ * this.noiseSizeZ);
         NoiseSampler noiseSampler = noiseProvider.getSamplerForHeightmap();
@@ -642,6 +643,17 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
 
             return aquiferSampler.computeSubstance(noisePos, clampedDensity);
         };
+    }
+
+    protected boolean isDensityModified() {
+        return this.worldBorderLocation.affectsDensity();
+    }
+
+    protected double modifyEdgeDensity(double density, double x, double y, double z) {
+        int worldX = (int)(x * this.noiseResolutionHorizontal);
+        int worldZ = (int)(z * this.noiseResolutionHorizontal);
+        density = this.worldBorderLocation.modifyDensity(density, worldX, worldZ);
+        return density;
     }
 
     private NoiseSettings getNoiseSettings() {

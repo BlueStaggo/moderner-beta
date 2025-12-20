@@ -356,12 +356,20 @@ public class ModernBetaClientBuiltInProviders {
         registryHandler.register(
             WORLD_BORDER.id,
             (screen, options) -> {
+                int minY = -64;
+                int maxY = 320;
+                if (screen instanceof ModernBetaGraphicalProviderSettingsScreen providerSettingsScreen) {
+                    minY = providerSettingsScreen.worldMinY;
+                    maxY = providerSettingsScreen.worldMaxY;
+                }
+
                 addAll(
                     options,
                     screen.booleanOption("enabled"),
                     screen.intRangeOption("width", 16, 1024, 16),
                     screen.selectionOption("centerType", WorldBorderLocation.CenterType::values),
-                    screen.selectionOption("falloffType", WorldBorderLocation.FalloffType::values)
+                    screen.selectionOption("falloffType", WorldBorderLocation.FalloffType::values),
+                    screen.intRangeOption("groundLevel", minY, maxY)
                 );
             }
         );

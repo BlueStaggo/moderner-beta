@@ -18,10 +18,14 @@ public record WorldBorderLocation(
             Codec.INT.fieldOf("width").orElse(256).forGetter(WorldBorderLocation::width),
             StringRepresentable.fromEnum(CenterType::values).fieldOf("centerType").orElse(CenterType.ORIGIN).forGetter(WorldBorderLocation::centerType),
             StringRepresentable.fromEnum(FalloffType::values).fieldOf("falloffType").orElse(FalloffType.VOID).forGetter(WorldBorderLocation::falloffType),
-            Codec.INT.fieldOf("groundLevel").orElse(32).forGetter(WorldBorderLocation::groundLevel)
+            Codec.INT.fieldOf("groundLevel").orElse(54).forGetter(WorldBorderLocation::groundLevel)
         ).apply(instance, WorldBorderLocation::new)
     );
     public static final WorldBorderLocation DEFAULT = CodecUtil.getDefaultByMap(CODEC);
+
+    public static WorldBorderLocation xboxLegacy(int width) {
+        return new WorldBorderLocation(true, width, CenterType.ORIGIN, FalloffType.SMOOTH_OCEAN, 54);
+    }
 
     public int center() {
         return centerType == CenterType.CORNER ? width / 2 : 0;
@@ -51,6 +55,24 @@ public record WorldBorderLocation(
         int radius = radius();
         return x * 16 + 15 >= center - radius && x * 16 < center + radius
             && z * 16 + 15 >= center - radius && z * 16 < center + radius;
+    }
+
+    public boolean affectsDensity() {
+        return this.enabled() && this.falloffType() == FalloffType.SMOOTH_OCEAN;
+    }
+
+    public double modifyDensity(double density, int x, int z) {
+        if (!this.affectsDensity()) {
+            return density;
+        }
+
+        int distance = Math.min(this.width() / 2 - Math.abs(x - center()), this.width() / 2 - Math.abs(z - center()));
+
+        double falloff = 0.0;
+        if (distance < 32) {
+            falloff = (32 - distance) * 4.0;
+        }
+        return density - falloff;
     }
 
     public enum CenterType implements StringRepresentable {

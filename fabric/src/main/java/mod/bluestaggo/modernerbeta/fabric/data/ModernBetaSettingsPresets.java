@@ -2342,12 +2342,7 @@ public final class ModernBetaSettingsPresets {
                     ? StackedZoomLayer.modal("ocean_climate", 2002, "ocean_climate", 6, 0)
                     : StackedZoomLayer.modal("ocean_climate", 2001, "ocean_climate", 6)
                 : null,
-            climaticOceans ? new ApplyOceanClimateLayer("land", 0, "land", "ocean_climate", !bedrock) : null,
-            finiteSize > 0
-                ? new ConditionalOverlayLayer("land", 0, "land",
-                    BiomePredicate.inRange(0, 0, finiteSize / 8, finiteSize / 8, true, InRangeBiomePredicate.Shape.RECTANGLE),
-                    LayerTarget.none(), LayerTarget.biome(ExtendedBiomeId.OCEAN))
-                : null
+            climaticOceans ? new ApplyOceanClimateLayer("land", 0, "land", "ocean_climate", !bedrock) : null
         ).filter(Objects::nonNull).toList();
 
         return new ConfiguredLayers(layers, Map.of(ModernBetaBuiltInTypes.LayerOutput.BIOME.id, "land"));
@@ -2419,7 +2414,7 @@ public final class ModernBetaSettingsPresets {
                 .add(PERLIN_NOISE_SETTINGS, PerlinNoiseSettings.RELEASE)
                 .add(NOISE_LANDMASS, NoiseLandmass.RELEASE)
                 .add(SURFACE_PROPERTIES, SurfaceProperties.MAJOR_RELEASE)
-                .add(ISLES_PROPERTIES, IslesProperties.xboxLegacy(finiteSize))
+                .add(WORLD_BORDER, WorldBorderLocation.xboxLegacy(finiteSize))
                 .build(),
             ModernBetaSettings.fractalLayers(configuredLayers1710Era(0, finiteSize, false, false, false, false, false, false))
                 .add(TEMPERATURE_HEIGHT_SCALING, TemperatureHeightScaling.MAJOR_RELEASE)

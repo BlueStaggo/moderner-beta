@@ -39,6 +39,7 @@ public final class ModernBetaBuiltInTypes {
         USE_OCEAN_BIOMES("use_ocean_biomes"),
         TEMPERATURE_HEIGHT_SCALING("temperature_height_scaling"),
         BIOME_INJECTION_THRESHOLDS("biome_injection_thresholds"),
+        OUT_OF_BOUNDS_BIOME("out_of_bounds_biome"),
         CAVE_BIOME_VORONOI("cave_biome_voronoi"),
         CONFIG_BETA_CLIMATIC_COLORS("config/beta_climatic_colors"),
         CONFIG_PE_CLIMATIC_COLORS("config/pe_climatic_colors"),

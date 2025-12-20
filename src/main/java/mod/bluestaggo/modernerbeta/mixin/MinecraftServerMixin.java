@@ -4,6 +4,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.api.level.chunk.ChunkProvider;
+import mod.bluestaggo.modernerbeta.api.level.chunk.ChunkProviderFinite;
 import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaChunkGenerator;
 import mod.bluestaggo.modernerbeta.level.chunk.provider.ChunkProviderFinite2D;
 import mod.bluestaggo.modernerbeta.level.chunk.provider.indev.IndevTheme;
@@ -103,15 +104,25 @@ public abstract class MinecraftServerMixin {
             setIndevProperties(level, chunkProviderIndev.getLevelTheme());
         }
 
-        if (chunkProvider instanceof mod.bluestaggo.modernerbeta.api.level.chunk.ChunkProviderFinite) {
-            mod.bluestaggo.modernerbeta.api.level.chunk.ChunkProviderFinite.resetPhase();
+        if (chunkProvider instanceof ChunkProviderFinite) {
+            ChunkProviderFinite.resetPhase();
         }
 
         WorldBorderLocation worldBorderLocation = modernBetaChunkGenerator.getChunkSettings().getOrDefault(SettingsComponentTypes.WORLD_BORDER);
         if (worldBorderLocation.enabled()) {
             WorldBorder worldBorder = level.getWorldBorder();
-            worldBorder.setCenter(worldBorderLocation.center(), worldBorderLocation.center());
-            worldBorder.setSize(worldBorderLocation.width());
+            int width = worldBorderLocation.width();
+            int center = worldBorderLocation.center();
+
+            if (chunkProvider instanceof ChunkProviderFinite chunkProviderFinite) {
+                // Rectangular world borders are impossible so just make a square one that
+                // encompasses as much of the finite world as possible
+                width = Math.max(chunkProviderFinite.getLevelWidth(), chunkProviderFinite.getLevelLength());
+                center = width / 2;
+            }
+
+            worldBorder.setSize(width);
+            worldBorder.setCenter(center, center);
         }
 
         return spawnPos;

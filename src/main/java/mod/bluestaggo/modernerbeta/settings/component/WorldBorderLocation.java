@@ -9,14 +9,16 @@ public record WorldBorderLocation(
     boolean enabled,
     int width,
     CenterType centerType,
-    FalloffType falloffType
+    FalloffType falloffType,
+    int groundLevel
 ) {
     public static final Codec<WorldBorderLocation> CODEC = RecordCodecBuilder.create(
         instance -> instance.group(
             Codec.BOOL.fieldOf("enabled").orElse(false).forGetter(WorldBorderLocation::enabled),
             Codec.INT.fieldOf("width").orElse(256).forGetter(WorldBorderLocation::width),
             StringRepresentable.fromEnum(CenterType::values).fieldOf("centerType").orElse(CenterType.ORIGIN).forGetter(WorldBorderLocation::centerType),
-            StringRepresentable.fromEnum(FalloffType::values).fieldOf("falloffType").orElse(FalloffType.VOID).forGetter(WorldBorderLocation::falloffType)
+            StringRepresentable.fromEnum(FalloffType::values).fieldOf("falloffType").orElse(FalloffType.VOID).forGetter(WorldBorderLocation::falloffType),
+            Codec.INT.fieldOf("groundLevel").orElse(32).forGetter(WorldBorderLocation::groundLevel)
         ).apply(instance, WorldBorderLocation::new)
     );
     public static final WorldBorderLocation DEFAULT = CodecUtil.getDefaultByMap(CODEC);

@@ -416,7 +416,8 @@
     "createWorld.customize.modern_beta.settings.world_border.falloffType": "Falloff Type",
     "createWorld.customize.modern_beta.settings.world_border.falloffType.void": "Void",
     "createWorld.customize.modern_beta.settings.world_border.falloffType.ocean": "Ocean",
-    "createWorld.customize.modern_beta.settings.world_border.falloffType.smoothOcean": "Smooth Ocean",
+    "createWorld.customize.modern_beta.settings.world_border.falloffType.smooth_ocean": "Smooth Ocean",
+    "createWorld.customize.modern_beta.settings.world_border.groundLevel": "Ground Level",
 
     "createWorld.customize.modern_beta.settings.single_biome": "Single Biome",
     "createWorld.customize.modern_beta.settings.single_biome.self": "Biome",
@@ -461,6 +462,8 @@
     "createWorld.customize.modern_beta.settings.voronoi_points.self": "Voronoi Points",
     "createWorld.customize.modern_beta.settings.fractal_layers": "Fractal Layers",
     "createWorld.customize.modern_beta.settings.fractal_layers.self": "Too advanced! Edit using JSON.",
+    "createWorld.customize.modern_beta.settings.out_of_bounds_biome": "Out of Bounds Biome",
+    "createWorld.customize.modern_beta.settings.out_of_bounds_biome.self": "Biome",
 
     "createWorld.customize.modern_beta.settings.cave_biome_voronoi": "Voronoi Settings",
     "createWorld.customize.modern_beta.settings.cave_biome_voronoi.horizontalScale": "Noise Scale XZ",

@@ -618,7 +618,13 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
         SimpleNoisePos noisePos = new SimpleNoisePos();
         return (x, y, z) -> {
             if (!worldBorderLocation.containsPoint(x, z)) {
-                return BlockStates.AIR;
+                return switch (worldBorderLocation.falloffType()) {
+                    case OCEAN, SMOOTH_OCEAN ->
+                        y < worldBorderLocation.groundLevel() ? this.defaultBlock
+                            : y < getSeaLevel() ? this.defaultFluid
+                            : BlockStates.AIR;
+                    default -> BlockStates.AIR;
+                };
             }
 
             double density = noiseSampler.sample();

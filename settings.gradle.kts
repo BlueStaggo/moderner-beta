@@ -52,12 +52,12 @@ stonecutter {
     centralScript = "build.gradle.kts"
 
     create(getRootProject()) {
-        versions("1.20.1", "1.21.1", "1.21.4", "1.21.5", "1.21.6", "1.21.9", "1.21.11")
+        versions("1.20.1", "1.21.1", "1.21.6", "1.21.9", "1.21.11")
 //        versions("1.21.11").buildscript("build-unobf.gradle.kts")
         branch("fabric")
         branch("forgelike") {
             versions("1.20.1").buildscript("build-lexforge.gradle.kts")
-            versions("1.21.1", "1.21.4", "1.21.5", "1.21.6", "1.21.9", "1.21.11")
+            versions("1.21.1", "1.21.6", "1.21.9", "1.21.11")
         }
 
         vcsVersion = "1.21.6"

@@ -42,6 +42,17 @@ public record WorldBorderLocation(
             && z >= center - radius && z < center + radius;
     }
 
+    public boolean containsChunk(int x, int z) {
+        if (!enabled()) {
+            return true;
+        }
+
+        int center = center();
+        int radius = radius();
+        return x * 16 + 15 >= center - radius && x * 16 < center + radius
+            && z * 16 + 15 >= center - radius && z * 16 < center + radius;
+    }
+
     public enum CenterType implements StringRepresentable {
         ORIGIN("origin"),
         CORNER("corner")

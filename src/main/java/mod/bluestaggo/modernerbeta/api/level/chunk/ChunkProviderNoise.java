@@ -9,6 +9,7 @@ import mod.bluestaggo.modernerbeta.api.level.chunk.noise.NoiseSampler;
 import mod.bluestaggo.modernerbeta.level.blocksource.BlockSourceRules;
 import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaChunkGenerator;
 import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaChunkNoiseSampler;
+import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaGenerationStep;
 import mod.bluestaggo.modernerbeta.level.chunk.provider.island.IslandShape;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.settings.component.*;
@@ -167,7 +168,13 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
             return chunk;
         }, Util.backgroundExecutor());
     }
-    
+
+    @Override
+    public boolean skipChunk(int chunkX, int chunkZ, ModernBetaGenerationStep step) {
+        return super.skipChunk(chunkX, chunkX, step)
+            || !this.worldBorderLocation.containsChunk(chunkX, chunkZ);
+    }
+
     /**
      * Sample height at given x/z coordinate. Initially generates heightmap for entire chunk,
      * if chunk containing x/z coordinates has never been sampled.

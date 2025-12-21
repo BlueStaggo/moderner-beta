@@ -11,8 +11,8 @@ import mod.bluestaggo.modernerbeta.level.ModernBetaLevelInitializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-//? if >=1.20.2 {
 import net.fabricmc.fabric.api.event.registry.DynamicRegistries;
+//? if >=1.20.2 {
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import mod.bluestaggo.modernerbeta.network.BiomeProviderInfoPayload;
 //?}

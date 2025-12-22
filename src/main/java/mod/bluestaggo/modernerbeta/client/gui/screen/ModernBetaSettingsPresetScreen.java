@@ -109,6 +109,25 @@ public class ModernBetaSettingsPresetScreen<T extends NameAndDescriptionItem> ex
         this.listWidget.render(graphics, mouseX, mouseY, delta);
     }
 
+    @Override
+    protected void repositionElements() {
+        super.repositionElements();
+        //? if >=1.20.3 {
+        this.listWidget.setSize(this.width, this.layout.getContentHeight());
+        this.listWidget.setPosition(0, this.layout.getHeaderHeight());
+        //? } else {
+        /*int y0 = this.layout.getY() + this.layout.getHeaderHeight();
+        int y1 = y0 + this.layout.getContentHeight();
+
+        this.listWidget.updateSize(this.width, this.height, y0, y1);
+        *///? }
+        //? if >=1.21.4 {
+        this.listWidget.refreshScrollAmount();
+        //? } else {
+        /*this.listWidget.setScrollAmount(this.listWidget.getScrollAmount());
+         *///? }
+    }
+
     private void updateSelectButton(boolean hasSelected) {
         this.selectPresetButton.active = hasSelected;
     }

@@ -416,31 +416,41 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
                 int y = surfaceTopY;
                 pos.setY(y);
 
-                if (!this.isBlockSuitableForSurface(chunk.getBlockState(pos))) {
-                    continue;
-                }
-
-                if (surfaceDepth <= 0) {
-                    VersionCompat.setBlockState(chunk, pos, y < seaLevel ? this.defaultBlock : BlockStates.AIR);
-                    pos.setY(--y);
-
-                    while (this.isBlockSuitableForSurface(chunk.getBlockState(pos))) {
-                        VersionCompat.setBlockState(chunk, pos, this.defaultBlock);
-                        pos.setY(--y);
-                    }
-                } else if (surfaceTopY >= seaLevel - 4 && surfaceTopY < seaLevel + 1) {
-                    SurfaceBlocks beach = genSandBeach ? surfaceConfig.beachSand() : genGravelBeach ? surfaceConfig.beachGravel() : null;
-                    if (beach != null) {
-                        if (beach.topBlock().isAir() && y < seaLevel) {
-                            VersionCompat.setBlockState(chunk, pos, this.defaultFluid);
-                        } else {
-                            VersionCompat.setBlockState(chunk, pos, beach.topBlock());
-                        }
+                if (this.isBlockSuitableForSurface(chunk.getBlockState(pos))) {
+                    if (surfaceDepth <= 0) {
+                        VersionCompat.setBlockState(chunk, pos, y < seaLevel ? this.defaultBlock : BlockStates.AIR);
                         pos.setY(--y);
 
                         while (this.isBlockSuitableForSurface(chunk.getBlockState(pos))) {
-                            VersionCompat.setBlockState(chunk, pos, beach.fillerBlock());
+                            VersionCompat.setBlockState(chunk, pos, this.defaultBlock);
                             pos.setY(--y);
+                        }
+                    } else if (surfaceTopY >= seaLevel - 4 && surfaceTopY < seaLevel + 1) {
+                        SurfaceBlocks beach = genSandBeach ? surfaceConfig.beachSand() : genGravelBeach ? surfaceConfig.beachGravel() : null;
+                        if (beach != null) {
+                            if (beach.topBlock().isAir() && y < seaLevel) {
+                                VersionCompat.setBlockState(chunk, pos, this.defaultFluid);
+                            } else {
+                                VersionCompat.setBlockState(chunk, pos, beach.topBlock());
+                            }
+                            pos.setY(--y);
+
+                            while (this.isBlockSuitableForSurface(chunk.getBlockState(pos))) {
+                                VersionCompat.setBlockState(chunk, pos, beach.fillerBlock());
+                                pos.setY(--y);
+                            }
+                        }
+                    }
+                }
+
+                if (this.surfaceProperties.generateBedrock()) {
+                    for (y = this.bedrockFloor; y < this.bedrockFloor + 5; y++) {
+                        int bedrockOffset = this.surfaceProperties.bedrockHoles()
+                                ? rand.nextInt(6) - 1
+                                : rand.nextInt(5);
+                        if (y <= this.bedrockFloor + bedrockOffset) {
+                            pos.setY(y);
+                            VersionCompat.setBlockState(chunk, pos, BlockStates.BEDROCK);
                         }
                     }
                 }

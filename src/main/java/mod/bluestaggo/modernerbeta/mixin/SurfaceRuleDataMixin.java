@@ -40,16 +40,30 @@ public class SurfaceRuleDataMixin {
         return constant;
     }
 
-    @SuppressWarnings({"InvalidInjectorMethodSignature", "rawtypes"})
+    @SuppressWarnings("rawtypes")
     @WrapOperation(method = "overworldLike",
-        at = @At(
-            value = "INVOKE",
-            target = "Lcom/google/common/collect/ImmutableList$Builder;add(Ljava/lang/Object;)Lcom/google/common/collect/ImmutableList$Builder;",
-            ordinal = 3,
-            remap = false
-        )
+        at = {
+            @At(
+                value = "INVOKE",
+                target = "Lcom/google/common/collect/ImmutableList$Builder;add(Ljava/lang/Object;)Lcom/google/common/collect/ImmutableList$Builder;",
+                ordinal = 0,
+                remap = false
+            ),
+            @At(
+                value = "INVOKE",
+                target = "Lcom/google/common/collect/ImmutableList$Builder;add(Ljava/lang/Object;)Lcom/google/common/collect/ImmutableList$Builder;",
+                ordinal = 1,
+                remap = false
+            ),
+            @At(
+                value = "INVOKE",
+                target = "Lcom/google/common/collect/ImmutableList$Builder;add(Ljava/lang/Object;)Lcom/google/common/collect/ImmutableList$Builder;",
+                ordinal = 3,
+                remap = false
+            )
+        }
     )
-    private static ImmutableList.Builder removeDeepslateIfModernBeta(ImmutableList.Builder instance, Object element, Operation<ImmutableList.Builder> original) {
+    private static ImmutableList.Builder removeWorldBottomRulesIfModernBeta(ImmutableList.Builder instance, Object element, Operation<ImmutableList.Builder> original) {
         if (useModernBetaSurfaceRules()) {
             return null;
         }

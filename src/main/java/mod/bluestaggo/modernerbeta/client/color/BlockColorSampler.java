@@ -337,11 +337,15 @@ public final class BlockColorSampler {
                 float downfall = Mth.clamp(weather.downfall(), 0.0F, 1.0F);
                 int baseColor = baseColorAccessor.apply(temperature, downfall);
 
+                int baseR = ((baseColor >> 16) & 255);
+                int baseG = ((baseColor >> 8) & 255);
+                int baseB = (baseColor & 255);
+
                 // customR = baseR * modR / 255
                 // customR * 255 / baseR = modR
-                int modR = ((customColor >> 16) & 255) * 255 / ((baseColor >> 16) & 255);
-                int modG = ((customColor >> 8) & 255) * 255 / ((baseColor >> 8) & 255);
-                int modB = (customColor & 255) * 255 / (baseColor & 255);
+                int modR = baseR != 0 ? ((customColor >> 16) & 255) * 255 / baseR : 255;
+                int modG = baseG != 0 ? ((customColor >> 8) & 255) * 255 / baseG : 255;
+                int modB = baseB != 0 ? (customColor & 255) * 255 / baseB : 255;
 
                 int r = Mth.clamp(((climateColor >> 16) & 255) * modR / 255, 0, 255);
                 int g = Mth.clamp(((climateColor >> 8) & 255) * modG / 255, 0, 255);

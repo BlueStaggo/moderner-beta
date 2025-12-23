@@ -1,5 +1,5 @@
 ## Fixes
 
-- (1.21.11) Fixed Reduced Height datapack having wrong overworld dimension properties set, resulting in no skylight.
-- (1.21.11) Fixed sky colour not changing with weather and time.
-- Fixed divide by zero error with some grass colours sampled from colour maps.
+- Fixed Bedrock generation not respecting the settings in Surface Properties when surface rules are enabled.
+- Fixed Bedrock generation not working when surface rules and Deepslate generation are enabled.
+- Fixed bug where some list based GUIs do not adjust properly upon the game window being resized

@@ -35,6 +35,7 @@ import net.minecraft.world.level.levelgen.blending.Blender;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.levelgen.placement.PlacementModifier;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
@@ -55,7 +56,7 @@ public abstract class ChunkProvider {
     
     protected final List<BlockSource> blockSources;
     protected final SurfaceBuilder surfaceBuilder;
-    
+
     /**
      * Construct a Modern Beta chunk provider with seed and settings.
      * 
@@ -77,6 +78,7 @@ public abstract class ChunkProvider {
         this.blockSources = ModernBetaRegistries.BLOCKSOURCE
             .listElements()
             .map(func -> func.value().apply(this.chunkSettings, this.randomFactory))
+            .sorted(Comparator.comparingInt(BlockSource::priority))
             .toList();
 
         HolderGetter<SurfaceConfig> surfaceConfigGetter = chunkGenerator.getSurfaceConfigRegistry();

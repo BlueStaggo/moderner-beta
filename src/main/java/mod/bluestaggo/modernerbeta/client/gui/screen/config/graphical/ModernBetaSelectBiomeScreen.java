@@ -111,18 +111,24 @@ public class ModernBetaSelectBiomeScreen extends ModernBetaScreen {
         row.addChild(Button.builder(CommonComponents.GUI_CANCEL, button -> this.onClose()).build());
     }
 
-    //? if >=1.20.2 {
+    @Override
     protected void repositionElements() {
         super.repositionElements();
+        //? if >=1.20.3 {
         this.biomeSelectionList.setSize(this.width, this.layout.getContentHeight());
         this.biomeSelectionList.setPosition(0, this.layout.getHeaderHeight());
+        //? } else {
+        /*int y0 = this.layout.getY() + this.layout.getHeaderHeight();
+        int y1 = y0 + this.layout.getContentHeight();
+
+        this.biomeSelectionList.updateSize(this.width, this.height, y0, y1);
+        *///? }
         //? if >=1.21.4 {
         this.biomeSelectionList.refreshScrollAmount();
         //? } else {
         /*this.biomeSelectionList.setScrollAmount(this.biomeSelectionList.getScrollAmount());
         *///? }
     }
-    //? }
 
     void refreshConfirmButton() {
         this.confirmButton.active = this.biomeSelectionList.getSelected() != null;

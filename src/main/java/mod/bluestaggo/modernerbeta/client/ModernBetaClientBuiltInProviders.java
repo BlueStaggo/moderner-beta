@@ -7,6 +7,7 @@ import mod.bluestaggo.modernerbeta.settings.component.CaveGeneration;
 import mod.bluestaggo.modernerbeta.level.chunk.provider.indev.IndevTheme;
 import mod.bluestaggo.modernerbeta.level.chunk.provider.indev.IndevType;
 import mod.bluestaggo.modernerbeta.level.chunk.provider.island.IslandShape;
+import mod.bluestaggo.modernerbeta.settings.component.WorldBorderLocation;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.gui.components.OptionsList;
@@ -348,6 +349,27 @@ public class ModernBetaClientBuiltInProviders {
                     screen.intRangeOption("centerOceanFalloffDistance", 1, 100),
                     screen.floatRangeOption("outerIslandNoiseScale", 0.01f, 5000.0f),
                     screen.floatRangeOption("outerIslandNoiseOffset", -1.0f, 1.0f)
+                );
+            }
+        );
+
+        registryHandler.register(
+            WORLD_BORDER.id,
+            (screen, options) -> {
+                int minY = -64;
+                int maxY = 320;
+                if (screen instanceof ModernBetaGraphicalProviderSettingsScreen providerSettingsScreen) {
+                    minY = providerSettingsScreen.worldMinY;
+                    maxY = providerSettingsScreen.worldMaxY;
+                }
+
+                addAll(
+                    options,
+                    screen.booleanOption("enabled"),
+                    screen.intRangeOption("width", 16, 1024, 16),
+                    screen.selectionOption("centerType", WorldBorderLocation.CenterType::values),
+                    screen.selectionOption("falloffType", WorldBorderLocation.FalloffType::values),
+                    screen.intRangeOption("groundLevel", minY, maxY)
                 );
             }
         );

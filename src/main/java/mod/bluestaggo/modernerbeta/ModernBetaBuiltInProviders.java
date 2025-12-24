@@ -69,7 +69,8 @@ public class ModernBetaBuiltInProviders {
                 SettingsComponentTypes.NOISE_LANDMASS,
                 SettingsComponentTypes.SURFACE_PROPERTIES,
                 SettingsComponentTypes.FORCED_BIOME_HEIGHT,
-                SettingsComponentTypes.ISLES_PROPERTIES
+                SettingsComponentTypes.ISLES_PROPERTIES,
+                SettingsComponentTypes.WORLD_BORDER
             )
         ));
     }

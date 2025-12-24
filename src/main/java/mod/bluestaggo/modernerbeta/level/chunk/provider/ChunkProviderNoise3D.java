@@ -9,10 +9,7 @@ import mod.bluestaggo.modernerbeta.api.level.spawn.SpawnLocator;
 import mod.bluestaggo.modernerbeta.level.spawn.SpawnLocatorPE;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
-import mod.bluestaggo.modernerbeta.settings.component.Noise3DSettings;
-import mod.bluestaggo.modernerbeta.settings.component.NoiseLandmass;
-import mod.bluestaggo.modernerbeta.settings.component.PerlinNoiseSettings;
-import mod.bluestaggo.modernerbeta.settings.component.SurfaceProperties;
+import mod.bluestaggo.modernerbeta.settings.component.*;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkHeightmap;
@@ -177,6 +174,10 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
             for (int localX = 0; localX < 16; localX++) {
                 int x = startX + localX;
                 int z = startZ + localZ;
+                if (!this.worldBorderLocation.containsPoint(x, z)) {
+                    continue;
+                }
+
                 int surfaceTopY = chunk.getOrCreateHeightmapUnprimed(Heightmap.Types.OCEAN_FLOOR_WG).getFirstAvailable(localX, localZ) - 1;
                 int surfaceMinY = heightmapChunk != null ?
                     heightmapChunk.getHeight(x, z, ChunkHeightmap.Type.SURFACE_FLOOR) - 8 :
@@ -367,10 +368,13 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
 
         for (int localZ = 0; localZ < 16; localZ++) {
             for (int localX = 0; localX < 16; localX++) {
-                pos.set(localX, 0, localZ);
-
                 int x = startX + localX;
                 int z = startZ + localZ;
+                if (!this.worldBorderLocation.containsPoint(x, z)) {
+                    continue;
+                }
+
+                pos.set(localX, 0, localZ);
                 int surfaceTopY = heightmapChunk != null ?
                     heightmapChunk.getHeight(x, z, ChunkHeightmap.Type.SURFACE_FLOOR) :
                     chunk.getOrCreateHeightmapUnprimed(Heightmap.Types.OCEAN_FLOOR_WG).getFirstAvailable(localX, localZ);
@@ -412,31 +416,41 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
                 int y = surfaceTopY;
                 pos.setY(y);
 
-                if (!this.isBlockSuitableForSurface(chunk.getBlockState(pos))) {
-                    continue;
-                }
-
-                if (surfaceDepth <= 0) {
-                    VersionCompat.setBlockState(chunk, pos, y < seaLevel ? this.defaultBlock : BlockStates.AIR);
-                    pos.setY(--y);
-
-                    while (this.isBlockSuitableForSurface(chunk.getBlockState(pos))) {
-                        VersionCompat.setBlockState(chunk, pos, this.defaultBlock);
-                        pos.setY(--y);
-                    }
-                } else if (surfaceTopY >= seaLevel - 4 && surfaceTopY < seaLevel + 1) {
-                    SurfaceBlocks beach = genSandBeach ? surfaceConfig.beachSand() : genGravelBeach ? surfaceConfig.beachGravel() : null;
-                    if (beach != null) {
-                        if (beach.topBlock().isAir() && y < seaLevel) {
-                            VersionCompat.setBlockState(chunk, pos, this.defaultFluid);
-                        } else {
-                            VersionCompat.setBlockState(chunk, pos, beach.topBlock());
-                        }
+                if (this.isBlockSuitableForSurface(chunk.getBlockState(pos))) {
+                    if (surfaceDepth <= 0) {
+                        VersionCompat.setBlockState(chunk, pos, y < seaLevel ? this.defaultBlock : BlockStates.AIR);
                         pos.setY(--y);
 
                         while (this.isBlockSuitableForSurface(chunk.getBlockState(pos))) {
-                            VersionCompat.setBlockState(chunk, pos, beach.fillerBlock());
+                            VersionCompat.setBlockState(chunk, pos, this.defaultBlock);
                             pos.setY(--y);
+                        }
+                    } else if (surfaceTopY >= seaLevel - 4 && surfaceTopY < seaLevel + 1) {
+                        SurfaceBlocks beach = genSandBeach ? surfaceConfig.beachSand() : genGravelBeach ? surfaceConfig.beachGravel() : null;
+                        if (beach != null) {
+                            if (beach.topBlock().isAir() && y < seaLevel) {
+                                VersionCompat.setBlockState(chunk, pos, this.defaultFluid);
+                            } else {
+                                VersionCompat.setBlockState(chunk, pos, beach.topBlock());
+                            }
+                            pos.setY(--y);
+
+                            while (this.isBlockSuitableForSurface(chunk.getBlockState(pos))) {
+                                VersionCompat.setBlockState(chunk, pos, beach.fillerBlock());
+                                pos.setY(--y);
+                            }
+                        }
+                    }
+                }
+
+                if (this.surfaceProperties.generateBedrock()) {
+                    for (y = this.bedrockFloor; y < this.bedrockFloor + 5; y++) {
+                        int bedrockOffset = this.surfaceProperties.bedrockHoles()
+                                ? rand.nextInt(6) - 1
+                                : rand.nextInt(5);
+                        if (y <= this.bedrockFloor + bedrockOffset) {
+                            pos.setY(y);
+                            VersionCompat.setBlockState(chunk, pos, BlockStates.BEDROCK);
                         }
                     }
                 }

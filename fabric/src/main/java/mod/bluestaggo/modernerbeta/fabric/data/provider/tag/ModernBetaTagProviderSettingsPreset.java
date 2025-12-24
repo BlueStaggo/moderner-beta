@@ -22,7 +22,8 @@ public class ModernBetaTagProviderSettingsPreset extends FabricTagProvider<Moder
             ModernBetaSettingsPresets.BETA_1_7_3,
             ModernBetaSettingsPresets.BETA_1_1_02,
             ModernBetaSettingsPresets.SKYLANDS,
-            ModernBetaSettingsPresets.PE
+            ModernBetaSettingsPresets.PE,
+            ModernBetaSettingsPresets.BETA_XBOX_LEGACY
         );
 
         this.builder(ALPHA_INFDEV).add(
@@ -79,7 +80,11 @@ public class ModernBetaTagProviderSettingsPreset extends FabricTagProvider<Moder
             ModernBetaSettingsPresets.RELEASE_1_17_1,
             ModernBetaSettingsPresets.RELEASE_1_17_1_LARGE_BIOMES,
             ModernBetaSettingsPresets.RELEASE_1_17_1_AMPLIFIED,
-            ModernBetaSettingsPresets.BEDROCK_1_17
+            ModernBetaSettingsPresets.BEDROCK_1_17,
+            ModernBetaSettingsPresets.LEGACY_CONSOLE_CLASSIC,
+            ModernBetaSettingsPresets.LEGACY_CONSOLE_SMALL,
+            ModernBetaSettingsPresets.LEGACY_CONSOLE_MEDIUM,
+            ModernBetaSettingsPresets.LEGACY_CONSOLE_LARGE
         );
         
         this.builder(BETA_CUSTOM).add(
@@ -92,7 +97,6 @@ public class ModernBetaTagProviderSettingsPreset extends FabricTagProvider<Moder
             ModernBetaSettingsPresets.BETA_DROUGHT,
             ModernBetaSettingsPresets.BETA_CAVE_CHAOS,
             ModernBetaSettingsPresets.BETA_LARGE_BIOMES,
-            ModernBetaSettingsPresets.BETA_XBOX_LEGACY,
             ModernBetaSettingsPresets.BETA_SURVIVAL_ISLAND,
             ModernBetaSettingsPresets.BETA_VANILLA
         );
@@ -109,11 +113,7 @@ public class ModernBetaTagProviderSettingsPreset extends FabricTagProvider<Moder
             ModernBetaSettingsPresets.CAVE_DELIGHT,
             ModernBetaSettingsPresets.MOUNTAIN_MADNESS,
             ModernBetaSettingsPresets.DROUGHT,
-            ModernBetaSettingsPresets.CAVE_CHAOS,
-            ModernBetaSettingsPresets.LEGACY_CONSOLE_CLASSIC,
-            ModernBetaSettingsPresets.LEGACY_CONSOLE_SMALL,
-            ModernBetaSettingsPresets.LEGACY_CONSOLE_MEDIUM,
-            ModernBetaSettingsPresets.LEGACY_CONSOLE_LARGE
+            ModernBetaSettingsPresets.CAVE_CHAOS
         );
     }
 }

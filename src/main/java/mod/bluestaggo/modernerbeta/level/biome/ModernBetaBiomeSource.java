@@ -28,6 +28,7 @@ import net.minecraft.core.HolderGetter;
 import net.minecraft.core.QuartPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.RegistryOps;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.LevelReader;
@@ -59,12 +60,13 @@ public class ModernBetaBiomeSource extends BiomeSource {
     private final HolderGetter<ModernBetaSettingsPreset> presetRegistry;
     private final ModernBetaSettings biomeSettings;
     private final ModernBetaSettings caveBiomeSettings;
-    
+    private final ResourceKey<Biome> outOfBoundsBiomeKey;
+
     private BiomeProvider biomeProvider;
     private CaveBiomeProvider caveBiomeProvider;
-    
+
     private ModernBetaChunkGenerator chunkGenerator;
-    
+
     public ModernBetaBiomeSource(
         HolderGetter<Biome> biomeRegistry,
         HolderGetter<ModernBetaSettingsPreset> presetRegistry,
@@ -97,6 +99,7 @@ public class ModernBetaBiomeSource extends BiomeSource {
         this.presetRegistry = presetRegistry;
         this.biomeSettings = biomeSettings;
         this.caveBiomeSettings = caveBiomeSettings;
+        this.outOfBoundsBiomeKey = ResourceKey.create(Registries.BIOME, biomeSettings.getOrDefault(SettingsComponentTypes.OUT_OF_BOUNDS_BIOME));
     }
     
     public void initProvider(long seed) {
@@ -223,6 +226,10 @@ public class ModernBetaBiomeSource extends BiomeSource {
     
     public Holder<Biome> getCaveBiome(int biomeX, int biomeY, int biomeZ) {
         return this.caveBiomeProvider.getBiome(biomeX, biomeY, biomeZ);
+    }
+
+    public Holder<Biome> getOutOfBoundsBiome() {
+        return this.biomeRegistry.getOrThrow(this.outOfBoundsBiomeKey);
     }
     
     public Holder<Biome> getBiomeForSpawn(int x, int y, int z) {

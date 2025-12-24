@@ -70,8 +70,9 @@ public class FilteredEditBox extends EditBox {
             String updated = new StringBuilder(value).replace(start, end, text).toString();
             if (this.filter.test(updated)) {
                 accessor.setValue(updated);
-                this.setCursorPosition(start + insertionLength);
-                this.setHighlightPos(cursorPos);
+                int newCursorPos = start + insertionLength;
+                this.setCursorPosition(newCursorPos);
+                this.setHighlightPos(newCursorPos);
                 accessor.invokeOnValueChange(updated);
             }
         }

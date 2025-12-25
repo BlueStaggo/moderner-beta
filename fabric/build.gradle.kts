@@ -7,7 +7,7 @@ plugins {
 }
 
 loom {
-    accessWidenerPath = commonProject.file("../../src/main/resources/moderner_beta.accesswidener")
+    accessWidenerPath = stonecutter.process(commonProject.file("../../src/main/resources/moderner_beta.accesswidener"), "build/dev.aw")
 
     runConfigs.all {
         ideConfigGenerated(true)
@@ -53,7 +53,6 @@ dependencies {
 tasks {
     processResources {
         exclude("assets/moderner_beta/banner.png")
-        exclude("moderner_beta-unobf.accesswidener")
     }
 
     remapJar {

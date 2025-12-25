@@ -116,5 +116,10 @@ stonecutter.parameters {
             direction = eval(current.version, ">=1.21.11")
             replace("net.minecraft.Util", "net.minecraft.util.Util")
         }
+
+        string {
+            direction = eval(current.version, ">=26.1")
+            replace("accessWidener v1 named", "accessWidener v1 official")
+        }
     }
 }

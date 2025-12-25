@@ -7,7 +7,7 @@ plugins {
 }
 
 loom {
-    accessWidenerPath = commonProject.file("../../src/main/resources/moderner_beta-unobf.accesswidener")
+    accessWidenerPath = stonecutter.process(commonProject.file("../../src/main/resources/moderner_beta.accesswidener"), "build/dev.aw")
 
     runConfigs.all {
         ideConfigGenerated(true)
@@ -49,11 +49,6 @@ dependencies {
 
 tasks.processResources {
     exclude("assets/moderner_beta/banner.png")
-
-    exclude("moderner_beta.accesswidener")
-    filesMatching("moderner_beta-unobf.accesswidener") {
-        name = "moderner_beta.accesswidener"
-    }
 }
 
 modrinth {

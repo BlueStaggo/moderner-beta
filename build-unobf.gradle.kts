@@ -11,7 +11,7 @@ loom {
         useLegacyMixinAp = false
     }
 
-    accessWidenerPath = file("../../src/main/resources/moderner_beta-unobf.accesswidener")
+    accessWidenerPath = stonecutter.process(file("../../src/main/resources/moderner_beta.accesswidener"), "build/dev.aw")
 
     decompilers {
         named("vineflower") { // Adds names to lambdas - useful for mixins

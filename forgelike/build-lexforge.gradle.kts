@@ -1,6 +1,3 @@
-import org.gradle.kotlin.dsl.accessTransformers
-import org.gradle.kotlin.dsl.from
-
 plugins {
     id("multiloader-loader").apply(false)
     id("net.neoforged.moddev.legacyforge")

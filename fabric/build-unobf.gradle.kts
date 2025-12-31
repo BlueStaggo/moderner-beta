@@ -38,10 +38,7 @@ dependencies {
     api("net.fabricmc.fabric-api:fabric-api:${commonMod.prop("fabric_api_version")}")
 
     if (commonMod.prop("mod_menu_supported").toBoolean()) {
-        //HACK: remove this when modmenu adds back placeholder-api support
-        implementation("com.terraformersmc:modmenu:${commonMod.prop("mod_menu_version")}") {
-            exclude(group = "eu.pb4", module = "placeholder-api")
-        }
+        implementation("com.terraformersmc:modmenu:${commonMod.prop("mod_menu_version")}")
     } else {
         compileOnly("com.terraformersmc:modmenu:${commonMod.prop("mod_menu_version")}")
     }

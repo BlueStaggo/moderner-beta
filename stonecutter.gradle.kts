@@ -120,6 +120,10 @@ stonecutter.parameters {
         string {
             direction = eval(current.version, ">=26.1")
             replace("accessWidener v1 named", "accessWidener v1 official")
+            replace("FabricDataOutput", "FabricPackOutput")
+            replace("FabricTagProvider", "FabricTagsProvider")
+            replace(".BlockTagProvider", ".BlockTagsProvider")
+            replace(".playS2C()", ".clientboundPlay()")
         }
     }
 }

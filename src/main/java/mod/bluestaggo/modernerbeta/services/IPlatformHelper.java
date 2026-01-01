@@ -1,4 +1,4 @@
-package mod.bluestaggo.modernerbeta;
+package mod.bluestaggo.modernerbeta.services;
 
 public interface IPlatformHelper {
     boolean isModPresent(String mod);

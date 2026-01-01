@@ -1,6 +1,6 @@
 package mod.bluestaggo.modernerbeta.fabric;
 
-import mod.bluestaggo.modernerbeta.IPlatformHelper;
+import mod.bluestaggo.modernerbeta.services.IPlatformHelper;
 import net.fabricmc.loader.api.FabricLoader;
 
 public class FabricPlatformHelper implements IPlatformHelper {

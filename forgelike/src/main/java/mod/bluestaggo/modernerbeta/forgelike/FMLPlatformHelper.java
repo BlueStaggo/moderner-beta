@@ -1,6 +1,6 @@
 package mod.bluestaggo.modernerbeta.forgelike;
 
-import mod.bluestaggo.modernerbeta.IPlatformHelper;
+import mod.bluestaggo.modernerbeta.services.IPlatformHelper;
 //? if neoforge {
 import net.neoforged.fml.loading.FMLLoader;
 //?} else {

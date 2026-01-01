@@ -14,8 +14,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(Level.class)
-public abstract class MixinLevel implements ModernBetaLevel {
+@Mixin(value = Level.class, priority = 1001)
+public abstract class LevelMixin implements ModernBetaLevel {
     @Unique private static final int MODERNER_BETA$TEMPERATURE_CACHE_CAPACITY = 128;
 
     @Unique private boolean modernerBeta$isModded;

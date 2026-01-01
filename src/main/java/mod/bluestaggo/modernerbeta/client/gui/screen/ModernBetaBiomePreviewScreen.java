@@ -18,6 +18,7 @@ import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeId;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers.LayerRandom;
+import mod.bluestaggo.modernerbeta.util.LoggingUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.gui.GuiGraphics;
@@ -235,7 +236,7 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                 try {
                     image.writeToFile(screenshotPath);
                 } catch (Exception exception) {
-                    ModernerBeta.log(Level.WARN, "Couldn't save screenshot: " + exception);
+                    LoggingUtil.log(Level.WARN, "Couldn't save screenshot: " + exception);
                 }
             });
         }

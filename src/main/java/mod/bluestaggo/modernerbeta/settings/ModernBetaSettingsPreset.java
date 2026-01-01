@@ -11,6 +11,7 @@ import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaResourceKeys;
 import mod.bluestaggo.modernerbeta.util.CodecUtil;
+import mod.bluestaggo.modernerbeta.util.LoggingUtil;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
@@ -132,8 +133,8 @@ public record ModernBetaSettingsPreset(
                     VersionCompat.getOrThrow(ModernBetaSettingsPreset.CODEC.decode(ops, json)).getFirst() : null;
             success = true;
         } catch (Exception e) {
-            ModernerBeta.log(Level.ERROR, "Unable to read settings JSON! Reverting to previous settings..");
-            ModernerBeta.log(Level.ERROR, String.format("Reason: %s", e.getMessage()));
+            LoggingUtil.log(Level.ERROR, "Unable to read settings JSON! Reverting to previous settings..");
+            LoggingUtil.log(Level.ERROR, String.format("Reason: %s", e.getMessage()));
         }
 
         return new Tuple<>(newPreset, success);
@@ -175,8 +176,8 @@ public record ModernBetaSettingsPreset(
             if (caveBiomeSettings.get(SettingsComponentTypes.PRESET) == null)
                 ModernBetaRegistries.CAVE_BIOME.get(caveBiomeSettings.getProvider());
         } catch (Exception e) {
-            ModernerBeta.log(Level.ERROR, "Unable to read settings JSON! Reverting to previous settings..");
-            ModernerBeta.log(Level.ERROR, String.format("Reason: %s", e.getMessage()));
+            LoggingUtil.log(Level.ERROR, "Unable to read settings JSON! Reverting to previous settings..");
+            LoggingUtil.log(Level.ERROR, String.format("Reason: %s", e.getMessage()));
             successful = false;
 
             chunkSettings = this.chunkSettings;
@@ -236,8 +237,8 @@ public record ModernBetaSettingsPreset(
             if (caveBiomeSettings.get(SettingsComponentTypes.PRESET) == null)
                 ModernBetaRegistries.CAVE_BIOME.get(caveBiomeSettings.getProvider());
         } catch (Exception e) {
-            ModernerBeta.log(Level.ERROR, "Unable to read settings NBT! Reverting to previous settings..");
-            ModernerBeta.log(Level.ERROR, String.format("Reason: %s", e.getMessage()));
+            LoggingUtil.log(Level.ERROR, "Unable to read settings NBT! Reverting to previous settings..");
+            LoggingUtil.log(Level.ERROR, String.format("Reason: %s", e.getMessage()));
             successful = false;
 
             chunkSettings = this.chunkSettings;
@@ -260,7 +261,7 @@ public record ModernBetaSettingsPreset(
         Optional<Holder.Reference<ModernBetaSettingsPreset>> preset = presetRegistry.get(ResourceKey.create(ModernBetaResourceKeys.SETTINGS_PRESET, presetId));
 
         if (preset.isEmpty()) {
-            ModernerBeta.log(Level.WARN, "Attempted to get Modern Beta preset \"" + presetId + "\", which is not registered.");
+            LoggingUtil.log(Level.WARN, "Attempted to get Modern Beta preset \"" + presetId + "\", which is not registered.");
             return Optional.empty();
         }
 

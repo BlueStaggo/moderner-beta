@@ -1,12 +1,11 @@
 package mod.bluestaggo.modernerbeta.level.spawn;
 
-import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.api.level.chunk.ChunkProvider;
 import mod.bluestaggo.modernerbeta.api.level.chunk.ChunkProviderNoise;
 import mod.bluestaggo.modernerbeta.api.level.spawn.SpawnLocator;
 import mod.bluestaggo.modernerbeta.tags.ModernBetaBiomeTags;
+import mod.bluestaggo.modernerbeta.util.LoggingUtil;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkHeightmap;
-import mod.bluestaggo.modernerbeta.util.random.mersenne.MTRandom;
 import mod.bluestaggo.modernerbeta.util.noise.PerlinOctaveNoise;
 import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomeSource;
 import net.minecraft.core.BlockPos;
@@ -38,7 +37,7 @@ public class SpawnLocatorPE implements SpawnLocator {
     
     @Override
     public Optional<BlockPos> locateSpawn(LevelHeightAccessor level) {
-        ModernerBeta.log(Level.INFO, "Setting a PE beach spawn..");
+        LoggingUtil.log(Level.INFO, "Setting a PE beach spawn..");
         
         int x = 0;
         int z = 0;
@@ -46,7 +45,7 @@ public class SpawnLocatorPE implements SpawnLocator {
         
         while(!this.isSandAt(level, x, z)) {
             if (attempts > 10000) {
-                ModernerBeta.log(Level.INFO, "Exceeded spawn attempts, spawning anyway at 128,128..");
+                LoggingUtil.log(Level.INFO, "Exceeded spawn attempts, spawning anyway at 128,128..");
                 
                 x = 128;
                 z = 128;

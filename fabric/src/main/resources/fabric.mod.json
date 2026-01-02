@@ -6,6 +6,7 @@
   "name": "Moderner Beta",
   "description": "Old (and not so old) world generation for modern Minecraft!",
   "authors": [
+    "icanttellyou",
     "BlueStaggo",
     "bespectacled"
   ],
@@ -13,15 +14,13 @@
     "Arenovas",
     "Amb0s",
     "comp500",
-    "ErzeKawek",
-    "icanttellyou",
     "PaulEvs",
     "SuperCoder7979"
   ],
   "contact": {
     "homepage": "https://modrinth.com/mod/moderner-beta/",
-    "sources": "https://github.com/Nostalgica-Reverie/moderner-beta",
-    "issues": "https://github.com/Nostalgica-Reverie/moderner-beta/issues"
+    "sources": "https://codeberg.org/Nostalgica-Reverie/moderner-beta",
+    "issues": "https://codeberg.org/Nostalgica-Reverie/moderner-beta/issues"
   },
 
   "license": "MIT",

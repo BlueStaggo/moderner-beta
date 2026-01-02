@@ -1,0 +1,57 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - '**'
+    paths:
+      - '**/*.java'
+      - '**/*.gradle'
+      - '**/*.kts'
+      - '**/*.json'
+    tags:
+      - '!**'
+  pull_request:
+    branches:
+      - '**'
+    paths:
+      - '**/*.java'
+      - '**/*.gradle'
+      - '**/*.kts'
+      - '**/*.json'
+
+jobs:
+  build:
+
+    runs-on: nr-runner
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up JDK 21
+      uses: https://github.com/actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+    - name: Run Data Generation
+      run: ./gradlew runDatagen
+      env:
+        CI: 'true'
+    - name: Build artifacts
+      run: ./gradlew build
+    - name: Get build hash
+      id: get-build-hash
+      run: |
+        echo "id=$(echo ${{forgejo.sha}} | cut -c 1-7)" >> $FORGEJO_OUTPUT
+    - name: Get branch name
+      id: get-branch
+      shell: bash
+      run: |
+        echo "branch=${FORGEJO_HEAD_REF:-${FORGEJO_REF#refs/heads/}}" >> $FORGEJO_OUTPUT
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: moderner-beta-${{steps.get-branch.outputs.branch}}-${{steps.get-build-hash.outputs.id}}
+        path: |
+          build/libs/fabric
+          build/libs/neoforge
+          build/libs/forge

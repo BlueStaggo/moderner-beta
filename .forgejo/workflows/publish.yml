@@ -1,0 +1,42 @@
+name: Mod Publish
+
+on:
+  push:
+    tags: ["**"]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 21
+        uses: https://github.com/actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+      - name: Run Data Generation
+        run: ./gradlew runDatagen
+        env:
+          CI: 'true'
+      - name: Build and publish
+        run: ./gradlew build modrinth --stacktrace
+        env:
+          MODRINTH_TOKEN: ${{secrets.MODRINTH_TOKEN}}
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: moderner-beta-${{forgejo.ref_name}}
+          path: |
+            build/libs/fabric
+            build/libs/neoforge
+            build/libs/forge
+#      - name: Create release
+#        uses: softprops/action-gh-release@v2
+#        with:
+#          body_path: CHANGELOG.md
+#          files: |
+#            build/libs/fabric/*-fabric-*[!-sources].jar
+#            build/libs/neoforge/*-neoforge-*[!-sources].jar
+#            build/libs/forge/*-forge-*[!-sources].jar

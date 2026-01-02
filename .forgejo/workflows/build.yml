@@ -23,7 +23,7 @@ on:
 jobs:
   build:
 
-    runs-on: nr-runner
+    runs-on: technocality
 
     steps:
     - uses: actions/checkout@v4

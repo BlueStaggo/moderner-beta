@@ -25,8 +25,8 @@ public class RegistryBuilderImpl<T> implements IRegistryBuilder<T> {
         registryBuilder.attribute(RegistryAttribute.OPTIONAL);
         //?} else {
         /*mod.bluestaggo.modernerbeta.util.LoggingUtil.log(org.slf4j.event.Level.WARN,
-            "Creation of optional registry has been attempted." +
-            "This is not supported by Fabric API for this version." +
+            "Creation of optional registry has been attempted. " +
+            "This is not supported by Fabric API for this version. " +
             "Unexpected behavior may arise.");
         *///?}
         return this;

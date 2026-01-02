@@ -9,6 +9,7 @@ on:
       - '**/*.gradle'
       - '**/*.kts'
       - '**/*.json'
+      - '.forgejo/workflows/build.yml'
     tags:
       - '!**'
   pull_request:

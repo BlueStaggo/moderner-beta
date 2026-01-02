@@ -46,7 +46,7 @@
     "moderner_beta-fabric.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.15.0",
+    "fabricloader": ">=0.16.0",
     "fabric": "*",
     "minecraft": "${minecraft_version_range}"
   }

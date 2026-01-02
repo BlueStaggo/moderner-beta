@@ -11,7 +11,7 @@
     <hr/>
 </center>
 
-Moderner Beta is the successor to [b3spectacled](https://github.com/b3spectacled)'s [Modern Beta](https://github.com/b3spectacled/modern-beta-fabric).
+Moderner Beta is the successor to [b3spectacled](https://codeberg.org/b3spectacled/)'s [Modern Beta](https://github.com/b3spectacled/modern-beta-fabric).
 It originally started as a pull request for the original Modern Beta to add in world generation from Beta 1.8 to 1.6.4,
 however due to b3spectacled's inactivity it has become its own project.
 The mod is currently supported for 1.20.1, 1.21.1, 1.21.4, 1.21.5 and 1.21.6.
@@ -50,7 +50,7 @@ This project is licensed under LGPLv3, up to and including commit 55519d1.
 
 ## Credits
 
-Thanks to [icanttellyou](https://github.com/forkiesassds) for porting the mod to various platforms.
+Thanks to [icanttellyou](https://codeberg.org/icanttellyou) for porting the mod to various platforms.
 
 The Nintendo Switch Edition [decompilation project](https://github.com/GRAnimated/MinecraftLCE/) has been referenced to implement accurate LCE terrain generation.
 

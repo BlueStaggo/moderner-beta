@@ -21,8 +21,10 @@ jobs:
         env:
           CI: 'true'
       - name: Build and publish
-        run: ./gradlew build modrinth --stacktrace
+        run: ./gradlew build publishMods --stacktrace
         env:
+          FORGEJO_TOKEN: ${{secrets.FORGEJO_TOKEN}}
+          _GITHUB_TOKEN: ${{secrets._GITHUB_TOKEN}}
           MODRINTH_TOKEN: ${{secrets.MODRINTH_TOKEN}}
       - name: Upload build artifacts
         uses: https://code.forgejo.org/forgejo/upload-artifact@v4
@@ -32,11 +34,3 @@ jobs:
             build/libs/fabric
             build/libs/neoforge
             build/libs/forge
-#      - name: Create release
-#        uses: softprops/action-gh-release@v2
-#        with:
-#          body_path: CHANGELOG.md
-#          files: |
-#            build/libs/fabric/*-fabric-*[!-sources].jar
-#            build/libs/neoforge/*-neoforge-*[!-sources].jar
-#            build/libs/forge/*-forge-*[!-sources].jar

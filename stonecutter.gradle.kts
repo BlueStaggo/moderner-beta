@@ -1,5 +1,3 @@
-import dev.kikugie.stonecutter.data.tree.struct.ProjectNode
-
 plugins {
     id("dev.kikugie.stonecutter")
     id("dev.architectury.loom").apply(false)
@@ -7,15 +5,46 @@ plugins {
     (id("org.jetbrains.kotlin.jvm") version "2.2.0").apply(false)
     (id("com.google.devtools.ksp") version "2.2.0-2.0.2").apply(false)
     (id("dev.kikugie.fletching-table") version "0.1.0-alpha.13").apply(false)
+    id("me.modmuss50.mod-publish-plugin") version "1.1.0"
 }
 
 plugins.apply("dev.kikugie.stonecutter")
 stonecutter.active("1.21.6")
 
+publishMods {
+    @Suppress("LocalVariableName")
+    val mod_version: String by extra
+    changelog = rootProject.file("CHANGELOG.md").readText()
+    type = STABLE
+
+    github {
+        accessToken = providers.environmentVariable("_GITHUB_TOKEN")
+        displayName = "Moderner Beta " + mod_version
+        version = mod_version
+        repository = "Nostalgica-Reverie/moderner-beta"
+        tagName = providers.environmentVariable("FORGEJO_REF_NAME")
+        commitish = ""
+
+        allowEmptyFiles = true
+    }
+
+    forgejo {
+        accessToken = providers.environmentVariable("FORGEJO_TOKEN")
+        host(uri("https://codeberg.com"))
+        displayName = "Moderner Beta " + mod_version
+        version = mod_version
+        repository = "Nostalgica-Reverie/moderner-beta"
+        tagName = providers.environmentVariable("FORGEJO_REF_NAME")
+        commitish = ""
+
+        allowEmptyFiles = true
+    }
+}
+
 stonecutter.tasks {
     order("runDatagen", filter = { this.branch.id == "fabric" })
     order("build")
-    order("modrinth", filter = { this.branch.id == "fabric" || this.branch.id == "forgelike" })
+    order("publishMods", filter = { this.branch.id == "fabric" || this.branch.id == "forgelike" })
 }
 
 stonecutter.parameters {

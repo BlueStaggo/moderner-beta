@@ -4,7 +4,7 @@ plugins {
     id "dev.kikugie.fletching-table"
     id "architectury-plugin" version "3.4.+"
     id "com.gradleup.shadow" version "9.0.0-rc2"
-    id "com.modrinth.minotaur" version "2.+"
+    id "me.modmuss50.mod-publish-plugin"
 }
 
 var neoforge = stonecutter.eval(stonecutter.current.version, ">=1.20.2")
@@ -195,13 +195,27 @@ java {
     targetCompatibility = javaVer
 }
 
-modrinth {
-    token = System.getenv("MODRINTH_TOKEN")
-    projectId = commonPr.modrinth_project_id
-    versionName = "Moderner Beta " + project.version
-    versionNumber = commonPr.version
-    gameVersions = commonPr.supported_versions.split(",").toList()
+publishMods {
+    displayName = "Moderner Beta " + project.version
     changelog = rootProject.file("CHANGELOG.md").text
-    loaders = [neoforge ? "neoforge" : "forge"]
-    uploadFile = tasks.remapJar
+    type = STABLE
+
+    file = remapJar.archiveFile
+    modLoaders.add(neoforge ? "neoforge" : "forge")
+
+    modrinth {
+        accessToken = System.getenv("MODRINTH_TOKEN")
+        projectId = commonPr.modrinth_project_id
+        minecraftVersions.addAll(commonPr.supported_versions.split(",").toList())
+    }
+
+    github {
+        accessToken = System.getenv("GITHUB_TOKEN")
+        parent project(":").tasks.named("publishGithub")
+    }
+
+    forgejo {
+        accessToken = System.getenv("FORGEJO_TOKEN")
+        parent project(":").tasks.named("publishForgejo")
+    }
 }

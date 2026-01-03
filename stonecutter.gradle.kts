@@ -19,7 +19,7 @@ publishMods {
 
     github {
         accessToken = providers.environmentVariable("_GITHUB_TOKEN")
-        displayName = "Moderner Beta " + mod_version
+        displayName = mod_version
         version = mod_version
         repository = "Nostalgica-Reverie/moderner-beta"
         tagName = providers.environmentVariable("FORGEJO_REF_NAME")
@@ -31,7 +31,7 @@ publishMods {
     forgejo {
         accessToken = providers.environmentVariable("FORGEJO_TOKEN")
         host(uri("https://codeberg.org"))
-        displayName = "Moderner Beta " + mod_version
+        displayName = mod_version
         version = mod_version
         repository = "Nostalgica-Reverie/moderner-beta"
         tagName = providers.environmentVariable("FORGEJO_REF_NAME")

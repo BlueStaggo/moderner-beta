@@ -30,7 +30,7 @@ publishMods {
 
     forgejo {
         accessToken = providers.environmentVariable("FORGEJO_TOKEN")
-        host(uri("https://codeberg.com"))
+        host(uri("https://codeberg.org"))
         displayName = "Moderner Beta " + mod_version
         version = mod_version
         repository = "Nostalgica-Reverie/moderner-beta"

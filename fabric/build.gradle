@@ -182,7 +182,7 @@ publishMods {
     }
 
     github {
-        accessToken = System.getenv("GITHUB_TOKEN")
+        accessToken = System.getenv("_GITHUB_TOKEN")
         parent project(":").tasks.named("publishGithub")
     }
 

@@ -1,8 +1,8 @@
 package mod.bluestaggo.modernerbeta.level.spawn;
 
-import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.api.level.chunk.ChunkProviderFinite;
 import mod.bluestaggo.modernerbeta.api.level.spawn.SpawnLocator;
+import mod.bluestaggo.modernerbeta.util.LoggingUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.LevelHeightAccessor;
 import net.minecraft.world.level.block.Block;
@@ -47,7 +47,7 @@ public class SpawnLocatorIndev implements SpawnLocator {
             spawnY = this.chunkProvider.getHeight(level, spawnX - width / 2, spawnZ - length / 2, Heightmap.Types.OCEAN_FLOOR_WG) + 1;
             
             if (attempts >= 1000000) {
-                ModernerBeta.log(Level.INFO, "[Indev] Exceeded spawn attempts, spawning anyway..");
+                LoggingUtil.log(Level.INFO, "[Indev] Exceeded spawn attempts, spawning anyway..");
               //spawnY = height + 100; From original code, but tends to fail on small worlds
                 
                 break;

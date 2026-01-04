@@ -1,10 +1,10 @@
 package mod.bluestaggo.modernerbeta.level.spawn;
 
-import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.api.level.chunk.ChunkProvider;
 import mod.bluestaggo.modernerbeta.api.level.chunk.ChunkProviderNoise;
 import mod.bluestaggo.modernerbeta.api.level.spawn.SpawnLocator;
 import mod.bluestaggo.modernerbeta.tags.ModernBetaBiomeTags;
+import mod.bluestaggo.modernerbeta.util.LoggingUtil;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkHeightmap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -36,7 +36,7 @@ public class SpawnLocatorRelease implements SpawnLocator {
 
     @Override
     public Optional<BlockPos> locateSpawn(LevelHeightAccessor level) {
-        ModernerBeta.log(Level.INFO, "Setting a grass spawn..");
+        LoggingUtil.log(Level.INFO, "Setting a grass spawn..");
 
         int x = 0;
         int z = 0;
@@ -47,12 +47,12 @@ public class SpawnLocatorRelease implements SpawnLocator {
             x = suitableBiomeLocation.getX();
             z = suitableBiomeLocation.getZ();
         } else {
-            ModernerBeta.log(Level.INFO, "Unable to find spawn biome");
+            LoggingUtil.log(Level.INFO, "Unable to find spawn biome");
         }
         
         while(!this.isGrassAt(level, x, z)) {
             if (attempts > 10000) {
-                ModernerBeta.log(Level.INFO, "Exceeded spawn attempts, spawning anyway at 0,0..");
+                LoggingUtil.log(Level.INFO, "Exceeded spawn attempts, spawning anyway at 0,0..");
                 
                 x = 0;
                 z = 0;

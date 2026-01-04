@@ -371,6 +371,16 @@ public final class BlockColorSampler {
             return levelReader.getBiomeManager();
         }
 
+        if (tintGetter.getClass().getName().equals("net.optifine.override.ChunkCacheOF")) {
+            try {
+                Field field = tintGetter.getClass().getDeclaredField("chunkCache");
+
+                if (Modifier.isPublic(field.getModifiers()) || field.trySetAccessible()) {
+                    tintGetter = (BlockAndTintGetter) field.get(tintGetter);
+                }
+            } catch (Exception ignored) {}
+        }
+
         if (tintGetter instanceof
             //? if >=1.21.6 {
             net.minecraft.client.renderer.chunk.RenderSectionRegion

@@ -1,4 +1,4 @@
-package mod.bluestaggo.modernerbeta.forgelike.mixin;
+package mod.bluestaggo.modernerbeta.mixin;
 
 import com.google.common.collect.ImmutableMap;
 import mod.bluestaggo.modernerbeta.services.ModernBetaServices;
@@ -11,10 +11,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
 
-public class ModernerBetaForgeLikeMixinPlugin implements IMixinConfigPlugin {
+public class ModernerBetaMixinPlugin implements IMixinConfigPlugin {
     private static final Supplier<Boolean> TRUE = () -> true;
     private static final Map<String, Supplier<Boolean>> CONDITIONS = ImmutableMap.of(
-        "mod.bluestaggo.modernerbeta.forgelike.mixin.compat.blueprint.ModdedBiomeSlicesManagerMixin", () -> ModernBetaServices.PLATFORM.isModPresent("blueprint")
+        //? if <1.21.2
+        //"mod.bluestaggo.modernerbeta.mixin.client.LevelRendererMixin", () -> !ModernBetaServices.PLATFORM.isModPresent("sereneseasons"),
+        "mod.bluestaggo.modernerbeta.mixin.BiomeMixin", () -> !ModernBetaServices.PLATFORM.isModPresent("sereneseasons"),
+        "mod.bluestaggo.modernerbeta.mixin.compat.sereneseasons.SeasonHooksMixin", () -> ModernBetaServices.PLATFORM.isModPresent("sereneseasons")
     );
 
     @Override

@@ -10,6 +10,7 @@ import mod.bluestaggo.modernerbeta.network.BiomeProviderInfoPayload;
 import mod.bluestaggo.modernerbeta.network.S2CPacketHandlers;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHelper;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
+import mod.bluestaggo.modernerbeta.services.ModernBetaServices;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
@@ -73,10 +74,7 @@ public class ModEventsCommon {
     @SubscribeEvent
     public static void commonInit(FMLConstructModEvent event) {
         ModernerBeta.init();
-        ModCompat.initialise(FMLUtils::isModPresent);
-
-        if (!FMLLoader/*? >=1.21.9 {*//*.getCurrent()*//*?}*/.isProduction())
-            ModernerBeta.DEV_ENV = true;
+        ModCompat.initialise(ModernBetaServices.PLATFORM::isModPresent);
 
         //? if forge {
         /*NetworkHelperImpl networkHelper = new NetworkHelperImpl();

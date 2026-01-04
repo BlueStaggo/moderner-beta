@@ -1,6 +1,5 @@
 package mod.bluestaggo.modernerbeta.api.level.chunk;
 
-import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.api.level.biome.climate.ClimateSampler;
 import mod.bluestaggo.modernerbeta.api.level.blocksource.BlockSource;
 import mod.bluestaggo.modernerbeta.api.level.chunk.surface.SurfaceConfig;
@@ -13,6 +12,7 @@ import mod.bluestaggo.modernerbeta.level.spawn.SpawnLocatorIndev;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.settings.component.FiniteLevelProperties;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
+import mod.bluestaggo.modernerbeta.util.LoggingUtil;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.util.noise.SimpleNoisePos;
 import net.minecraft.Util;
@@ -338,7 +338,7 @@ public abstract class ChunkProviderFinite extends ChunkProvider implements Chunk
     protected void setPhase(String phase) {
         levelPhase = phase + "..";
         
-        ModernerBeta.log(Level.INFO, levelPhase);
+        LoggingUtil.log(Level.INFO, levelPhase);
     }
     
     protected void fillOblateSpheroid(float centerX, float centerY, float centerZ, float radius, Block fillBlock) {

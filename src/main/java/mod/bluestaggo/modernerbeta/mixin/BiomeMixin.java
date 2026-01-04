@@ -2,7 +2,7 @@ package mod.bluestaggo.modernerbeta.mixin;
 
 import mod.bluestaggo.modernerbeta.api.level.biome.climate.ClimateSampler;
 import mod.bluestaggo.modernerbeta.imixin.ModernBetaLevel;
-import mod.bluestaggo.modernerbeta.level.feature.BetaSnowAndFreezeFeature;
+import mod.bluestaggo.modernerbeta.level.biome.ClimateHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.biome.Biome;
@@ -22,7 +22,7 @@ public abstract class BiomeMixin {
         at = @At("HEAD"),
         cancellable = true
     )
-    private void canSetIceWithModernBetaClimate(LevelReader level, BlockPos pos, boolean doWaterCheck, CallbackInfoReturnable<Boolean> cir) {
+    private void shouldFreezeWithModernBetaClimate(LevelReader level, BlockPos pos, boolean doWaterCheck, CallbackInfoReturnable<Boolean> cir) {
         if (!(level instanceof ModernBetaLevel modernBetaLevel))
             return;
 
@@ -30,7 +30,7 @@ public abstract class BiomeMixin {
         if (climateSampler == null)
             return;
 
-        cir.setReturnValue(BetaSnowAndFreezeFeature.canSetIce(
+        cir.setReturnValue(ClimateHelper.shouldFreeze(
             level,
             pos,
             doWaterCheck,
@@ -45,7 +45,7 @@ public abstract class BiomeMixin {
         at = @At("HEAD"),
         cancellable = true
     )
-    private void canSetSnowWithModernBetaClimate(LevelReader level, BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
+    private void shouldSnowWithModernBetaClimate(LevelReader level, BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
         if (!(level instanceof ModernBetaLevel modernBetaLevel))
             return;
 
@@ -53,7 +53,7 @@ public abstract class BiomeMixin {
         if (climateSampler == null)
             return;
 
-        cir.setReturnValue(BetaSnowAndFreezeFeature.canSetSnow(
+        cir.setReturnValue(ClimateHelper.shouldSnow(
             level,
             pos,
             climateSampler.sampleModifiedTemperature(pos, this.climateSettings.temperatureModifier()),

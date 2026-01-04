@@ -959,6 +959,7 @@ public class ModernBetaTagProviderBiome extends FabricTagProvider<Biome> {
             .addTag(IS_RAINFOREST)
             .addTag(IS_DESERT)
             .addTag(IS_SAVANNA)
-            .addTag(IS_SWAMP);
+            .addTag(IS_SWAMP)
+            .addTag(IS_SEASONAL_FOREST);
     }
 }

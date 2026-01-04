@@ -10,7 +10,7 @@ import net.minecraft.world.level.biome.Biome;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(ServerLevel.class)
+@Mixin(value = ServerLevel.class, priority = 1001)
 public abstract class ServerLevelMixin implements ModernBetaLevel {
     @WrapOperation(
         //? if >=1.20.2 {

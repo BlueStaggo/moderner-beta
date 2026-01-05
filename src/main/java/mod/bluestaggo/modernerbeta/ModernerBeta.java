@@ -11,6 +11,7 @@ import mod.bluestaggo.modernerbeta.network.INetworkHelper;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaResourceKeys;
+import mod.bluestaggo.modernerbeta.services.ModernBetaServices;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPresetCategory;
@@ -28,6 +29,7 @@ import mod.bluestaggo.modernerbeta.level.feature.ModernBetaTrunkPlacers;
 import mod.bluestaggo.modernerbeta.level.feature.placement.ModernBetaPlacementTypes;
 import mod.bluestaggo.modernerbeta.level.structure.ModernBetaStructurePieceTypes;
 import mod.bluestaggo.modernerbeta.level.structure.ModernBetaStructureTypes;
+import mod.bluestaggo.modernerbeta.util.LoggingUtil;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
@@ -50,10 +52,8 @@ public class ModernerBeta {
     public static final String MOD_ID = "moderner_beta";
     public static final String MOD_NAME = "Moderner Beta";
 
-    public static boolean DEV_ENV;
+    public static final boolean DEV_ENV = ModernBetaServices.PLATFORM.isDevEnvironment();
     public static boolean GENERATING_DATA;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(MOD_NAME);
 
     public static final List<String> BUILT_IN_PACKS = List.of(
         "reduced_height",
@@ -78,7 +78,7 @@ public class ModernerBeta {
     public static ModernBetaSettings config;
 
     public static void init() {
-        ModernerBeta.log(Level.INFO, "Initializing Moderner Beta...");
+        LoggingUtil.log(Level.INFO, "Initializing Moderner Beta...");
     }
 
     public static void setupCustomRegistryHandlers() {
@@ -104,34 +104,6 @@ public class ModernerBeta {
 
     public static ResourceLocation createId(String name) {
         return ResourceLocation./*? >=1.21 {*/fromNamespaceAndPath/*?} else {*//*tryBuild*//*?}*/(MOD_ID, name);
-    }
-
-    public static void log(Level level, String message) {
-        String template = "[" + MOD_NAME + "] {}";
-
-        switch (level) {
-            case TRACE:
-                LOGGER.trace(template, message);
-                break;
-            case DEBUG:
-                LOGGER.debug(template, message);
-                break;
-            case INFO:
-                LOGGER.info(template, message);
-                break;
-            case WARN:
-                LOGGER.warn(template, message);
-                break;
-            case ERROR:
-                LOGGER.error(template, message);
-                break;
-            default:
-                throw new IllegalArgumentException("Unknown logging level: " + level);
-        }
-    }
-
-    public static void log(String message) {
-        log(Level.INFO, message);
     }
 
     public static GsonBuilder getSettingsGson() {
@@ -173,7 +145,7 @@ public class ModernerBeta {
 
         DataResult<JsonElement> encodedConfig = ModernBetaSettings.CODEC.encode(config, JsonOps.INSTANCE, new JsonObject());
         if (encodedConfig.result().isEmpty()) {
-            log(Level.WARN, "Failed to serialize config to JSON: " + encodedConfig);
+            LoggingUtil.log(Level.WARN, "Failed to serialize config to JSON: " + encodedConfig);
             return;
         }
 

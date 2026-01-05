@@ -1,3 +1,11 @@
+# 4.0.3
+
+## Changes
+- Improved compatibility with Serene Seasons
+
+## Fixes
+- Fixed incompatibilities with Optifine
+
 # 4.0.2
 
 ## Fixes

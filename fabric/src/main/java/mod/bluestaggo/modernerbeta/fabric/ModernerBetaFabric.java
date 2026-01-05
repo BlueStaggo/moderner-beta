@@ -50,9 +50,8 @@ public class ModernerBetaFabric implements ModInitializer {
             DynamicRegistries.register((ResourceKey<Registry<Object>>)dynamicRegistry.getA(), (Codec<Object>)dynamicRegistry.getB());
         }
 
-        if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
+        if (ModernerBeta.DEV_ENV) {
             CommandRegistrationCallback.EVENT.register(DebugProviderSettingsCommand::register);
-            ModernerBeta.DEV_ENV = true;
         }
 
         ServerLifecycleEvents.SERVER_STARTING.register(ModernBetaLevelInitializer::initStarting);

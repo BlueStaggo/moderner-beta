@@ -11,6 +11,7 @@ import mod.bluestaggo.modernerbeta.compat.client.ModCompatClient;
 import mod.bluestaggo.modernerbeta.forgelike.registry.RegistryHelperImpl;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHelper;
+import mod.bluestaggo.modernerbeta.services.ModernBetaServices;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 //? if neoforge {
@@ -68,7 +69,7 @@ public class ModEventsClient {
     @SubscribeEvent
     public static void clientInit(FMLClientSetupEvent event) {
         ModernerBetaClient.init();
-        ModCompatClient.initialise(FMLUtils::isModPresent);
+        ModCompatClient.initialise(ModernBetaServices.PLATFORM::isModPresent);
 
         ModLoadingContext.get().registerExtensionPoint(
                 //? if neoforge {

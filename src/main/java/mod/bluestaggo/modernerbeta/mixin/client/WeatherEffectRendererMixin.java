@@ -22,12 +22,8 @@ public class WeatherEffectRendererMixin {
             target = VersionCompat.BIOME_GET_PRECIPITATION_TARGET
         )
     )
-    public Biome.Precipitation modifyTickPrecipitation(
-        Biome biome, BlockPos blockPos
-        /*if >=1.21.2 */, int seaLevel/**/
-        , Operation<Biome.Precipitation> original,
-        @Local(argsOnly = true) Level level
-    ) {
+    public Biome.Precipitation modifyTickPrecipitation(Biome biome, BlockPos blockPos, int seaLevel,
+                                                       Operation<Biome.Precipitation> original, @Local(argsOnly = true) Level level) {
         ModernBetaLevel modernBetaLevel = (ModernBetaLevel)level;
 
         if (!modernBetaLevel.modernerBeta$isModded()) {

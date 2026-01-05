@@ -10,6 +10,7 @@ import mod.bluestaggo.modernerbeta.level.chunk.provider.ChunkProviderFinite2D;
 import mod.bluestaggo.modernerbeta.level.chunk.provider.indev.IndevTheme;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.settings.component.WorldBorderLocation;
+import mod.bluestaggo.modernerbeta.util.LoggingUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -93,7 +94,7 @@ public abstract class MinecraftServerMixin {
             int y = spawnPos.getY();
             int z = spawnPos.getZ();
 
-            ModernerBeta.log(Level.INFO, String.format("Spawning at %d/%d/%d", x, y, z));
+            LoggingUtil.log(Level.INFO, String.format("Spawning at %d/%d/%d", x, y, z));
         }
 
         if (spawnPos != null && chunkProvider instanceof ChunkProviderFinite2D chunkProviderIndev) {

@@ -2,7 +2,7 @@ plugins {
     id("java")
     id("idea")
     id("multiloader-common")
-    id("com.modrinth.minotaur")
+    id("me.modmuss50.mod-publish-plugin")
 }
 
 val commonJava: Configuration by configurations.creating {
@@ -23,14 +23,30 @@ dependencies {
     commonResources(project(path = commonPath, configuration = "commonResources"))
 }
 
-modrinth {
-    token.set(System.getenv("MODRINTH_TOKEN"))
-    projectId.set(commonMod.prop("modrinth_project_id"))
-    versionName.set("Moderner Beta " + commonMod.version)
-    versionNumber.set(version.toString())
-    gameVersions.addAll(commonMod.prop("supported_versions").split(",").toList())
-    changelog.set(rootProject.file("CHANGELOG.md").readText())
-    loaders.addAll(supported_loaders!!)
+publishMods {
+    displayName = "Moderner Beta " + commonMod.version
+    version = project.version.toString() + "-" + loader
+
+    changelog = rootProject.file("CHANGELOG.md").readText()
+    type = STABLE
+
+    modLoaders.addAll(supported_loaders!!)
+
+    modrinth {
+        accessToken = System.getenv("MODRINTH_TOKEN")
+        projectId = commonMod.prop("modrinth_project_id")
+        minecraftVersions.addAll(commonMod.prop("supported_versions").split(",").toList())
+    }
+
+    github {
+        accessToken = System.getenv("_GITHUB_TOKEN")
+        parent(project(":").tasks.named("publishGithub"))
+    }
+
+    forgejo {
+        accessToken = System.getenv("FORGEJO_TOKEN")
+        parent(project(":").tasks.named("publishForgejo"))
+    }
 }
 
 tasks {

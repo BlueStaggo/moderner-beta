@@ -60,9 +60,10 @@ tasks {
     }
 }
 
-modrinth {
-    dependencies {
-        required.project("fabric-api")
+publishMods {
+    file.set(tasks.remapJar.get().archiveFile)
+
+    modrinth {
+        requires("fabric-api")
     }
-    uploadFile.set(tasks.remapJar)
 }

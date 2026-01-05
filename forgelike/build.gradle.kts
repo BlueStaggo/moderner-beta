@@ -4,7 +4,7 @@ plugins {
     kotlin("jvm")
     id("com.google.devtools.ksp")
     id("dev.kikugie.fletching-table")
-    id("com.modrinth.minotaur")
+    id("me.modmuss50.mod-publish-plugin")
 }
 
 project.ext["loader"] = "neoforge"
@@ -88,6 +88,6 @@ tasks.processResources {
     exclude("META-INF/at-forge.cfg")
 }
 
-modrinth {
-    uploadFile.set(tasks.jar)
+publishMods {
+    file.set(tasks.jar.get().archiveFile)
 }

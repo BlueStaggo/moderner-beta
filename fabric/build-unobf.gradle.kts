@@ -48,9 +48,9 @@ tasks.processResources {
     exclude("assets/moderner_beta/banner.png")
 }
 
-modrinth {
-    dependencies {
-        required.project("fabric-api")
+publishMods {
+    file.set(tasks.jar.get().archiveFile)
+    modrinth {
+        requires("fabric-api")
     }
-    uploadFile.set(tasks.jar)
 }

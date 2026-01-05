@@ -44,7 +44,6 @@ public class ModernBetaBuiltInProviders {
             ChunkProviderFinite2D::new, () -> List.of(
                 SettingsComponentTypes.DEEPSLATE_GENERATION,
                 SettingsComponentTypes.USE_SURFACE_RULES,
-                SettingsComponentTypes.SEA_LEVEL,
                 SettingsComponentTypes.CAVE_GENERATION,
                 SettingsComponentTypes.FINITE_LEVEL_PROPERTIES,
                 SettingsComponentTypes.FINITE_CAVE_GENERATION,

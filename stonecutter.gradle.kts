@@ -57,6 +57,7 @@ stonecutter.parameters {
             direction = eval(current.version, "<1.20.5")
             replace("com.mojang.serialization.MapCodec<", "com.mojang.serialization./*Map*/Codec<")
             replace("com.mojang.serialization.MapCodec.", "com.mojang.serialization./*Map*/Codec.")
+            replace("BootstrapContext", "BootstapContext")
         }
 
         string {
@@ -93,7 +94,6 @@ stonecutter.parameters {
             replace("WeightedList.codec", "SimpleWeightedRandomList.wrappedCodec")
             replace("WeightedList.of", "SimpleWeightedRandomList.create")
             replace("WeightedList", "SimpleWeightedRandomList")
-            replace("BootstrapContext", "BootstapContext")
         }
 
         string {

@@ -184,8 +184,8 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
         //Executor executor,
         Blender blender, RandomState noiseConfig, StructureManager structureAccessor, ChunkAccess chunk
     ) {
-        ChunkPos pos = chunk.getPos();
-        if (ModCompat.skipGeneratingChunk(pos.x, pos.z))
+        ChunkPos chunkPos = chunk.getPos();
+        if (ModCompat.skipGeneratingChunk(chunkPos.x, chunkPos.z))
             return CompletableFuture.completedFuture(chunk);
 
         return this.chunkProvider.provideChunk(Blender.empty(), structureAccessor, chunk, noiseConfig);
@@ -193,14 +193,14 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
 
     @Override
     public void buildSurface(WorldGenRegion chunkRegion, StructureManager structureAccessor, RandomState noiseConfig, ChunkAccess chunk) {
-        ChunkPos pos = chunk.getPos();
+        ChunkPos chunkPos = chunk.getPos();
 
-        if (ModCompat.skipGeneratingChunk(pos.x, pos.z))
+        if (ModCompat.skipGeneratingChunk(chunkPos.x, chunkPos.z))
             return;
 
         this.injectBiomes(chunk, noiseConfig.sampler(), BiomeInjectionStep.PRE);
 
-        if (!this.chunkProvider.skipChunk(pos.x, pos.z, ModernBetaGenerationStep.SURFACE)) {
+        if (!this.chunkProvider.skipChunk(chunkPos.x, chunkPos.z, ModernBetaGenerationStep.SURFACE)) {
             if (this.biomeSource instanceof ModernBetaBiomeSource modernBetaBiomeSource) {
                 if (this.useSurfaceRules) {
                     this.buildDefaultSurface(chunkRegion, structureAccessor, noiseConfig, chunk);
@@ -241,14 +241,13 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
                       //? if <1.21.2
                       //, GenerationStep.Carving carverStep
     ) {
-        ChunkPos pos = chunk.getPos();
+        ChunkPos chunkPos = chunk.getPos();
 
-        if (ModCompat.skipGeneratingChunk(pos.x, pos.z) ||
-            this.chunkProvider.skipChunk(pos.x, pos.z, ModernBetaGenerationStep.CARVERS))
+        if (ModCompat.skipGeneratingChunk(chunkPos.x, chunkPos.z) ||
+            this.chunkProvider.skipChunk(chunkPos.x, chunkPos.z, ModernBetaGenerationStep.CARVERS))
             return;
 
         BiomeManager biomeAccessWithSource = biomeAccess.withDifferentSource((biomeX, biomeY, biomeZ) -> this.biomeSource.getNoiseBiome(biomeX, biomeY, biomeZ, noiseConfig.sampler()));
-        ChunkPos chunkPos = chunk.getPos();
 
         int mainChunkX = chunkPos.x;
         int mainChunkZ = chunkPos.z;
@@ -287,7 +286,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
         for (int chunkX = mainChunkX - 8; chunkX <= mainChunkX + 8; ++chunkX) {
             for (int chunkZ = mainChunkZ - 8; chunkZ <= mainChunkZ + 8; ++chunkZ) {
                 ChunkPos carverPos = new ChunkPos(chunkX, chunkZ);
-                ChunkAccess carverChunk = chunkRegion.getChunk(carverPos.x, carverPos.z);
+                ChunkAccess carverChunk = chunkRegion.getChunk(chunkX, chunkZ);
                 
                 @SuppressWarnings("deprecation")
                 BiomeGenerationSettings genSettings = carverChunk.carverBiome(() -> this.getBiomeGenerationSettings(
@@ -363,9 +362,9 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
 
     @Override
     public void applyBiomeDecoration(WorldGenLevel level, ChunkAccess chunk, StructureManager structureAccessor) {
-        ChunkPos pos = chunk.getPos();
+        ChunkPos chunkPos = chunk.getPos();
         
-        if (this.chunkProvider.skipChunk(pos.x, pos.z, ModernBetaGenerationStep.FEATURES)) 
+        if (this.chunkProvider.skipChunk(chunkPos.x, chunkPos.z, ModernBetaGenerationStep.FEATURES))
             return;
 
         super.applyBiomeDecoration(level, chunk, structureAccessor);
@@ -373,10 +372,10 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
     
     @Override
     public void spawnOriginalMobs(WorldGenRegion region) {
-        ChunkPos pos = region.getCenter();
+        ChunkPos chunkPos = region.getCenter();
         
-        if (ModCompat.skipGeneratingChunk(pos.x, pos.z) ||
-            this.chunkProvider.skipChunk(pos.x, pos.z, ModernBetaGenerationStep.ENTITY_SPAWN))
+        if (ModCompat.skipGeneratingChunk(chunkPos.x, chunkPos.z) ||
+            this.chunkProvider.skipChunk(chunkPos.x, chunkPos.z, ModernBetaGenerationStep.ENTITY_SPAWN))
             return;
         
         super.spawnOriginalMobs(region);

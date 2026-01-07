@@ -49,27 +49,24 @@ stonecutter.tasks {
 stonecutter.parameters {
     replacements {
         string {
-            direction = eval(current.version, "<1.21.5")
-            replace("WeightedList.codec", "SimpleWeightedRandomList.wrappedCodec")
+            direction = eval(current.version, "<1.20.3")
+            replace("net.minecraft.network.chat.ComponentSerialization.CODEC", "net.minecraft.util.ExtraCodecs.COMPONENT")
         }
 
         string {
-            direction = eval(current.version, "<1.21.5")
-            replace("WeightedList.of", "SimpleWeightedRandomList.create")
+            direction = eval(current.version, "<1.20.5")
+            replace("com.mojang.serialization.MapCodec<", "com.mojang.serialization./*Map*/Codec<")
+            replace("com.mojang.serialization.MapCodec.", "com.mojang.serialization./*Map*/Codec.")
         }
 
         string {
-            direction = eval(current.version, "<1.21.5")
-            replace("WeightedList", "SimpleWeightedRandomList")
+            direction = eval(current.version, "<1.21")
+            replace("gui.screens.options.OptionsSubScreen", "gui.screens.OptionsSubScreen")
         }
 
         string("registryOr") {
             direction = eval(current.version, "<1.21.2")
             replace(".lookupOrThrow(ModernBetaResourceKeys.", ".registryOrThrow(ModernBetaResourceKeys.")
-        }
-
-        string("registryOr") {
-            direction = eval(current.version, "<1.21.2")
             replace(".lookupOrThrow(Registries.", ".registryOrThrow(Registries.")
         }
 
@@ -79,23 +76,11 @@ stonecutter.parameters {
         }
 
         string {
-            direction = eval(current.version, ">=1.21.6")
-            replace("this.getOrCreateTagBuilder(", "this.builder(")
-        }
-
-        string {
-            direction = eval(current.version, "<1.20.5")
-            replace("BootstrapContext", "BootstapContext")
-        }
-
-        string {
             direction = eval(current.version, "<1.21.2")
             replace(".getMinSectionY()", ".getMinSection()")
-        }
-
-        string {
-            direction = eval(current.version, "<1.21.2")
             replace(".getMaxSectionY()", ".getMaxSection()")
+
+            replace(".listElements()", ".holders()")
         }
 
         string("minBuild") {
@@ -104,48 +89,28 @@ stonecutter.parameters {
         }
 
         string {
-            direction = eval(current.version, "<1.21.2")
-            replace(".listElements()", ".holders()")
+            direction = eval(current.version, "<1.21.5")
+            replace("WeightedList.codec", "SimpleWeightedRandomList.wrappedCodec")
+            replace("WeightedList.of", "SimpleWeightedRandomList.create")
+            replace("WeightedList", "SimpleWeightedRandomList")
+            replace("BootstrapContext", "BootstapContext")
         }
 
         string {
-            direction = eval(current.version, "<1.21")
-            replace("gui.screens.options.OptionsSubScreen", "gui.screens.OptionsSubScreen")
-        }
-
-        string {
-            direction = eval(current.version, "<1.20.3")
-            replace("net.minecraft.network.chat.ComponentSerialization.CODEC", "net.minecraft.util.ExtraCodecs.COMPONENT")
-        }
-
-        string {
-            direction = eval(current.version, "<1.20.5")
-            replace("com.mojang.serialization.MapCodec<", "com.mojang.serialization./*Map*/Codec<")
-        }
-
-        string {
-            direction = eval(current.version, "<1.20.5")
-            replace("com.mojang.serialization.MapCodec.", "com.mojang.serialization./*Map*/Codec.")
+            direction = eval(current.version, ">=1.21.6")
+            replace("this.getOrCreateTagBuilder(", "this.builder(")
         }
 
         string {
             direction = eval(current.version, ">=1.21.11")
             replace("ResourceLocation", "Identifier")
-        }
-
-        string {
-            direction = eval(current.version, ">=1.21.11")
             replace("ResourceKey::location", "ResourceKey::identifier")
+            replace("net.minecraft.Util", "net.minecraft.util.Util")
         }
 
         string("dotLocation") {
             direction = eval(current.version, ">=1.21.11")
             replace(".location()", ".identifier()")
-        }
-
-        string {
-            direction = eval(current.version, ">=1.21.11")
-            replace("net.minecraft.Util", "net.minecraft.util.Util")
         }
 
         string {

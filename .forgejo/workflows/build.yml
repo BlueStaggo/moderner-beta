@@ -9,6 +9,7 @@ on:
       - '**/*.gradle'
       - '**/*.kts'
       - '**/*.json'
+      - '**/*.properties'
       - '.forgejo/workflows/build.yml'
     tags:
       - '!**'
@@ -20,6 +21,7 @@ on:
       - '**/*.gradle'
       - '**/*.kts'
       - '**/*.json'
+      - '**/*.properties'
 
 jobs:
   build:

@@ -71,6 +71,8 @@ processResources {
 }
 
 repositories {
+	removeIf { ((MavenArtifactRepository) it).url.toString() == "https://maven.architectury.dev/" }
+
 	mavenCentral()
 	maven { url "https://maven.shedaniel.me/" }
 	maven { url "https://maven.terraformersmc.com/releases" }

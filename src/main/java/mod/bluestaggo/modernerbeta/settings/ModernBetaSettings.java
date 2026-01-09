@@ -4,6 +4,7 @@ package mod.bluestaggo.modernerbeta.settings;
 import com.google.common.collect.Iterators;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
+import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectMap;
@@ -20,6 +21,7 @@ import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.Tag;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -203,12 +205,14 @@ public class ModernBetaSettings implements Iterable<SettingsComponent<?>> {
         ModernBetaSettings baseSettings = basePresetSettings.get();
         Builder builder = new Builder(this.registries);
         builder.add(SettingsComponentTypes.PRESET, basePreset);
+        DynamicOps<Tag> ops = newSettings.registries != null ? RegistryOps.create(NbtOps.INSTANCE, newSettings.registries) : NbtOps.INSTANCE;
+
         newSettings.stream()
             .filter(component -> {
                 Codec<Object> codec = (Codec<Object>) component.type().codec();
                 return !Objects.equals(
-                    codec.encodeStart(NbtOps.INSTANCE, baseSettings.getOrDefault(component.type())).map(Function.identity()).result().orElse(null),
-                    codec.encodeStart(NbtOps.INSTANCE, component.value()).map(Function.identity()).result().orElse(null)
+                    codec.encodeStart(ops, baseSettings.getOrDefault(component.type())).map(Function.identity()).result().orElse(null),
+                    codec.encodeStart(ops, component.value()).map(Function.identity()).result().orElse(null)
                 );
             })
             .forEach(builder::add);
@@ -236,7 +240,8 @@ public class ModernBetaSettings implements Iterable<SettingsComponent<?>> {
     }
 
     public CompoundTag toCompound() {
-        return (CompoundTag)VersionCompat.getOrThrow(CODEC.encode(this, NbtOps.INSTANCE, new CompoundTag()));
+        DynamicOps<Tag> ops = registries != null ? RegistryOps.create(NbtOps.INSTANCE, registries) : NbtOps.INSTANCE;
+        return (CompoundTag)VersionCompat.getOrThrow(CODEC.encode(this, ops, new CompoundTag()));
     }
 
     public Builder extend() {

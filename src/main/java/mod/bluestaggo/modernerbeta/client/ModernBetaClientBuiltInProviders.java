@@ -223,6 +223,8 @@ public class ModernBetaClientBuiltInProviders {
                     screen.booleanOption("generateLiquids"),
                     screen.booleanOption("generateBedrock"),
                     screen.booleanOption("bedrockHoles"),
+                    screen.booleanOption("uniformBedrock"),
+                    screen.booleanOption("bedrockCeiling"),
                     screen.booleanOption("flipNoiseCoordinates"),
                     screen.booleanOption("enableBeaches"),
                     screen.floatRangeOption("sandBeachScale", 0.0f, 1.0f),

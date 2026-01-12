@@ -450,7 +450,7 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
                         continue;
                     }
 
-                    for (y = this.bedrockFloor; y < this.bedrockCeiling; y++) {
+                    for (y = this.bedrockFloor; y < this.bedrockFloor + 5; y++) {
                         int bedrockOffset = this.surfaceProperties.bedrockHoles()
                             ? rand.nextInt(6) - 1
                             : rand.nextInt(5);

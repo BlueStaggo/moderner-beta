@@ -141,7 +141,13 @@ public abstract class MinecraftServerMixin {
             } case PARADISE -> {
                 disableWeatherCycle(level);
                 disableDayCycle(level);
+                //? if >=26.1 {
+                /*net.minecraft.core.Holder<net.minecraft.world.clock.WorldClock> clock =
+                        level.dimensionType().defaultClock().orElseThrow();
+                level.clockManager().setTotalTicks(clock, 6000);
+                *///? } else {
                 level.setDayTime(6000);
+                //? }
             //? if <1.21.11 {
             } case WOODS -> {
                 disableWeatherCycle(level);

@@ -12,7 +12,6 @@ import mod.bluestaggo.modernerbeta.network.BiomeProviderInfoPayload;
 import mod.bluestaggo.modernerbeta.network.S2CPacketHandlers;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
@@ -28,7 +27,7 @@ public class ModernerBetaFabricClient implements ClientModInitializer {
 
         ModernerBetaInitializer.setupRegistryHandlers(ModernerBetaClient.CUSTOM_REGISTRY_HANDLERS);
 
-        BlockColors.register(ColorProviderRegistry.BLOCK::register);
+        BlockColors.register(net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry.BLOCK::register);
 
         ResourceManagerHelper resourceManager = ResourceManagerHelper.get(PackType.CLIENT_RESOURCES);
         resourceManager.registerReloadListener(new ModernBetaFabricColormapReloadListener(

@@ -116,6 +116,7 @@ stonecutter.parameters {
         string {
             direction = eval(current.version, ">=26.1")
             replace("accessWidener v1 named", "accessWidener v1 official")
+            replace("ColorProviderRegistry.BLOCK", "BlockColorRegistry")
             replace("FabricDataOutput", "FabricPackOutput")
             replace("FabricTagProvider", "FabricTagsProvider")
             replace(".BlockTagProvider", ".BlockTagsProvider")
@@ -125,6 +126,12 @@ stonecutter.parameters {
             replace("chunk.getPos().z", "chunk.getPos().z()")
             replace("chunkPos.x", "chunkPos.x()")
             replace("chunkPos.z", "chunkPos.z()")
+        }
+
+        string("worldGenLevel") {
+            direction = eval(current.version, ">=26.1")
+            replace("LevelSimulatedReader", "WorldGenLevel")
+            replace("setDirtAt", "placeBelowTrunkBlock")
         }
     }
 }

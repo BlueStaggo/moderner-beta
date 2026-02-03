@@ -77,6 +77,8 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
                 /*false,
                 true,
                 false,
+                //? if >=26.1
+                //false,
                 *///? }
                 1.0,
                 //? if <1.21.11 {

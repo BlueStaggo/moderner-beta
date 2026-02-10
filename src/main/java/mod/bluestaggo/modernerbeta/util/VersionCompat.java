@@ -179,7 +179,12 @@ public final class VersionCompat {
         //? if >=1.21 {
         return net.minecraft.core.registries.Registries.elementsDirPath(resourceKey);
         //? } else {
-        /*return resourceKey.location().getPath();
+        /*ResourceLocation id = resourceKey.location();
+        if (!id.getNamespace().equals("minecraft")) {
+            return id.getNamespace() + "/" + id.getPath();
+        }
+
+        return id.getPath();
         *///? }
     }
 

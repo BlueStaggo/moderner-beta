@@ -126,6 +126,7 @@ stonecutter.parameters {
             replace("chunk.getPos().z", "chunk.getPos().z()")
             replace("chunkPos.x", "chunkPos.x()")
             replace("chunkPos.z", "chunkPos.z()")
+            replace("SnowyDirtBlock", "SnowyBlock")
         }
 
         string("worldGenLevel") {

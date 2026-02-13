@@ -211,6 +211,12 @@ publishMods {
         minecraftVersions.addAll(commonPr.supported_versions.split(",").toList())
     }
 
+    curseforge {
+        accessToken = System.getenv("CURSEFORGE_TOKEN")
+        projectId = commonPr.curseforge_project_id
+        minecraftVersions.addAll(commonPr.supported_versions.split(",").toList())
+    }
+
     github {
         accessToken = System.getenv("_GITHUB_TOKEN")
         parent project(":").tasks.named("publishGithub")

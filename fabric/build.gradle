@@ -169,6 +169,7 @@ java {
 
 publishMods {
     displayName = "Moderner Beta " + project.version
+    version = project.version + "-fabric"
     changelog = rootProject.file("CHANGELOG.md").text
     type = STABLE
 

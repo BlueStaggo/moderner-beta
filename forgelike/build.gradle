@@ -199,6 +199,7 @@ java {
 
 publishMods {
     displayName = "Moderner Beta " + project.version
+    version = project.version + "-" + (neoforge ? "neoforge" : "forge")
     changelog = rootProject.file("CHANGELOG.md").text
     type = STABLE
 

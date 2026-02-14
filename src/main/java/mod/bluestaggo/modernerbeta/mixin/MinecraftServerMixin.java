@@ -124,6 +124,8 @@ public abstract class MinecraftServerMixin {
 
             worldBorder.setSize(width);
             worldBorder.setCenter(center, center);
+            //? if <1.21.9
+            ((ServerLevelData) level.getLevelData()).setWorldBorder(worldBorder.createSettings());
         }
 
         return spawnPos;

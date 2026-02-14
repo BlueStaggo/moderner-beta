@@ -46,6 +46,7 @@ public class ModernBetaBuiltInProviders {
                 SettingsComponentTypes.USE_SURFACE_RULES,
                 SettingsComponentTypes.CAVE_GENERATION,
                 SettingsComponentTypes.FINITE_LEVEL_PROPERTIES,
+                SettingsComponentTypes.WORLD_BORDER,
                 SettingsComponentTypes.FINITE_CAVE_GENERATION,
                 SettingsComponentTypes.FINITE_NOISE,
                 SettingsComponentTypes.FINITE_BEACHES,

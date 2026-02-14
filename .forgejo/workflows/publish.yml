@@ -26,6 +26,7 @@ jobs:
           FORGEJO_TOKEN: ${{secrets.FORGEJO_TOKEN}}
           _GITHUB_TOKEN: ${{secrets._GITHUB_TOKEN}}
           MODRINTH_TOKEN: ${{secrets.MODRINTH_TOKEN}}
+          CURSEFORGE_TOKEN: ${{secrets.CURSEFORGE_TOKEN}}
       - name: Upload build artifacts
         uses: https://code.forgejo.org/forgejo/upload-artifact@v4
         with:

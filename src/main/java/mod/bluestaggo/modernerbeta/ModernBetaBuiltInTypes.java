@@ -1,9 +1,6 @@
 package mod.bluestaggo.modernerbeta;
 
-import mod.bluestaggo.modernerbeta.registry.ModernBetaResourceKeys;
-import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.tags.ModernBetaBiomeTags;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 
 public final class ModernBetaBuiltInTypes {
@@ -31,6 +28,7 @@ public final class ModernBetaBuiltInTypes {
         FINITE_POOLS("finite_pools"),
         SPAWN_INDEV_HOUSE("spawn_indev_house"),
         ISLES_PROPERTIES("isles_properties"),
+        WORLD_BORDER("world_border"),
         SINGLE_BIOME("single_biome"),
         CLIMATE_SCALE("climate_scale"),
         CLIMATE_MAPPINGS("climate_mappings"),
@@ -40,6 +38,8 @@ public final class ModernBetaBuiltInTypes {
         USE_32BIT_LAYER_SEED("use_32bit_layer_seed"),
         USE_OCEAN_BIOMES("use_ocean_biomes"),
         TEMPERATURE_HEIGHT_SCALING("temperature_height_scaling"),
+        BIOME_INJECTION_THRESHOLDS("biome_injection_thresholds"),
+        OUT_OF_BOUNDS_BIOME("out_of_bounds_biome"),
         CAVE_BIOME_VORONOI("cave_biome_voronoi"),
         CONFIG_BETA_CLIMATIC_COLORS("config/beta_climatic_colors"),
         CONFIG_PE_CLIMATIC_COLORS("config/pe_climatic_colors"),
@@ -139,6 +139,9 @@ public final class ModernBetaBuiltInTypes {
 
     public enum LayerOutput {
         BIOME("biome"),
+        HEIGHT("height"),
+        OCEAN("ocean"),
+        DEEP_OCEAN("deep_ocean"),
         ;
 
         public final ResourceLocation id;

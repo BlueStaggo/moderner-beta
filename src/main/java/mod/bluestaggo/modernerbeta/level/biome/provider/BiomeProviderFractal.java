@@ -25,7 +25,7 @@ import net.minecraft.world.level.biome.BiomeManager;
 
 import java.util.*;
 
-public class BiomeProviderFractal extends BiomeProvider implements BiomeResolverBlock, BiomeResolverExtendedIdStepped, BiomeManager.NoiseBiomeSource {
+public class BiomeProviderFractal extends BiomeProvider implements BiomeResolverBlock, BiomeResolverExtendedIdStepped, BiomeManager.NoiseBiomeSource, BiomeResolverOcean {
 	protected final ConfiguredLayers configuredLayers;
 	protected final List<Layer> pipeline;
 
@@ -33,6 +33,9 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 	private final BiomeManager biomeAccess;
 	private final List<Holder<Biome>> allBiomes;
 	private final Layer layer;
+    private final Layer heightLayer;
+    private final Layer oceanLayer;
+    private final Layer deepOceanLayer;
 
 	public BiomeProviderFractal(ModernBetaSettings settings, HolderGetter<Biome> biomeRegistry, long seed) {
 		super(settings, biomeRegistry, seed);
@@ -47,11 +50,30 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 		if (use32BitSeed)
 			seed &= 0xFFFFFFFFL;
 
+        Set<ExtendedBiomeId> allExtendedBiomes = new HashSet<>();
+
 		this.layer = this.configuredLayers.getOutputOrThrow(ModernBetaBuiltInTypes.LayerOutput.BIOME.id);
 		this.layer.init(seed);
+        this.layer.addPossibleBiomesRecursive(allExtendedBiomes);
 
-		Set<ExtendedBiomeId> allExtendedBiomes = new HashSet<>();
-		this.layer.addPossibleBiomesRecursive(allExtendedBiomes);
+		this.heightLayer = this.configuredLayers.getOutput(ModernBetaBuiltInTypes.LayerOutput.HEIGHT.id)
+			.orElse(this.layer);
+		this.heightLayer.init(seed);
+
+        if (this.settings.getOrDefault(SettingsComponentTypes.USE_OCEAN_BIOMES)) {
+            this.oceanLayer = this.configuredLayers.getOutputOrThrow(ModernBetaBuiltInTypes.LayerOutput.OCEAN.id);
+            this.oceanLayer.init(seed);
+            this.oceanLayer.addPossibleBiomesRecursive(allExtendedBiomes);
+
+            this.deepOceanLayer = this.configuredLayers.getOutput(ModernBetaBuiltInTypes.LayerOutput.DEEP_OCEAN.id)
+                .orElse(this.oceanLayer);
+            this.deepOceanLayer.init(seed);
+            this.deepOceanLayer.addPossibleBiomesRecursive(allExtendedBiomes);
+        } else {
+            this.oceanLayer = null;
+            this.deepOceanLayer = null;
+        }
+
 		this.allBiomes = allExtendedBiomes.stream()
 			.map(biome -> this.getBiomeEntry(biome.baseId()))
 			.filter(Optional::isPresent)
@@ -66,16 +88,29 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 		return (Optional<Holder<Biome>>)(Object)this.biomeRegistry.get(key);
 	}
 
-	@Override
-	public Holder<Biome> getBiome(int biomeX, int biomeY, int biomeZ) {
-		ResourceLocation baseId = this.getExtendedBiomeId(biomeX, biomeY, biomeZ).baseId();
-		return this.getBiomeEntry(baseId)
-			.orElseThrow(() -> new NoSuchElementException("Biome \"" + baseId + "\" does not exist."));
-	}
+    private Holder<Biome> getBiomeHolderFromId(ResourceLocation id) {
+        return this.getBiomeEntry(id)
+            .orElseThrow(() -> new NoSuchElementException("Biome \"" + id + "\" does not exist."));
+    }
 
 	@Override
+	public Holder<Biome> getBiome(int biomeX, int biomeY, int biomeZ) {
+        return this.getBiomeHolderFromId(this.layer.sample(biomeX, biomeZ).baseId());
+	}
+
+    @Override
+    public Holder<Biome> getOceanBiome(int biomeX, int biomeY, int biomeZ) {
+        return this.getBiomeHolderFromId(this.oceanLayer.sample(biomeX, biomeZ).baseId());
+    }
+
+    @Override
+    public Holder<Biome> getDeepOceanBiome(int biomeX, int biomeY, int biomeZ) {
+        return this.getBiomeHolderFromId(this.deepOceanLayer.sample(biomeX, biomeZ).baseId());
+    }
+
+    @Override
 	public ExtendedBiomeId getExtendedBiomeId(int biomeX, int biomeY, int biomeZ) {
-		return this.layer.sample(biomeX, biomeZ);
+		return this.heightLayer.sample(biomeX, biomeZ);
 	}
 
 	@Override
@@ -107,7 +142,7 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 
 	@Override
 	public Component getBiomeName(int biomeX, int biomeY, int biomeZ) {
-		return this.getExtendedBiomeName(this.getExtendedBiomeId(biomeX, biomeY, biomeZ));
+		return this.getExtendedBiomeName(this.layer.sample(biomeX, biomeZ));
 	}
 
 	@Override

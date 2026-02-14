@@ -169,6 +169,7 @@ java {
 
 publishMods {
     displayName = "Moderner Beta " + project.version
+    version = project.version + "-fabric"
     changelog = rootProject.file("CHANGELOG.md").text
     type = STABLE
 
@@ -178,6 +179,14 @@ publishMods {
     modrinth {
         accessToken = System.getenv("MODRINTH_TOKEN")
         projectId = commonPr.modrinth_project_id
+        minecraftVersions.addAll(commonPr.supported_versions.split(",").toList())
+
+        requires("fabric-api")
+    }
+
+    curseforge {
+        accessToken = System.getenv("CURSEFORGE_TOKEN")
+        projectId = commonPr.curseforge_project_id
         minecraftVersions.addAll(commonPr.supported_versions.split(",").toList())
 
         requires("fabric-api")

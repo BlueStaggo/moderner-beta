@@ -9,10 +9,7 @@ import mod.bluestaggo.modernerbeta.api.level.spawn.SpawnLocator;
 import mod.bluestaggo.modernerbeta.level.spawn.SpawnLocatorPE;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
-import mod.bluestaggo.modernerbeta.settings.component.Noise3DSettings;
-import mod.bluestaggo.modernerbeta.settings.component.NoiseLandmass;
-import mod.bluestaggo.modernerbeta.settings.component.PerlinNoiseSettings;
-import mod.bluestaggo.modernerbeta.settings.component.SurfaceProperties;
+import mod.bluestaggo.modernerbeta.settings.component.*;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkHeightmap;
@@ -177,6 +174,10 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
             for (int localX = 0; localX < 16; localX++) {
                 int x = startX + localX;
                 int z = startZ + localZ;
+                if (!this.worldBorderLocation.containsPoint(x, z)) {
+                    continue;
+                }
+
                 int surfaceTopY = chunk.getOrCreateHeightmapUnprimed(Heightmap.Types.OCEAN_FLOOR_WG).getFirstAvailable(localX, localZ) - 1;
                 int surfaceMinY = heightmapChunk != null ?
                     heightmapChunk.getHeight(x, z, ChunkHeightmap.Type.SURFACE_FLOOR) - 8 :
@@ -233,9 +234,10 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
 
                     // Place bedrock
                     if (this.surfaceProperties.generateBedrock()) {
-                        int bedrockOffset = this.surfaceProperties.bedrockHoles()
-                                ? rand.nextInt(6) - 1
-                                : rand.nextInt(5);
+                        int bedrockOffset = this.surfaceProperties.uniformBedrock() ? 0 :
+                                (this.surfaceProperties.bedrockHoles()
+                                    ? rand.nextInt(6) - 1
+                                    : rand.nextInt(5));
                         if (y <= this.bedrockFloor + bedrockOffset) {
                             VersionCompat.setBlockState(chunk, pos, BlockStates.BEDROCK);
                             continue;
@@ -367,10 +369,13 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
 
         for (int localZ = 0; localZ < 16; localZ++) {
             for (int localX = 0; localX < 16; localX++) {
-                pos.set(localX, 0, localZ);
-
                 int x = startX + localX;
                 int z = startZ + localZ;
+                if (!this.worldBorderLocation.containsPoint(x, z)) {
+                    continue;
+                }
+
+                pos.set(localX, 0, localZ);
                 int surfaceTopY = heightmapChunk != null ?
                     heightmapChunk.getHeight(x, z, ChunkHeightmap.Type.SURFACE_FLOOR) :
                     chunk.getOrCreateHeightmapUnprimed(Heightmap.Types.OCEAN_FLOOR_WG).getFirstAvailable(localX, localZ);
@@ -440,10 +445,16 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
                 }
 
                 if (this.surfaceProperties.generateBedrock()) {
+                    if (this.surfaceProperties.uniformBedrock()) {
+                        VersionCompat.setBlockState(chunk, pos.atY(this.bedrockFloor), BlockStates.BEDROCK);
+                        continue;
+                    }
+
                     for (y = this.bedrockFloor; y < this.bedrockFloor + 5; y++) {
                         int bedrockOffset = this.surfaceProperties.bedrockHoles()
-                                ? rand.nextInt(6) - 1
-                                : rand.nextInt(5);
+                            ? rand.nextInt(6) - 1
+                            : rand.nextInt(5);
+
                         if (y <= this.bedrockFloor + bedrockOffset) {
                             pos.setY(y);
                             VersionCompat.setBlockState(chunk, pos, BlockStates.BEDROCK);

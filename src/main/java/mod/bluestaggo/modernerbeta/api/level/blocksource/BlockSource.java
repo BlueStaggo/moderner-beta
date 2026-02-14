@@ -7,4 +7,8 @@ public interface BlockSource {
     BlockSource DEFAULT = (x, y, z) -> null;
     
     BlockState apply(int x, int y, int z);
+
+    default int priority() {
+        return 0;
+    }
 }

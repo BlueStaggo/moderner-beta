@@ -8,6 +8,7 @@ public record SurfaceProperties(
     boolean generateLiquids,
     boolean generateBedrock,
     boolean bedrockHoles,
+    boolean uniformBedrock,
     boolean flipNoiseCoordinates,
     boolean enableBeaches,
     float sandBeachScale,
@@ -23,6 +24,7 @@ public record SurfaceProperties(
             Codec.BOOL.fieldOf("generateLiquids").orElse(true).forGetter(SurfaceProperties::generateLiquids),
             Codec.BOOL.fieldOf("generateBedrock").orElse(true).forGetter(SurfaceProperties::generateBedrock),
             Codec.BOOL.fieldOf("bedrockHoles").orElse(false).forGetter(SurfaceProperties::bedrockHoles),
+            Codec.BOOL.fieldOf("uniformBedrock").orElse(false).forGetter(SurfaceProperties::uniformBedrock),
             Codec.BOOL.fieldOf("flipNoiseCoordinates").orElse(false).forGetter(SurfaceProperties::flipNoiseCoordinates),
             Codec.BOOL.fieldOf("enableBeaches").orElse(true).forGetter(SurfaceProperties::enableBeaches),
             Codec.FLOAT.fieldOf("sandBeachScale").orElse(0.03125F).forGetter(SurfaceProperties::sandBeachScale),
@@ -40,6 +42,7 @@ public record SurfaceProperties(
         true,
         true,
         true,
+        false,
         true,
         true,
         0.03125F,
@@ -55,6 +58,7 @@ public record SurfaceProperties(
         true,
         false,
         false,
+        false,
         true,
         0.03125F,
         0.03125F,
@@ -65,6 +69,7 @@ public record SurfaceProperties(
         false
     );
     public static final SurfaceProperties SKYLANDS = new SurfaceProperties(
+        false,
         false,
         false,
         false,
@@ -84,6 +89,7 @@ public record SurfaceProperties(
         false,
         false,
         false,
+        false,
         0.03125F,
         0.03125F,
         0.0625F,
@@ -95,6 +101,7 @@ public record SurfaceProperties(
     public static final SurfaceProperties MAJOR_RELEASE = new SurfaceProperties(
         true,
         true,
+        false,
         false,
         false,
         false,

@@ -9,6 +9,7 @@ import mod.bluestaggo.modernerbeta.api.level.chunk.noise.NoiseSampler;
 import mod.bluestaggo.modernerbeta.level.blocksource.BlockSourceRules;
 import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaChunkGenerator;
 import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaChunkNoiseSampler;
+import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaGenerationStep;
 import mod.bluestaggo.modernerbeta.level.chunk.provider.island.IslandShape;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.settings.component.*;
@@ -68,6 +69,7 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
     private final IslesProperties islesProperties;
     protected final NoiseScale noiseScale;
     private final NoiseSlide noiseSlide;
+    protected final WorldBorderLocation worldBorderLocation;
 
     private final AtomicReference<RandomState> noiseConfig = new AtomicReference<>();
 
@@ -80,6 +82,7 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
         this.islesProperties = this.getChunkSettings().getOrDefault(SettingsComponentTypes.ISLES_PROPERTIES);
         this.noiseScale = this.getChunkSettings().getOrDefault(SettingsComponentTypes.NOISE_SCALE);
         this.noiseSlide = this.getChunkSettings().getOrElse(SettingsComponentTypes.NOISE_SLIDE, NoiseSlide.DISABLED);
+        this.worldBorderLocation = this.getChunkSettings().getOrDefault(SettingsComponentTypes.WORLD_BORDER);
 
         this.worldMinY = noiseSettings.minY();
         this.worldHeight = noiseSettings.height();
@@ -107,7 +110,8 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
                     this.noiseSizeX,
                     this.noiseSizeY,
                     this.noiseSizeZ,
-                    this::sampleNoiseColumn
+                    this::sampleNoiseColumn,
+                    this.isDensityModified() ? this::modifyEdgeDensity : null
                 );
 
                 noiseProviderBase.sampleInitialNoise(chunkX * this.noiseSizeX, chunkZ * this.noiseSizeZ);
@@ -164,7 +168,13 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
             return chunk;
         }, Util.backgroundExecutor());
     }
-    
+
+    @Override
+    public boolean skipChunk(int chunkX, int chunkZ, ModernBetaGenerationStep step) {
+        return super.skipChunk(chunkX, chunkX, step)
+            || step == ModernBetaGenerationStep.CARVERS && !this.worldBorderLocation.containsChunk(chunkX, chunkZ);
+    }
+
     /**
      * Sample height at given x/z coordinate. Initially generates heightmap for entire chunk,
      * if chunk containing x/z coordinates has never been sampled.
@@ -259,7 +269,7 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
         int localNoiseX,
         int localNoiseZ
     );
-    
+
     /**
      * Check if default noise post processor (i.e. NONE) is being used.
      * 
@@ -523,7 +533,8 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
             this.noiseSizeX,
             this.noiseSizeY,
             this.noiseSizeZ,
-            this::sampleNoiseColumn
+            this::sampleNoiseColumn,
+            this.isDensityModified() ? this::modifyEdgeDensity : null
         );
         noiseProvider.sampleInitialNoise(chunkX * this.noiseSizeX, chunkZ * this.noiseSizeZ);
         NoiseSampler noiseSampler = noiseProvider.getSamplerForHeightmap();
@@ -614,6 +625,16 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
     ) {
         SimpleNoisePos noisePos = new SimpleNoisePos();
         return (x, y, z) -> {
+            if (!worldBorderLocation.containsPoint(x, z)) {
+                return switch (worldBorderLocation.falloffType()) {
+                    case OCEAN, SMOOTH_OCEAN ->
+                        y < worldBorderLocation.groundLevel() ? this.defaultBlock
+                            : y < getSeaLevel() ? this.defaultFluid
+                            : BlockStates.AIR;
+                    default -> BlockStates.AIR;
+                };
+            }
+
             double density = noiseSampler.sample();
             double clampedDensity = Mth.clamp(density / 200.0, -1.0, 1.0);
             
@@ -622,6 +643,17 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
 
             return aquiferSampler.computeSubstance(noisePos, clampedDensity);
         };
+    }
+
+    protected boolean isDensityModified() {
+        return this.worldBorderLocation.affectsDensity();
+    }
+
+    protected double modifyEdgeDensity(double density, double x, double y, double z) {
+        int worldX = (int)(x * this.noiseResolutionHorizontal);
+        int worldZ = (int)(z * this.noiseResolutionHorizontal);
+        density = this.worldBorderLocation.modifyDensity(density, worldX, worldZ);
+        return density;
     }
 
     private NoiseSettings getNoiseSettings() {

@@ -10,6 +10,7 @@ import mod.bluestaggo.modernerbeta.settings.component.*;
 import mod.bluestaggo.modernerbeta.level.biome.provider.climate.ClimateMapping;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ConfiguredLayers;
 import mod.bluestaggo.modernerbeta.level.biome.voronoi.VoronoiPointBiome;
+import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import net.minecraft.core.Holder;
 import mod.bluestaggo.modernerbeta.settings.component.validation.ComponentValidator;
 import mod.bluestaggo.modernerbeta.settings.component.validation.ValidationResult;
@@ -52,6 +53,7 @@ public class SettingsComponentTypes {
     public static SettingsComponentType<FinitePools> FINITE_POOLS;
     public static SettingsComponentType<Boolean> SPAWN_INDEV_HOUSE;
     public static SettingsComponentType<IslesProperties> ISLES_PROPERTIES;
+    public static SettingsComponentType<WorldBorderLocation> WORLD_BORDER;
 
     // Biome provider
     public static SettingsComponentType<ResourceLocation> SINGLE_BIOME;
@@ -63,6 +65,8 @@ public class SettingsComponentTypes {
     public static SettingsComponentType<Boolean> USE_32BIT_LAYER_SEED;
     public static SettingsComponentType<Boolean> USE_OCEAN_BIOMES;
     public static SettingsComponentType<TemperatureHeightScaling> TEMPERATURE_HEIGHT_SCALING;
+    public static SettingsComponentType<BiomeInjectionThresholds> BIOME_INJECTION_THRESHOLDS;
+    public static SettingsComponentType<ResourceLocation> OUT_OF_BOUNDS_BIOME;
 
     // Cave biome provider
     public static SettingsComponentType<CaveBiomeVoronoi> CAVE_BIOME_VORONOI;
@@ -212,6 +216,11 @@ public class SettingsComponentTypes {
             IslesProperties.CODEC,
             IslesProperties.DEFAULT,
             ValidationResult.Valid::new);
+        WORLD_BORDER = register(
+            ModernBetaBuiltInTypes.SettingsComponentType.WORLD_BORDER.id,
+            WorldBorderLocation.CODEC,
+            WorldBorderLocation.DEFAULT,
+            ValidationResult.Valid::new);
 
         // Biome provider
         SINGLE_BIOME = register(
@@ -287,6 +296,16 @@ public class SettingsComponentTypes {
             ModernBetaBuiltInTypes.SettingsComponentType.TEMPERATURE_HEIGHT_SCALING.id,
             StringRepresentable.fromEnum(TemperatureHeightScaling::values),
             TemperatureHeightScaling.NONE,
+            ValidationResult.Valid::new);
+        BIOME_INJECTION_THRESHOLDS = register(
+            ModernBetaBuiltInTypes.SettingsComponentType.BIOME_INJECTION_THRESHOLDS.id,
+            BiomeInjectionThresholds.CODEC,
+            BiomeInjectionThresholds.DEFAULT,
+            ValidationResult.Valid::new);
+        OUT_OF_BOUNDS_BIOME = register(
+            ModernBetaBuiltInTypes.SettingsComponentType.OUT_OF_BOUNDS_BIOME.id,
+            ResourceLocation.CODEC,
+            VersionCompat.vanillaId("the_void"),
             ValidationResult.Valid::new);
 
         // Cave biome provider

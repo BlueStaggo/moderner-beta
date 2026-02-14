@@ -66,7 +66,7 @@ public class BiomeInjector {
 
         WorldBorderLocation worldBorderLocation = settingsChunk.getOrDefault(SettingsComponentTypes.WORLD_BORDER);
         Predicate<BiomeInjectionContext> outOfBoundsPredicate = context ->
-            !worldBorderLocation.containsPoint(context.getX(), context.getZ());
+            !worldBorderLocation.containsPoint(context.getX(), context.getZ(), 4); //Constant is private...
         
         BiomeInjectionRules.Builder builderPre = new BiomeInjectionRules.Builder();
         BiomeInjectionRules.Builder builderPost = new BiomeInjectionRules.Builder();

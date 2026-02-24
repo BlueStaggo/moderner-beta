@@ -38,6 +38,12 @@ publishMods {
         minecraftVersions.addAll(commonMod.prop("supported_versions").split(",").toList())
     }
 
+    curseforge {
+        accessToken = System.getenv("CURSEFORGE_TOKEN")
+        projectId = commonMod.prop("curseforge_project_id")
+        minecraftVersions.addAll(commonMod.prop("supported_versions").split(",").toList())
+    }
+
     github {
         accessToken = System.getenv("_GITHUB_TOKEN")
         parent(project(":").tasks.named("publishGithub"))

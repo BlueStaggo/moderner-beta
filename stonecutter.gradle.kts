@@ -128,6 +128,8 @@ stonecutter.parameters {
             replace("chunkPos.x", "chunkPos.x()")
             replace("chunkPos.z", "chunkPos.z()")
             replace("SnowyDirtBlock", "SnowyBlock")
+            replace("net.minecraft.world.level.BlockAndTintGetter", "net.minecraft.client.renderer.block.BlockAndTintGetter")
+            replace("DimensionType.CardinalLightType", "net.minecraft.world.level.CardinalLighting.Type")
         }
 
         string("worldGenLevel") {

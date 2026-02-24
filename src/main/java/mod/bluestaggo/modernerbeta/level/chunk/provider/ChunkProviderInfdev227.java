@@ -42,7 +42,7 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
     private final int worldHeight;
     private final int worldTopY;
     private final int seaLevel;
-    
+
     private final int bedrockFloor;
     
     private final BlockState defaultBlock;
@@ -101,6 +101,7 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
         );
     }
 
+    @Override
     public void provideSurface(WorldGenRegion region, StructureManager structureAccessor, ChunkAccess chunk, ModernBetaBiomeSource biomeSource, RandomState noiseConfig) {
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
         
@@ -164,6 +165,30 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
                     runDepth++;
 
                     VersionCompat.setBlockState(chunk, pos, blockState);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void provideSurfaceExtra(WorldGenRegion region, StructureManager structureAccessor, ChunkAccess chunk, ModernBetaBiomeSource biomeSource, RandomState noiseConfig) {
+        ChunkPos chunkPos = chunk.getPos();
+        int chunkX = chunkPos.x;
+        int chunkZ = chunkPos.z;
+
+        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
+        Random bedrockRand = this.createSurfaceRandom(chunkX, chunkZ);
+
+        int bedrockFloor = this.worldMinY + this.bedrockFloor;
+
+        for (int localX = 0; localX < 16; ++localX) {
+            for (int localZ = 0; localZ < 16; ++localZ) {
+                for (int y = this.worldTopY; y >= this.worldMinY; y--) {
+                    pos.set(localX, y, localZ);
+
+                    if (y <= bedrockFloor + bedrockRand.nextInt(5)) {
+                        VersionCompat.setBlockState(chunk, pos, BlockStates.BEDROCK);
+                    }
                 }
             }
         }

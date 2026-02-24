@@ -8,7 +8,7 @@ pluginManagement {
         }
         maven {
             name = "Architectury"
-            url = uri("https://maven.architectury.dev/")
+            url = uri("https://maven.shedaniel.me/")
         }
         maven {
             name = "NeoForged"

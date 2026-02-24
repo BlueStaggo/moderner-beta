@@ -423,6 +423,7 @@ public final class ModernBetaSettingsPresets {
                 .add(PERLIN_NOISE_SETTINGS, PerlinNoiseSettings.CLASSIC)
                 .add(DEEPSLATE_GENERATION, DeepslateGeneration.DISABLED)
                 .add(CAVE_GENERATION, CaveGeneration.DISABLED)
+                .add(WORLD_BORDER, WorldBorderLocation.indev(256, 64))
                 .addDefault(FINITE_LEVEL_PROPERTIES, FINITE_CAVE_GENERATION, FINITE_NOISE, FINITE_BEACHES, FINITE_POOLS)
                 .build(),
             ModernBetaSettings.singleBiome(ModernBetaBiomes.INDEV_NORMAL),
@@ -444,6 +445,7 @@ public final class ModernBetaSettingsPresets {
                     256,
                     128
                 ))
+                .add(WORLD_BORDER, WorldBorderLocation.indev(256, 64))
                 .add(DEEPSLATE_GENERATION, DeepslateGeneration.DISABLED)
                 .add(CAVE_GENERATION, CaveGeneration.DISABLED)
                 .add(FINITE_BEACHES, new FiniteBeaches(
@@ -477,6 +479,7 @@ public final class ModernBetaSettingsPresets {
                     256,
                     128
                 ))
+                .add(WORLD_BORDER, WorldBorderLocation.indev(256, 64))
                 .add(DEEPSLATE_GENERATION, DeepslateGeneration.DISABLED)
                 .add(CAVE_GENERATION, CaveGeneration.DISABLED)
                 .add(FINITE_CAVE_GENERATION, new FiniteCaveGeneration(
@@ -1415,6 +1418,7 @@ public final class ModernBetaSettingsPresets {
                     256,
                     128
                 ))
+                .add(WORLD_BORDER, WorldBorderLocation.indev(256, 64))
                 .build(),
             ModernBetaSettings.singleBiome(ModernBetaBiomes.INDEV_PARADISE),
             basePreset.caveBiomeSettings()
@@ -1432,6 +1436,7 @@ public final class ModernBetaSettingsPresets {
                     256,
                     128
                 ))
+                .add(WORLD_BORDER, WorldBorderLocation.indev(256, 64))
                 .build(),
             ModernBetaSettings.singleBiome(ModernBetaBiomes.INDEV_WOODS),
             basePreset.caveBiomeSettings()
@@ -1449,6 +1454,7 @@ public final class ModernBetaSettingsPresets {
                     256,
                     128
                 ))
+                .add(WORLD_BORDER, WorldBorderLocation.indev(256, 64))
                 .build(),
             ModernBetaSettings.singleBiome(ModernBetaBiomes.INDEV_HELL),
             basePreset.caveBiomeSettings()

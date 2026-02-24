@@ -27,6 +27,10 @@ public record WorldBorderLocation(
         return new WorldBorderLocation(true, width, CenterType.ORIGIN, FalloffType.SMOOTH_OCEAN, 54);
     }
 
+    public static WorldBorderLocation indev(int width, int seaLevel) {
+        return new WorldBorderLocation(true, width, CenterType.ORIGIN, FalloffType.OCEAN, seaLevel - 9);
+    }
+
     public int center() {
         return centerType == CenterType.CORNER ? width / 2 : 0;
     }
@@ -36,14 +40,18 @@ public record WorldBorderLocation(
     }
 
     public boolean containsPoint(int x, int z) {
+        return containsPoint(x, z, 0);
+    }
+
+    public boolean containsPoint(int x, int z, int margin) {
         if (!enabled()) {
             return true;
         }
 
         int center = center();
         int radius = radius();
-        return x >= center - radius && x < center + radius
-            && z >= center - radius && z < center + radius;
+        return x >= center - radius - margin && x < center + radius + margin
+            && z >= center - radius - margin && z < center + radius + margin;
     }
 
     public boolean containsChunk(int x, int z) {

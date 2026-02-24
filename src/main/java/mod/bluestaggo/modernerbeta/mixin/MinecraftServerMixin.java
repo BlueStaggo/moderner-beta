@@ -118,12 +118,14 @@ public abstract class MinecraftServerMixin {
             if (chunkProvider instanceof ChunkProviderFinite chunkProviderFinite) {
                 // Rectangular world borders are impossible so just make a square one that
                 // encompasses as much of the finite world as possible
-                width = Math.max(chunkProviderFinite.getLevelWidth(), chunkProviderFinite.getLevelLength());
-                center = width / 2;
+                width = Math.min(width, Math.max(chunkProviderFinite.getLevelWidth(), chunkProviderFinite.getLevelLength()));
+                center = 0; //width / 2;
             }
 
             worldBorder.setSize(width);
             worldBorder.setCenter(center, center);
+            //? if <1.21.9
+            ((ServerLevelData) level.getLevelData()).setWorldBorder(worldBorder.createSettings());
         }
 
         return spawnPos;

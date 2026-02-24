@@ -338,6 +338,7 @@
     "createWorld.customize.modern_beta.settings.surface_properties.generateLiquids": "Generate Liquids",
     "createWorld.customize.modern_beta.settings.surface_properties.generateBedrock": "Generate Bedrock",
     "createWorld.customize.modern_beta.settings.surface_properties.bedrockHoles": "Bedrock Holes",
+    "createWorld.customize.modern_beta.settings.surface_properties.uniformBedrock": "Uniform Bedrock Generation",
     "createWorld.customize.modern_beta.settings.surface_properties.flipNoiseCoordinates": "Flip Noise Coordinates",
     "createWorld.customize.modern_beta.settings.surface_properties.enableBeaches": "Beach Noise Enabled",
     "createWorld.customize.modern_beta.settings.surface_properties.sandBeachScale": "Sand Beach Scale",

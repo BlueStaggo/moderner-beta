@@ -234,9 +234,10 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
 
                     // Place bedrock
                     if (this.surfaceProperties.generateBedrock()) {
-                        int bedrockOffset = this.surfaceProperties.bedrockHoles()
-                                ? rand.nextInt(6) - 1
-                                : rand.nextInt(5);
+                        int bedrockOffset = this.surfaceProperties.uniformBedrock() ? 0 :
+                                (this.surfaceProperties.bedrockHoles()
+                                    ? rand.nextInt(6) - 1
+                                    : rand.nextInt(5));
                         if (y <= this.bedrockFloor + bedrockOffset) {
                             VersionCompat.setBlockState(chunk, pos, BlockStates.BEDROCK);
                             continue;
@@ -444,10 +445,16 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
                 }
 
                 if (this.surfaceProperties.generateBedrock()) {
+                    if (this.surfaceProperties.uniformBedrock()) {
+                        VersionCompat.setBlockState(chunk, pos.atY(this.bedrockFloor), BlockStates.BEDROCK);
+                        continue;
+                    }
+
                     for (y = this.bedrockFloor; y < this.bedrockFloor + 5; y++) {
                         int bedrockOffset = this.surfaceProperties.bedrockHoles()
-                                ? rand.nextInt(6) - 1
-                                : rand.nextInt(5);
+                            ? rand.nextInt(6) - 1
+                            : rand.nextInt(5);
+
                         if (y <= this.bedrockFloor + bedrockOffset) {
                             pos.setY(y);
                             VersionCompat.setBlockState(chunk, pos, BlockStates.BEDROCK);

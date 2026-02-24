@@ -44,6 +44,7 @@ stonecutter.tasks {
     order("runDatagen", filter = { this.branch.id == "fabric" })
     order("build")
     order("publishModrinth", filter = { this.branch.id == "fabric" || this.branch.id == "forgelike" })
+    order("publishCurseforge", filter = { this.branch.id == "fabric" || this.branch.id == "forgelike" })
 }
 
 stonecutter.parameters {

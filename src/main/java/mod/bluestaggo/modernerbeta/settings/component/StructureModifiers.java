@@ -22,15 +22,15 @@ import java.util.List;
 import java.util.Map;
 
 public record StructureModifiers(
-    Map<ResourceKey<StructureSet>, StructureSet> structureOverrides,
-    List<ResourceKey<StructureSet>> removedStructures
+    Map<ResourceKey<StructureSet>, StructureSet> overrides,
+    List<ResourceKey<StructureSet>> removed
 ) {
     public static final Codec<StructureModifiers> CODEC = RecordCodecBuilder.create(
         instance -> instance.group(
             Codec.unboundedMap(ResourceKey.codec(Registries.STRUCTURE_SET), StructureSet.DIRECT_CODEC)
-                .fieldOf("structureOverrides").forGetter(StructureModifiers::structureOverrides),
-            Codec.list(ResourceKey.codec(Registries.STRUCTURE_SET)).fieldOf("removedStructures")
-                .forGetter(StructureModifiers::removedStructures)
+                .fieldOf("overrides").forGetter(StructureModifiers::overrides),
+            Codec.list(ResourceKey.codec(Registries.STRUCTURE_SET)).fieldOf("removed")
+                .forGetter(StructureModifiers::removed)
         ).apply(instance, StructureModifiers::new)
     );
 

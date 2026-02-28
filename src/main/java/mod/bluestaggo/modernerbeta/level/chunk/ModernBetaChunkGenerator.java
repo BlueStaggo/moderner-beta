@@ -53,7 +53,6 @@ import net.minecraft.world.level.levelgen.carver.CarvingContext;
 import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
 import net.minecraft.world.level.levelgen.structure.StructureSet;
 import org.jetbrains.annotations.NotNull;
-import org.spongepowered.asm.mixin.injection.struct.InjectorGroupInfo;
 
 import java.util.List;
 import java.util.Map;
@@ -177,14 +176,14 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
 
         List<Holder<StructureSet>> list = structureSetLookup.listElements()
             .filter(reference -> {
-                if (modifiers.removedStructures().contains(reference.key()))
+                if (modifiers.removed().contains(reference.key()))
                     return false;
 
                 return ChunkGeneratorStructureStateAccessor.invokeHasBiomesForStructureSet(reference.value(), biomeSource);
             })
             .collect(Collectors.toList());
 
-        for (Map.Entry<ResourceKey<StructureSet>, StructureSet> override : modifiers.structureOverrides().entrySet()) {
+        for (Map.Entry<ResourceKey<StructureSet>, StructureSet> override : modifiers.overrides().entrySet()) {
             list.stream().filter(h -> h.unwrapKey().orElseThrow().equals(override.getKey()))
                 .findFirst().ifPresent(list::remove);
 

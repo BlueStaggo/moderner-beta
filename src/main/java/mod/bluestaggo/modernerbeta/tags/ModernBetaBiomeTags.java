@@ -31,7 +31,6 @@ public class ModernBetaBiomeTags {
     public static final TagKey<Biome> IS_RELEASE_SPAWN = keyOf("is_early_release_spawn");
     public static final TagKey<Biome> HAS_EARLY_RELEASE_SWAMP_COLORS = keyOf("has_early_release_swamp_colors");
 
-    public static final TagKey<Biome> INDEV_STRONGHOLD_HAS_STRUCTURE = keyOf("has_structure/indev_stronghold");
     public static final TagKey<Biome> OCEAN_SHRINE_HAS_STRUCTURE = keyOf("has_structure/ocean_shrine");
 
     public static final TagKey<Biome> SURFACE_CONFIG_SAND = keyOf("surface_config/sand");

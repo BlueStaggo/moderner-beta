@@ -54,6 +54,7 @@ public class SettingsComponentTypes {
     public static SettingsComponentType<Boolean> SPAWN_INDEV_HOUSE;
     public static SettingsComponentType<IslesProperties> ISLES_PROPERTIES;
     public static SettingsComponentType<WorldBorderLocation> WORLD_BORDER;
+    public static SettingsComponentType<StructureModifiers> STRUCTURE_MODIFERS;
 
     // Biome provider
     public static SettingsComponentType<ResourceLocation> SINGLE_BIOME;
@@ -220,6 +221,12 @@ public class SettingsComponentTypes {
             ModernBetaBuiltInTypes.SettingsComponentType.WORLD_BORDER.id,
             WorldBorderLocation.CODEC,
             WorldBorderLocation.DEFAULT,
+            ValidationResult.Valid::new);
+        STRUCTURE_MODIFERS = registerWithDefaultGetter(
+            ModernBetaBuiltInTypes.SettingsComponentType.STRUCTURE_MODIFIERS.id,
+            StructureModifiers.CODEC,
+            (settings, registry) ->
+                StructureModifiers.getDefault(registry.lookup(Registries.STRUCTURE).orElseThrow().getter()),
             ValidationResult.Valid::new);
 
         // Biome provider

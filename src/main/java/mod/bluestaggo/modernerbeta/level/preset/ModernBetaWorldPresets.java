@@ -1,6 +1,5 @@
 package mod.bluestaggo.modernerbeta.level.preset;
 
-import com.mojang.serialization.Lifecycle;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.api.level.chunk.surface.SurfaceConfig;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaResourceKeys;
@@ -8,9 +7,9 @@ import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaChunkGenerator;
+import mod.bluestaggo.modernerbeta.util.BootstrapContextInfoLookup;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.RegistryOps;
@@ -27,10 +26,8 @@ import net.minecraft.world.level.dimension.LevelStem;
 import net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
 import net.minecraft.world.level.levelgen.presets.WorldPreset;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
-import java.util.Optional;
 
 public class ModernBetaWorldPresets {
     public static final ResourceKey<WorldPreset> MODERN_BETA = keyOf(ModernerBeta.createId(ModernerBeta.MOD_ID));
@@ -43,12 +40,7 @@ public class ModernBetaWorldPresets {
         HolderGetter<SurfaceConfig> registrySurfaceConfig = context.lookup(ModernBetaResourceKeys.SURFACE_CONFIG);
         HolderGetter<MultiNoiseBiomeSourceParameterList> registryParameters = context.lookup(Registries.MULTI_NOISE_BIOME_SOURCE_PARAMETER_LIST);
 
-        RegistryOps.RegistryInfoLookup lookup = new RegistryOps.RegistryInfoLookup() {
-            @Override
-            public <T> @NotNull Optional<RegistryOps.RegistryInfo<T>> lookup(ResourceKey<? extends Registry<? extends T>> registryKey) {
-                return Optional.of(new RegistryOps.RegistryInfo<>(null, context.lookup(registryKey), Lifecycle.stable()));
-            }
-        };
+        RegistryOps.RegistryInfoLookup lookup = new BootstrapContextInfoLookup<>(context);
 
         LevelStem overworld = createOverworldOptions(registryDimensionType, registryBiome, registryPreset, registrySurfaceConfig, lookup);
         LevelStem nether = createNetherOptions(registryDimensionType, registrySettings, registryParameters);

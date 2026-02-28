@@ -15,6 +15,7 @@ import net.minecraft.world.level.dimension.LevelStem;
 
 public class ModernBetaLevelInitializer {
     public static void initStarting(MinecraftServer server) {
+        System.out.println("initStarting");
         Registry<LevelStem> registryDimensionOptions = server.registries().compositeAccess().lookupOrThrow(Registries.LEVEL_STEM);
         long seed = server.getWorldData().worldGenOptions().seed();
         

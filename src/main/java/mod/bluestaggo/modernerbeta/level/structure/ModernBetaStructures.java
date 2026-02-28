@@ -29,7 +29,7 @@ public class ModernBetaStructures {
         
         context.register(
             INDEV_STRONGHOLD,
-            new StrongholdStructure(createConfig(registryBiome.getOrThrow(ModernBetaBiomeTags.INDEV_STRONGHOLD_HAS_STRUCTURE), TerrainAdjustment.BURY))
+            new StrongholdStructure(createConfig(HolderSet.empty(), TerrainAdjustment.BURY))
         );
         context.register(
             OCEAN_SHRINE,

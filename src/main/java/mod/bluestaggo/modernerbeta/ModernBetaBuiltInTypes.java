@@ -29,6 +29,7 @@ public final class ModernBetaBuiltInTypes {
         SPAWN_INDEV_HOUSE("spawn_indev_house"),
         ISLES_PROPERTIES("isles_properties"),
         WORLD_BORDER("world_border"),
+        STRUCTURE_MODIFIERS("structure_modifiers"),
         SINGLE_BIOME("single_biome"),
         CLIMATE_SCALE("climate_scale"),
         CLIMATE_MAPPINGS("climate_mappings"),

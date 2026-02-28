@@ -5,6 +5,7 @@ import com.google.common.base.Suppliers;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.api.level.chunk.surface.SurfaceConfig;
 import mod.bluestaggo.modernerbeta.compat.ModCompat;
+import mod.bluestaggo.modernerbeta.mixin.ChunkGeneratorStructureStateAccessor;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.api.level.chunk.ChunkProvider;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
@@ -13,6 +14,7 @@ import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.settings.component.CaveGeneration;
+import mod.bluestaggo.modernerbeta.settings.component.StructureModifiers;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
 import mod.bluestaggo.modernerbeta.util.CodecUtil;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
@@ -42,21 +44,23 @@ import net.minecraft.world.level.biome.BiomeManager;
 import net.minecraft.world.level.biome.BiomeSource;
 import net.minecraft.world.level.biome.Climate.Sampler;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.chunk.CarvingMask;
-import net.minecraft.world.level.chunk.ChunkAccess;
-import net.minecraft.world.level.chunk.ChunkGenerator;
-import net.minecraft.world.level.chunk.ProtoChunk;
+import net.minecraft.world.level.chunk.*;
 import net.minecraft.world.level.levelgen.*;
 //? if <1.21.2
 //import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.blending.Blender;
 import net.minecraft.world.level.levelgen.carver.CarvingContext;
 import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
+import net.minecraft.world.level.levelgen.structure.StructureSet;
 import org.jetbrains.annotations.NotNull;
+import org.spongepowered.asm.mixin.injection.struct.InjectorGroupInfo;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 //? if <1.21
 //import java.util.concurrent.Executor;
 
@@ -164,6 +168,30 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
 
         this.useSurfaceRules = chunkSettings.getOrDefault(SettingsComponentTypes.USE_SURFACE_RULES);
         this.caveSettings = chunkSettings.getOrDefault(SettingsComponentTypes.CAVE_GENERATION);
+    }
+
+    @Override
+    public @NotNull ChunkGeneratorStructureState createState(HolderLookup<StructureSet> structureSetLookup, RandomState randomState, long seed) {
+        ModernBetaSettings mappedChunkSettings = chunkSettings.mapPreset(presetRegistry, ModernBetaSettingsPreset::chunkSettings);
+        StructureModifiers modifiers = mappedChunkSettings.getOrDefault(SettingsComponentTypes.STRUCTURE_MODIFERS);
+
+        List<Holder<StructureSet>> list = structureSetLookup.listElements()
+            .filter(reference -> {
+                if (modifiers.removedStructures().contains(reference.key()))
+                    return false;
+
+                return ChunkGeneratorStructureStateAccessor.invokeHasBiomesForStructureSet(reference.value(), biomeSource);
+            })
+            .collect(Collectors.toList());
+
+        for (Map.Entry<ResourceKey<StructureSet>, StructureSet> override : modifiers.structureOverrides().entrySet()) {
+            list.stream().filter(h -> h.unwrapKey().orElseThrow().equals(override.getKey()))
+                .findFirst().ifPresent(list::remove);
+
+            list.add(Holder.direct(override.getValue()));
+        }
+
+        return ChunkGeneratorStructureStateAccessor.invokeInit(randomState, biomeSource, seed, seed, list);
     }
 
     @Override

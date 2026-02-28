@@ -2393,6 +2393,7 @@ public final class ModernBetaSettingsPresets {
                 .add(PERLIN_NOISE_SETTINGS, PerlinNoiseSettings.RELEASE)
                 .add(NOISE_LANDMASS, NoiseLandmass.RELEASE)
                 .add(SURFACE_PROPERTIES, SurfaceProperties.MAJOR_RELEASE)
+                .add(STRUCTURE_MODIFERS, StructureModifiers.VANILLA)
                 .build(),
             ModernBetaSettings.fractalLayers(configuredLayers1710Era(biomeScale, 0, bedrock, false, false, false, false, false))
                 .add(TEMPERATURE_HEIGHT_SCALING, TemperatureHeightScaling.MAJOR_RELEASE)
@@ -2416,6 +2417,7 @@ public final class ModernBetaSettingsPresets {
                 .add(PERLIN_NOISE_SETTINGS, PerlinNoiseSettings.RELEASE)
                 .add(NOISE_LANDMASS, NoiseLandmass.RELEASE)
                 .add(SURFACE_PROPERTIES, SurfaceProperties.MAJOR_RELEASE)
+                .add(STRUCTURE_MODIFERS, StructureModifiers.VANILLA)
                 .build(),
             ModernBetaSettings.fractalLayers(configuredLayers1710Era(biomeScale, 0, bedrock, true, true, true, true, false))
                 .add(TEMPERATURE_HEIGHT_SCALING, TemperatureHeightScaling.MAJOR_RELEASE)
@@ -2443,7 +2445,7 @@ public final class ModernBetaSettingsPresets {
                 .add(NOISE_LANDMASS, NoiseLandmass.RELEASE)
                 .add(SURFACE_PROPERTIES, SurfaceProperties.MAJOR_RELEASE)
                 .add(WORLD_BORDER, WorldBorderLocation.xboxLegacy(finiteSize))
-                .add(STRUCTURE_MODIFERS, StructureModifiers.getFinite(structureRegistry, biomeRegistry, finiteSize, finiteSize))
+                .add(STRUCTURE_MODIFERS, StructureModifiers.getFinite(structureRegistry, biomeRegistry, finiteSize, finiteSize, false))
                 .build(),
             ModernBetaSettings.fractalLayers(configuredLayers1710Era(0, finiteSize, false, false, false, false, false, false))
                 .add(TEMPERATURE_HEIGHT_SCALING, TemperatureHeightScaling.MAJOR_RELEASE)
@@ -2466,6 +2468,7 @@ public final class ModernBetaSettingsPresets {
                 .add(PERLIN_NOISE_SETTINGS, PerlinNoiseSettings.RELEASE)
                 .add(NOISE_LANDMASS, NoiseLandmass.RELEASE)
                 .add(SURFACE_PROPERTIES, SurfaceProperties.MAJOR_RELEASE)
+                .add(STRUCTURE_MODIFERS, StructureModifiers.VANILLA)
                 .build(),
             ModernBetaSettings.fractalLayers(configuredLayers1710Era(biomeScale, 0, false, true, true, true, true, true))
                 .add(TEMPERATURE_HEIGHT_SCALING, TemperatureHeightScaling.MAJOR_RELEASE)

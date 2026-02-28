@@ -34,6 +34,8 @@ public record StructureModifiers(
         ).apply(instance, StructureModifiers::new)
     );
 
+    public static final StructureModifiers VANILLA = new StructureModifiers(Map.of(), List.of());
+
     public static StructureModifiers getDefault(HolderGetter<Structure> structureRegistry) {
         return new StructureModifiers(
             Map.of(

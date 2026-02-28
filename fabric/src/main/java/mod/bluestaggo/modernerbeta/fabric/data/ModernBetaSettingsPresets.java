@@ -19,12 +19,11 @@ import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ConfiguredLayers
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeId;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.LayerTarget;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.predicates.BiomePredicate;
-import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.predicates.InRangeBiomePredicate;
 import mod.bluestaggo.modernerbeta.level.biome.voronoi.VoronoiPointBiome;
 import mod.bluestaggo.modernerbeta.level.chunk.provider.indev.IndevTheme;
 import mod.bluestaggo.modernerbeta.level.chunk.provider.indev.IndevType;
 import mod.bluestaggo.modernerbeta.level.chunk.provider.island.IslandShape;
-import mod.bluestaggo.modernerbeta.util.BootstrapContextInfoLookup;
+import mod.bluestaggo.modernerbeta.util.BootstrapDataContextInfoLookup;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
@@ -206,7 +205,7 @@ public final class ModernBetaSettingsPresets {
     }
 
     private static ModernBetaSettingsPreset presetBeta(BootstrapContext<ModernBetaSettingsPreset> context, boolean oakBiomes) {
-        BootstrapContextInfoLookup<?> lookup = new BootstrapContextInfoLookup<>(context);
+        BootstrapDataContextInfoLookup<?> lookup = new BootstrapDataContextInfoLookup<>(context);
         return new ModernBetaSettingsPreset(
             ModernBetaSettings.builder(lookup)
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.NOISE_3D.id)
@@ -277,7 +276,7 @@ public final class ModernBetaSettingsPresets {
 
     private static ModernBetaSettingsPreset presetAlpha(BootstrapContext<ModernBetaSettingsPreset> context) {
         return new ModernBetaSettingsPreset(
-            ModernBetaSettings.builder(new BootstrapContextInfoLookup<>(context))
+            ModernBetaSettings.builder(new BootstrapDataContextInfoLookup<>(context))
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.NOISE_3D.id)
                 .add(NOISE_GENERATOR_SETTINGS, context.lookup(Registries.NOISE_SETTINGS)
                         .get(ModernBetaNoiseGeneratorSettings.OVERWORLD_128).orElseThrow())
@@ -297,7 +296,7 @@ public final class ModernBetaSettingsPresets {
     
     private static ModernBetaSettingsPreset presetSkylands(BootstrapContext<ModernBetaSettingsPreset> context) {
         return new ModernBetaSettingsPreset(
-            ModernBetaSettings.builder(new BootstrapContextInfoLookup<>(context))
+            ModernBetaSettings.builder(new BootstrapDataContextInfoLookup<>(context))
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.NOISE_3D.id)
                 .add(NOISE_GENERATOR_SETTINGS, context.lookup(Registries.NOISE_SETTINGS)
                         .get(ModernBetaNoiseGeneratorSettings.SKY_128).orElseThrow())
@@ -326,7 +325,7 @@ public final class ModernBetaSettingsPresets {
     
     private static ModernBetaSettingsPreset presetInfdev415(BootstrapContext<ModernBetaSettingsPreset> context) {
         return new ModernBetaSettingsPreset(
-            ModernBetaSettings.builder(new BootstrapContextInfoLookup<>(context))
+            ModernBetaSettings.builder(new BootstrapDataContextInfoLookup<>(context))
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.NOISE_3D.id)
                 .add(NOISE_GENERATOR_SETTINGS, context.lookup(Registries.NOISE_SETTINGS)
                         .get(ModernBetaNoiseGeneratorSettings.INFDEV_415).orElseThrow())
@@ -347,7 +346,7 @@ public final class ModernBetaSettingsPresets {
     
     private static ModernBetaSettingsPreset presetInfdev420(BootstrapContext<ModernBetaSettingsPreset> context) {
         return new ModernBetaSettingsPreset(
-            ModernBetaSettings.builder(new BootstrapContextInfoLookup<>(context))
+            ModernBetaSettings.builder(new BootstrapDataContextInfoLookup<>(context))
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.NOISE_3D.id)
                 .add(NOISE_GENERATOR_SETTINGS, context.lookup(Registries.NOISE_SETTINGS)
                         .get(ModernBetaNoiseGeneratorSettings.OVERWORLD_128).orElseThrow())
@@ -368,7 +367,7 @@ public final class ModernBetaSettingsPresets {
     
     private static ModernBetaSettingsPreset presetInfdev611(BootstrapContext<ModernBetaSettingsPreset> context) {
         return new ModernBetaSettingsPreset(
-            ModernBetaSettings.builder(new BootstrapContextInfoLookup<>(context))
+            ModernBetaSettings.builder(new BootstrapDataContextInfoLookup<>(context))
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.NOISE_3D.id)
                 .add(NOISE_GENERATOR_SETTINGS, context.lookup(Registries.NOISE_SETTINGS)
                         .get(ModernBetaNoiseGeneratorSettings.OVERWORLD_128).orElseThrow())
@@ -389,7 +388,7 @@ public final class ModernBetaSettingsPresets {
 
     private static ModernBetaSettingsPreset presetInfdev325(BootstrapContext<ModernBetaSettingsPreset> context) {
         return new ModernBetaSettingsPreset(
-            ModernBetaSettings.builder(new BootstrapContextInfoLookup<>(context))
+            ModernBetaSettings.builder(new BootstrapDataContextInfoLookup<>(context))
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.INFDEV_227.id)
                 .add(NOISE_GENERATOR_SETTINGS, context.lookup(Registries.NOISE_SETTINGS)
                         .get(ModernBetaNoiseGeneratorSettings.OVERWORLD_128).orElseThrow())
@@ -406,7 +405,7 @@ public final class ModernBetaSettingsPresets {
     
     private static ModernBetaSettingsPreset presetInfdev227(BootstrapContext<ModernBetaSettingsPreset> context) {
         return new ModernBetaSettingsPreset(
-            ModernBetaSettings.builder(new BootstrapContextInfoLookup<>(context))
+            ModernBetaSettings.builder(new BootstrapDataContextInfoLookup<>(context))
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.INFDEV_227.id)
                 .add(NOISE_GENERATOR_SETTINGS, context.lookup(Registries.NOISE_SETTINGS)
                         .get(ModernBetaNoiseGeneratorSettings.OVERWORLD_128).orElseThrow())
@@ -426,7 +425,7 @@ public final class ModernBetaSettingsPresets {
         HolderGetter<Biome> biomeRegistry = context.lookup(Registries.BIOME);
 
         return new ModernBetaSettingsPreset(
-            ModernBetaSettings.builder(new BootstrapContextInfoLookup<>(context))
+            ModernBetaSettings.builder(new BootstrapDataContextInfoLookup<>(context))
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.FINITE_2D.id)
                 .add(NOISE_GENERATOR_SETTINGS, context.lookup(Registries.NOISE_SETTINGS)
                         .get(ModernBetaNoiseGeneratorSettings.FINITE_2D).orElseThrow())
@@ -434,7 +433,7 @@ public final class ModernBetaSettingsPresets {
                 .add(DEEPSLATE_GENERATION, DeepslateGeneration.DISABLED)
                 .add(CAVE_GENERATION, CaveGeneration.DISABLED)
                 .add(WORLD_BORDER, WorldBorderLocation.indev(256, 64))
-                .add(STRUCTURE_MODIFERS, StructureModifiers.getFinite(structureRegistry, biomeRegistry, 256, 256, false))
+                .add(STRUCTURE_MODIFERS, StructureModifiers.getFinite(structureRegistry, biomeRegistry, 256, 256, false, true))
                 .addDefault(FINITE_LEVEL_PROPERTIES, FINITE_CAVE_GENERATION, FINITE_NOISE, FINITE_BEACHES, FINITE_POOLS)
                 .build(),
             ModernBetaSettings.singleBiome(ModernBetaBiomes.INDEV_NORMAL),
@@ -447,7 +446,7 @@ public final class ModernBetaSettingsPresets {
         HolderGetter<Biome> biomeRegistry = context.lookup(Registries.BIOME);
 
         return new ModernBetaSettingsPreset(
-            ModernBetaSettings.builder(new BootstrapContextInfoLookup<>(context))
+            ModernBetaSettings.builder(new BootstrapDataContextInfoLookup<>(context))
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.FINITE_2D.id)
                 .add(NOISE_GENERATOR_SETTINGS, context.lookup(Registries.NOISE_SETTINGS)
                         .get(ModernBetaNoiseGeneratorSettings.FINITE_2D).orElseThrow())
@@ -472,7 +471,7 @@ public final class ModernBetaSettingsPresets {
                     false
                 ))
                 .add(SPAWN_INDEV_HOUSE, false)
-                .add(STRUCTURE_MODIFERS, StructureModifiers.getFinite(structureRegistry, biomeRegistry, 256, 256, false))
+                .add(STRUCTURE_MODIFERS, StructureModifiers.getFinite(structureRegistry, biomeRegistry, 256, 256, false, true))
                 .addDefault(FINITE_CAVE_GENERATION, FINITE_NOISE, FINITE_POOLS)
                 .build(),
             ModernBetaSettings.singleBiome(ModernBetaBiomes.INDEV_NORMAL),
@@ -482,7 +481,7 @@ public final class ModernBetaSettingsPresets {
 
     private static ModernBetaSettingsPreset presetClassic14a08(BootstrapContext<ModernBetaSettingsPreset> context) {
         return new ModernBetaSettingsPreset(
-            ModernBetaSettings.builder(new BootstrapContextInfoLookup<>(context))
+            ModernBetaSettings.builder(new BootstrapDataContextInfoLookup<>(context))
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.FINITE_2D.id)
                 .add(NOISE_GENERATOR_SETTINGS, context.lookup(Registries.NOISE_SETTINGS)
                         .get(ModernBetaNoiseGeneratorSettings.FINITE_2D).orElseThrow())
@@ -2445,7 +2444,7 @@ public final class ModernBetaSettingsPresets {
                 .add(NOISE_LANDMASS, NoiseLandmass.RELEASE)
                 .add(SURFACE_PROPERTIES, SurfaceProperties.MAJOR_RELEASE)
                 .add(WORLD_BORDER, WorldBorderLocation.xboxLegacy(finiteSize))
-                .add(STRUCTURE_MODIFERS, StructureModifiers.getFinite(structureRegistry, biomeRegistry, finiteSize, finiteSize, false))
+                .add(STRUCTURE_MODIFERS, StructureModifiers.getFinite(structureRegistry, biomeRegistry, finiteSize, finiteSize, false, false))
                 .build(),
             ModernBetaSettings.fractalLayers(configuredLayers1710Era(0, finiteSize, false, false, false, false, false, false))
                 .add(TEMPERATURE_HEIGHT_SCALING, TemperatureHeightScaling.MAJOR_RELEASE)

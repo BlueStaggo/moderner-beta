@@ -52,7 +52,7 @@ public record StructureModifiers(
         int width,
         int length
     ) {
-        return getFinite(structureRegistry, biomeRegistry, width, length, true);
+        return getFinite(structureRegistry, biomeRegistry, width, length, true, false);
     }
 
     public static StructureModifiers getFinite(
@@ -60,7 +60,8 @@ public record StructureModifiers(
         HolderGetter<Biome> biomeRegistry,
         int width,
         int length,
-        boolean shrines
+        boolean shrines,
+        boolean indev
     ) {
         ImmutableMap.Builder<ResourceKey<StructureSet>, StructureSet> overrideBuilder = ImmutableMap.builder();
 
@@ -71,11 +72,16 @@ public record StructureModifiers(
             );
         }
 
+        int d = Math.min(width, length);
+        int distance = !indev ? Math.min(32, d / 128) : 0;
+        int spread = !indev ? 3 : 0;
+        int count = !indev ? Math.min(128, Math.max(d / 682, 3)) : 1;
+
         overrideBuilder.put(
             BuiltinStructureSets.STRONGHOLDS,
             new StructureSet(
                 structureRegistry.getOrThrow(BuiltinStructures.STRONGHOLD),
-                new ConcentricRingsStructurePlacement(32, 3, 128, biomeRegistry.getOrThrow(BiomeTags.STRONGHOLD_BIASED_TO))
+                new ConcentricRingsStructurePlacement(distance, spread, count, biomeRegistry.getOrThrow(BiomeTags.STRONGHOLD_BIASED_TO))
             )
         );
 

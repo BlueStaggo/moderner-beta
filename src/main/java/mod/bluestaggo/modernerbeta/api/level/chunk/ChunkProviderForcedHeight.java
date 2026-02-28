@@ -1,4 +1,5 @@
 //~dotLocation
+//~holders
 package mod.bluestaggo.modernerbeta.api.level.chunk;
 
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;

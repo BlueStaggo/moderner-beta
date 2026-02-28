@@ -1,5 +1,6 @@
 //~registryOr
 //~dotLocation
+//~holders
 package mod.bluestaggo.modernerbeta.client.gui.screen.config.graphical;
 
 import com.ibm.icu.text.Collator;

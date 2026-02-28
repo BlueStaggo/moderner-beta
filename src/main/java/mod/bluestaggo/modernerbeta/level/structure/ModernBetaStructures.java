@@ -18,6 +18,7 @@ import net.minecraft.world.level.levelgen.structure.StructureSpawnOverride;
 import net.minecraft.world.level.levelgen.structure.TerrainAdjustment;
 import net.minecraft.world.level.levelgen.structure.structures.StrongholdStructure;
 
+import java.util.List;
 import java.util.Map;
 
 public class ModernBetaStructures {
@@ -29,7 +30,7 @@ public class ModernBetaStructures {
         
         context.register(
             INDEV_STRONGHOLD,
-            new StrongholdStructure(createConfig(HolderSet.empty(), TerrainAdjustment.BURY))
+            new StrongholdStructure(createConfig(HolderSet.direct(List.of()), TerrainAdjustment.BURY))
         );
         context.register(
             OCEAN_SHRINE,

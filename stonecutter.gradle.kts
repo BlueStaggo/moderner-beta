@@ -105,7 +105,7 @@ stonecutter.parameters {
             replace(".getMinY()", ".getMinBuildHeight()")
         }
 
-        string {
+        string("holders") {
             direction = eval(current.version, "<1.21.2")
             replace(".listElements()", ".holders()")
         }

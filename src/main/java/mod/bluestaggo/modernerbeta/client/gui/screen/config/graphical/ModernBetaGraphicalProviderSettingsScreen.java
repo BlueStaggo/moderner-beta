@@ -1,3 +1,4 @@
+//~holders
 package mod.bluestaggo.modernerbeta.client.gui.screen.config.graphical;
 
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;

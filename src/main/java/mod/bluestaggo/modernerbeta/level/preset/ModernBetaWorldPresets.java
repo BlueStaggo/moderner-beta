@@ -7,7 +7,7 @@ import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaChunkGenerator;
-import mod.bluestaggo.modernerbeta.util.BootstrapContextInfoLookup;
+import mod.bluestaggo.modernerbeta.util.BootstrapDataContextInfoLookup;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
@@ -40,7 +40,7 @@ public class ModernBetaWorldPresets {
         HolderGetter<SurfaceConfig> registrySurfaceConfig = context.lookup(ModernBetaResourceKeys.SURFACE_CONFIG);
         HolderGetter<MultiNoiseBiomeSourceParameterList> registryParameters = context.lookup(Registries.MULTI_NOISE_BIOME_SOURCE_PARAMETER_LIST);
 
-        RegistryOps.RegistryInfoLookup lookup = new BootstrapContextInfoLookup<>(context);
+        RegistryOps.RegistryInfoLookup lookup = new BootstrapDataContextInfoLookup<>(context);
 
         LevelStem overworld = createOverworldOptions(registryDimensionType, registryBiome, registryPreset, registrySurfaceConfig, lookup);
         LevelStem nether = createNetherOptions(registryDimensionType, registrySettings, registryParameters);

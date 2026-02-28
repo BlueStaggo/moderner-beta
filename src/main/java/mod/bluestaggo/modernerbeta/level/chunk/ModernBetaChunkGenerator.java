@@ -57,6 +57,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -176,7 +177,8 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
 
         List<Holder<StructureSet>> list = structureSetLookup.listElements()
             .filter(reference -> {
-                if (modifiers.removed().contains(reference.key()))
+                ResourceKey<StructureSet> key = reference.key();
+                if (modifiers.removed().contains(key) || modifiers.overrides().containsKey(key))
                     return false;
 
                 return ChunkGeneratorStructureStateAccessor.invokeHasBiomesForStructureSet(reference.value(), biomeSource);
@@ -184,9 +186,6 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
             .collect(Collectors.toList());
 
         for (Map.Entry<ResourceKey<StructureSet>, StructureSet> override : modifiers.overrides().entrySet()) {
-            list.stream().filter(h -> h.unwrapKey().orElseThrow().equals(override.getKey()))
-                .findFirst().ifPresent(list::remove);
-
             list.add(Holder.direct(override.getValue()));
         }
 

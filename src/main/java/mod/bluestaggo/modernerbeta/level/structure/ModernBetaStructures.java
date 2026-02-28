@@ -22,16 +22,11 @@ import java.util.List;
 import java.util.Map;
 
 public class ModernBetaStructures {
-    public static final ResourceKey<Structure> INDEV_STRONGHOLD = of("indev_stronghold");
     public static final ResourceKey<Structure> OCEAN_SHRINE = of("ocean_shrine");
 
     public static void bootstrap(BootstrapContext<Structure> context) {
         HolderGetter<Biome> registryBiome = context.lookup(Registries.BIOME);
-        
-        context.register(
-            INDEV_STRONGHOLD,
-            new StrongholdStructure(createConfig(HolderSet.direct(List.of()), TerrainAdjustment.BURY))
-        );
+
         context.register(
             OCEAN_SHRINE,
             new OceanShrineStructure(

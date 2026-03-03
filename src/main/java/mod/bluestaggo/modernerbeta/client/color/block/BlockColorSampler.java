@@ -1,4 +1,4 @@
-package mod.bluestaggo.modernerbeta.client.color;
+package mod.bluestaggo.modernerbeta.client.color.block;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -6,27 +6,20 @@ import com.google.common.cache.LoadingCache;
 import it.unimi.dsi.fastutil.longs.Long2ObjectLinkedOpenHashMap;
 import mod.bluestaggo.modernerbeta.api.level.biome.climate.ClimateSampler;
 import mod.bluestaggo.modernerbeta.api.level.biome.climate.Clime;
-import mod.bluestaggo.modernerbeta.compat.client.ModCompatClient;
 import mod.bluestaggo.modernerbeta.mixin.BiomeAccessor;
 import mod.bluestaggo.modernerbeta.mixin.client.RenderSectionRegionAccessor;
 import mod.bluestaggo.modernerbeta.settings.component.ClimateDistribution;
 import mod.bluestaggo.modernerbeta.tags.ModernBetaBiomeTags;
-import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.FoliageColor;
-import net.minecraft.world.level.GrassColor;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeManager;
 import net.minecraft.world.level.biome.BiomeSpecialEffects;
-import net.minecraft.world.level.block.DoublePlantBlock;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
@@ -97,7 +90,7 @@ public final class BlockColorSampler {
         this.climeCache.clear();
     }
 
-    private Clime sampleClime(BlockPos pos) {
+    Clime sampleClime(BlockPos pos) {
         return this.sampleClime(pos.getX(), pos.getZ());
     }
 
@@ -118,145 +111,6 @@ public final class BlockColorSampler {
             return clime;
         }
     }
-
-    public int getGrassColor(BlockState ignoredState, BlockAndTintGetter view, BlockPos pos, int ignoredTintNdx) {
-        if (view == null || pos == null) { // Appears to enter here when loading color for inventory block
-            return GrassColor.getDefaultColor();
-        }
-
-        if (this.useBiomeColor()) {
-            BiomeManager biomeAccess = getBiomeAccessFromView(view);
-            if (biomeAccess != null) {
-                return this.sampleModifiedColorMaybeLerped(
-                    biomeAccess,
-                    pos,
-                    //? if >=1.21.11 {
-                    /*BiomeSpecialEffects::grassColorOverride,
-                    BiomeSpecialEffects::grassColorModifier,
-                    *///? } else {
-                    BiomeSpecialEffects::getGrassColorOverride,
-                    BiomeSpecialEffects::getGrassColorModifier,
-                    //? }
-                    GrassColor::get,
-                    ModCompatClient::modifyGrassColor
-                );
-            }
-
-            Clime clime = this.sampleClime(pos);
-            return GrassColor.get(clime.temp(), clime.rain());
-        }
-
-        return BiomeColors.getAverageGrassColor(view, pos);
-    }
-
-    public int getPetalColor(BlockState state, BlockAndTintGetter view, BlockPos pos, int tintNdx) {
-        if (tintNdx == 0)
-            return 0xFFFFFFFF;
-
-        return getShortGrassColor(state, view, pos, tintNdx);
-    }
-
-    public int getTallGrassColor(BlockState state, BlockAndTintGetter view, BlockPos pos, int tintNdx) {
-        return getShortGrassColor(state, view, state.getValue(DoublePlantBlock.HALF) == DoubleBlockHalf.UPPER ? pos.below() : pos, tintNdx);
-    }
-    
-    public int getShortGrassColor(BlockState ignoredState, BlockAndTintGetter view, BlockPos pos, int ignoredTintNdx) {
-        if (view == null || pos == null) { // Appears to enter here when loading color for inventory block
-            return GrassColor.getDefaultColor();
-        }
-        
-        if (this.useBiomeColor()) {
-            if (this.getClimateDistribution().fuzzyGrass()) {
-                int x = pos.getX();
-                int y = pos.getY();
-                int z = pos.getZ();
-
-                long shift = x * 0x2FC20FL + z * 0x5D8875L + y;
-                shift = shift * shift * 0x285B825L + shift * 11L;
-                pos = pos.offset(
-                    (int)(shift >> 14 & 31L),
-                    (int)(shift >> 19 & 31L),
-                    (int)(shift >> 24 & 31L)
-                );
-            }
-
-            BiomeManager biomeAccess = getBiomeAccessFromView(view);
-            if (biomeAccess != null) {
-                return this.sampleModifiedColorMaybeLerped(
-                    biomeAccess,
-                    pos,
-                    //? if >=1.21.11 {
-                    /*BiomeSpecialEffects::grassColorOverride,
-                    BiomeSpecialEffects::grassColorModifier,
-                    *///? } else {
-                    BiomeSpecialEffects::getGrassColorOverride,
-                    BiomeSpecialEffects::getGrassColorModifier,
-                    //? }
-                    GrassColor::get,
-                    ModCompatClient::modifyGrassColor
-                );
-            }
-
-            Clime clime = this.sampleClime(pos);
-            return GrassColor.get(clime.temp(), clime.rain());
-        }
-        
-        return BiomeColors.getAverageGrassColor(view, pos);
-    }
-    
-    public int getFoliageColor(BlockState ignoredState, BlockAndTintGetter view, BlockPos pos, int ignoredTintNdx) {
-        if (view == null || pos == null) { // Appears to enter here when loading color for inventory block
-            return 0xFF48B518;
-        }
-        
-        if (this.useBiomeColor()) {
-            BiomeManager biomeAccess = getBiomeAccessFromView(view);
-            if (biomeAccess != null) {
-                return this.sampleModifiedColorMaybeLerped(
-                    biomeAccess,
-                    pos,
-                    //? if >=1.21.11 {
-                    /*BiomeSpecialEffects::foliageColorOverride,
-                    *///? } else {
-                    BiomeSpecialEffects::getFoliageColorOverride,
-                    //? }
-                    effects -> BiomeSpecialEffects.GrassColorModifier.NONE,
-                    FoliageColor::get,
-                    ModCompatClient::modifyFoliageColor
-                );
-            }
-
-            Clime clime = this.sampleClime(pos);
-            return FoliageColor.get(clime.temp(), clime.rain());
-        }
-        
-        return BiomeColors.getAverageFoliageColor(view, pos);
-    }
-    
-    public int getWaterColor(BlockState ignoredState, BlockAndTintGetter view, BlockPos pos, int ignoredTintNdx) {
-        if (view == null || pos == null) {
-            return 0xFFFFFFFF;
-        }
-
-        if (this.useWaterColor()) {
-            Clime clime = this.sampleClime(pos);
-            return this.colormapWater.getColor(clime.temp(), clime.rain());
-        }
-        
-        return BiomeColors.getAverageWaterColor(view, pos);
-    }
-    
-    public int getSugarCaneColor(BlockState ignoredState, BlockAndTintGetter view, BlockPos pos, int ignoredTintNdx) {
-        if (view == null || pos == null) {
-            return 0xFFFFFFFF;
-        }
-
-        if (this.useBiomeColor()) {
-            return 0xFFFFFFFF;
-        }
-        
-        return BiomeColors.getAverageGrassColor(view, pos);
-    }
     
     public boolean useBiomeColor() {
         return this.climateSampler != null && this.climateSampler.useBiomeColor();
@@ -273,11 +127,11 @@ public final class BlockColorSampler {
         return this.climateSampler.getDistribution();
     }
 
-    private int sampleModifiedColorMaybeLerped(BiomeManager biomeAccess, BlockPos pos,
-                                               Function<BiomeSpecialEffects, Optional<Integer>> customColorAccessor,
-                                               Function<BiomeSpecialEffects, BiomeSpecialEffects.GrassColorModifier> grassColorModifierAccessor,
-                                               ClimateToColorOperator baseColorAccessor,
-                                               PostSampleModifier postSampleModifier) {
+    int sampleModifiedColorMaybeLerped(BiomeManager biomeAccess, BlockPos pos,
+                                       Function<BiomeSpecialEffects, Optional<Integer>> customColorAccessor,
+                                       Function<BiomeSpecialEffects, BiomeSpecialEffects.GrassColorModifier> grassColorModifierAccessor,
+                                       ClimateToColorOperator baseColorAccessor,
+                                       PostSampleModifier postSampleModifier) {
         if (this.getClimateDistribution().smoothBorders()) {
             return this.sampleModifiedColorLerped(biomeAccess, pos, customColorAccessor, grassColorModifierAccessor, baseColorAccessor, postSampleModifier);
         } else {
@@ -362,7 +216,7 @@ public final class BlockColorSampler {
         return postSampleModifier.apply(finalColor, biomeEntry, pos);
     }
 
-    private BiomeManager getBiomeAccessFromView(BlockAndTintGetter tintGetter) {
+    BiomeManager getBiomeAccessFromView(BlockAndTintGetter tintGetter) {
         if (tintGetter instanceof Level level) {
             return level.getBiomeManager();
         }
@@ -413,12 +267,12 @@ public final class BlockColorSampler {
     }
 
     @FunctionalInterface
-    private interface ClimateToColorOperator {
+    interface ClimateToColorOperator {
         int apply(double temperature, double downfall);
     }
 
     @FunctionalInterface
-    private interface PostSampleModifier {
+    interface PostSampleModifier {
         int apply(int original, Holder<Biome> biome, BlockPos pos);
     }
 }

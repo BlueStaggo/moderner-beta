@@ -130,6 +130,7 @@ stonecutter.parameters {
             replace("SnowyDirtBlock", "SnowyBlock")
             replace("net.minecraft.world.level.BlockAndTintGetter", "net.minecraft.client.renderer.block.BlockAndTintGetter")
             replace("DimensionType.CardinalLightType", "net.minecraft.world.level.CardinalLighting.Type")
+            replace("net.minecraft.client.color.block.BlockColor", "net.minecraft.client.color.block.BlockTintSource")
         }
 
         string("worldGenLevel") {

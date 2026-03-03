@@ -1,7 +1,7 @@
 package mod.bluestaggo.modernerbeta.mixin.client;
 
 import mod.bluestaggo.modernerbeta.api.level.biome.climate.Clime;
-import mod.bluestaggo.modernerbeta.client.color.BlockColorSampler;
+import mod.bluestaggo.modernerbeta.client.color.block.BlockColorSampler;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockAndTintGetter;

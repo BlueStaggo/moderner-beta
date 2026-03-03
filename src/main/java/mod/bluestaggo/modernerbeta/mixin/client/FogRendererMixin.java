@@ -6,7 +6,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.api.level.biome.climate.Clime;
 import mod.bluestaggo.modernerbeta.client.FogUtils;
-import mod.bluestaggo.modernerbeta.client.color.BlockColorSampler;
+import mod.bluestaggo.modernerbeta.client.color.block.BlockColorSampler;
 import mod.bluestaggo.modernerbeta.imixin.ModernBetaLevel;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import net.minecraft.client.Camera;

@@ -1,3 +1,4 @@
+//? if <1.21.9 {
 package mod.bluestaggo.modernerbeta.fabric.client.resource;
 
 import mod.bluestaggo.modernerbeta.client.resource.ModernBetaColormapReloadListener;
@@ -19,3 +20,4 @@ public class ModernBetaFabricColormapReloadListener extends ModernBetaColormapRe
         return id;
     }
 }
+//? }

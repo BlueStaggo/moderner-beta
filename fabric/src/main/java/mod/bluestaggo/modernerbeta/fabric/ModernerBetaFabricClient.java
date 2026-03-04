@@ -6,13 +6,11 @@ import mod.bluestaggo.modernerbeta.client.color.block.BlockColorSampler;
 import mod.bluestaggo.modernerbeta.client.color.block.BlockColors;
 import mod.bluestaggo.modernerbeta.client.registry.ModernBetaClientRegistries;
 import mod.bluestaggo.modernerbeta.compat.client.ModCompatClient;
-import mod.bluestaggo.modernerbeta.fabric.client.resource.ModernBetaFabricColormapReloadListener;
 import mod.bluestaggo.modernerbeta.fabric.registry.RegistryHelperImpl;
 import mod.bluestaggo.modernerbeta.network.BiomeProviderInfoPayload;
 import mod.bluestaggo.modernerbeta.network.S2CPacketHandlers;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.packs.PackType;
@@ -29,17 +27,28 @@ public class ModernerBetaFabricClient implements ClientModInitializer {
 
         BlockColors.register(net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry.BLOCK::register);
 
-        ResourceManagerHelper resourceManager = ResourceManagerHelper.get(PackType.CLIENT_RESOURCES);
-        resourceManager.registerReloadListener(new ModernBetaFabricColormapReloadListener(
-                ModernerBeta.createId("water_colormap"),
-                "textures/colormap/water.png",
-                BlockColorSampler.INSTANCE.colormapWater::setColormap
+        //? if >=1.21.9 {
+        /*net.fabricmc.fabric.api.resource.v1.ResourceLoader resourceManager =
+                net.fabricmc.fabric.api.resource.v1.ResourceLoader.get(PackType.CLIENT_RESOURCES);
+        resourceManager.registerReloader(ModernerBeta.createId("water_colormap"), new mod.bluestaggo.modernerbeta.client.resource.ModernBetaColormapReloadListener(
+        *///? } else {
+        net.fabricmc.fabric.api.resource.ResourceManagerHelper resourceManager =
+                net.fabricmc.fabric.api.resource.ResourceManagerHelper.get(PackType.CLIENT_RESOURCES);
+        resourceManager.registerReloadListener(new mod.bluestaggo.modernerbeta.fabric.client.resource.ModernBetaFabricColormapReloadListener(
+            ModernerBeta.createId("water_colormap"),
+        //? }
+            "textures/colormap/water.png",
+            BlockColorSampler.INSTANCE.colormapWater::setColormap
         ));
 
-        resourceManager.registerReloadListener(new ModernBetaFabricColormapReloadListener(
-                ModernerBeta.createId("underwater_colormap"),
-                "textures/colormap/underwater.png",
-                BlockColorSampler.INSTANCE.colormapUnderwater::setColormap
+        //? if >=1.21.9 {
+        /*resourceManager.registerReloader(ModernerBeta.createId("underwater_colormap"), new mod.bluestaggo.modernerbeta.client.resource.ModernBetaColormapReloadListener(
+        *///? } else {
+        resourceManager.registerReloadListener(new mod.bluestaggo.modernerbeta.fabric.client.resource.ModernBetaFabricColormapReloadListener(
+            ModernerBeta.createId("underwater_colormap"),
+        //? }
+            "textures/colormap/underwater.png",
+            BlockColorSampler.INSTANCE.colormapUnderwater::setColormap
         ));
 
 

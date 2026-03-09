@@ -3,6 +3,10 @@ package mod.bluestaggo.modernerbeta.level.biome.injector;
 
 import mod.bluestaggo.modernerbeta.api.level.chunk.ChunkProvider;
 import mod.bluestaggo.modernerbeta.api.level.chunk.ChunkProviderNoise;
+import mod.bluestaggo.modernerbeta.level.biome.injector.rule.CaveInjectionRule;
+import mod.bluestaggo.modernerbeta.level.biome.injector.rule.DeepOceanInjectionRule;
+import mod.bluestaggo.modernerbeta.level.biome.injector.rule.OceanInjectionRule;
+import mod.bluestaggo.modernerbeta.level.biome.injector.rule.OutOfBoundsInjectionRule;
 import mod.bluestaggo.modernerbeta.mixin.LevelChunkSectionAccessor;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
@@ -11,7 +15,6 @@ import mod.bluestaggo.modernerbeta.settings.component.BiomeInjectionThresholds;
 import mod.bluestaggo.modernerbeta.settings.component.WorldBorderLocation;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkHeightmap;
 import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomeSource;
-import mod.bluestaggo.modernerbeta.level.biome.injector.BiomeInjectionRules.BiomeInjectionContext;
 import mod.bluestaggo.modernerbeta.level.cavebiome.provider.CaveBiomeProviderNone;
 import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaChunkGenerator;
 import net.minecraft.core.Holder;
@@ -26,22 +29,15 @@ import net.minecraft.world.level.chunk.PalettedContainer;
 import net.minecraft.world.level.chunk.PalettedContainerRO;
 import net.minecraft.world.level.levelgen.Heightmap;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
-import java.util.function.Predicate;
 
 public class BiomeInjector {
-    public enum BiomeInjectionStep {
-        PRE,  // Injects before surface generation step.
-        POST, // Injects after surface generation step.
-        ALL   // Injects for structure generation, spawn location.
-    }
-
     private final ModernBetaChunkGenerator modernBetaChunkGenerator;
     private final ModernBetaBiomeSource modernBetaBiomeSource;
-    
-    private final BiomeInjectionRules rulesPre;
-    private final BiomeInjectionRules rulesPost;
-    private final BiomeInjectionRules rulesAll;
+
+    private final List<BiomeInjectionRule> rules;
 
     public BiomeInjector(ModernBetaChunkGenerator modernBetaChunkGenerator, ModernBetaBiomeSource modernBetaBiomeSource) {
         this.modernBetaChunkGenerator = modernBetaChunkGenerator;
@@ -55,46 +51,26 @@ public class BiomeInjector {
         boolean useOceanBiomes = settingsBiome.getOrDefault(SettingsComponentTypes.USE_OCEAN_BIOMES);
         BiomeInjectionThresholds thresholds = settingsBiome.getOrDefault(SettingsComponentTypes.BIOME_INJECTION_THRESHOLDS);
 
-        Predicate<BiomeInjectionContext> cavePredicate = context -> 
-            context.getY() >= context.worldMinY && context.getY() + thresholds.caveDepth() < context.minHeight;
-
-        Predicate<BiomeInjectionContext> oceanPredicate = context -> 
-            modernBetaBiomeSource.hasOceanBiomes() && this.atOceanDepth(context.topHeight, thresholds.oceanDepth());
-
-        Predicate<BiomeInjectionContext> deepOceanPredicate = context -> 
-            modernBetaBiomeSource.hasOceanBiomes() && this.atOceanDepth(context.topHeight, thresholds.deepOceanDepth());
-
         WorldBorderLocation worldBorderLocation = settingsChunk.getOrDefault(SettingsComponentTypes.WORLD_BORDER);
-        Predicate<BiomeInjectionContext> outOfBoundsPredicate = context ->
-            !worldBorderLocation.containsPoint(context.getX(), context.getZ(), 4); //Constant is private...
-        
-        BiomeInjectionRules.Builder builderPre = new BiomeInjectionRules.Builder();
-        BiomeInjectionRules.Builder builderPost = new BiomeInjectionRules.Builder();
-        BiomeInjectionRules.Builder builderAll = new BiomeInjectionRules.Builder();
 
-        if (worldBorderLocation.enabled()) {
-            builderPre.add(outOfBoundsPredicate, (x, y, z) -> this.modernBetaBiomeSource.getOutOfBoundsBiome());
-            builderPost.add(outOfBoundsPredicate, (x, y, z) -> this.modernBetaBiomeSource.getOutOfBoundsBiome());
-        }
+        this.rules = new ArrayList<>();
 
-        if (!(this.modernBetaBiomeSource.getCaveBiomeProvider() instanceof CaveBiomeProviderNone)) {
-            builderPost.add(cavePredicate, this.modernBetaBiomeSource::getCaveBiome);
-        }
+        if (worldBorderLocation.enabled())
+            this.rules.add(new OutOfBoundsInjectionRule(modernBetaBiomeSource, worldBorderLocation));
+
+        if (!(this.modernBetaBiomeSource.getCaveBiomeProvider() instanceof CaveBiomeProviderNone))
+            this.rules.add(new CaveInjectionRule(modernBetaBiomeSource, thresholds.caveDepth()));
 
         if (useOceanBiomes) {
-            builderPost.add(deepOceanPredicate, this.modernBetaBiomeSource::getDeepOceanBiome);
-            builderPost.add(oceanPredicate, this.modernBetaBiomeSource::getOceanBiome);
+            this.rules.add(new OceanInjectionRule(modernBetaBiomeSource,
+                    this.modernBetaChunkGenerator.getSeaLevel(), thresholds.oceanDepth()));
+            this.rules.add(new DeepOceanInjectionRule(modernBetaBiomeSource,
+                    this.modernBetaChunkGenerator.getSeaLevel(), thresholds.deepOceanDepth()));
         }
-
-        builderAll.add(builderPre).add(builderPost);
-        
-        this.rulesPre = builderPre.build();
-        this.rulesPost = builderPost.build();
-        this.rulesAll = builderAll.build();
     }
     
-    public void injectBiomes(ChunkAccess chunk, Sampler noiseSampler, BiomeInjectionStep step) {
-        if (this.rulesAll.isEmpty()) {
+    public void injectBiomes(ChunkAccess chunk, Sampler noiseSampler, BiomeInjectionRule.Step step) {
+        if (this.rules.isEmpty()) {
             return;
         }
 
@@ -139,7 +115,7 @@ public class BiomeInjector {
         }
     }
     
-    public Holder<Biome> getBiomeAtBlock(LevelHeightAccessor level, int x, int y, int z, Sampler noiseSampler, BiomeInjectionStep step) {
+    public Holder<Biome> getBiomeAtBlock(LevelHeightAccessor level, int x, int y, int z, Sampler noiseSampler, BiomeInjectionRule.Step step) {
         int biomeX = x >> 2;
         int biomeY = y >> 2;
         int biomeZ = z >> 2;
@@ -147,7 +123,7 @@ public class BiomeInjector {
         return this.getBiome(level, biomeX, biomeY, biomeZ, noiseSampler, step);
     }
 
-    public String getBiomeNameAtBlock(LevelHeightAccessor level, int x, int y, int z, Sampler noiseSampler, BiomeInjectionStep step) {
+    public String getBiomeNameAtBlock(LevelHeightAccessor level, int x, int y, int z, Sampler noiseSampler, BiomeInjectionRule.Step step) {
         int biomeX = x >> 2;
         int biomeY = y >> 2;
         int biomeZ = z >> 2;
@@ -157,8 +133,8 @@ public class BiomeInjector {
         return key.location().toString();
     }
     
-    public Holder<Biome> getBiome(LevelHeightAccessor level, int biomeX, int biomeY, int biomeZ, Sampler noiseSampler, BiomeInjectionStep step) {
-        if (this.rulesAll.isEmpty()) {
+    public Holder<Biome> getBiome(LevelHeightAccessor level, int biomeX, int biomeY, int biomeZ, Sampler noiseSampler, BiomeInjectionRule.Step step) {
+        if (this.rules.isEmpty()) {
             return this.modernBetaBiomeSource.getNoiseBiome(biomeX, biomeY, biomeZ, noiseSampler);
         }
 
@@ -169,19 +145,27 @@ public class BiomeInjector {
             .orElseGet(() -> this.modernBetaBiomeSource.getNoiseBiome(biomeX, biomeY, biomeZ, noiseSampler));
     }
     
-    public Optional<Holder<Biome>> getOptionalBiome(LevelHeightAccessor level, int biomeX, int biomeY, int biomeZ, Sampler noiseSampler, BiomeInjectionStep step) {
+    public Optional<Holder<Biome>> getOptionalBiome(LevelHeightAccessor level, int biomeX, int biomeY, int biomeZ, Sampler noiseSampler, BiomeInjectionRule.Step step) {
         BiomeInjectionContext context = this.createContext(level, biomeX, biomeY, biomeZ);
 
         return this.getBiome(context, biomeX, biomeY, biomeZ, noiseSampler, step);
     }
     
-    private Optional<Holder<Biome>> getBiome(BiomeInjectionContext context, int biomeX, int biomeY, int biomeZ, Sampler noiseSampler, BiomeInjectionStep step) {
-        Holder<Biome> biome = switch(step) {
-            case PRE -> this.rulesPre.test(context, biomeX, biomeY, biomeZ);
-            case POST -> this.rulesPost.test(context, biomeX, biomeY, biomeZ);
-            case ALL -> this.rulesAll.test(context, biomeX, biomeY, biomeZ);
-        };
-        
+    private Optional<Holder<Biome>> getBiome(BiomeInjectionContext context, int biomeX, int biomeY, int biomeZ, Sampler noiseSampler, BiomeInjectionRule.Step step) {
+        Holder<Biome> biome = null;
+
+        for (BiomeInjectionRule rule : this.rules) {
+            if (step != BiomeInjectionRule.Step.ALL && !rule.applicableSteps().contains(step))
+                continue;
+
+            if (!rule.applyWhen(context))
+                continue;
+
+            biome = rule.apply(biomeX, biomeY, biomeZ);
+            if (biome != null)
+                break;
+        }
+
         return Optional.ofNullable(biome);
     }
     
@@ -225,9 +209,5 @@ public class BiomeInjector {
         }
         
         return minHeight;
-    }
-
-    private boolean atOceanDepth(int topHeight, int oceanDepth) {
-        return topHeight < this.modernBetaChunkGenerator.getSeaLevel() - oceanDepth;
     }
 }

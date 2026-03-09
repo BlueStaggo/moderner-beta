@@ -55,14 +55,14 @@ public class BiomeProviderVoronoi extends BiomeProvider implements BiomeResolver
     }
  
     @Override
-    public Holder<Biome> getOceanBiome(int biomeX, int biomeY, int biomeZ) {
+    public Holder<Biome> getOceanBiome(int biomeX, int biomeZ) {
         ClimateMapping climateMapping = this.getClimateMapping(biomeX, biomeZ);
         
         return this.biomeRegistry.getOrThrow(climateMapping.getBiome(ClimateType.OCEAN));
     }
     
     @Override
-    public Holder<Biome> getDeepOceanBiome(int biomeX, int biomeY, int biomeZ) {
+    public Holder<Biome> getDeepOceanBiome(int biomeX, int biomeZ) {
         ClimateMapping climateMapping = this.getClimateMapping(biomeX, biomeZ);
         
         return this.biomeRegistry.getOrThrow(climateMapping.getBiome(ClimateType.DEEP_OCEAN));

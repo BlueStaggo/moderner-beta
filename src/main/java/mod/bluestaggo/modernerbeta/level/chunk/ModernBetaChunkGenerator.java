@@ -5,6 +5,7 @@ import com.google.common.base.Suppliers;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.api.level.chunk.surface.SurfaceConfig;
 import mod.bluestaggo.modernerbeta.compat.ModCompat;
+import mod.bluestaggo.modernerbeta.level.biome.injector.BiomeInjectionRule;
 import mod.bluestaggo.modernerbeta.mixin.ChunkGeneratorStructureStateAccessor;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.api.level.chunk.ChunkProvider;
@@ -22,7 +23,6 @@ import mod.bluestaggo.modernerbeta.util.random.BedrockRandomSource;
 import mod.bluestaggo.modernerbeta.util.random.BedrockWorldgenRandom;
 import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.level.biome.injector.BiomeInjector;
-import mod.bluestaggo.modernerbeta.level.biome.injector.BiomeInjector.BiomeInjectionStep;
 import mod.bluestaggo.modernerbeta.level.carver.BetaCaveCarverConfiguration;
 import mod.bluestaggo.modernerbeta.level.carver.configured.ModernBetaConfiguredCarvers;
 import net.minecraft.Util;
@@ -226,7 +226,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
         if (ModCompat.skipGeneratingChunk(pos.x, pos.z))
             return;
 
-        this.injectBiomes(chunk, noiseConfig.sampler(), BiomeInjectionStep.PRE);
+        this.injectBiomes(chunk, noiseConfig.sampler(), BiomeInjectionRule.Step.PRE);
 
         if (!this.chunkProvider.skipChunk(pos.x, pos.z, ModernBetaGenerationStep.SURFACE)) {
             if (this.biomeSource instanceof ModernBetaBiomeSource modernBetaBiomeSource) {
@@ -241,7 +241,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
             }
         }
 
-        this.injectBiomes(chunk, noiseConfig.sampler(), BiomeInjectionStep.POST);
+        this.injectBiomes(chunk, noiseConfig.sampler(), BiomeInjectionRule.Step.POST);
     }
 
     @Override
@@ -510,7 +510,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
         return CODEC;
     }
     
-    private void injectBiomes(ChunkAccess chunk, Sampler noiseSampler, BiomeInjectionStep step) {
+    private void injectBiomes(ChunkAccess chunk, Sampler noiseSampler, BiomeInjectionRule.Step step) {
         BiomeInjector biomeInjector = this.biomeInjector.get();
         if (biomeInjector != null) {
             biomeInjector.injectBiomes(chunk, noiseSampler, step);

@@ -99,12 +99,12 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 	}
 
     @Override
-    public Holder<Biome> getOceanBiome(int biomeX, int biomeY, int biomeZ) {
+    public Holder<Biome> getOceanBiome(int biomeX, int biomeZ) {
         return this.getBiomeHolderFromId(this.oceanLayer.sample(biomeX, biomeZ).baseId());
     }
 
     @Override
-    public Holder<Biome> getDeepOceanBiome(int biomeX, int biomeY, int biomeZ) {
+    public Holder<Biome> getDeepOceanBiome(int biomeX, int biomeZ) {
         return this.getBiomeHolderFromId(this.deepOceanLayer.sample(biomeX, biomeZ).baseId());
     }
 

@@ -1,5 +1,6 @@
 package mod.bluestaggo.modernerbeta.client.debug.entries;
 
+import mod.bluestaggo.modernerbeta.level.biome.injector.BiomeInjectionRule;
 import mod.bluestaggo.modernerbeta.level.biome.injector.BiomeInjector;
 import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaChunkGenerator;
 //? if >=1.21.9 {
@@ -44,7 +45,7 @@ public class DebugEntryInjectedBiome /*? >=1.21.9 {*/ /*implements DebugScreenEn
 
         if (chunkGenerator instanceof ModernBetaChunkGenerator modernBetaChunkGenerator &&
                 modernBetaChunkGenerator.getBiomeInjector() != null) {
-            String biome = modernBetaChunkGenerator.getBiomeInjector().getBiomeNameAtBlock(level, x, y, z, null, BiomeInjector.BiomeInjectionStep.ALL);
+            String biome = modernBetaChunkGenerator.getBiomeInjector().getBiomeNameAtBlock(level, x, y, z, null, BiomeInjectionRule.Step.ALL);
             return String.format("[Modern Beta] Injected biome: %s", biome);
         }
 

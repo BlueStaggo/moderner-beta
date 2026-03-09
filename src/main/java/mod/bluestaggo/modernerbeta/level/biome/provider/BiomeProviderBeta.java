@@ -68,7 +68,7 @@ public class BiomeProviderBeta extends BiomeProvider implements ClimateSampler, 
     }
  
     @Override
-    public Holder<Biome> getOceanBiome(int biomeX, int biomeY, int biomeZ) {
+    public Holder<Biome> getOceanBiome(int biomeX, int biomeZ) {
         int x = biomeX << 2;
         int z = biomeZ << 2;
         
@@ -80,7 +80,7 @@ public class BiomeProviderBeta extends BiomeProvider implements ClimateSampler, 
     }
     
     @Override
-    public Holder<Biome> getDeepOceanBiome(int biomeX, int biomeY, int biomeZ) {
+    public Holder<Biome> getDeepOceanBiome(int biomeX, int biomeZ) {
         int x = biomeX << 2;
         int z = biomeZ << 2;
         

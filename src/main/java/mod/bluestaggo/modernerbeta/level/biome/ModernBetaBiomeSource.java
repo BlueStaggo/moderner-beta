@@ -10,6 +10,7 @@ import mod.bluestaggo.modernerbeta.api.level.biome.BiomeProvider;
 import mod.bluestaggo.modernerbeta.api.level.biome.BiomeResolverBlock;
 import mod.bluestaggo.modernerbeta.api.level.biome.BiomeResolverExtendedId;
 import mod.bluestaggo.modernerbeta.api.level.biome.BiomeResolverOcean;
+import mod.bluestaggo.modernerbeta.level.biome.injector.BiomeInjectionRule;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.api.level.cavebiome.CaveBiomeProvider;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
@@ -18,7 +19,6 @@ import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
-import mod.bluestaggo.modernerbeta.level.biome.injector.BiomeInjector.BiomeInjectionStep;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeId;
 import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaChunkGenerator;
 import net.minecraft.core.BlockPos;
@@ -144,7 +144,7 @@ public class ModernBetaBiomeSource extends BiomeSource {
                 int z = biomeZ << 2;
                 int y = this.chunkGenerator.getHeight(x, z, Heightmap.Types.OCEAN_FLOOR_WG, null);
                 
-                set.add(this.chunkGenerator.getBiomeInjector().getBiomeAtBlock(null, x, y, z, noiseSampler, BiomeInjectionStep.ALL));
+                set.add(this.chunkGenerator.getBiomeInjector().getBiomeAtBlock(null, x, y, z, noiseSampler, BiomeInjectionRule.Step.ALL));
             }
         }
         
@@ -199,7 +199,7 @@ public class ModernBetaBiomeSource extends BiomeSource {
                 
                 Holder<Biome> biome = this.chunkGenerator
                     .getBiomeInjector()
-                    .getBiome(level, biomeX, biomeY, biomeZ, noiseSampler, BiomeInjectionStep.ALL);
+                    .getBiome(level, biomeX, biomeY, biomeZ, noiseSampler, BiomeInjectionRule.Step.ALL);
 
                 if (!biomeSet.contains(biome)) continue;
                 
@@ -210,18 +210,18 @@ public class ModernBetaBiomeSource extends BiomeSource {
         return null;
     }
 
-    public Holder<Biome> getOceanBiome(int biomeX, int biomeY, int biomeZ) {
+    public Holder<Biome> getOceanBiome(int biomeX, int biomeZ) {
         if (this.biomeProvider instanceof BiomeResolverOcean biomeResolverOcean)
-            return biomeResolverOcean.getOceanBiome(biomeX, biomeY, biomeZ);
+            return biomeResolverOcean.getOceanBiome(biomeX, biomeZ);
         
-        return this.biomeProvider.getBiome(biomeX, biomeY, biomeZ);
+        return null;
     }
     
-    public Holder<Biome> getDeepOceanBiome(int biomeX, int biomeY, int biomeZ) {
+    public Holder<Biome> getDeepOceanBiome(int biomeX, int biomeZ) {
         if (this.biomeProvider instanceof BiomeResolverOcean biomeResolverOcean)
-            return biomeResolverOcean.getDeepOceanBiome(biomeX, biomeY, biomeZ);
+            return biomeResolverOcean.getDeepOceanBiome(biomeX, biomeZ);
         
-        return this.biomeProvider.getBiome(biomeX, biomeY, biomeZ);
+        return null;
     }
     
     public Holder<Biome> getCaveBiome(int biomeX, int biomeY, int biomeZ) {

@@ -49,73 +49,61 @@ stonecutter.tasks {
 
 stonecutter.parameters {
     replacements {
-        string {
-            direction = eval(current.version, "<1.20.3")
+        string(eval(current.version, "<1.20.3")) {
             replace("net.minecraft.network.chat.ComponentSerialization.CODEC", "net.minecraft.util.ExtraCodecs.COMPONENT")
         }
 
-        string {
-            direction = eval(current.version, "<1.20.5")
+        string(eval(current.version, "<1.20.5")) {
             replace("com.mojang.serialization.MapCodec<", "com.mojang.serialization./*Map*/Codec<")
             replace("com.mojang.serialization.MapCodec.", "com.mojang.serialization./*Map*/Codec.")
             replace("BootstrapContext", "BootstapContext")
         }
 
-        string {
-            direction = eval(current.version, "<1.21")
+        string(eval(current.version, "<1.21")) {
             replace("gui.screens.options.OptionsSubScreen", "gui.screens.OptionsSubScreen")
         }
 
-        string("registryOr") {
-            direction = eval(current.version, "<1.21.2")
+        string(eval(current.version, "<1.21.2"), "registryOr") {
             replace(".lookupOrThrow(ModernBetaResourceKeys.", ".registryOrThrow(ModernBetaResourceKeys.")
             replace(".lookupOrThrow(Registries.", ".registryOrThrow(Registries.")
         }
 
-        string("registryGet") {
-            direction = eval(current.version, "<1.21.2")
+        string(eval(current.version, "<1.21.2"), "registryGet") {
             replace(".getValue(", ".get(")
         }
 
-        string {
-            direction = eval(current.version, "<1.21.2")
+        string(eval(current.version, "<1.21.2")) {
             replace(".getMinSectionY()", ".getMinSection()")
             replace(".getMaxSectionY()", ".getMaxSection()")
 
             replace(".listElements()", ".holders()")
         }
 
-        string("minBuild") {
-            direction = eval(current.version, "<1.21.2")
+        string(eval(current.version, "<1.21.2"), "minBuild") {
             replace(".getMinY()", ".getMinBuildHeight()")
         }
 
-        string {
-            direction = eval(current.version, "<1.21.5")
+        string(eval(current.version, "<1.21.5")) {
             replace("WeightedList.codec", "SimpleWeightedRandomList.wrappedCodec")
             replace("WeightedList.of", "SimpleWeightedRandomList.create")
             replace("WeightedList", "SimpleWeightedRandomList")
         }
 
-        string {
-            direction = eval(current.version, ">=1.21.6")
+        string(eval(current.version, ">=1.21.6")) {
             replace("this.getOrCreateTagBuilder(", "this.builder(")
         }
 
-        string {
-            direction = eval(current.version, ">=1.21.11")
+        string(eval(current.version, ">=1.21.11")) {
             replace("ResourceLocation", "Identifier")
             replace("ResourceKey::location", "ResourceKey::identifier")
             replace("net.minecraft.Util", "net.minecraft.util.Util")
         }
 
-        string("dotLocation") {
-            direction = eval(current.version, ">=1.21.11")
+        string(eval(current.version, ">=1.21.11"), "dotLocation") {
             replace(".location()", ".identifier()")
         }
 
-        string {
-            direction = eval(current.version, ">=26.1")
+        string(eval(current.version, ">=26.1")) {
             replace("accessWidener v1 named", "accessWidener v1 official")
             replace("ColorProviderRegistry.BLOCK", "BlockColorRegistry")
             replace("FabricDataOutput", "FabricPackOutput")
@@ -139,8 +127,7 @@ stonecutter.parameters {
             replace(".render(", ".extractRenderState(")
         }
 
-        string("worldGenLevel") {
-            direction = eval(current.version, ">=26.1")
+        string(eval(current.version, ">=26.1"), "worldGenLevel") {
             replace("LevelSimulatedReader", "WorldGenLevel")
             replace("setDirtAt", "placeBelowTrunkBlock")
         }

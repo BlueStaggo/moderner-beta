@@ -30,6 +30,7 @@ public class ModernerBetaFabricClient implements ClientModInitializer {
         //? if >=1.21.9 {
         /*net.fabricmc.fabric.api.resource.v1.ResourceLoader resourceManager =
                 net.fabricmc.fabric.api.resource.v1.ResourceLoader.get(PackType.CLIENT_RESOURCES);
+        //~ if >=26.1 'registerReloader' -> 'registerReloadListener'
         resourceManager.registerReloader(ModernerBeta.createId("water_colormap"), new mod.bluestaggo.modernerbeta.client.resource.ModernBetaColormapReloadListener(
         *///? } else {
         net.fabricmc.fabric.api.resource.ResourceManagerHelper resourceManager =
@@ -42,7 +43,8 @@ public class ModernerBetaFabricClient implements ClientModInitializer {
         ));
 
         //? if >=1.21.9 {
-        /*resourceManager.registerReloader(ModernerBeta.createId("underwater_colormap"), new mod.bluestaggo.modernerbeta.client.resource.ModernBetaColormapReloadListener(
+        /*//~ if >=26.1 'registerReloader' -> 'registerReloadListener'
+        resourceManager.registerReloader(ModernerBeta.createId("underwater_colormap"), new mod.bluestaggo.modernerbeta.client.resource.ModernBetaColormapReloadListener(
         *///? } else {
         resourceManager.registerReloadListener(new mod.bluestaggo.modernerbeta.fabric.client.resource.ModernBetaFabricColormapReloadListener(
             ModernerBeta.createId("underwater_colormap"),

@@ -1,7 +1,6 @@
 package mod.bluestaggo.modernerbeta.client.gui.widget;
 
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractStringWidget;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.CommonComponents;
@@ -55,7 +54,7 @@ public class AlignedStringWidget extends AbstractStringWidget {
     //? if >=1.21.11 {
     /*public void visitLines(net.minecraft.client.gui.ActiveTextCollector collector) {
     *///? } else {
-    public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float deltaTicks) {
+    public void renderWidget(net.minecraft.client.gui.GuiGraphics graphics, int mouseX, int mouseY, float deltaTicks) {
     //? }
         Component message = this.getMessage();
         Font textRenderer = this.getFont();

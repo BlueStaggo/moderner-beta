@@ -694,250 +694,100 @@ public class ModernBetaTagProviderBiome extends FabricTagProvider<Biome> {
      * 
      */
     private void configureConventional(Provider provider) {
-        this.builder(
-            //? if >=1.20.5 {
-            ConventionalBiomeTags.IS_AQUATIC
-            //?} else {
-            /*ConventionalBiomeTags.AQUATIC
-            *///?}
-        )
+        this.builder(ConventionalBiomeTags.IS_AQUATIC)
             .addTag(IS_OCEAN);
         
-        this.builder(
-            //? if >=1.20.5 {
-            ConventionalBiomeTags.IS_AQUATIC_ICY
-            //?} else {
-            /*ConventionalBiomeTags.AQUATIC_ICY
-            *///?}
-        )
+        this.builder(ConventionalBiomeTags.IS_AQUATIC_ICY)
             .add(
                 ModernBetaBiomes.BETA_FROZEN_OCEAN,
                 ModernBetaBiomes.PE_FROZEN_OCEAN
             );
         
-        this.builder(
-            //? if >=1.20.5 {
-            ConventionalBiomeTags.IS_COLD
-            //?} else {
-            /*ConventionalBiomeTags.CLIMATE_COLD
-            *///?}
-        )
+        this.builder(ConventionalBiomeTags.IS_COLD)
             .addTag(IS_TAIGA)
             .addTag(IS_TUNDRA);
         
-        this.builder(
-            //? if >=1.20.5 {
-            ConventionalBiomeTags.IS_DRY
-            //?} else {
-            /*ConventionalBiomeTags.CLIMATE_DRY
-            *///?}
-        )
+        this.builder(ConventionalBiomeTags.IS_DRY)
             .addTag(IS_DESERT)
             .addTag(IS_PLAINS)
             .addTag(IS_SAVANNA)
             .addTag(IS_SHRUBLAND)
             .addTag(IS_TUNDRA);
         
-        this.builder(
-            //? if >=1.20.5 {
-            ConventionalBiomeTags.IS_HOT
-            //?} else {
-            /*ConventionalBiomeTags.CLIMATE_HOT
-            *///?}
-        )
+        this.builder(ConventionalBiomeTags.IS_HOT)
             .addTag(IS_DESERT)
             .addTag(IS_PLAINS)
             .addTag(IS_SEASONAL_FOREST)
             .addTag(IS_RAINFOREST);
         
-        this.builder(
-            //? if >=1.20.5 {
-            ConventionalBiomeTags.IS_TEMPERATE
-            //?} else {
-            /*ConventionalBiomeTags.CLIMATE_TEMPERATE
-            *///?}
-        )
+        this.builder(ConventionalBiomeTags.IS_TEMPERATE)
             .addTag(IS_SAVANNA)
             .addTag(IS_SHRUBLAND)
             .addTag(IS_FOREST)
             .addTag(IS_SWAMP);
         
-        this.builder(
-            //? if >=1.20.5 {
-            ConventionalBiomeTags.IS_WET
-            //?} else {
-            /*ConventionalBiomeTags.CLIMATE_WET
-            *///?}
-        )
+        this.builder(ConventionalBiomeTags.IS_WET)
             .addTag(IS_OCEAN)
             .addTag(IS_SWAMP)
             .addTag(IS_RAINFOREST);
         
-        this.builder(
-            //? if >=1.20.5 {
-            ConventionalBiomeTags.IS_DESERT
-            //?} else {
-            /*ConventionalBiomeTags.DESERT
-            *///?}
-        )
+        this.builder(ConventionalBiomeTags.IS_DESERT)
             .addTag(IS_DESERT);
         
-        this.builder(
-            //? if >=1.20.5 {
-            ConventionalBiomeTags.IS_FOREST
-            //?} else {
-            /*ConventionalBiomeTags.FOREST
-            *///?}
-        )
+        this.builder(ConventionalBiomeTags.IS_FOREST)
             .addTag(IS_FOREST)
             .addTag(IS_SEASONAL_FOREST);
         
-        this.builder(
-            //? if >=1.20.5 {
-            ConventionalBiomeTags.IS_OVERWORLD
-            //?} else {
-            /*ConventionalBiomeTags.IN_OVERWORLD
-            *///?}
-        )
+        this.builder(ConventionalBiomeTags.IS_OVERWORLD)
             .addTag(IS_MODERN_BETA);
-        
-        this.builder(
-            //? if >=1.20.5 {
-            ConventionalBiomeTags.IS_JUNGLE
-            //?} else {
-            /*ConventionalBiomeTags.JUNGLE
-            *///?}
-        )
+
+        this.builder(ConventionalBiomeTags.IS_JUNGLE)
             .addTag(IS_RAINFOREST);
         
-        this.builder(
-            //? if >=1.20.5 {
-            ConventionalBiomeTags.IS_DEEP_OCEAN
-            //?} else {
-            /*ConventionalBiomeTags.DEEP_OCEAN
-            *///?}
-        )
+        this.builder(ConventionalBiomeTags.IS_DEEP_OCEAN)
             .addTag(IS_OCEAN);
         
-        this.builder(
-            //? if >=1.20.5 {
-            ConventionalBiomeTags.IS_PLAINS
-            //?} else {
-            /*ConventionalBiomeTags.PLAINS
-            *///?}
-        )
+        this.builder(ConventionalBiomeTags.IS_PLAINS)
             .addTag(IS_PLAINS)
             .addTag(IS_SHRUBLAND);
         
-        this.builder(
-            //? if >=1.20.5 {
-            ConventionalBiomeTags.IS_SAVANNA
-            //?} else {
-            /*ConventionalBiomeTags.SAVANNA
-            *///?}
-        )
+        this.builder(ConventionalBiomeTags.IS_SAVANNA)
             .addTag(IS_SAVANNA);
         
-        this.builder(
-            //? if >=1.20.5 {
-            ConventionalBiomeTags.IS_SHALLOW_OCEAN
-            //?} else {
-            /*ConventionalBiomeTags.SHALLOW_OCEAN
-            *///?}
-        )
+        this.builder(ConventionalBiomeTags.IS_SHALLOW_OCEAN)
             .addTag(IS_OCEAN);
         
-        this.builder(
-            //? if >=1.20.5 {
-            ConventionalBiomeTags.IS_SNOWY
-            //?} else {
-            /*ConventionalBiomeTags.SNOWY
-            *///?}
-        )
+        this.builder(ConventionalBiomeTags.IS_SNOWY)
             .addTag(IS_TAIGA)
             .addTag(IS_TUNDRA);
         
-        this.builder(
-            //? if >=1.20.5 {
-            ConventionalBiomeTags.IS_SNOWY_PLAINS
-            //?} else {
-            /*ConventionalBiomeTags.SNOWY_PLAINS
-            *///?}
-        )
+        this.builder(ConventionalBiomeTags.IS_SNOWY_PLAINS)
             .addTag(IS_TUNDRA);
         
-        this.builder(
-            //? if >=1.20.5 {
-            ConventionalBiomeTags.IS_SWAMP
-            //?} else {
-            /*ConventionalBiomeTags.SWAMP
-            *///?}
-        )
+        this.builder(ConventionalBiomeTags.IS_SWAMP)
             .addTag(IS_SWAMP);
         
-        this.builder(
-            //? if >=1.20.5 {
-            ConventionalBiomeTags.IS_TAIGA
-            //?} else {
-            /*ConventionalBiomeTags.TAIGA
-            *///?}
-        )
+        this.builder(ConventionalBiomeTags.IS_TAIGA)
             .addTag(IS_TAIGA);
         
-        this.builder(
-            //? if >=1.20.5 {
-            ConventionalBiomeTags.IS_CONIFEROUS_TREE
-            //?} else {
-            /*ConventionalBiomeTags.TREE_CONIFEROUS
-            *///?}
-        )
+        this.builder(ConventionalBiomeTags.IS_CONIFEROUS_TREE)
             .addTag(IS_TAIGA);
         
-        this.builder(
-            //? if >=1.20.5 {
-            ConventionalBiomeTags.IS_DECIDUOUS_TREE
-            //?} else {
-            /*ConventionalBiomeTags.TREE_DECIDUOUS
-            *///?}
-        )
+        this.builder(ConventionalBiomeTags.IS_DECIDUOUS_TREE)
             .addTag(IS_FOREST)
             .addTag(IS_SEASONAL_FOREST);
         
-        this.builder(
-            //? if >=1.20.5 {
-            ConventionalBiomeTags.IS_JUNGLE_TREE
-            //?} else {
-            /*ConventionalBiomeTags.TREE_JUNGLE
-            *///?}
-        )
+        this.builder(ConventionalBiomeTags.IS_JUNGLE_TREE)
             .addTag(IS_RAINFOREST);
         
-        this.builder(
-            //? if >=1.20.5 {
-            ConventionalBiomeTags.IS_SAVANNA_TREE
-            //?} else {
-            /*ConventionalBiomeTags.TREE_SAVANNA
-            *///?}
-        )
+        this.builder(ConventionalBiomeTags.IS_SAVANNA_TREE)
             .addTag(IS_SAVANNA);
         
-        this.builder(
-            //? if >=1.20.5 {
-            ConventionalBiomeTags.IS_VEGETATION_DENSE
-            //?} else {
-            /*ConventionalBiomeTags.VEGETATION_DENSE
-            *///?}
-        )
+        this.builder(ConventionalBiomeTags.IS_VEGETATION_DENSE)
             .addTag(IS_RAINFOREST)
             .addTag(IS_PLAINS);
         
-        this.builder(
-            //? if >=1.20.5 {
-            ConventionalBiomeTags.IS_VEGETATION_SPARSE
-            //?} else {
-            /*ConventionalBiomeTags.VEGETATION_SPARSE
-            *///?}
-        )
+        this.builder(ConventionalBiomeTags.IS_VEGETATION_SPARSE)
             .addTag(IS_DESERT)
             .addTag(IS_SAVANNA)
             .addTag(IS_SHRUBLAND)

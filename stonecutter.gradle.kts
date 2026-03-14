@@ -54,6 +54,17 @@ stonecutter.parameters {
         }
 
         string(eval(current.version, "<1.20.5")) {
+            replace("ConventionalBiomeTags.IS_COLD", "ConventionalBiomeTags.CLIMATE_COLD")
+            replace("ConventionalBiomeTags.IS_DRY", "ConventionalBiomeTags.CLIMATE_DRY")
+            replace("ConventionalBiomeTags.IS_HOT", "ConventionalBiomeTags.CLIMATE_HOT")
+            replace("ConventionalBiomeTags.IS_TEMPERATE", "ConventionalBiomeTags.CLIMATE_TEMPERATE")
+            replace("ConventionalBiomeTags.IS_WET", "ConventionalBiomeTags.CLIMATE_WET")
+            replace("ConventionalBiomeTags.IS_OVERWORLD", "ConventionalBiomeTags.IN_OVERWORLD")
+            replace("ConventionalBiomeTags.IS_CONIFEROUS_TREE", "ConventionalBiomeTags.TREE_CONIFEROUS")
+            replace("ConventionalBiomeTags.IS_DECIDUOUS_TREE", "ConventionalBiomeTags.TREE_DECIDUOUS")
+            replace("ConventionalBiomeTags.IS_JUNGLE_TREE", "ConventionalBiomeTags.TREE_JUNGLE")
+            replace("ConventionalBiomeTags.IS_SAVANNA_TREE", "ConventionalBiomeTags.TREE_SAVANNA")
+            replace("ConventionalBiomeTags.IS_", "ConventionalBiomeTags.")
             replace("com.mojang.serialization.MapCodec<", "com.mojang.serialization./*Map*/Codec<")
             replace("com.mojang.serialization.MapCodec.", "com.mojang.serialization./*Map*/Codec.")
             replace("BootstrapContext", "BootstapContext")

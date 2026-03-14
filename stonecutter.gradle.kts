@@ -54,6 +54,7 @@ stonecutter.parameters {
         }
 
         string(eval(current.version, "<1.20.5")) {
+            replace("net.fabricmc.fabric.api.tag.convention.v2.ConventionalBiomeTags", "net.fabricmc.fabric.api.tag.convention.v1.ConventionalBiomeTags")
             replace("ConventionalBiomeTags.IS_COLD", "ConventionalBiomeTags.CLIMATE_COLD")
             replace("ConventionalBiomeTags.IS_DRY", "ConventionalBiomeTags.CLIMATE_DRY")
             replace("ConventionalBiomeTags.IS_HOT", "ConventionalBiomeTags.CLIMATE_HOT")

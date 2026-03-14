@@ -4,11 +4,7 @@ import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomes;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
-//? if >=1.20.5 {
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBiomeTags;
-//?} else {
-/*import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBiomeTags;
- *///?}
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.core.registries.Registries;

@@ -122,6 +122,7 @@ stonecutter.parameters {
             replace("FabricTagProvider", "FabricTagsProvider")
             replace(".BlockTagProvider", ".BlockTagsProvider")
             replace(".playS2C()", ".clientboundPlay()")
+            replace("RegisterColorHandlersEvent.Block", "RegisterColorHandlersEvent.BlockTintSources")
             replace("ChunkPos.asLong", "ChunkPos.pack")
             replace("chunk.getPos().x", "chunk.getPos().x()")
             replace("chunk.getPos().z", "chunk.getPos().z()")

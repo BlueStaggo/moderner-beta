@@ -68,7 +68,7 @@ stonecutter {
         branch("fabric")
         branch("forgelike") {
             versions("1.20.1").buildscript("build-lexforge.gradle.kts")
-            versions("1.21.1", "1.21.6", "1.21.9", "1.21.11")
+            versions("1.21.1", "1.21.6", "1.21.9", "1.21.11", "26.1")
         }
 
         vcsVersion = "1.21.6"

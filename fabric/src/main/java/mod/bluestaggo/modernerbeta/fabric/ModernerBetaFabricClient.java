@@ -82,10 +82,23 @@ public class ModernerBetaFabricClient implements ClientModInitializer {
             public java.util.concurrent.CompletableFuture<Void> reload(
                 PreparationBarrier barrier,
                 net.minecraft.server.packs.resources.ResourceManager manager,
+                //? if <1.21.2 {
+                /*net.minecraft.util.profiling.ProfilerFiller preparationsProfiler,
+                net.minecraft.util.profiling.ProfilerFiller reloadProfiler,
+                *///? }
                 java.util.concurrent.Executor backgroundExecutor,
                 java.util.concurrent.Executor gameExecutor
             ) {
-                return listener.reload(barrier, manager, backgroundExecutor, gameExecutor);
+                return listener.reload(
+                    barrier,
+                    manager,
+                    //? if <1.21.2 {
+                    /*preparationsProfiler,
+                    reloadProfiler,
+                    *///? }
+                    backgroundExecutor,
+                    gameExecutor
+                );
             }
         });
         //? }

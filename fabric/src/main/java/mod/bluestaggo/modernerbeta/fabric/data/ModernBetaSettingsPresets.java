@@ -2274,7 +2274,7 @@ public final class ModernBetaSettingsPresets {
                         ExtendedBiomeId.of("minecraft:windswept_forest"),
                         modernBiomes ? ExtendedBiomeId.of("minecraft:meadow") : null,
                         modernBiomes ? ExtendedBiomeId.of("minecraft:cherry_grove") : null,
-                    ).filter(Objects::nonNull).collect(Collectors.toSet())
+                    ).filter(Objects::nonNull).collect(Collectors.toSet()),
                     oceansPredicate,
                     ExtendedBiomeId.of("minecraft:stony_shore")
                 ),

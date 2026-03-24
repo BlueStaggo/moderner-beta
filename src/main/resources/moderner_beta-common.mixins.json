@@ -4,6 +4,7 @@
   "package": "mod.bluestaggo.modernerbeta.mixin",
   "plugin": "mod.bluestaggo.modernerbeta.mixin.ModernerBetaMixinPlugin",
   "compatibilityLevel": "JAVA_${java_version}",
+  "refmap": "moderner_beta.refmap.json",
   "injectors": {
     "defaultRequire": 1
   }

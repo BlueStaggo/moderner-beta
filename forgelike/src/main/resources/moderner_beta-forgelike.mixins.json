@@ -3,6 +3,7 @@
   "minVersion": "0.8",
   "package": "mod.bluestaggo.modernerbeta.forgelike.mixin",
   "plugin": "mod.bluestaggo.modernerbeta.forgelike.mixin.ModernerBetaForgeLikeMixinPlugin",
+  "refmap": "moderner_beta.refmap.json",
   "compatibilityLevel": "JAVA_${java_version}",
   "injectors": {
     "defaultRequire": 1

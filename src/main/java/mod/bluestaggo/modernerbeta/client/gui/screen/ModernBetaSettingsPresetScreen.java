@@ -225,7 +225,9 @@ public class ModernBetaSettingsPresetScreen<T extends NameAndDescriptionItem> ex
 
             @Override
             public void
-            //? if >=1.21.9 {
+            //? if >=26.1 {
+            /*extractContent
+            *///? } else if >=1.21.9 {
             /*renderContent
             *///? } else {
             render

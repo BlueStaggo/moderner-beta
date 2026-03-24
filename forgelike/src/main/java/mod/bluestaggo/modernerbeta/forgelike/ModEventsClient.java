@@ -2,8 +2,8 @@ package mod.bluestaggo.modernerbeta.forgelike;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.client.ModernerBetaClient;
-import mod.bluestaggo.modernerbeta.client.color.BlockColorSampler;
-import mod.bluestaggo.modernerbeta.client.color.BlockColors;
+import mod.bluestaggo.modernerbeta.client.color.block.BlockColorSampler;
+import mod.bluestaggo.modernerbeta.client.color.block.BlockColors;
 import mod.bluestaggo.modernerbeta.client.gui.screen.config.graphical.ModernBetaGraphicalConfigSettingsScreen;
 import mod.bluestaggo.modernerbeta.client.registry.ModernBetaClientRegistries;
 import mod.bluestaggo.modernerbeta.client.resource.ModernBetaColormapReloadListener;

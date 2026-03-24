@@ -9,6 +9,7 @@ on:
       - '**/*.gradle'
       - '**/*.kts'
       - '**/*.json'
+      - '**/*.properties'
       - '.forgejo/workflows/build.yml'
     tags:
       - '!**'
@@ -20,6 +21,7 @@ on:
       - '**/*.gradle'
       - '**/*.kts'
       - '**/*.json'
+      - '**/*.properties'
 
 jobs:
   build:
@@ -28,10 +30,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Set up JDK 21
+    - name: Set up JDK 25
       uses: https://github.com/actions/setup-java@v4
       with:
-        java-version: '21'
+        java-version: '25'
         distribution: 'temurin'
     - name: Run Data Generation
       run: ./gradlew runDatagen
@@ -47,7 +49,7 @@ jobs:
       id: get-branch
       shell: bash
       run: |
-        echo "branch=${FORGEJO_HEAD_REF:-${FORGEJO_REF#refs/heads/}}" >> $FORGEJO_OUTPUT
+        echo "branch=$(echo ${FORGEJO_HEAD_REF:-${FORGEJO_REF#refs/heads/}} | sed -e 's/[ \t:\/\\"<>|*?]/-/g' -e 's/--*/-/g')" >> $FORGEJO_OUTPUT
     - name: Upload build artifacts
       uses: https://code.forgejo.org/forgejo/upload-artifact@v4
       with:

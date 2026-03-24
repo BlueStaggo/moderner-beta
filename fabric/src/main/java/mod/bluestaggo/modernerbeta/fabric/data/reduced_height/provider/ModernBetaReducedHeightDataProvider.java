@@ -3,7 +3,6 @@ package mod.bluestaggo.modernerbeta.fabric.data.reduced_height.provider;
 import com.mojang.datafixers.util.Either;
 import mod.bluestaggo.modernerbeta.fabric.data.reduced_height.ModernBetaReducedHeightNoiseSettings;
 import mod.bluestaggo.modernerbeta.level.carver.configured.ModernBetaConfiguredCarvers;
-import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaNoiseSettings;
 import mod.bluestaggo.modernerbeta.level.feature.configured.ModernBetaConfiguredFeatures;
 import mod.bluestaggo.modernerbeta.mixin.NoiseRouterDataAccessor;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -44,7 +43,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.OptionalLong;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -70,7 +68,7 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
             BuiltinDimensionTypes.OVERWORLD,
             new DimensionType(
                 //? if <1.21.11 {
-                OptionalLong.empty(),
+                java.util.OptionalLong.empty(),
                 true,
                 false,
                 false,
@@ -79,6 +77,8 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
                 /*false,
                 true,
                 false,
+                //? if >=26.1
+                //false,
                 *///? }
                 1.0,
                 //? if <1.21.11 {
@@ -111,6 +111,9 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
                     .set(EnvironmentAttributes.AMBIENT_SOUNDS, AmbientSounds.LEGACY_CAVE_SETTINGS)
                     .build(),
                 provider.lookupOrThrow(Registries.TIMELINE).getOrThrow(net.minecraft.tags.TimelineTags.IN_OVERWORLD)
+                *///? }
+                //? if >=26.1 {
+                /*, Optional.of(provider.lookupOrThrow(Registries.WORLD_CLOCK).getOrThrow(net.minecraft.world.clock.WorldClocks.OVERWORLD))
                 *///? }
             )
         );
@@ -169,7 +172,7 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
 
         //Placed features
         HolderGetter<ConfiguredFeature<?, ?>> registryConfiguredFeature = provider.lookupOrThrow(Registries.CONFIGURED_FEATURE);
-        Holder<ConfiguredFeature<?, ?>> noOp = new Holder.Direct<>(new ConfiguredFeature<>(Feature.NO_OP, NoneFeatureConfiguration.NONE));
+        Holder<ConfiguredFeature<?, ?>> noOp = Holder.direct(new ConfiguredFeature<>(Feature.NO_OP, NoneFeatureConfiguration.NONE));
         Holder<ConfiguredFeature<?, ?>> dirt = registryConfiguredFeature.getOrThrow(OreFeatures.ORE_DIRT);
         Holder<ConfiguredFeature<?, ?>> gravel = registryConfiguredFeature.getOrThrow(OreFeatures.ORE_GRAVEL);
         Holder<ConfiguredFeature<?, ?>> granite = registryConfiguredFeature.getOrThrow(OreFeatures.ORE_GRANITE);
@@ -360,6 +363,13 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
                 return holder.isBound();
             }
 
+            //? if >=26.1 {
+            /*@Override
+            public boolean areComponentsBound() {
+                return holder.areComponentsBound();
+            }
+            *///? }
+
             @Override
             public boolean is(ResourceLocation id) {
                 return holder.is(id);
@@ -392,6 +402,13 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
             public @NotNull Stream<TagKey<T>> tags() {
                 return holder.tags();
             }
+
+            //? if >=26.1 {
+            /*@Override
+            public net.minecraft.core.component.DataComponentMap components() {
+                return holder.components();
+            }
+            *///? }
 
             @Override
             public @NotNull Either<ResourceKey<T>, T> unwrap() {

@@ -22,14 +22,14 @@ logoFile = "assets/moderner_beta/banner.png"
 
 [[dependencies.moderner_beta]]
 modId = "${loader}"
-${mandatory}
-versionRange = "${loader_version_range}"
+mandatory = true
+versionRange = "${forgelike_loader_version_range}"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.moderner_beta]]
 modId = "minecraft"
-${mandatory}
-versionRange = "${minecraft_version_range}"
+mandatory = true
+versionRange = "${forgelike_minecraft_version_range}"
 ordering = "NONE"
 side = "BOTH"

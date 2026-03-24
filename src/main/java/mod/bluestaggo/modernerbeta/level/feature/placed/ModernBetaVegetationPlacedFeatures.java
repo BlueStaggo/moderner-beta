@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import mod.bluestaggo.modernerbeta.level.feature.ModernBetaFeatureTags;
 import mod.bluestaggo.modernerbeta.level.feature.configured.ModernBetaVegetationConfiguredFeatures;
 import mod.bluestaggo.modernerbeta.level.feature.placement.*;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.Vec3i;
@@ -18,17 +19,12 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.VerticalAnchor;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
-import net.minecraft.world.level.levelgen.placement.BiomeFilter;
-import net.minecraft.world.level.levelgen.placement.BlockPredicateFilter;
-import net.minecraft.world.level.levelgen.placement.CountPlacement;
-import net.minecraft.world.level.levelgen.placement.HeightRangePlacement;
-import net.minecraft.world.level.levelgen.placement.InSquarePlacement;
-import net.minecraft.world.level.levelgen.placement.PlacedFeature;
-import net.minecraft.world.level.levelgen.placement.PlacementModifier;
-import net.minecraft.world.level.levelgen.placement.RarityFilter;
-import net.minecraft.world.level.levelgen.placement.SurfaceWaterDepthFilter;
+import net.minecraft.world.level.levelgen.placement.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class ModernBetaVegetationPlacedFeatures {
@@ -148,16 +144,28 @@ public class ModernBetaVegetationPlacedFeatures {
     public static void bootstrap(BootstrapContext<PlacedFeature> context) {
         HolderGetter<ConfiguredFeature<?, ?>> registryConfigured = context.lookup(Registries.CONFIGURED_FEATURE);
 
+        //? if >=26.1 {
+        /*Holder.Reference<ConfiguredFeature<?, ?>> patchCactus = registryConfigured.getOrThrow(VegetationFeatures.CACTUS);
+        Holder.Reference<ConfiguredFeature<?, ?>> mushroomHell = registryConfigured.getOrThrow(ModernBetaVegetationConfiguredFeatures.MUSHROOM);
+
+        Holder.Reference<ConfiguredFeature<?, ?>> patchDandelion = registryConfigured.getOrThrow(ModernBetaVegetationConfiguredFeatures.DANDELION);
+        Holder.Reference<ConfiguredFeature<?, ?>> patchPoppy = registryConfigured.getOrThrow(ModernBetaVegetationConfiguredFeatures.POPPY);
+        Holder.Reference<ConfiguredFeature<?, ?>> patchDandelionInfdev227 = patchDandelion;
+
+        Holder.Reference<ConfiguredFeature<?, ?>> patchGrass = registryConfigured.getOrThrow(ModernBetaVegetationConfiguredFeatures.GRASS);
+        Holder.Reference<ConfiguredFeature<?, ?>> patchGrassLush = registryConfigured.getOrThrow(ModernBetaVegetationConfiguredFeatures.GRASS_LUSH);
+        *///? } else {
         Holder.Reference<ConfiguredFeature<?, ?>> patchCactus = registryConfigured.getOrThrow(VegetationFeatures.PATCH_CACTUS);
         Holder.Reference<ConfiguredFeature<?, ?>> mushroomHell = registryConfigured.getOrThrow(ModernBetaVegetationConfiguredFeatures.MUSHROOM_HELL);
-        
+
         Holder.Reference<ConfiguredFeature<?, ?>> patchDandelion = registryConfigured.getOrThrow(ModernBetaVegetationConfiguredFeatures.PATCH_DANDELION);
         Holder.Reference<ConfiguredFeature<?, ?>> patchPoppy = registryConfigured.getOrThrow(ModernBetaVegetationConfiguredFeatures.PATCH_POPPY);
-        Holder.Reference<ConfiguredFeature<?, ?>> flowerDefault = registryConfigured.getOrThrow(VegetationFeatures.FLOWER_DEFAULT);
         Holder.Reference<ConfiguredFeature<?, ?>> patchDandelionInfdev227 = registryConfigured.getOrThrow(ModernBetaVegetationConfiguredFeatures.PATCH_DANDELION_INFDEV_227);
-        
+
         Holder.Reference<ConfiguredFeature<?, ?>> patchGrass = registryConfigured.getOrThrow(ModernBetaVegetationConfiguredFeatures.PATCH_GRASS);
         Holder.Reference<ConfiguredFeature<?, ?>> patchGrassLush = registryConfigured.getOrThrow(ModernBetaVegetationConfiguredFeatures.PATCH_GRASS_LUSH);
+        //? }
+        Holder.Reference<ConfiguredFeature<?, ?>> flowerDefault = registryConfigured.getOrThrow(VegetationFeatures.FLOWER_DEFAULT);
 
         Holder.Reference<ConfiguredFeature<?, ?>> treesAlpha = registryConfigured.getOrThrow(ModernBetaVegetationConfiguredFeatures.TREES_ALPHA);
         Holder.Reference<ConfiguredFeature<?, ?>> treesInfdev611 = registryConfigured.getOrThrow(ModernBetaVegetationConfiguredFeatures.TREES_INFDEV_611);
@@ -205,22 +213,22 @@ public class ModernBetaVegetationPlacedFeatures {
         Holder.Reference<ConfiguredFeature<?, ?>> treesIndevWoodsBees = registryConfigured.getOrThrow(ModernBetaVegetationConfiguredFeatures.TREES_INDEV_WOODS_BEES);
         Holder.Reference<ConfiguredFeature<?, ?>> treesClassic14a08Bees = registryConfigured.getOrThrow(ModernBetaVegetationConfiguredFeatures.TREES_CLASSIC_14A_08_BEES);
 
-        PlacementUtils.register(context, PATCH_CACTUS_ALPHA, patchCactus, CountPlacement.of(2), InSquarePlacement.spread(), HEIGHTMAP_SPREAD_DOUBLE, BiomeFilter.biome());
-        PlacementUtils.register(context, PATCH_CACTUS_PE, patchCactus, CountPlacement.of(5), InSquarePlacement.spread(), HEIGHTMAP_SPREAD_DOUBLE, BiomeFilter.biome());
-        PlacementUtils.register(context, MUSHROOM_HELL, mushroomHell, CountPlacement.of(1), InSquarePlacement.spread(), MOTION_BLOCKING_HEIGHTMAP, BiomeFilter.biome());
+        PlacementUtils.register(context, PATCH_CACTUS_ALPHA, patchCactus, makePatch(10, BlockPredicate.allOf(BlockPredicate.ONLY_IN_AIR_PREDICATE, BlockPredicate.wouldSurvive(Blocks.CACTUS.defaultBlockState(), BlockPos.ZERO)), CountPlacement.of(2), InSquarePlacement.spread(), HEIGHTMAP_SPREAD_DOUBLE, BiomeFilter.biome()));
+        PlacementUtils.register(context, PATCH_CACTUS_PE, patchCactus, makePatch(10, BlockPredicate.allOf(BlockPredicate.ONLY_IN_AIR_PREDICATE, BlockPredicate.wouldSurvive(Blocks.CACTUS.defaultBlockState(), BlockPos.ZERO)), CountPlacement.of(5), InSquarePlacement.spread(), HEIGHTMAP_SPREAD_DOUBLE, BiomeFilter.biome()));
+        PlacementUtils.register(context, MUSHROOM_HELL, mushroomHell, makePatch(CountPlacement.of(1), InSquarePlacement.spread(), MOTION_BLOCKING_HEIGHTMAP, BiomeFilter.biome()));
         
-        PlacementUtils.register(context, PATCH_DANDELION_2, patchDandelion, CountPlacement.of(2), InSquarePlacement.spread(), HEIGHT_RANGE_128, BiomeFilter.biome());
-        PlacementUtils.register(context, PATCH_DANDELION_3, patchDandelion, CountPlacement.of(3), InSquarePlacement.spread(), HEIGHT_RANGE_128, BiomeFilter.biome());
-        PlacementUtils.register(context, PATCH_DANDELION_4, patchDandelion, CountPlacement.of(4), InSquarePlacement.spread(), HEIGHT_RANGE_128, BiomeFilter.biome());
-        PlacementUtils.register(context, PATCH_DANDELION, patchDandelion, withCountExtraModifier(0, 0.5f, 1), InSquarePlacement.spread(), HEIGHT_RANGE_128, BiomeFilter.biome());
-        PlacementUtils.register(context, PATCH_POPPY, patchPoppy, withCountExtraModifier(0, 0.5f, 1), InSquarePlacement.spread(), HEIGHT_RANGE_128, BiomeFilter.biome());
+        PlacementUtils.register(context, PATCH_DANDELION_2, patchDandelion, makePatch(CountPlacement.of(2), InSquarePlacement.spread(), HEIGHT_RANGE_128, BiomeFilter.biome()));
+        PlacementUtils.register(context, PATCH_DANDELION_3, patchDandelion, makePatch(CountPlacement.of(3), InSquarePlacement.spread(), HEIGHT_RANGE_128, BiomeFilter.biome()));
+        PlacementUtils.register(context, PATCH_DANDELION_4, patchDandelion, makePatch(CountPlacement.of(4), InSquarePlacement.spread(), HEIGHT_RANGE_128, BiomeFilter.biome()));
+        PlacementUtils.register(context, PATCH_DANDELION, patchDandelion, makePatch(withCountExtraModifier(0, 0.5f, 1), InSquarePlacement.spread(), HEIGHT_RANGE_128, BiomeFilter.biome()));
+        PlacementUtils.register(context, PATCH_POPPY, patchPoppy, makePatch(withCountExtraModifier(0, 0.5f, 1), InSquarePlacement.spread(), HEIGHT_RANGE_128, BiomeFilter.biome()));
         PlacementUtils.register(context, PATCH_FLOWER_PARADISE, flowerDefault, CountPlacement.of(20), InSquarePlacement.spread(), HEIGHT_RANGE_128, BiomeFilter.biome());
         PlacementUtils.register(context, PATCH_DANDELION_INFDEV_227, patchDandelionInfdev227, CountPlacement.of(UniformInt.of(0, 10)), InSquarePlacement.spread(), SURFACE_WATER_DEPTH, PlacementUtils.HEIGHTMAP_OCEAN_FLOOR, BiomeFilter.biome());
     
-        PlacementUtils.register(context, PATCH_GRASS_PLAINS_10, patchGrass, CountPlacement.of(10), InSquarePlacement.spread(), WORLD_SURFACE_WG_HEIGHTMAP, BiomeFilter.biome());
-        PlacementUtils.register(context, PATCH_GRASS_TAIGA_1, patchGrass, CountPlacement.of(1), InSquarePlacement.spread(), WORLD_SURFACE_WG_HEIGHTMAP, BiomeFilter.biome());
-        PlacementUtils.register(context, PATCH_GRASS_RAINFOREST_10, patchGrassLush, CountPlacement.of(10), InSquarePlacement.spread(), WORLD_SURFACE_WG_HEIGHTMAP, BiomeFilter.biome());
-        PlacementUtils.register(context, PATCH_GRASS_ALPHA_2, patchGrass, withCountExtraModifier(0, 0.05f, 1), InSquarePlacement.spread(), WORLD_SURFACE_WG_HEIGHTMAP, BiomeFilter.biome());
+        PlacementUtils.register(context, PATCH_GRASS_PLAINS_10, patchGrass, makePatch(CountPlacement.of(10), InSquarePlacement.spread(), WORLD_SURFACE_WG_HEIGHTMAP, BiomeFilter.biome()));
+        PlacementUtils.register(context, PATCH_GRASS_TAIGA_1, patchGrass, makePatch(InSquarePlacement.spread(), WORLD_SURFACE_WG_HEIGHTMAP, BiomeFilter.biome()));
+        PlacementUtils.register(context, PATCH_GRASS_RAINFOREST_10, patchGrassLush, makePatch(CountPlacement.of(10), InSquarePlacement.spread(), WORLD_SURFACE_WG_HEIGHTMAP, BiomeFilter.biome()));
+        PlacementUtils.register(context, PATCH_GRASS_ALPHA_2, patchGrass, makePatch(withCountExtraModifier(0, 0.05f, 1), InSquarePlacement.spread(), WORLD_SURFACE_WG_HEIGHTMAP, BiomeFilter.biome()));
         
         PlacementUtils.register(context, TREES_ALPHA, treesAlpha, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_ALPHA, NoiseBasedCountPlacementModifierAlpha.of(0, 0.1f, 1)));
         PlacementUtils.register(context, TREES_INFDEV_611, treesInfdev611, withNoiseBasedCountModifier(ModernBetaFeatureTags.TREES_INFDEV_611, NoiseBasedCountPlacementModifierInfdev611.of(0, 0.1f, 1)));
@@ -267,5 +275,26 @@ public class ModernBetaVegetationPlacedFeatures {
         PlacementUtils.register(context, TREES_INDEV_BEES, treesIndevBees, RarityFilter.onAverageOnceEvery(3), withCountExtraModifier(5, 0.1f, 1), InSquarePlacement.spread(), SURFACE_WATER_DEPTH, PlacementUtils.HEIGHTMAP_OCEAN_FLOOR, BiomeFilter.biome());
         PlacementUtils.register(context, TREES_INDEV_WOODS_BEES, treesIndevWoodsBees, withCountExtraModifier(30, 0.1f, 1), InSquarePlacement.spread(), SURFACE_WATER_DEPTH, PlacementUtils.HEIGHTMAP_OCEAN_FLOOR, BiomeFilter.biome());
         PlacementUtils.register(context, TREES_CLASSIC_14A_08_BEES, treesClassic14a08Bees, RarityFilter.onAverageOnceEvery(5), withCountExtraModifier(20, 0.1f, 1), InSquarePlacement.spread(), SURFACE_WATER_DEPTH, PlacementUtils.HEIGHTMAP_OCEAN_FLOOR, BiomeFilter.biome());
+    }
+
+    private static List<PlacementModifier> makePatch(PlacementModifier... baseModifiers) {
+        return makePatch(64, baseModifiers);
+    }
+
+    private static List<PlacementModifier> makePatch(int count, PlacementModifier... baseModifiers) {
+        return makePatch(count, BlockPredicate.ONLY_IN_AIR_PREDICATE, baseModifiers);
+    }
+
+    private static List<PlacementModifier> makePatch(int count, BlockPredicate blockPredicate, PlacementModifier... baseModifiers) {
+        List<PlacementModifier> list = Arrays.stream(baseModifiers)
+                .collect(Collectors.toCollection(ArrayList::new));
+
+        //? if >=26.1 {
+        /*list.add(CountPlacement.of(count));
+        list.add(RandomOffsetPlacement.ofTriangle(7, 3));
+        list.add(BlockPredicateFilter.forPredicate(blockPredicate));
+        *///? }
+
+        return list;
     }
 }

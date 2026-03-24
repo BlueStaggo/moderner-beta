@@ -54,7 +54,8 @@
   ],
   "depends": {
     "fabricloader": ">=0.16.0",
-    "fabric": "*",
-    "minecraft": "${minecraft_version_range}"
-  }
+    "fabric-api": "*",
+    "minecraft": "${fabric_minecraft_version_range}"
+  },
+  "accessWidener": "moderner_beta.accesswidener"
 }

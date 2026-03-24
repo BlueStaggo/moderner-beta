@@ -4,7 +4,7 @@ package mod.bluestaggo.modernerbeta.mixin.client;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import mod.bluestaggo.modernerbeta.api.level.biome.climate.Clime;
-import mod.bluestaggo.modernerbeta.client.color.BlockColorSampler;
+import mod.bluestaggo.modernerbeta.client.color.block.BlockColorSampler;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.fog.environment.WaterFogEnvironment;

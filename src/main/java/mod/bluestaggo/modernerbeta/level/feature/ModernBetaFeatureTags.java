@@ -10,8 +10,7 @@ public class ModernBetaFeatureTags {
     public static final String CAVE_INFDEV_325 = "cave_infdev_325";
 
     //? if >=26.1 {
-    /*public static final String MUSHROOM = "mushroom";
-    public static final String DANDELION = "dandelion";
+    /*public static final String DANDELION = "dandelion";
     public static final String POPPY = "poppy";
     public static final String GRASS = "grass";
     public static final String GRASS_LUSH = "grass_lush";
@@ -19,8 +18,10 @@ public class ModernBetaFeatureTags {
 
     public static final String PATCH_CACTUS_ALPHA = "patch_cactus";
     public static final String PATCH_CACTUS_PE = "patch_cactus_pe";
+    public static final String PATCH_BROWN_MUSHROOM = "patch_brown_mushroom";
+    public static final String PATCH_RED_MUSHROOM = "patch_red_mushroom";
     public static final String MUSHROOM_HELL = "mushroom_hell";
-    
+
     public static final String PATCH_DANDELION_2 = "patch_dandelion_2";
     public static final String PATCH_DANDELION_3 = "patch_dandelion_3";
     public static final String PATCH_DANDELION_4 = "patch_dandelion_4";

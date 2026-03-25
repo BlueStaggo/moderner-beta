@@ -80,8 +80,10 @@ public class ModernBetaVegetationPlacedFeatures {
     
     public static final ResourceKey<PlacedFeature> PATCH_CACTUS_ALPHA = ModernBetaPlacedFeatures.of(ModernBetaFeatureTags.PATCH_CACTUS_ALPHA);
     public static final ResourceKey<PlacedFeature> PATCH_CACTUS_PE = ModernBetaPlacedFeatures.of(ModernBetaFeatureTags.PATCH_CACTUS_PE);
+    public static final ResourceKey<PlacedFeature> PATCH_BROWN_MUSHROOM = ModernBetaPlacedFeatures.of(ModernBetaFeatureTags.PATCH_BROWN_MUSHROOM);
+    public static final ResourceKey<PlacedFeature> PATCH_RED_MUSHROOM = ModernBetaPlacedFeatures.of(ModernBetaFeatureTags.PATCH_RED_MUSHROOM);
     public static final ResourceKey<PlacedFeature> MUSHROOM_HELL = ModernBetaPlacedFeatures.of(ModernBetaFeatureTags.MUSHROOM_HELL);
-    
+
     public static final ResourceKey<PlacedFeature> PATCH_DANDELION_2 = ModernBetaPlacedFeatures.of(ModernBetaFeatureTags.PATCH_DANDELION_2);
     public static final ResourceKey<PlacedFeature> PATCH_DANDELION_3 = ModernBetaPlacedFeatures.of(ModernBetaFeatureTags.PATCH_DANDELION_3);
     public static final ResourceKey<PlacedFeature> PATCH_DANDELION_4 = ModernBetaPlacedFeatures.of(ModernBetaFeatureTags.PATCH_DANDELION_4);
@@ -146,7 +148,9 @@ public class ModernBetaVegetationPlacedFeatures {
 
         //? if >=26.1 {
         /*Holder.Reference<ConfiguredFeature<?, ?>> patchCactus = registryConfigured.getOrThrow(VegetationFeatures.CACTUS);
-        Holder.Reference<ConfiguredFeature<?, ?>> mushroomHell = registryConfigured.getOrThrow(ModernBetaVegetationConfiguredFeatures.MUSHROOM);
+        Holder.Reference<ConfiguredFeature<?, ?>> patchBrownMushroom = registryConfigured.getOrThrow(VegetationFeatures.BROWN_MUSHROOM);
+        Holder.Reference<ConfiguredFeature<?, ?>> patchRedMushroom = registryConfigured.getOrThrow(VegetationFeatures.RED_MUSHROOM);
+        Holder.Reference<ConfiguredFeature<?, ?>> mushroomHell = registryConfigured.getOrThrow(ModernBetaVegetationConfiguredFeatures.MUSHROOM_HELL);
 
         Holder.Reference<ConfiguredFeature<?, ?>> patchDandelion = registryConfigured.getOrThrow(ModernBetaVegetationConfiguredFeatures.DANDELION);
         Holder.Reference<ConfiguredFeature<?, ?>> patchPoppy = registryConfigured.getOrThrow(ModernBetaVegetationConfiguredFeatures.POPPY);
@@ -156,6 +160,8 @@ public class ModernBetaVegetationPlacedFeatures {
         Holder.Reference<ConfiguredFeature<?, ?>> patchGrassLush = registryConfigured.getOrThrow(ModernBetaVegetationConfiguredFeatures.GRASS_LUSH);
         *///? } else {
         Holder.Reference<ConfiguredFeature<?, ?>> patchCactus = registryConfigured.getOrThrow(VegetationFeatures.PATCH_CACTUS);
+        Holder.Reference<ConfiguredFeature<?, ?>> patchBrownMushroom = registryConfigured.getOrThrow(ModernBetaVegetationConfiguredFeatures.PATCH_BROWN_MUSHROOM);
+        Holder.Reference<ConfiguredFeature<?, ?>> patchRedMushroom = registryConfigured.getOrThrow(ModernBetaVegetationConfiguredFeatures.PATCH_RED_MUSHROOM);
         Holder.Reference<ConfiguredFeature<?, ?>> mushroomHell = registryConfigured.getOrThrow(ModernBetaVegetationConfiguredFeatures.MUSHROOM_HELL);
 
         Holder.Reference<ConfiguredFeature<?, ?>> patchDandelion = registryConfigured.getOrThrow(ModernBetaVegetationConfiguredFeatures.PATCH_DANDELION);
@@ -215,8 +221,10 @@ public class ModernBetaVegetationPlacedFeatures {
 
         PlacementUtils.register(context, PATCH_CACTUS_ALPHA, patchCactus, makePatch(10, BlockPredicate.allOf(BlockPredicate.ONLY_IN_AIR_PREDICATE, BlockPredicate.wouldSurvive(Blocks.CACTUS.defaultBlockState(), BlockPos.ZERO)), CountPlacement.of(2), InSquarePlacement.spread(), HEIGHTMAP_SPREAD_DOUBLE, BiomeFilter.biome()));
         PlacementUtils.register(context, PATCH_CACTUS_PE, patchCactus, makePatch(10, BlockPredicate.allOf(BlockPredicate.ONLY_IN_AIR_PREDICATE, BlockPredicate.wouldSurvive(Blocks.CACTUS.defaultBlockState(), BlockPos.ZERO)), CountPlacement.of(5), InSquarePlacement.spread(), HEIGHTMAP_SPREAD_DOUBLE, BiomeFilter.biome()));
+        PlacementUtils.register(context, PATCH_BROWN_MUSHROOM, patchBrownMushroom, makePatch(64, BlockPredicate.matchesBlocks(Blocks.AIR, Blocks.CAVE_AIR), RarityFilter.onAverageOnceEvery(4), InSquarePlacement.spread(), HEIGHT_RANGE_128, BiomeFilter.biome()));
+        PlacementUtils.register(context, PATCH_RED_MUSHROOM, patchRedMushroom, makePatch(64, BlockPredicate.matchesBlocks(Blocks.AIR, Blocks.CAVE_AIR), RarityFilter.onAverageOnceEvery(8), InSquarePlacement.spread(), HEIGHT_RANGE_128, BiomeFilter.biome()));
         PlacementUtils.register(context, MUSHROOM_HELL, mushroomHell, makePatch(CountPlacement.of(1), InSquarePlacement.spread(), MOTION_BLOCKING_HEIGHTMAP, BiomeFilter.biome()));
-        
+
         PlacementUtils.register(context, PATCH_DANDELION_2, patchDandelion, makePatch(CountPlacement.of(2), InSquarePlacement.spread(), HEIGHT_RANGE_128, BiomeFilter.biome()));
         PlacementUtils.register(context, PATCH_DANDELION_3, patchDandelion, makePatch(CountPlacement.of(3), InSquarePlacement.spread(), HEIGHT_RANGE_128, BiomeFilter.biome()));
         PlacementUtils.register(context, PATCH_DANDELION_4, patchDandelion, makePatch(CountPlacement.of(4), InSquarePlacement.spread(), HEIGHT_RANGE_128, BiomeFilter.biome()));

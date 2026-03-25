@@ -19,7 +19,7 @@ public class ModernBetaTagProviderConfiguredFeature extends FabricTagProvider<Co
     @Override
     protected void addTags(HolderLookup.Provider provider) {
         this.builder(FeatureTags.CAN_SPAWN_FROM_BONE_MEAL).add(
-            ModernBetaVegetationConfiguredFeatures.MUSHROOM,
+            ModernBetaVegetationConfiguredFeatures.MUSHROOM_HELL,
             ModernBetaVegetationConfiguredFeatures.DANDELION,
             ModernBetaVegetationConfiguredFeatures.POPPY
         );

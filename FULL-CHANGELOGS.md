@@ -5,6 +5,7 @@
 
 ## Changes
 - Fixed inaccuracies with biome generation on Major Release presets
+- Made the Bedrock carver seeding accurate.
 
 ## Fixes
 - Fixed regression with Beta beach generation caused in 4.0.0

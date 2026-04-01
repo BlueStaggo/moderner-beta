@@ -158,10 +158,10 @@ public class BiomeProviderVoronoi extends BiomeProvider implements BiomeResolver
         }
         
         public Clime sampleNoise(int x, int z) {
-            double temp = this.tempOctaveNoise.sample(x, z, this.tempNoiseScale, 0.25D);
-            double rain = this.rainOctaveNoise.sample(x, z, this.rainNoiseScale, 0.33333333333333331D);
-            double detail = this.detailOctaveNoise.sample(x, z, this.detailNoiseScale, 0.58823529411764708D);
-            double weird = this.weirdOctaveNoise.sample(x, z, this.weirdNoiseScale, 0.2941176471D);
+            double temp = this.tempOctaveNoise.sampleXZ(x, z, this.tempNoiseScale, this.tempNoiseScale, 1.0 / 4.0);
+            double rain = this.rainOctaveNoise.sampleXZ(x, z, this.rainNoiseScale, this.rainNoiseScale, 1.0 / 3.0);
+            double detail = this.detailOctaveNoise.sampleXZ(x, z, this.detailNoiseScale, this.detailNoiseScale, 1.0 / 1.7);
+            double weird = this.weirdOctaveNoise.sampleXZ(x, z, this.weirdNoiseScale, this.weirdNoiseScale, 0.5 / 1.7);
 
             detail = detail * 1.1D + 0.5D;
             weird = (weird / 1.525D + 1.0D) / 2.0D;

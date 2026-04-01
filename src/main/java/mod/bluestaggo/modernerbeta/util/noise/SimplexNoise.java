@@ -17,10 +17,10 @@ public class SimplexNoise {
     
     private static final double UNSKEW_FACTOR_2D = (3.0 - Math.sqrt(3.0)) / 6.0;
     private static final double SKEW_FACTOR_2D = 0.5 * (Math.sqrt(3.0) - 1.0);
-    
-    private static final double SKEW_FACTOR_3D = 1.0 / 3.0;
+
     private static final double UNSKEW_FACTOR_3D = 1.0 / 6.0;
-    
+    private static final double SKEW_FACTOR_3D = 1.0 / 3.0;
+
     public SimplexNoise() {
         this(new Random());
     }

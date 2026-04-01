@@ -333,7 +333,7 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
         double islandOffset = VersionCompat.clampedLerp(0.0, oceanSlideTarget, islandDelta);
             
         if (this.islesProperties.useOuterIslands() && distance > centerOceanRadius) {
-            double islandAddition = (float)this.islandNoise.sample(
+            double islandAddition = this.islandNoise.sample(
                 noiseX / outerIslandNoiseScale,
                 noiseZ / outerIslandNoiseScale,
                 1.0,

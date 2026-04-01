@@ -178,9 +178,9 @@ public class BiomeProviderBeta extends BiomeProvider implements ClimateSampler, 
         }
         
         public Clime sampleNoise(int x, int z) {
-            double temp = this.tempOctaveNoise.sample(x, z, this.tempNoiseScale, 0.25D);
-            double rain = this.rainOctaveNoise.sample(x, z, this.rainNoiseScale, 0.33333333333333331D);
-            double detail = this.detailOctaveNoise.sample(x, z, this.detailNoiseScale, 0.58823529411764708D);
+            double temp = this.tempOctaveNoise.sampleXZ(x, z, this.tempNoiseScale, this.tempNoiseScale, 1.0 / 4.0);
+            double rain = this.rainOctaveNoise.sampleXZ(x, z, this.rainNoiseScale, this.rainNoiseScale, 1.0 / 3.0);
+            double detail = this.detailOctaveNoise.sampleXZ(x, z, this.detailNoiseScale, this.detailNoiseScale, 1.0 / 1.7);
 
             detail = detail * 1.1D + 0.5D;
 
@@ -227,7 +227,7 @@ public class BiomeProviderBeta extends BiomeProvider implements ClimateSampler, 
         }
         
         private double sampleNoise(int x, int z) {
-            return this.tempOctaveNoise.sample(x, z, this.tempNoiseScale, this.tempNoiseScale, 0.5D);
+            return this.tempOctaveNoise.sampleXZ(x, z, this.tempNoiseScale, this.tempNoiseScale, 0.5D);
         }
     }
 }

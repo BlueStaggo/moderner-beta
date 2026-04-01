@@ -13,6 +13,7 @@ import mod.bluestaggo.modernerbeta.settings.component.*;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkHeightmap;
+import mod.bluestaggo.modernerbeta.util.noise.OctaveNoise;
 import mod.bluestaggo.modernerbeta.util.noise.PerlinOctaveNoise;
 import mod.bluestaggo.modernerbeta.util.noise.SimpleNoisePos;
 import mod.bluestaggo.modernerbeta.util.noise.SimplexOctaveNoise;
@@ -50,8 +51,7 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
     private final PerlinOctaveNoise maxLimitOctaveNoise;
     private final PerlinOctaveNoise mainOctaveNoise;
     private final PerlinOctaveNoise beachOctaveNoise;
-    private final PerlinOctaveNoise surfacePerlinOctaveNoise;
-    private final SimplexOctaveNoise surfaceSimplexOctaveNoise;
+    private final OctaveNoise surfaceOctaveNoise;
     private final PerlinOctaveNoise scaleOctaveNoise;
     private final PerlinOctaveNoise depthOctaveNoise;
     private final PerlinOctaveNoise forestOctaveNoise;
@@ -76,13 +76,9 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
             ? new PerlinOctaveNoise(this.random, 4, perlinSettings)
             : null;
 
-        if (noise3DSettings.simplexSurfaceNoise()) {
-            this.surfacePerlinOctaveNoise = null;
-            this.surfaceSimplexOctaveNoise = new SimplexOctaveNoise(this.random, 4);
-        } else {
-            this.surfacePerlinOctaveNoise = new PerlinOctaveNoise(this.random, 4, perlinSettings);
-            this.surfaceSimplexOctaveNoise = null;
-        }
+        this.surfaceOctaveNoise = noise3DSettings.simplexSurfaceNoise()
+            ? new SimplexOctaveNoise(this.random, 4)
+            : new PerlinOctaveNoise(this.random, 4, perlinSettings);
 
         if (noiseLandmass.scale().enabled()) {
             this.scaleOctaveNoise = new PerlinOctaveNoise(this.random, 10, perlinSettings);
@@ -164,7 +160,7 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
             gravelScale, 1.0D, gravelScale
         ) : null;
 
-        double[] surfaceNoise = surfacePerlinOctaveNoise != null && noise3DSettings.arraySurfaceNoise() ? surfacePerlinOctaveNoise.sampleArray(
+        double[] surfaceNoise = !noise3DSettings.simplexSurfaceNoise() && noise3DSettings.arraySurfaceNoise() ? surfaceOctaveNoise.sampleArray(
             chunkX * 16, chunkZ * 16, 0.0D,
             16, 16, 1,
             surfaceScale, surfaceScale, surfaceScale
@@ -208,9 +204,8 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
 
                 double surfaceSample = surfaceNoise != null
                     ? surfaceNoise[noiseCoord]
-                    : surfaceSimplexOctaveNoise != null ? surfaceSimplexOctaveNoise.sample(x, z, surfaceScale, 1.0D)
-                    : surfacePerlinOctaveNoise != null ? surfacePerlinOctaveNoise.sample(x, z, surfaceScale)
-                    : 0.0D;
+                    : surfaceOctaveNoise.sampleXZ(
+                            x, z, surfaceScale, surfaceScale, noise3DSettings.simplexSurfaceNoise() ? 1.0D : 0.5D);
                 int surfaceDepth = (int) (surfaceSample / 3D + 3D + rand.nextDouble() * 0.25D);
 
                 if (!this.surfaceProperties.erosion() && surfaceDepth < 1) {
@@ -361,7 +356,7 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
             gravelScale, 1.0D, gravelScale
         ) : null;
 
-        double[] surfaceNoise = surfacePerlinOctaveNoise != null && noise3DSettings.arraySurfaceNoise() ? surfacePerlinOctaveNoise.sampleArray(
+        double[] surfaceNoise = !noise3DSettings.simplexSurfaceNoise() && noise3DSettings.arraySurfaceNoise() ? surfaceOctaveNoise.sampleArray(
             chunkX * 16, chunkZ * 16, 0.0D,
             16, 16, 1,
             surfaceScale, surfaceScale, surfaceScale
@@ -406,9 +401,8 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
 
                 double surfaceSample = !surfaceProperties.erosion() ? 1.0D
                     : surfaceNoise != null ? surfaceNoise[noiseCoord]
-                    : surfaceSimplexOctaveNoise != null ? surfaceSimplexOctaveNoise.sample(x, z, surfaceScale, 1.0D)
-                    : surfacePerlinOctaveNoise != null ? surfacePerlinOctaveNoise.sample(x, z, surfaceScale)
-                    : 0.0D;
+                    : surfaceOctaveNoise.sampleXZ(
+                            x, z, surfaceScale, surfaceScale, noise3DSettings.simplexSurfaceNoise() ? 1.0D : 0.5D);
                 int surfaceDepth = (int) (surfaceSample / 3D + 3D + rand.nextDouble() * 0.25D);
 
                 Holder<Biome> biome = biomeSource.getBiomeForSurfaceGen(region, pos.set(x, surfaceTopY, z));

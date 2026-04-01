@@ -5,7 +5,7 @@ import net.minecraft.util.Mth;
 
 import java.util.Random;
 
-public class PerlinOctaveNoise {
+public class PerlinOctaveNoise implements OctaveNoise {
     private final PerlinNoiseSettings settings;
     private final PerlinNoise[] noises;
     private final int octaves;
@@ -23,6 +23,7 @@ public class PerlinOctaveNoise {
     /*
      * Generic 3D array noise sampler.
      */
+    @Override
     public double[] sampleArray(
         double x,
         double y,
@@ -32,7 +33,8 @@ public class PerlinOctaveNoise {
         int sizeZ, 
         double scaleX,
         double scaleY,
-        double scaleZ
+        double scaleZ,
+        double lacunarity
     ) {
         double[] noise = new double[sizeX * sizeY * sizeZ];
         double frequency = 1.0;
@@ -82,7 +84,7 @@ public class PerlinOctaveNoise {
                 );
             }
 
-            frequency /= 2.0;
+            frequency *= lacunarity;
         }
         
         return noise;
@@ -91,13 +93,14 @@ public class PerlinOctaveNoise {
     /*
      * Standard 2D Perlin noise sampler.
      */
-    public final double sampleXY(double x, double y) {
+    @Override
+    public final double sampleXY(double x, double y, double lacunarity) {
         double total = 0.0;
         double frequency = 1.0;
         
         for (int i = 0; i < this.octaves; ++i) {
             total += this.noises[i].sample(x / frequency, y / frequency) * frequency;
-            frequency *= 2.0;
+            frequency /= lacunarity;
         }
         
         return total;
@@ -106,7 +109,8 @@ public class PerlinOctaveNoise {
     /*
      * Standard 3D Perlin noise sampler.
      */
-    public final double sample(double x, double y, double z) {
+    @Override
+    public final double sample(double x, double y, double z, double lacunarity) {
         double total = 0.0;
         double frequency = 1.0;
 
@@ -126,7 +130,7 @@ public class PerlinOctaveNoise {
             }
 
             total += this.noises[i].sample(offX, y / frequency, offZ) * frequency;
-            frequency *= 2.0;
+            frequency /= lacunarity;
         }
 
         return total;
@@ -135,7 +139,8 @@ public class PerlinOctaveNoise {
     /*
      * 2D noise sampler. This noise sampler does not overflow.
      */
-    public final double sampleXZ(double x, double z, double scaleX, double scaleZ) {
+    @Override
+    public final double sampleXZ(double x, double z, double scaleX, double scaleZ, double lacunarity) {
         double total = 0.0;
         double frequency = 1.0;
 
@@ -159,7 +164,7 @@ public class PerlinOctaveNoise {
                 offZ,
                 frequency
             );
-            frequency /= 2.0;
+            frequency *= lacunarity;
         }
 
         return total;
@@ -168,7 +173,8 @@ public class PerlinOctaveNoise {
     /*
      * 3D noise sampler. This noise sampler does not overflow horizontally.
      */
-    public final double sample(double x, double y, double z, double scaleX, double scaleY, double scaleZ) {
+    @Override
+    public final double sample(double x, double y, double z, double scaleX, double scaleY, double scaleZ, double lacunarity) {
         if (settings.infdevNoiseScaling()) {
             return sample(x * scaleX, y * scaleY, z * scaleZ);
         }
@@ -199,7 +205,7 @@ public class PerlinOctaveNoise {
                 y * scaleY * frequency
             ) / frequency;
 
-            frequency /= 2.0;
+            frequency *= lacunarity;
         }
 
         return total;

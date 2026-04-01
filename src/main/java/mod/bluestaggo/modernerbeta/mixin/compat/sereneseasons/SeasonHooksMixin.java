@@ -22,7 +22,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @SuppressWarnings("UnresolvedMixinReference")
 @Pseudo
-@Mixin(targets = "sereneseasons.season.SeasonHooks", remap = false)
+@Mixin(targets = "sereneseasons.season.SeasonHooks")
 public abstract class SeasonHooksMixin {
     @Unique
     private static Level modernerBeta$level;

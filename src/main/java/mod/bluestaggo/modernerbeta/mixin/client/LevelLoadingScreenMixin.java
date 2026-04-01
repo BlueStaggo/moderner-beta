@@ -29,7 +29,15 @@ public abstract class LevelLoadingScreenMixin extends Screen {
         ChunkProviderFinite.resetPhase();
     }
     
-    @Inject(method = "render", at = @At("TAIL"))
+    @Inject(
+        method =
+            //? if >=26.1 {
+            /*"extractRenderState",
+            *///? } else {
+            "render",
+            //? }
+        at = @At("TAIL")
+    )
     private void injectRender(GuiGraphics graphics, int mouseX, int mouseY, float delta, CallbackInfo info) {
         String phase = ChunkProviderFinite.getPhase();
         

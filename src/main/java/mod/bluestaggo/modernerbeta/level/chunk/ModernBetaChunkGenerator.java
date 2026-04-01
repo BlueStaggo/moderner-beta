@@ -5,8 +5,9 @@ import com.google.common.base.Suppliers;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.api.level.chunk.surface.SurfaceConfig;
 import mod.bluestaggo.modernerbeta.compat.ModCompat;
-import mod.bluestaggo.modernerbeta.level.biome.injector.BiomeInjectionRule;
 import mod.bluestaggo.modernerbeta.mixin.ChunkGeneratorStructureStateAccessor;
+import mod.bluestaggo.modernerbeta.mixin.NoiseBasedChunkGeneratorAccessor;
+import mod.bluestaggo.modernerbeta.level.biome.injector.BiomeInjectionRule;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.api.level.chunk.ChunkProvider;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
@@ -84,13 +85,14 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
 
     private ChunkProvider chunkProvider;
 
+    @SuppressWarnings("DataFlowIssue")
     public ModernBetaChunkGenerator(
         BiomeSource biomeSource,
         HolderGetter<ModernBetaSettingsPreset> presetRegistry,
         HolderGetter<SurfaceConfig> surfaceConfigRegistry,
         ModernBetaSettings chunkProviderSettings
     ) {
-        super(biomeSource, generatorSettings(presetRegistry, fixupPreset(chunkProviderSettings)));
+        super(biomeSource, null);
 
         this.presetRegistry = presetRegistry;
         this.surfaceConfigRegistry = surfaceConfigRegistry;
@@ -118,16 +120,11 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
         return chunkProviderSettings;
     }
 
+    private static Holder<NoiseGeneratorSettings> generatorSettings(ModernBetaSettings chunkSettings) {
+        Holder<NoiseGeneratorSettings> generatorSettings = chunkSettings.getOrDefault(SettingsComponentTypes.NOISE_GENERATOR_SETTINGS);
 
-    private static Holder<NoiseGeneratorSettings> generatorSettings(
-        HolderGetter<ModernBetaSettingsPreset> presetRegistry,
-        ModernBetaSettings chunkSettings
-    ) {
-        ModernBetaSettings mappedChunkSettings = chunkSettings.mapPreset(presetRegistry, ModernBetaSettingsPreset::chunkSettings);
-        Holder<NoiseGeneratorSettings> generatorSettings = mappedChunkSettings.getOrDefault(SettingsComponentTypes.NOISE_GENERATOR_SETTINGS);
-
-        NoiseSettings noiseSettings = mappedChunkSettings.get(SettingsComponentTypes.NOISE_SETTINGS);
-        Integer seaLevel = mappedChunkSettings.get(SettingsComponentTypes.SEA_LEVEL);
+        NoiseSettings noiseSettings = chunkSettings.get(SettingsComponentTypes.NOISE_SETTINGS);
+        Integer seaLevel = chunkSettings.get(SettingsComponentTypes.SEA_LEVEL);
         if (noiseSettings == null & seaLevel == null)
             return generatorSettings;
 
@@ -154,6 +151,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
 
     public void initProvider(long seed) {
         ModernBetaSettings chunkSettings = this.chunkSettings.mapPreset(this.presetRegistry, ModernBetaSettingsPreset::chunkSettings);
+        ((NoiseBasedChunkGeneratorAccessor) this).setSettings(generatorSettings(chunkSettings));
 
         this.chunkProvider = ModernBetaRegistries.CHUNK
             //? if >=1.21.2 {
@@ -212,8 +210,8 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
         //Executor executor,
         Blender blender, RandomState noiseConfig, StructureManager structureAccessor, ChunkAccess chunk
     ) {
-        ChunkPos pos = chunk.getPos();
-        if (ModCompat.skipGeneratingChunk(pos.x, pos.z))
+        ChunkPos chunkPos = chunk.getPos();
+        if (ModCompat.skipGeneratingChunk(chunkPos.x, chunkPos.z))
             return CompletableFuture.completedFuture(chunk);
 
         return this.chunkProvider.provideChunk(Blender.empty(), structureAccessor, chunk, noiseConfig);
@@ -221,14 +219,14 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
 
     @Override
     public void buildSurface(WorldGenRegion chunkRegion, StructureManager structureAccessor, RandomState noiseConfig, ChunkAccess chunk) {
-        ChunkPos pos = chunk.getPos();
+        ChunkPos chunkPos = chunk.getPos();
 
-        if (ModCompat.skipGeneratingChunk(pos.x, pos.z))
+        if (ModCompat.skipGeneratingChunk(chunkPos.x, chunkPos.z))
             return;
 
         this.injectBiomes(chunk, noiseConfig.sampler(), BiomeInjectionRule.Step.PRE);
 
-        if (!this.chunkProvider.skipChunk(pos.x, pos.z, ModernBetaGenerationStep.SURFACE)) {
+        if (!this.chunkProvider.skipChunk(chunkPos.x, chunkPos.z, ModernBetaGenerationStep.SURFACE)) {
             if (this.biomeSource instanceof ModernBetaBiomeSource modernBetaBiomeSource) {
                 if (this.useSurfaceRules) {
                     this.buildDefaultSurface(chunkRegion, structureAccessor, noiseConfig, chunk);
@@ -269,14 +267,13 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
                       //? if <1.21.2
                       //, GenerationStep.Carving carverStep
     ) {
-        ChunkPos pos = chunk.getPos();
+        ChunkPos chunkPos = chunk.getPos();
 
-        if (ModCompat.skipGeneratingChunk(pos.x, pos.z) ||
-            this.chunkProvider.skipChunk(pos.x, pos.z, ModernBetaGenerationStep.CARVERS))
+        if (ModCompat.skipGeneratingChunk(chunkPos.x, chunkPos.z) ||
+            this.chunkProvider.skipChunk(chunkPos.x, chunkPos.z, ModernBetaGenerationStep.CARVERS))
             return;
 
         BiomeManager biomeAccessWithSource = biomeAccess.withDifferentSource((biomeX, biomeY, biomeZ) -> this.biomeSource.getNoiseBiome(biomeX, biomeY, biomeZ, noiseConfig.sampler()));
-        ChunkPos chunkPos = chunk.getPos();
 
         int mainChunkX = chunkPos.x;
         int mainChunkZ = chunkPos.z;
@@ -315,7 +312,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
         for (int chunkX = mainChunkX - 8; chunkX <= mainChunkX + 8; ++chunkX) {
             for (int chunkZ = mainChunkZ - 8; chunkZ <= mainChunkZ + 8; ++chunkZ) {
                 ChunkPos carverPos = new ChunkPos(chunkX, chunkZ);
-                ChunkAccess carverChunk = chunkRegion.getChunk(carverPos.x, carverPos.z);
+                ChunkAccess carverChunk = chunkRegion.getChunk(chunkX, chunkZ);
                 
                 @SuppressWarnings("deprecation")
                 BiomeGenerationSettings genSettings = carverChunk.carverBiome(() -> this.getBiomeGenerationSettings(
@@ -391,9 +388,9 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
 
     @Override
     public void applyBiomeDecoration(WorldGenLevel level, ChunkAccess chunk, StructureManager structureAccessor) {
-        ChunkPos pos = chunk.getPos();
+        ChunkPos chunkPos = chunk.getPos();
         
-        if (this.chunkProvider.skipChunk(pos.x, pos.z, ModernBetaGenerationStep.FEATURES)) 
+        if (this.chunkProvider.skipChunk(chunkPos.x, chunkPos.z, ModernBetaGenerationStep.FEATURES))
             return;
 
         super.applyBiomeDecoration(level, chunk, structureAccessor);
@@ -401,10 +398,10 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
     
     @Override
     public void spawnOriginalMobs(WorldGenRegion region) {
-        ChunkPos pos = region.getCenter();
+        ChunkPos chunkPos = region.getCenter();
         
-        if (ModCompat.skipGeneratingChunk(pos.x, pos.z) ||
-            this.chunkProvider.skipChunk(pos.x, pos.z, ModernBetaGenerationStep.ENTITY_SPAWN))
+        if (ModCompat.skipGeneratingChunk(chunkPos.x, chunkPos.z) ||
+            this.chunkProvider.skipChunk(chunkPos.x, chunkPos.z, ModernBetaGenerationStep.ENTITY_SPAWN))
             return;
         
         super.spawnOriginalMobs(region);

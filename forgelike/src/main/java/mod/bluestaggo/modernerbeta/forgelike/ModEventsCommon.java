@@ -3,7 +3,6 @@ package mod.bluestaggo.modernerbeta.forgelike;
 import com.mojang.serialization.Codec;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.compat.ModCompat;
-import mod.bluestaggo.modernerbeta.forgelike.mixin.DataPackRegistriesHooksAccessor;
 import mod.bluestaggo.modernerbeta.forgelike.network.NetworkHelperImpl;
 import mod.bluestaggo.modernerbeta.forgelike.registry.RegistryHelperImpl;
 import mod.bluestaggo.modernerbeta.network.BiomeProviderInfoPayload;
@@ -18,6 +17,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackSource;
+import net.minecraft.util.Tuple;
 //? if neoforge {
 import mod.bluestaggo.modernerbeta.registry.VanillaRegistryHandler;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -30,14 +30,12 @@ import net.neoforged.neoforge.event.AddPackFindersEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
-import net.neoforged.neoforge.registries.ModifyRegistriesEvent;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 import net.neoforged.neoforge.registries.RegisterEvent;
 //?} else {
 /*import mod.bluestaggo.modernerbeta.forgelike.registry.ForgeRegistryHandler;
 import net.minecraft.server.packs.PathPackResources;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.common.util.LogicalSidedProvider;
 import net.minecraftforge.event.AddPackFindersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -135,41 +133,8 @@ public class ModEventsCommon {
     @SuppressWarnings("unchecked")
     public static void registerDatapackRegistries(DataPackRegistryEvent.NewRegistry event) {
         ModernerBeta.setupCustomDynamicRegistries();
-        for (ModernerBeta.CustomDynamicRegistry<?> dynamicRegistry : ModernerBeta.CUSTOM_DYNAMIC_REGISTRIES) {
-            event.dataPackRegistry((ResourceKey<Registry<Object>>) dynamicRegistry.key(), (Codec<Object>) dynamicRegistry.codec());
-        }
-    }
-
-    @SubscribeEvent
-    public static void modifyRegistries(
-            //? if neoforge {
-            ModifyRegistriesEvent
-            //? } else {
-            /*RegisterCapabilitiesEvent
-            *///? }
-            event) {
-        //HACK: we're modifying the datapack registries with an event that is called
-        //  after DataPackRegistryEvent.NewRegistry is processed. this event we're using does not allow for
-        //  modifying datapack registries, but we do it anyway.
-        var dataPackRegistries = DataPackRegistriesHooksAccessor.getDataPackRegistries();
-
-        for (ModernerBeta.CustomDynamicRegistry<?> dynamicRegistry : ModernerBeta.CUSTOM_DYNAMIC_REGISTRIES) {
-            if (dynamicRegistry.insertAfter() == null)
-                continue;
-
-            var registryData = dataPackRegistries.stream()
-                    .filter(data -> data.key() == dynamicRegistry.key())
-                    .findFirst()
-                    .orElseThrow();
-            dataPackRegistries.remove(registryData);
-
-            int index = dataPackRegistries.stream()
-                    .filter(data -> data.key() == dynamicRegistry.insertAfter())
-                    .map(dataPackRegistries::indexOf)
-                    .findFirst()
-                    .orElseThrow();
-
-            dataPackRegistries.add(index, registryData);
+        for (Tuple<ResourceKey<?>, Codec<?>> dynamicRegistry : ModernerBeta.CUSTOM_DYNAMIC_REGISTRIES) {
+            event.dataPackRegistry((ResourceKey<Registry<Object>>)dynamicRegistry.getA(), (Codec<Object>)dynamicRegistry.getB());
         }
     }
 

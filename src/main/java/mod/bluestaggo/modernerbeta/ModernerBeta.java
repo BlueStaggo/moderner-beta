@@ -32,7 +32,6 @@ import mod.bluestaggo.modernerbeta.level.structure.ModernBetaStructureTypes;
 import mod.bluestaggo.modernerbeta.util.LoggingUtil;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Tuple;
@@ -74,7 +73,7 @@ public class ModernerBeta {
     );
 
     public static List<Tuple<Registry<?>, Consumer<IRegistryHandler<?>>>> CUSTOM_REGISTRY_HANDLERS;
-    public static List<CustomDynamicRegistry<?>> CUSTOM_DYNAMIC_REGISTRIES;
+    public static List<Tuple<ResourceKey<?>, Codec<?>>> CUSTOM_DYNAMIC_REGISTRIES;
     public static INetworkHelper networkHelper;
     public static ModernBetaSettings config;
 
@@ -95,21 +94,11 @@ public class ModernerBeta {
         );
     }
 
-    public record CustomDynamicRegistry<T>(
-        ResourceKey<? extends Registry<T>> key,
-        ResourceKey<? extends Registry<?>> insertAfter,
-        Codec<T> codec
-    ) {
-        public CustomDynamicRegistry(ResourceKey<? extends Registry<T>> key, Codec<T> codec) {
-            this(key, null, codec);
-        }
-    }
-
     public static void setupCustomDynamicRegistries() {
         CUSTOM_DYNAMIC_REGISTRIES = List.of(
-            new CustomDynamicRegistry<>(ModernBetaResourceKeys.SETTINGS_PRESET, Registries.NOISE_SETTINGS, ModernBetaSettingsPreset.CODEC),
-            new CustomDynamicRegistry<>(ModernBetaResourceKeys.SETTINGS_PRESET_CATEGORY, ModernBetaSettingsPresetCategory.CODEC),
-            new CustomDynamicRegistry<>(ModernBetaResourceKeys.SURFACE_CONFIG, SurfaceConfig.CODEC)
+                new Tuple<>(ModernBetaResourceKeys.SETTINGS_PRESET, ModernBetaSettingsPreset.CODEC),
+                new Tuple<>(ModernBetaResourceKeys.SETTINGS_PRESET_CATEGORY, ModernBetaSettingsPresetCategory.CODEC),
+                new Tuple<>(ModernBetaResourceKeys.SURFACE_CONFIG, SurfaceConfig.CODEC)
         );
     }
 

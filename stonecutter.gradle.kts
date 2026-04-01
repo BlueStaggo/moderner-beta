@@ -1,11 +1,10 @@
 plugins {
     id("dev.kikugie.stonecutter")
-    id("dev.architectury.loom").apply(false)
 
-    (id("org.jetbrains.kotlin.jvm") version "2.2.0").apply(false)
-    (id("com.google.devtools.ksp") version "2.2.0-2.0.2").apply(false)
-    (id("dev.kikugie.fletching-table") version "0.1.0-alpha.13").apply(false)
-    id("me.modmuss50.mod-publish-plugin") version "1.1.0"
+    (kotlin("jvm") version "2.3.0").apply(false)
+    (id("com.google.devtools.ksp") version "2.3.3").apply(false)
+    (id("dev.kikugie.fletching-table") version "0.1.0-alpha.22").apply(false)
+    id("me.modmuss50.mod-publish-plugin")
 }
 
 plugins.apply("dev.kikugie.stonecutter")
@@ -50,104 +49,102 @@ stonecutter.tasks {
 
 stonecutter.parameters {
     replacements {
-        string {
-            direction = eval(current.version, "<1.21.5")
-            replace("WeightedList.codec", "SimpleWeightedRandomList.wrappedCodec")
-        }
-
-        string {
-            direction = eval(current.version, "<1.21.5")
-            replace("WeightedList.of", "SimpleWeightedRandomList.create")
-        }
-
-        string {
-            direction = eval(current.version, "<1.21.5")
-            replace("WeightedList", "SimpleWeightedRandomList")
-        }
-
-        string("registryOr") {
-            direction = eval(current.version, "<1.21.2")
-            replace(".lookupOrThrow(ModernBetaResourceKeys.", ".registryOrThrow(ModernBetaResourceKeys.")
-        }
-
-        string("registryOr") {
-            direction = eval(current.version, "<1.21.2")
-            replace(".lookupOrThrow(Registries.", ".registryOrThrow(Registries.")
-        }
-
-        string("registryGet") {
-            direction = eval(current.version, "<1.21.2")
-            replace(".getValue(", ".get(")
-        }
-
-        string {
-            direction = eval(current.version, ">=1.21.6")
-            replace("this.getOrCreateTagBuilder(", "this.builder(")
-        }
-
-        string {
-            direction = eval(current.version, "<1.20.5")
-            replace("BootstrapContext", "BootstapContext")
-        }
-
-        string {
-            direction = eval(current.version, "<1.21.2")
-            replace(".getMinSectionY()", ".getMinSection()")
-        }
-
-        string {
-            direction = eval(current.version, "<1.21.2")
-            replace(".getMaxSectionY()", ".getMaxSection()")
-        }
-
-        string("minBuild") {
-            direction = eval(current.version, "<1.21.2")
-            replace(".getMinY()", ".getMinBuildHeight()")
-        }
-
-        string("holders") {
-            direction = eval(current.version, "<1.21.2")
-            replace(".listElements()", ".holders()")
-        }
-
-        string {
-            direction = eval(current.version, "<1.21")
-            replace("gui.screens.options.OptionsSubScreen", "gui.screens.OptionsSubScreen")
-        }
-
-        string {
-            direction = eval(current.version, "<1.20.3")
+        string(eval(current.version, "<1.20.3")) {
             replace("net.minecraft.network.chat.ComponentSerialization.CODEC", "net.minecraft.util.ExtraCodecs.COMPONENT")
         }
 
-        string {
-            direction = eval(current.version, "<1.20.5")
+        string(eval(current.version, "<1.20.5")) {
+            replace("net.fabricmc.fabric.api.tag.convention.v2.ConventionalBiomeTags", "net.fabricmc.fabric.api.tag.convention.v1.ConventionalBiomeTags")
+            replace("ConventionalBiomeTags.IS_COLD", "ConventionalBiomeTags.CLIMATE_COLD")
+            replace("ConventionalBiomeTags.IS_DRY", "ConventionalBiomeTags.CLIMATE_DRY")
+            replace("ConventionalBiomeTags.IS_HOT", "ConventionalBiomeTags.CLIMATE_HOT")
+            replace("ConventionalBiomeTags.IS_TEMPERATE", "ConventionalBiomeTags.CLIMATE_TEMPERATE")
+            replace("ConventionalBiomeTags.IS_WET", "ConventionalBiomeTags.CLIMATE_WET")
+            replace("ConventionalBiomeTags.IS_OVERWORLD", "ConventionalBiomeTags.IN_OVERWORLD")
+            replace("ConventionalBiomeTags.IS_CONIFEROUS_TREE", "ConventionalBiomeTags.TREE_CONIFEROUS")
+            replace("ConventionalBiomeTags.IS_DECIDUOUS_TREE", "ConventionalBiomeTags.TREE_DECIDUOUS")
+            replace("ConventionalBiomeTags.IS_JUNGLE_TREE", "ConventionalBiomeTags.TREE_JUNGLE")
+            replace("ConventionalBiomeTags.IS_SAVANNA_TREE", "ConventionalBiomeTags.TREE_SAVANNA")
+            replace("ConventionalBiomeTags.IS_", "ConventionalBiomeTags.")
             replace("com.mojang.serialization.MapCodec<", "com.mojang.serialization./*Map*/Codec<")
-        }
-
-        string {
-            direction = eval(current.version, "<1.20.5")
             replace("com.mojang.serialization.MapCodec.", "com.mojang.serialization./*Map*/Codec.")
+            replace("BootstrapContext", "BootstapContext")
         }
 
-        string {
-            direction = eval(current.version, ">=1.21.11")
+        string(eval(current.version, "<1.21")) {
+            replace("gui.screens.options.OptionsSubScreen", "gui.screens.OptionsSubScreen")
+        }
+
+        string(eval(current.version, "<1.21.2"), "registryOr") {
+            replace(".lookupOrThrow(ModernBetaResourceKeys.", ".registryOrThrow(ModernBetaResourceKeys.")
+            replace(".lookupOrThrow(Registries.", ".registryOrThrow(Registries.")
+        }
+
+        string(eval(current.version, "<1.21.2"), "registryGet") {
+            replace(".getValue(", ".get(")
+        }
+
+        string(eval(current.version, "<1.21.2")) {
+            replace(".getMinSectionY()", ".getMinSection()")
+            replace(".getMaxSectionY()", ".getMaxSection()")
+        }
+
+        string(eval(current.version, "<1.21.2"), "minBuild") {
+            replace(".getMinY()", ".getMinBuildHeight()")
+        }
+
+        string(eval(current.version, "<1.21.2"), "holders") {
+            replace(".listElements()", ".holders()")
+        }
+
+        string(eval(current.version, "<1.21.5")) {
+            replace("WeightedList.codec", "SimpleWeightedRandomList.wrappedCodec")
+            replace("WeightedList.of", "SimpleWeightedRandomList.create")
+            replace("WeightedList", "SimpleWeightedRandomList")
+        }
+
+        string(eval(current.version, ">=1.21.6")) {
+            replace("this.getOrCreateTagBuilder(", "this.builder(")
+        }
+
+        string(eval(current.version, ">=1.21.11")) {
             replace("ResourceLocation", "Identifier")
-        }
-
-        string {
-            direction = eval(current.version, ">=1.21.11")
             replace("ResourceKey::location", "ResourceKey::identifier")
+            replace("net.minecraft.Util", "net.minecraft.util.Util")
         }
 
-        string("dotLocation") {
-            direction = eval(current.version, ">=1.21.11")
+        string(eval(current.version, ">=1.21.11"), "dotLocation") {
             replace(".location()", ".identifier()")
         }
 
-        string {
-            direction = eval(current.version, ">=1.21.11")
-            replace("net.minecraft.Util", "net.minecraft.util.Util")
+        string(eval(current.version, ">=26.1")) {
+            replace("accessWidener v1 named", "accessWidener v1 official")
+            replace("ColorProviderRegistry.BLOCK", "BlockColorRegistry")
+            replace("FabricDataOutput", "FabricPackOutput")
+            replace("FabricTagProvider", "FabricTagsProvider")
+            replace(".BlockTagProvider", ".BlockTagsProvider")
+            replace(".playS2C()", ".clientboundPlay()")
+            replace("RegisterColorHandlersEvent.Block", "RegisterColorHandlersEvent.BlockTintSources")
+            replace("ChunkPos.asLong", "ChunkPos.pack")
+            replace("chunk.getPos().x", "chunk.getPos().x()")
+            replace("chunk.getPos().z", "chunk.getPos().z()")
+            replace("chunkPos.x", "chunkPos.x()")
+            replace("chunkPos.z", "chunkPos.z()")
+            replace("SnowyDirtBlock", "SnowyBlock")
+            replace("net.minecraft.world.level.BlockAndTintGetter", "net.minecraft.client.renderer.block.BlockAndTintGetter")
+            replace("DimensionType.CardinalLightType", "net.minecraft.world.level.CardinalLighting.Type")
+            replace("net.minecraft.client.color.block.BlockColor", "net.minecraft.client.color.block.BlockTintSource")
+            replace("GuiGraphics", "GuiGraphicsExtractor")
+            replace(".drawString(", ".text(")
+            replace(".drawCenteredString(", ".centeredText(")
+            replace("renderWidget", "extractWidgetRenderState")
+            replace("void render(", "void extractRenderState(")
+            replace(".render(", ".extractRenderState(")
+        }
+
+        string(eval(current.version, ">=26.1"), "worldGenLevel") {
+            replace("LevelSimulatedReader", "WorldGenLevel")
+            replace("setDirtAt", "placeBelowTrunkBlock")
         }
     }
 }

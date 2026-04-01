@@ -60,8 +60,8 @@ public class PerlinOctaveNoise {
                 int ndx = 0;
                 for (int sX = 0; sX < sizeX; sX++) {
                     for (int sZ = 0; sZ < sizeZ; sZ++) {
-                        double curX = (x + (double)sX) * scaleX;
-                        double curZ = (z + (double)sZ) * scaleZ;
+                        double curX = (x + (double)sX) * scaleX * frequency;
+                        double curZ = (z + (double)sZ) * scaleZ * frequency;
 
                         noise[ndx++] += this.noises[i].sampleXZ(curX, curZ, frequency);
                     }

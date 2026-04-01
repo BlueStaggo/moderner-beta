@@ -2287,12 +2287,12 @@ public final class ModernBetaSettingsPresets {
                     ExtendedBiomeId.of("minecraft:sparse_jungle")
                 ),
                 PredicateOverlayLayer.Target.exclusiveBeach(
-                    modernBiomes
-                        ? Stream.concat(
-                            biomeCategories.get("windswept_hills").stream(),
-                            Stream.of(ExtendedBiomeId.of("minecraft:cherry_grove"))
-                        ).collect(Collectors.toSet())
-                        : biomeCategories.get("windswept_hills"),
+                    Stream.of(
+                        ExtendedBiomeId.of("minecraft:windswept_hills"),
+                        ExtendedBiomeId.of("minecraft:windswept_forest"),
+                        modernBiomes ? ExtendedBiomeId.of("minecraft:meadow") : null,
+                        modernBiomes ? ExtendedBiomeId.of("minecraft:cherry_grove") : null
+                    ).filter(Objects::nonNull).collect(Collectors.toSet()),
                     oceansPredicate,
                     ExtendedBiomeId.of("minecraft:stony_shore")
                 ),

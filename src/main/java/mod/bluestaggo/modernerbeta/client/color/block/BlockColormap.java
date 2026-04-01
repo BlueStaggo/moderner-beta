@@ -1,4 +1,4 @@
-package mod.bluestaggo.modernerbeta.client.color;
+package mod.bluestaggo.modernerbeta.client.color.block;
 
 public class BlockColormap {
     private final int[] colormap;

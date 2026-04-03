@@ -50,7 +50,7 @@ public class CaveBiomeProviderVoronoi extends CaveBiomeProvider implements CaveC
     
     @Override
     public List<Holder<Biome>> getBiomes() {        
-        return this.rules.getItems().stream().distinct().map(key -> this.biomeRegistry.getOrThrow(key)).collect(Collectors.toList());
+        return this.rules.getItems().stream().distinct().map(this.biomeRegistry::getOrThrow).collect(Collectors.toList());
     }
 
     @Override

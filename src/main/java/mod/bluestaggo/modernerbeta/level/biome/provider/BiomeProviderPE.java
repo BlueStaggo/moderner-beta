@@ -100,7 +100,7 @@ public class BiomeProviderPE extends BiomeProvider implements ClimateSampler, Cl
         return this.climateMap
             .getBiomeKeys()
             .stream()
-            .map(i -> this.biomeRegistry.getOrThrow(i))
+            .map(this.biomeRegistry::getOrThrow)
             .collect(Collectors.toList());
     }
 

@@ -317,7 +317,7 @@ public class PerlinNoise {
     }
 
     // Using alternate function from
-    // https://adrianb.io/2014/08/09/perlinnoise.html
+    // https://riven8192.blogspot.com/2010/08/calculate-perlinnoise-twice-as-fast.html
     private static double grad(int hash, double x, double y, double z) {
         switch (hash & 0xF) {
             case 0x0:

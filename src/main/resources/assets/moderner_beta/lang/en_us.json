@@ -42,7 +42,7 @@
     "createWorld.customize.modern_beta.preset.custom": "Custom",
     "createWorld.customize.modern_beta.preset.type.default": "Default",
     "createWorld.customize.modern_beta.preset.type.custom": "Custom",
-    
+
     "createWorld.customize.modern_beta.preset.name.moderner_beta.beta": "Beta 1.7.3",
     "createWorld.customize.modern_beta.preset.name.moderner_beta.beta_1_1_02": "Beta 1.1_02",
     "createWorld.customize.modern_beta.preset.name.moderner_beta.alpha": "Alpha v1.1.2_01",
@@ -258,7 +258,7 @@
     "createWorld.customize.modern_beta.settings.cave_generation": "Caves",
     "createWorld.customize.modern_beta.settings.cave_generation.useCarvers": "Enabled",
     "createWorld.customize.modern_beta.settings.cave_generation.fixCaveBorders": "Fix Cave Borders",
-    "createWorld.customize.modern_beta.settings.cave_generation.useNoiseCaves": "Generate Noise Caves",
+    "createWorld.customize.modern_beta.settings.cave_generation.useNoiseCaves": "Generate Modern Caves",
     "createWorld.customize.modern_beta.settings.cave_generation.forceBetaCaves": "Force Beta Caves",
     "createWorld.customize.modern_beta.settings.cave_generation.forceBetaCanyons": "Force Beta Canyons",
     "createWorld.customize.modern_beta.settings.cave_generation.seedMethod": "Seed Method",
@@ -530,16 +530,16 @@
     "biome.moderner_beta.beta_tundra": "Beta Tundra",
     "biome.moderner_beta.beta_ice_desert": "Beta Ice Desert",
     "biome.moderner_beta.beta_sky": "Beta Sky",
-    
+
     "biome.moderner_beta.beta_ocean": "Beta Ocean",
     "biome.moderner_beta.beta_lukewarm_ocean": "Beta Lukewarm Ocean",
     "biome.moderner_beta.beta_warm_ocean": "Beta Warm Ocean",
     "biome.moderner_beta.beta_cold_ocean": "Beta Cold Ocean",
     "biome.moderner_beta.beta_frozen_ocean": "Beta Frozen Ocean",
-    
+
     "biome.moderner_beta.alpha": "Alpha",
     "biome.moderner_beta.alpha_winter": "Alpha Winter",
-    
+
     "biome.moderner_beta.infdev_611": "Infdev 611",
     "biome.moderner_beta.infdev_420": "Infdev 420",
     "biome.moderner_beta.infdev_415": "Infdev 415",
@@ -563,7 +563,7 @@
     "biome.moderner_beta.pe_taiga": "PE Taiga",
     "biome.moderner_beta.pe_tundra": "PE Tundra",
     "biome.moderner_beta.pe_ice_desert": "PE Ice Desert",
-    
+
     "biome.moderner_beta.pe_ocean": "PE Ocean",
     "biome.moderner_beta.pe_lukewarm_ocean": "PE Lukewarm Ocean",
     "biome.moderner_beta.pe_warm_ocean": "PE Warm Ocean",

@@ -30,6 +30,6 @@ public class CaveInjectionRule implements BiomeInjectionRule {
 
     @Override
     public EnumSet<Step> applicableSteps() {
-        return EnumSet.of(Step.POST);
+        return EnumSet.of(Step.PRE);
     }
 }

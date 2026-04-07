@@ -39,6 +39,11 @@ public class ModernBetaTagProviderBlock
             Blocks.ANDESITE,
             Blocks.DIORITE,
             Blocks.GRANITE,
+            //? if >=26.2 {
+            /*Blocks.SULFUR,
+            Blocks.POTENT_SULFUR,
+            Blocks.CINNABAR,
+            *///? }
             Blocks.IRON_ORE,
             Blocks.DEEPSLATE_IRON_ORE,
             Blocks.RAW_IRON_BLOCK,

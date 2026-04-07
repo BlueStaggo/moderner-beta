@@ -32,6 +32,6 @@ public class OceanInjectionRule implements BiomeInjectionRule2D {
 
     @Override
     public EnumSet<Step> applicableSteps() {
-        return EnumSet.of(Step.POST);
+        return EnumSet.of(Step.PRE);
     }
 }

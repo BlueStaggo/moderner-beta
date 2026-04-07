@@ -62,6 +62,8 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
     @Override
     protected void configure(Provider provider, Entries entries) {
         isGeneratingData = true;
+        //? >=26.2
+        //HolderGetter<Block> blocks = provider.lookupOrThrow(Registries.BLOCK);
 
         //Dimension types
         entries.add(
@@ -88,7 +90,11 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
                 0,
                 320,
                 320,
+                //? if >=26.2 {
+                /*blocks.getOrThrow(BlockTags.INFINIBURN_OVERWORLD),
+                *///? } else {
                 BlockTags.INFINIBURN_OVERWORLD,
+                //? }
                 //? if <1.21.11
                 BuiltinDimensionTypes.OVERWORLD_EFFECTS,
                 0.0F,

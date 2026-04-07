@@ -2,6 +2,7 @@
 //~dotLocation
 package mod.bluestaggo.modernerbeta.client.gui.screen.config.graphical;
 
+import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.client.registry.ModernBetaClientRegistries;
@@ -17,7 +18,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Tuple;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -45,10 +45,10 @@ public abstract class ModernBetaGraphicalComponentedSettingsScreen extends Moder
     }
 
     @Override
-    protected Tuple<CompoundTag, String> resolveSettings(String key) {
+    protected Pair<CompoundTag, String> resolveSettings(String key) {
         if (this.currentComponentType != null) {
             if ("self".equals(key)) {
-                return new Tuple<>(this.settings, this.currentComponentType.toString());
+                return new Pair<>(this.settings, this.currentComponentType.toString());
             }
             if (key.isEmpty()) {
                 key = this.currentComponentType.toString();

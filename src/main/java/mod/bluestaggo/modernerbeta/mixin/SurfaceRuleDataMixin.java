@@ -58,7 +58,7 @@ public class SurfaceRuleDataMixin {
             @At(
                 value = "INVOKE",
                 target = "Lcom/google/common/collect/ImmutableList$Builder;add(Ljava/lang/Object;)Lcom/google/common/collect/ImmutableList$Builder;",
-                ordinal = 3,
+                ordinal = /*? >=26.2 {*/ /*4 *//*?} else {*/ 3 /*?}*/,
                 remap = false
             )
         }

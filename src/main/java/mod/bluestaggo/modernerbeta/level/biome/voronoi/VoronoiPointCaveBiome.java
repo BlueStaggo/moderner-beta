@@ -20,7 +20,13 @@ public record VoronoiPointCaveBiome(String biome, double temp, double rain, doub
     public static final List<VoronoiPointCaveBiome> DEFAULT_POINTS = List.of(
         new VoronoiPointCaveBiome("", 0.0, 0.5, 0.75),
         new VoronoiPointCaveBiome("minecraft:lush_caves", 0.1, 0.5, 0.75),
+        //? if >=26.2 {
+        /*new VoronoiPointCaveBiome("", 0.35, 0.5, 0.75),
+        new VoronoiPointCaveBiome("minecraft:sulfur_caves", 0.5, 0.5, 0.75),
+        new VoronoiPointCaveBiome("", 0.75, 0.5, 0.75),
+        *///? } else {
         new VoronoiPointCaveBiome("", 0.5, 0.5, 0.75),
+        //? }
         new VoronoiPointCaveBiome("minecraft:dripstone_caves", 0.9, 0.5, 0.75),
         new VoronoiPointCaveBiome("", 1.0, 0.5, 0.75),
 
@@ -29,6 +35,10 @@ public record VoronoiPointCaveBiome(String biome, double temp, double rain, doub
         new VoronoiPointCaveBiome("", 0.4, 0.5, 0.25),
         new VoronoiPointCaveBiome("minecraft:deep_dark", 0.5, 0.5, 0.25),
         new VoronoiPointCaveBiome("", 0.6, 0.5, 0.25),
+        //? if >=26.2 {
+        /*new VoronoiPointCaveBiome("minecraft:sulfur_caves", 0.65, 0.5, 0.25),
+        new VoronoiPointCaveBiome("", 0.75, 0.5, 0.25),
+        *///? }
         new VoronoiPointCaveBiome("minecraft:dripstone_caves", 0.8, 0.5, 0.25),
         new VoronoiPointCaveBiome("", 1.0, 0.5, 0.25)
     );

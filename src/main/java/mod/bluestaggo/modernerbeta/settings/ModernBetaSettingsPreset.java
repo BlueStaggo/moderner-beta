@@ -3,6 +3,7 @@ package mod.bluestaggo.modernerbeta.settings;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.mojang.datafixers.util.Either;
+import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JsonOps;
@@ -22,7 +23,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Tuple;
 import org.slf4j.event.Level;
 
 import java.util.List;
@@ -116,9 +116,9 @@ public record ModernBetaSettingsPreset(
         );
     }
 
-    public static Tuple<ModernBetaSettingsPreset, Boolean> fromJson(HolderLookup.Provider registries, String jsonString) {
+    public static Pair<ModernBetaSettingsPreset, Boolean> fromJson(HolderLookup.Provider registries, String jsonString) {
         if (jsonString == null || jsonString.isBlank())
-            return new Tuple<>(null, false);
+            return new Pair<>(null, false);
 
         DynamicOps<JsonElement> ops = registries != null ? RegistryOps.create(JsonOps.INSTANCE, registries) : JsonOps.INSTANCE;
 
@@ -137,10 +137,10 @@ public record ModernBetaSettingsPreset(
             LoggingUtil.log(Level.ERROR, String.format("Reason: %s", e.getMessage()));
         }
 
-        return new Tuple<>(newPreset, success);
+        return new Pair<>(newPreset, success);
     }
 
-    public Tuple<ModernBetaSettingsPreset, Boolean> setJson(HolderLookup.Provider registries, String stringChunk, String stringBiome, String stringCaveBiome) {
+    public Pair<ModernBetaSettingsPreset, Boolean> setJson(HolderLookup.Provider registries, String stringChunk, String stringBiome, String stringCaveBiome) {
         ModernBetaSettings chunkSettings;
         ModernBetaSettings biomeSettings;
         ModernBetaSettings caveBiomeSettings;
@@ -185,11 +185,11 @@ public record ModernBetaSettingsPreset(
             caveBiomeSettings = this.caveBiomeSettings;
         }
 
-        return new Tuple<>(new ModernBetaSettingsPreset(chunkSettings, biomeSettings, caveBiomeSettings), successful);
+        return new Pair<>(new ModernBetaSettingsPreset(chunkSettings, biomeSettings, caveBiomeSettings), successful);
     }
 
     @SuppressWarnings("ConstantValue")
-    public Tuple<ModernBetaSettingsPreset, Boolean> setNbt(
+    public Pair<ModernBetaSettingsPreset, Boolean> setNbt(
         HolderLookup.Provider registries,
         CompoundTag nbtChunk,
         CompoundTag nbtBiome,
@@ -246,7 +246,7 @@ public record ModernBetaSettingsPreset(
             caveBiomeSettings = this.caveBiomeSettings;
         }
 
-        return new Tuple<>(new ModernBetaSettingsPreset(chunkSettings, biomeSettings, caveBiomeSettings), successful);
+        return new Pair<>(new ModernBetaSettingsPreset(chunkSettings, biomeSettings, caveBiomeSettings), successful);
     }
 
     public static Optional<ModernBetaSettingsPreset> getPreset(ResourceLocation presetId, HolderGetter<ModernBetaSettingsPreset> presetRegistry) {

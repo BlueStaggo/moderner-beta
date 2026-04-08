@@ -94,8 +94,8 @@ public class ModEventsClient {
         /*ForgeRegistryHandler<?> registryHandler = new ForgeRegistryHandler<>(event);
         *///?}
         ModernerBetaClient.CUSTOM_REGISTRY_HANDLERS.stream()
-            .filter(pair -> pair.getA().key().equals(event.getRegistryKey()))
-            .forEach(pair -> pair.getB().accept(registryHandler));
+            .filter(pair -> pair.getFirst().key().equals(event.getRegistryKey()))
+            .forEach(pair -> pair.getSecond().accept(registryHandler));
     }
 
     @SubscribeEvent

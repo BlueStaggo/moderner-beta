@@ -116,7 +116,7 @@ public class SettingsComponentTypes {
         USE_SURFACE_RULES = register(
             ModernBetaBuiltInTypes.SettingsComponentType.USE_SURFACE_RULES.id,
             Codec.BOOL,
-            false,
+            true,
             ValidationResult.Valid::new);
         SEA_LEVEL = registerWithDefaultGetter(
             ModernBetaBuiltInTypes.SettingsComponentType.SEA_LEVEL.id,

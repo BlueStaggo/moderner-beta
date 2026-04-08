@@ -281,13 +281,14 @@ public final class ModernBetaSettingsPresets {
                 .add(NOISE_GENERATOR_SETTINGS, context.lookup(Registries.NOISE_SETTINGS)
                         .get(ModernBetaNoiseGeneratorSettings.OVERWORLD_128).orElseThrow())
                 .add(DEEPSLATE_GENERATION, DeepslateGeneration.DISABLED)
+                .add(USE_SURFACE_RULES, false)
                 .add(CAVE_GENERATION, CaveGeneration.BETA)
                 .add(NOISE_3D_SETTINGS, Noise3DSettings.ALPHA)
                 .add(PERLIN_NOISE_SETTINGS, PerlinNoiseSettings.ALPHA)
                 .add(NOISE_SCALE, NoiseScale.ALPHA)
                 .add(NOISE_LANDMASS, NoiseLandmass.ALPHA)
                 .add(SURFACE_PROPERTIES, SurfaceProperties.ALPHA)
-                .addDefault(USE_SURFACE_RULES, NOISE_SLIDE, STRUCTURE_MODIFERS)
+                .addDefault(NOISE_SLIDE, STRUCTURE_MODIFERS)
                 .build(),
             ModernBetaSettings.singleBiome(ModernBetaBiomes.ALPHA),
             ModernBetaSettings.noCaveBiomes()
@@ -301,6 +302,7 @@ public final class ModernBetaSettingsPresets {
                 .add(NOISE_GENERATOR_SETTINGS, context.lookup(Registries.NOISE_SETTINGS)
                         .get(ModernBetaNoiseGeneratorSettings.SKY_128).orElseThrow())
                 .add(DEEPSLATE_GENERATION, DeepslateGeneration.DISABLED)
+                .add(USE_SURFACE_RULES, false)
                 .add(CAVE_GENERATION, CaveGeneration.BETA)
                 .add(NOISE_3D_SETTINGS, Noise3DSettings.SKYLANDS)
                 .add(NOISE_SCALE, NoiseScale.SKYLANDS)
@@ -316,7 +318,7 @@ public final class ModernBetaSettingsPresets {
                 .add(SURFACE_PROPERTIES, SurfaceProperties.SKYLANDS)
                 .add(STRUCTURE_MODIFERS, StructureModifiers.vanillaWithExceptions(
                         /*? >=1.21 {*/net.minecraft.world.level.levelgen.structure.BuiltinStructureSets.TRIAL_CHAMBERS/*?}*/))
-                .addDefault(USE_SURFACE_RULES, PERLIN_NOISE_SETTINGS)
+                .addDefault(PERLIN_NOISE_SETTINGS)
                 .build(),
             ModernBetaSettings.singleBiome(ModernBetaBiomes.BETA_SKY),
             ModernBetaSettings.noCaveBiomes()
@@ -330,6 +332,7 @@ public final class ModernBetaSettingsPresets {
                 .add(NOISE_GENERATOR_SETTINGS, context.lookup(Registries.NOISE_SETTINGS)
                         .get(ModernBetaNoiseGeneratorSettings.INFDEV_415).orElseThrow())
                 .add(DEEPSLATE_GENERATION, DeepslateGeneration.DISABLED)
+                .add(USE_SURFACE_RULES, false)
                 .add(CAVE_GENERATION, CaveGeneration.DISABLED)
                 .add(NOISE_3D_SETTINGS, Noise3DSettings.INFDEV_415)
                 .add(PERLIN_NOISE_SETTINGS, PerlinNoiseSettings.INFDEV_415)
@@ -337,7 +340,7 @@ public final class ModernBetaSettingsPresets {
                 .add(NOISE_SLIDE, NoiseSlide.DISABLED)
                 .add(NOISE_LANDMASS, NoiseLandmass.DISABLED)
                 .add(SURFACE_PROPERTIES, SurfaceProperties.ALPHA)
-                .addDefault(USE_SURFACE_RULES, STRUCTURE_MODIFERS)
+                .addDefault(STRUCTURE_MODIFERS)
                 .build(),
             ModernBetaSettings.singleBiome(ModernBetaBiomes.INFDEV_415),
             ModernBetaSettings.noCaveBiomes()
@@ -351,6 +354,7 @@ public final class ModernBetaSettingsPresets {
                 .add(NOISE_GENERATOR_SETTINGS, context.lookup(Registries.NOISE_SETTINGS)
                         .get(ModernBetaNoiseGeneratorSettings.OVERWORLD_128).orElseThrow())
                 .add(DEEPSLATE_GENERATION, DeepslateGeneration.DISABLED)
+                .add(USE_SURFACE_RULES, false)
                 .add(CAVE_GENERATION, CaveGeneration.DISABLED)
                 .add(NOISE_3D_SETTINGS, Noise3DSettings.INFDEV_611)
                 .add(PERLIN_NOISE_SETTINGS, PerlinNoiseSettings.ALPHA)
@@ -358,7 +362,7 @@ public final class ModernBetaSettingsPresets {
                 .add(NOISE_SLIDE, NoiseSlide.DISABLED)
                 .add(NOISE_LANDMASS, NoiseLandmass.DISABLED)
                 .add(SURFACE_PROPERTIES, SurfaceProperties.ALPHA)
-                .addDefault(USE_SURFACE_RULES, STRUCTURE_MODIFERS)
+                .addDefault(STRUCTURE_MODIFERS)
                 .build(),
             ModernBetaSettings.singleBiome(ModernBetaBiomes.INFDEV_420),
             ModernBetaSettings.noCaveBiomes()
@@ -372,6 +376,7 @@ public final class ModernBetaSettingsPresets {
                 .add(NOISE_GENERATOR_SETTINGS, context.lookup(Registries.NOISE_SETTINGS)
                         .get(ModernBetaNoiseGeneratorSettings.OVERWORLD_128).orElseThrow())
                 .add(DEEPSLATE_GENERATION, DeepslateGeneration.DISABLED)
+                .add(USE_SURFACE_RULES, false)
                 .add(CAVE_GENERATION, CaveGeneration.BETA)
                 .add(NOISE_3D_SETTINGS, Noise3DSettings.INFDEV_611)
                 .add(PERLIN_NOISE_SETTINGS, PerlinNoiseSettings.ALPHA)
@@ -379,7 +384,7 @@ public final class ModernBetaSettingsPresets {
                 .add(NOISE_SLIDE, NoiseSlide.DISABLED)
                 .add(NOISE_LANDMASS, NoiseLandmass.INFDEV_611)
                 .add(SURFACE_PROPERTIES, SurfaceProperties.ALPHA)
-                .addDefault(USE_SURFACE_RULES, STRUCTURE_MODIFERS)
+                .addDefault(STRUCTURE_MODIFERS)
                 .build(),
             ModernBetaSettings.singleBiome(ModernBetaBiomes.INFDEV_611),
             ModernBetaSettings.noCaveBiomes()
@@ -431,6 +436,7 @@ public final class ModernBetaSettingsPresets {
                         .get(ModernBetaNoiseGeneratorSettings.FINITE_2D).orElseThrow())
                 .add(PERLIN_NOISE_SETTINGS, PerlinNoiseSettings.CLASSIC)
                 .add(DEEPSLATE_GENERATION, DeepslateGeneration.DISABLED)
+                .add(USE_SURFACE_RULES, false)
                 .add(CAVE_GENERATION, CaveGeneration.DISABLED)
                 .add(WORLD_BORDER, WorldBorderLocation.indev(256, 64))
                 .add(STRUCTURE_MODIFERS, StructureModifiers.getFinite(structureRegistry, biomeRegistry, 256, 256, false, true))
@@ -460,6 +466,7 @@ public final class ModernBetaSettingsPresets {
                 ))
                 .add(WORLD_BORDER, WorldBorderLocation.indev(256, 64))
                 .add(DEEPSLATE_GENERATION, DeepslateGeneration.DISABLED)
+                .add(USE_SURFACE_RULES, false)
                 .add(CAVE_GENERATION, CaveGeneration.DISABLED)
                 .add(FINITE_BEACHES, new FiniteBeaches(
                     FiniteBeaches.DEFAULT.sandThreshold(),
@@ -495,6 +502,7 @@ public final class ModernBetaSettingsPresets {
                 ))
                 .add(WORLD_BORDER, WorldBorderLocation.indev(256, 64))
                 .add(DEEPSLATE_GENERATION, DeepslateGeneration.DISABLED)
+                .add(USE_SURFACE_RULES, false)
                 .add(CAVE_GENERATION, CaveGeneration.DISABLED)
                 .add(FINITE_CAVE_GENERATION, new FiniteCaveGeneration(
                     true,
@@ -539,6 +547,7 @@ public final class ModernBetaSettingsPresets {
             DEFAULT_BETA.chunkSettings().extend()
                 .add(NOISE_3D_SETTINGS, Noise3DSettings.PE)
                 .add(DEEPSLATE_GENERATION, DeepslateGeneration.DISABLED)
+                .add(USE_SURFACE_RULES, false)
                 .build(),
             DEFAULT_BETA.biomeSettings().extend()
                 .add(PROVIDER, ModernBetaBuiltInTypes.Biome.PE.id)
@@ -924,7 +933,6 @@ public final class ModernBetaSettingsPresets {
     private static ModernBetaSettingsPreset presetBetaVanilla() {
         return new ModernBetaSettingsPreset(
             DEFAULT_BETA.chunkSettings().extend()
-                .add(USE_SURFACE_RULES, true)
                 .add(CAVE_GENERATION, CaveGeneration.EARLY_RELEASE)
                 .build(),
             ModernBetaSettings.builder()
@@ -2384,7 +2392,6 @@ public final class ModernBetaSettingsPresets {
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.NOISE_3D.id)
                 .add(NOISE_GENERATOR_SETTINGS, context.lookup(Registries.NOISE_SETTINGS)
                         .get(bedrock ? ModernBetaNoiseGeneratorSettings.OVERWORLD_128 : ModernBetaNoiseGeneratorSettings.OVERWORLD_256).orElseThrow())
-                .add(USE_SURFACE_RULES, true)
                 .add(CAVE_GENERATION, bedrock ? CaveGeneration.BEDROCK : CaveGeneration.RELEASE_1_12_2)
                 .add(FORCED_BIOME_HEIGHT, ForcedBiomeHeight.overridesOnly(heightOverrides, amplified))
                 .add(SEA_LEVEL, 63)
@@ -2408,7 +2415,6 @@ public final class ModernBetaSettingsPresets {
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.NOISE_3D.id)
                 .add(NOISE_GENERATOR_SETTINGS, context.lookup(Registries.NOISE_SETTINGS)
                         .get(bedrock ? ModernBetaNoiseGeneratorSettings.OVERWORLD_128 : ModernBetaNoiseGeneratorSettings.OVERWORLD_256).orElseThrow())
-                .add(USE_SURFACE_RULES, true)
                 .add(CAVE_GENERATION, bedrock ? CaveGeneration.BEDROCK : CaveGeneration.RELEASE_1_17_1)
                 .add(FORCED_BIOME_HEIGHT, ForcedBiomeHeight.overridesOnly(HeightConfig.MAJOR_RELEASE_CONFIGS, amplified))
                 .add(SEA_LEVEL, 63)
@@ -2435,7 +2441,6 @@ public final class ModernBetaSettingsPresets {
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.NOISE_3D.id)
                 .add(NOISE_GENERATOR_SETTINGS, context.lookup(Registries.NOISE_SETTINGS)
                         .get(ModernBetaNoiseGeneratorSettings.OVERWORLD_256).orElseThrow())
-                .add(USE_SURFACE_RULES, true)
                 .add(CAVE_GENERATION, CaveGeneration.EARLY_RELEASE)
                 .add(FORCED_BIOME_HEIGHT, ForcedBiomeHeight.overridesOnly(HeightConfig.MAJOR_RELEASE_CONFIGS))
                 .add(SEA_LEVEL, 63)
@@ -2459,7 +2464,6 @@ public final class ModernBetaSettingsPresets {
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.NOISE_3D.id)
                 .add(NOISE_GENERATOR_SETTINGS, context.lookup(Registries.NOISE_SETTINGS)
                         .get(ModernBetaNoiseGeneratorSettings.OVERWORLD_256).orElseThrow())
-                .add(USE_SURFACE_RULES, true)
                 .add(CAVE_GENERATION, CaveGeneration.RELEASE_1_17_1)
                 .add(FORCED_BIOME_HEIGHT, ForcedBiomeHeight.overridesOnly(HeightConfig.MAJOR_RELEASE_CONFIGS, amplified))
                 .add(SEA_LEVEL, 63)
@@ -2520,7 +2524,6 @@ public final class ModernBetaSettingsPresets {
 
         return new ModernBetaSettingsPreset(
             DEFAULT_BETA.chunkSettings().extend()
-                .add(USE_SURFACE_RULES, true)
                 .add(CAVE_GENERATION, CaveGeneration.EARLY_RELEASE)
                 .add(FORCED_BIOME_HEIGHT, ForcedBiomeHeight.overridesOnly(
                     Map.ofEntries(

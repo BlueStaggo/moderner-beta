@@ -86,7 +86,7 @@ stonecutter.parameters {
 
         string(eval(current.version, "<1.21.2")) {
             replace(".getMinSectionY()", ".getMinSection()")
-            replace(".getMaxSectionY()", ".getMaxSection()")
+            replace(".getMaxSectionY() + 1", ".getMaxSection()")
         }
 
         string(eval(current.version, "<1.21.2"), "minBuild") {

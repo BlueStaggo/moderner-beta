@@ -1,8 +1,7 @@
-## Additions
-- Added support for Minecraft 26.1
-
 ## Changes
-- Fixed inaccuracies with biome generation on Major Release presets
+- Made mushroom generation more accurate in presets with all custom biomes
+- Renamed the Noise Caves option to Modern Caves to reduce confusion.
 
 ## Fixes
-- Fixed regression with Beta beach generation caused in 4.0.0
+- Fixed crash with Serene Seasons on Forge 1.20.1
+- Fixed biome injection being broken when going up and down vertically.

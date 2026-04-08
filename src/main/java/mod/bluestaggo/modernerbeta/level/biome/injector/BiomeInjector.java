@@ -88,29 +88,35 @@ public class BiomeInjector {
          */
         
         // Replace biomes from biome container
-        for (int sectionY = view.getMinSectionY(); sectionY < view.getMaxSectionY(); ++sectionY) {
+        for (int sectionY = view.getMinSectionY(); sectionY < view.getMaxSectionY() + 1; ++sectionY) {
             int sectionYNdx = chunk.getSectionIndexFromSectionY(sectionY);
             LevelChunkSection section = chunk.getSection(sectionYNdx);
             
             PalettedContainerRO<Holder<Biome>> readableContainer = section.getBiomes();
             PalettedContainer<Holder<Biome>> palettedContainer = section.getBiomes().recreate();
-            
-            for (int localBiomeX = 0; localBiomeX < 4; ++localBiomeX) {
-                for (int localBiomeZ = 0; localBiomeZ < 4; ++localBiomeZ) {
+            palettedContainer.acquire();
+
+            try {
+                for (int localBiomeX = 0; localBiomeX < 4; ++localBiomeX) {
                     int biomeX = localBiomeX + startBiomeX;
-                    int biomeZ = localBiomeZ + startBiomeZ;
-                    
-                    for (int localBiomeY = 0; localBiomeY < 4; ++localBiomeY) {
-                        int biomeY = localBiomeY + sectionY << 2;
-                        
-                        Holder<Biome> initialBiome = readableContainer.get(localBiomeX, localBiomeY, localBiomeZ);
-                        Holder<Biome> replacementBiome = this.getOptionalBiome(view, biomeX, biomeY, biomeZ, noiseSampler, step).orElse(initialBiome);
-                        
-                        palettedContainer.set(localBiomeX, localBiomeY, localBiomeZ, replacementBiome);
-                    }   
+
+                    for (int localBiomeZ = 0; localBiomeZ < 4; ++localBiomeZ) {
+                        int biomeZ = localBiomeZ + startBiomeZ;
+
+                        for (int localBiomeY = 0; localBiomeY < 4; ++localBiomeY) {
+                            int biomeY = sectionY << 2 | localBiomeY;
+
+                            Holder<Biome> initialBiome = readableContainer.get(localBiomeX, localBiomeY, localBiomeZ);
+                            Holder<Biome> replacementBiome = this.getOptionalBiome(view, biomeX, biomeY, biomeZ, noiseSampler, step).orElse(initialBiome);
+
+                            palettedContainer.getAndSetUnchecked(localBiomeX, localBiomeY, localBiomeZ, replacementBiome);
+                        }
+                    }
                 }
+            } finally {
+                palettedContainer.release();
             }
-            
+
             ((LevelChunkSectionAccessor)section).setBiomes(palettedContainer);
         }
     }
@@ -175,7 +181,7 @@ public class BiomeInjector {
         int minHeight = this.sampleMinHeight(level, biomeX, biomeZ);
 
         return new BiomeInjectionContext(worldMinY, topHeight, minHeight)
-            .setPosition(biomeX << 2, biomeY << 2, biomeZ << 2);
+            .setPosition((biomeX << 2) + 2, biomeY << 2, (biomeZ << 2) + 2);
     }
     
     private int sampleTopHeight(LevelHeightAccessor level, int biomeX, int biomeZ) {

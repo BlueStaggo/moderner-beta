@@ -4,9 +4,18 @@ import com.google.common.collect.ImmutableList;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomes;
 import net.minecraft.data.worldgen.SurfaceRuleData;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.Biomes;
+import net.minecraft.world.level.levelgen.SurfaceRules;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static mod.bluestaggo.modernerbeta.level.chunk.ModernBetaNoiseGeneratorSettings.useModernBetaSurfaceRules;
 
@@ -69,5 +78,38 @@ public class SurfaceRuleDataMixin {
         }
 
         return original.call(instance, element);
+    }
+
+    @WrapOperation(
+        method = "overworldLike",
+        at = @At(
+                value = "INVOKE",
+                target = "Lnet/minecraft/world/level/levelgen/SurfaceRules;isBiome([Lnet/minecraft/resources/ResourceKey;)Lnet/minecraft/world/level/levelgen/SurfaceRules$ConditionSource;"
+        )
+    )
+    private static SurfaceRules.ConditionSource addModernBetaVariantsToRulePredicates(ResourceKey<Biome>[] target, Operation<SurfaceRules.ConditionSource> original) {
+        if (!useModernBetaSurfaceRules())
+            return original.call((Object) target);
+
+        List<ResourceKey<Biome>> targets = new ArrayList<>(Arrays.asList(target));
+
+        if (targets.contains(Biomes.FROZEN_OCEAN) || targets.contains(Biomes.DEEP_FROZEN_OCEAN)) {
+            targets.add(ModernBetaBiomes.BETA_FROZEN_OCEAN);
+        }
+
+        if (targets.contains(Biomes.WARM_OCEAN)) {
+            targets.add(ModernBetaBiomes.BETA_WARM_OCEAN);
+        }
+
+        if (targets.contains(Biomes.DESERT)) {
+            targets.add(ModernBetaBiomes.BETA_DESERT);
+            targets.add(ModernBetaBiomes.BETA_ICE_DESERT);
+        }
+
+        if (targets.contains(Biomes.LUKEWARM_OCEAN) || targets.contains(Biomes.DEEP_LUKEWARM_OCEAN)) {
+            targets.add(ModernBetaBiomes.BETA_LUKEWARM_OCEAN);
+        }
+
+        return original.call((Object) targets.toArray(new ResourceKey[0]));
     }
 }

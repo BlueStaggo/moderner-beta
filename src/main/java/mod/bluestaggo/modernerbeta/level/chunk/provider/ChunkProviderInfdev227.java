@@ -4,6 +4,7 @@ import mod.bluestaggo.modernerbeta.api.level.chunk.ChunkProvider;
 import mod.bluestaggo.modernerbeta.api.level.chunk.ChunkProviderNoiseImitable;
 import mod.bluestaggo.modernerbeta.api.level.chunk.surface.SurfaceConfig;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
+import mod.bluestaggo.modernerbeta.settings.component.DeepslateGeneration;
 import mod.bluestaggo.modernerbeta.settings.component.Infdev227Structures;
 import mod.bluestaggo.modernerbeta.settings.component.PerlinNoiseSettings;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
@@ -17,7 +18,12 @@ import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaChunkGenerator;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.WorldGenRegion;
+import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.LevelHeightAccessor;
 import net.minecraft.world.level.StructureManager;
@@ -44,6 +50,9 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
     private final int seaLevel;
 
     private final int bedrockFloor;
+
+    private final DeepslateGeneration deepslateGeneration;
+    private final BlockState deepslateBlock;
     
     private final BlockState defaultBlock;
     private final BlockState defaultFluid;
@@ -72,6 +81,12 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
         this.worldTopY = this.worldHeight + this.worldMinY;
         this.seaLevel = generatorSettings.seaLevel();
         this.bedrockFloor = 0;
+
+        this.deepslateGeneration = this.getChunkSettings().getOrDefault(SettingsComponentTypes.DEEPSLATE_GENERATION);
+        this.deepslateBlock = BuiltInRegistries.BLOCK.getOrThrow(ResourceKey.create(Registries.BLOCK, this.deepslateGeneration.block()))
+                //? if >=1.21.2
+                .value()
+                .defaultBlockState();
 
         this.defaultBlock = generatorSettings.defaultBlock();
         this.defaultFluid = generatorSettings.defaultFluid();
@@ -153,6 +168,20 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
                     if (runDepth == 1) blockToSet = fillerBlock;
 
                     runDepth++;
+
+                    if (blockToSet == null && this.deepslateGeneration.enabled()) {
+                        if (y <= this.deepslateGeneration.minY()) {
+                            blockToSet = this.deepslateBlock;
+                        } else {
+                            int minY = this.deepslateGeneration.minY();
+                            int maxY = this.deepslateGeneration.maxY();
+
+                            double yThreshold = Mth.lerp(Mth.inverseLerp(y, minY, maxY), 1.0, 0.0);
+                            RandomSource random = this.randomFactory.at(x, y, z);
+
+                            blockToSet = (double) random.nextFloat() < yThreshold ? this.deepslateBlock : null;
+                        }
+                    }
 
                     if (blockToSet != null) {
                         VersionCompat.setBlockState(chunk, pos, blockToSet);

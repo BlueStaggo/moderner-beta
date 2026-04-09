@@ -120,51 +120,43 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
             for (int localZ = 0; localZ < 16; ++localZ) {
                 int x = startX + localX;
                 int z = startZ + localZ;
-                int surfaceTopY = chunk.getOrCreateHeightmapUnprimed(Types.OCEAN_FLOOR_WG).getFirstAvailable(localX, localZ) - 1;
-                
+                int surfaceTopY = this.getHeight(region, x, z, Types.WORLD_SURFACE_WG);
+
                 Holder<Biome> biome = biomeSource.getBiomeForSurfaceGen(region, pos.set(x, surfaceTopY, z));
-                int surfaceMinY = this.getHeight(region, x, z, Types.OCEAN_FLOOR_WG) - 8;
-                
+
                 SurfaceConfig surfaceConfig = this.surfaceBuilder.getSurfaceConfig(biome);
                 BlockState topBlock = surfaceConfig.normal().topBlock();
                 BlockState fillerBlock = surfaceConfig.normal().fillerBlock();
 
                 int runDepth = 0;
 
-                for (int y = this.worldTopY; y >= this.worldMinY; --y) {
-                    BlockState blockState;
-                    
+                for (int y = surfaceTopY; y >= this.worldMinY; --y) {
                     pos.set(localX, y, localZ);
-                    blockState = chunk.getBlockState(pos);
+                    BlockState blockAt = chunk.getBlockState(pos);
+                    BlockState blockToSet = null;
                     
                     // Place bedrock
                     if (y <= bedrockFloor + bedrockRand.nextInt(5)) {
-                        VersionCompat.setBlockState(chunk, pos, BlockStates.BEDROCK);
-                        continue;
+                        blockToSet = BlockStates.BEDROCK;
                     }
-
-                    // Skip if at surface min y
-                    if (y < surfaceMinY) {
-                        continue;
-                    }
-
-                    boolean inFluid = blockState.equals(BlockStates.AIR) || blockState.equals(this.defaultFluid);
                     
-                    if (inFluid) {
+                    if (blockAt.equals(BlockStates.AIR) || blockAt.equals(this.defaultFluid)) {
                         runDepth = 0;
                         continue;
                     }
                     
-                    if (!blockState.is(this.defaultBlock.getBlock())) {
+                    if (!blockAt.is(this.defaultBlock.getBlock())) {
                         continue;
                     }
-                        
-                    if (runDepth == 0) blockState = (y >= this.seaLevel) ? topBlock : fillerBlock;
-                    if (runDepth == 1) blockState = fillerBlock;
-                    
+
+                    if (runDepth == 0) blockToSet = (y >= this.seaLevel) ? topBlock : fillerBlock;
+                    if (runDepth == 1) blockToSet = fillerBlock;
+
                     runDepth++;
 
-                    VersionCompat.setBlockState(chunk, pos, blockState);
+                    if (blockToSet != null) {
+                        VersionCompat.setBlockState(chunk, pos, blockToSet);
+                    }
                 }
             }
         }

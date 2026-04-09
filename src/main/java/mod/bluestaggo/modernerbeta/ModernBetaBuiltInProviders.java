@@ -11,7 +11,6 @@ import mod.bluestaggo.modernerbeta.level.chunk.provider.ChunkProviderNoise3D;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.level.biome.HeightConfig;
-import mod.bluestaggo.modernerbeta.level.blocksource.BlockSourceDeepslate;
 import mod.bluestaggo.modernerbeta.level.cavebiome.provider.CaveBiomeProviderNone;
 import mod.bluestaggo.modernerbeta.level.cavebiome.provider.CaveBiomeProviderSingle;
 import mod.bluestaggo.modernerbeta.level.cavebiome.provider.CaveBiomeProviderVoronoi;
@@ -179,6 +178,5 @@ public class ModernBetaBuiltInProviders {
     
     public static void registerBlockSources(IRegistryHandler<?> handler) {
         IRegistryHandler<BlockSourceCreator> registryHandler = (IRegistryHandler<BlockSourceCreator>) handler;
-        registryHandler.register(ModernBetaBuiltInTypes.BlockSource.DEEPSLATE.id, BlockSourceDeepslate::new);
     }
 }

@@ -27,8 +27,12 @@ import mod.bluestaggo.modernerbeta.level.spawn.SpawnLocatorBeta;
 import mod.bluestaggo.modernerbeta.level.spawn.SpawnLocatorRelease;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.biome.Biome;
@@ -45,6 +49,8 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
     private final Noise3DSettings noise3DSettings;
     private final NoiseLandmass noiseLandmass;
     private final SurfaceProperties surfaceProperties;
+    private final DeepslateGeneration deepslateGeneration;
+    private final BlockState deepslateBlock;
     private final boolean forcedBiomeHeightEnabled;
 
     private final PerlinOctaveNoise minLimitOctaveNoise;
@@ -66,6 +72,11 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
         this.noise3DSettings = this.getChunkSettings().getOrDefault(SettingsComponentTypes.NOISE_3D_SETTINGS);
         this.noiseLandmass = this.getChunkSettings().getOrDefault(SettingsComponentTypes.NOISE_LANDMASS);
         this.surfaceProperties = this.getChunkSettings().getOrDefault(SettingsComponentTypes.SURFACE_PROPERTIES);
+        this.deepslateGeneration = this.getChunkSettings().getOrDefault(SettingsComponentTypes.DEEPSLATE_GENERATION);
+        this.deepslateBlock = BuiltInRegistries.BLOCK.getOrThrow(ResourceKey.create(Registries.BLOCK, this.deepslateGeneration.block()))
+                //? if >=1.21.2
+                .value()
+                .defaultBlockState();
         this.forcedBiomeHeightEnabled = this.getChunkSettings().getOrDefault(SettingsComponentTypes.FORCED_BIOME_HEIGHT).enabled();
 
         this.minLimitOctaveNoise = new PerlinOctaveNoise(this.random, 16, perlinSettings);
@@ -174,10 +185,9 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
                     continue;
                 }
 
-                int surfaceTopY = chunk.getOrCreateHeightmapUnprimed(Heightmap.Types.OCEAN_FLOOR_WG).getFirstAvailable(localX, localZ) - 1;
-                int surfaceMinY = heightmapChunk != null ?
-                    heightmapChunk.getHeight(x, z, ChunkHeightmap.Type.SURFACE_FLOOR) - 8 :
-                    this.worldMinY;
+                int surfaceTopY = heightmapChunk != null ?
+                        heightmapChunk.getHeight(x, z, ChunkHeightmap.Type.SURFACE) :
+                        chunk.getHeight(Heightmap.Types.WORLD_SURFACE_WG, localX, localZ) + 1;
 
                 int noiseCoord = this.surfaceProperties.flipNoiseCoordinates()
                     ? localX + localZ * 16
@@ -221,11 +231,10 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
                 BlockState fillerBlock = surfaceConfig.normal().fillerBlock();
 
                 // Generate from top to bottom of world
-                for (int y = this.worldTopY - 1; y >= this.worldMinY; y--) {
-                    BlockState blockState;
-
+                for (int y = surfaceTopY; y >= this.worldMinY; y--) {
                     pos.set(localX, y, localZ);
-                    blockState = chunk.getBlockState(pos);
+                    BlockState blockAt = chunk.getBlockState(pos);
+                    BlockState blockToSet = null;
 
                     // Place bedrock
                     if (this.surfaceProperties.generateBedrock()) {
@@ -234,22 +243,16 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
                                     ? rand.nextInt(6) - 1
                                     : rand.nextInt(5));
                         if (y <= this.bedrockFloor + bedrockOffset) {
-                            VersionCompat.setBlockState(chunk, pos, BlockStates.BEDROCK);
-                            continue;
+                            blockToSet = BlockStates.BEDROCK;
                         }
                     }
 
-                    // Skip if at surface min y
-                    if (y < surfaceMinY) {
-                        continue;
-                    }
-
-                    if (blockState.isAir()) { // Skip if air block
+                    if (blockAt.isAir()) { // Skip if air block
                         runDepth = -1;
                         continue;
                     }
 
-                    if (!blockState.is(this.defaultBlock.getBlock())) { // Skip if not stone
+                    if (!blockAt.is(this.defaultBlock.getBlock())) { // Skip if not stone
                         continue;
                     }
 
@@ -280,41 +283,53 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
 
                             boolean isAir = fluidBlock == null;
                             topBlock = isAir ? BlockStates.AIR : fluidBlock;
-
-                            this.scheduleFluidTick(chunk, aquiferSampler, pos, topBlock);
                         }
 
                         if (y >= seaLevel - 1 || (y < seaLevel - 1 && chunk.getBlockState(pos.above()).isAir())) {
-                            blockState = topBlock;
+                            blockToSet = topBlock;
                         } else if (surfaceProperties.gravelOceanBed() && y < seaLevel - 7 - surfaceDepth) {
                             topBlock = BlockStates.AIR;
                             fillerBlock = BlockStates.STONE;
-                            blockState = BlockStates.GRAVEL;
+                            blockToSet = BlockStates.GRAVEL;
                         } else {
-                            blockState = fillerBlock;
+                            blockToSet = fillerBlock;
+                        }
+                    } else if (runDepth > 0) {
+                        runDepth--;
+                        blockToSet = fillerBlock;
+
+                        // Generates layer of sandstone starting at lowest block of sand, of height 1 to 4.
+                        if (runDepth == 0 && fillerBlock.is(Blocks.SAND)) {
+                            runDepth = rand.nextInt(4);
+                            fillerBlock = BlockStates.SANDSTONE;
                         }
 
-                        VersionCompat.setBlockState(chunk, pos, blockState);
-
-                        continue;
+                        if (runDepth == 0 && fillerBlock.is(Blocks.RED_SAND)) {
+                            runDepth = rand.nextInt(4);
+                            fillerBlock = BlockStates.RED_SANDSTONE;
+                        }
                     }
 
-                    if (runDepth <= 0) {
-                        continue;
+                    if (blockToSet == null && this.deepslateGeneration.enabled()) {
+                        if (y <= this.deepslateGeneration.minY()) {
+                            blockToSet = this.deepslateBlock;
+                        } else {
+                            int minY = this.deepslateGeneration.minY();
+                            int maxY = this.deepslateGeneration.maxY();
+
+                            double yThreshold = Mth.lerp(Mth.inverseLerp(y, minY, maxY), 1.0, 0.0);
+                            RandomSource random = this.randomFactory.at(x, y, z);
+
+                            blockToSet = (double) random.nextFloat() < yThreshold ? this.deepslateBlock : null;
+                        }
                     }
 
-                    runDepth--;
-                    VersionCompat.setBlockState(chunk, pos, fillerBlock);
+                    if (blockToSet != null) {
+                        if (!blockToSet.getFluidState().isEmpty()) {
+                            this.scheduleFluidTick(chunk, aquiferSampler, pos, blockToSet);
+                        }
 
-                    // Generates layer of sandstone starting at lowest block of sand, of height 1 to 4.
-                    if (runDepth == 0 && fillerBlock.is(Blocks.SAND)) {
-                        runDepth = rand.nextInt(4);
-                        fillerBlock = BlockStates.SANDSTONE;
-                    }
-
-                    if (runDepth == 0 && fillerBlock.is(Blocks.RED_SAND)) {
-                        runDepth = rand.nextInt(4);
-                        fillerBlock = BlockStates.RED_SANDSTONE;
+                        VersionCompat.setBlockState(chunk, pos, blockToSet);
                     }
                 }
             }

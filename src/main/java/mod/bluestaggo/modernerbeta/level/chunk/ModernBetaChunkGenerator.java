@@ -5,9 +5,10 @@ import com.google.common.base.Suppliers;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.api.level.chunk.surface.SurfaceConfig;
 import mod.bluestaggo.modernerbeta.compat.ModCompat;
+import mod.bluestaggo.modernerbeta.level.biome.injection.BiomeInjectionHandler;
 import mod.bluestaggo.modernerbeta.mixin.ChunkGeneratorStructureStateAccessor;
 import mod.bluestaggo.modernerbeta.mixin.NoiseBasedChunkGeneratorAccessor;
-import mod.bluestaggo.modernerbeta.level.biome.injector.BiomeInjectionRule;
+import mod.bluestaggo.modernerbeta.level.biome.injection.BiomeInjectionRule;
 import mod.bluestaggo.modernerbeta.mixin.SequenceRuleSourceAccessor;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.api.level.chunk.ChunkProvider;
@@ -25,7 +26,6 @@ import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.util.random.BedrockRandomSource;
 import mod.bluestaggo.modernerbeta.util.random.BedrockWorldgenRandom;
 import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomeSource;
-import mod.bluestaggo.modernerbeta.level.biome.injector.BiomeInjector;
 import mod.bluestaggo.modernerbeta.level.carver.BetaCaveCarverConfiguration;
 import mod.bluestaggo.modernerbeta.level.carver.configured.ModernBetaConfiguredCarvers;
 import net.minecraft.Util;
@@ -78,7 +78,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
     private final HolderGetter<ModernBetaSettingsPreset> presetRegistry;
     private final HolderGetter<SurfaceConfig> surfaceConfigRegistry;
     private final ModernBetaSettings chunkSettings;
-    private final Supplier<BiomeInjector> biomeInjector;
+    private final Supplier<BiomeInjectionHandler> biomeInjector;
 
     private boolean useSurfaceRules;
     private CaveGeneration caveSettings = CaveGeneration.DEFAULT;
@@ -99,7 +99,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
         this.chunkSettings = fixupPreset(chunkProviderSettings);
         this.biomeInjector = Suppliers.memoize(() ->
             this.biomeSource instanceof ModernBetaBiomeSource modernBetaBiomeSource
-                ? new BiomeInjector(this, modernBetaBiomeSource) : null);
+                ? new BiomeInjectionHandler(this, modernBetaBiomeSource) : null);
 
         if (this.biomeSource instanceof ModernBetaBiomeSource modernBetaBiomeSource) {
             modernBetaBiomeSource.setChunkGenerator(this);
@@ -523,7 +523,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
         return this.chunkSettings;
     }
     
-    public BiomeInjector getBiomeInjector() {
+    public BiomeInjectionHandler getBiomeInjector() {
         return this.biomeInjector.get();
     }
 
@@ -537,9 +537,9 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
     }
     
     private void injectBiomes(ChunkAccess chunk, Sampler noiseSampler, BiomeInjectionRule.Step step) {
-        BiomeInjector biomeInjector = this.biomeInjector.get();
-        if (biomeInjector != null) {
-            biomeInjector.injectBiomes(chunk, noiseSampler, step);
+        BiomeInjectionHandler biomeInjectionHandler = this.biomeInjector.get();
+        if (biomeInjectionHandler != null) {
+            biomeInjectionHandler.injectBiomes(chunk, noiseSampler, step);
         }
     }
 

@@ -6,6 +6,7 @@ import it.unimi.dsi.fastutil.doubles.DoubleList;
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.api.level.biome.climate.TemperatureHeightScaling;
+import mod.bluestaggo.modernerbeta.level.biome.injection.BiomeInjectionRules;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers.*;
 import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaNoiseGeneratorSettings;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaResourceKeys;
@@ -27,6 +28,7 @@ import mod.bluestaggo.modernerbeta.util.BootstrapDataContextInfoLookup;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
+import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.random.WeightedList;
@@ -135,7 +137,7 @@ public final class ModernBetaSettingsPresets {
         register(context, INDEV, presetIndev(context));
         register(context, CLASSIC_0_30, presetClassic(context));
         register(context, CLASSIC_0_0_14A_08, presetClassic14a08(context));
-        register(context, PE, presetPE());
+        register(context, PE, presetPE(context));
         register(context, BETA_1_8_1, presetBeta181(false, 0));
         register(context, BETA_1_9_PRE_3, presetBeta19Pre3(false, 0));
         register(context, RELEASE_1_0_0, preset100(false, 0));
@@ -216,7 +218,6 @@ public final class ModernBetaSettingsPresets {
                 .build(),
             ModernBetaSettings.builder(lookup)
                 .add(PROVIDER, ModernBetaBuiltInTypes.Biome.BETA.id)
-                .add(USE_OCEAN_BIOMES, true)
                 .add(TEMPERATURE_HEIGHT_SCALING, TemperatureHeightScaling.BETA)
                 .add(CLIMATE_DISTRIBUTION, ClimateDistribution.BETA)
                 .add(CLIMATE_MAPPINGS, Map.ofEntries(
@@ -265,6 +266,7 @@ public final class ModernBetaSettingsPresets {
                         ModernBetaBiomes.BETA_FROZEN_OCEAN.location()
                     ))
                 ))
+                .add(BIOME_INJECTION_RULES, BiomeInjectionRules.defaultRules(lookup, true))
                 .addDefault(CLIMATE_SCALE)
                 .build(),
             ModernBetaSettings.builder(lookup)
@@ -534,7 +536,9 @@ public final class ModernBetaSettingsPresets {
         );
     }
     
-    private static ModernBetaSettingsPreset presetPE() {
+    private static ModernBetaSettingsPreset presetPE(BootstrapContext<ModernBetaSettingsPreset> context) {
+        RegistryOps.RegistryInfoLookup lookup = new BootstrapDataContextInfoLookup<>(context);
+
         return new ModernBetaSettingsPreset(
             DEFAULT_BETA.chunkSettings().extend()
                 .add(NOISE_3D_SETTINGS, Noise3DSettings.PE)
@@ -542,7 +546,6 @@ public final class ModernBetaSettingsPresets {
                 .build(),
             DEFAULT_BETA.biomeSettings().extend()
                 .add(PROVIDER, ModernBetaBuiltInTypes.Biome.PE.id)
-                .add(USE_OCEAN_BIOMES, false)
                 .add(TEMPERATURE_HEIGHT_SCALING, TemperatureHeightScaling.BETA)
                 .add(CLIMATE_DISTRIBUTION, ClimateDistribution.BETA)
                 .add(CLIMATE_MAPPINGS, Map.ofEntries(
@@ -591,16 +594,19 @@ public final class ModernBetaSettingsPresets {
                         ModernBetaBiomes.PE_FROZEN_OCEAN.location()
                     ))
                 ))
+                .add(BIOME_INJECTION_RULES, BiomeInjectionRules.emptyRules(lookup))
                 .build(),
             ModernBetaSettings.noCaveBiomes()
         );
     }
     
     private static ModernBetaSettingsPreset presetBetaSkylands(BootstrapContext<ModernBetaSettingsPreset> context) {
+        RegistryOps.RegistryInfoLookup lookup = new BootstrapDataContextInfoLookup<>(context);
+
         return new ModernBetaSettingsPreset(
             presetSkylands(context).chunkSettings(),
             DEFAULT_BETA.biomeSettings().extend()
-                .add(USE_OCEAN_BIOMES, false)
+                .add(BIOME_INJECTION_RULES, BiomeInjectionRules.defaultRules(lookup, false))
                 .build(),
             DEFAULT_BETA.caveBiomeSettings()
         );
@@ -929,7 +935,6 @@ public final class ModernBetaSettingsPresets {
                 .build(),
             ModernBetaSettings.builder()
                 .add(PROVIDER, ModernBetaBuiltInTypes.Biome.VORONOI.id)
-                .add(USE_OCEAN_BIOMES, true)
                 .add(CLIMATE_SCALE, new ClimateScale(
                     0.025f / 3.0f,
                     0.05f / 3.0f,

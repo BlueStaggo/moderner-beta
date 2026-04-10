@@ -60,7 +60,7 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 			.orElse(this.layer);
 		this.heightLayer.init(seed);
 
-        if (this.settings.getOrDefault(SettingsComponentTypes.USE_OCEAN_BIOMES)) {
+        if (true/*this.settings.getOrDefault(SettingsComponentTypes.USE_OCEAN_BIOMES)*/) { //TODO
             this.oceanLayer = this.configuredLayers.getOutputOrThrow(ModernBetaBuiltInTypes.LayerOutput.OCEAN.id);
             this.oceanLayer.init(seed);
             this.oceanLayer.addPossibleBiomesRecursive(allExtendedBiomes);

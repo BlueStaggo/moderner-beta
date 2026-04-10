@@ -4,6 +4,8 @@ import com.mojang.serialization.Codec;
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.api.level.biome.climate.TemperatureHeightScaling;
+import mod.bluestaggo.modernerbeta.level.biome.injection.BiomeInjectionRule;
+import mod.bluestaggo.modernerbeta.level.biome.injection.BiomeInjectionRules;
 import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaNoiseGeneratorSettings;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import mod.bluestaggo.modernerbeta.settings.component.*;
@@ -64,10 +66,8 @@ public class SettingsComponentTypes {
     public static SettingsComponentType<List<VoronoiPointBiome>> VORONOI_POINTS;
     public static SettingsComponentType<ConfiguredLayers> FRACTAL_LAYERS;
     public static SettingsComponentType<Boolean> USE_32BIT_LAYER_SEED;
-    public static SettingsComponentType<Boolean> USE_OCEAN_BIOMES;
     public static SettingsComponentType<TemperatureHeightScaling> TEMPERATURE_HEIGHT_SCALING;
-    public static SettingsComponentType<BiomeInjectionThresholds> BIOME_INJECTION_THRESHOLDS;
-    public static SettingsComponentType<ResourceLocation> OUT_OF_BOUNDS_BIOME;
+    public static SettingsComponentType<List<BiomeInjectionRule>> BIOME_INJECTION_RULES;
 
     // Cave biome provider
     public static SettingsComponentType<CaveBiomeVoronoi> CAVE_BIOME_VORONOI;
@@ -294,25 +294,16 @@ public class SettingsComponentTypes {
             Codec.BOOL,
             false,
             ValidationResult.Valid::new);
-        USE_OCEAN_BIOMES = register(
-            ModernBetaBuiltInTypes.SettingsComponentType.USE_OCEAN_BIOMES.id,
-            Codec.BOOL,
-            false,
-            ValidationResult.Valid::new);
         TEMPERATURE_HEIGHT_SCALING = register(
             ModernBetaBuiltInTypes.SettingsComponentType.TEMPERATURE_HEIGHT_SCALING.id,
             StringRepresentable.fromEnum(TemperatureHeightScaling::values),
             TemperatureHeightScaling.NONE,
             ValidationResult.Valid::new);
-        BIOME_INJECTION_THRESHOLDS = register(
-            ModernBetaBuiltInTypes.SettingsComponentType.BIOME_INJECTION_THRESHOLDS.id,
-            BiomeInjectionThresholds.CODEC,
-            BiomeInjectionThresholds.DEFAULT,
-            ValidationResult.Valid::new);
-        OUT_OF_BOUNDS_BIOME = register(
-            ModernBetaBuiltInTypes.SettingsComponentType.OUT_OF_BOUNDS_BIOME.id,
-            ResourceLocation.CODEC,
-            VersionCompat.vanillaId("the_void"),
+        BIOME_INJECTION_RULES = registerWithDefaultGetter(
+            ModernBetaBuiltInTypes.SettingsComponentType.BIOME_INJECTION_RULES.id,
+            BiomeInjectionRule.CODEC.listOf(),
+            (settings, registries) ->
+                    BiomeInjectionRules.defaultRules(registries, false),
             ValidationResult.Valid::new);
 
         // Cave biome provider

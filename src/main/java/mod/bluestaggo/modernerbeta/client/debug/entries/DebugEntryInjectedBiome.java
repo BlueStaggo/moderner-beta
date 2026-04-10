@@ -1,7 +1,6 @@
 package mod.bluestaggo.modernerbeta.client.debug.entries;
 
-import mod.bluestaggo.modernerbeta.level.biome.injector.BiomeInjectionRule;
-import mod.bluestaggo.modernerbeta.level.biome.injector.BiomeInjector;
+import mod.bluestaggo.modernerbeta.level.biome.injection.BiomeInjectionRule;
 import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaChunkGenerator;
 //? if >=1.21.9 {
 /*import net.minecraft.client.Minecraft;

@@ -7,6 +7,8 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import mod.bluestaggo.modernerbeta.api.level.chunk.surface.SurfaceConfig;
+import mod.bluestaggo.modernerbeta.level.biome.injection.injector.BiomeInjectorType;
+import mod.bluestaggo.modernerbeta.level.biome.injection.predicates.InjectionPredicateType;
 import mod.bluestaggo.modernerbeta.network.INetworkHelper;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
@@ -35,8 +37,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Tuple;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.slf4j.event.Level;
 
 import java.io.BufferedReader;
@@ -90,7 +90,9 @@ public class ModernerBeta {
             new Tuple<>(ModernBetaRegistries.HEIGHT_CONFIG, ModernBetaBuiltInProviders::registerHeightConfigs),
             new Tuple<>(ModernBetaRegistries.BLOCKSOURCE, ModernBetaBuiltInProviders::registerBlockSources),
             new Tuple<>(ModernBetaRegistries.FRACTAL_LAYER, LayerType::init),
-            new Tuple<>(ModernBetaRegistries.BIOME_PREDICATE, BiomePredicateType::init)
+            new Tuple<>(ModernBetaRegistries.BIOME_PREDICATE, BiomePredicateType::init),
+            new Tuple<>(ModernBetaRegistries.BIOME_INJECTOR, BiomeInjectorType::init),
+            new Tuple<>(ModernBetaRegistries.INJECTION_PREDICATE, InjectionPredicateType::init)
         );
     }
 

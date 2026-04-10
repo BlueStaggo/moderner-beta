@@ -123,7 +123,7 @@ public class BiomeInjectionHandler {
             return this.modernBetaBiomeSource.getNoiseBiome(biomeX, biomeY, biomeZ, noiseSampler);
         }
 
-        BiomeInjectionContext context = this.createContext(level, biomeX, biomeY, biomeZ);
+        BiomeInjectionContext context = this.setupContext(level, biomeX, biomeY, biomeZ);
 
         return this
             .getBiome(context, biomeX, biomeY, biomeZ, noiseSampler, step)
@@ -131,7 +131,7 @@ public class BiomeInjectionHandler {
     }
     
     public Optional<Holder<Biome>> getOptionalBiome(LevelHeightAccessor level, int biomeX, int biomeY, int biomeZ, Sampler noiseSampler, BiomeInjectionRule.Step step) {
-        BiomeInjectionContext context = this.createContext(level, biomeX, biomeY, biomeZ);
+        BiomeInjectionContext context = this.setupContext(level, biomeX, biomeY, biomeZ);
 
         return this.getBiome(context, biomeX, biomeY, biomeZ, noiseSampler, step);
     }
@@ -154,7 +154,7 @@ public class BiomeInjectionHandler {
         return Optional.ofNullable(biome);
     }
     
-    private BiomeInjectionContext createContext(LevelHeightAccessor level, int biomeX, int biomeY, int biomeZ) {
+    private BiomeInjectionContext setupContext(LevelHeightAccessor level, int biomeX, int biomeY, int biomeZ) {
         int worldMinY = this.modernBetaChunkGenerator.getMinY();
         int topHeight = this.sampleTopHeight(level, biomeX, biomeZ);
         int minHeight = this.sampleMinHeight(level, biomeX, biomeZ);

@@ -159,7 +159,7 @@ public final class ModernBetaSettingsPresets {
         register(context, BETA_LARGE_BIOMES, presetBetaLargeBiomes());
         register(context, BETA_XBOX_LEGACY, presetBetaXboxLegacy(context));
         register(context, BETA_SURVIVAL_ISLAND, presetBetaSurvivalIsland());
-        register(context, BETA_VANILLA, presetBetaVanilla());
+        register(context, BETA_VANILLA, presetBetaVanilla(context));
         register(context, LEGACY_CONSOLE_CLASSIC, presetReleaseXboxLegacy(context, 864));
         register(context, LEGACY_CONSOLE_SMALL, presetReleaseXboxLegacy(context, 1024));
         register(context, LEGACY_CONSOLE_MEDIUM, presetReleaseXboxLegacy(context, 3072));
@@ -967,7 +967,9 @@ public final class ModernBetaSettingsPresets {
         );
     }
     
-    private static ModernBetaSettingsPreset presetBetaVanilla() {
+    private static ModernBetaSettingsPreset presetBetaVanilla(BootstrapContext<ModernBetaSettingsPreset> context) {
+        RegistryOps.RegistryInfoLookup lookup = new BootstrapDataContextInfoLookup<>(context);
+
         return new ModernBetaSettingsPreset(
             DEFAULT_BETA.chunkSettings().extend()
                 .add(USE_SURFACE_RULES, true)
@@ -1456,6 +1458,7 @@ public final class ModernBetaSettingsPresets {
                         0.1, 0.9, 0.8
                     )
                 ))
+                .add(BIOME_INJECTION_RULES, BiomeInjectionRules.defaultRules(lookup, true))
                 .build(),
             DEFAULT_BETA.caveBiomeSettings()
         );

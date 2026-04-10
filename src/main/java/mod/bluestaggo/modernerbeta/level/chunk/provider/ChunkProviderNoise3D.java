@@ -185,9 +185,7 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
                     continue;
                 }
 
-                int surfaceTopY = heightmapChunk != null ?
-                        heightmapChunk.getHeight(x, z, ChunkHeightmap.Type.SURFACE) :
-                        chunk.getHeight(Heightmap.Types.WORLD_SURFACE_WG, localX, localZ) + 1;
+                int surfaceTopY = chunk.getHeight(Heightmap.Types.WORLD_SURFACE_WG, localX, localZ) + 1;
 
                 int noiseCoord = this.surfaceProperties.flipNoiseCoordinates()
                     ? localX + localZ * 16

@@ -135,7 +135,7 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
             for (int localZ = 0; localZ < 16; ++localZ) {
                 int x = startX + localX;
                 int z = startZ + localZ;
-                int surfaceTopY = this.getHeight(region, x, z, Types.WORLD_SURFACE_WG);
+                int surfaceTopY = chunk.getHeight(Heightmap.Types.WORLD_SURFACE_WG, x, z) + 1;
 
                 Holder<Biome> biome = biomeSource.getBiomeForSurfaceGen(region, pos.set(x, surfaceTopY, z));
 

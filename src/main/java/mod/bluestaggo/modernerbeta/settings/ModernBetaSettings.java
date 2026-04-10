@@ -99,11 +99,10 @@ public class ModernBetaSettings implements Iterable<SettingsComponent<?>> {
             .add(SettingsComponentTypes.FRACTAL_LAYERS, configuredLayers);
     }
 
-    public static ModernBetaSettings singleBiome(ResourceKey<Biome> biome) {
+    public static Builder singleBiome(ResourceKey<Biome> biome) {
         return new Builder()
             .add(SettingsComponentTypes.PROVIDER, ModernBetaBuiltInTypes.Biome.SINGLE.id)
-            .add(SettingsComponentTypes.SINGLE_BIOME, biome.location())
-            .build();
+            .add(SettingsComponentTypes.SINGLE_BIOME, biome.location());
     }
 
     public static ModernBetaSettings noCaveBiomes() {

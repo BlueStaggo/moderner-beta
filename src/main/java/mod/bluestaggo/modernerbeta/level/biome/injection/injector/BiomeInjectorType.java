@@ -10,6 +10,7 @@ public record BiomeInjectorType<I extends BiomeInjector>(com.mojang.serializatio
     public static BiomeInjectorType<ConstantBiomeInjector> CONSTANT_BIOME;
     public static BiomeInjectorType<DeepOceanBiomeInjector> DEEP_OCEAN;
     public static BiomeInjectorType<OceanBiomeInjector> OCEAN;
+    public static BiomeInjectorType<PredicateBiomeInjector> PREDICATE;
 
     private static <I extends BiomeInjector> BiomeInjectorType<I> register(String id, com.mojang.serialization.MapCodec<I> codec) {
         return registryHandler.register(ModernerBeta.createId(id), new BiomeInjectorType<>(codec));
@@ -23,5 +24,6 @@ public record BiomeInjectorType<I extends BiomeInjector>(com.mojang.serializatio
         CONSTANT_BIOME = register("constant_biome", ConstantBiomeInjector.CODEC);
         DEEP_OCEAN = register("deep_ocean", DeepOceanBiomeInjector.CODEC);
         OCEAN = register("ocean", OceanBiomeInjector.CODEC);
+        PREDICATE = register("predicate", PredicateBiomeInjector.CODEC);
     }
 }

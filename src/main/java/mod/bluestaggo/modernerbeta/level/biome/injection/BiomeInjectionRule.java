@@ -8,21 +8,16 @@ import net.minecraft.core.Holder;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.biome.Biome;
 
-public record BiomeInjectionRule(BiomeInjector injector, InjectionPredicate predicate, Step stepFor) {
+public record BiomeInjectionRule(BiomeInjector injector, Step stepFor) {
     public static final Codec<BiomeInjectionRule> CODEC = RecordCodecBuilder.create(
         instance -> instance.group(
             BiomeInjector.TYPE_CODEC.forGetter(BiomeInjectionRule::injector),
-            InjectionPredicate.BASE_CODEC.fieldOf("predicate").forGetter(BiomeInjectionRule::predicate),
             StringRepresentable.fromEnum(Step::values).fieldOf("step_for").forGetter(BiomeInjectionRule::stepFor)
         ).apply(instance, BiomeInjectionRule::new)
     );
 
     public Holder<Biome> apply(BiomeInjectionContext context, int biomeX, int biomeY, int biomeZ) {
         return injector.apply(context, biomeX, biomeY, biomeZ);
-    }
-
-    public boolean applyWhen(BiomeInjectionContext context) {
-        return predicate.shouldApply(context);
     }
 
     public enum Step implements StringRepresentable {
@@ -37,7 +32,7 @@ public record BiomeInjectionRule(BiomeInjector injector, InjectionPredicate pred
         /**
          * Injects for structure generation, spawn location.
          */
-        ALL("all");
+        ALL(null);
 
         private final String value;
 

@@ -1,10 +1,7 @@
 package mod.bluestaggo.modernerbeta.level.biome.injection;
 
 import com.google.common.collect.ImmutableList;
-import mod.bluestaggo.modernerbeta.level.biome.injection.injector.CaveBiomeInjector;
-import mod.bluestaggo.modernerbeta.level.biome.injection.injector.ConstantBiomeInjector;
-import mod.bluestaggo.modernerbeta.level.biome.injection.injector.DeepOceanBiomeInjector;
-import mod.bluestaggo.modernerbeta.level.biome.injection.injector.OceanBiomeInjector;
+import mod.bluestaggo.modernerbeta.level.biome.injection.injector.*;
 import mod.bluestaggo.modernerbeta.level.biome.injection.predicates.SurfaceBelowSeaLevelInjectionPredicate;
 import mod.bluestaggo.modernerbeta.level.biome.injection.predicates.BelowSurfaceInjectionPredicate;
 import mod.bluestaggo.modernerbeta.level.biome.injection.predicates.OutOfBoundsInjectionPredicate;
@@ -22,8 +19,10 @@ public final class BiomeInjectionRules {
         ImmutableList.Builder<BiomeInjectionRule> builder = ImmutableList.builder();
 
         builder.add(new BiomeInjectionRule(
-            new ConstantBiomeInjector(biomeRegistry.getOrThrow(Biomes.THE_VOID)),
-            new OutOfBoundsInjectionPredicate(4),
+            new PredicateBiomeInjector(
+                new OutOfBoundsInjectionPredicate(4),
+                new ConstantBiomeInjector(biomeRegistry.getOrThrow(Biomes.THE_VOID))
+            ),
             BiomeInjectionRule.Step.PRE
         ));
 
@@ -35,32 +34,42 @@ public final class BiomeInjectionRules {
         ImmutableList.Builder<BiomeInjectionRule> builder = ImmutableList.builder();
 
         builder.add(new BiomeInjectionRule(
-            new ConstantBiomeInjector(biomeRegistry.getOrThrow(Biomes.THE_VOID)),
-            new OutOfBoundsInjectionPredicate(4),
+            new PredicateBiomeInjector(
+                new OutOfBoundsInjectionPredicate(4),
+                new ConstantBiomeInjector(biomeRegistry.getOrThrow(Biomes.THE_VOID))
+            ),
             BiomeInjectionRule.Step.PRE
         ));
         builder.add(new BiomeInjectionRule(
-            new CaveBiomeInjector(),
-            new BelowSurfaceInjectionPredicate(8),
+            new PredicateBiomeInjector(
+                new BelowSurfaceInjectionPredicate(8),
+                new CaveBiomeInjector()
+            ),
             BiomeInjectionRule.Step.PRE
         ));
 
         if (oceans) {
             builder.add(new BiomeInjectionRule(
-                new DeepOceanBiomeInjector(),
-                new SurfaceBelowSeaLevelInjectionPredicate(16),
+                new PredicateBiomeInjector(
+                    new SurfaceBelowSeaLevelInjectionPredicate(16),
+                    new DeepOceanBiomeInjector()
+                ),
                 BiomeInjectionRule.Step.PRE
             ));
             builder.add(new BiomeInjectionRule(
-                new OceanBiomeInjector(),
-                new SurfaceBelowSeaLevelInjectionPredicate(4),
+                new PredicateBiomeInjector(
+                    new SurfaceBelowSeaLevelInjectionPredicate(4),
+                    new OceanBiomeInjector()
+                ),
                 BiomeInjectionRule.Step.PRE
             ));
         }
 
         builder.add(new BiomeInjectionRule(
-            new ConstantBiomeInjector(biomeRegistry.getOrThrow(Biomes.THE_VOID)),
-            new OutOfBoundsInjectionPredicate(4),
+            new PredicateBiomeInjector(
+                new OutOfBoundsInjectionPredicate(4),
+                new ConstantBiomeInjector(biomeRegistry.getOrThrow(Biomes.THE_VOID))
+            ),
             BiomeInjectionRule.Step.POST
         ));
 

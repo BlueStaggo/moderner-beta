@@ -21,6 +21,7 @@ import net.minecraft.world.level.chunk.LevelChunkSection;
 import net.minecraft.world.level.chunk.PalettedContainer;
 import net.minecraft.world.level.chunk.PalettedContainerRO;
 import net.minecraft.world.level.levelgen.Heightmap;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Optional;
@@ -100,25 +101,15 @@ public class BiomeInjectionHandler {
         }
     }
     
-    public Holder<Biome> getBiomeAtBlock(LevelHeightAccessor level, int x, int y, int z, Sampler noiseSampler, BiomeInjectionRule.Step step) {
+    public @NotNull Holder<Biome> getBiomeAtBlock(LevelHeightAccessor level, int x, int y, int z, Sampler noiseSampler, BiomeInjectionRule.Step step) {
         int biomeX = x >> 2;
         int biomeY = y >> 2;
         int biomeZ = z >> 2;
         
         return this.getBiome(level, biomeX, biomeY, biomeZ, noiseSampler, step);
     }
-
-    public String getBiomeNameAtBlock(LevelHeightAccessor level, int x, int y, int z, Sampler noiseSampler, BiomeInjectionRule.Step step) {
-        int biomeX = x >> 2;
-        int biomeY = y >> 2;
-        int biomeZ = z >> 2;
-
-        ResourceKey<Biome> key = this.getBiome(level, biomeX, biomeY, biomeZ, noiseSampler, step).unwrapKey().orElse(null);
-        if (key == null) return "???";
-        return key.location().toString();
-    }
     
-    public Holder<Biome> getBiome(LevelHeightAccessor level, int biomeX, int biomeY, int biomeZ, Sampler noiseSampler, BiomeInjectionRule.Step step) {
+    public @NotNull Holder<Biome> getBiome(LevelHeightAccessor level, int biomeX, int biomeY, int biomeZ, Sampler noiseSampler, BiomeInjectionRule.Step step) {
         if (this.rules.isEmpty()) {
             return this.modernBetaBiomeSource.getNoiseBiome(biomeX, biomeY, biomeZ, noiseSampler);
         }
@@ -130,20 +121,17 @@ public class BiomeInjectionHandler {
             .orElseGet(() -> this.modernBetaBiomeSource.getNoiseBiome(biomeX, biomeY, biomeZ, noiseSampler));
     }
     
-    public Optional<Holder<Biome>> getOptionalBiome(LevelHeightAccessor level, int biomeX, int biomeY, int biomeZ, Sampler noiseSampler, BiomeInjectionRule.Step step) {
+    public @NotNull Optional<Holder<Biome>> getOptionalBiome(LevelHeightAccessor level, int biomeX, int biomeY, int biomeZ, Sampler noiseSampler, BiomeInjectionRule.Step step) {
         BiomeInjectionContext context = this.setupContext(level, biomeX, biomeY, biomeZ);
 
         return this.getBiome(context, biomeX, biomeY, biomeZ, noiseSampler, step);
     }
     
-    private Optional<Holder<Biome>> getBiome(BiomeInjectionContext context, int biomeX, int biomeY, int biomeZ, Sampler noiseSampler, BiomeInjectionRule.Step step) {
+    private @NotNull Optional<Holder<Biome>> getBiome(BiomeInjectionContext context, int biomeX, int biomeY, int biomeZ, Sampler noiseSampler, BiomeInjectionRule.Step step) {
         Holder<Biome> biome = null;
 
         for (BiomeInjectionRule rule : this.rules) {
             if (step != BiomeInjectionRule.Step.ALL && step != rule.stepFor())
-                continue;
-
-            if (!rule.applyWhen(context))
                 continue;
 
             biome = rule.apply(context, biomeX, biomeY, biomeZ);
@@ -160,8 +148,8 @@ public class BiomeInjectionHandler {
         int minHeight = this.sampleMinHeight(level, biomeX, biomeZ);
 
         return context.get()
-                .setHeights(worldMinY, topHeight, minHeight)
-                .setPosition((biomeX << 2) + 2, biomeY << 2, (biomeZ << 2) + 2);
+            .setHeights(worldMinY, topHeight, minHeight)
+            .setPosition((biomeX << 2) + 2, biomeY << 2, (biomeZ << 2) + 2);
     }
     
     private int sampleTopHeight(LevelHeightAccessor level, int biomeX, int biomeZ) {

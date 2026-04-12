@@ -5,7 +5,7 @@ import mod.bluestaggo.modernerbeta.api.level.biome.climate.Clime;
 import java.util.function.BiFunction;
 
 public class ChunkClimate {
-    private final Clime climes[] = new Clime[256];
+    private final Clime[] climes = new Clime[256];
     
     public ChunkClimate(int chunkX, int chunkZ, BiFunction<Integer, Integer, Clime> chunkFunc) {
         int startX = chunkX << 4;

@@ -11,7 +11,6 @@ import mod.bluestaggo.modernerbeta.util.chunk.ChunkHeightmap;
 import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaChunkGenerator;
 import net.minecraft.core.Holder;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.LevelHeightAccessor;
 import net.minecraft.world.level.biome.Biome;
@@ -134,6 +133,7 @@ public class BiomeInjectionHandler {
             if (step != BiomeInjectionRule.Step.ALL && step != rule.stepFor())
                 continue;
 
+            rule.initIfNeeded();
             biome = rule.apply(context, biomeX, biomeY, biomeZ);
             if (biome != null)
                 break;

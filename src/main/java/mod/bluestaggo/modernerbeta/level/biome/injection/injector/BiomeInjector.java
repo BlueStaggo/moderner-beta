@@ -12,5 +12,8 @@ public interface BiomeInjector {
 
     BiomeInjectorType<?> getType();
 
+    default void initIfNeeded() {
+    }
+
     Holder<Biome> apply(BiomeInjectionContext context, int biomeX, int biomeY, int biomeZ);
 }

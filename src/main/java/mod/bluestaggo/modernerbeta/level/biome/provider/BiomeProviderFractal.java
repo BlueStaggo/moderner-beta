@@ -29,7 +29,6 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 	protected final ConfiguredLayers configuredLayers;
 	protected final List<Layer> pipeline;
 
-	private final Supplier<Holder<Biome>> baseBiome;
 	private final BiomeManager biomeAccess;
 	private final List<Holder<Biome>> allBiomes;
 	private final Layer layer;
@@ -40,7 +39,6 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 	public BiomeProviderFractal(ModernBetaSettings settings, HolderGetter<Biome> biomeRegistry, long seed) {
 		super(settings, biomeRegistry, seed);
 
-		this.baseBiome = Suppliers.memoize(() -> this.getBiomeEntry(this.settings.getOrDefault(SettingsComponentTypes.SINGLE_BIOME)).orElseThrow());
 		this.biomeAccess = new BiomeManager(this, seed);
 
 		this.configuredLayers = this.settings.getOrThrow(SettingsComponentTypes.FRACTAL_LAYERS);

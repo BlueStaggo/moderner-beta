@@ -3,7 +3,6 @@ package mod.bluestaggo.modernerbeta.level.biome.injection;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.level.biome.injection.injector.BiomeInjector;
-import mod.bluestaggo.modernerbeta.level.biome.injection.predicates.InjectionPredicate;
 import net.minecraft.core.Holder;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.biome.Biome;
@@ -15,6 +14,10 @@ public record BiomeInjectionRule(BiomeInjector injector, Step stepFor) {
             StringRepresentable.fromEnum(Step::values).fieldOf("step_for").forGetter(BiomeInjectionRule::stepFor)
         ).apply(instance, BiomeInjectionRule::new)
     );
+
+    public void initIfNeeded() {
+        this.injector.initIfNeeded();
+    }
 
     public Holder<Biome> apply(BiomeInjectionContext context, int biomeX, int biomeY, int biomeZ) {
         return injector.apply(context, biomeX, biomeY, biomeZ);

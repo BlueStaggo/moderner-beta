@@ -19,9 +19,11 @@ public final class BiomeInjectionRules {
         ImmutableList.Builder<BiomeInjectionRule> builder = ImmutableList.builder();
 
         builder.add(new BiomeInjectionRule(
-            new PredicateBiomeInjector(
-                new OutOfBoundsInjectionPredicate(4),
-                new ConstantBiomeInjector(biomeRegistry.getOrThrow(Biomes.THE_VOID))
+            new Cache2DBiomeInjector(
+                new PredicateBiomeInjector(
+                    new OutOfBoundsInjectionPredicate(4),
+                    new ConstantBiomeInjector(biomeRegistry.getOrThrow(Biomes.THE_VOID))
+                )
             ),
             BiomeInjectionRule.Step.PRE
         ));
@@ -34,9 +36,11 @@ public final class BiomeInjectionRules {
         ImmutableList.Builder<BiomeInjectionRule> builder = ImmutableList.builder();
 
         builder.add(new BiomeInjectionRule(
-            new PredicateBiomeInjector(
-                new OutOfBoundsInjectionPredicate(4),
-                new ConstantBiomeInjector(biomeRegistry.getOrThrow(Biomes.THE_VOID))
+            new Cache2DBiomeInjector(
+                new PredicateBiomeInjector(
+                    new OutOfBoundsInjectionPredicate(4),
+                    new ConstantBiomeInjector(biomeRegistry.getOrThrow(Biomes.THE_VOID))
+                )
             ),
             BiomeInjectionRule.Step.PRE
         ));
@@ -50,25 +54,31 @@ public final class BiomeInjectionRules {
 
         if (oceans) {
             builder.add(new BiomeInjectionRule(
-                new PredicateBiomeInjector(
-                    new SurfaceBelowSeaLevelInjectionPredicate(16),
-                    new DeepOceanBiomeInjector()
+                new Cache2DBiomeInjector(
+                    new PredicateBiomeInjector(
+                        new SurfaceBelowSeaLevelInjectionPredicate(16),
+                        new DeepOceanBiomeInjector()
+                    )
                 ),
                 BiomeInjectionRule.Step.PRE
             ));
             builder.add(new BiomeInjectionRule(
-                new PredicateBiomeInjector(
-                    new SurfaceBelowSeaLevelInjectionPredicate(4),
-                    new OceanBiomeInjector()
+                new Cache2DBiomeInjector(
+                    new PredicateBiomeInjector(
+                        new SurfaceBelowSeaLevelInjectionPredicate(4),
+                        new OceanBiomeInjector()
+                    )
                 ),
                 BiomeInjectionRule.Step.PRE
             ));
         }
 
         builder.add(new BiomeInjectionRule(
-            new PredicateBiomeInjector(
-                new OutOfBoundsInjectionPredicate(4),
-                new ConstantBiomeInjector(biomeRegistry.getOrThrow(Biomes.THE_VOID))
+            new Cache2DBiomeInjector(
+                new PredicateBiomeInjector(
+                    new OutOfBoundsInjectionPredicate(4),
+                    new ConstantBiomeInjector(biomeRegistry.getOrThrow(Biomes.THE_VOID))
+                )
             ),
             BiomeInjectionRule.Step.POST
         ));

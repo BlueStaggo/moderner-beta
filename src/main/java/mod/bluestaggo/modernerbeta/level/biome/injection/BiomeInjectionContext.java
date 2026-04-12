@@ -6,6 +6,8 @@ import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.settings.component.WorldBorderLocation;
+import net.minecraft.core.SectionPos;
+import net.minecraft.world.level.ChunkPos;
 
 public final class BiomeInjectionContext {
     public final ModernBetaChunkGenerator chunkGenerator;
@@ -17,6 +19,7 @@ public final class BiomeInjectionContext {
     public int topHeight;
     public int minHeight;
 
+    private ChunkPos chunkPos;
     private int x;
     private int y;
     private int z;
@@ -35,10 +38,20 @@ public final class BiomeInjectionContext {
         return this;
     }
 
+    public BiomeInjectionContext setChunkPos(ChunkPos chunkPos) {
+        this.chunkPos = chunkPos;
+        return this;
+    }
+
     public BiomeInjectionContext setPosition(int x, int y, int z) {
         this.x = x;
         this.y = y;
         this.z = z;
+
+        this.chunkPos = new ChunkPos(
+            SectionPos.blockToSectionCoord(x),
+            SectionPos.blockToSectionCoord(z)
+        );
 
         return this;
     }
@@ -60,5 +73,9 @@ public final class BiomeInjectionContext {
 
     public int getZ() {
         return this.z;
+    }
+
+    public ChunkPos getChunkPos() {
+        return this.chunkPos;
     }
 }

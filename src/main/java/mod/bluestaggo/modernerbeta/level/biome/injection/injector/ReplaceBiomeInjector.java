@@ -1,5 +1,6 @@
 package mod.bluestaggo.modernerbeta.level.biome.injection.injector;
 
+import com.google.common.collect.ImmutableSet;
 import com.mojang.serialization.Codec;
 import mod.bluestaggo.modernerbeta.level.biome.injection.BiomeInjectionContext;
 import mod.bluestaggo.modernerbeta.level.biome.injection.InjectionNeeds;
@@ -9,6 +10,7 @@ import net.minecraft.world.level.biome.Biome;
 
 import java.util.EnumSet;
 import java.util.Map;
+import java.util.Set;
 
 public record ReplaceBiomeInjector(Map<Holder<Biome>, Holder<Biome>> replacements) implements BiomeInjector {
     public static final com.mojang.serialization.MapCodec<ReplaceBiomeInjector> CODEC = VersionCompat.createMaybeMapCodec(
@@ -30,6 +32,17 @@ public record ReplaceBiomeInjector(Map<Holder<Biome>, Holder<Biome>> replacement
         }
 
         return null;
+    }
+
+    @Override
+    public Set<Holder<Biome>> getPossibleBiomes() {
+        ImmutableSet.Builder<Holder<Biome>> builder = ImmutableSet.builder();
+
+        for (Holder<Biome> biome : replacements.values()) {
+            builder.add(biome);
+        }
+
+        return builder.build();
     }
 
     @Override

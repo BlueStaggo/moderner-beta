@@ -1,5 +1,6 @@
 package mod.bluestaggo.modernerbeta.level.biome.injection.injector;
 
+import com.google.common.collect.ImmutableSet;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -16,6 +17,8 @@ import net.minecraft.world.level.biome.Biome;
 import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class MappedClimateBiomeInjector implements BiomeInjector {
@@ -104,6 +107,25 @@ public class MappedClimateBiomeInjector implements BiomeInjector {
         }
 
         return this.middleBiome;
+    }
+
+    @Override
+    public Set<Holder<Biome>> getPossibleBiomes() {
+        ImmutableSet.Builder<Holder<Biome>> builder = ImmutableSet.builder();
+
+        Set<Holder<Biome>> lower = this.lowerBiomes.stream()
+            .map(b -> b.biome)
+            .collect(Collectors.toSet());
+
+        Set<Holder<Biome>> upper = this.upperBiomes.stream()
+            .map(b -> b.biome)
+            .collect(Collectors.toSet());
+
+        builder.addAll(lower);
+        builder.add(this.middleBiome);
+        builder.addAll(upper);
+
+        return builder.build();
     }
 
     @Override

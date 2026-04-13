@@ -24,13 +24,14 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeManager;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class BiomeProviderFractal extends BiomeProvider implements BiomeResolverBlock, BiomeResolverExtendedIdStepped, BiomeManager.NoiseBiomeSource {
 	protected final ConfiguredLayers configuredLayers;
 	protected final List<Layer> pipeline;
 
 	private final BiomeManager biomeAccess;
-	private final List<Holder<Biome>> allBiomes;
+	private final Set<Holder<Biome>> allBiomes;
 	private final Layer layer;
     private final Layer heightLayer;
 
@@ -67,8 +68,7 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 			.map(biome -> this.getBiomeEntry(biome.baseId()))
 			.filter(Optional::isPresent)
 			.map(Optional::get)
-			.distinct()
-			.toList();
+			.collect(Collectors.toSet());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -100,7 +100,7 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 	}
 
 	@Override
-	public List<Holder<Biome>> getBiomes() {
+	public Set<Holder<Biome>> getBiomes() {
 		return allBiomes;
 	}
 

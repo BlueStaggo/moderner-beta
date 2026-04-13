@@ -38,7 +38,6 @@ import net.minecraft.world.level.biome.Climate.Sampler;
 import net.minecraft.world.level.levelgen.Heightmap;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -269,18 +268,23 @@ public class ModernBetaBiomeSource extends BiomeSource {
     protected @NotNull Stream<Holder<Biome>> collectPossibleBiomes() {
         ModernBetaSettings biomeSettings = this.biomeSettings.mapPreset(this.presetRegistry, ModernBetaSettingsPreset::biomeSettings);
         ModernBetaSettings caveBiomeSettings = this.caveBiomeSettings.mapPreset(this.presetRegistry, ModernBetaSettingsPreset::caveBiomeSettings);
-        
+
         BiomeProvider biomeProvider = ModernBetaRegistries.BIOME
             .getValue(biomeSettings.getProvider())
             .apply(biomeSettings, biomeRegistry, 0L);
-        
+
         CaveBiomeProvider caveBiomeProvider = ModernBetaRegistries.CAVE_BIOME
             .getValue(caveBiomeSettings.getProvider())
             .apply(caveBiomeSettings, biomeRegistry, 0L);
 
-        List<Holder<Biome>> biomes = new ArrayList<>();
+        Set<Holder<Biome>> biomes = new HashSet<>();
         biomes.addAll(biomeProvider.getBiomes());
         biomes.addAll(caveBiomeProvider.getBiomes());
+
+        List<BiomeInjectionRule> injectionRules = biomeSettings.getOrDefault(SettingsComponentTypes.BIOME_INJECTION_RULES);
+        for (BiomeInjectionRule injectionRule : injectionRules) {
+            biomes.addAll(injectionRule.getPossibleBiomes());
+        }
         
         return biomes.stream();
     }

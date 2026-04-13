@@ -9,7 +9,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.biome.Biome;
 
-import java.util.List;
+import java.util.Set;
 
 public class CaveBiomeProviderSingle extends CaveBiomeProvider {
     private final ResourceKey<Biome> biome;
@@ -26,7 +26,7 @@ public class CaveBiomeProviderSingle extends CaveBiomeProvider {
     }
     
     @Override
-    public List<Holder<Biome>> getBiomes() {
-        return List.of(this.biomeRegistry.getOrThrow(this.biome));
+    public Set<Holder<Biome>> getBiomes() {
+        return Set.of(this.biomeRegistry.getOrThrow(this.biome));
     }
 }

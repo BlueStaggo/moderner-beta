@@ -9,7 +9,7 @@ import net.minecraft.core.HolderGetter;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.biome.Biome;
 
-import java.util.List;
+import java.util.Set;
 
 public abstract class BiomeProvider {
     protected final ModernBetaSettings settings;
@@ -50,8 +50,8 @@ public abstract class BiomeProvider {
      * 
      * @return A list of biomes.
      */
-    public List<Holder<Biome>> getBiomes() {
-        return List.of();
+    public Set<Holder<Biome>> getBiomes() {
+        return Set.of();
     }
 
     /**

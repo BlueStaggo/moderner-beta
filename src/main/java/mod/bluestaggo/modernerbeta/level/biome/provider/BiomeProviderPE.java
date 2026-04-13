@@ -22,8 +22,8 @@ import net.minecraft.core.HolderGetter;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.biome.Biome;
 
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class BiomeProviderPE extends BiomeProvider implements ClimateSampler, ClimateSamplerSky, BiomeResolverBlock {
@@ -70,12 +70,12 @@ public class BiomeProviderPE extends BiomeProvider implements ClimateSampler, Cl
     }
 
     @Override
-    public List<Holder<Biome>> getBiomes() {
+    public Set<Holder<Biome>> getBiomes() {
         return this.climateMap
             .getBiomeKeys()
             .stream()
             .map(this.biomeRegistry::getOrThrow)
-            .collect(Collectors.toList());
+            .collect(Collectors.toSet());
     }
 
     @Override

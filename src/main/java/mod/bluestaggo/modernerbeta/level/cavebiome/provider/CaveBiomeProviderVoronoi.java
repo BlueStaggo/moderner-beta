@@ -20,6 +20,7 @@ import net.minecraft.world.level.biome.Biome;
 
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class CaveBiomeProviderVoronoi extends CaveBiomeProvider implements CaveClimateSampler {
@@ -49,8 +50,8 @@ public class CaveBiomeProviderVoronoi extends CaveBiomeProvider implements CaveC
     }
     
     @Override
-    public List<Holder<Biome>> getBiomes() {        
-        return this.rules.getItems().stream().distinct().map(this.biomeRegistry::getOrThrow).collect(Collectors.toList());
+    public Set<Holder<Biome>> getBiomes() {
+        return this.rules.getItems().stream().distinct().map(this.biomeRegistry::getOrThrow).collect(Collectors.toSet());
     }
 
     @Override

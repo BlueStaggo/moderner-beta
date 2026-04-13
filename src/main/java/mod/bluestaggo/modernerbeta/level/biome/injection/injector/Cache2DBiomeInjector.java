@@ -11,6 +11,7 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.biome.Biome;
 
 import java.util.EnumSet;
+import java.util.Set;
 
 public class Cache2DBiomeInjector implements BiomeInjector {
     public static final com.mojang.serialization.MapCodec<Cache2DBiomeInjector> CODEC = VersionCompat.createMaybeMapCodec(
@@ -53,6 +54,11 @@ public class Cache2DBiomeInjector implements BiomeInjector {
 
         int pos = localBiomeX << 2 | localBiomeZ;
         return lookup.computeIfAbsent(pos, p -> this.injector.apply(context, biomeX, 0, biomeZ));
+    }
+
+    @Override
+    public Set<Holder<Biome>> getPossibleBiomes() {
+        return this.injector.getPossibleBiomes();
     }
 
     @Override

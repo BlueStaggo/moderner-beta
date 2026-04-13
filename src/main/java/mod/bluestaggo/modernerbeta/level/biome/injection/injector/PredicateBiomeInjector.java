@@ -1,5 +1,6 @@
 package mod.bluestaggo.modernerbeta.level.biome.injection.injector;
 
+import com.google.common.collect.ImmutableSet;
 import mod.bluestaggo.modernerbeta.level.biome.injection.BiomeInjectionContext;
 import mod.bluestaggo.modernerbeta.level.biome.injection.InjectionNeeds;
 import mod.bluestaggo.modernerbeta.level.biome.injection.predicates.InjectionPredicate;
@@ -9,6 +10,7 @@ import net.minecraft.world.level.biome.Biome;
 
 import java.util.EnumSet;
 import java.util.Optional;
+import java.util.Set;
 
 public record PredicateBiomeInjector(
     InjectionPredicate predicate,
@@ -45,6 +47,17 @@ public record PredicateBiomeInjector(
         }
 
         return null;
+    }
+
+    @Override
+    public Set<Holder<Biome>> getPossibleBiomes() {
+        ImmutableSet.Builder<Holder<Biome>> builder = ImmutableSet.builder();
+
+        builder.addAll(onMatch.getPossibleBiomes());
+        otherwise.ifPresent(injector ->
+            builder.addAll(injector.getPossibleBiomes()));
+
+        return builder.build();
     }
 
     @Override

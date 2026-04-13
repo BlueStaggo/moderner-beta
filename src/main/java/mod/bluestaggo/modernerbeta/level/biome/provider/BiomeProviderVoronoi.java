@@ -20,9 +20,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.biome.Biome;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class BiomeProviderVoronoi extends BiomeProvider implements DebugTextProvider2D {
@@ -53,8 +54,8 @@ public class BiomeProviderVoronoi extends BiomeProvider implements DebugTextProv
     }
 
     @Override
-    public List<Holder<Biome>> getBiomes() {
-        List<ResourceLocation> biomes = new ArrayList<>();
+    public Set<Holder<Biome>> getBiomes() {
+        Set<ResourceLocation> biomes = new HashSet<>();
 
         this.rules.getItems().forEach(key -> biomes.add(key.biome()));
         
@@ -62,7 +63,7 @@ public class BiomeProviderVoronoi extends BiomeProvider implements DebugTextProv
             .stream()
             .distinct()
             .map(key -> this.biomeRegistry.getOrThrow(ResourceKey.create(Registries.BIOME, key)))
-            .collect(Collectors.toList());
+            .collect(Collectors.toSet());
     }
     
     private ClimateMapping getClimateMapping(int biomeX, int biomeZ) {

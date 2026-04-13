@@ -8,6 +8,7 @@ import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.biome.Biome;
 
 import java.util.EnumSet;
+import java.util.Set;
 
 public record BiomeInjectionRule(BiomeInjector injector, Step stepFor) {
     public static final Codec<BiomeInjectionRule> CODEC = RecordCodecBuilder.create(
@@ -22,7 +23,11 @@ public record BiomeInjectionRule(BiomeInjector injector, Step stepFor) {
     }
 
     public Holder<Biome> apply(BiomeInjectionContext context, int biomeX, int biomeY, int biomeZ) {
-        return injector.apply(context, biomeX, biomeY, biomeZ);
+        return this.injector.apply(context, biomeX, biomeY, biomeZ);
+    }
+
+    public Set<Holder<Biome>> getPossibleBiomes() {
+        return this.injector.getPossibleBiomes();
     }
 
     public EnumSet<InjectionNeeds> needs() {

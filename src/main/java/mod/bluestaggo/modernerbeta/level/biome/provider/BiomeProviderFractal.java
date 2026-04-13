@@ -63,7 +63,7 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 		this.heightLayer.init(seed);
 
 		this.chunkCacheBiomes = new ChunkCache<>(
-			"climate",
+			"biomes",
 			(chunkX, chunkZ) -> new FractalCache(chunkX, chunkZ, this.layer::sample, this.heightLayer::sample)
 		);
 

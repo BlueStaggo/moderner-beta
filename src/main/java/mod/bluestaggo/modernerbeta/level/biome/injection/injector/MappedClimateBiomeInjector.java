@@ -2,7 +2,6 @@ package mod.bluestaggo.modernerbeta.level.biome.injection.injector;
 
 import com.google.common.collect.ImmutableSet;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.api.level.biome.climate.ClimateSampler;
 import mod.bluestaggo.modernerbeta.api.level.biome.climate.Clime;
@@ -22,7 +21,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class MappedClimateBiomeInjector implements BiomeInjector {
-    public static final MapCodec<MappedClimateBiomeInjector> CODEC = VersionCompat.createMaybeMapCodec(
+    public static final com.mojang.serialization.MapCodec<MappedClimateBiomeInjector> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> instance.group(
             StringRepresentable.fromEnum(Type::values).fieldOf("climate_type")
                     .forGetter(injector -> injector.type),

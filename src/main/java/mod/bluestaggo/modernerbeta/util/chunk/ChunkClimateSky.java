@@ -1,11 +1,11 @@
 package mod.bluestaggo.modernerbeta.util.chunk;
 
-import java.util.function.BiFunction;
+import mod.bluestaggo.modernerbeta.util.function.BiIntegerFunction;
 
 public class ChunkClimateSky {
-    private final double temp[] = new double[256];
+    private final double[] temp = new double[256];
     
-    public ChunkClimateSky(int chunkX, int chunkZ, BiFunction<Integer, Integer, Double> chunkFunc) {
+    public ChunkClimateSky(int chunkX, int chunkZ, BiIntegerFunction<Double> chunkFunc) {
         int startX = chunkX << 4;
         int startZ = chunkZ << 4;
         

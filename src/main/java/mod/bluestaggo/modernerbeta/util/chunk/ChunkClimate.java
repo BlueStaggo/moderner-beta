@@ -1,13 +1,12 @@
 package mod.bluestaggo.modernerbeta.util.chunk;
 
 import mod.bluestaggo.modernerbeta.api.level.biome.climate.Clime;
-
-import java.util.function.BiFunction;
+import mod.bluestaggo.modernerbeta.util.function.BiIntegerFunction;
 
 public class ChunkClimate {
     private final Clime[] climes = new Clime[256];
     
-    public ChunkClimate(int chunkX, int chunkZ, BiFunction<Integer, Integer, Clime> chunkFunc) {
+    public ChunkClimate(int chunkX, int chunkZ, BiIntegerFunction<Clime> chunkFunc) {
         int startX = chunkX << 4;
         int startZ = chunkZ << 4;
         
@@ -20,6 +19,6 @@ public class ChunkClimate {
     }
     
     public Clime sampleClime(int x, int z) {
-        return climes[(z & 0xF) + (x & 0xF) * 16];
+        return climes[(x & 0xF) << 4 | (z & 0xF)];
     }
 }

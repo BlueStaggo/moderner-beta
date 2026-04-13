@@ -1,8 +1,6 @@
 //~dotLocation
 package mod.bluestaggo.modernerbeta.level.biome.provider;
 
-import com.google.common.base.Supplier;
-import com.google.common.base.Suppliers;
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
 import mod.bluestaggo.modernerbeta.api.level.biome.BiomeProvider;
 import mod.bluestaggo.modernerbeta.api.level.biome.BiomeResolverBlock;
@@ -13,6 +11,9 @@ import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ConfiguredLayers;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeId;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers.Layer;
+import mod.bluestaggo.modernerbeta.util.chunk.ChunkCache;
+import mod.bluestaggo.modernerbeta.util.chunk.ChunkClimate;
+import mod.bluestaggo.modernerbeta.util.function.BiIntegerFunction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
@@ -33,6 +34,9 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 	private final List<Holder<Biome>> allBiomes;
 	private final Layer layer;
     private final Layer heightLayer;
+
+	private final ChunkCache<FractalCache> chunkCacheBiomes;
+
     private final Layer oceanLayer;
     private final Layer deepOceanLayer;
 
@@ -58,7 +62,12 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 			.orElse(this.layer);
 		this.heightLayer.init(seed);
 
-        if (true/*this.settings.getOrDefault(SettingsComponentTypes.USE_OCEAN_BIOMES)*/) { //TODO
+		this.chunkCacheBiomes = new ChunkCache<>(
+			"climate",
+			(chunkX, chunkZ) -> new FractalCache(chunkX, chunkZ, this.layer::sample, this.heightLayer::sample)
+		);
+
+        if (false/*this.settings.getOrDefault(SettingsComponentTypes.USE_OCEAN_BIOMES)*/) { //TODO
             this.oceanLayer = this.configuredLayers.getOutputOrThrow(ModernBetaBuiltInTypes.LayerOutput.OCEAN.id);
             this.oceanLayer.init(seed);
             this.oceanLayer.addPossibleBiomesRecursive(allExtendedBiomes);
@@ -93,9 +102,11 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 
 	@Override
 	public Holder<Biome> getBiome(int biomeX, int biomeY, int biomeZ) {
-        return this.getBiomeHolderFromId(this.layer.sample(biomeX, biomeZ).baseId());
+		FractalCache cache = this.chunkCacheBiomes.get(biomeX >> 2, biomeZ >> 2);
+        return this.getBiomeHolderFromId(cache.getBiomeAt(biomeX, biomeZ).baseId());
 	}
 
+	//TODO
     @Override
     public Holder<Biome> getOceanBiome(int biomeX, int biomeZ) {
         return this.getBiomeHolderFromId(this.oceanLayer.sample(biomeX, biomeZ).baseId());
@@ -108,7 +119,8 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 
     @Override
 	public ExtendedBiomeId getExtendedBiomeId(int biomeX, int biomeY, int biomeZ) {
-		return this.heightLayer.sample(biomeX, biomeZ);
+		FractalCache cache = this.chunkCacheBiomes.get(biomeX >> 2, biomeZ >> 2);
+		return cache.getBiomeAt(biomeX, biomeZ);
 	}
 
 	@Override
@@ -170,5 +182,35 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 	@Override
 	public Component getStepName(int step) {
 		return Component.literal(this.pipeline.get(step).toString());
+	}
+
+	private static class FractalCache {
+		private static final int CACHE_SIZE = 4 * 4;
+
+		private final ExtendedBiomeId[] baseCache = new ExtendedBiomeId[CACHE_SIZE];
+		private final ExtendedBiomeId[] heightCache = new ExtendedBiomeId[CACHE_SIZE];
+
+		public FractalCache(int chunkX, int chunkZ, BiIntegerFunction<ExtendedBiomeId> biomeFunc, BiIntegerFunction<ExtendedBiomeId> heightFunc) {
+			int startX = chunkX << 2;
+			int startZ = chunkZ << 2;
+
+			int i = 0;
+			for (int x = startX; x < startX + 4; x++) {
+				for (int z = startZ; z < startZ + 4; z++) {
+					this.baseCache[i] = biomeFunc.apply(x, z);
+					this.heightCache[i] = heightFunc.apply(x, z);
+
+					i++;
+				}
+			}
+		}
+
+		public ExtendedBiomeId getBiomeAt(int biomeX, int biomeZ) {
+			return this.baseCache[(biomeX & 3) << 2 | (biomeZ & 3)];
+		}
+
+		public ExtendedBiomeId getHeightAt(int biomeX, int biomeZ) {
+			return this.heightCache[(biomeX & 3) << 2 | (biomeZ & 3)];
+		}
 	}
 }

@@ -1,3 +1,4 @@
+//~dotLocation
 package mod.bluestaggo.modernerbeta.client.debug.entries;
 
 import mod.bluestaggo.modernerbeta.level.biome.injection.BiomeInjectionRule;

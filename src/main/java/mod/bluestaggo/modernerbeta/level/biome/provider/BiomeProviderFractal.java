@@ -120,7 +120,7 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
     @Override
 	public ExtendedBiomeId getExtendedBiomeId(int biomeX, int biomeY, int biomeZ) {
 		FractalCache cache = this.chunkCacheBiomes.get(biomeX >> 2, biomeZ >> 2);
-		return cache.getBiomeAt(biomeX, biomeZ);
+		return cache.getHeightAt(biomeX, biomeZ);
 	}
 
 	@Override

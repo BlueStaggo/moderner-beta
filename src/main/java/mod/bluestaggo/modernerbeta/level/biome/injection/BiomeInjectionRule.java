@@ -25,6 +25,10 @@ public record BiomeInjectionRule(BiomeInjector injector, Step stepFor) {
         return injector.apply(context, biomeX, biomeY, biomeZ);
     }
 
+    public EnumSet<InjectionNeeds> needs() {
+        return injector.needs();
+    }
+
     public boolean canFulfill(EnumSet<InjectionNeeds> ableToFulfill) {
         return ableToFulfill.containsAll(injector.needs());
     }

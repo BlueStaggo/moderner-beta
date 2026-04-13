@@ -431,8 +431,6 @@
     "createWorld.customize.modern_beta.settings.climate_scale.weird": "Weirdness",
     "createWorld.customize.modern_beta.settings.climate_mappings": "Climate Mappings",
     "createWorld.customize.modern_beta.settings.climate_mappings.biome": "Land",
-    "createWorld.customize.modern_beta.settings.climate_mappings.oceanBiome": "Ocean",
-    "createWorld.customize.modern_beta.settings.climate_mappings.deepOceanBiome": "Deep Ocean",
     "createWorld.customize.modern_beta.settings.climate_mappings.desert": "Desert Mappings",
     "createWorld.customize.modern_beta.settings.climate_mappings.forest": "Forest Mappings",
     "createWorld.customize.modern_beta.settings.climate_mappings.ice_desert": "Ice Desert Mappings",

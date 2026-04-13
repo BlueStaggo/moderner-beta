@@ -12,7 +12,6 @@ import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ConfiguredLayers
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeId;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers.Layer;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkCache;
-import mod.bluestaggo.modernerbeta.util.chunk.ChunkClimate;
 import mod.bluestaggo.modernerbeta.util.function.BiIntegerFunction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -26,7 +25,7 @@ import net.minecraft.world.level.biome.BiomeManager;
 
 import java.util.*;
 
-public class BiomeProviderFractal extends BiomeProvider implements BiomeResolverBlock, BiomeResolverExtendedIdStepped, BiomeManager.NoiseBiomeSource, BiomeResolverOcean {
+public class BiomeProviderFractal extends BiomeProvider implements BiomeResolverBlock, BiomeResolverExtendedIdStepped, BiomeManager.NoiseBiomeSource {
 	protected final ConfiguredLayers configuredLayers;
 	protected final List<Layer> pipeline;
 
@@ -37,10 +36,7 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 
 	private final ChunkCache<FractalCache> chunkCacheBiomes;
 
-    private final Layer oceanLayer;
-    private final Layer deepOceanLayer;
-
-	public BiomeProviderFractal(ModernBetaSettings settings, HolderGetter<Biome> biomeRegistry, long seed) {
+    public BiomeProviderFractal(ModernBetaSettings settings, HolderGetter<Biome> biomeRegistry, long seed) {
 		super(settings, biomeRegistry, seed);
 
 		this.biomeAccess = new BiomeManager(this, seed);
@@ -67,21 +63,7 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 			(chunkX, chunkZ) -> new FractalCache(chunkX, chunkZ, this.layer::sample, this.heightLayer::sample)
 		);
 
-        if (false/*this.settings.getOrDefault(SettingsComponentTypes.USE_OCEAN_BIOMES)*/) { //TODO
-            this.oceanLayer = this.configuredLayers.getOutputOrThrow(ModernBetaBuiltInTypes.LayerOutput.OCEAN.id);
-            this.oceanLayer.init(seed);
-            this.oceanLayer.addPossibleBiomesRecursive(allExtendedBiomes);
-
-            this.deepOceanLayer = this.configuredLayers.getOutput(ModernBetaBuiltInTypes.LayerOutput.DEEP_OCEAN.id)
-                .orElse(this.oceanLayer);
-            this.deepOceanLayer.init(seed);
-            this.deepOceanLayer.addPossibleBiomesRecursive(allExtendedBiomes);
-        } else {
-            this.oceanLayer = null;
-            this.deepOceanLayer = null;
-        }
-
-		this.allBiomes = allExtendedBiomes.stream()
+        this.allBiomes = allExtendedBiomes.stream()
 			.map(biome -> this.getBiomeEntry(biome.baseId()))
 			.filter(Optional::isPresent)
 			.map(Optional::get)
@@ -105,17 +87,6 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 		FractalCache cache = this.chunkCacheBiomes.get(biomeX >> 2, biomeZ >> 2);
         return this.getBiomeHolderFromId(cache.getBiomeAt(biomeX, biomeZ).baseId());
 	}
-
-	//TODO
-    @Override
-    public Holder<Biome> getOceanBiome(int biomeX, int biomeZ) {
-        return this.getBiomeHolderFromId(this.oceanLayer.sample(biomeX, biomeZ).baseId());
-    }
-
-    @Override
-    public Holder<Biome> getDeepOceanBiome(int biomeX, int biomeZ) {
-        return this.getBiomeHolderFromId(this.deepOceanLayer.sample(biomeX, biomeZ).baseId());
-    }
 
     @Override
 	public ExtendedBiomeId getExtendedBiomeId(int biomeX, int biomeY, int biomeZ) {

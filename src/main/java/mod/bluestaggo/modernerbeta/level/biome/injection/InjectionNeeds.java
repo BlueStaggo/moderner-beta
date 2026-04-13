@@ -4,6 +4,7 @@ import java.util.EnumSet;
 
 public enum InjectionNeeds {
     BIOMES,
+    CLIMATE,
     HEIGHTS;
 
     public static EnumSet<InjectionNeeds> all() {
@@ -11,6 +12,6 @@ public enum InjectionNeeds {
     }
 
     public static EnumSet<InjectionNeeds> cheapToFulfill() {
-        return EnumSet.of(BIOMES);
+        return EnumSet.of(BIOMES, CLIMATE);
     }
 }

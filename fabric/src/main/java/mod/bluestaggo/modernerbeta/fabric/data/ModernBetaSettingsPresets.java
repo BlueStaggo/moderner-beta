@@ -221,52 +221,20 @@ public final class ModernBetaSettingsPresets {
                 .add(TEMPERATURE_HEIGHT_SCALING, TemperatureHeightScaling.BETA)
                 .add(CLIMATE_DISTRIBUTION, ClimateDistribution.BETA)
                 .add(CLIMATE_MAPPINGS, Map.ofEntries(
-                    Map.entry("desert", new ClimateMapping(
-                        ModernBetaBiomes.BETA_DESERT.location(),
-                        ModernBetaBiomes.BETA_OCEAN.location()
-                    )),
-                    Map.entry("forest", new ClimateMapping(
-                        (oakBiomes ? ModernBetaBiomes.BETA_OAK_FOREST : ModernBetaBiomes.BETA_FOREST).location(),
-                        ModernBetaBiomes.BETA_OCEAN.location()
-                    )),
-                    Map.entry("ice_desert", new ClimateMapping(
-                        ModernBetaBiomes.BETA_TUNDRA.location(),
-                        ModernBetaBiomes.BETA_FROZEN_OCEAN.location()
-                    )),
-                    Map.entry("plains", new ClimateMapping(
-                        ModernBetaBiomes.BETA_PLAINS.location(),
-                        ModernBetaBiomes.BETA_OCEAN.location()
-                    )),
-                    Map.entry("rainforest", new ClimateMapping(
-                        ModernBetaBiomes.BETA_RAINFOREST.location(),
-                        ModernBetaBiomes.BETA_WARM_OCEAN.location()
-                    )),
-                    Map.entry("savanna", new ClimateMapping(
-                        ModernBetaBiomes.BETA_SAVANNA.location(),
-                        ModernBetaBiomes.BETA_OCEAN.location()
-                    )),
-                    Map.entry("shrubland", new ClimateMapping(
-                        ModernBetaBiomes.BETA_SHRUBLAND.location(),
-                        ModernBetaBiomes.BETA_OCEAN.location()
-                    )),
-                    Map.entry("seasonal_forest", new ClimateMapping(
-                        ModernBetaBiomes.BETA_SEASONAL_FOREST.location(),
-                        ModernBetaBiomes.BETA_LUKEWARM_OCEAN.location()
-                    )),
-                    Map.entry("swampland", new ClimateMapping(
-                        ModernBetaBiomes.BETA_SWAMPLAND.location(),
-                        ModernBetaBiomes.BETA_COLD_OCEAN.location()
-                    )),
-                    Map.entry("taiga", new ClimateMapping(
-                        (oakBiomes ? ModernBetaBiomes.BETA_OAK_TAIGA : ModernBetaBiomes.BETA_TAIGA).location(),
-                        ModernBetaBiomes.BETA_FROZEN_OCEAN.location()
-                    )),
-                    Map.entry("tundra", new ClimateMapping(
-                        ModernBetaBiomes.BETA_TUNDRA.location(),
-                        ModernBetaBiomes.BETA_FROZEN_OCEAN.location()
-                    ))
+                    Map.entry("desert", new ClimateMapping(ModernBetaBiomes.BETA_DESERT.location())),
+                    Map.entry("forest", new ClimateMapping((oakBiomes ? ModernBetaBiomes.BETA_OAK_FOREST : ModernBetaBiomes.BETA_FOREST).location())),
+                    Map.entry("ice_desert", new ClimateMapping(ModernBetaBiomes.BETA_TUNDRA.location())),
+                    Map.entry("plains", new ClimateMapping(ModernBetaBiomes.BETA_PLAINS.location())),
+                    Map.entry("rainforest", new ClimateMapping(ModernBetaBiomes.BETA_RAINFOREST.location())),
+                    Map.entry("savanna", new ClimateMapping(ModernBetaBiomes.BETA_SAVANNA.location())),
+                    Map.entry("shrubland", new ClimateMapping(ModernBetaBiomes.BETA_SHRUBLAND.location())),
+                    Map.entry("seasonal_forest", new ClimateMapping(ModernBetaBiomes.BETA_SEASONAL_FOREST.location())),
+                    Map.entry("swampland", new ClimateMapping(ModernBetaBiomes.BETA_SWAMPLAND.location())),
+                    Map.entry("taiga", new ClimateMapping((oakBiomes ? ModernBetaBiomes.BETA_OAK_TAIGA : ModernBetaBiomes.BETA_TAIGA).location())),
+                    Map.entry("tundra", new ClimateMapping(ModernBetaBiomes.BETA_TUNDRA.location() ))
                 ))
-                .add(BIOME_INJECTION_RULES, BiomeInjectionRules.defaultRules(lookup, true))
+                .add(BIOME_INJECTION_RULES, BiomeInjectionRules.standardRules(lookup,
+                        BiomeInjectionRules.makeBetaOceanRule(lookup, false)))
                 .addDefault(CLIMATE_SCALE)
                 .build(),
             ModernBetaSettings.builder(lookup)
@@ -589,50 +557,17 @@ public final class ModernBetaSettingsPresets {
                 .add(TEMPERATURE_HEIGHT_SCALING, TemperatureHeightScaling.BETA)
                 .add(CLIMATE_DISTRIBUTION, ClimateDistribution.BETA)
                 .add(CLIMATE_MAPPINGS, Map.ofEntries(
-                    Map.entry("desert", new ClimateMapping(
-                        ModernBetaBiomes.PE_DESERT.location(),
-                        ModernBetaBiomes.PE_OCEAN.location()
-                    )),
-                    Map.entry("forest", new ClimateMapping(
-                        ModernBetaBiomes.PE_FOREST.location(),
-                        ModernBetaBiomes.PE_OCEAN.location()
-                    )),
-                    Map.entry("ice_desert", new ClimateMapping(
-                        ModernBetaBiomes.PE_TUNDRA.location(),
-                        ModernBetaBiomes.PE_FROZEN_OCEAN.location()
-                    )),
-                    Map.entry("plains", new ClimateMapping(
-                        ModernBetaBiomes.PE_PLAINS.location(),
-                        ModernBetaBiomes.PE_OCEAN.location()
-                    )),
-                    Map.entry("rainforest", new ClimateMapping(
-                        ModernBetaBiomes.PE_RAINFOREST.location(),
-                        ModernBetaBiomes.PE_WARM_OCEAN.location()
-                    )),
-                    Map.entry("savanna", new ClimateMapping(
-                        ModernBetaBiomes.PE_SAVANNA.location(),
-                        ModernBetaBiomes.PE_OCEAN.location()
-                    )),
-                    Map.entry("shrubland", new ClimateMapping(
-                        ModernBetaBiomes.PE_SHRUBLAND.location(),
-                        ModernBetaBiomes.PE_OCEAN.location()
-                    )),
-                    Map.entry("seasonal_forest", new ClimateMapping(
-                        ModernBetaBiomes.PE_SEASONAL_FOREST.location(),
-                        ModernBetaBiomes.PE_LUKEWARM_OCEAN.location()
-                    )),
-                    Map.entry("swampland", new ClimateMapping(
-                        ModernBetaBiomes.PE_SWAMPLAND.location(),
-                        ModernBetaBiomes.PE_COLD_OCEAN.location()
-                    )),
-                    Map.entry("taiga", new ClimateMapping(
-                        ModernBetaBiomes.PE_TAIGA.location(),
-                        ModernBetaBiomes.PE_FROZEN_OCEAN.location()
-                    )),
-                    Map.entry("tundra", new ClimateMapping(
-                        ModernBetaBiomes.PE_TUNDRA.location(),
-                        ModernBetaBiomes.PE_FROZEN_OCEAN.location()
-                    ))
+                    Map.entry("desert", new ClimateMapping(ModernBetaBiomes.PE_DESERT.location())),
+                    Map.entry("forest", new ClimateMapping(ModernBetaBiomes.PE_FOREST.location())),
+                    Map.entry("ice_desert", new ClimateMapping(ModernBetaBiomes.PE_TUNDRA.location())),
+                    Map.entry("plains", new ClimateMapping(ModernBetaBiomes.PE_PLAINS.location() )),
+                    Map.entry("rainforest", new ClimateMapping(ModernBetaBiomes.PE_RAINFOREST.location())),
+                    Map.entry("savanna", new ClimateMapping(ModernBetaBiomes.PE_SAVANNA.location())),
+                    Map.entry("shrubland", new ClimateMapping(ModernBetaBiomes.PE_SHRUBLAND.location())),
+                    Map.entry("seasonal_forest", new ClimateMapping(ModernBetaBiomes.PE_SEASONAL_FOREST.location())),
+                    Map.entry("swampland", new ClimateMapping(ModernBetaBiomes.PE_SWAMPLAND.location())),
+                    Map.entry("taiga", new ClimateMapping(ModernBetaBiomes.PE_TAIGA.location())),
+                    Map.entry("tundra", new ClimateMapping(ModernBetaBiomes.PE_TUNDRA.location()))
                 ))
                 .add(BIOME_INJECTION_RULES, BiomeInjectionRules.emptyRules(lookup))
                 .build(),
@@ -646,7 +581,7 @@ public final class ModernBetaSettingsPresets {
         return new ModernBetaSettingsPreset(
             presetSkylands(context).chunkSettings(),
             DEFAULT_BETA.biomeSettings().extend()
-                .add(BIOME_INJECTION_RULES, BiomeInjectionRules.defaultRules(lookup, false))
+                .add(BIOME_INJECTION_RULES, BiomeInjectionRules.standardRules(lookup))
                 .build(),
             DEFAULT_BETA.caveBiomeSettings()
         );
@@ -987,478 +922,104 @@ public final class ModernBetaSettingsPresets {
                 .add(VORONOI_POINTS, List.of(
                     // Standard Biomes
 
-                    new VoronoiPointBiome(
-                        Biomes.DESERT.location(),
-                        Biomes.LUKEWARM_OCEAN.location(),
-                        Biomes.DEEP_LUKEWARM_OCEAN.location(),
-                        0.9, 0.1, 0.5
-                    ),
-                    new VoronoiPointBiome(
-                        Biomes.PLAINS.location(),
-                        Biomes.LUKEWARM_OCEAN.location(),
-                        Biomes.DEEP_LUKEWARM_OCEAN.location(),
-                        0.9, 0.3, 0.5
-                    ),
-                    new VoronoiPointBiome(
-                        Biomes.FOREST.location(),
-                        Biomes.LUKEWARM_OCEAN.location(),
-                        Biomes.DEEP_LUKEWARM_OCEAN.location(),
-                        0.9, 0.5, 0.5
-                    ),
-                    new VoronoiPointBiome(
-                        Biomes.FOREST.location(),
-                        Biomes.WARM_OCEAN.location(),
-                        Biomes.WARM_OCEAN.location(),
-                        0.9, 0.7, 0.5
-                    ),
-                    new VoronoiPointBiome(
-                        Biomes.JUNGLE.location(),
-                        Biomes.WARM_OCEAN.location(),
-                        Biomes.WARM_OCEAN.location(),
-                        0.9, 0.9, 0.5
-                    ),
+                    new VoronoiPointBiome(Biomes.DESERT.location(), 0.9, 0.1, 0.5),
+                    new VoronoiPointBiome(Biomes.PLAINS.location(), 0.9, 0.3, 0.5),
+                    new VoronoiPointBiome(Biomes.FOREST.location(), 0.9, 0.5, 0.5),
+                    new VoronoiPointBiome(Biomes.FOREST.location(), 0.9, 0.7, 0.5),
+                    new VoronoiPointBiome(Biomes.JUNGLE.location(), 0.9, 0.9, 0.5),
 
-                    new VoronoiPointBiome(
-                        Biomes.SAVANNA.location(),
-                        Biomes.OCEAN.location(),
-                        Biomes.DEEP_OCEAN.location(),
-                        0.7, 0.1, 0.5
-                    ),
-                    new VoronoiPointBiome(
-                        Biomes.PLAINS.location(),
-                        Biomes.OCEAN.location(),
-                        Biomes.DEEP_OCEAN.location(),
-                        0.7, 0.3, 0.5
-                    ),
-                    new VoronoiPointBiome(
-                        Biomes.FOREST.location(),
-                        Biomes.OCEAN.location(),
-                        Biomes.DEEP_OCEAN.location(),
-                        0.7, 0.5, 0.5
-                    ),
-                    new VoronoiPointBiome(
-                        Biomes.FOREST.location(),
-                        Biomes.OCEAN.location(),
-                        Biomes.DEEP_OCEAN.location(),
-                        0.7, 0.7, 0.5
-                    ),
-                    new VoronoiPointBiome(
-                        Biomes.FOREST.location(),
-                        Biomes.OCEAN.location(),
-                        Biomes.DEEP_OCEAN.location(),
-                        0.7, 0.9, 0.5
-                    ),
+                    new VoronoiPointBiome(Biomes.SAVANNA.location(), 0.7, 0.1, 0.5),
+                    new VoronoiPointBiome(Biomes.PLAINS.location(), 0.7, 0.3, 0.5),
+                    new VoronoiPointBiome(Biomes.FOREST.location(), 0.7, 0.5, 0.5),
+                    new VoronoiPointBiome(Biomes.FOREST.location(), 0.7, 0.7, 0.5),
+                    new VoronoiPointBiome(Biomes.FOREST.location(), 0.7, 0.9, 0.5),
 
-                    new VoronoiPointBiome(
-                        Biomes.PLAINS.location(),
-                        Biomes.OCEAN.location(),
-                        Biomes.DEEP_OCEAN.location(),
-                        0.5, 0.1, 0.5
-                    ),
-                    new VoronoiPointBiome(
-                        Biomes.PLAINS.location(),
-                        Biomes.OCEAN.location(),
-                        Biomes.DEEP_OCEAN.location(),
-                        0.5, 0.3, 0.5
-                    ),
-                    new VoronoiPointBiome(
-                        Biomes.BIRCH_FOREST.location(),
-                        Biomes.OCEAN.location(),
-                        Biomes.DEEP_OCEAN.location(),
-                        0.5, 0.5, 0.5
-                    ),
-                    new VoronoiPointBiome(
-                        Biomes.BIRCH_FOREST.location(),
-                        Biomes.OCEAN.location(),
-                        Biomes.DEEP_OCEAN.location(),
-                        0.5, 0.7, 0.5
-                    ),
-                    new VoronoiPointBiome(
-                        Biomes.SWAMP.location(),
-                        Biomes.OCEAN.location(),
-                        Biomes.DEEP_OCEAN.location(),
-                        0.5, 0.9, 0.5
-                    ),
+                    new VoronoiPointBiome(Biomes.PLAINS.location(), 0.5, 0.1, 0.5),
+                    new VoronoiPointBiome(Biomes.PLAINS.location(), 0.5, 0.3, 0.5),
+                    new VoronoiPointBiome(Biomes.BIRCH_FOREST.location(), 0.5, 0.5, 0.5),
+                    new VoronoiPointBiome(Biomes.BIRCH_FOREST.location(), 0.5, 0.7, 0.5),
+                    new VoronoiPointBiome(Biomes.SWAMP.location(), 0.5, 0.9, 0.5),
 
-                    new VoronoiPointBiome(
-                        Biomes.SNOWY_PLAINS.location(),
-                        Biomes.FROZEN_OCEAN.location(),
-                        Biomes.DEEP_FROZEN_OCEAN.location(),
-                        0.3, 0.1, 0.5
-                    ),
-                    new VoronoiPointBiome(
-                        Biomes.TAIGA.location(),
-                        Biomes.COLD_OCEAN.location(),
-                        Biomes.DEEP_COLD_OCEAN.location(),
-                        0.3, 0.3, 0.5
-                    ),
-                    new VoronoiPointBiome(
-                        Biomes.TAIGA.location(),
-                        Biomes.COLD_OCEAN.location(),
-                        Biomes.DEEP_COLD_OCEAN.location(),
-                        0.3, 0.5, 0.5
-                    ),
-                    new VoronoiPointBiome(
-                        Biomes.SNOWY_TAIGA.location(),
-                        Biomes.FROZEN_OCEAN.location(),
-                        Biomes.DEEP_FROZEN_OCEAN.location(),
-                        0.3, 0.7, 0.5
-                    ),
-                    new VoronoiPointBiome(
-                        Biomes.SNOWY_TAIGA.location(),
-                        Biomes.FROZEN_OCEAN.location(),
-                        Biomes.DEEP_FROZEN_OCEAN.location(),
-                        0.3, 0.9, 0.5
-                    ),
+                    new VoronoiPointBiome(Biomes.SNOWY_PLAINS.location(), 0.3, 0.1, 0.5),
+                    new VoronoiPointBiome(Biomes.TAIGA.location(), 0.3, 0.3, 0.5),
+                    new VoronoiPointBiome(Biomes.TAIGA.location(), 0.3, 0.5, 0.5),
+                    new VoronoiPointBiome(Biomes.SNOWY_TAIGA.location(), 0.3, 0.7, 0.5),
+                    new VoronoiPointBiome(Biomes.SNOWY_TAIGA.location(), 0.3, 0.9, 0.5),
 
-                    new VoronoiPointBiome(
-                        Biomes.SNOWY_PLAINS.location(),
-                        Biomes.FROZEN_OCEAN.location(),
-                        Biomes.DEEP_FROZEN_OCEAN.location(),
-                        0.1, 0.1, 0.5
-                    ),
-                    new VoronoiPointBiome(
-                        Biomes.SNOWY_PLAINS.location(),
-                        Biomes.FROZEN_OCEAN.location(),
-                        Biomes.DEEP_FROZEN_OCEAN.location(),
-                        0.1, 0.3, 0.5
-                    ),
-                    new VoronoiPointBiome(
-                        Biomes.SNOWY_PLAINS.location(),
-                        Biomes.FROZEN_OCEAN.location(),
-                        Biomes.DEEP_FROZEN_OCEAN.location(),
-                        0.1, 0.5, 0.5
-                    ),
-                    new VoronoiPointBiome(
-                        Biomes.SNOWY_PLAINS.location(),
-                        Biomes.FROZEN_OCEAN.location(),
-                        Biomes.DEEP_FROZEN_OCEAN.location(),
-                        0.1, 0.7, 0.5
-                    ),
-                    new VoronoiPointBiome(
-                        Biomes.SNOWY_PLAINS.location(),
-                        Biomes.FROZEN_OCEAN.location(),
-                        Biomes.DEEP_FROZEN_OCEAN.location(),
-                        0.1, 0.9, 0.5
-                    ),
+                    new VoronoiPointBiome(Biomes.SNOWY_PLAINS.location(), 0.1, 0.1, 0.5),
+                    new VoronoiPointBiome(Biomes.SNOWY_PLAINS.location(), 0.1, 0.3, 0.5),
+                    new VoronoiPointBiome(Biomes.SNOWY_PLAINS.location(), 0.1, 0.5, 0.5),
+                    new VoronoiPointBiome(Biomes.SNOWY_PLAINS.location(), 0.1, 0.7, 0.5),
+                    new VoronoiPointBiome(Biomes.SNOWY_PLAINS.location(), 0.1, 0.9, 0.5),
 
                     // Mutated Biomes
 
-                    new VoronoiPointBiome(
-                        Biomes.DESERT.location(),
-                        Biomes.LUKEWARM_OCEAN.location(),
-                        Biomes.DEEP_LUKEWARM_OCEAN.location(),
-                        0.9, 0.1, 0.2
-                    ),
-                    new VoronoiPointBiome(
-                        Biomes.SUNFLOWER_PLAINS.location(),
-                        Biomes.LUKEWARM_OCEAN.location(),
-                        Biomes.DEEP_LUKEWARM_OCEAN.location(),
-                        0.9, 0.3, 0.2
-                    ),
-                    new VoronoiPointBiome(
-                        Biomes.DARK_FOREST.location(),
-                        Biomes.LUKEWARM_OCEAN.location(),
-                        Biomes.DEEP_LUKEWARM_OCEAN.location(),
-                        0.9, 0.5, 0.2
-                    ),
-                    new VoronoiPointBiome(
-                        Biomes.DARK_FOREST.location(),
-                        Biomes.WARM_OCEAN.location(),
-                        Biomes.WARM_OCEAN.location(),
-                        0.9, 0.7, 0.2
-                    ),
-                    new VoronoiPointBiome(
-                        Biomes.BAMBOO_JUNGLE.location(),
-                        Biomes.WARM_OCEAN.location(),
-                        Biomes.WARM_OCEAN.location(),
-                        0.9, 0.9, 0.2
-                    ),
+                    new VoronoiPointBiome(Biomes.DESERT.location(), 0.9, 0.1, 0.2),
+                    new VoronoiPointBiome(Biomes.SUNFLOWER_PLAINS.location(), 0.9, 0.3, 0.2),
+                    new VoronoiPointBiome(Biomes.DARK_FOREST.location(), 0.9, 0.5, 0.2),
+                    new VoronoiPointBiome(Biomes.DARK_FOREST.location(), 0.9, 0.7, 0.2),
+                    new VoronoiPointBiome(Biomes.BAMBOO_JUNGLE.location(), 0.9, 0.9, 0.2),
 
-                    new VoronoiPointBiome(
-                        Biomes.SAVANNA.location(),
-                        Biomes.OCEAN.location(),
-                        Biomes.DEEP_OCEAN.location(),
-                        0.7, 0.1, 0.2
-                    ),
-                    new VoronoiPointBiome(
-                        Biomes.MEADOW.location(),
-                        Biomes.OCEAN.location(),
-                        Biomes.DEEP_OCEAN.location(),
-                        0.7, 0.3, 0.2
-                    ),
-                    new VoronoiPointBiome(
-                        Biomes.FLOWER_FOREST.location(),
-                        Biomes.OCEAN.location(),
-                        Biomes.DEEP_OCEAN.location(),
-                        0.7, 0.5, 0.2
-                    ),
-                    new VoronoiPointBiome(
-                        Biomes.FLOWER_FOREST.location(),
-                        Biomes.OCEAN.location(),
-                        Biomes.DEEP_OCEAN.location(),
-                        0.7, 0.7, 0.2
-                    ),
-                    new VoronoiPointBiome(
-                        Biomes.FLOWER_FOREST.location(),
-                        Biomes.OCEAN.location(),
-                        Biomes.DEEP_OCEAN.location(),
-                        0.7, 0.9, 0.2
-                    ),
+                    new VoronoiPointBiome(Biomes.SAVANNA.location(), 0.7, 0.1, 0.2),
+                    new VoronoiPointBiome(Biomes.MEADOW.location(), 0.7, 0.3, 0.2),
+                    new VoronoiPointBiome(Biomes.FLOWER_FOREST.location(), 0.7, 0.5, 0.2),
+                    new VoronoiPointBiome(Biomes.FLOWER_FOREST.location(), 0.7, 0.7, 0.2),
+                    new VoronoiPointBiome(Biomes.FLOWER_FOREST.location(), 0.7, 0.9, 0.2),
 
-                    new VoronoiPointBiome(
-                        Biomes.MEADOW.location(),
-                        Biomes.OCEAN.location(),
-                        Biomes.DEEP_OCEAN.location(),
-                        0.5, 0.1, 0.2
-                    ),
-                    new VoronoiPointBiome(
-                        Biomes.MEADOW.location(),
-                        Biomes.OCEAN.location(),
-                        Biomes.DEEP_OCEAN.location(),
-                        0.5, 0.3, 0.2
-                    ),
-                    new VoronoiPointBiome(
-                        Biomes.CHERRY_GROVE.location(),
-                        Biomes.OCEAN.location(),
-                        Biomes.DEEP_OCEAN.location(),
-                        0.5, 0.5, 0.2
-                    ),
-                    new VoronoiPointBiome(
-                        Biomes.CHERRY_GROVE.location(),
-                        Biomes.OCEAN.location(),
-                        Biomes.DEEP_OCEAN.location(),
-                        0.5, 0.7, 0.2
-                    ),
-                    new VoronoiPointBiome(
-                        Biomes.MANGROVE_SWAMP.location(),
-                        Biomes.OCEAN.location(),
-                        Biomes.DEEP_OCEAN.location(),
-                        0.5, 0.9, 0.2
-                    ),
+                    new VoronoiPointBiome(Biomes.MEADOW.location(), 0.5, 0.1, 0.2),
+                    new VoronoiPointBiome(Biomes.MEADOW.location(), 0.5, 0.3, 0.2),
+                    new VoronoiPointBiome(Biomes.CHERRY_GROVE.location(), 0.5, 0.5, 0.2),
+                    new VoronoiPointBiome(Biomes.CHERRY_GROVE.location(), 0.5, 0.7, 0.2),
+                    new VoronoiPointBiome(Biomes.MANGROVE_SWAMP.location(), 0.5, 0.9, 0.2),
 
-                    new VoronoiPointBiome(
-                        Biomes.SNOWY_PLAINS.location(),
-                        Biomes.FROZEN_OCEAN.location(),
-                        Biomes.DEEP_FROZEN_OCEAN.location(),
-                        0.3, 0.1, 0.2
-                    ),
-                    new VoronoiPointBiome(
-                        Biomes.OLD_GROWTH_PINE_TAIGA.location(),
-                        Biomes.COLD_OCEAN.location(),
-                        Biomes.DEEP_COLD_OCEAN.location(),
-                        0.3, 0.3, 0.2
-                    ),
-                    new VoronoiPointBiome(
-                        Biomes.OLD_GROWTH_PINE_TAIGA.location(),
-                        Biomes.COLD_OCEAN.location(),
-                        Biomes.DEEP_COLD_OCEAN.location(),
-                        0.3, 0.5, 0.2
-                    ),
-                    new VoronoiPointBiome(
-                        Biomes.GROVE.location(),
-                        Biomes.FROZEN_OCEAN.location(),
-                        Biomes.DEEP_FROZEN_OCEAN.location(),
-                        0.3, 0.7, 0.2
-                    ),
-                    new VoronoiPointBiome(
-                        Biomes.GROVE.location(),
-                        Biomes.FROZEN_OCEAN.location(),
-                        Biomes.DEEP_FROZEN_OCEAN.location(),
-                        0.3, 0.9, 0.2
-                    ),
+                    new VoronoiPointBiome(Biomes.SNOWY_PLAINS.location(), 0.3, 0.1, 0.2),
+                    new VoronoiPointBiome(Biomes.OLD_GROWTH_PINE_TAIGA.location(), 0.3, 0.3, 0.2),
+                    new VoronoiPointBiome(Biomes.OLD_GROWTH_PINE_TAIGA.location(), 0.3, 0.5, 0.2),
+                    new VoronoiPointBiome(Biomes.GROVE.location(), 0.3, 0.7, 0.2),
+                    new VoronoiPointBiome(Biomes.GROVE.location(), 0.3, 0.9, 0.2),
 
-                    new VoronoiPointBiome(
-                        Biomes.SNOWY_PLAINS.location(),
-                        Biomes.FROZEN_OCEAN.location(),
-                        Biomes.DEEP_FROZEN_OCEAN.location(),
-                        0.1, 0.1, 0.2
-                    ),
-                    new VoronoiPointBiome(
-                        Biomes.SNOWY_PLAINS.location(),
-                        Biomes.FROZEN_OCEAN.location(),
-                        Biomes.DEEP_FROZEN_OCEAN.location(),
-                        0.1, 0.3, 0.2
-                    ),
-                    new VoronoiPointBiome(
-                        Biomes.SNOWY_PLAINS.location(),
-                        Biomes.FROZEN_OCEAN.location(),
-                        Biomes.DEEP_FROZEN_OCEAN.location(),
-                        0.1, 0.5, 0.2
-                    ),
-                    new VoronoiPointBiome(
-                        Biomes.SNOWY_SLOPES.location(),
-                        Biomes.FROZEN_OCEAN.location(),
-                        Biomes.DEEP_FROZEN_OCEAN.location(),
-                        0.1, 0.7, 0.2
-                    ),
-                    new VoronoiPointBiome(
-                        Biomes.SNOWY_SLOPES.location(),
-                        Biomes.FROZEN_OCEAN.location(),
-                        Biomes.DEEP_FROZEN_OCEAN.location(),
-                        0.1, 0.9, 0.2
-                    ),
+                    new VoronoiPointBiome(Biomes.SNOWY_PLAINS.location(), 0.1, 0.1, 0.2),
+                    new VoronoiPointBiome(Biomes.SNOWY_PLAINS.location(), 0.1, 0.3, 0.2),
+                    new VoronoiPointBiome(Biomes.SNOWY_PLAINS.location(), 0.1, 0.5, 0.2),
+                    new VoronoiPointBiome(Biomes.SNOWY_SLOPES.location(), 0.1, 0.7, 0.2),
+                    new VoronoiPointBiome(Biomes.SNOWY_SLOPES.location(), 0.1, 0.9, 0.2),
 
                     // Mutated Biomes 2
 
-                    new VoronoiPointBiome(
-                        Biomes.BADLANDS.location(),
-                        Biomes.LUKEWARM_OCEAN.location(),
-                        Biomes.DEEP_LUKEWARM_OCEAN.location(),
-                        0.9, 0.1, 0.8
-                    ),
-                    new VoronoiPointBiome(
-                        Biomes.PLAINS.location(),
-                        Biomes.LUKEWARM_OCEAN.location(),
-                        Biomes.DEEP_LUKEWARM_OCEAN.location(),
-                        0.9, 0.3, 0.8
-                    ),
-                    new VoronoiPointBiome(
-                        Biomes.SPARSE_JUNGLE.location(),
-                        Biomes.LUKEWARM_OCEAN.location(),
-                        Biomes.DEEP_LUKEWARM_OCEAN.location(),
-                        0.9, 0.5, 0.8
-                    ),
-                    new VoronoiPointBiome(
-                        Biomes.SPARSE_JUNGLE.location(),
-                        Biomes.WARM_OCEAN.location(),
-                        Biomes.WARM_OCEAN.location(),
-                        0.9, 0.7, 0.8
-                    ),
-                    new VoronoiPointBiome(
-                        Biomes.MUSHROOM_FIELDS.location(),
-                        Biomes.WARM_OCEAN.location(),
-                        Biomes.WARM_OCEAN.location(),
-                        0.9, 0.9, 0.8
-                    ),
+                    new VoronoiPointBiome(Biomes.BADLANDS.location(), 0.9, 0.1, 0.8),
+                    new VoronoiPointBiome(Biomes.PLAINS.location(), 0.9, 0.3, 0.8),
+                    new VoronoiPointBiome(Biomes.SPARSE_JUNGLE.location(), 0.9, 0.5, 0.8),
+                    new VoronoiPointBiome(Biomes.SPARSE_JUNGLE.location(), 0.9, 0.7, 0.8),
+                    new VoronoiPointBiome(Biomes.MUSHROOM_FIELDS.location(), 0.9, 0.9, 0.8),
 
-                    new VoronoiPointBiome(
-                        Biomes.SAVANNA.location(),
-                        Biomes.OCEAN.location(),
-                        Biomes.DEEP_OCEAN.location(),
-                        0.7, 0.1, 0.8
-                    ),
-                    new VoronoiPointBiome(
-                        Biomes.PLAINS.location(),
-                        Biomes.OCEAN.location(),
-                        Biomes.DEEP_OCEAN.location(),
-                        0.7, 0.3, 0.8
-                    ),
+                    new VoronoiPointBiome(Biomes.SAVANNA.location(), 0.7, 0.1, 0.8),
+                    new VoronoiPointBiome(Biomes.PLAINS.location(), 0.7, 0.3, 0.8),
                     //? if >=1.21.4 {
-                    new VoronoiPointBiome(
-                        Biomes.PALE_GARDEN.location(),
-                        Biomes.OCEAN.location(),
-                        Biomes.DEEP_OCEAN.location(),
-                        0.7, 0.5, 0.8
-                    ),
-                    new VoronoiPointBiome(
-                        Biomes.PALE_GARDEN.location(),
-                        Biomes.OCEAN.location(),
-                        Biomes.DEEP_OCEAN.location(),
-                        0.7, 0.7, 0.8
-                    ),
-                    new VoronoiPointBiome(
-                        Biomes.PALE_GARDEN.location(),
-                        Biomes.OCEAN.location(),
-                        Biomes.DEEP_OCEAN.location(),
-                        0.7, 0.9, 0.8
-                    ),
+                    new VoronoiPointBiome(Biomes.PALE_GARDEN.location(), 0.7, 0.5, 0.8),
+                    new VoronoiPointBiome(Biomes.PALE_GARDEN.location(), 0.7, 0.7, 0.8),
+                    new VoronoiPointBiome(Biomes.PALE_GARDEN.location(), 0.7, 0.9, 0.8),
                     //?}
 
-                    new VoronoiPointBiome(
-                        Biomes.PLAINS.location(),
-                        Biomes.OCEAN.location(),
-                        Biomes.DEEP_OCEAN.location(),
-                        0.5, 0.1, 0.8
-                    ),
-                    new VoronoiPointBiome(
-                        Biomes.PLAINS.location(),
-                        Biomes.OCEAN.location(),
-                        Biomes.DEEP_OCEAN.location(),
-                        0.5, 0.3, 0.8
-                    ),
-                    new VoronoiPointBiome(
-                        Biomes.OLD_GROWTH_BIRCH_FOREST.location(),
-                        Biomes.OCEAN.location(),
-                        Biomes.DEEP_OCEAN.location(),
-                        0.5, 0.5, 0.8
-                    ),
-                    new VoronoiPointBiome(
-                        Biomes.OLD_GROWTH_BIRCH_FOREST.location(),
-                        Biomes.OCEAN.location(),
-                        Biomes.DEEP_OCEAN.location(),
-                        0.5, 0.7, 0.8
-                    ),
-                    new VoronoiPointBiome(
-                        Biomes.MANGROVE_SWAMP.location(),
-                        Biomes.OCEAN.location(),
-                        Biomes.DEEP_OCEAN.location(),
-                        0.5, 0.9, 0.8
-                    ),
+                    new VoronoiPointBiome(Biomes.PLAINS.location(), 0.5, 0.1, 0.8),
+                    new VoronoiPointBiome(Biomes.PLAINS.location(), 0.5, 0.3, 0.8),
+                    new VoronoiPointBiome(Biomes.OLD_GROWTH_BIRCH_FOREST.location(), 0.5, 0.5, 0.8),
+                    new VoronoiPointBiome(Biomes.OLD_GROWTH_BIRCH_FOREST.location(), 0.5, 0.7, 0.8),
+                    new VoronoiPointBiome(Biomes.MANGROVE_SWAMP.location(), 0.5, 0.9, 0.8),
 
-                    new VoronoiPointBiome(
-                        Biomes.SNOWY_PLAINS.location(),
-                        Biomes.FROZEN_OCEAN.location(),
-                        Biomes.DEEP_FROZEN_OCEAN.location(),
-                        0.3, 0.1, 0.8
-                    ),
-                    new VoronoiPointBiome(
-                        Biomes.OLD_GROWTH_SPRUCE_TAIGA.location(),
-                        Biomes.COLD_OCEAN.location(),
-                        Biomes.DEEP_COLD_OCEAN.location(),
-                        0.3, 0.3, 0.8
-                    ),
-                    new VoronoiPointBiome(
-                        Biomes.OLD_GROWTH_SPRUCE_TAIGA.location(),
-                        Biomes.COLD_OCEAN.location(),
-                        Biomes.DEEP_COLD_OCEAN.location(),
-                        0.3, 0.5, 0.8
-                    ),
-                    new VoronoiPointBiome(
-                        Biomes.GROVE.location(),
-                        Biomes.FROZEN_OCEAN.location(),
-                        Biomes.DEEP_FROZEN_OCEAN.location(),
-                        0.3, 0.7, 0.8
-                    ),
-                    new VoronoiPointBiome(
-                        Biomes.GROVE.location(),
-                        Biomes.FROZEN_OCEAN.location(),
-                        Biomes.DEEP_FROZEN_OCEAN.location(),
-                        0.3, 0.9, 0.8
-                    ),
+                    new VoronoiPointBiome(Biomes.SNOWY_PLAINS.location(), 0.3, 0.1, 0.8),
+                    new VoronoiPointBiome(Biomes.OLD_GROWTH_SPRUCE_TAIGA.location(), 0.3, 0.3, 0.8),
+                    new VoronoiPointBiome(Biomes.OLD_GROWTH_SPRUCE_TAIGA.location(), 0.3, 0.5, 0.8),
+                    new VoronoiPointBiome(Biomes.GROVE.location(), 0.3, 0.7, 0.8),
+                    new VoronoiPointBiome(Biomes.GROVE.location(), 0.3, 0.9, 0.8),
 
-                    new VoronoiPointBiome(
-                        Biomes.SNOWY_PLAINS.location(),
-                        Biomes.FROZEN_OCEAN.location(),
-                        Biomes.DEEP_FROZEN_OCEAN.location(),
-                        0.1, 0.1, 0.8
-                    ),
-                    new VoronoiPointBiome(
-                        Biomes.SNOWY_PLAINS.location(),
-                        Biomes.FROZEN_OCEAN.location(),
-                        Biomes.DEEP_FROZEN_OCEAN.location(),
-                        0.1, 0.3, 0.8
-                    ),
-                    new VoronoiPointBiome(
-                        Biomes.SNOWY_PLAINS.location(),
-                        Biomes.FROZEN_OCEAN.location(),
-                        Biomes.DEEP_FROZEN_OCEAN.location(),
-                        0.1, 0.5, 0.8
-                    ),
-                    new VoronoiPointBiome(
-                        Biomes.ICE_SPIKES.location(),
-                        Biomes.FROZEN_OCEAN.location(),
-                        Biomes.DEEP_FROZEN_OCEAN.location(),
-                        0.1, 0.7, 0.8
-                    ),
-                    new VoronoiPointBiome(
-                        Biomes.ICE_SPIKES.location(),
-                        Biomes.FROZEN_OCEAN.location(),
-                        Biomes.DEEP_FROZEN_OCEAN.location(),
-                        0.1, 0.9, 0.8
-                    )
+                    new VoronoiPointBiome(Biomes.SNOWY_PLAINS.location(), 0.1, 0.1, 0.8),
+                    new VoronoiPointBiome(Biomes.SNOWY_PLAINS.location(), 0.1, 0.3, 0.8),
+                    new VoronoiPointBiome(Biomes.SNOWY_PLAINS.location(), 0.1, 0.5, 0.8),
+                    new VoronoiPointBiome(Biomes.ICE_SPIKES.location(), 0.1, 0.7, 0.8),
+                    new VoronoiPointBiome(Biomes.ICE_SPIKES.location(), 0.1, 0.9, 0.8)
                 ))
-                .add(BIOME_INJECTION_RULES, BiomeInjectionRules.defaultRules(lookup, true))
+                .add(BIOME_INJECTION_RULES, BiomeInjectionRules.standardRules(lookup,
+                        BiomeInjectionRules.makeModernOceanRule(lookup)))
                 .build(),
             DEFAULT_BETA.caveBiomeSettings()
         );

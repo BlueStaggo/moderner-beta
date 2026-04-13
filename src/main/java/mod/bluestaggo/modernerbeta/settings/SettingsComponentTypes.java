@@ -12,7 +12,6 @@ import mod.bluestaggo.modernerbeta.settings.component.*;
 import mod.bluestaggo.modernerbeta.level.biome.provider.climate.ClimateMapping;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ConfiguredLayers;
 import mod.bluestaggo.modernerbeta.level.biome.voronoi.VoronoiPointBiome;
-import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import net.minecraft.core.Holder;
 import mod.bluestaggo.modernerbeta.settings.component.validation.ComponentValidator;
 import mod.bluestaggo.modernerbeta.settings.component.validation.ValidationResult;
@@ -252,14 +251,6 @@ public class SettingsComponentTypes {
                     if (mapping.biome() == null) {
                         return new ValidationResult.Invalid<>(Component.literal("Biome mapping %s contains no biome value!"));
                     }
-
-                    if (mapping.oceanBiome() == null) {
-                        return new ValidationResult.Invalid<>(Component.literal("Biome mapping %s contains no ocean biome value!"));
-                    }
-
-                    if (mapping.deepOceanBiome() == null) {
-                        return new ValidationResult.Invalid<>(Component.literal("Biome mapping %s contains no deep ocean biome value!"));
-                    }
                 }
 
                 return new ValidationResult.Valid<>(component);
@@ -303,7 +294,7 @@ public class SettingsComponentTypes {
             ModernBetaBuiltInTypes.SettingsComponentType.BIOME_INJECTION_RULES.id,
             BiomeInjectionRule.CODEC.listOf(),
             (settings, registries) ->
-                    BiomeInjectionRules.defaultRules(registries, false),
+                    BiomeInjectionRules.standardRules(registries),
             ValidationResult.Valid::new);
 
         // Cave biome provider

@@ -9,7 +9,6 @@ import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.api.level.biome.BiomeProvider;
 import mod.bluestaggo.modernerbeta.api.level.biome.BiomeResolverBlock;
 import mod.bluestaggo.modernerbeta.api.level.biome.BiomeResolverExtendedId;
-import mod.bluestaggo.modernerbeta.api.level.biome.BiomeResolverOcean;
 import mod.bluestaggo.modernerbeta.level.biome.injection.BiomeInjectionRule;
 import mod.bluestaggo.modernerbeta.level.biome.injection.InjectionNeeds;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
@@ -208,20 +207,6 @@ public class ModernBetaBiomeSource extends BiomeSource {
         
         return null;
     }
-
-    public Holder<Biome> getOceanBiome(int biomeX, int biomeZ) {
-        if (this.biomeProvider instanceof BiomeResolverOcean biomeResolverOcean)
-            return biomeResolverOcean.getOceanBiome(biomeX, biomeZ);
-        
-        return null;
-    }
-    
-    public Holder<Biome> getDeepOceanBiome(int biomeX, int biomeZ) {
-        if (this.biomeProvider instanceof BiomeResolverOcean biomeResolverOcean)
-            return biomeResolverOcean.getDeepOceanBiome(biomeX, biomeZ);
-        
-        return null;
-    }
     
     public Holder<Biome> getCaveBiome(int biomeX, int biomeY, int biomeZ) {
         return this.caveBiomeProvider.getBiome(biomeX, biomeY, biomeZ);
@@ -267,10 +252,6 @@ public class ModernBetaBiomeSource extends BiomeSource {
     
     public ModernBetaSettings getCaveBiomeSettings() {
         return this.caveBiomeSettings;
-    }
-
-    public boolean hasOceanBiomes() {
-        return this.biomeProvider instanceof BiomeResolverOcean;
     }
     
     @SuppressWarnings("unchecked")

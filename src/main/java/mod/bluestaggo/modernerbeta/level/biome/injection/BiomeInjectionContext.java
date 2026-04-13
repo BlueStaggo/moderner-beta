@@ -6,8 +6,12 @@ import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.settings.component.WorldBorderLocation;
+import net.minecraft.core.Holder;
 import net.minecraft.core.SectionPos;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.biome.Biome;
+
+import java.util.EnumSet;
 
 public final class BiomeInjectionContext {
     public final ModernBetaChunkGenerator chunkGenerator;
@@ -23,6 +27,9 @@ public final class BiomeInjectionContext {
     private int x;
     private int y;
     private int z;
+
+    private Holder<Biome> biome;
+    private EnumSet<InjectionNeeds> fulfillableNeeds;
 
     public BiomeInjectionContext(ModernBetaChunkGenerator chunkGenerator, ModernBetaBiomeSource biomeSource) {
         this.chunkGenerator = chunkGenerator;
@@ -56,6 +63,16 @@ public final class BiomeInjectionContext {
         return this;
     }
 
+    public BiomeInjectionContext setBiome(Holder<Biome> biome) {
+        this.biome = biome;
+        return this;
+    }
+
+    public BiomeInjectionContext setFulfillableNeeds(EnumSet<InjectionNeeds> ableToFulfill) {
+        this.fulfillableNeeds = ableToFulfill;
+        return this;
+    }
+
     void setupContext() {
         ModernBetaSettings settingsChunk = this.chunkGenerator.getChunkSettings()
                 .mapPreset(this.chunkGenerator.getPresetRegistry(), ModernBetaSettingsPreset::chunkSettings);
@@ -77,5 +94,13 @@ public final class BiomeInjectionContext {
 
     public ChunkPos getChunkPos() {
         return this.chunkPos;
+    }
+
+    public Holder<Biome> getBiome() {
+        return this.biome;
+    }
+
+    public EnumSet<InjectionNeeds> getFulfillableNeeds() {
+        return this.fulfillableNeeds;
     }
 }

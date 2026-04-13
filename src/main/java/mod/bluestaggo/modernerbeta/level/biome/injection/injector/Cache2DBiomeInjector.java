@@ -52,7 +52,7 @@ public class Cache2DBiomeInjector implements BiomeInjector {
         int localBiomeZ = biomeZ & 3;
 
         int pos = localBiomeX << 2 | localBiomeZ;
-        return lookup.computeIfAbsent(pos, p -> this.injector.apply(context, biomeX, 16, biomeZ));
+        return lookup.computeIfAbsent(pos, p -> this.injector.apply(context, biomeX, 0, biomeZ));
     }
 
     @Override

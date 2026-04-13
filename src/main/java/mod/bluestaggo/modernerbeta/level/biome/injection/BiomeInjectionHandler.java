@@ -1,6 +1,7 @@
 //~dotLocation
 package mod.bluestaggo.modernerbeta.level.biome.injection;
 
+import mod.bluestaggo.modernerbeta.api.level.biome.climate.ClimateSampler;
 import mod.bluestaggo.modernerbeta.api.level.chunk.ChunkProvider;
 import mod.bluestaggo.modernerbeta.api.level.chunk.ChunkProviderNoise;
 import mod.bluestaggo.modernerbeta.mixin.LevelChunkSectionAccessor;
@@ -127,6 +128,11 @@ public class BiomeInjectionHandler {
             return this.modernBetaBiomeSource.getNoiseBiome(biomeX, biomeY, biomeZ, noiseSampler);
         }
 
+        if (ableToFulfill.contains(InjectionNeeds.CLIMATE) &&
+                !(this.modernBetaBiomeSource.getBiomeProvider() instanceof ClimateSampler)) {
+            ableToFulfill.remove(InjectionNeeds.CLIMATE);
+        }
+
         BiomeInjectionContext context = this.setupContext(level, biomeX, biomeY, biomeZ, ableToFulfill);
 
         return this
@@ -141,6 +147,11 @@ public class BiomeInjectionHandler {
         BiomeInjectionRule.Step step,
         EnumSet<InjectionNeeds> ableToFulfill
     ) {
+        if (ableToFulfill.contains(InjectionNeeds.CLIMATE) &&
+                !(this.modernBetaBiomeSource.getBiomeProvider() instanceof ClimateSampler)) {
+            ableToFulfill.remove(InjectionNeeds.CLIMATE);
+        }
+
         BiomeInjectionContext context = this.setupContext(level, biomeX, biomeY, biomeZ, ableToFulfill);
 
         return this.getBiome(context, biomeX, biomeY, biomeZ, noiseSampler, step, ableToFulfill);
@@ -162,10 +173,15 @@ public class BiomeInjectionHandler {
             if (!rule.canFulfill(ableToFulfill))
                 continue;
 
+            if (rule.needs().contains(InjectionNeeds.BIOMES) && context.getBiome() == null)
+                context.setBiome(this.modernBetaBiomeSource.getNoiseBiome(biomeX, biomeY, biomeZ, noiseSampler));
+
             rule.initIfNeeded();
-            biome = rule.apply(context, biomeX, biomeY, biomeZ);
-            if (biome != null)
-                break;
+            Holder<Biome> result = rule.apply(context, biomeX, biomeY, biomeZ);
+            if (result != null) {
+                context.setBiome(result);
+                biome = result;
+            }
         }
 
         return Optional.ofNullable(biome);
@@ -186,7 +202,10 @@ public class BiomeInjectionHandler {
             context.setHeights(worldMinY, topHeight, minHeight);
         }
 
-        return context.setPosition((biomeX << 2) + 2, biomeY << 2, (biomeZ << 2) + 2);
+        return context
+                .setBiome(null)
+                .setFulfillableNeeds(ableToFulfill)
+                .setPosition((biomeX << 2) + 2, biomeY << 2, (biomeZ << 2) + 2);
     }
     
     private int sampleTopHeight(LevelHeightAccessor level, int biomeX, int biomeZ) {

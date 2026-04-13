@@ -405,11 +405,7 @@ public class ModernBetaClientBuiltInProviders {
                     addAll(
                         options,
                         screen.headerOption(screen.getText("biome")),
-                        screen.biomeOption(target + ".biome", false),
-                        screen.headerOption(screen.getText("oceanBiome")),
-                        screen.biomeOption(target + ".oceanBiome", false),
-                        screen.headerOption(screen.getText("deepOceanBiome")),
-                        screen.biomeOption(target + ".deepOceanBiome", false)
+                        screen.biomeOption(target + ".biome", false)
                     );
                 }
             }

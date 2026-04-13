@@ -139,8 +139,6 @@ public final class ModernBetaBuiltInTypes {
     public enum LayerOutput {
         BIOME("biome"),
         HEIGHT("height"),
-        OCEAN("ocean"),
-        DEEP_OCEAN("deep_ocean"),
         ;
 
         public final ResourceLocation id;

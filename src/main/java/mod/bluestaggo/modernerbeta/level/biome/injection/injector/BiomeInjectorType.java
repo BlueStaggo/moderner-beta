@@ -9,9 +9,10 @@ public record BiomeInjectorType<I extends BiomeInjector>(com.mojang.serializatio
     public static BiomeInjectorType<Cache2DBiomeInjector> CACHE_2D;
     public static BiomeInjectorType<CaveBiomeInjector> CAVE_BIOME;
     public static BiomeInjectorType<ConstantBiomeInjector> CONSTANT_BIOME;
-    public static BiomeInjectorType<DeepOceanBiomeInjector> DEEP_OCEAN;
-    public static BiomeInjectorType<OceanBiomeInjector> OCEAN;
+    public static BiomeInjectorType<MappedClimateBiomeInjector> MAPPED_CLIMATE;
     public static BiomeInjectorType<PredicateBiomeInjector> PREDICATE;
+    public static BiomeInjectorType<ReplaceBiomeInjector> REPLACE;
+    public static BiomeInjectorType<ReplaceByTagBiomeInjector> REPLACE_BY_TAG;
 
     private static <I extends BiomeInjector> BiomeInjectorType<I> register(String id, com.mojang.serialization.MapCodec<I> codec) {
         return registryHandler.register(ModernerBeta.createId(id), new BiomeInjectorType<>(codec));
@@ -24,8 +25,9 @@ public record BiomeInjectorType<I extends BiomeInjector>(com.mojang.serializatio
         CACHE_2D = register("cache_2d", Cache2DBiomeInjector.CODEC);
         CAVE_BIOME = register("cave_biome", CaveBiomeInjector.CODEC);
         CONSTANT_BIOME = register("constant_biome", ConstantBiomeInjector.CODEC);
-        DEEP_OCEAN = register("deep_ocean", DeepOceanBiomeInjector.CODEC);
-        OCEAN = register("ocean", OceanBiomeInjector.CODEC);
+        MAPPED_CLIMATE = register("mapped_climate", MappedClimateBiomeInjector.CODEC);
         PREDICATE = register("predicate", PredicateBiomeInjector.CODEC);
+        REPLACE = register("replace", ReplaceBiomeInjector.CODEC);
+        REPLACE_BY_TAG = register("replace_by_tag", ReplaceByTagBiomeInjector.CODEC);
     }
 }

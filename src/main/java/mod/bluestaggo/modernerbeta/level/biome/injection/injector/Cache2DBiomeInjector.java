@@ -3,11 +3,14 @@ package mod.bluestaggo.modernerbeta.level.biome.injection.injector;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import mod.bluestaggo.modernerbeta.level.biome.injection.BiomeInjectionContext;
+import mod.bluestaggo.modernerbeta.level.biome.injection.InjectionNeeds;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkCache;
 import net.minecraft.core.Holder;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.biome.Biome;
+
+import java.util.EnumSet;
 
 public class Cache2DBiomeInjector implements BiomeInjector {
     public static final com.mojang.serialization.MapCodec<Cache2DBiomeInjector> CODEC = VersionCompat.createMaybeMapCodec(
@@ -50,5 +53,10 @@ public class Cache2DBiomeInjector implements BiomeInjector {
 
         int pos = localBiomeX << 2 | localBiomeZ;
         return lookup.computeIfAbsent(pos, p -> this.injector.apply(context, biomeX, 16, biomeZ));
+    }
+
+    @Override
+    public EnumSet<InjectionNeeds> needs() {
+        return this.injector.needs();
     }
 }

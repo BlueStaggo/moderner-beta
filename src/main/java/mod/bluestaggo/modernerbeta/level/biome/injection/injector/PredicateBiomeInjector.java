@@ -1,11 +1,13 @@
 package mod.bluestaggo.modernerbeta.level.biome.injection.injector;
 
 import mod.bluestaggo.modernerbeta.level.biome.injection.BiomeInjectionContext;
+import mod.bluestaggo.modernerbeta.level.biome.injection.InjectionNeeds;
 import mod.bluestaggo.modernerbeta.level.biome.injection.predicates.InjectionPredicate;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import net.minecraft.core.Holder;
 import net.minecraft.world.level.biome.Biome;
 
+import java.util.EnumSet;
 import java.util.Optional;
 
 public record PredicateBiomeInjector(
@@ -43,5 +45,18 @@ public record PredicateBiomeInjector(
         }
 
         return null;
+    }
+
+    @Override
+    public EnumSet<InjectionNeeds> needs() {
+        EnumSet<InjectionNeeds> needs = EnumSet.noneOf(InjectionNeeds.class);
+
+        needs.addAll(predicate.needs());
+        needs.addAll(onMatch.needs());
+
+        otherwise.ifPresent(injector ->
+                needs.addAll(injector.needs()));
+
+        return needs;
     }
 }

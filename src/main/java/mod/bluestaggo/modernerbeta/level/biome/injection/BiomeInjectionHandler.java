@@ -22,6 +22,7 @@ import net.minecraft.world.level.chunk.PalettedContainerRO;
 import net.minecraft.world.level.levelgen.Heightmap;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -86,7 +87,8 @@ public class BiomeInjectionHandler {
                             int biomeY = sectionY << 2 | localBiomeY;
 
                             Holder<Biome> initialBiome = readableContainer.get(localBiomeX, localBiomeY, localBiomeZ);
-                            Holder<Biome> replacementBiome = this.getOptionalBiome(view, biomeX, biomeY, biomeZ, noiseSampler, step).orElse(initialBiome);
+                            Holder<Biome> replacementBiome = this.getOptionalBiome(view, biomeX, biomeY, biomeZ,
+                                            noiseSampler, step, InjectionNeeds.all()).orElse(initialBiome);
 
                             palettedContainer.getAndSetUnchecked(localBiomeX, localBiomeY, localBiomeZ, replacementBiome);
                         }
@@ -100,37 +102,64 @@ public class BiomeInjectionHandler {
         }
     }
     
-    public @NotNull Holder<Biome> getBiomeAtBlock(LevelHeightAccessor level, int x, int y, int z, Sampler noiseSampler, BiomeInjectionRule.Step step) {
+    public @NotNull Holder<Biome> getBiomeAtBlock(
+        LevelHeightAccessor level,
+        int x, int y, int z,
+        Sampler noiseSampler,
+        BiomeInjectionRule.Step step,
+        EnumSet<InjectionNeeds> ableToFulfill
+    ) {
         int biomeX = x >> 2;
         int biomeY = y >> 2;
         int biomeZ = z >> 2;
         
-        return this.getBiome(level, biomeX, biomeY, biomeZ, noiseSampler, step);
+        return this.getBiome(level, biomeX, biomeY, biomeZ, noiseSampler, step, ableToFulfill);
     }
     
-    public @NotNull Holder<Biome> getBiome(LevelHeightAccessor level, int biomeX, int biomeY, int biomeZ, Sampler noiseSampler, BiomeInjectionRule.Step step) {
+    public @NotNull Holder<Biome> getBiome(
+        LevelHeightAccessor level,
+        int biomeX, int biomeY, int biomeZ,
+        Sampler noiseSampler,
+        BiomeInjectionRule.Step step,
+        EnumSet<InjectionNeeds> ableToFulfill
+    ) {
         if (this.rules.isEmpty()) {
             return this.modernBetaBiomeSource.getNoiseBiome(biomeX, biomeY, biomeZ, noiseSampler);
         }
 
-        BiomeInjectionContext context = this.setupContext(level, biomeX, biomeY, biomeZ);
+        BiomeInjectionContext context = this.setupContext(level, biomeX, biomeY, biomeZ, ableToFulfill);
 
         return this
-            .getBiome(context, biomeX, biomeY, biomeZ, noiseSampler, step)
+            .getBiome(context, biomeX, biomeY, biomeZ, noiseSampler, step, ableToFulfill)
             .orElseGet(() -> this.modernBetaBiomeSource.getNoiseBiome(biomeX, biomeY, biomeZ, noiseSampler));
     }
     
-    public @NotNull Optional<Holder<Biome>> getOptionalBiome(LevelHeightAccessor level, int biomeX, int biomeY, int biomeZ, Sampler noiseSampler, BiomeInjectionRule.Step step) {
-        BiomeInjectionContext context = this.setupContext(level, biomeX, biomeY, biomeZ);
+    public @NotNull Optional<Holder<Biome>> getOptionalBiome(
+        LevelHeightAccessor level,
+        int biomeX, int biomeY, int biomeZ,
+        Sampler noiseSampler,
+        BiomeInjectionRule.Step step,
+        EnumSet<InjectionNeeds> ableToFulfill
+    ) {
+        BiomeInjectionContext context = this.setupContext(level, biomeX, biomeY, biomeZ, ableToFulfill);
 
-        return this.getBiome(context, biomeX, biomeY, biomeZ, noiseSampler, step);
+        return this.getBiome(context, biomeX, biomeY, biomeZ, noiseSampler, step, ableToFulfill);
     }
     
-    private @NotNull Optional<Holder<Biome>> getBiome(BiomeInjectionContext context, int biomeX, int biomeY, int biomeZ, Sampler noiseSampler, BiomeInjectionRule.Step step) {
+    private @NotNull Optional<Holder<Biome>> getBiome(
+        BiomeInjectionContext context,
+        int biomeX, int biomeY, int biomeZ,
+        Sampler noiseSampler,
+        BiomeInjectionRule.Step step,
+        EnumSet<InjectionNeeds> ableToFulfill
+    ) {
         Holder<Biome> biome = null;
 
         for (BiomeInjectionRule rule : this.rules) {
             if (step != BiomeInjectionRule.Step.ALL && step != rule.stepFor())
+                continue;
+
+            if (!rule.canFulfill(ableToFulfill))
                 continue;
 
             rule.initIfNeeded();
@@ -142,14 +171,22 @@ public class BiomeInjectionHandler {
         return Optional.ofNullable(biome);
     }
     
-    private BiomeInjectionContext setupContext(LevelHeightAccessor level, int biomeX, int biomeY, int biomeZ) {
-        int worldMinY = this.modernBetaChunkGenerator.getMinY();
-        int topHeight = this.sampleTopHeight(level, biomeX, biomeZ);
-        int minHeight = this.sampleMinHeight(level, biomeX, biomeZ);
+    private BiomeInjectionContext setupContext(
+        LevelHeightAccessor level,
+        int biomeX, int biomeY, int biomeZ,
+        EnumSet<InjectionNeeds> ableToFulfill
+    ) {
+        BiomeInjectionContext context = this.context.get();
 
-        return context.get()
-            .setHeights(worldMinY, topHeight, minHeight)
-            .setPosition((biomeX << 2) + 2, biomeY << 2, (biomeZ << 2) + 2);
+        if (ableToFulfill.contains(InjectionNeeds.HEIGHTS)) {
+            int worldMinY = this.modernBetaChunkGenerator.getMinY();
+            int topHeight = this.sampleTopHeight(level, biomeX, biomeZ);
+            int minHeight = this.sampleMinHeight(level, biomeX, biomeZ);
+
+            context.setHeights(worldMinY, topHeight, minHeight);
+        }
+
+        return context.setPosition((biomeX << 2) + 2, biomeY << 2, (biomeZ << 2) + 2);
     }
     
     private int sampleTopHeight(LevelHeightAccessor level, int biomeX, int biomeZ) {

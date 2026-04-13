@@ -11,6 +11,7 @@ import mod.bluestaggo.modernerbeta.api.level.biome.BiomeResolverBlock;
 import mod.bluestaggo.modernerbeta.api.level.biome.BiomeResolverExtendedId;
 import mod.bluestaggo.modernerbeta.api.level.biome.BiomeResolverOcean;
 import mod.bluestaggo.modernerbeta.level.biome.injection.BiomeInjectionRule;
+import mod.bluestaggo.modernerbeta.level.biome.injection.InjectionNeeds;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.api.level.cavebiome.CaveBiomeProvider;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
@@ -142,7 +143,7 @@ public class ModernBetaBiomeSource extends BiomeSource {
                 int z = biomeZ << 2;
                 int y = this.chunkGenerator.getHeight(x, z, Heightmap.Types.OCEAN_FLOOR_WG, null);
                 
-                set.add(this.chunkGenerator.getBiomeInjector().getBiomeAtBlock(null, x, y, z, noiseSampler, BiomeInjectionRule.Step.ALL));
+                set.add(this.chunkGenerator.getBiomeInjector().getBiomeAtBlock(null, x, y, z, noiseSampler, BiomeInjectionRule.Step.ALL, InjectionNeeds.all()));
             }
         }
         
@@ -159,7 +160,7 @@ public class ModernBetaBiomeSource extends BiomeSource {
         Climate.Sampler noiseSampler,
         LevelReader level
     ) {
-        if (this.chunkGenerator == null || true) {
+        if (this.chunkGenerator == null) {
             return super.findClosestBiome3d(
                 origin,
                 radius,
@@ -197,7 +198,7 @@ public class ModernBetaBiomeSource extends BiomeSource {
                 
                 Holder<Biome> biome = this.chunkGenerator
                     .getBiomeInjector()
-                    .getBiome(level, biomeX, biomeY, biomeZ, noiseSampler, BiomeInjectionRule.Step.ALL);
+                    .getBiome(level, biomeX, biomeY, biomeZ, noiseSampler, BiomeInjectionRule.Step.ALL, InjectionNeeds.cheapToFulfill());
 
                 if (!biomeSet.contains(biome)) continue;
                 

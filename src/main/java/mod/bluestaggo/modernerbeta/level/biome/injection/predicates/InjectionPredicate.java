@@ -2,8 +2,10 @@ package mod.bluestaggo.modernerbeta.level.biome.injection.predicates;
 
 import com.mojang.serialization.MapCodec;
 import mod.bluestaggo.modernerbeta.level.biome.injection.BiomeInjectionContext;
+import mod.bluestaggo.modernerbeta.level.biome.injection.InjectionNeeds;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 
+import java.util.EnumSet;
 import java.util.List;
 
 public interface InjectionPredicate {
@@ -25,4 +27,8 @@ public interface InjectionPredicate {
     InjectionPredicateType<?> getType();
 
     boolean shouldApply(BiomeInjectionContext context);
+
+    default EnumSet<InjectionNeeds> needs() {
+        return EnumSet.noneOf(InjectionNeeds.class);
+    }
 }

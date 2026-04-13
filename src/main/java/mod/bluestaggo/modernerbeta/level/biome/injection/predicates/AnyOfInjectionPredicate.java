@@ -1,9 +1,11 @@
 package mod.bluestaggo.modernerbeta.level.biome.injection.predicates;
 
 import mod.bluestaggo.modernerbeta.level.biome.injection.BiomeInjectionContext;
+import mod.bluestaggo.modernerbeta.level.biome.injection.InjectionNeeds;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 
 public record AnyOfInjectionPredicate(List<InjectionPredicate> terms) implements InjectionPredicate {
@@ -33,5 +35,16 @@ public record AnyOfInjectionPredicate(List<InjectionPredicate> terms) implements
             }
         }
         return false;
+    }
+
+    @Override
+    public EnumSet<InjectionNeeds> needs() {
+        EnumSet<InjectionNeeds> needs = EnumSet.noneOf(InjectionNeeds.class);
+
+        for (InjectionPredicate term : this.terms) {
+            needs.addAll(term.needs());
+        }
+
+        return needs;
     }
 }

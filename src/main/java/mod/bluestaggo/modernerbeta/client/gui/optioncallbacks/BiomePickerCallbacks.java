@@ -26,6 +26,7 @@ import java.util.function.Function;
 
 public record BiomePickerCallbacks(Consumer<Screen> screenChangeHandler, Screen parentScreen, WorldCreationContext generatorOptionsHolder, boolean allowNone) implements OptionInstance.ValueSet<String> {
     @Override
+    //~ if >=26.2 'Consumer<' -> 'OptionInstance.ValueUpdateListener<? super '
     public @NotNull Function<OptionInstance<String>, AbstractWidget> createButton(OptionInstance.TooltipSupplier<String> tooltipFactory, Options gameOptions, int x, int y, int width, Consumer<String> changeCallback) {
         return option -> {
             ResourceLocation biomeId = ResourceLocation.tryParse(option.get());

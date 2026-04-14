@@ -5,7 +5,16 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderLookup.Provider;
+//? if >=26.2 {
+/*import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.data.tags.BlockItemTagAppender;
+import net.minecraft.references.BlockItemId;
+import net.minecraft.references.BlockItemIds;
+*///? } else {
 import net.minecraft.world.level.block.Blocks;
+//? }
 
 import java.util.concurrent.CompletableFuture;
 
@@ -30,6 +39,7 @@ public class ModernBetaTagProviderBlock
         *///?}
                 ModernBetaBlockTags.OVERWORLD_CARVER_REPLACEABLES
         ).add(
+            //~ if >=26.2 'Blocks.' -> 'BlockItemIds.' {
             Blocks.STONE,
             Blocks.COBBLESTONE,
             Blocks.DIRT,
@@ -53,6 +63,18 @@ public class ModernBetaTagProviderBlock
             Blocks.COAL_ORE,
             Blocks.DEEPSLATE_COAL_ORE,
             Blocks.COAL_BLOCK
+            //~ }
         );
     }
+
+    //? if >=26.2 {
+    /*protected BlockItemTagAppender<Block> valueLookupBuilder(TagKey<Block> tag) {
+        return new BlockItemTagAppender<>(super.tag(tag)) {
+            @Override
+            protected ResourceKey<Block> convertElement(BlockItemId element) {
+                return element.block();
+            }
+        };
+    }
+    *///? }
 }

@@ -8,7 +8,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.random.WeightedList;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.MobSpawnSettings;
@@ -16,9 +15,7 @@ import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureSpawnOverride;
 import net.minecraft.world.level.levelgen.structure.TerrainAdjustment;
-import net.minecraft.world.level.levelgen.structure.structures.StrongholdStructure;
 
-import java.util.List;
 import java.util.Map;
 
 public class ModernBetaStructures {
@@ -35,7 +32,8 @@ public class ModernBetaStructures {
                     Map.of(
                         MobCategory.MONSTER, new StructureSpawnOverride(
                             StructureSpawnOverride.BoundingBoxType.STRUCTURE,
-                            WeightedList.of(new MobSpawnSettings.SpawnerData(EntityType.GUARDIAN, /*? if <1.21.5 {*//*1, *//*?}*/ 1, 2))
+                            WeightedList.of(new MobSpawnSettings.SpawnerData(
+                                net.minecraft.world.entity.EntityType.GUARDIAN, /*? if <1.21.5 {*//*1, *//*?}*/ 1, 2))
                         ),
                         MobCategory.UNDERGROUND_WATER_CREATURE, new StructureSpawnOverride(
                             StructureSpawnOverride.BoundingBoxType.STRUCTURE,

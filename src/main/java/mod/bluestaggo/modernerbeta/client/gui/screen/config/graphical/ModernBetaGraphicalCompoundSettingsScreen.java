@@ -294,8 +294,8 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
 
     public OptionInstance<?> extendedIdOption(String key) {
         Pair<CompoundTag, String> resolvedSettings = this.resolveSettings(key);
-        CompoundTag settings = resolvedSettings.getA();
-        String subKey = resolvedSettings.getB();
+        CompoundTag settings = resolvedSettings.getFirst();
+        String subKey = resolvedSettings.getSecond();
         Supplier<String> stringSupplier = () -> VersionCompat.unwrap(settings.getString(subKey));
 
         return new OptionInstance<>(

@@ -3,10 +3,10 @@ package mod.bluestaggo.modernerbeta.client.gui.screen.config.graphical;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import mod.bluestaggo.modernerbeta.client.gui.optioncallbacks.*;
+import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.util.function.FloatSupplier;
 import mod.bluestaggo.modernerbeta.level.biome.HeightConfig;
-import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeId;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.Options;
 import net.minecraft.client.gui.screens.Screen;
@@ -292,18 +292,18 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
         );
     }
 
-    public OptionInstance<?> extendedBiomeIdOption(String key) {
+    public OptionInstance<?> extendedIdOption(String key) {
         Pair<CompoundTag, String> resolvedSettings = this.resolveSettings(key);
-        CompoundTag settings = resolvedSettings.getFirst();
-        String subKey = resolvedSettings.getSecond();
+        CompoundTag settings = resolvedSettings.getA();
+        String subKey = resolvedSettings.getB();
         Supplier<String> stringSupplier = () -> VersionCompat.unwrap(settings.getString(subKey));
 
         return new OptionInstance<>(
             "",
             OptionInstance.noTooltip(),
             (optionText, value) -> Component.nullToEmpty(stringSupplier.get()),
-            new TextFieldCallbacks(string -> ExtendedBiomeId.validate(string).error().isEmpty()),
-            ExtendedBiomeId.of(stringSupplier.get()).toString(),
+            new TextFieldCallbacks(string -> ExtendedIdentifier.validate(string).error().isEmpty()),
+            ExtendedIdentifier.of(stringSupplier.get()).toString(),
             value -> settings.putString(subKey, value)
         );
     }

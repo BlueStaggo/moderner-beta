@@ -1,8 +1,9 @@
 package mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers;
 
 import com.mojang.serialization.Codec;
+import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeIds;
+import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
-import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeId;
 
 public class SupplyRandomLayer extends Layer {
     public static final com.mojang.serialization.MapCodec<SupplyRandomLayer> CODEC = VersionCompat.createMaybeMapCodec(
@@ -24,7 +25,7 @@ public class SupplyRandomLayer extends Layer {
     }
 
     @Override
-    protected ExtendedBiomeId generate(int x, int z) {
-        return ExtendedBiomeId.RANDOM.withExt(String.valueOf(this.getRandom(x, z).nextInt(this.range)));
+    protected ExtendedIdentifier generate(int x, int z) {
+        return ExtendedBiomeIds.RANDOM.withExt(String.valueOf(this.getRandom(x, z).nextInt(this.range)));
     }
 }

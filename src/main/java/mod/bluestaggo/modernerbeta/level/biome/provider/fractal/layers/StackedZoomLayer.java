@@ -1,8 +1,8 @@
 package mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers;
 
 import com.mojang.serialization.Codec;
+import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
-import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeId;
 import net.minecraft.util.StringRepresentable;
 
 import java.util.List;
@@ -51,12 +51,12 @@ public class StackedZoomLayer extends SingleParentLayer {
     }
 
     @Override
-    protected ExtendedBiomeId generate(int x, int z) {
+    protected ExtendedIdentifier generate(int x, int z) {
         return null;
     }
 
     @Override
-    public ExtendedBiomeId sample(int x, int z) {
+    public ExtendedIdentifier sample(int x, int z) {
         return this.stackedLayer.sample(x, z);
     }
 

@@ -3,7 +3,6 @@ package mod.bluestaggo.modernerbeta.level.biome.provider;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.api.level.biome.BiomeProvider;
 import mod.bluestaggo.modernerbeta.api.level.biome.BiomeResolverBlock;
-import mod.bluestaggo.modernerbeta.api.level.biome.BiomeResolverOcean;
 import mod.bluestaggo.modernerbeta.api.level.biome.climate.ClimateSampler;
 import mod.bluestaggo.modernerbeta.api.level.biome.climate.ClimateSamplerSky;
 import mod.bluestaggo.modernerbeta.api.level.biome.climate.Clime;
@@ -17,18 +16,17 @@ import mod.bluestaggo.modernerbeta.util.chunk.ChunkClimateSky;
 import mod.bluestaggo.modernerbeta.util.noise.SimplexOctaveNoise;
 import mod.bluestaggo.modernerbeta.level.biome.provider.climate.ClimateMap;
 import mod.bluestaggo.modernerbeta.level.biome.provider.climate.ClimateMapping;
-import mod.bluestaggo.modernerbeta.level.biome.provider.climate.ClimateType;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.biome.Biome;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-public class BiomeProviderBeta extends BiomeProvider implements ClimateSampler, ClimateSamplerSky, BiomeResolverBlock, BiomeResolverOcean {
+public class BiomeProviderBeta extends BiomeProvider implements ClimateSampler, ClimateSamplerSky, BiomeResolverBlock {
     private final ClimateMap climateMap;
     private final BetaClimateSampler climateSampler;
     private final BetaClimateSamplerSky climateSamplerSky;
@@ -64,31 +62,7 @@ public class BiomeProviderBeta extends BiomeProvider implements ClimateSampler, 
         double temp = clime.temp();
         double rain = clime.rain();
         
-        return this.biomeRegistry.getOrThrow(this.climateMap.getBiome(temp, rain, ClimateType.LAND));
-    }
- 
-    @Override
-    public Holder<Biome> getOceanBiome(int biomeX, int biomeZ) {
-        int x = biomeX << 2;
-        int z = biomeZ << 2;
-        
-        Clime clime = this.climateSampler.sample(x, z);
-        double temp = clime.temp();
-        double rain = clime.rain();
-        
-        return this.biomeRegistry.getOrThrow(this.climateMap.getBiome(temp, rain, ClimateType.OCEAN));
-    }
-    
-    @Override
-    public Holder<Biome> getDeepOceanBiome(int biomeX, int biomeZ) {
-        int x = biomeX << 2;
-        int z = biomeZ << 2;
-        
-        Clime clime = this.climateSampler.sample(x, z);
-        double temp = clime.temp();
-        double rain = clime.rain();
-        
-        return this.biomeRegistry.getOrThrow(this.climateMap.getBiome(temp, rain, ClimateType.DEEP_OCEAN));
+        return this.biomeRegistry.getOrThrow(this.climateMap.getBiome(temp, rain));
     }
     
     @Override
@@ -97,16 +71,16 @@ public class BiomeProviderBeta extends BiomeProvider implements ClimateSampler, 
         double temp = clime.temp();
         double rain = clime.rain();
         
-        return this.biomeRegistry.getOrThrow(this.climateMap.getBiome(temp, rain, ClimateType.LAND));
+        return this.biomeRegistry.getOrThrow(this.climateMap.getBiome(temp, rain));
     }
 
     @Override
-    public List<Holder<Biome>> getBiomes() {
+    public Set<Holder<Biome>> getBiomes() {
         return this.climateMap
             .getBiomeKeys()
             .stream()
             .map(this.biomeRegistry::getOrThrow)
-            .collect(Collectors.toList());
+            .collect(Collectors.toSet());
     }
 
     @Override

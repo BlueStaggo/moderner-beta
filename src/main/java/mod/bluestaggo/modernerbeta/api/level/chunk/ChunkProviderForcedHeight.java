@@ -7,8 +7,8 @@ import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.settings.component.ForcedBiomeHeight;
 import mod.bluestaggo.modernerbeta.level.biome.HeightConfig;
 import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomeSource;
-import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeId;
 import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaChunkGenerator;
+import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
@@ -23,7 +23,7 @@ public abstract class ChunkProviderForcedHeight extends ChunkProviderNoise {
     private final int heightSampleRadius;
     private final float[] biomeHeightWeights;
 
-    private final Map<ExtendedBiomeId, HeightConfig> biomeHeightValues;
+    private final Map<ExtendedIdentifier, HeightConfig> biomeHeightValues;
     private final ForcedBiomeHeight forcedBiomeHeight;
 
     public ChunkProviderForcedHeight(ModernBetaChunkGenerator chunkGenerator, long seed) {
@@ -40,7 +40,7 @@ public abstract class ChunkProviderForcedHeight extends ChunkProviderNoise {
                     HeightConfig heightConfig = entry.value();
                     return chunkGenerator.getBiomeSource().possibleBiomes().stream()
                         .filter(biome -> biome.is(heightConfigTag))
-                        .map(biome -> ExtendedBiomeId.of(biome.unwrapKey().orElseThrow().location(), heightConfig.type()))
+                        .map(biome -> ExtendedIdentifier.of(biome.unwrapKey().orElseThrow().location(), heightConfig.type()))
                         .filter(extId -> !this.forcedBiomeHeight.heightOverrides().containsKey(extId))
                         .map(extId -> Map.entry(extId, heightConfig));
                 })
@@ -58,15 +58,15 @@ public abstract class ChunkProviderForcedHeight extends ChunkProviderNoise {
         }
     }
 
-    public ExtendedBiomeId getExtendedBiomeId(int biomeX, int biomeZ) {
+    public ExtendedIdentifier getExtendedBiomeId(int biomeX, int biomeZ) {
         if (this.chunkGenerator.getBiomeSource() instanceof ModernBetaBiomeSource modernBetaBiomeSource) {
             return modernBetaBiomeSource.getBiomeForHeightGen(biomeX, 16, biomeZ);
         } else {
-            return ExtendedBiomeId.of(this.getBiome(biomeX, 16, biomeZ, null).unwrapKey().orElseThrow().location());
+            return ExtendedIdentifier.of(this.getBiome(biomeX, 16, biomeZ, null).unwrapKey().orElseThrow().location());
         }
     }
 
-    public HeightConfig getHeightConfigOfBiome(ExtendedBiomeId extendedBiomeId) {
+    public HeightConfig getHeightConfigOfBiome(ExtendedIdentifier extendedBiomeId) {
         return this.biomeHeightValues.getOrDefault(extendedBiomeId, HeightConfig.DEFAULT);
     }
 
@@ -79,7 +79,7 @@ public abstract class ChunkProviderForcedHeight extends ChunkProviderNoise {
         float depth = 0.0F;
         float totalWeight = 0.0F;
 
-        ExtendedBiomeId biome = this.getExtendedBiomeId(noiseX, noiseZ);
+        ExtendedIdentifier biome = this.getExtendedBiomeId(noiseX, noiseZ);
         double minSurfaceHeight = this.getHeightConfigOfBiome(biome).depth();
 
         int hsr = this.heightSampleRadius;

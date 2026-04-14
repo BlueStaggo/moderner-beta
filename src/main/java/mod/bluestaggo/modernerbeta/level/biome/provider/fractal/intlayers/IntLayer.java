@@ -1,7 +1,7 @@
 package mod.bluestaggo.modernerbeta.level.biome.provider.fractal.intlayers;
 
 import it.unimi.dsi.fastutil.longs.Long2IntLinkedOpenHashMap;
-import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeId;
+import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers.Layer;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers.LayerRandom;
 import net.minecraft.core.Holder;
@@ -75,7 +75,7 @@ public abstract class IntLayer {
     }
 
     protected static Biome getBiomeFromLayer(HolderGetter<Biome> biomeRegistry, Layer layer, int x, int z) {
-        ExtendedBiomeId extendedBiomeId = layer.sample(x, z);
+        ExtendedIdentifier extendedBiomeId = layer.sample(x, z);
         return biomeRegistry.get(ResourceKey.create(Registries.BIOME, extendedBiomeId.baseId()))
             .map(Holder::value)
             .orElse(null);

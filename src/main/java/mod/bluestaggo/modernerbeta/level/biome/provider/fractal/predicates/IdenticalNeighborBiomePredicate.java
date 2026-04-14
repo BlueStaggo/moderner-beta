@@ -1,7 +1,7 @@
 package mod.bluestaggo.modernerbeta.level.biome.provider.fractal.predicates;
 
+import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
-import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeId;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers.Layer;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers.LayerRandom;
 
@@ -23,7 +23,7 @@ public class IdenticalNeighborBiomePredicate extends NeighborComparisonPredicate
     }
 
     @Override
-    protected boolean neighborMatches(ExtendedBiomeId centre, ExtendedBiomeId neighbor, Layer layer, Supplier<LayerRandom> randomSupplier, int x, int z, int nx, int nz) {
+    protected boolean neighborMatches(ExtendedIdentifier centre, ExtendedIdentifier neighbor, Layer layer, Supplier<LayerRandom> randomSupplier, int x, int z, int nx, int nz) {
         return neighbor.equals(centre);
     }
 }

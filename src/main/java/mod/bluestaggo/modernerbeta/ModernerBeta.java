@@ -8,6 +8,8 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import mod.bluestaggo.modernerbeta.api.level.chunk.surface.SurfaceConfig;
+import mod.bluestaggo.modernerbeta.level.biome.injection.injector.BiomeInjectorType;
+import mod.bluestaggo.modernerbeta.level.biome.injection.predicates.InjectionPredicateType;
 import mod.bluestaggo.modernerbeta.network.INetworkHelper;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
@@ -88,7 +90,9 @@ public class ModernerBeta {
             new Pair<>(ModernBetaRegistries.HEIGHT_CONFIG, ModernBetaBuiltInProviders::registerHeightConfigs),
             new Pair<>(ModernBetaRegistries.BLOCKSOURCE, ModernBetaBuiltInProviders::registerBlockSources),
             new Pair<>(ModernBetaRegistries.FRACTAL_LAYER, LayerType::init),
-            new Pair<>(ModernBetaRegistries.BIOME_PREDICATE, BiomePredicateType::init)
+            new Pair<>(ModernBetaRegistries.BIOME_PREDICATE, BiomePredicateType::init),
+            new Pair<>(ModernBetaRegistries.BIOME_INJECTOR, BiomeInjectorType::init),
+            new Pair<>(ModernBetaRegistries.INJECTION_PREDICATE, InjectionPredicateType::init)
         );
     }
 

@@ -1,7 +1,6 @@
 package mod.bluestaggo.modernerbeta.level.biome.provider;
 
 import mod.bluestaggo.modernerbeta.api.level.biome.BiomeProvider;
-import mod.bluestaggo.modernerbeta.api.level.biome.BiomeResolverOcean;
 import mod.bluestaggo.modernerbeta.api.level.biome.climate.Clime;
 import mod.bluestaggo.modernerbeta.api.debug.DebugTextProvider2D;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
@@ -11,7 +10,6 @@ import mod.bluestaggo.modernerbeta.util.chunk.ChunkCache;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkClimate;
 import mod.bluestaggo.modernerbeta.util.noise.SimplexOctaveNoise;
 import mod.bluestaggo.modernerbeta.level.biome.provider.climate.ClimateMapping;
-import mod.bluestaggo.modernerbeta.level.biome.provider.climate.ClimateType;
 import mod.bluestaggo.modernerbeta.level.biome.voronoi.VoronoiPointBiome;
 import mod.bluestaggo.modernerbeta.level.biome.voronoi.VoronoiPointRules;
 import net.minecraft.core.Holder;
@@ -22,12 +20,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.biome.Biome;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-public class BiomeProviderVoronoi extends BiomeProvider implements BiomeResolverOcean, DebugTextProvider2D {
+public class BiomeProviderVoronoi extends BiomeProvider implements DebugTextProvider2D {
     private final VoronoiClimateSampler climateSampler;
     private final VoronoiPointRules<ClimateMapping, Clime> rules;
     
@@ -51,38 +50,20 @@ public class BiomeProviderVoronoi extends BiomeProvider implements BiomeResolver
     public Holder<Biome> getBiome(int biomeX, int biomeY, int biomeZ) {
         ClimateMapping climateMapping = this.getClimateMapping(biomeX, biomeZ);
         
-        return this.biomeRegistry.getOrThrow(climateMapping.getBiome(ClimateType.LAND));
-    }
- 
-    @Override
-    public Holder<Biome> getOceanBiome(int biomeX, int biomeZ) {
-        ClimateMapping climateMapping = this.getClimateMapping(biomeX, biomeZ);
-        
-        return this.biomeRegistry.getOrThrow(climateMapping.getBiome(ClimateType.OCEAN));
-    }
-    
-    @Override
-    public Holder<Biome> getDeepOceanBiome(int biomeX, int biomeZ) {
-        ClimateMapping climateMapping = this.getClimateMapping(biomeX, biomeZ);
-        
-        return this.biomeRegistry.getOrThrow(climateMapping.getBiome(ClimateType.DEEP_OCEAN));
+        return this.biomeRegistry.getOrThrow(climateMapping.getBiome());
     }
 
     @Override
-    public List<Holder<Biome>> getBiomes() {
-        List<ResourceLocation> biomes = new ArrayList<>();
+    public Set<Holder<Biome>> getBiomes() {
+        Set<ResourceLocation> biomes = new HashSet<>();
 
-        this.rules.getItems().forEach(key -> {
-            biomes.add(key.biome());
-            biomes.add(key.oceanBiome());
-            biomes.add(key.deepOceanBiome());
-        });
+        this.rules.getItems().forEach(key -> biomes.add(key.biome()));
         
         return biomes
             .stream()
             .distinct()
             .map(key -> this.biomeRegistry.getOrThrow(ResourceKey.create(Registries.BIOME, key)))
-            .collect(Collectors.toList());
+            .collect(Collectors.toSet());
     }
     
     private ClimateMapping getClimateMapping(int biomeX, int biomeZ) {
@@ -99,14 +80,12 @@ public class BiomeProviderVoronoi extends BiomeProvider implements BiomeResolver
         
         for (VoronoiPointBiome point : points) {
             ResourceLocation biome = point.biome();
-            ResourceLocation oceanBiome = point.oceanBiome();
-            ResourceLocation deepOceanBiome = point.deepOceanBiome();
             
             double temp = Mth.clamp(point.temp(), 0.0, 1.0);
             double rain = Mth.clamp(point.rain(), 0.0, 1.0);
             double weird = Mth.clamp(point.weird(), 0.0, 1.0);
             
-            ClimateMapping climateMapping = new ClimateMapping(biome, oceanBiome, deepOceanBiome);
+            ClimateMapping climateMapping = new ClimateMapping(biome);
             Clime clime = new Clime(temp, rain, weird);
             
             builder.add(climateMapping, clime);

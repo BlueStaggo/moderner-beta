@@ -1,6 +1,7 @@
 package mod.bluestaggo.modernerbeta.mixin;
 
-import mod.bluestaggo.modernerbeta.level.biome.injector.BiomeInjectionRule;
+import mod.bluestaggo.modernerbeta.level.biome.injection.BiomeInjectionRule;
+import mod.bluestaggo.modernerbeta.level.biome.injection.InjectionNeeds;
 import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaChunkGenerator;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -27,7 +28,8 @@ public abstract class StructureMixin {
                     blockPos.getY(),
                     blockPos.getZ(),
                     context.randomState().sampler(),
-                    BiomeInjectionRule.Step.ALL
+                    BiomeInjectionRule.Step.ALL,
+                    InjectionNeeds.all()
                 );
                 
                 boolean isBiomeValid = context.validBiome().test(biome);

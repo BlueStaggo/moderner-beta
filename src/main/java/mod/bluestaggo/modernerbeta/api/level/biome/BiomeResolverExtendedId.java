@@ -1,6 +1,6 @@
 package mod.bluestaggo.modernerbeta.api.level.biome;
 
-import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeId;
+import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
 
 public interface BiomeResolverExtendedId {
      /**
@@ -13,5 +13,5 @@ public interface BiomeResolverExtendedId {
      *
      * @return A biome at given biome coordinates.
      */
-    ExtendedBiomeId getExtendedBiomeId(int biomeX, int biomeY, int biomeZ);
+    ExtendedIdentifier getExtendedBiomeId(int biomeX, int biomeY, int biomeZ);
 }

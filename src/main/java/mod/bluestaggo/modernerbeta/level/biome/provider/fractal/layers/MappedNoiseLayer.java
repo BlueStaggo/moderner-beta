@@ -4,8 +4,8 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.doubles.DoubleImmutableList;
 import it.unimi.dsi.fastutil.doubles.DoubleList;
+import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
-import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeId;
 import net.minecraft.world.level.levelgen.SingleThreadedRandomSource;
 import net.minecraft.world.level.levelgen.synth.PerlinNoise;
 
@@ -37,7 +37,7 @@ public class MappedNoiseLayer extends Layer {
 
     private final List<Entry> lowerBiomes;
     private final List<Entry> upperBiomes;
-    private final ExtendedBiomeId middleBiome;
+    private final ExtendedIdentifier middleBiome;
     private final double scale;
     private final DoubleList amplitudes;
     private final boolean useSaltedSeed;
@@ -88,7 +88,7 @@ public class MappedNoiseLayer extends Layer {
     }
 
     @Override
-    protected ExtendedBiomeId generate(int x, int z) {
+    protected ExtendedIdentifier generate(int x, int z) {
         double noiseValue = this.noiseSampler.getValue(x / this.scale, z / this.scale, 0.0);
 
         for (Entry lowerBiome : this.lowerBiomes) {
@@ -107,17 +107,17 @@ public class MappedNoiseLayer extends Layer {
     }
 
     @Override
-    protected void addPossibleBiomes(Set<ExtendedBiomeId> biomes) {
+    protected void addPossibleBiomes(Set<ExtendedIdentifier> biomes) {
         this.lowerBiomes.forEach(pair -> biomes.add(pair.biome));
         this.upperBiomes.forEach(pair -> biomes.add(pair.biome));
         biomes.add(this.middleBiome);
     }
 
-    public record Entry(double value, ExtendedBiomeId biome) {
+    public record Entry(double value, ExtendedIdentifier biome) {
         public static final Codec<Entry> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
                 Codec.DOUBLE.fieldOf("value").forGetter(Entry::value),
-                ExtendedBiomeId.CODEC.fieldOf("biome").forGetter(Entry::biome)
+                ExtendedIdentifier.CODEC.fieldOf("biome").forGetter(Entry::biome)
             ).apply(instance, Entry::new)
         );
     }

@@ -5,9 +5,11 @@ import com.google.common.base.Suppliers;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.api.level.chunk.surface.SurfaceConfig;
 import mod.bluestaggo.modernerbeta.compat.ModCompat;
+import mod.bluestaggo.modernerbeta.level.biome.injection.BiomeInjectionHandler;
 import mod.bluestaggo.modernerbeta.mixin.ChunkGeneratorStructureStateAccessor;
 import mod.bluestaggo.modernerbeta.mixin.NoiseBasedChunkGeneratorAccessor;
-import mod.bluestaggo.modernerbeta.level.biome.injector.BiomeInjectionRule;
+import mod.bluestaggo.modernerbeta.level.biome.injection.BiomeInjectionRule;
+import mod.bluestaggo.modernerbeta.mixin.SequenceRuleSourceAccessor;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.api.level.chunk.ChunkProvider;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
@@ -16,6 +18,7 @@ import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.settings.component.CaveGeneration;
+import mod.bluestaggo.modernerbeta.settings.component.DeepslateGeneration;
 import mod.bluestaggo.modernerbeta.settings.component.StructureModifiers;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
 import mod.bluestaggo.modernerbeta.util.CodecUtil;
@@ -23,11 +26,11 @@ import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.util.random.BedrockRandomSource;
 import mod.bluestaggo.modernerbeta.util.random.BedrockWorldgenRandom;
 import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomeSource;
-import mod.bluestaggo.modernerbeta.level.biome.injector.BiomeInjector;
 import mod.bluestaggo.modernerbeta.level.carver.BetaCaveCarverConfiguration;
 import mod.bluestaggo.modernerbeta.level.carver.configured.ModernBetaConfiguredCarvers;
 import net.minecraft.Util;
 import net.minecraft.core.*;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.Carvers;
 import net.minecraft.resources.RegistryOps;
@@ -55,10 +58,7 @@ import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
 import net.minecraft.world.level.levelgen.structure.StructureSet;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -78,7 +78,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
     private final HolderGetter<ModernBetaSettingsPreset> presetRegistry;
     private final HolderGetter<SurfaceConfig> surfaceConfigRegistry;
     private final ModernBetaSettings chunkSettings;
-    private final Supplier<BiomeInjector> biomeInjector;
+    private final Supplier<BiomeInjectionHandler> biomeInjector;
 
     private boolean useSurfaceRules;
     private CaveGeneration caveSettings = CaveGeneration.DEFAULT;
@@ -99,7 +99,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
         this.chunkSettings = fixupPreset(chunkProviderSettings);
         this.biomeInjector = Suppliers.memoize(() ->
             this.biomeSource instanceof ModernBetaBiomeSource modernBetaBiomeSource
-                ? new BiomeInjector(this, modernBetaBiomeSource) : null);
+                ? new BiomeInjectionHandler(this, modernBetaBiomeSource) : null);
 
         if (this.biomeSource instanceof ModernBetaBiomeSource modernBetaBiomeSource) {
             modernBetaBiomeSource.setChunkGenerator(this);
@@ -125,18 +125,47 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
 
         NoiseSettings noiseSettings = chunkSettings.get(SettingsComponentTypes.NOISE_SETTINGS);
         Integer seaLevel = chunkSettings.get(SettingsComponentTypes.SEA_LEVEL);
-        if (noiseSettings == null & seaLevel == null)
+        DeepslateGeneration deepslateGeneration = chunkSettings.getOrDefault(SettingsComponentTypes.DEEPSLATE_GENERATION);
+        boolean deepslateEnabled = deepslateGeneration.enabled();
+        int deepslateMinY = deepslateGeneration.minY();
+        int deepslateMaxY = deepslateGeneration.maxY();
+        BlockState deepslateBlock = BuiltInRegistries.BLOCK.getOrThrow(ResourceKey.create(Registries.BLOCK, deepslateGeneration.block()))
+                //? if >=1.21.2
+                .value()
+                .defaultBlockState();
+
+        if (noiseSettings == null && seaLevel == null && !deepslateEnabled)
             return generatorSettings;
 
-
         NoiseGeneratorSettings unboxed = generatorSettings.value();
+        SurfaceRules.RuleSource surfaceRules = unboxed.surfaceRule();
+        if (deepslateEnabled) {
+            SurfaceRules.RuleSource deepslateRule = SurfaceRules.ifTrue(
+                SurfaceRules.verticalGradient(
+                    "deepslate",
+                    VerticalAnchor.absolute(deepslateMinY),
+                    VerticalAnchor.absolute(deepslateMaxY)
+                ),
+                SurfaceRules.state(deepslateBlock)
+            );
+
+            if (surfaceRules instanceof SequenceRuleSourceAccessor sequenceRule) {
+                List<SurfaceRules.RuleSource> ruleSequence = new ArrayList<>(sequenceRule.sequence());
+                ruleSequence.add(deepslateRule);
+
+                surfaceRules = SurfaceRules.sequence(ruleSequence.toArray(new SurfaceRules.RuleSource[0]));
+            } else {
+                surfaceRules = SurfaceRules.sequence(surfaceRules, deepslateRule);
+            }
+        }
+
         //noinspection deprecation
         unboxed = new NoiseGeneratorSettings(
             noiseSettings != null ? noiseSettings : unboxed.noiseSettings(),
             unboxed.defaultBlock(),
             unboxed.defaultFluid(),
             unboxed.noiseRouter(),
-            unboxed.surfaceRule(),
+            surfaceRules,
             unboxed.spawnTarget(),
             seaLevel != null ? seaLevel : unboxed.seaLevel(),
             unboxed.disableMobGeneration(),
@@ -494,7 +523,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
         return this.chunkSettings;
     }
     
-    public BiomeInjector getBiomeInjector() {
+    public BiomeInjectionHandler getBiomeInjector() {
         return this.biomeInjector.get();
     }
 
@@ -508,9 +537,9 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
     }
     
     private void injectBiomes(ChunkAccess chunk, Sampler noiseSampler, BiomeInjectionRule.Step step) {
-        BiomeInjector biomeInjector = this.biomeInjector.get();
-        if (biomeInjector != null) {
-            biomeInjector.injectBiomes(chunk, noiseSampler, step);
+        BiomeInjectionHandler biomeInjectionHandler = this.biomeInjector.get();
+        if (biomeInjectionHandler != null) {
+            biomeInjectionHandler.injectBiomes(chunk, noiseSampler, step);
         }
     }
 

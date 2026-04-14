@@ -5,7 +5,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.world.level.biome.Biome;
 
-import java.util.List;
+import java.util.Set;
 
 public abstract class CaveBiomeProvider {
     protected final ModernBetaSettings settings;
@@ -41,7 +41,7 @@ public abstract class CaveBiomeProvider {
      * 
      * @return A list of biomes.
      */
-    public List<Holder<Biome>> getBiomes() {
-        return List.of();
+    public Set<Holder<Biome>> getBiomes() {
+        return Set.of();
     }
 }

@@ -401,15 +401,10 @@ public class ModernBetaClientBuiltInProviders {
                 };
 
                 for (String target : climateMappingTargets) {
-                    options.addBig(screen.headerOption(screen.getText(target).withStyle(ChatFormatting.BOLD)));
                     addAll(
                         options,
-                        screen.headerOption(screen.getText("biome")),
-                        screen.biomeOption(target + ".biome", false),
-                        screen.headerOption(screen.getText("oceanBiome")),
-                        screen.biomeOption(target + ".oceanBiome", false),
-                        screen.headerOption(screen.getText("deepOceanBiome")),
-                        screen.biomeOption(target + ".deepOceanBiome", false)
+                        screen.headerOption(screen.getText(target)),
+                        screen.biomeOption(target, false)
                     );
                 }
             }
@@ -436,18 +431,6 @@ public class ModernBetaClientBuiltInProviders {
         );
 
         registryHandler.register(
-            BIOME_INJECTION_THRESHOLDS.id,
-            (screen, options) -> {
-                addAll(
-                    options,
-                    screen.intRangeOption("oceanDepth", 0, 64),
-                    screen.intRangeOption("deepOceanDepth", 0, 64),
-                    screen.intRangeOption("caveDepth", 0, 64)
-                );
-            }
-        );
-
-        registryHandler.register(
             VORONOI_POINTS.id,
             (screen, options) -> {
                 options.addBig(screen.listEditButton(
@@ -464,13 +447,6 @@ public class ModernBetaClientBuiltInProviders {
             (screen, options) -> {
                 options.addBig(screen.headerOption(
                     screen.getText("self").withStyle(ChatFormatting.RED, ChatFormatting.BOLD)));
-            }
-        );
-
-        registryHandler.register(
-            USE_OCEAN_BIOMES.id,
-            (screen, options) -> {
-                options.addBig(screen.booleanOption("self"));
             }
         );
 
@@ -522,7 +498,7 @@ public class ModernBetaClientBuiltInProviders {
                 addAll(
                     options,
                     screen.headerOption(screen.getText("defaultSettingsPreset")),
-                    screen.extendedBiomeIdOption("defaultSettingsPreset")
+                    screen.extendedIdOption("defaultSettingsPreset")
                 );
             }
         );

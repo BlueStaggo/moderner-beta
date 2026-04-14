@@ -2,7 +2,7 @@ package mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers;
 
 import com.mojang.datafixers.Products;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeId;
+import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
 
 import java.util.List;
 import java.util.Set;
@@ -32,7 +32,7 @@ public abstract class LayerWrapperLayer extends Layer {
     }
 
     @Override
-    protected void addPossibleBiomes(Set<ExtendedBiomeId> biomes) {
+    protected void addPossibleBiomes(Set<ExtendedIdentifier> biomes) {
         this.layer.addPossibleBiomes(biomes);
     }
 
@@ -42,12 +42,12 @@ public abstract class LayerWrapperLayer extends Layer {
     }
 
     @Override
-    protected ExtendedBiomeId generate(int x, int z) {
+    protected ExtendedIdentifier generate(int x, int z) {
         return this.layer.generate(x, z);
     }
 
     @Override
-    public ExtendedBiomeId sample(int x, int z) {
+    public ExtendedIdentifier sample(int x, int z) {
         return this.layer.sample(x, z);
     }
 

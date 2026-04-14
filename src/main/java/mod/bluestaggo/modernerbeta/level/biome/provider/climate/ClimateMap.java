@@ -22,21 +22,18 @@ public class ClimateMap {
         return new LinkedHashMap<>(this.climateMap);
     }
     
-    public ResourceKey<Biome> getBiome(double temp, double rain, ClimateType type) {
+    public ResourceKey<Biome> getBiome(double temp, double rain) {
         int t = (int) (temp * 63D);
         int r = (int) (rain * 63D);
 
-        return this.climateTable[t + r * 64].getBiome(type);
+        return this.climateTable[t + r * 64].getBiome();
     }
     
     public List<ResourceKey<Biome>> getBiomeKeys() {
         List<ResourceKey<Biome>> biomeKeys = new ArrayList<>();
         
-        this.climateMap.values().forEach(mapping -> {
-            biomeKeys.add(mapping.getBiome(ClimateType.LAND));
-            biomeKeys.add(mapping.getBiome(ClimateType.OCEAN));
-            biomeKeys.add(mapping.getBiome(ClimateType.DEEP_OCEAN));
-        });
+        this.climateMap.values().forEach(mapping ->
+                biomeKeys.add(mapping.getBiome()));
         
         return biomeKeys;
     }

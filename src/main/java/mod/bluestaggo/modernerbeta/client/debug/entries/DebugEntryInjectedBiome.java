@@ -1,7 +1,8 @@
+//~dotLocation
 package mod.bluestaggo.modernerbeta.client.debug.entries;
 
-import mod.bluestaggo.modernerbeta.level.biome.injector.BiomeInjectionRule;
-import mod.bluestaggo.modernerbeta.level.biome.injector.BiomeInjector;
+import mod.bluestaggo.modernerbeta.level.biome.injection.BiomeInjectionRule;
+import mod.bluestaggo.modernerbeta.level.biome.injection.InjectionNeeds;
 import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaChunkGenerator;
 //? if >=1.21.9 {
 /*import net.minecraft.client.Minecraft;
@@ -45,7 +46,11 @@ public class DebugEntryInjectedBiome /*? >=1.21.9 {*/ /*implements DebugScreenEn
 
         if (chunkGenerator instanceof ModernBetaChunkGenerator modernBetaChunkGenerator &&
                 modernBetaChunkGenerator.getBiomeInjector() != null) {
-            String biome = modernBetaChunkGenerator.getBiomeInjector().getBiomeNameAtBlock(level, x, y, z, null, BiomeInjectionRule.Step.ALL);
+            String biome = modernBetaChunkGenerator.getBiomeInjector()
+                    .getBiomeAtBlock(level, x, y, z, null, BiomeInjectionRule.Step.ALL, InjectionNeeds.all())
+                    .unwrapKey()
+                    .map(key -> key.location().toString())
+                    .orElse("[unregistered]");
             return String.format("[Modern Beta] Injected biome: %s", biome);
         }
 

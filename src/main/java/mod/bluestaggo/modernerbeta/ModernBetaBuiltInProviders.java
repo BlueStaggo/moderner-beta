@@ -11,7 +11,6 @@ import mod.bluestaggo.modernerbeta.level.chunk.provider.ChunkProviderNoise3D;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.level.biome.HeightConfig;
-import mod.bluestaggo.modernerbeta.level.blocksource.BlockSourceDeepslate;
 import mod.bluestaggo.modernerbeta.level.cavebiome.provider.CaveBiomeProviderNone;
 import mod.bluestaggo.modernerbeta.level.cavebiome.provider.CaveBiomeProviderSingle;
 import mod.bluestaggo.modernerbeta.level.cavebiome.provider.CaveBiomeProviderVoronoi;
@@ -82,8 +81,6 @@ public class ModernBetaBuiltInProviders {
         registryHandler.register(ModernBetaBuiltInTypes.Biome.BETA.id, new BiomeProviderType<>(
             BiomeProviderBeta::new, BiomeProviderBeta.class, () -> List.of(
                 SettingsComponentTypes.TEMPERATURE_HEIGHT_SCALING,
-                SettingsComponentTypes.USE_OCEAN_BIOMES,
-                SettingsComponentTypes.BIOME_INJECTION_THRESHOLDS,
                 SettingsComponentTypes.CLIMATE_DISTRIBUTION,
                 SettingsComponentTypes.CLIMATE_SCALE,
                 SettingsComponentTypes.CLIMATE_MAPPINGS
@@ -98,8 +95,6 @@ public class ModernBetaBuiltInProviders {
         registryHandler.register(ModernBetaBuiltInTypes.Biome.PE.id, new BiomeProviderType<>(
             BiomeProviderPE::new, BiomeProviderPE.class, () -> List.of(
                 SettingsComponentTypes.TEMPERATURE_HEIGHT_SCALING,
-                SettingsComponentTypes.USE_OCEAN_BIOMES,
-                SettingsComponentTypes.BIOME_INJECTION_THRESHOLDS,
                 SettingsComponentTypes.CLIMATE_DISTRIBUTION,
                 SettingsComponentTypes.CLIMATE_SCALE,
                 SettingsComponentTypes.CLIMATE_MAPPINGS
@@ -108,8 +103,6 @@ public class ModernBetaBuiltInProviders {
         registryHandler.register(ModernBetaBuiltInTypes.Biome.VORONOI.id, new BiomeProviderType<>(
             BiomeProviderVoronoi::new, BiomeProviderVoronoi.class, () -> List.of(
                 SettingsComponentTypes.TEMPERATURE_HEIGHT_SCALING,
-                SettingsComponentTypes.USE_OCEAN_BIOMES,
-                SettingsComponentTypes.BIOME_INJECTION_THRESHOLDS,
                 SettingsComponentTypes.VORONOI_POINTS,
                 SettingsComponentTypes.CLIMATE_SCALE
             )
@@ -117,9 +110,7 @@ public class ModernBetaBuiltInProviders {
         registryHandler.register(ModernBetaBuiltInTypes.Biome.FRACTAL.id, new BiomeProviderType<>(
             BiomeProviderFractal::new, BiomeProviderFractal.class, () -> List.of(
                 SettingsComponentTypes.TEMPERATURE_HEIGHT_SCALING,
-                SettingsComponentTypes.FRACTAL_LAYERS,
-                SettingsComponentTypes.USE_OCEAN_BIOMES,
-                SettingsComponentTypes.BIOME_INJECTION_THRESHOLDS
+                SettingsComponentTypes.FRACTAL_LAYERS
             )
         ));
         registryHandler.register(ModernBetaBuiltInTypes.Biome.BETA_FRACTAL.id, new BiomeProviderType<>(
@@ -179,6 +170,5 @@ public class ModernBetaBuiltInProviders {
     
     public static void registerBlockSources(IRegistryHandler<?> handler) {
         IRegistryHandler<BlockSourceCreator> registryHandler = (IRegistryHandler<BlockSourceCreator>) handler;
-        registryHandler.register(ModernBetaBuiltInTypes.BlockSource.DEEPSLATE.id, BlockSourceDeepslate::new);
     }
 }

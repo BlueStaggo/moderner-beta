@@ -108,6 +108,7 @@ stonecutter.parameters {
         }
 
         string(eval(current.version, ">=1.21.11")) {
+            replace("ExtendedIdentifier", "ExtendedIdentifier")
             replace("ResourceLocation", "Identifier")
             replace("ResourceKey::location", "ResourceKey::identifier")
             replace("net.minecraft.Util", "net.minecraft.util.Util")

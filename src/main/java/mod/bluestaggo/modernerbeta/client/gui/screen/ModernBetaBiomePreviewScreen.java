@@ -6,6 +6,8 @@ import com.mojang.blaze3d.platform.NativeImage;
 import it.unimi.dsi.fastutil.ints.Int2IntAVLTreeMap;
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
+import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeIds;
+import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
 import mod.bluestaggo.modernerbeta.mixin.client.ScreenshotAccessor;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.api.level.biome.BiomeProvider;
@@ -16,7 +18,6 @@ import mod.bluestaggo.modernerbeta.api.level.chunk.surface.SurfaceConfig;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaResourceKeys;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
-import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeId;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers.LayerRandom;
 import mod.bluestaggo.modernerbeta.util.LoggingUtil;
 import net.minecraft.ChatFormatting;
@@ -540,11 +541,11 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                         Holder<Biome> biome = biomeProvider instanceof BiomeResolverStepped resolverStepped
                             ? resolverStepped.getBiomeForStep(sampleX, 64, sampleY, step)
                             : biomeProvider.getBiome(sampleX, 64, sampleY);
-                        ExtendedBiomeId extendedBiome = biomeProvider instanceof BiomeResolverExtendedId resolverExtendedId
+                        ExtendedIdentifier extendedBiome = biomeProvider instanceof BiomeResolverExtendedId resolverExtendedId
                             ? resolverExtendedId instanceof BiomeResolverExtendedIdStepped resolverExtendedIdStepped
                                 ? resolverExtendedIdStepped.getExtendedBiomeIdForStep(sampleX, 64, sampleY, step)
                                 : resolverExtendedId.getExtendedBiomeId(sampleX, 64, sampleY)
-                            : ExtendedBiomeId.NULL;
+                            : ExtendedBiomeIds.NULL;
 
                         int color = this.getBiomeColor(biome, extendedBiome.ext(), sampleX, sampleY, randColors, random);
 

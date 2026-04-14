@@ -2,8 +2,9 @@ package mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers;
 
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableList;
+import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeIds;
+import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
-import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeId;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.LayerTarget;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.predicates.BiomePredicate;
 
@@ -38,10 +39,10 @@ public class ConditionalOverlayLayer extends SingleParentLayer {
     public static ConditionalOverlayLayer mushroomIslands() {
         return new ConditionalOverlayLayer(
             "land", 5, "land",
-            BiomePredicate.of(ExtendedBiomeId.OCEAN)
+            BiomePredicate.of(ExtendedBiomeIds.OCEAN)
                 .and(BiomePredicate.diagonalInterior())
                 .and(BiomePredicate.oneIn(100)),
-            LayerTarget.biome(ExtendedBiomeId.MUSHROOM_ISLAND), LayerTarget.none()
+            LayerTarget.biome(ExtendedBiomeIds.MUSHROOM_ISLAND), LayerTarget.none()
         );
     }
 
@@ -79,7 +80,7 @@ public class ConditionalOverlayLayer extends SingleParentLayer {
     }
 
     @Override
-    protected void addPossibleBiomes(Set<ExtendedBiomeId> biomes) {
+    protected void addPossibleBiomes(Set<ExtendedIdentifier> biomes) {
         if (this.onMatchConfigured != null && !(this.onMatchConfigured instanceof LayerTarget.Configured.OfLayer)) {
             this.onMatchConfigured.addPossibleBiomes(biomes);
         }
@@ -89,16 +90,16 @@ public class ConditionalOverlayLayer extends SingleParentLayer {
     }
 
     @Override
-    protected ExtendedBiomeId generate(int x, int z) {
-        ExtendedBiomeId biome = this.parentLayer.sample(x, z);
+    protected ExtendedIdentifier generate(int x, int z) {
+        ExtendedIdentifier biome = this.parentLayer.sample(x, z);
         LayerTarget.Configured target = this.predicate.matches(biome, this.parentLayer, Suppliers.memoize(() -> this.getRandom(x, z)), x, z)
             ? this.onMatchConfigured : this.otherwiseConfigured;
         if (target == null) {
             return biome;
         }
 
-        ExtendedBiomeId output = target.sample(x, z);
-        if (ExtendedBiomeId.NULL.equals(output)) {
+        ExtendedIdentifier output = target.sample(x, z);
+        if (ExtendedBiomeIds.NULL.equals(output)) {
             return biome;
         }
 

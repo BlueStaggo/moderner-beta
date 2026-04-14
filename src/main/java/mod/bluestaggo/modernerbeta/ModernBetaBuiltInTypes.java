@@ -37,10 +37,8 @@ public final class ModernBetaBuiltInTypes {
         VORONOI_POINTS("voronoi_points"),
         FRACTAL_LAYERS("fractal_layers"),
         USE_32BIT_LAYER_SEED("use_32bit_layer_seed"),
-        USE_OCEAN_BIOMES("use_ocean_biomes"),
         TEMPERATURE_HEIGHT_SCALING("temperature_height_scaling"),
-        BIOME_INJECTION_THRESHOLDS("biome_injection_thresholds"),
-        OUT_OF_BOUNDS_BIOME("out_of_bounds_biome"),
+        BIOME_INJECTION_RULES("biome_injection_rules"),
         CAVE_BIOME_VORONOI("cave_biome_voronoi"),
         CONFIG_BETA_CLIMATIC_COLORS("config/beta_climatic_colors"),
         CONFIG_PE_CLIMATIC_COLORS("config/pe_climatic_colors"),
@@ -126,23 +124,10 @@ public final class ModernBetaBuiltInTypes {
             this.id = ModernerBeta.createId(id);
         }
     }
-    
-    public enum BlockSource {
-        DEEPSLATE("deepslate"),
-        ;
-        
-        public final ResourceLocation id;
-        
-        BlockSource(String id) {
-            this.id = ModernerBeta.createId(id);
-        }
-    }
 
     public enum LayerOutput {
         BIOME("biome"),
         HEIGHT("height"),
-        OCEAN("ocean"),
-        DEEP_OCEAN("deep_ocean"),
         ;
 
         public final ResourceLocation id;

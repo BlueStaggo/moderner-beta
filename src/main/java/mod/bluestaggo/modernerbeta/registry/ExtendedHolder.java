@@ -1,3 +1,4 @@
+//~dotLocation
 package mod.bluestaggo.modernerbeta.registry;
 
 import com.mojang.datafixers.util.Either;

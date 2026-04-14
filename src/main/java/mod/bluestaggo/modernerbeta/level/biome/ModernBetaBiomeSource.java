@@ -18,8 +18,8 @@ import mod.bluestaggo.modernerbeta.registry.ModernBetaResourceKeys;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
+import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
-import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeId;
 import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaChunkGenerator;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -226,11 +226,17 @@ public class ModernBetaBiomeSource extends BiomeSource {
         return region.getBiome(pos);
     }
 
-    public ExtendedBiomeId getBiomeForHeightGen(int biomeX, int biomeY, int biomeZ) {
-        if (this.biomeProvider instanceof BiomeResolverExtendedId biomeResolver)
-            return biomeResolver.getExtendedBiomeId(biomeX, biomeY, biomeZ);
+    public ExtendedIdentifier getBiomeForHeightGen(int biomeX, int biomeY, int biomeZ) {
+        ExtendedIdentifier biome;
+        if (this.biomeProvider instanceof BiomeResolverExtendedId biomeResolver) {
+            biome = biomeResolver.getExtendedBiomeId(biomeX, biomeY, biomeZ);
+        } else {
+            biome = ExtendedIdentifier.of(this.biomeProvider.getBiome(biomeX, biomeY, biomeZ).unwrapKey().orElseThrow().location());
+        }
 
-        return ExtendedBiomeId.of(this.biomeProvider.getBiome(biomeX, biomeY, biomeZ).unwrapKey().orElseThrow().location());
+//        this.chunkGenerator.getBiomeInjector().getOptionalBiome(null, biomeX, biomeY, biomeZ, )
+
+        return biome;
     }
     
     public void setChunkGenerator(ModernBetaChunkGenerator chunkGenerator) {

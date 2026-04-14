@@ -3,8 +3,8 @@ package mod.bluestaggo.modernerbeta.client.gui.screen.config.graphical;
 import mod.bluestaggo.modernerbeta.client.gui.optioncallbacks.FloatSliderCallbacks;
 import mod.bluestaggo.modernerbeta.client.gui.optioncallbacks.BiomePickerCallbacks;
 import mod.bluestaggo.modernerbeta.client.gui.optioncallbacks.TextFieldCallbacks;
+import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
-import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeId;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.Options;
 import net.minecraft.client.gui.components.OptionsList;
@@ -125,15 +125,15 @@ public abstract class ModernBetaGraphicalListSettingsScreen extends ModernBetaGr
         );
     }
 
-    protected List<OptionInstance<?>> extendedBiomeIdOption(int i) {
+    protected List<OptionInstance<?>> extendedIdOption(int i) {
         Supplier<String> stringSupplier = () -> VersionCompat.unwrapOrElse(settings.getString(i), "");
         return List.of(
             new OptionInstance<>(
                 "",
                 OptionInstance.noTooltip(),
                 (optionText, value) -> Component.nullToEmpty(stringSupplier.get()),
-                new TextFieldCallbacks(string -> ExtendedBiomeId.validate(string).error().isEmpty()),
-                ExtendedBiomeId.of(stringSupplier.get()).toString(),
+                new TextFieldCallbacks(string -> ExtendedIdentifier.validate(string).error().isEmpty()),
+                ExtendedIdentifier.of(stringSupplier.get()).toString(),
                 value -> {
                     settings.add(i, StringTag.valueOf(value));
                     this.rebuildWidgets();

@@ -1,10 +1,11 @@
 package mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers;
 
 import com.mojang.serialization.Codec;
+import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeIds;
 import mod.bluestaggo.modernerbeta.util.CodecUtil;
+import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomes;
-import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeId;
 import net.minecraft.world.level.biome.Biomes;
 
 import java.util.*;
@@ -15,36 +16,36 @@ public class MixRiverLayer extends SingleParentLayer {
         instance -> fillSingleParentLayerFields(instance)
             .and(instance.group(
                 Codec.STRING.fieldOf("riverSource").forGetter(layer -> layer.riverSource),
-                CodecUtil.set(ExtendedBiomeId.CODEC).fieldOf("ignoredBiomes").forGetter(layer -> layer.ignoredBiomes),
-                Codec.unboundedMap(ExtendedBiomeId.CODEC, ExtendedBiomeId.CODEC).fieldOf("biomeSpecificRivers").forGetter(layer -> layer.biomeSpecificRivers)
+                CodecUtil.set(ExtendedIdentifier.CODEC).fieldOf("ignoredBiomes").forGetter(layer -> layer.ignoredBiomes),
+                Codec.unboundedMap(ExtendedIdentifier.CODEC, ExtendedIdentifier.CODEC).fieldOf("biomeSpecificRivers").forGetter(layer -> layer.biomeSpecificRivers)
             ))
             .apply(instance, MixRiverLayer::new)
     );
 
     private final String riverSource;
-    private final Set<ExtendedBiomeId> ignoredBiomes;
-    private final Map<ExtendedBiomeId, ExtendedBiomeId> biomeSpecificRivers;
+    private final Set<ExtendedIdentifier> ignoredBiomes;
+    private final Map<ExtendedIdentifier, ExtendedIdentifier> biomeSpecificRivers;
 
     private transient Layer riverSourceLayer;
 
     public static MixRiverLayer forEarlyRelease(String id, long seed, String parent, String riverSource) {
-        return new MixRiverLayer(id, seed, parent, riverSource, Set.of(ExtendedBiomeId.OCEAN), Map.of(
-            ExtendedBiomeId.of(ModernBetaBiomes.LATE_BETA_ICE_PLAINS), ExtendedBiomeId.FROZEN_RIVER,
-            ExtendedBiomeId.of(ModernBetaBiomes.EARLY_RELEASE_ICE_PLAINS), ExtendedBiomeId.FROZEN_RIVER,
-            ExtendedBiomeId.MUSHROOM_ISLAND, ExtendedBiomeId.MUSHROOM_SHORE,
-            ExtendedBiomeId.MUSHROOM_SHORE, ExtendedBiomeId.MUSHROOM_SHORE
+        return new MixRiverLayer(id, seed, parent, riverSource, Set.of(ExtendedBiomeIds.OCEAN), Map.of(
+            ExtendedIdentifier.of(ModernBetaBiomes.LATE_BETA_ICE_PLAINS), ExtendedBiomeIds.FROZEN_RIVER,
+            ExtendedIdentifier.of(ModernBetaBiomes.EARLY_RELEASE_ICE_PLAINS), ExtendedBiomeIds.FROZEN_RIVER,
+            ExtendedBiomeIds.MUSHROOM_ISLAND, ExtendedBiomeIds.MUSHROOM_SHORE,
+            ExtendedBiomeIds.MUSHROOM_SHORE, ExtendedBiomeIds.MUSHROOM_SHORE
         ));
     }
 
     public static MixRiverLayer forMajorRelease(String id, long seed, String parent, String riverSource) {
-        return new MixRiverLayer(id, seed, parent, riverSource, Set.of(ExtendedBiomeId.OCEAN, ExtendedBiomeId.DEEP_OCEAN), Map.of(
-            ExtendedBiomeId.of(Biomes.SNOWY_PLAINS), ExtendedBiomeId.FROZEN_RIVER,
-            ExtendedBiomeId.MUSHROOM_ISLAND, ExtendedBiomeId.MUSHROOM_SHORE,
-            ExtendedBiomeId.MUSHROOM_SHORE, ExtendedBiomeId.MUSHROOM_SHORE
+        return new MixRiverLayer(id, seed, parent, riverSource, Set.of(ExtendedBiomeIds.OCEAN, ExtendedBiomeIds.DEEP_OCEAN), Map.of(
+            ExtendedIdentifier.of(Biomes.SNOWY_PLAINS), ExtendedBiomeIds.FROZEN_RIVER,
+            ExtendedBiomeIds.MUSHROOM_ISLAND, ExtendedBiomeIds.MUSHROOM_SHORE,
+            ExtendedBiomeIds.MUSHROOM_SHORE, ExtendedBiomeIds.MUSHROOM_SHORE
         ));
     }
 
-    public MixRiverLayer(String id, long seed, String parent, String riverSource, Set<ExtendedBiomeId> ignoredBiomes, Map<ExtendedBiomeId, ExtendedBiomeId> biomeSpecificRivers) {
+    public MixRiverLayer(String id, long seed, String parent, String riverSource, Set<ExtendedIdentifier> ignoredBiomes, Map<ExtendedIdentifier, ExtendedIdentifier> biomeSpecificRivers) {
         super(id, seed, parent);
         this.riverSource = riverSource;
         this.ignoredBiomes = ignoredBiomes;
@@ -68,24 +69,24 @@ public class MixRiverLayer extends SingleParentLayer {
     }
 
     @Override
-    protected ExtendedBiomeId generate(int x, int z) {
-        ExtendedBiomeId base = this.parentLayer.sample(x, z);
+    protected ExtendedIdentifier generate(int x, int z) {
+        ExtendedIdentifier base = this.parentLayer.sample(x, z);
         if (this.ignoredBiomes.contains(base)) {
             return base;
         }
 
-        ExtendedBiomeId river = this.riverSourceLayer.sample(x, z);
-        if (!river.equals(ExtendedBiomeId.RIVER)) {
+        ExtendedIdentifier river = this.riverSourceLayer.sample(x, z);
+        if (!river.equals(ExtendedBiomeIds.RIVER)) {
             return base;
         }
 
-        return this.biomeSpecificRivers.getOrDefault(base, ExtendedBiomeId.RIVER);
+        return this.biomeSpecificRivers.getOrDefault(base, ExtendedBiomeIds.RIVER);
     }
 
     @Override
-    protected void addPossibleBiomes(Set<ExtendedBiomeId> biomes) {
-        biomes.add(ExtendedBiomeId.RIVER);
-        for (Map.Entry<ExtendedBiomeId, ExtendedBiomeId> entry : this.biomeSpecificRivers.entrySet()) {
+    protected void addPossibleBiomes(Set<ExtendedIdentifier> biomes) {
+        biomes.add(ExtendedBiomeIds.RIVER);
+        for (Map.Entry<ExtendedIdentifier, ExtendedIdentifier> entry : this.biomeSpecificRivers.entrySet()) {
             if (biomes.contains(entry.getKey())) {
                 biomes.add(entry.getValue());
             }

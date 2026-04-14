@@ -1,13 +1,13 @@
 package mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers;
 
 import com.mojang.serialization.Codec;
+import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
-import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeId;
 
 import java.util.Set;
 
-import static mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeId.OCEAN;
-import static mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeId.PLAINS;
+import static mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeIds.OCEAN;
+import static mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeIds.PLAINS;
 
 public class InitLandLayer extends Layer {
     public static final com.mojang.serialization.MapCodec<InitLandLayer> CODEC = VersionCompat.createMaybeMapCodec(
@@ -33,7 +33,7 @@ public class InitLandLayer extends Layer {
     }
 
     @Override
-    protected ExtendedBiomeId generate(int x, int z) {
+    protected ExtendedIdentifier generate(int x, int z) {
         if (x == 0 && z == 0 || this.getRandom(x, z).nextInt(this.landChance) == 0) {
             return PLAINS;
         }
@@ -41,7 +41,7 @@ public class InitLandLayer extends Layer {
     }
 
     @Override
-    protected void addPossibleBiomes(Set<ExtendedBiomeId> biomes) {
+    protected void addPossibleBiomes(Set<ExtendedIdentifier> biomes) {
         biomes.add(OCEAN);
         biomes.add(PLAINS);
     }

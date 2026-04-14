@@ -1,8 +1,9 @@
 package mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers;
 
 import com.mojang.serialization.Codec;
+import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeIds;
+import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
-import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeId;
 
 import java.util.List;
 import java.util.Map;
@@ -18,13 +19,13 @@ public class ApplyOceanClimateLayer extends SingleParentLayer {
             ))
             .apply(instance, ApplyOceanClimateLayer::new)
     );
-    private static final Set<ExtendedBiomeId> BASE_OCEANS = Set.of(ExtendedBiomeId.OCEAN, ExtendedBiomeId.DEEP_OCEAN);
-    private static final Map<ExtendedBiomeId, ExtendedBiomeId> DEEP_MAP = Map.of(
-        ExtendedBiomeId.WARM_OCEAN, ExtendedBiomeId.WARM_OCEAN.withExt("deep"),
-        ExtendedBiomeId.LUKEWARM_OCEAN, ExtendedBiomeId.DEEP_LUKEWARM_OCEAN,
-        ExtendedBiomeId.OCEAN, ExtendedBiomeId.DEEP_OCEAN,
-        ExtendedBiomeId.COLD_OCEAN, ExtendedBiomeId.DEEP_COLD_OCEAN,
-        ExtendedBiomeId.FROZEN_OCEAN, ExtendedBiomeId.DEEP_FROZEN_OCEAN
+    private static final Set<ExtendedIdentifier> BASE_OCEANS = Set.of(ExtendedBiomeIds.OCEAN, ExtendedBiomeIds.DEEP_OCEAN);
+    private static final Map<ExtendedIdentifier, ExtendedIdentifier> DEEP_MAP = Map.of(
+        ExtendedBiomeIds.WARM_OCEAN, ExtendedBiomeIds.WARM_OCEAN.withExt("deep"),
+        ExtendedBiomeIds.LUKEWARM_OCEAN, ExtendedBiomeIds.DEEP_LUKEWARM_OCEAN,
+        ExtendedBiomeIds.OCEAN, ExtendedBiomeIds.DEEP_OCEAN,
+        ExtendedBiomeIds.COLD_OCEAN, ExtendedBiomeIds.DEEP_COLD_OCEAN,
+        ExtendedBiomeIds.FROZEN_OCEAN, ExtendedBiomeIds.DEEP_FROZEN_OCEAN
     );
 
     private final String oceanClimate;
@@ -54,29 +55,29 @@ public class ApplyOceanClimateLayer extends SingleParentLayer {
     }
 
     @Override
-    protected ExtendedBiomeId generate(int x, int z) {
-        ExtendedBiomeId base = this.parentLayer.sample(x, z);
+    protected ExtendedIdentifier generate(int x, int z) {
+        ExtendedIdentifier base = this.parentLayer.sample(x, z);
         if (!BASE_OCEANS.contains(base)) {
             return base;
         }
 
-        ExtendedBiomeId ocean = this.oceanClimateLayer.sample(x, z);
+        ExtendedIdentifier ocean = this.oceanClimateLayer.sample(x, z);
 
         if (this.applyCoasts) {
-            boolean isWarm = ExtendedBiomeId.WARM_OCEAN.equals(ocean);
-            if (isWarm || ExtendedBiomeId.FROZEN_OCEAN.equals(ocean)) {
+            boolean isWarm = ExtendedBiomeIds.WARM_OCEAN.equals(ocean);
+            if (isWarm || ExtendedBiomeIds.FROZEN_OCEAN.equals(ocean)) {
                 for (int ox = -8; ox <= 8; ox += 4) {
                     for (int oz = -8; oz <= 8; oz += 4) {
-                        ExtendedBiomeId nearBiome = this.parentLayer.sample(x + ox, z + oz);
+                        ExtendedIdentifier nearBiome = this.parentLayer.sample(x + ox, z + oz);
                         if (!BASE_OCEANS.contains(nearBiome)) {
-                            return isWarm ? ExtendedBiomeId.LUKEWARM_OCEAN : ExtendedBiomeId.COLD_OCEAN;
+                            return isWarm ? ExtendedBiomeIds.LUKEWARM_OCEAN : ExtendedBiomeIds.COLD_OCEAN;
                         }
                     }
                 }
             }
         }
 
-        if (ExtendedBiomeId.DEEP_OCEAN.equals(base)) {
+        if (ExtendedBiomeIds.DEEP_OCEAN.equals(base)) {
             ocean = DEEP_MAP.getOrDefault(ocean, ocean);
         }
         return ocean;

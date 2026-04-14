@@ -24,7 +24,7 @@ public class ConfiguredLayers {
 
     public static final ConfiguredLayers DEFAULT
         = new ConfiguredLayers(
-            List.of(new ConstantBiomeLayer("land", 0, ExtendedBiomeId.PLAINS)),
+            List.of(new ConstantBiomeLayer("land", 0, ExtendedBiomeIds.PLAINS)),
             Map.of(ModernBetaBuiltInTypes.LayerOutput.BIOME.id, "land")
         );
 

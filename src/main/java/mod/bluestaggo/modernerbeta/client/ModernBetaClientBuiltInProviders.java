@@ -498,7 +498,7 @@ public class ModernBetaClientBuiltInProviders {
                 addAll(
                     options,
                     screen.headerOption(screen.getText("defaultSettingsPreset")),
-                    screen.extendedBiomeIdOption("defaultSettingsPreset")
+                    screen.extendedIdOption("defaultSettingsPreset")
                 );
             }
         );

@@ -5,11 +5,11 @@ import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
 import mod.bluestaggo.modernerbeta.api.level.biome.BiomeProvider;
 import mod.bluestaggo.modernerbeta.api.level.biome.BiomeResolverBlock;
 import mod.bluestaggo.modernerbeta.api.level.biome.BiomeResolverExtendedIdStepped;
-import mod.bluestaggo.modernerbeta.api.level.biome.*;
+import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeIds;
+import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ConfiguredLayers;
-import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeId;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers.Layer;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkCache;
 import mod.bluestaggo.modernerbeta.util.function.BiIntegerFunction;
@@ -49,7 +49,7 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 		if (use32BitSeed)
 			seed &= 0xFFFFFFFFL;
 
-        Set<ExtendedBiomeId> allExtendedBiomes = new HashSet<>();
+        Set<ExtendedIdentifier> allExtendedBiomes = new HashSet<>();
 
 		this.layer = this.configuredLayers.getOutputOrThrow(ModernBetaBuiltInTypes.LayerOutput.BIOME.id);
 		this.layer.init(seed);
@@ -89,7 +89,7 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 	}
 
     @Override
-	public ExtendedBiomeId getExtendedBiomeId(int biomeX, int biomeY, int biomeZ) {
+	public ExtendedIdentifier getExtendedBiomeId(int biomeX, int biomeY, int biomeZ) {
 		FractalCache cache = this.chunkCacheBiomes.get(biomeX >> 2, biomeZ >> 2);
 		return cache.getHeightAt(biomeX, biomeZ);
 	}
@@ -117,7 +117,7 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 	}
 
 	@Override
-	public ExtendedBiomeId getExtendedBiomeIdForStep(int biomeX, int biomeY, int biomeZ, int step) {
+	public ExtendedIdentifier getExtendedBiomeIdForStep(int biomeX, int biomeY, int biomeZ, int step) {
 		return this.pipeline.get(step).sample(biomeX, biomeZ);
 	}
 
@@ -131,7 +131,7 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 		return this.getExtendedBiomeName(this.getExtendedBiomeIdForStep(biomeX, biomeY, biomeZ, step));
 	}
 
-	private Component getExtendedBiomeName(ExtendedBiomeId extendedBiomeId) {
+	private Component getExtendedBiomeName(ExtendedIdentifier extendedBiomeId) {
 		Component text = this.getBiomeEntry(extendedBiomeId.baseId())
 			.map(entry -> entry.unwrapKey()
 				.map(key -> Component.translatable(key.location().toLanguageKey("biome")))
@@ -139,7 +139,7 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 			.orElse(Component.literal("[unregistered]"));
 
 		if (!extendedBiomeId.ext().isEmpty()) {
-			text = Component.translatable(ExtendedBiomeId.TRANSLATION_KEY, text, Component.literal(extendedBiomeId.ext()));
+			text = Component.translatable(ExtendedBiomeIds.TRANSLATION_KEY, text, Component.literal(extendedBiomeId.ext()));
 		}
 
 		return text;
@@ -158,10 +158,10 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 	private static class FractalCache {
 		private static final int CACHE_SIZE = 4 * 4;
 
-		private final ExtendedBiomeId[] baseCache = new ExtendedBiomeId[CACHE_SIZE];
-		private final ExtendedBiomeId[] heightCache = new ExtendedBiomeId[CACHE_SIZE];
+		private final ExtendedIdentifier[] baseCache = new ExtendedIdentifier[CACHE_SIZE];
+		private final ExtendedIdentifier[] heightCache = new ExtendedIdentifier[CACHE_SIZE];
 
-		public FractalCache(int chunkX, int chunkZ, BiIntegerFunction<ExtendedBiomeId> biomeFunc, BiIntegerFunction<ExtendedBiomeId> heightFunc) {
+		public FractalCache(int chunkX, int chunkZ, BiIntegerFunction<ExtendedIdentifier> biomeFunc, BiIntegerFunction<ExtendedIdentifier> heightFunc) {
 			int startX = chunkX << 2;
 			int startZ = chunkZ << 2;
 
@@ -176,11 +176,11 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 			}
 		}
 
-		public ExtendedBiomeId getBiomeAt(int biomeX, int biomeZ) {
+		public ExtendedIdentifier getBiomeAt(int biomeX, int biomeZ) {
 			return this.baseCache[(biomeX & 3) << 2 | (biomeZ & 3)];
 		}
 
-		public ExtendedBiomeId getHeightAt(int biomeX, int biomeZ) {
+		public ExtendedIdentifier getHeightAt(int biomeX, int biomeZ) {
 			return this.heightCache[(biomeX & 3) << 2 | (biomeZ & 3)];
 		}
 	}

@@ -22,6 +22,7 @@ import net.minecraft.world.level.chunk.PalettedContainer;
 import net.minecraft.world.level.chunk.PalettedContainerRO;
 import net.minecraft.world.level.levelgen.Heightmap;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -141,12 +142,16 @@ public class BiomeInjectionHandler {
     }
     
     public @NotNull Optional<Holder<Biome>> getOptionalBiome(
-        LevelHeightAccessor level,
+        @Nullable LevelHeightAccessor level,
         int biomeX, int biomeY, int biomeZ,
         Sampler noiseSampler,
         BiomeInjectionRule.Step step,
         EnumSet<InjectionNeeds> ableToFulfill
     ) {
+        if (ableToFulfill.contains(InjectionNeeds.HEIGHTS) && level == null) {
+            ableToFulfill.remove(InjectionNeeds.HEIGHTS);
+        }
+
         if (ableToFulfill.contains(InjectionNeeds.CLIMATE) &&
                 !(this.modernBetaBiomeSource.getBiomeProvider() instanceof ClimateSampler)) {
             ableToFulfill.remove(InjectionNeeds.CLIMATE);

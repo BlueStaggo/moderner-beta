@@ -1,7 +1,7 @@
 package mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers;
 
+import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
-import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeId;
 
 public class ModalZoomLayer extends FuzzyZoomLayer {
     public static final com.mojang.serialization.MapCodec<ModalZoomLayer> CODEC = VersionCompat.createMaybeMapCodec(
@@ -19,14 +19,14 @@ public class ModalZoomLayer extends FuzzyZoomLayer {
     }
 
     @Override
-    protected ExtendedBiomeId generate(int x, int z) {
+    protected ExtendedIdentifier generate(int x, int z) {
         int xHalf = x & 1;
         int zHalf = z & 1;
 
         int halfX = x >> 1;
         int halfZ = z >> 1;
 
-        ExtendedBiomeId biome00 = this.parentLayer.sample(halfX, halfZ);
+        ExtendedIdentifier biome00 = this.parentLayer.sample(halfX, halfZ);
         if (xHalf == 0 && zHalf == 0) {
             return biome00;
         }
@@ -49,7 +49,7 @@ public class ModalZoomLayer extends FuzzyZoomLayer {
         }
     }
 
-    private ExtendedBiomeId interpolate(LayerRandom random, ExtendedBiomeId a, ExtendedBiomeId b, ExtendedBiomeId c, ExtendedBiomeId d) {
+    private ExtendedIdentifier interpolate(LayerRandom random, ExtendedIdentifier a, ExtendedIdentifier b, ExtendedIdentifier c, ExtendedIdentifier d) {
         boolean ab = a.equals(b);
         boolean ac = a.equals(c);
         boolean ad = a.equals(d);

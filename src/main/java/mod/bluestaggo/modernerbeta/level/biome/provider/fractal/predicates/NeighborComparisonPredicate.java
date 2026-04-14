@@ -3,9 +3,9 @@ package mod.bluestaggo.modernerbeta.level.biome.provider.fractal.predicates;
 import com.mojang.datafixers.Products;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeId;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers.Layer;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers.LayerRandom;
+import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
 
 import java.util.function.Supplier;
 
@@ -35,7 +35,7 @@ public abstract class NeighborComparisonPredicate implements BiomePredicate {
     }
 
     @Override
-    public boolean matches(ExtendedBiomeId biome, Layer layer, Supplier<LayerRandom> randomSupplier, int x, int z) {
+    public boolean matches(ExtendedIdentifier biome, Layer layer, Supplier<LayerRandom> randomSupplier, int x, int z) {
         int[] xCoords = this.diagonal ? DIAGONAL_NEIGHBOR_X_COORDS : NEIGHBOR_X_COORDS;
         int[] zCoords = this.diagonal ? DIAGONAL_NEIGHBOR_Z_COORDS : NEIGHBOR_Z_COORDS;
 
@@ -43,7 +43,7 @@ public abstract class NeighborComparisonPredicate implements BiomePredicate {
         for (int i = 0; i < 4; i++) {
             int nx = x + xCoords[i];
             int nz = z + zCoords[i];
-            ExtendedBiomeId neighbor = layer.sample(nx, nz);
+            ExtendedIdentifier neighbor = layer.sample(nx, nz);
             boolean match = this.neighborMatches(biome, neighbor, layer, randomSupplier, x, z, nx, nz);
             if (match && ++matches >= this.requiredCount) {
                 return true;
@@ -53,5 +53,5 @@ public abstract class NeighborComparisonPredicate implements BiomePredicate {
         return false;
     }
 
-    protected abstract boolean neighborMatches(ExtendedBiomeId centre, ExtendedBiomeId neighbor, Layer layer, Supplier<LayerRandom> randomSupplier, int x, int z, int nx, int nz);
+    protected abstract boolean neighborMatches(ExtendedIdentifier centre, ExtendedIdentifier neighbor, Layer layer, Supplier<LayerRandom> randomSupplier, int x, int z, int nx, int nz);
 }

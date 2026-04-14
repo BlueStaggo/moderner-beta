@@ -4,13 +4,13 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.util.CodecUtil;
 import mod.bluestaggo.modernerbeta.level.biome.HeightConfig;
-import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeId;
+import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
 
 import java.util.Map;
 
 public record ForcedBiomeHeight(
     boolean enabled,
-    Map<ExtendedBiomeId, HeightConfig> heightOverrides,
+    Map<ExtendedIdentifier, HeightConfig> heightOverrides,
     float depthWeight,
     float depthOffset,
     float scaleWeight,
@@ -20,7 +20,7 @@ public record ForcedBiomeHeight(
     public static final Codec<ForcedBiomeHeight> CODEC = RecordCodecBuilder.create(
         instance -> instance.group(
             Codec.BOOL.fieldOf("enabled").orElse(false).forGetter(ForcedBiomeHeight::enabled),
-            Codec.unboundedMap(ExtendedBiomeId.CODEC, HeightConfig.CODEC).fieldOf("heightOverrides").orElse(Map.of()).forGetter(ForcedBiomeHeight::heightOverrides),
+            Codec.unboundedMap(ExtendedIdentifier.CODEC, HeightConfig.CODEC).fieldOf("heightOverrides").orElse(Map.of()).forGetter(ForcedBiomeHeight::heightOverrides),
             Codec.FLOAT.fieldOf("depthWeight").orElse(1.0f).forGetter(ForcedBiomeHeight::depthWeight),
             Codec.FLOAT.fieldOf("depthOffset").orElse(0.0f).forGetter(ForcedBiomeHeight::depthOffset),
             Codec.FLOAT.fieldOf("scaleWeight").orElse(1.0f).forGetter(ForcedBiomeHeight::scaleWeight),
@@ -32,11 +32,11 @@ public record ForcedBiomeHeight(
     public static final ForcedBiomeHeight ENABLED = new ForcedBiomeHeight(true, Map.of(), 1.0f, 0.0f, 1.0f, 0.0f, false);
     public static final ForcedBiomeHeight AMPLIFIED = new ForcedBiomeHeight(true, Map.of(), 2.0f, 1.0f, 4.0f, 1.0f, true);
 
-    public static ForcedBiomeHeight overridesOnly(Map<ExtendedBiomeId, HeightConfig> heightOverrides) {
+    public static ForcedBiomeHeight overridesOnly(Map<ExtendedIdentifier, HeightConfig> heightOverrides) {
         return overridesOnly(heightOverrides, false);
     }
 
-    public static ForcedBiomeHeight overridesOnly(Map<ExtendedBiomeId, HeightConfig> heightOverrides, boolean amplified) {
+    public static ForcedBiomeHeight overridesOnly(Map<ExtendedIdentifier, HeightConfig> heightOverrides, boolean amplified) {
         return new ForcedBiomeHeight(
             true,
             heightOverrides,

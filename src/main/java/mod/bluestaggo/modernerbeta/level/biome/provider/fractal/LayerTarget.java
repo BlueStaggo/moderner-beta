@@ -3,6 +3,7 @@ package mod.bluestaggo.modernerbeta.level.biome.provider.fractal;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers.Layer;
+import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
 import net.minecraft.util.StringRepresentable;
 
 import java.util.Optional;
@@ -10,7 +11,7 @@ import java.util.Set;
 import java.util.function.Function;
 
 public record LayerTarget(Type type, String value) {
-    private static final LayerTarget NONE = new LayerTarget(Type.BIOME, ExtendedBiomeId.NULL.toString());
+    private static final LayerTarget NONE = new LayerTarget(Type.BIOME, ExtendedBiomeIds.NULL.toString());
 
     public static final Codec<LayerTarget> CODEC = RecordCodecBuilder.create(
         instance -> instance.group(
@@ -23,7 +24,7 @@ public record LayerTarget(Type type, String value) {
         return new LayerTarget(Type.BIOME, biome);
     }
 
-    public static LayerTarget biome(ExtendedBiomeId biome) {
+    public static LayerTarget biome(ExtendedIdentifier biome) {
         return new LayerTarget(Type.BIOME, biome.toString());
     }
 
@@ -38,7 +39,7 @@ public record LayerTarget(Type type, String value) {
     public Configured configure(Function<String, Layer> layerMap) {
         return switch (this.type) {
             case LAYER -> new Configured.OfLayer(layerMap.apply(this.value));
-            case BIOME -> new Configured.OfBiome(ExtendedBiomeId.of(this.value));
+            case BIOME -> new Configured.OfBiome(ExtendedIdentifier.of(this.value));
         };
     }
 
@@ -60,9 +61,9 @@ public record LayerTarget(Type type, String value) {
 
     public interface Configured {
         Optional<Layer> asLayer();
-        ExtendedBiomeId sample(int x, int z);
+        ExtendedIdentifier sample(int x, int z);
         boolean isEquivalentToOrNull(Layer layer);
-        void addPossibleBiomes(Set<ExtendedBiomeId> biomes);
+        void addPossibleBiomes(Set<ExtendedIdentifier> biomes);
 
         record OfLayer(Layer layer) implements Configured {
             @Override
@@ -71,7 +72,7 @@ public record LayerTarget(Type type, String value) {
             }
 
             @Override
-            public ExtendedBiomeId sample(int x, int z) {
+            public ExtendedIdentifier sample(int x, int z) {
                 return this.layer.sample(x, z);
             }
 
@@ -81,29 +82,29 @@ public record LayerTarget(Type type, String value) {
             }
 
             @Override
-            public void addPossibleBiomes(Set<ExtendedBiomeId> biomes) {
+            public void addPossibleBiomes(Set<ExtendedIdentifier> biomes) {
                 this.layer.addPossibleBiomesRecursive(biomes);
             }
         }
 
-        record OfBiome(ExtendedBiomeId biome) implements Configured {
+        record OfBiome(ExtendedIdentifier biome) implements Configured {
             @Override
             public Optional<Layer> asLayer() {
                 return Optional.empty();
             }
 
             @Override
-            public ExtendedBiomeId sample(int x, int z) {
+            public ExtendedIdentifier sample(int x, int z) {
                 return this.biome;
             }
 
             @Override
             public boolean isEquivalentToOrNull(Layer layer) {
-                return ExtendedBiomeId.NULL.equals(this.biome);
+                return ExtendedBiomeIds.NULL.equals(this.biome);
             }
 
             @Override
-            public void addPossibleBiomes(Set<ExtendedBiomeId> biomes) {
+            public void addPossibleBiomes(Set<ExtendedIdentifier> biomes) {
                 biomes.add(this.biome);
             }
         }

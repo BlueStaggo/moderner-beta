@@ -1,7 +1,10 @@
 package mod.bluestaggo.modernerbeta.level.biome.injection.predicates;
 
 import mod.bluestaggo.modernerbeta.level.biome.injection.BiomeInjectionContext;
+import mod.bluestaggo.modernerbeta.level.biome.injection.InjectionNeeds;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
+
+import java.util.EnumSet;
 
 public record InvertedInjectionPredicate(InjectionPredicate term) implements InjectionPredicate {
     public static final com.mojang.serialization.MapCodec<InvertedInjectionPredicate> CODEC = VersionCompat.createMaybeMapCodec(
@@ -18,5 +21,10 @@ public record InvertedInjectionPredicate(InjectionPredicate term) implements Inj
     @Override
     public boolean shouldApply(BiomeInjectionContext context) {
         return !this.term.shouldApply(context);
+    }
+
+    @Override
+    public EnumSet<InjectionNeeds> needs() {
+        return this.term.needs();
     }
 }

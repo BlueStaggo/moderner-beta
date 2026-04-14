@@ -24,7 +24,7 @@ public class MappedClimateBiomeInjector implements BiomeInjector {
     public static final com.mojang.serialization.MapCodec<MappedClimateBiomeInjector> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> instance.group(
             StringRepresentable.fromEnum(Type::values).fieldOf("climate_type")
-                    .forGetter(injector -> injector.type),
+                .forGetter(injector -> injector.type),
             Entry.CODEC
                 .listOf()
                 .fieldOf("values")

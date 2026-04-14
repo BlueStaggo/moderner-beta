@@ -401,11 +401,10 @@ public class ModernBetaClientBuiltInProviders {
                 };
 
                 for (String target : climateMappingTargets) {
-                    options.addBig(screen.headerOption(screen.getText(target).withStyle(ChatFormatting.BOLD)));
                     addAll(
                         options,
-                        screen.headerOption(screen.getText("biome")),
-                        screen.biomeOption(target + ".biome", false)
+                        screen.headerOption(screen.getText(target)),
+                        screen.biomeOption(target, false)
                     );
                 }
             }

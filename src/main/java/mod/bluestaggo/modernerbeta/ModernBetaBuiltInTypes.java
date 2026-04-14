@@ -124,17 +124,6 @@ public final class ModernBetaBuiltInTypes {
             this.id = ModernerBeta.createId(id);
         }
     }
-    
-    public enum BlockSource {
-        DEEPSLATE("deepslate"),
-        ;
-        
-        public final ResourceLocation id;
-        
-        BlockSource(String id) {
-            this.id = ModernerBeta.createId(id);
-        }
-    }
 
     public enum LayerOutput {
         BIOME("biome"),

@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomes;
 import mod.bluestaggo.modernerbeta.level.biome.injection.injector.*;
+import mod.bluestaggo.modernerbeta.level.biome.injection.predicates.BiomeInSetInjectionPredicate;
 import mod.bluestaggo.modernerbeta.level.biome.injection.predicates.SurfaceBelowSeaLevelInjectionPredicate;
 import mod.bluestaggo.modernerbeta.level.biome.injection.predicates.BelowSurfaceInjectionPredicate;
 import mod.bluestaggo.modernerbeta.level.biome.injection.predicates.OutOfBoundsInjectionPredicate;
@@ -55,20 +56,11 @@ public final class BiomeInjectionRules {
 
         builder.add(new BiomeInjectionRule(
             new PredicateBiomeInjector(
-                new BelowSurfaceInjectionPredicate(8),
+                new BelowSurfaceInjectionPredicate(8)
+                    .and(new BiomeInSetInjectionPredicate(biomeRegistry.getOrThrow(Biomes.THE_VOID)).invert()),
                 new CaveBiomeInjector()
             ),
             BiomeInjectionRule.Step.PRE
-        ));
-
-        builder.add(new BiomeInjectionRule(
-            new Cache2DBiomeInjector(
-                new PredicateBiomeInjector(
-                    new OutOfBoundsInjectionPredicate(4),
-                    new ConstantBiomeInjector(biomeRegistry.getOrThrow(Biomes.THE_VOID))
-                )
-            ),
-            BiomeInjectionRule.Step.POST
         ));
 
         return builder.build();
@@ -153,22 +145,25 @@ public final class BiomeInjectionRules {
         return new BiomeInjectionRule(
             new Cache2DBiomeInjector(
                 new PredicateBiomeInjector(
-                    new SurfaceBelowSeaLevelInjectionPredicate(16),
-                    new MappedClimateBiomeInjector(MappedClimateBiomeInjector.Type.TEMPERATURE, List.of(
-                        new MappedClimateBiomeInjector.Entry(0.2, biomeRegistry.getOrThrow(Biomes.DEEP_LUKEWARM_OCEAN)),
-                        new MappedClimateBiomeInjector.Entry(0.0, biomeRegistry.getOrThrow(Biomes.DEEP_OCEAN)),
-                        new MappedClimateBiomeInjector.Entry(-0.1, biomeRegistry.getOrThrow(Biomes.DEEP_COLD_OCEAN)),
-                        new MappedClimateBiomeInjector.Entry(-0.2, biomeRegistry.getOrThrow(Biomes.DEEP_FROZEN_OCEAN))
-                    )),
+                    new BiomeInSetInjectionPredicate(biomeRegistry.getOrThrow(Biomes.THE_VOID)).invert(),
                     new PredicateBiomeInjector(
-                        new SurfaceBelowSeaLevelInjectionPredicate(4),
+                        new SurfaceBelowSeaLevelInjectionPredicate(16),
                         new MappedClimateBiomeInjector(MappedClimateBiomeInjector.Type.TEMPERATURE, List.of(
-                            new MappedClimateBiomeInjector.Entry(0.4, biomeRegistry.getOrThrow(Biomes.WARM_OCEAN)),
-                            new MappedClimateBiomeInjector.Entry(0.2, biomeRegistry.getOrThrow(Biomes.LUKEWARM_OCEAN)),
-                            new MappedClimateBiomeInjector.Entry(0.0, biomeRegistry.getOrThrow(Biomes.OCEAN)),
-                            new MappedClimateBiomeInjector.Entry(-0.1, biomeRegistry.getOrThrow(Biomes.COLD_OCEAN)),
-                            new MappedClimateBiomeInjector.Entry(-0.2, biomeRegistry.getOrThrow(Biomes.FROZEN_OCEAN))
-                        ))
+                            new MappedClimateBiomeInjector.Entry(0.2, biomeRegistry.getOrThrow(Biomes.DEEP_LUKEWARM_OCEAN)),
+                            new MappedClimateBiomeInjector.Entry(0.0, biomeRegistry.getOrThrow(Biomes.DEEP_OCEAN)),
+                            new MappedClimateBiomeInjector.Entry(-0.1, biomeRegistry.getOrThrow(Biomes.DEEP_COLD_OCEAN)),
+                            new MappedClimateBiomeInjector.Entry(-0.2, biomeRegistry.getOrThrow(Biomes.DEEP_FROZEN_OCEAN))
+                        )),
+                        new PredicateBiomeInjector(
+                            new SurfaceBelowSeaLevelInjectionPredicate(4),
+                            new MappedClimateBiomeInjector(MappedClimateBiomeInjector.Type.TEMPERATURE, List.of(
+                                new MappedClimateBiomeInjector.Entry(0.4, biomeRegistry.getOrThrow(Biomes.WARM_OCEAN)),
+                                new MappedClimateBiomeInjector.Entry(0.2, biomeRegistry.getOrThrow(Biomes.LUKEWARM_OCEAN)),
+                                new MappedClimateBiomeInjector.Entry(0.0, biomeRegistry.getOrThrow(Biomes.OCEAN)),
+                                new MappedClimateBiomeInjector.Entry(-0.1, biomeRegistry.getOrThrow(Biomes.COLD_OCEAN)),
+                                new MappedClimateBiomeInjector.Entry(-0.2, biomeRegistry.getOrThrow(Biomes.FROZEN_OCEAN))
+                            ))
+                        )
                     )
                 )
             ),

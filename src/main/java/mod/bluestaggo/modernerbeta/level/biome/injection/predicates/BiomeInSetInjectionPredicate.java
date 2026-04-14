@@ -17,6 +17,11 @@ public record BiomeInSetInjectionPredicate(Set<Holder<Biome>> biomes) implements
         ).apply(instance, BiomeInSetInjectionPredicate::new)
     );
 
+    @SafeVarargs
+    public BiomeInSetInjectionPredicate(Holder<Biome>... biomes) {
+        this(Set.of(biomes));
+    }
+
     @Override
     public InjectionPredicateType<?> getType() {
         return InjectionPredicateType.BIOME_IN_SET;

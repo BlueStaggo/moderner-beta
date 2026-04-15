@@ -6,12 +6,7 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderLookup.Provider;
 //? if >=26.2 {
-/*import net.minecraft.resources.ResourceKey;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.data.tags.BlockItemTagAppender;
-import net.minecraft.references.BlockItemId;
-import net.minecraft.references.BlockItemIds;
+/*import net.minecraft.references.BlockItemIds;
 *///? } else {
 import net.minecraft.world.level.block.Blocks;
 //? }
@@ -32,7 +27,7 @@ public class ModernBetaTagProviderBlock
 
     @Override
     protected void addTags(Provider provider) {
-        //? if >=1.21.6 {
+        //? if >=1.21.6 && <26.2 {
         this.valueLookupBuilder(
         //?} else {
         /*this.builder(
@@ -66,15 +61,4 @@ public class ModernBetaTagProviderBlock
             //~ }
         );
     }
-
-    //? if >=26.2 {
-    /*protected BlockItemTagAppender<Block> valueLookupBuilder(TagKey<Block> tag) {
-        return new BlockItemTagAppender<>(super.tag(tag)) {
-            @Override
-            protected ResourceKey<Block> convertElement(BlockItemId element) {
-                return element.block();
-            }
-        };
-    }
-    *///? }
 }

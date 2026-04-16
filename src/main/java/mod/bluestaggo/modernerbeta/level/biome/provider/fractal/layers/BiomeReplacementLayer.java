@@ -3,8 +3,10 @@ package mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers;
 import com.mojang.serialization.Codec;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeIds;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.LayerTarget;
+import mod.bluestaggo.modernerbeta.registry.ExtendedHolder;
 import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
+import net.minecraft.world.level.biome.Biome;
 
 import java.util.List;
 import java.util.Map;
@@ -17,19 +19,19 @@ import java.util.stream.Stream;
 public class BiomeReplacementLayer extends SingleParentLayer {
     public static final com.mojang.serialization.MapCodec<BiomeReplacementLayer> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> fillSingleParentLayerFields(instance)
-            .and(Codec.unboundedMap(ExtendedIdentifier.CODEC, LayerTarget.CODEC).fieldOf("targets").forGetter(layer -> layer.targets))
+            .and(Codec.unboundedMap(ExtendedBiomeIds.CODEC, LayerTarget.CODEC).fieldOf("targets").forGetter(layer -> layer.targets))
             .apply(instance, BiomeReplacementLayer::new)
     );
 
-    private final Map<ExtendedIdentifier, LayerTarget> targets;
-    private transient Map<ExtendedIdentifier, LayerTarget.Configured> configuredTargets;
+    private final Map<ExtendedHolder<Biome>, LayerTarget> targets;
+    private transient Map<ExtendedHolder<Biome>, LayerTarget.Configured> configuredTargets;
 
-    public BiomeReplacementLayer(String id, long seed, String parent, Map<ExtendedIdentifier, LayerTarget> targets) {
+    public BiomeReplacementLayer(String id, long seed, String parent, Map<ExtendedHolder<Biome>, LayerTarget> targets) {
         super(id, seed, parent);
         this.targets = targets;
     }
 
-    public static BiomeReplacementLayer toBiomes(String id, long seed, String parent, Map<ExtendedIdentifier, ExtendedIdentifier> targets) {
+    public static BiomeReplacementLayer toBiomes(String id, long seed, String parent, Map<ExtendedHolder<Biome>, ExtendedIdentifier> targets) {
         return new BiomeReplacementLayer(id, seed, parent, targets.entrySet().stream()
             .collect(
                 Collectors.toMap(
@@ -55,15 +57,15 @@ public class BiomeReplacementLayer extends SingleParentLayer {
     }
 
     @Override
-    protected ExtendedIdentifier generate(int x, int z) {
-        ExtendedIdentifier baseBiome = this.parentLayer.sample(x, z);
+    protected ExtendedHolder<Biome> generate(int x, int z) {
+        ExtendedHolder<Biome> baseBiome = this.parentLayer.sample(x, z);
         LayerTarget.Configured target = this.configuredTargets.get(baseBiome);
         if (target == null) {
             return baseBiome;
         }
 
-        ExtendedIdentifier replacementBiome = target.sample(x, z);
-        if (ExtendedBiomeIds.NULL.equals(replacementBiome)) {
+        ExtendedHolder<Biome> replacementBiome = target.sample(x, z);
+        if (replacementBiome.is(ExtendedBiomeIds.NULL)) {
             return baseBiome;
         }
 
@@ -78,7 +80,7 @@ public class BiomeReplacementLayer extends SingleParentLayer {
     }
 
     @Override
-    protected void addPossibleBiomes(Set<ExtendedIdentifier> biomes) {
+    protected void addPossibleBiomes(Set<ExtendedHolder<Biome>> biomes) {
         for (LayerTarget.Configured target : this.configuredTargets.values()) {
             if (target instanceof LayerTarget.Configured.OfLayer) {
                 continue;

@@ -1,9 +1,12 @@
 package mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers;
 
 import com.mojang.serialization.Codec;
+import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeIds;
+import mod.bluestaggo.modernerbeta.registry.ExtendedHolder;
 import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomes;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
 
 import java.util.Map;
@@ -18,26 +21,26 @@ public class AddLandLayer extends SingleParentLayer {
             Codec.LONG.fieldOf("seed").orElse(0L).forGetter(layer -> layer.seed),
             Codec.STRING.fieldOf("parent").forGetter(layer -> layer.parent),
             Codec.BOOL.fieldOf("betaShape").orElse(false).forGetter(layer -> layer.betaShape),
-            ExtendedIdentifier.CODEC.fieldOf("ocean").orElse(OCEAN).forGetter(layer -> layer.ocean),
-            ExtendedIdentifier.CODEC.fieldOf("land").orElse(PLAINS).forGetter(layer -> layer.land),
-            Codec.unboundedMap(ExtendedIdentifier.CODEC, ExtendedIdentifier.CODEC).fieldOf("biomeSpecificOceans").orElse(Map.of()).forGetter(layer -> layer.biomeSpecificOceans),
+            ExtendedBiomeIds.CODEC.fieldOf("ocean").orElse(OCEAN).forGetter(layer -> layer.ocean),
+            ExtendedBiomeIds.CODEC.fieldOf("land").orElse(PLAINS).forGetter(layer -> layer.land),
+            Codec.unboundedMap(ExtendedBiomeIds.CODEC, ExtendedBiomeIds.CODEC).fieldOf("biomeSpecificOceans").orElse(Map.of()).forGetter(layer -> layer.biomeSpecificOceans),
             Codec.INT.fieldOf("landChance").orElse(3).forGetter(layer -> layer.landChance),
             Codec.INT.fieldOf("oceanChance").orElse(5).forGetter(layer -> layer.oceanChance)
         ).apply(instance, AddLandLayer::new)
     );
 
     private final boolean betaShape;
-    private final ExtendedIdentifier ocean;
-    private final ExtendedIdentifier land;
-    private final Map<ExtendedIdentifier, ExtendedIdentifier> biomeSpecificOceans;
+    private final ExtendedHolder<Biome> ocean;
+    private final ExtendedHolder<Biome> land;
+    private final Map<ExtendedHolder<Biome>, ExtendedHolder<Biome>> biomeSpecificOceans;
     private final int landChance;
     private final int oceanChance;
 
-    public AddLandLayer(String id, long seed, String parent, boolean betaShape, ExtendedIdentifier ocean, ExtendedIdentifier land, Map<ExtendedIdentifier, ExtendedIdentifier> biomeSpecificOceans) {
+    public AddLandLayer(String id, long seed, String parent, boolean betaShape, ExtendedHolder<Biome> ocean, ExtendedHolder<Biome> land, Map<ExtendedHolder<Biome>, ExtendedHolder<Biome>> biomeSpecificOceans) {
         this(id, seed, parent, betaShape, ocean, land, biomeSpecificOceans, 3, 5);
     }
 
-    public AddLandLayer(String id, long seed, String parent, boolean betaShape, ExtendedIdentifier ocean, ExtendedIdentifier land, Map<ExtendedIdentifier, ExtendedIdentifier> biomeSpecificOceans, int landChance, int oceanChance) {
+    public AddLandLayer(String id, long seed, String parent, boolean betaShape, ExtendedHolder<Biome> ocean, ExtendedHolder<Biome> land, Map<ExtendedHolder<Biome>, ExtendedHolder<Biome>> biomeSpecificOceans, int landChance, int oceanChance) {
         super(id, seed, parent);
         this.betaShape = betaShape;
         this.ocean = ocean;
@@ -67,7 +70,7 @@ public class AddLandLayer extends SingleParentLayer {
         return new AddLandLayer(id, seed, parent, true, OCEAN, ExtendedIdentifier.of(ModernBetaBiomes.LATE_BETA_PLAINS), Map.of());
     }
 
-    public static AddLandLayer forEarlyRelease(String id, long seed, String parent, ExtendedIdentifier icePlains) {
+    public static AddLandLayer forEarlyRelease(String id, long seed, String parent, ExtendedHolder<Biome> icePlains) {
         return new AddLandLayer(id, seed, parent, false, OCEAN, ExtendedIdentifier.of(ModernBetaBiomes.LATE_BETA_PLAINS), Map.of(icePlains, FROZEN_OCEAN));
     }
 
@@ -81,20 +84,20 @@ public class AddLandLayer extends SingleParentLayer {
     }
 
     @Override
-    protected ExtendedIdentifier generate(int x, int z) {
-        ExtendedIdentifier base = this.parentLayer.sample(x, z);
-        ExtendedIdentifier[] neighbors = this.parentLayer.sampleDiagonalNeighbors(x, z);
+    protected ExtendedHolder<Biome> generate(int x, int z) {
+        ExtendedHolder<Biome> base = this.parentLayer.sample(x, z);
+        ExtendedHolder<Biome>[] neighbors = this.parentLayer.sampleDiagonalNeighbors(x, z);
 
         if (base.equals(this.ocean) && !allNeighborsEqual(neighbors, this.ocean)) {
             int landSampleChance = 1;
-            ExtendedIdentifier sampledLand = this.land;
+            ExtendedHolder<Biome> sampledLand = this.land;
             LayerRandom random = this.getRandom(x, z);
 
             boolean addLand;
             if (this.betaShape) {
                 addLand = random.nextInt(this.landChance) == this.landChance - 1;
             } else {
-                for (ExtendedIdentifier neighbor : neighbors) {
+                for (ExtendedHolder<Biome> neighbor : neighbors) {
                     if (!neighbor.equals(this.ocean) && random.nextInt(landSampleChance++) == 0) {
                         sampledLand = neighbor;
                     }
@@ -116,10 +119,10 @@ public class AddLandLayer extends SingleParentLayer {
     }
 
     @Override
-    protected void addPossibleBiomes(Set<ExtendedIdentifier> biomes) {
+    protected void addPossibleBiomes(Set<ExtendedHolder<Biome>> biomes) {
         biomes.add(this.ocean);
         biomes.add(this.land);
-        for (Map.Entry<ExtendedIdentifier, ExtendedIdentifier> entry : this.biomeSpecificOceans.entrySet()) {
+        for (Map.Entry<ExtendedHolder<Biome>, ExtendedHolder<Biome>> entry : this.biomeSpecificOceans.entrySet()) {
             biomes.add(entry.getKey());
             biomes.add(entry.getValue());
         }

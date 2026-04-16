@@ -1,16 +1,18 @@
 package mod.bluestaggo.modernerbeta.level.biome.provider.fractal.predicates;
 
-import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
+import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeIds;
+import mod.bluestaggo.modernerbeta.registry.ExtendedHolder;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers.Layer;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers.LayerRandom;
+import net.minecraft.world.level.biome.Biome;
 
 import java.util.function.Supplier;
 
-public record SingleMatchBiomePredicate(ExtendedIdentifier biome) implements BiomePredicate {
+public record SingleMatchBiomePredicate(ExtendedHolder<Biome> biome) implements BiomePredicate {
     public static final com.mojang.serialization.MapCodec<SingleMatchBiomePredicate> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> instance.group(
-            ExtendedIdentifier.CODEC.fieldOf("biome").forGetter(predicate -> predicate.biome)
+            ExtendedBiomeIds.CODEC.fieldOf("biome").forGetter(predicate -> predicate.biome)
         ).apply(instance, SingleMatchBiomePredicate::new)
     );
 
@@ -20,7 +22,7 @@ public record SingleMatchBiomePredicate(ExtendedIdentifier biome) implements Bio
     }
 
     @Override
-    public boolean matches(ExtendedIdentifier biome, Layer layer, Supplier<LayerRandom> randomSupplier, int x, int z) {
+    public boolean matches(ExtendedHolder<Biome> biome, Layer layer, Supplier<LayerRandom> randomSupplier, int x, int z) {
         return this.biome.equals(biome);
     }
 }

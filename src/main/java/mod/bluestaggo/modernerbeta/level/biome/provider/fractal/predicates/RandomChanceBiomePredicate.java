@@ -1,10 +1,11 @@
 package mod.bluestaggo.modernerbeta.level.biome.provider.fractal.predicates;
 
 import com.mojang.serialization.Codec;
-import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
+import mod.bluestaggo.modernerbeta.registry.ExtendedHolder;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers.Layer;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers.LayerRandom;
+import net.minecraft.world.level.biome.Biome;
 
 import java.util.function.Supplier;
 
@@ -22,7 +23,7 @@ public record RandomChanceBiomePredicate(int numerator, int denominator) impleme
     }
 
     @Override
-    public boolean matches(ExtendedIdentifier biome, Layer layer, Supplier<LayerRandom> randomSupplier, int x, int z) {
+    public boolean matches(ExtendedHolder<Biome> biome, Layer layer, Supplier<LayerRandom> randomSupplier, int x, int z) {
         return randomSupplier.get().nextInt(this.denominator) < this.numerator;
     }
 }

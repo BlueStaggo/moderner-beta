@@ -62,8 +62,8 @@ public class BiomeProviderBetaFractal extends BiomeProviderFractal implements Cl
     @Override
     public Clime sample(int x, int z) {
         //TODO: investigate if we need to cache this
-        int temperature = this.temperatureLayer.sample(this.biomeRegistry, x, z);
-        int downfall = this.downfallLayer.sample(this.biomeRegistry, x, z);
+        int temperature = this.temperatureLayer.sample(x, z);
+        int downfall = this.downfallLayer.sample(x, z);
         return new Clime(
             Mth.clamp(temperature, 0, 65536) / 65536.0,
             Mth.clamp(downfall, 0, 65536) / 65536.0
@@ -92,7 +92,7 @@ public class BiomeProviderBetaFractal extends BiomeProviderFractal implements Cl
 
     @Override
     public double sampleSky(int x, int z) {
-        return this.temperatureLayer.sample(this.biomeRegistry, x, z) / 65536.0;
+        return this.temperatureLayer.sample(x, z) / 65536.0;
     }
 
     @Override

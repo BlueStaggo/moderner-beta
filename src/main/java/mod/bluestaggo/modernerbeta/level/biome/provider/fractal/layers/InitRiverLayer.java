@@ -1,7 +1,8 @@
 package mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers;
 
-import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
+import mod.bluestaggo.modernerbeta.registry.ExtendedHolder;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
+import net.minecraft.world.level.biome.Biome;
 
 import static mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeIds.*;
 
@@ -21,9 +22,9 @@ public class InitRiverLayer extends SingleParentLayer {
     }
 
     @Override
-    protected ExtendedIdentifier generate(int x, int z) {
-        ExtendedIdentifier baseBiome = this.parentLayer.sample(x, z);
-        if (baseBiome.baseId().equals(OCEAN.baseId())) {
+    protected ExtendedHolder<Biome> generate(int x, int z) {
+        ExtendedHolder<Biome> baseBiome = this.parentLayer.sample(x, z);
+        if (baseBiome.is(OCEAN.baseId())) {
             return baseBiome;
         }
 

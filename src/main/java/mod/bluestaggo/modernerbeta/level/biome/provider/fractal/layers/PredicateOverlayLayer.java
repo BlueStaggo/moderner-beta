@@ -4,10 +4,12 @@ import com.google.common.base.Suppliers;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeIds;
+import mod.bluestaggo.modernerbeta.registry.ExtendedHolder;
 import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.predicates.BiomePredicate;
 import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.level.biome.Biome;
 
 import java.util.List;
 import java.util.Objects;
@@ -55,13 +57,13 @@ public class PredicateOverlayLayer extends SingleParentLayer {
     }
 
     @Override
-    protected ExtendedIdentifier generate(int x, int z) {
-        ExtendedIdentifier baseBiome = this.parentLayer.sample(x, z);
+    protected ExtendedHolder<Biome> generate(int x, int z) {
+        ExtendedHolder<Biome> baseBiome = this.parentLayer.sample(x, z);
         for (ConfiguredTarget target : this.configuredTargets) {
             Supplier<LayerRandom> randomSupplier = Suppliers.memoize(() -> this.getRandom(x, z));
             if (target.predicate().matches(baseBiome, this.parentLayer, randomSupplier, x, z)) {
-                ExtendedIdentifier result = target.sample(x, z);
-                if (ExtendedBiomeIds.NULL.equals(result)) {
+                ExtendedHolder<Biome> result = target.sample(x, z);
+                if (result.is(ExtendedBiomeIds.NULL)) {
                     return baseBiome;
                 }
                 return result;
@@ -71,7 +73,7 @@ public class PredicateOverlayLayer extends SingleParentLayer {
     }
 
     @Override
-    protected void addPossibleBiomes(Set<ExtendedIdentifier> biomes) {
+    protected void addPossibleBiomes(Set<ExtendedHolder<Biome>> biomes) {
         for (ConfiguredTarget target : this.configuredTargets) {
             target.addPossibleBiomes(biomes);
         }
@@ -96,15 +98,15 @@ public class PredicateOverlayLayer extends SingleParentLayer {
             return new Target(predicate, layer, Type.LAYER);
         }
 
-        public static Target biome(BiomePredicate predicate, ExtendedIdentifier biome) {
-            return new Target(predicate, biome.toString(), Type.BIOME);
+        public static Target biome(BiomePredicate predicate, ExtendedHolder<Biome> biome) {
+            return new Target(predicate, biome.unwrapExtendedKey().orElseThrow().toString(), Type.BIOME);
         }
 
         public static Target inclusiveBeach(Set<ExtendedIdentifier> exceptions, ExtendedIdentifier beach) {
             return inclusiveBeach(exceptions, BiomePredicate.of(ExtendedBiomeIds.OCEAN), beach);
         }
 
-        public static Target inclusiveBeach(Set<ExtendedIdentifier> exceptions, BiomePredicate ocean, ExtendedIdentifier beach) {
+        public static Target inclusiveBeach(Set<ExtendedHolder<Biome>> exceptions, BiomePredicate ocean, ExtendedHolder<Biome> beach) {
             return biome(
                 BiomePredicate.noneInSet(exceptions)
                     .and(BiomePredicate.neighborsMatch(ocean, 1)),
@@ -112,11 +114,11 @@ public class PredicateOverlayLayer extends SingleParentLayer {
             );
         }
 
-        public static Target exclusiveBeach(Set<ExtendedIdentifier> biomes, ExtendedIdentifier beach) {
+        public static Target exclusiveBeach(Set<ExtendedHolder<Biome>> biomes, ExtendedHolder<Biome> beach) {
             return exclusiveBeach(biomes, BiomePredicate.of(ExtendedBiomeIds.OCEAN), beach);
         }
 
-        public static Target exclusiveBeach(Set<ExtendedIdentifier> biomes, BiomePredicate ocean, ExtendedIdentifier beach) {
+        public static Target exclusiveBeach(Set<ExtendedHolder<Biome>> biomes, BiomePredicate ocean, ExtendedHolder<Biome> beach) {
             return biome(
                 BiomePredicate.inSet(biomes)
                     .and(BiomePredicate.neighborsMatch(ocean, 1)),
@@ -124,7 +126,7 @@ public class PredicateOverlayLayer extends SingleParentLayer {
             );
         }
 
-        public static Target simpleHills(Set<ExtendedIdentifier> affectedBiomes, String layer) {
+        public static Target simpleHills(Set<ExtendedHolder<Biome>> affectedBiomes, String layer) {
             return layer(
                 BiomePredicate.inSet(affectedBiomes)
                     .and(BiomePredicate.interior())
@@ -133,7 +135,7 @@ public class PredicateOverlayLayer extends SingleParentLayer {
             );
         }
 
-        public static Target borderTransition(ExtendedIdentifier from, Set<ExtendedIdentifier> similarBiomes, ExtendedIdentifier to) {
+        public static Target borderTransition(ExtendedHolder<Biome> from, Set<ExtendedHolder<Biome>> similarBiomes, ExtendedHolder<Biome> to) {
             return biome(
                 BiomePredicate.of(from)
                     .and(BiomePredicate.neighborsMatch(
@@ -169,35 +171,35 @@ public class PredicateOverlayLayer extends SingleParentLayer {
     private interface ConfiguredTarget {
         BiomePredicate predicate();
         Layer layer();
-        ExtendedIdentifier sample(int x, int z);
-        void addPossibleBiomes(Set<ExtendedIdentifier> biomes);
+        ExtendedHolder<Biome> sample(int x, int z);
+        void addPossibleBiomes(Set<ExtendedHolder<Biome>> biomes);
     }
 
     private record ConfiguredLayerTarget(BiomePredicate predicate, Layer layer) implements ConfiguredTarget {
         @Override
-        public ExtendedIdentifier sample(int x, int z) {
+        public ExtendedHolder<Biome> sample(int x, int z) {
             return this.layer.sample(x, z);
         }
 
         @Override
-        public void addPossibleBiomes(Set<ExtendedIdentifier> biomes) {
+        public void addPossibleBiomes(Set<ExtendedHolder<Biome>> biomes) {
             layer.addPossibleBiomesRecursive(biomes);
         }
     }
 
-    private record ConfiguredBiomeTarget(BiomePredicate predicate, ExtendedIdentifier biome) implements ConfiguredTarget {
+    private record ConfiguredBiomeTarget(BiomePredicate predicate, ExtendedHolder<Biome> biome) implements ConfiguredTarget {
         @Override
         public Layer layer() {
             return null;
         }
 
         @Override
-        public ExtendedIdentifier sample(int x, int z) {
+        public ExtendedHolder<Biome> sample(int x, int z) {
             return this.biome;
         }
 
         @Override
-        public void addPossibleBiomes(Set<ExtendedIdentifier> biomes) {
+        public void addPossibleBiomes(Set<ExtendedHolder<Biome>> biomes) {
             biomes.add(biome);
         }
     }

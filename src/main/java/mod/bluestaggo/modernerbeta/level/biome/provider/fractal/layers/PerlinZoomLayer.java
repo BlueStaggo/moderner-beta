@@ -1,10 +1,11 @@
 package mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers;
 
 import com.mojang.serialization.Codec;
+import mod.bluestaggo.modernerbeta.registry.ExtendedHolder;
 import mod.bluestaggo.modernerbeta.settings.component.PerlinNoiseSettings;
-import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.util.noise.PerlinNoise;
+import net.minecraft.world.level.biome.Biome;
 
 import java.util.Random;
 
@@ -53,7 +54,7 @@ public class PerlinZoomLayer extends SingleParentLayer {
     }
 
     @Override
-    protected ExtendedIdentifier generate(int x, int z) {
+    protected ExtendedHolder<Biome> generate(int x, int z) {
         int zoomedX = (int)Math.round((x / this.scale) + this.xOffsetNoise.sample(x * this.variation / this.scale, z * this.variation / this.scale) * this.strength);
         int zoomedZ = (int)Math.round((z / this.scale) + this.zOffsetNoise.sample(x * this.variation / this.scale, z * this.variation / this.scale) * this.strength);
         return this.parentLayer.sample(zoomedX, zoomedZ);

@@ -11,6 +11,7 @@ import mod.bluestaggo.modernerbeta.api.level.biome.BiomeResolverBlock;
 import mod.bluestaggo.modernerbeta.api.level.biome.BiomeResolverExtendedId;
 import mod.bluestaggo.modernerbeta.level.biome.injection.BiomeInjectionRule;
 import mod.bluestaggo.modernerbeta.level.biome.injection.InjectionNeeds;
+import mod.bluestaggo.modernerbeta.registry.ExtendedHolder;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.api.level.cavebiome.CaveBiomeProvider;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
@@ -226,12 +227,12 @@ public class ModernBetaBiomeSource extends BiomeSource {
         return region.getBiome(pos);
     }
 
-    public ExtendedIdentifier getBiomeForHeightGen(int biomeX, int biomeY, int biomeZ) {
-        ExtendedIdentifier biome;
+    public ExtendedHolder<Biome> getBiomeForHeightGen(int biomeX, int biomeY, int biomeZ) {
+        ExtendedHolder<Biome> biome;
         if (this.biomeProvider instanceof BiomeResolverExtendedId biomeResolver) {
             biome = biomeResolver.getExtendedBiomeId(biomeX, biomeY, biomeZ);
         } else {
-            biome = ExtendedIdentifier.of(this.biomeProvider.getBiome(biomeX, biomeY, biomeZ).unwrapKey().orElseThrow().location());
+            biome = new ExtendedHolder<>(this.biomeProvider.getBiome(biomeX, biomeY, biomeZ));
         }
 
 //        this.chunkGenerator.getBiomeInjector().getOptionalBiome(null, biomeX, biomeY, biomeZ, )

@@ -2,10 +2,12 @@ package mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers;
 
 import com.mojang.serialization.Codec;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeIds;
+import mod.bluestaggo.modernerbeta.registry.ExtendedHolder;
 import mod.bluestaggo.modernerbeta.util.CodecUtil;
 import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomes;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
 
 import java.util.*;
@@ -16,15 +18,15 @@ public class MixRiverLayer extends SingleParentLayer {
         instance -> fillSingleParentLayerFields(instance)
             .and(instance.group(
                 Codec.STRING.fieldOf("riverSource").forGetter(layer -> layer.riverSource),
-                CodecUtil.set(ExtendedIdentifier.CODEC).fieldOf("ignoredBiomes").forGetter(layer -> layer.ignoredBiomes),
-                Codec.unboundedMap(ExtendedIdentifier.CODEC, ExtendedIdentifier.CODEC).fieldOf("biomeSpecificRivers").forGetter(layer -> layer.biomeSpecificRivers)
+                CodecUtil.set(ExtendedBiomeIds.CODEC).fieldOf("ignoredBiomes").forGetter(layer -> layer.ignoredBiomes),
+                Codec.unboundedMap(ExtendedBiomeIds.CODEC, ExtendedBiomeIds.CODEC).fieldOf("biomeSpecificRivers").forGetter(layer -> layer.biomeSpecificRivers)
             ))
             .apply(instance, MixRiverLayer::new)
     );
 
     private final String riverSource;
-    private final Set<ExtendedIdentifier> ignoredBiomes;
-    private final Map<ExtendedIdentifier, ExtendedIdentifier> biomeSpecificRivers;
+    private final Set<ExtendedHolder<Biome>> ignoredBiomes;
+    private final Map<ExtendedHolder<Biome>, ExtendedHolder<Biome>> biomeSpecificRivers;
 
     private transient Layer riverSourceLayer;
 
@@ -45,7 +47,7 @@ public class MixRiverLayer extends SingleParentLayer {
         ));
     }
 
-    public MixRiverLayer(String id, long seed, String parent, String riverSource, Set<ExtendedIdentifier> ignoredBiomes, Map<ExtendedIdentifier, ExtendedIdentifier> biomeSpecificRivers) {
+    public MixRiverLayer(String id, long seed, String parent, String riverSource, Set<ExtendedHolder<Biome>> ignoredBiomes, Map<ExtendedHolder<Biome>, ExtendedHolder<Biome>> biomeSpecificRivers) {
         super(id, seed, parent);
         this.riverSource = riverSource;
         this.ignoredBiomes = ignoredBiomes;
@@ -69,14 +71,14 @@ public class MixRiverLayer extends SingleParentLayer {
     }
 
     @Override
-    protected ExtendedIdentifier generate(int x, int z) {
-        ExtendedIdentifier base = this.parentLayer.sample(x, z);
+    protected ExtendedHolder<Biome> generate(int x, int z) {
+        ExtendedHolder<Biome> base = this.parentLayer.sample(x, z);
         if (this.ignoredBiomes.contains(base)) {
             return base;
         }
 
-        ExtendedIdentifier river = this.riverSourceLayer.sample(x, z);
-        if (!river.equals(ExtendedBiomeIds.RIVER)) {
+        ExtendedHolder<Biome> river = this.riverSourceLayer.sample(x, z);
+        if (!river.is(ExtendedBiomeIds.RIVER)) {
             return base;
         }
 
@@ -84,9 +86,9 @@ public class MixRiverLayer extends SingleParentLayer {
     }
 
     @Override
-    protected void addPossibleBiomes(Set<ExtendedIdentifier> biomes) {
+    protected void addPossibleBiomes(Set<ExtendedHolder<Biome>> biomes) {
         biomes.add(ExtendedBiomeIds.RIVER);
-        for (Map.Entry<ExtendedIdentifier, ExtendedIdentifier> entry : this.biomeSpecificRivers.entrySet()) {
+        for (Map.Entry<ExtendedHolder<Biome>, ExtendedHolder<Biome>> entry : this.biomeSpecificRivers.entrySet()) {
             if (biomes.contains(entry.getKey())) {
                 biomes.add(entry.getValue());
             }

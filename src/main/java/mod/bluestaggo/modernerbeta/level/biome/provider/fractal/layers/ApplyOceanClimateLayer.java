@@ -2,8 +2,10 @@ package mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers;
 
 import com.mojang.serialization.Codec;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeIds;
+import mod.bluestaggo.modernerbeta.registry.ExtendedHolder;
 import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
+import net.minecraft.world.level.biome.Biome;
 
 import java.util.List;
 import java.util.Map;
@@ -55,21 +57,21 @@ public class ApplyOceanClimateLayer extends SingleParentLayer {
     }
 
     @Override
-    protected ExtendedIdentifier generate(int x, int z) {
-        ExtendedIdentifier base = this.parentLayer.sample(x, z);
-        if (!BASE_OCEANS.contains(base)) {
+    protected ExtendedHolder<Biome> generate(int x, int z) {
+        ExtendedHolder<Biome> base = this.parentLayer.sample(x, z);
+        if (BASE_OCEANS.stream().noneMatch(base::is)) { //TODO: is stream a good idea?
             return base;
         }
 
-        ExtendedIdentifier ocean = this.oceanClimateLayer.sample(x, z);
+        ExtendedHolder<Biome> ocean = this.oceanClimateLayer.sample(x, z);
 
         if (this.applyCoasts) {
-            boolean isWarm = ExtendedBiomeIds.WARM_OCEAN.equals(ocean);
-            if (isWarm || ExtendedBiomeIds.FROZEN_OCEAN.equals(ocean)) {
+            boolean isWarm = ocean.is(ExtendedBiomeIds.WARM_OCEAN);
+            if (isWarm || ocean.is(ExtendedBiomeIds.FROZEN_OCEAN)) {
                 for (int ox = -8; ox <= 8; ox += 4) {
                     for (int oz = -8; oz <= 8; oz += 4) {
-                        ExtendedIdentifier nearBiome = this.parentLayer.sample(x + ox, z + oz);
-                        if (!BASE_OCEANS.contains(nearBiome)) {
+                        ExtendedHolder<Biome> nearBiome = this.parentLayer.sample(x + ox, z + oz);
+                        if (BASE_OCEANS.stream().noneMatch(nearBiome::is)) {
                             return isWarm ? ExtendedBiomeIds.LUKEWARM_OCEAN : ExtendedBiomeIds.COLD_OCEAN;
                         }
                     }
@@ -77,8 +79,12 @@ public class ApplyOceanClimateLayer extends SingleParentLayer {
             }
         }
 
-        if (ExtendedBiomeIds.DEEP_OCEAN.equals(base)) {
-            ocean = DEEP_MAP.getOrDefault(ocean, ocean);
+        if (base.is(ExtendedBiomeIds.DEEP_OCEAN)) {
+            ExtendedIdentifier deep = DEEP_MAP.get(ocean.unwrapExtendedKey().orElseThrow());
+
+            if (deep != null) {
+                ocean = deep;
+            }
         }
         return ocean;
     }

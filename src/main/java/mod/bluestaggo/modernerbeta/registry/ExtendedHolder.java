@@ -4,6 +4,7 @@ package mod.bluestaggo.modernerbeta.registry;
 import com.mojang.datafixers.util.Either;
 import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderOwner;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -15,6 +16,10 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 public record ExtendedHolder<T>(Holder<T> base, String ext, boolean weak) implements Holder<T> {
+    public ExtendedHolder(Holder<T> base) {
+        this(base, "", false);
+    }
+
     @Override
     public T value() {
         return this.base.value();
@@ -35,6 +40,10 @@ public record ExtendedHolder<T>(Holder<T> base, String ext, boolean weak) implem
     @Override
     public boolean is(ResourceLocation key) {
         return this.base.is(key);
+    }
+
+    public boolean is(ExtendedIdentifier key) {
+        return this.base.is(key.baseId()) && (this.weak || key.weak() || Objects.equals(this.ext, key.ext()));
     }
 
     @Override

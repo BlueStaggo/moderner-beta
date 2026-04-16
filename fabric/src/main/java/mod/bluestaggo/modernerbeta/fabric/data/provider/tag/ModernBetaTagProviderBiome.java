@@ -501,6 +501,26 @@ public class ModernBetaTagProviderBiome extends FabricTagProvider<Biome> {
                 Biomes.DEEP_COLD_OCEAN,
                 Biomes.DEEP_LUKEWARM_OCEAN
             );
+
+        this.builder(REPLACE_WITH_FROZEN_OCEAN)
+            .addTag(IS_TUNDRA)
+            .addTag(IS_TAIGA);
+
+        this.builder(REPLACE_WITH_COLD_OCEAN)
+            .addTag(IS_SWAMP);
+
+        this.builder(REPLACE_WITH_OCEAN)
+            .addTag(IS_DESERT)
+            .addTag(IS_FOREST)
+            .addTag(IS_PLAINS)
+            .addTag(IS_SAVANNA)
+            .addTag(IS_SHRUBLAND);
+
+        this.builder(REPLACE_WITH_LUKEWARM_OCEAN)
+            .addTag(IS_SEASONAL_FOREST);
+
+        this.builder(REPLACE_WITH_WARM_OCEAN)
+            .addTag(IS_RAINFOREST);
     }
     
     private void configureVanilla(Provider provider) {

@@ -84,12 +84,20 @@ public class SurfaceRuleDataMixin {
         method = "overworldLike",
         at = @At(
                 value = "INVOKE",
-                target = "Lnet/minecraft/world/level/levelgen/SurfaceRules;isBiome([Lnet/minecraft/resources/ResourceKey;)Lnet/minecraft/world/level/levelgen/SurfaceRules$ConditionSource;"
+                target = "Lnet/minecraft/world/level/levelgen/SurfaceRules;isBiome("
+                        //? >=26.2
+                        //+ "Lnet/minecraft/core/HolderGetter;"
+                        + "[Lnet/minecraft/resources/ResourceKey;)Lnet/minecraft/world/level/levelgen/SurfaceRules$ConditionSource;"
         )
     )
-    private static SurfaceRules.ConditionSource addModernBetaVariantsToRulePredicates(ResourceKey<Biome>[] target, Operation<SurfaceRules.ConditionSource> original) {
+    private static SurfaceRules.ConditionSource addModernBetaVariantsToRulePredicates(
+        //? if >=26.2
+        //net.minecraft.core.HolderGetter<Biome> biomes,
+        ResourceKey<Biome>[] target,
+        Operation<SurfaceRules.ConditionSource> original
+    ) {
         if (!useModernBetaSurfaceRules())
-            return original.call((Object) target);
+            return original.call(/*? >=26.2 {*//*biomes, *//*?} else {*/(Object)/*?}*/ target);
 
         List<ResourceKey<Biome>> targets = new ArrayList<>(Arrays.asList(target));
 
@@ -110,6 +118,6 @@ public class SurfaceRuleDataMixin {
             targets.add(ModernBetaBiomes.BETA_LUKEWARM_OCEAN);
         }
 
-        return original.call((Object) targets.toArray(new ResourceKey[0]));
+        return original.call(/*? >=26.2 {*//*biomes, *//*?} else {*/(Object)/*?}*/ targets.toArray(new ResourceKey[0]));
     }
 }

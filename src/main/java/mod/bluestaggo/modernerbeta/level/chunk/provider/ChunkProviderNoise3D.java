@@ -671,7 +671,7 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
     }
     
     @Override
-    protected PerlinOctaveNoise getForestOctaveNoise() {
+    protected OctaveNoise getForestOctaveNoise() {
         return this.forestOctaveNoise;
     }
 

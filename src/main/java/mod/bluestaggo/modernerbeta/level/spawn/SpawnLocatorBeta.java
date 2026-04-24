@@ -6,7 +6,7 @@ import mod.bluestaggo.modernerbeta.api.level.spawn.SpawnLocator;
 import mod.bluestaggo.modernerbeta.tags.ModernBetaBiomeTags;
 import mod.bluestaggo.modernerbeta.util.LoggingUtil;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkHeightmap;
-import mod.bluestaggo.modernerbeta.util.noise.PerlinOctaveNoise;
+import mod.bluestaggo.modernerbeta.util.noise.OctaveNoise;
 import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomeSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -26,9 +26,9 @@ public class SpawnLocatorBeta implements SpawnLocator {
     private final Random rand;
     
     private final ChunkProvider chunkProvider;
-    private final PerlinOctaveNoise beachOctaveNoise;
+    private final OctaveNoise beachOctaveNoise;
     
-    public SpawnLocatorBeta(ChunkProvider chunkProvider, PerlinOctaveNoise beachOctaveNoise, Random rand) {
+    public SpawnLocatorBeta(ChunkProvider chunkProvider, OctaveNoise beachOctaveNoise, Random rand) {
         this.rand = rand;
         
         this.chunkProvider = chunkProvider;

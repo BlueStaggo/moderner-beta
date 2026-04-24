@@ -1,6 +1,6 @@
 package mod.bluestaggo.modernerbeta.level.feature.placement;
 
-import mod.bluestaggo.modernerbeta.util.noise.PerlinOctaveNoise;
+import mod.bluestaggo.modernerbeta.util.noise.OctaveNoise;
 import mod.bluestaggo.modernerbeta.level.feature.placement.noise.NoiseBasedCount;
 import mod.bluestaggo.modernerbeta.level.feature.placement.noise.NoiseBasedCountBeta;
 import net.minecraft.core.BlockPos;
@@ -31,5 +31,5 @@ public abstract class NoiseBasedCountPlacementModifier extends RepeatingPlacemen
         return this.noiseDecorator.sample(chunkX, chunkZ, random) + this.count + ((random.nextFloat() < this.extraChance) ? this.extraCount : 0);
     }
 
-    public abstract void setOctaves(PerlinOctaveNoise octaves);
+    public abstract void setOctaves(OctaveNoise octaves);
 }

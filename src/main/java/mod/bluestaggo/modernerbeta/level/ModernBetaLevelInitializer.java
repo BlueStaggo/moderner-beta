@@ -28,12 +28,12 @@ public class ModernBetaLevelInitializer {
             ChunkGenerator chunkGenerator = dimensionOptions.generator();
             BiomeSource biomeSource = chunkGenerator.getBiomeSource();
             
-            if (chunkGenerator instanceof ModernBetaChunkGenerator modernBetaChunkGenerator) {
-                modernBetaChunkGenerator.initProvider(seed);
-            }
-            
             if (biomeSource instanceof ModernBetaBiomeSource modernBetaBiomeSource) {
                 modernBetaBiomeSource.initProvider(seed);
+            }
+
+            if (chunkGenerator instanceof ModernBetaChunkGenerator modernBetaChunkGenerator) {
+                modernBetaChunkGenerator.initProvider(seed);
             }
         });
     }

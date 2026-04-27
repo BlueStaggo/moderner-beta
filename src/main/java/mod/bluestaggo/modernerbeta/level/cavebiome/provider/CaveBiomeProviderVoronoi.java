@@ -27,7 +27,7 @@ public class CaveBiomeProviderVoronoi extends CaveBiomeProvider implements CaveC
     public CaveBiomeProviderVoronoi(ModernBetaSettings settings, HolderGetter<Biome> biomeRegistry, long seed) {
         super(settings, biomeRegistry, seed);
 
-        CaveBiomeVoronoi voronoi = this.settings.getOrThrow(SettingsComponentTypes.CAVE_BIOME_VORONOI);
+        CaveBiomeVoronoi voronoi = this.settings.getOrDefault(SettingsComponentTypes.CAVE_BIOME_VORONOI);
         this.climateSampler = new VoronoiCaveClimateSampler(
             seed,
             voronoi.verticalScale(),

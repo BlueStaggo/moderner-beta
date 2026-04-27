@@ -10,6 +10,7 @@ import mod.bluestaggo.modernerbeta.mixin.ChunkGeneratorStructureStateAccessor;
 import mod.bluestaggo.modernerbeta.mixin.NoiseBasedChunkGeneratorAccessor;
 import mod.bluestaggo.modernerbeta.level.biome.injection.BiomeInjectionRule;
 import mod.bluestaggo.modernerbeta.mixin.SequenceRuleSourceAccessor;
+import mod.bluestaggo.modernerbeta.registry.DefferedDirectHolder;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.api.level.chunk.ChunkProvider;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
@@ -101,6 +102,11 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
             this.biomeSource instanceof ModernBetaBiomeSource modernBetaBiomeSource
                 ? new BiomeInjectionHandler(this, modernBetaBiomeSource) : null);
 
+        NoiseBasedChunkGeneratorAccessor accessor = (NoiseBasedChunkGeneratorAccessor) this;
+        Holder<NoiseGeneratorSettings> settings = DefferedDirectHolder.of(this::noiseGeneratorSettings);
+        accessor.setSettings(settings);
+        accessor.setGlobalFluidPicker(Suppliers.memoize(() -> accessor.invokeCreateFluidPicker(settings.value())));
+
         if (this.biomeSource instanceof ModernBetaBiomeSource modernBetaBiomeSource) {
             modernBetaBiomeSource.setChunkGenerator(this);
         }
@@ -120,7 +126,8 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
         return chunkProviderSettings;
     }
 
-    private static Holder<NoiseGeneratorSettings> generatorSettings(ModernBetaSettings chunkSettings) {
+    private NoiseGeneratorSettings noiseGeneratorSettings() {
+        ModernBetaSettings chunkSettings = this.chunkSettings.mapPreset(this.presetRegistry, ModernBetaSettingsPreset::chunkSettings);
         Holder<NoiseGeneratorSettings> generatorSettings = chunkSettings.getOrDefault(SettingsComponentTypes.NOISE_GENERATOR_SETTINGS);
 
         NoiseSettings noiseSettings = chunkSettings.get(SettingsComponentTypes.NOISE_SETTINGS);
@@ -134,10 +141,10 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
                 .value()
                 .defaultBlockState();
 
-        if (noiseSettings == null && seaLevel == null && !deepslateEnabled)
-            return generatorSettings;
-
         NoiseGeneratorSettings unboxed = generatorSettings.value();
+        if (noiseSettings == null && seaLevel == null && !deepslateEnabled)
+            return unboxed;
+
         SurfaceRules.RuleSource surfaceRules = unboxed.surfaceRule();
         if (deepslateEnabled) {
             SurfaceRules.RuleSource deepslateRule = SurfaceRules.ifTrue(
@@ -173,14 +180,12 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
             unboxed.oreVeinsEnabled(),
             unboxed.useLegacyRandomSource()
         );
-        generatorSettings = Holder.direct(unboxed);
 
-        return generatorSettings;
+        return unboxed;
     }
 
     public void initProvider(long seed) {
         ModernBetaSettings chunkSettings = this.chunkSettings.mapPreset(this.presetRegistry, ModernBetaSettingsPreset::chunkSettings);
-        ((NoiseBasedChunkGeneratorAccessor) this).setSettings(generatorSettings(chunkSettings));
 
         this.chunkProvider = ModernBetaRegistries.CHUNK
             //? if >=1.21.2 {

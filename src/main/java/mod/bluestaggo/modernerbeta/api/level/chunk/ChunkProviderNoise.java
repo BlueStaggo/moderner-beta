@@ -462,6 +462,9 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
                     for (int subY = this.noiseResolutionVertical - 1; subY >= 0; --subY) {
                         int y = subY + (subChunkY + minimumCellY) * this.noiseResolutionVertical;
                         int localY = y & 0xF;
+
+                        if (y < worldMinY)
+                            continue;
                         
                         int sectionNdx = chunk.getSectionIndex(y);
                         if (sections != sectionNdx) {

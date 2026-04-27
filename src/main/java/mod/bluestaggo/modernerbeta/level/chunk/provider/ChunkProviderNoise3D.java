@@ -109,12 +109,14 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
 
         this.forestOctaveNoise = new PerlinOctaveNoise(this.random, noiseScale.forestNoiseOctaves(), perlinSettings);
 
-        this.climateSampler = !this.noise3DSettings.climateHeightScaling() ? null
-            : (this.chunkGenerator.getBiomeSource() instanceof ModernBetaBiomeSource biomeSource
-                    && biomeSource.getBiomeProvider() instanceof ClimateSampler climateSampler
-            ) ? climateSampler
-            : this.noise3DSettings.pocketEditionRng() ? new BiomeProviderPE(ModernBetaSettings.empty(), null, seed)
-            : new BiomeProviderBeta(ModernBetaSettings.empty(), null, seed);
+        this.climateSampler = !this.noise3DSettings.climateHeightScaling() ? null :
+            this.chunkGenerator.getBiomeSource() instanceof ModernBetaBiomeSource biomeSource
+            ? biomeSource.getBiomeProvider() instanceof ClimateSampler climateSampler
+                ? climateSampler
+                : this.noise3DSettings.pocketEditionRng()
+                    ? new BiomeProviderPE(biomeSource.getBiomeProvider().getSettings(), null, seed)
+                    : new BiomeProviderBeta(biomeSource.getBiomeProvider().getSettings(), null, seed)
+            : null;
     }
     
     @Override

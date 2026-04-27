@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.api.level.biome.climate.TemperatureHeightScaling;
+import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomes;
 import mod.bluestaggo.modernerbeta.level.biome.injection.BiomeInjectionRule;
 import mod.bluestaggo.modernerbeta.level.biome.injection.BiomeInjectionRules;
 import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaNoiseGeneratorSettings;
@@ -19,6 +20,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
 import net.minecraft.world.level.levelgen.NoiseSettings;
 
@@ -58,7 +60,7 @@ public class SettingsComponentTypes {
     public static SettingsComponentType<StructureModifiers> STRUCTURE_MODIFERS;
 
     // Biome provider
-    public static SettingsComponentType<ResourceLocation> SINGLE_BIOME;
+    public static SettingsComponentType<Holder<Biome>> SINGLE_BIOME;
     public static SettingsComponentType<ClimateScale> CLIMATE_SCALE;
     public static SettingsComponentType<Map<String, ClimateMapping>> CLIMATE_MAPPINGS;
     public static SettingsComponentType<ClimateDistribution> CLIMATE_DISTRIBUTION;
@@ -229,20 +231,22 @@ public class SettingsComponentTypes {
             ValidationResult.Valid::new);
 
         // Biome provider
-        SINGLE_BIOME = register(
+        SINGLE_BIOME = registerWithDefaultGetter(
             ModernBetaBuiltInTypes.SettingsComponentType.SINGLE_BIOME.id,
-            ResourceLocation.CODEC,
-            ModernerBeta.createId("beta_plains"),
+            Biome.CODEC,
+            (settings, registry) ->
+                registry.lookup(Registries.BIOME).orElseThrow().getter().getOrThrow(ModernBetaBiomes.BETA_PLAINS),
             ValidationResult.Valid::new);
         CLIMATE_SCALE = register(
             ModernBetaBuiltInTypes.SettingsComponentType.CLIMATE_SCALE.id,
             ClimateScale.CODEC,
             ClimateScale.DEFAULT,
             ValidationResult.Valid::new);
-        CLIMATE_MAPPINGS = register(
+        CLIMATE_MAPPINGS = registerWithDefaultGetter(
             ModernBetaBuiltInTypes.SettingsComponentType.CLIMATE_MAPPINGS.id,
             ClimateMapping.MAP_CODEC,
-            ClimateMapping.DEFAULT_MAPPINGS,
+            (settings, registry) ->
+                ClimateMapping.getDefaultMappings(registry),
             component -> {
                 for (Map.Entry<String, ClimateMapping> entry : component.entrySet()) {
                     String base = entry.getKey();
@@ -298,10 +302,11 @@ public class SettingsComponentTypes {
             ValidationResult.Valid::new);
 
         // Cave biome provider
-        CAVE_BIOME_VORONOI = register(
+        CAVE_BIOME_VORONOI = registerWithDefaultGetter(
             ModernBetaBuiltInTypes.SettingsComponentType.CAVE_BIOME_VORONOI.id,
             CaveBiomeVoronoi.CODEC,
-            CaveBiomeVoronoi.DEFAULT,
+            (settings, registries) ->
+                CaveBiomeVoronoi.getDefault(registries),
             ValidationResult.Valid::new);
 
         // Config

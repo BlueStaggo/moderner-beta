@@ -1,12 +1,9 @@
 package mod.bluestaggo.modernerbeta.level.biome.provider.climate;
 
-import net.minecraft.resources.ResourceKey;
+import net.minecraft.core.Holder;
 import net.minecraft.world.level.biome.Biome;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ClimateMap {
     private final Map<String, ClimateMapping> climateMap;
@@ -22,20 +19,20 @@ public class ClimateMap {
         return new LinkedHashMap<>(this.climateMap);
     }
     
-    public ResourceKey<Biome> getBiome(double temp, double rain) {
+    public Holder<Biome> getBiome(double temp, double rain) {
         int t = (int) (temp * 63D);
         int r = (int) (rain * 63D);
 
-        return this.climateTable[t + r * 64].getBiome();
+        return this.climateTable[t + r * 64].biome();
     }
     
-    public List<ResourceKey<Biome>> getBiomeKeys() {
-        List<ResourceKey<Biome>> biomeKeys = new ArrayList<>();
+    public Set<Holder<Biome>> getBiomes() {
+        Set<Holder<Biome>> biomes = new HashSet<>();
         
         this.climateMap.values().forEach(mapping ->
-                biomeKeys.add(mapping.getBiome()));
+                biomes.add(mapping.biome()));
         
-        return biomeKeys;
+        return biomes;
     }
     
     private void generateBiomeLookup() {

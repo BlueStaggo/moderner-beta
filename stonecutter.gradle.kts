@@ -152,6 +152,7 @@ stonecutter.parameters {
             replace(".setScreen(", ".gui.setScreen(")
             replace("::setScreen", ".gui::setScreen")
             replace("this.minecraft.screen", "this.minecraft.gui.screen()")
+            replace("markPosForPostprocessing", "markPosForPostProcessing")
         }
 
         regex(eval(current.version, ">=26.2")) {

@@ -256,7 +256,7 @@ public class ModernBetaSettingsPresetScreen<T extends NameAndDescriptionItem> ex
 
                 this.draw(graphics, x, y, this.presetTexture);
 
-                if (minecraft.options.touchscreen().get() || hovered) {
+                if (/*? <26.2 {*/minecraft.options.touchscreen().get() || /*?}*/ hovered) {
                     boolean isMouseHovering = (mouseX - x) < ICON_SIZE;
 
                     graphics.fill(x, y, x + ICON_SIZE, y + ICON_SIZE, -1601138544);

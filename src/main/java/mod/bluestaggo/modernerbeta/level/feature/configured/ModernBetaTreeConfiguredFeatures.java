@@ -29,18 +29,23 @@ public class ModernBetaTreeConfiguredFeatures {
     public static void bootstrap(BootstrapContext<?> context) {
         BootstrapContext<ConfiguredFeature<?, ?>> featureContext = (BootstrapContext<ConfiguredFeature<?, ?>>)context;
 
-        FeatureUtils.register(featureContext, FANCY_OAK, Feature.TREE, getOldFancyTreeConfig());
-        FeatureUtils.register(featureContext, OAK_14A_08, Feature.TREE, getOak14a08Config(false));
-        FeatureUtils.register(featureContext, OAK_14A_08_BEES_0002, Feature.TREE, getOak14a08Config(true));
+        FeatureUtils.register(featureContext, FANCY_OAK, Feature.TREE, getOldFancyTreeConfig(context));
+        FeatureUtils.register(featureContext, OAK_14A_08, Feature.TREE, getOak14a08Config(context, false));
+        FeatureUtils.register(featureContext, OAK_14A_08_BEES_0002, Feature.TREE, getOak14a08Config(context, true));
     }
 
-    private static TreeConfiguration getOak14a08Config(boolean bees) {
+    private static TreeConfiguration getOak14a08Config(BootstrapContext<?> context, boolean bees) {
+        //? >=26.2
+        //net.minecraft.core.HolderGetter<net.minecraft.world.level.biome.Biome> biomes = context.lookup(net.minecraft.core.registries.Registries.BIOME);
+
         TreeConfiguration.TreeConfigurationBuilder builder = new TreeConfiguration.TreeConfigurationBuilder(
                 BlockStateProvider.simple(Blocks.OAK_LOG),
                 new StraightTrunkPlacer(4, 1, 0),
                 BlockStateProvider.simple(Blocks.OAK_LEAVES),
                 new Oak14a08FoliagePlacer(ConstantInt.of(1), ConstantInt.of(0), 2),
                 new TwoLayersFeatureSize(1, 0, 1)
+                //? >=26.2
+                //, TreeConfiguration.defaultPlaceBelowTreeTrunkProvider(biomes)
         );
 
         if (bees) {
@@ -50,13 +55,18 @@ public class ModernBetaTreeConfiguredFeatures {
         return builder.build();
     }
 
-    private static TreeConfiguration getOldFancyTreeConfig() {
+    private static TreeConfiguration getOldFancyTreeConfig(BootstrapContext<?> context) {
+        //? >=26.2
+        //net.minecraft.core.HolderGetter<net.minecraft.world.level.biome.Biome> biomes = context.lookup(net.minecraft.core.registries.Registries.BIOME);
+
         TreeConfiguration.TreeConfigurationBuilder builder = new TreeConfiguration.TreeConfigurationBuilder(
                 BlockStateProvider.simple(Blocks.OAK_LOG),
                 new BetaLargeOakTrunkPlacer(5, 11, 0, false),
                 BlockStateProvider.simple(Blocks.OAK_LEAVES),
                 new BetaLargeOakFoliagePlacer(ConstantInt.of(2), ConstantInt.of(4), 4),
                 new TwoLayersFeatureSize(0, 0, 0, OptionalInt.of(8))
+                //? >=26.2
+                //, TreeConfiguration.defaultPlaceBelowTreeTrunkProvider(biomes)
         );
 
         return builder.build();

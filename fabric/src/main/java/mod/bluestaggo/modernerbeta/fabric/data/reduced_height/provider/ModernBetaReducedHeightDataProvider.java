@@ -279,10 +279,17 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
         DensityFunction spaghettiThickness = DensityFunctions.mappedNoise(
                 noiseParametersLookup.getOrThrow(Noises.SPAGHETTI_3D_THICKNESS), -0.065, -0.088);
 
+        //? >=26.2 {
+        /*DensityFunction weirdSpaghetti1 = NoiseRouterData.QuantizedSpaghettiRarity.wrapRarity3d(spaghettiRarity,
+                noiseParametersLookup.getOrThrow(Noises.SPAGHETTI_3D_1));
+        DensityFunction weirdSpaghetti2 = NoiseRouterData.QuantizedSpaghettiRarity.wrapRarity3d(spaghettiRarity,
+                noiseParametersLookup.getOrThrow(Noises.SPAGHETTI_3D_2));
+        *///? } else {
         DensityFunction weirdSpaghetti1 = DensityFunctions.weirdScaledSampler(spaghettiRarity,
                 noiseParametersLookup.getOrThrow(Noises.SPAGHETTI_3D_1), DensityFunctions.WeirdScaledSampler.RarityValueMapper.TYPE1);
         DensityFunction weirdSpaghetti2 = DensityFunctions.weirdScaledSampler(spaghettiRarity,
                 noiseParametersLookup.getOrThrow(Noises.SPAGHETTI_3D_2), DensityFunctions.WeirdScaledSampler.RarityValueMapper.TYPE1);
+        //? }
 
         DensityFunction mainSpaghetti = DensityFunctions.add(DensityFunctions.max(weirdSpaghetti1, weirdSpaghetti2), spaghettiThickness).clamp(-1.0, 1.0);
         DensityFunction spaghettiRoughness = new DensityFunctions.HolderHolder(
@@ -329,8 +336,13 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
     ) {
         DensityFunction spaghettiModulator = DensityFunctions.noise(noiseParametersLookup.getOrThrow(
                 Noises.SPAGHETTI_2D_MODULATOR), 2.0, 1.0);
+        //? if >=26.2 {
+        /*DensityFunction weirdSpaghetti = NoiseRouterData.QuantizedSpaghettiRarity.wrapRarity2d(spaghettiModulator,
+                noiseParametersLookup.getOrThrow(Noises.SPAGHETTI_2D));
+        *///? } else {
         DensityFunction weirdSpaghetti = DensityFunctions.weirdScaledSampler(spaghettiModulator, noiseParametersLookup.getOrThrow(
                 Noises.SPAGHETTI_2D), DensityFunctions.WeirdScaledSampler.RarityValueMapper.TYPE2);
+        //? }
         DensityFunction spaghettiElevation = DensityFunctions.mappedNoise(noiseParametersLookup.getOrThrow(
                 Noises.SPAGHETTI_2D_ELEVATION), 0.0, Math.floorDiv(-64, 8), 8.0);
         DensityFunction spaghettiThicknessModulator = new DensityFunctions.HolderHolder(

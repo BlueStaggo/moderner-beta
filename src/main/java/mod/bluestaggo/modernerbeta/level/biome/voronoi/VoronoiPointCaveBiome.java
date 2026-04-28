@@ -34,7 +34,7 @@ public record VoronoiPointCaveBiome(Optional<Holder<Biome>> biome, double temp, 
             new VoronoiPointCaveBiome(biomeRegistry.getOrThrow(Biomes.LUSH_CAVES), 0.1, 0.5, 0.75),
             //? if >=26.2 {
             /*new VoronoiPointCaveBiome(Optional.empty(), 0.35, 0.5, 0.75),
-            new VoronoiPointCaveBiome(Biomes.SULFUR_CAVES, 0.5, 0.5, 0.75),
+            new VoronoiPointCaveBiome(biomeRegistry.getOrThrow(Biomes.SULFUR_CAVES), 0.5, 0.5, 0.75),
             new VoronoiPointCaveBiome(Optional.empty(), 0.75, 0.5, 0.75),
             *///? } else {
             new VoronoiPointCaveBiome(Optional.empty(), 0.5, 0.5, 0.75),
@@ -48,7 +48,7 @@ public record VoronoiPointCaveBiome(Optional<Holder<Biome>> biome, double temp, 
             new VoronoiPointCaveBiome(biomeRegistry.getOrThrow(Biomes.DEEP_DARK), 0.5, 0.5, 0.25),
             new VoronoiPointCaveBiome(Optional.empty(), 0.6, 0.5, 0.25),
             //? if >=26.2 {
-            /*new VoronoiPointCaveBiome(Biomes.SULFUR_CAVES, 0.65, 0.5, 0.25),
+            /*new VoronoiPointCaveBiome(biomeRegistry.getOrThrow(Biomes.SULFUR_CAVES), 0.65, 0.5, 0.25),
             new VoronoiPointCaveBiome(Optional.empty(), 0.75, 0.5, 0.25),
             *///? }
             new VoronoiPointCaveBiome(biomeRegistry.getOrThrow(Biomes.DRIPSTONE_CAVES), 0.8, 0.5, 0.25),

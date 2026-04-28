@@ -8,10 +8,12 @@ import mod.bluestaggo.modernerbeta.level.biome.injection.predicates.BiomeInSetIn
 import mod.bluestaggo.modernerbeta.level.biome.injection.predicates.SurfaceBelowSeaLevelInjectionPredicate;
 import mod.bluestaggo.modernerbeta.level.biome.injection.predicates.BelowSurfaceInjectionPredicate;
 import mod.bluestaggo.modernerbeta.level.biome.injection.predicates.OutOfBoundsInjectionPredicate;
+import mod.bluestaggo.modernerbeta.tags.ModernBetaBiomeTags;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.RegistryOps;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
 
@@ -69,70 +71,24 @@ public final class BiomeInjectionRules {
     public static BiomeInjectionRule makeBetaOceanRule(RegistryOps.RegistryInfoLookup registries, boolean pe) {
         HolderGetter<Biome> biomeRegistry = registries.lookup(Registries.BIOME).orElseThrow().getter();
 
-        ImmutableMap.Builder<Holder<Biome>, Holder<Biome>> builder = ImmutableMap.builder();
-        
-        builder.put(
-            biomeRegistry.getOrThrow(!pe ? ModernBetaBiomes.BETA_DESERT : ModernBetaBiomes.PE_DESERT),
-            biomeRegistry.getOrThrow(!pe ? ModernBetaBiomes.BETA_OCEAN : ModernBetaBiomes.PE_OCEAN)
-        );
-        builder.put(
-            biomeRegistry.getOrThrow(!pe ? ModernBetaBiomes.BETA_FOREST : ModernBetaBiomes.PE_FOREST),
-            biomeRegistry.getOrThrow(!pe ? ModernBetaBiomes.BETA_OCEAN : ModernBetaBiomes.PE_OCEAN)
-        );
-        if (!pe) {
-            builder.put(
-                biomeRegistry.getOrThrow(ModernBetaBiomes.BETA_OAK_FOREST),
-                biomeRegistry.getOrThrow(ModernBetaBiomes.BETA_OCEAN)
-            );
-        }
-        builder.put(
-            biomeRegistry.getOrThrow(!pe ? ModernBetaBiomes.BETA_ICE_DESERT : ModernBetaBiomes.PE_ICE_DESERT),
-            biomeRegistry.getOrThrow(!pe ? ModernBetaBiomes.BETA_FROZEN_OCEAN : ModernBetaBiomes.PE_FROZEN_OCEAN)
-        );
-        builder.put(
-            biomeRegistry.getOrThrow(!pe ? ModernBetaBiomes.BETA_PLAINS : ModernBetaBiomes.PE_PLAINS),
-            biomeRegistry.getOrThrow(!pe ? ModernBetaBiomes.BETA_OCEAN : ModernBetaBiomes.PE_OCEAN)
-        );
-        builder.put(
-            biomeRegistry.getOrThrow(!pe ? ModernBetaBiomes.BETA_RAINFOREST : ModernBetaBiomes.PE_RAINFOREST),
-            biomeRegistry.getOrThrow(!pe ? ModernBetaBiomes.BETA_WARM_OCEAN : ModernBetaBiomes.PE_WARM_OCEAN)
-        );
-        builder.put(
-            biomeRegistry.getOrThrow(!pe ? ModernBetaBiomes.BETA_SAVANNA : ModernBetaBiomes.PE_SAVANNA),
-            biomeRegistry.getOrThrow(!pe ? ModernBetaBiomes.BETA_OCEAN : ModernBetaBiomes.PE_OCEAN)
-        );
-        builder.put(
-            biomeRegistry.getOrThrow(!pe ? ModernBetaBiomes.BETA_SHRUBLAND : ModernBetaBiomes.PE_SHRUBLAND),
-            biomeRegistry.getOrThrow(!pe ? ModernBetaBiomes.BETA_OCEAN : ModernBetaBiomes.PE_OCEAN)
-        );
-        builder.put(
-            biomeRegistry.getOrThrow(!pe ? ModernBetaBiomes.BETA_SEASONAL_FOREST : ModernBetaBiomes.PE_SEASONAL_FOREST),
-            biomeRegistry.getOrThrow(!pe ? ModernBetaBiomes.BETA_LUKEWARM_OCEAN : ModernBetaBiomes.PE_LUKEWARM_OCEAN)
-        );
-        builder.put(
-            biomeRegistry.getOrThrow(!pe ? ModernBetaBiomes.BETA_SWAMPLAND : ModernBetaBiomes.PE_SWAMPLAND),
-            biomeRegistry.getOrThrow(!pe ? ModernBetaBiomes.BETA_COLD_OCEAN : ModernBetaBiomes.PE_COLD_OCEAN)
-        );
-        builder.put(
-            biomeRegistry.getOrThrow(!pe ? ModernBetaBiomes.BETA_TAIGA : ModernBetaBiomes.PE_TAIGA),
-            biomeRegistry.getOrThrow(!pe ? ModernBetaBiomes.BETA_FROZEN_OCEAN : ModernBetaBiomes.PE_FROZEN_OCEAN)
-        );
-        if (!pe) {
-            builder.put(
-                biomeRegistry.getOrThrow(ModernBetaBiomes.BETA_OAK_TAIGA),
-                biomeRegistry.getOrThrow(ModernBetaBiomes.BETA_FROZEN_OCEAN)
-            );
-        }
-        builder.put(
-            biomeRegistry.getOrThrow(!pe ? ModernBetaBiomes.BETA_TUNDRA : ModernBetaBiomes.PE_TUNDRA),
-            biomeRegistry.getOrThrow(!pe ? ModernBetaBiomes.BETA_FROZEN_OCEAN : ModernBetaBiomes.PE_FROZEN_OCEAN)
-        );
+        ImmutableMap.Builder<TagKey<Biome>, Holder<Biome>> builder = ImmutableMap.builder();
+
+        builder.put(ModernBetaBiomeTags.REPLACE_WITH_FROZEN_OCEAN,
+                biomeRegistry.getOrThrow(!pe ? ModernBetaBiomes.BETA_FROZEN_OCEAN : ModernBetaBiomes.PE_FROZEN_OCEAN));
+        builder.put(ModernBetaBiomeTags.REPLACE_WITH_COLD_OCEAN,
+                biomeRegistry.getOrThrow(!pe ? ModernBetaBiomes.BETA_COLD_OCEAN : ModernBetaBiomes.PE_COLD_OCEAN));
+        builder.put(ModernBetaBiomeTags.REPLACE_WITH_OCEAN,
+                biomeRegistry.getOrThrow(!pe ? ModernBetaBiomes.BETA_OCEAN : ModernBetaBiomes.PE_OCEAN));
+        builder.put(ModernBetaBiomeTags.REPLACE_WITH_LUKEWARM_OCEAN,
+                biomeRegistry.getOrThrow(!pe ? ModernBetaBiomes.BETA_LUKEWARM_OCEAN : ModernBetaBiomes.PE_LUKEWARM_OCEAN));
+        builder.put(ModernBetaBiomeTags.REPLACE_WITH_WARM_OCEAN,
+                biomeRegistry.getOrThrow(!pe ? ModernBetaBiomes.BETA_WARM_OCEAN : ModernBetaBiomes.PE_WARM_OCEAN));
 
         return new BiomeInjectionRule(
             new Cache2DBiomeInjector(
                 new PredicateBiomeInjector(
                     new SurfaceBelowSeaLevelInjectionPredicate(4),
-                    new ReplaceBiomeInjector(builder.build())
+                    new ReplaceByTagBiomeInjector(builder.build())
                 )
             ),
             BiomeInjectionRule.Step.PRE

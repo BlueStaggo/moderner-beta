@@ -17,13 +17,13 @@ import mod.bluestaggo.modernerbeta.util.CodecUtil;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ConfiguredLayers;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers.Layer;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.RegistryOps;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biome;
 import org.jetbrains.annotations.NotNull;
@@ -99,10 +99,10 @@ public class ModernBetaSettings implements Iterable<SettingsComponent<?>> {
             .add(SettingsComponentTypes.FRACTAL_LAYERS, configuredLayers);
     }
 
-    public static Builder singleBiome(ResourceKey<Biome> biome) {
+    public static Builder singleBiome(Holder<Biome> biome) {
         return new Builder()
             .add(SettingsComponentTypes.PROVIDER, ModernBetaBuiltInTypes.Biome.SINGLE.id)
-            .add(SettingsComponentTypes.SINGLE_BIOME, biome.location());
+            .add(SettingsComponentTypes.SINGLE_BIOME, biome);
     }
 
     public static ModernBetaSettings noCaveBiomes() {
@@ -204,7 +204,7 @@ public class ModernBetaSettings implements Iterable<SettingsComponent<?>> {
         ModernBetaSettings baseSettings = basePresetSettings.get();
         Builder builder = new Builder(this.registries);
         builder.add(SettingsComponentTypes.PRESET, basePreset);
-        DynamicOps<Tag> ops = newSettings.registries != null ? RegistryOps.create(NbtOps.INSTANCE, newSettings.registries) : NbtOps.INSTANCE;
+        DynamicOps<Tag> ops = newSettings.getOpsForSettings(NbtOps.INSTANCE);
 
         newSettings.stream()
             .filter(component -> {
@@ -216,6 +216,10 @@ public class ModernBetaSettings implements Iterable<SettingsComponent<?>> {
             })
             .forEach(builder::add);
         return builder.build();
+    }
+
+    public <T> DynamicOps<T> getOpsForSettings(DynamicOps<T> ops) {
+        return this.registries != null ? RegistryOps.create(ops, this.registries) : ops;
     }
 
     public int size() {
@@ -239,7 +243,7 @@ public class ModernBetaSettings implements Iterable<SettingsComponent<?>> {
     }
 
     public CompoundTag toCompound() {
-        DynamicOps<Tag> ops = registries != null ? RegistryOps.create(NbtOps.INSTANCE, registries) : NbtOps.INSTANCE;
+        DynamicOps<Tag> ops = getOpsForSettings(NbtOps.INSTANCE);
         return (CompoundTag)VersionCompat.getOrThrow(CODEC.encode(this, ops, new CompoundTag()));
     }
 

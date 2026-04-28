@@ -2,17 +2,18 @@ package mod.bluestaggo.modernerbeta.level.feature.placement.noise;
 
 
 import mod.bluestaggo.modernerbeta.settings.component.PerlinNoiseSettings;
+import mod.bluestaggo.modernerbeta.util.noise.OctaveNoise;
 import mod.bluestaggo.modernerbeta.util.noise.PerlinOctaveNoise;
 import net.minecraft.util.RandomSource;
 
 public class NoiseBasedCountInfdev415 implements NoiseBasedCount {
-    private final PerlinOctaveNoise noiseSampler;
+    private final OctaveNoise noiseSampler;
     
     public NoiseBasedCountInfdev415(RandomSource random) {
         this.noiseSampler = new PerlinOctaveNoise(new java.util.Random(random.nextLong()), 5, PerlinNoiseSettings.INFDEV_415);
     }
     
-    public NoiseBasedCountInfdev415(PerlinOctaveNoise noiseSampler) {
+    public NoiseBasedCountInfdev415(OctaveNoise noiseSampler) {
         this.noiseSampler = noiseSampler;
     }
 

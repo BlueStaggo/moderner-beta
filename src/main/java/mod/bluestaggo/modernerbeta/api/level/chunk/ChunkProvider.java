@@ -18,6 +18,7 @@ import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.settings.component.PerlinNoiseSettings;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
+import mod.bluestaggo.modernerbeta.util.noise.OctaveNoise;
 import mod.bluestaggo.modernerbeta.util.noise.PerlinOctaveNoise;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
@@ -208,7 +209,7 @@ public abstract class ChunkProvider {
     }
 
     /**
-     * Sets forest density using PerlinOctaveNoise sampler created with world seed.
+     * Sets forest density using OctaveNoise sampler created with world seed.
      * Checks every placed feature in the biome source feature list,
      * and if it uses ModernBetaNoiseBasedCountPlacementModifier, replaces the noise sampler.
      */
@@ -284,11 +285,11 @@ public abstract class ChunkProvider {
     }
     
     /**
-     * Get Perlin octave noise sampler for tree placement.
+     * Gets an octave noise sampler for tree placement.
      * 
-     * @return Perlin octave noise sampler.
+     * @return An octave noise sampler.
      */
-    protected PerlinOctaveNoise getForestOctaveNoise() {
+    protected OctaveNoise getForestOctaveNoise() {
         return new PerlinOctaveNoise(new Random(this.seed), 8, PerlinNoiseSettings.DEFAULT);
     }
 }

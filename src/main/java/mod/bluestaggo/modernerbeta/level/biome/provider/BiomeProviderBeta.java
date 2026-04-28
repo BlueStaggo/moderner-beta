@@ -24,7 +24,6 @@ import net.minecraft.world.level.biome.Biome;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class BiomeProviderBeta extends BiomeProvider implements ClimateSampler, ClimateSamplerSky, BiomeResolverBlock {
     private final ClimateMap climateMap;
@@ -62,7 +61,7 @@ public class BiomeProviderBeta extends BiomeProvider implements ClimateSampler, 
         double temp = clime.temp();
         double rain = clime.rain();
         
-        return this.biomeRegistry.getOrThrow(this.climateMap.getBiome(temp, rain));
+        return this.climateMap.getBiome(temp, rain);
     }
     
     @Override
@@ -71,16 +70,12 @@ public class BiomeProviderBeta extends BiomeProvider implements ClimateSampler, 
         double temp = clime.temp();
         double rain = clime.rain();
         
-        return this.biomeRegistry.getOrThrow(this.climateMap.getBiome(temp, rain));
+        return this.climateMap.getBiome(temp, rain);
     }
 
     @Override
     public Set<Holder<Biome>> getBiomes() {
-        return this.climateMap
-            .getBiomeKeys()
-            .stream()
-            .map(this.biomeRegistry::getOrThrow)
-            .collect(Collectors.toSet());
+        return this.climateMap.getBiomes();
     }
 
     @Override

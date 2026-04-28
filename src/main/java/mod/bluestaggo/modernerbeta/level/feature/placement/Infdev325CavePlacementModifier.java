@@ -2,7 +2,7 @@ package mod.bluestaggo.modernerbeta.level.feature.placement;
 
 import com.mojang.serialization.Codec;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
-import mod.bluestaggo.modernerbeta.util.noise.PerlinOctaveNoise;
+import mod.bluestaggo.modernerbeta.util.noise.OctaveNoise;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.levelgen.placement.PlacementContext;
@@ -25,7 +25,7 @@ public class Infdev325CavePlacementModifier extends PlacementModifier {
     private final int minSection;
     private final int maxSection;
 
-    private PerlinOctaveNoise octaves;
+    private OctaveNoise octaves;
 
     protected Infdev325CavePlacementModifier(int minSection, int maxSection) {
         this.minSection = minSection;
@@ -36,7 +36,7 @@ public class Infdev325CavePlacementModifier extends PlacementModifier {
         return new Infdev325CavePlacementModifier(minSection, maxSection);
     }
 
-    public void setOctaves(PerlinOctaveNoise octaves) {
+    public void setOctaves(OctaveNoise octaves) {
         this.octaves = octaves;
     }
 

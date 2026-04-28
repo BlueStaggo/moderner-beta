@@ -8,6 +8,7 @@ import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.api.level.biome.climate.TemperatureHeightScaling;
 import mod.bluestaggo.modernerbeta.level.biome.injection.BiomeInjectionRules;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeIds;
+import mod.bluestaggo.modernerbeta.level.biome.voronoi.VoronoiPointCaveBiome;
 import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers.*;
 import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaNoiseGeneratorSettings;
@@ -157,7 +158,7 @@ public final class ModernBetaSettingsPresets {
         register(context, BETA_MOUNTAIN_MADNESS, presetMountainMadness(DEFAULT_BETA, betaId, false));
         register(context, BETA_DROUGHT, presetDrought(DEFAULT_BETA, betaId));
         register(context, BETA_CAVE_CHAOS, presetCaveChaos(DEFAULT_BETA, betaId));
-        register(context, BETA_LARGE_BIOMES, presetBetaLargeBiomes());
+        register(context, BETA_LARGE_BIOMES, presetBetaLargeBiomes(context));
         register(context, BETA_XBOX_LEGACY, presetBetaXboxLegacy(context));
         register(context, BETA_SURVIVAL_ISLAND, presetBetaSurvivalIsland());
         register(context, BETA_VANILLA, presetBetaVanilla(context));
@@ -209,6 +210,8 @@ public final class ModernBetaSettingsPresets {
 
     private static ModernBetaSettingsPreset presetBeta(BootstrapContext<ModernBetaSettingsPreset> context, boolean oakBiomes) {
         BootstrapDataContextInfoLookup<?> lookup = new BootstrapDataContextInfoLookup<>(context);
+        HolderGetter<Biome> biomeRegistry = context.lookup(Registries.BIOME);
+
         return new ModernBetaSettingsPreset(
             ModernBetaSettings.builder(lookup)
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.NOISE_3D.id)
@@ -222,17 +225,17 @@ public final class ModernBetaSettingsPresets {
                 .add(TEMPERATURE_HEIGHT_SCALING, TemperatureHeightScaling.BETA)
                 .add(CLIMATE_DISTRIBUTION, ClimateDistribution.BETA)
                 .add(CLIMATE_MAPPINGS, Map.ofEntries(
-                    Map.entry("desert", new ClimateMapping(ModernBetaBiomes.BETA_DESERT.location())),
-                    Map.entry("forest", new ClimateMapping((oakBiomes ? ModernBetaBiomes.BETA_OAK_FOREST : ModernBetaBiomes.BETA_FOREST).location())),
-                    Map.entry("ice_desert", new ClimateMapping(ModernBetaBiomes.BETA_TUNDRA.location())),
-                    Map.entry("plains", new ClimateMapping(ModernBetaBiomes.BETA_PLAINS.location())),
-                    Map.entry("rainforest", new ClimateMapping(ModernBetaBiomes.BETA_RAINFOREST.location())),
-                    Map.entry("savanna", new ClimateMapping(ModernBetaBiomes.BETA_SAVANNA.location())),
-                    Map.entry("shrubland", new ClimateMapping(ModernBetaBiomes.BETA_SHRUBLAND.location())),
-                    Map.entry("seasonal_forest", new ClimateMapping(ModernBetaBiomes.BETA_SEASONAL_FOREST.location())),
-                    Map.entry("swampland", new ClimateMapping(ModernBetaBiomes.BETA_SWAMPLAND.location())),
-                    Map.entry("taiga", new ClimateMapping((oakBiomes ? ModernBetaBiomes.BETA_OAK_TAIGA : ModernBetaBiomes.BETA_TAIGA).location())),
-                    Map.entry("tundra", new ClimateMapping(ModernBetaBiomes.BETA_TUNDRA.location() ))
+                    Map.entry("desert", new ClimateMapping(biomeRegistry.getOrThrow(ModernBetaBiomes.BETA_DESERT))),
+                    Map.entry("forest", new ClimateMapping(biomeRegistry.getOrThrow(oakBiomes ? ModernBetaBiomes.BETA_OAK_FOREST : ModernBetaBiomes.BETA_FOREST))),
+                    Map.entry("ice_desert", new ClimateMapping(biomeRegistry.getOrThrow(ModernBetaBiomes.BETA_TUNDRA))),
+                    Map.entry("plains", new ClimateMapping(biomeRegistry.getOrThrow(ModernBetaBiomes.BETA_PLAINS))),
+                    Map.entry("rainforest", new ClimateMapping(biomeRegistry.getOrThrow(ModernBetaBiomes.BETA_RAINFOREST))),
+                    Map.entry("savanna", new ClimateMapping(biomeRegistry.getOrThrow(ModernBetaBiomes.BETA_SAVANNA))),
+                    Map.entry("shrubland", new ClimateMapping(biomeRegistry.getOrThrow(ModernBetaBiomes.BETA_SHRUBLAND))),
+                    Map.entry("seasonal_forest", new ClimateMapping(biomeRegistry.getOrThrow(ModernBetaBiomes.BETA_SEASONAL_FOREST))),
+                    Map.entry("swampland", new ClimateMapping(biomeRegistry.getOrThrow(ModernBetaBiomes.BETA_SWAMPLAND))),
+                    Map.entry("taiga", new ClimateMapping(biomeRegistry.getOrThrow(oakBiomes ? ModernBetaBiomes.BETA_OAK_TAIGA : ModernBetaBiomes.BETA_TAIGA))),
+                    Map.entry("tundra", new ClimateMapping(biomeRegistry.getOrThrow(ModernBetaBiomes.BETA_TUNDRA)))
                 ))
                 .add(BIOME_INJECTION_RULES, BiomeInjectionRules.standardRules(lookup,
                         BiomeInjectionRules.makeBetaOceanRule(lookup, false)))
@@ -247,7 +250,8 @@ public final class ModernBetaSettingsPresets {
 
     private static ModernBetaSettingsPreset presetAlpha(BootstrapContext<ModernBetaSettingsPreset> context) {
         RegistryOps.RegistryInfoLookup lookup = new BootstrapDataContextInfoLookup<>(context);
-        
+        HolderGetter<Biome> biomeRegistry = context.lookup(Registries.BIOME);
+
         return new ModernBetaSettingsPreset(
             ModernBetaSettings.builder(lookup)
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.NOISE_3D.id)
@@ -263,7 +267,7 @@ public final class ModernBetaSettingsPresets {
                 .add(SURFACE_PROPERTIES, SurfaceProperties.ALPHA)
                 .addDefault(NOISE_SLIDE, STRUCTURE_MODIFERS)
                 .build(),
-            ModernBetaSettings.singleBiome(ModernBetaBiomes.ALPHA)
+            ModernBetaSettings.singleBiome(biomeRegistry.getOrThrow(ModernBetaBiomes.ALPHA))
                 .add(BIOME_INJECTION_RULES, BiomeInjectionRules.emptyRules(lookup))
                 .build(),
             ModernBetaSettings.noCaveBiomes()
@@ -272,6 +276,7 @@ public final class ModernBetaSettingsPresets {
     
     private static ModernBetaSettingsPreset presetSkylands(BootstrapContext<ModernBetaSettingsPreset> context) {
         RegistryOps.RegistryInfoLookup lookup = new BootstrapDataContextInfoLookup<>(context);
+        HolderGetter<Biome> biomeRegistry = context.lookup(Registries.BIOME);
 
         return new ModernBetaSettingsPreset(
             ModernBetaSettings.builder(lookup)
@@ -297,7 +302,7 @@ public final class ModernBetaSettingsPresets {
                         /*? >=1.21 {*/net.minecraft.world.level.levelgen.structure.BuiltinStructureSets.TRIAL_CHAMBERS/*?}*/))
                 .addDefault(PERLIN_NOISE_SETTINGS)
                 .build(),
-            ModernBetaSettings.singleBiome(ModernBetaBiomes.BETA_SKY)
+            ModernBetaSettings.singleBiome(biomeRegistry.getOrThrow(ModernBetaBiomes.BETA_SKY))
                 .add(BIOME_INJECTION_RULES, BiomeInjectionRules.emptyRules(lookup))
                 .build(),
             ModernBetaSettings.noCaveBiomes()
@@ -306,6 +311,7 @@ public final class ModernBetaSettingsPresets {
     
     private static ModernBetaSettingsPreset presetInfdev415(BootstrapContext<ModernBetaSettingsPreset> context) {
         RegistryOps.RegistryInfoLookup lookup = new BootstrapDataContextInfoLookup<>(context);
+        HolderGetter<Biome> biomeRegistry = context.lookup(Registries.BIOME);
 
         return new ModernBetaSettingsPreset(
             ModernBetaSettings.builder(lookup)
@@ -323,7 +329,7 @@ public final class ModernBetaSettingsPresets {
                 .add(SURFACE_PROPERTIES, SurfaceProperties.ALPHA)
                 .addDefault(STRUCTURE_MODIFERS)
                 .build(),
-            ModernBetaSettings.singleBiome(ModernBetaBiomes.INFDEV_415)
+            ModernBetaSettings.singleBiome(biomeRegistry.getOrThrow(ModernBetaBiomes.INFDEV_415))
                 .add(BIOME_INJECTION_RULES, BiomeInjectionRules.emptyRules(lookup))
                 .build(),
             ModernBetaSettings.noCaveBiomes()
@@ -332,6 +338,7 @@ public final class ModernBetaSettingsPresets {
     
     private static ModernBetaSettingsPreset presetInfdev420(BootstrapContext<ModernBetaSettingsPreset> context) {
         RegistryOps.RegistryInfoLookup lookup = new BootstrapDataContextInfoLookup<>(context);
+        HolderGetter<Biome> biomeRegistry = context.lookup(Registries.BIOME);
 
         return new ModernBetaSettingsPreset(
             ModernBetaSettings.builder(lookup)
@@ -349,7 +356,7 @@ public final class ModernBetaSettingsPresets {
                 .add(SURFACE_PROPERTIES, SurfaceProperties.ALPHA)
                 .addDefault(STRUCTURE_MODIFERS)
                 .build(),
-            ModernBetaSettings.singleBiome(ModernBetaBiomes.INFDEV_420)
+            ModernBetaSettings.singleBiome(biomeRegistry.getOrThrow(ModernBetaBiomes.INFDEV_420))
                 .add(BIOME_INJECTION_RULES, BiomeInjectionRules.emptyRules(lookup))
                 .build(),
             ModernBetaSettings.noCaveBiomes()
@@ -358,6 +365,7 @@ public final class ModernBetaSettingsPresets {
     
     private static ModernBetaSettingsPreset presetInfdev611(BootstrapContext<ModernBetaSettingsPreset> context) {
         RegistryOps.RegistryInfoLookup lookup = new BootstrapDataContextInfoLookup<>(context);
+        HolderGetter<Biome> biomeRegistry = context.lookup(Registries.BIOME);
 
         return new ModernBetaSettingsPreset(
             ModernBetaSettings.builder(lookup)
@@ -375,7 +383,7 @@ public final class ModernBetaSettingsPresets {
                 .add(SURFACE_PROPERTIES, SurfaceProperties.ALPHA)
                 .addDefault(STRUCTURE_MODIFERS)
                 .build(),
-            ModernBetaSettings.singleBiome(ModernBetaBiomes.INFDEV_611)
+            ModernBetaSettings.singleBiome(biomeRegistry.getOrThrow(ModernBetaBiomes.INFDEV_611))
                 .add(BIOME_INJECTION_RULES, BiomeInjectionRules.emptyRules(lookup))
                 .build(),
             ModernBetaSettings.noCaveBiomes()
@@ -384,6 +392,7 @@ public final class ModernBetaSettingsPresets {
 
     private static ModernBetaSettingsPreset presetInfdev325(BootstrapContext<ModernBetaSettingsPreset> context) {
         RegistryOps.RegistryInfoLookup lookup = new BootstrapDataContextInfoLookup<>(context);
+        HolderGetter<Biome> biomeRegistry = context.lookup(Registries.BIOME);
 
         return new ModernBetaSettingsPreset(
             ModernBetaSettings.builder(lookup)
@@ -396,7 +405,7 @@ public final class ModernBetaSettingsPresets {
                 .add(CAVE_GENERATION, CaveGeneration.DISABLED)
                 .add(INFDEV_227_STRUCTURES, new Infdev227Structures(true, false))
                 .build(),
-            ModernBetaSettings.singleBiome(ModernBetaBiomes.INFDEV_325)
+            ModernBetaSettings.singleBiome(biomeRegistry.getOrThrow(ModernBetaBiomes.INFDEV_325))
                 .add(BIOME_INJECTION_RULES, BiomeInjectionRules.emptyRules(lookup))
                 .build(),
             ModernBetaSettings.noCaveBiomes()
@@ -405,6 +414,7 @@ public final class ModernBetaSettingsPresets {
     
     private static ModernBetaSettingsPreset presetInfdev227(BootstrapContext<ModernBetaSettingsPreset> context) {
         RegistryOps.RegistryInfoLookup lookup = new BootstrapDataContextInfoLookup<>(context);
+        HolderGetter<Biome> biomeRegistry = context.lookup(Registries.BIOME);
 
         return new ModernBetaSettingsPreset(
             ModernBetaSettings.builder(lookup)
@@ -417,7 +427,7 @@ public final class ModernBetaSettingsPresets {
                 .add(CAVE_GENERATION, CaveGeneration.DISABLED)
                 .add(INFDEV_227_STRUCTURES, new Infdev227Structures(true, true))
                 .build(),
-            ModernBetaSettings.singleBiome(ModernBetaBiomes.INFDEV_227)
+            ModernBetaSettings.singleBiome(biomeRegistry.getOrThrow(ModernBetaBiomes.INFDEV_227))
                 .add(BIOME_INJECTION_RULES, BiomeInjectionRules.emptyRules(lookup))
                 .build(),
             ModernBetaSettings.noCaveBiomes()
@@ -443,7 +453,7 @@ public final class ModernBetaSettingsPresets {
                 .add(STRUCTURE_MODIFERS, StructureModifiers.getFinite(structureRegistry, biomeRegistry, 256, 256, false, true))
                 .addDefault(FINITE_LEVEL_PROPERTIES, FINITE_CAVE_GENERATION, FINITE_NOISE, FINITE_BEACHES, FINITE_POOLS)
                 .build(),
-            ModernBetaSettings.singleBiome(ModernBetaBiomes.INDEV_NORMAL)
+            ModernBetaSettings.singleBiome(biomeRegistry.getOrThrow(ModernBetaBiomes.INDEV_NORMAL))
                 .add(BIOME_INJECTION_RULES, BiomeInjectionRules.emptyRules(lookup))
                 .build(),
             ModernBetaSettings.noCaveBiomes()
@@ -486,7 +496,7 @@ public final class ModernBetaSettingsPresets {
                 .add(STRUCTURE_MODIFERS, StructureModifiers.getFinite(structureRegistry, biomeRegistry, 256, 256, false, true))
                 .addDefault(FINITE_CAVE_GENERATION, FINITE_NOISE, FINITE_POOLS)
                 .build(),
-            ModernBetaSettings.singleBiome(ModernBetaBiomes.INDEV_NORMAL)
+            ModernBetaSettings.singleBiome(biomeRegistry.getOrThrow(ModernBetaBiomes.INDEV_NORMAL))
                 .add(BIOME_INJECTION_RULES, BiomeInjectionRules.emptyRules(lookup))
                 .build(),
             ModernBetaSettings.noCaveBiomes()
@@ -495,6 +505,9 @@ public final class ModernBetaSettingsPresets {
 
     private static ModernBetaSettingsPreset presetClassic14a08(BootstrapContext<ModernBetaSettingsPreset> context) {
         RegistryOps.RegistryInfoLookup lookup = new BootstrapDataContextInfoLookup<>(context);
+
+        HolderGetter<Structure> structureRegistry = context.lookup(Registries.STRUCTURE);
+        HolderGetter<Biome> biomeRegistry = context.lookup(Registries.BIOME);
 
         return new ModernBetaSettingsPreset(
             ModernBetaSettings.builder(lookup)
@@ -545,8 +558,9 @@ public final class ModernBetaSettingsPresets {
                     true
                 ))
                 .add(SPAWN_INDEV_HOUSE, false)
+                .add(STRUCTURE_MODIFERS, StructureModifiers.getFinite(structureRegistry, biomeRegistry, 256, 256, false, true))
                 .build(),
-            ModernBetaSettings.singleBiome(ModernBetaBiomes.CLASSIC_14A_08)
+            ModernBetaSettings.singleBiome(biomeRegistry.getOrThrow(ModernBetaBiomes.CLASSIC_14A_08))
                 .add(BIOME_INJECTION_RULES, BiomeInjectionRules.emptyRules(lookup))
                 .build(),
             ModernBetaSettings.noCaveBiomes()
@@ -555,6 +569,7 @@ public final class ModernBetaSettingsPresets {
     
     private static ModernBetaSettingsPreset presetPE(BootstrapContext<ModernBetaSettingsPreset> context) {
         RegistryOps.RegistryInfoLookup lookup = new BootstrapDataContextInfoLookup<>(context);
+        HolderGetter<Biome> biomeRegistry = context.lookup(Registries.BIOME);
 
         return new ModernBetaSettingsPreset(
             DEFAULT_BETA.chunkSettings().extend()
@@ -567,17 +582,17 @@ public final class ModernBetaSettingsPresets {
                 .add(TEMPERATURE_HEIGHT_SCALING, TemperatureHeightScaling.BETA)
                 .add(CLIMATE_DISTRIBUTION, ClimateDistribution.BETA)
                 .add(CLIMATE_MAPPINGS, Map.ofEntries(
-                    Map.entry("desert", new ClimateMapping(ModernBetaBiomes.PE_DESERT.location())),
-                    Map.entry("forest", new ClimateMapping(ModernBetaBiomes.PE_FOREST.location())),
-                    Map.entry("ice_desert", new ClimateMapping(ModernBetaBiomes.PE_TUNDRA.location())),
-                    Map.entry("plains", new ClimateMapping(ModernBetaBiomes.PE_PLAINS.location() )),
-                    Map.entry("rainforest", new ClimateMapping(ModernBetaBiomes.PE_RAINFOREST.location())),
-                    Map.entry("savanna", new ClimateMapping(ModernBetaBiomes.PE_SAVANNA.location())),
-                    Map.entry("shrubland", new ClimateMapping(ModernBetaBiomes.PE_SHRUBLAND.location())),
-                    Map.entry("seasonal_forest", new ClimateMapping(ModernBetaBiomes.PE_SEASONAL_FOREST.location())),
-                    Map.entry("swampland", new ClimateMapping(ModernBetaBiomes.PE_SWAMPLAND.location())),
-                    Map.entry("taiga", new ClimateMapping(ModernBetaBiomes.PE_TAIGA.location())),
-                    Map.entry("tundra", new ClimateMapping(ModernBetaBiomes.PE_TUNDRA.location()))
+                    Map.entry("desert", new ClimateMapping(biomeRegistry.getOrThrow(ModernBetaBiomes.PE_DESERT))),
+                    Map.entry("forest", new ClimateMapping(biomeRegistry.getOrThrow(ModernBetaBiomes.PE_FOREST))),
+                    Map.entry("ice_desert", new ClimateMapping(biomeRegistry.getOrThrow(ModernBetaBiomes.PE_TUNDRA))),
+                    Map.entry("plains", new ClimateMapping(biomeRegistry.getOrThrow(ModernBetaBiomes.PE_PLAINS) )),
+                    Map.entry("rainforest", new ClimateMapping(biomeRegistry.getOrThrow(ModernBetaBiomes.PE_RAINFOREST))),
+                    Map.entry("savanna", new ClimateMapping(biomeRegistry.getOrThrow(ModernBetaBiomes.PE_SAVANNA))),
+                    Map.entry("shrubland", new ClimateMapping(biomeRegistry.getOrThrow(ModernBetaBiomes.PE_SHRUBLAND))),
+                    Map.entry("seasonal_forest", new ClimateMapping(biomeRegistry.getOrThrow(ModernBetaBiomes.PE_SEASONAL_FOREST))),
+                    Map.entry("swampland", new ClimateMapping(biomeRegistry.getOrThrow(ModernBetaBiomes.PE_SWAMPLAND))),
+                    Map.entry("taiga", new ClimateMapping(biomeRegistry.getOrThrow(ModernBetaBiomes.PE_TAIGA))),
+                    Map.entry("tundra", new ClimateMapping(biomeRegistry.getOrThrow(ModernBetaBiomes.PE_TUNDRA)))
                 ))
                 .add(BIOME_INJECTION_RULES, BiomeInjectionRules.emptyRules(lookup))
                 .build(),
@@ -853,7 +868,9 @@ public final class ModernBetaSettingsPresets {
         );
     }
     
-    private static ModernBetaSettingsPreset presetBetaLargeBiomes() {
+    private static ModernBetaSettingsPreset presetBetaLargeBiomes(BootstrapContext<ModernBetaSettingsPreset> context) {
+        RegistryOps.RegistryInfoLookup lookup = new BootstrapDataContextInfoLookup<>(context);
+
         return new ModernBetaSettingsPreset(
             DEFAULT_BETA.chunkSettings(),
             DEFAULT_BETA.biomeSettings().extend()
@@ -871,7 +888,7 @@ public final class ModernBetaSettingsPresets {
                     16.0f,
                     -64,
                     64,
-                    CaveBiomeVoronoi.DEFAULT.points()
+                    VoronoiPointCaveBiome.getDefaultPoints(lookup)
                 ))
                 .build()
         );
@@ -914,6 +931,7 @@ public final class ModernBetaSettingsPresets {
     
     private static ModernBetaSettingsPreset presetBetaVanilla(BootstrapContext<ModernBetaSettingsPreset> context) {
         RegistryOps.RegistryInfoLookup lookup = new BootstrapDataContextInfoLookup<>(context);
+        HolderGetter<Biome> biomeRegistry = context.lookup(Registries.BIOME);
 
         return new ModernBetaSettingsPreset(
             DEFAULT_BETA.chunkSettings().extend()
@@ -931,101 +949,101 @@ public final class ModernBetaSettingsPresets {
                 .add(VORONOI_POINTS, List.of(
                     // Standard Biomes
 
-                    new VoronoiPointBiome(Biomes.DESERT.location(), 0.9, 0.1, 0.5),
-                    new VoronoiPointBiome(Biomes.PLAINS.location(), 0.9, 0.3, 0.5),
-                    new VoronoiPointBiome(Biomes.FOREST.location(), 0.9, 0.5, 0.5),
-                    new VoronoiPointBiome(Biomes.FOREST.location(), 0.9, 0.7, 0.5),
-                    new VoronoiPointBiome(Biomes.JUNGLE.location(), 0.9, 0.9, 0.5),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.DESERT), 0.9, 0.1, 0.5),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.PLAINS), 0.9, 0.3, 0.5),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.FOREST), 0.9, 0.5, 0.5),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.FOREST), 0.9, 0.7, 0.5),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.JUNGLE), 0.9, 0.9, 0.5),
 
-                    new VoronoiPointBiome(Biomes.SAVANNA.location(), 0.7, 0.1, 0.5),
-                    new VoronoiPointBiome(Biomes.PLAINS.location(), 0.7, 0.3, 0.5),
-                    new VoronoiPointBiome(Biomes.FOREST.location(), 0.7, 0.5, 0.5),
-                    new VoronoiPointBiome(Biomes.FOREST.location(), 0.7, 0.7, 0.5),
-                    new VoronoiPointBiome(Biomes.FOREST.location(), 0.7, 0.9, 0.5),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.SAVANNA), 0.7, 0.1, 0.5),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.PLAINS), 0.7, 0.3, 0.5),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.FOREST), 0.7, 0.5, 0.5),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.FOREST), 0.7, 0.7, 0.5),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.FOREST), 0.7, 0.9, 0.5),
 
-                    new VoronoiPointBiome(Biomes.PLAINS.location(), 0.5, 0.1, 0.5),
-                    new VoronoiPointBiome(Biomes.PLAINS.location(), 0.5, 0.3, 0.5),
-                    new VoronoiPointBiome(Biomes.BIRCH_FOREST.location(), 0.5, 0.5, 0.5),
-                    new VoronoiPointBiome(Biomes.BIRCH_FOREST.location(), 0.5, 0.7, 0.5),
-                    new VoronoiPointBiome(Biomes.SWAMP.location(), 0.5, 0.9, 0.5),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.PLAINS), 0.5, 0.1, 0.5),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.PLAINS), 0.5, 0.3, 0.5),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.BIRCH_FOREST), 0.5, 0.5, 0.5),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.BIRCH_FOREST), 0.5, 0.7, 0.5),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.SWAMP), 0.5, 0.9, 0.5),
 
-                    new VoronoiPointBiome(Biomes.SNOWY_PLAINS.location(), 0.3, 0.1, 0.5),
-                    new VoronoiPointBiome(Biomes.TAIGA.location(), 0.3, 0.3, 0.5),
-                    new VoronoiPointBiome(Biomes.TAIGA.location(), 0.3, 0.5, 0.5),
-                    new VoronoiPointBiome(Biomes.SNOWY_TAIGA.location(), 0.3, 0.7, 0.5),
-                    new VoronoiPointBiome(Biomes.SNOWY_TAIGA.location(), 0.3, 0.9, 0.5),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.SNOWY_PLAINS), 0.3, 0.1, 0.5),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.TAIGA), 0.3, 0.3, 0.5),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.TAIGA), 0.3, 0.5, 0.5),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.SNOWY_TAIGA), 0.3, 0.7, 0.5),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.SNOWY_TAIGA), 0.3, 0.9, 0.5),
 
-                    new VoronoiPointBiome(Biomes.SNOWY_PLAINS.location(), 0.1, 0.1, 0.5),
-                    new VoronoiPointBiome(Biomes.SNOWY_PLAINS.location(), 0.1, 0.3, 0.5),
-                    new VoronoiPointBiome(Biomes.SNOWY_PLAINS.location(), 0.1, 0.5, 0.5),
-                    new VoronoiPointBiome(Biomes.SNOWY_PLAINS.location(), 0.1, 0.7, 0.5),
-                    new VoronoiPointBiome(Biomes.SNOWY_PLAINS.location(), 0.1, 0.9, 0.5),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.SNOWY_PLAINS), 0.1, 0.1, 0.5),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.SNOWY_PLAINS), 0.1, 0.3, 0.5),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.SNOWY_PLAINS), 0.1, 0.5, 0.5),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.SNOWY_PLAINS), 0.1, 0.7, 0.5),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.SNOWY_PLAINS), 0.1, 0.9, 0.5),
 
                     // Mutated Biomes
 
-                    new VoronoiPointBiome(Biomes.DESERT.location(), 0.9, 0.1, 0.2),
-                    new VoronoiPointBiome(Biomes.SUNFLOWER_PLAINS.location(), 0.9, 0.3, 0.2),
-                    new VoronoiPointBiome(Biomes.DARK_FOREST.location(), 0.9, 0.5, 0.2),
-                    new VoronoiPointBiome(Biomes.DARK_FOREST.location(), 0.9, 0.7, 0.2),
-                    new VoronoiPointBiome(Biomes.BAMBOO_JUNGLE.location(), 0.9, 0.9, 0.2),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.DESERT), 0.9, 0.1, 0.2),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.SUNFLOWER_PLAINS), 0.9, 0.3, 0.2),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.DARK_FOREST), 0.9, 0.5, 0.2),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.DARK_FOREST), 0.9, 0.7, 0.2),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.BAMBOO_JUNGLE), 0.9, 0.9, 0.2),
 
-                    new VoronoiPointBiome(Biomes.SAVANNA.location(), 0.7, 0.1, 0.2),
-                    new VoronoiPointBiome(Biomes.MEADOW.location(), 0.7, 0.3, 0.2),
-                    new VoronoiPointBiome(Biomes.FLOWER_FOREST.location(), 0.7, 0.5, 0.2),
-                    new VoronoiPointBiome(Biomes.FLOWER_FOREST.location(), 0.7, 0.7, 0.2),
-                    new VoronoiPointBiome(Biomes.FLOWER_FOREST.location(), 0.7, 0.9, 0.2),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.SAVANNA), 0.7, 0.1, 0.2),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.MEADOW), 0.7, 0.3, 0.2),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.FLOWER_FOREST), 0.7, 0.5, 0.2),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.FLOWER_FOREST), 0.7, 0.7, 0.2),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.FLOWER_FOREST), 0.7, 0.9, 0.2),
 
-                    new VoronoiPointBiome(Biomes.MEADOW.location(), 0.5, 0.1, 0.2),
-                    new VoronoiPointBiome(Biomes.MEADOW.location(), 0.5, 0.3, 0.2),
-                    new VoronoiPointBiome(Biomes.CHERRY_GROVE.location(), 0.5, 0.5, 0.2),
-                    new VoronoiPointBiome(Biomes.CHERRY_GROVE.location(), 0.5, 0.7, 0.2),
-                    new VoronoiPointBiome(Biomes.MANGROVE_SWAMP.location(), 0.5, 0.9, 0.2),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.MEADOW), 0.5, 0.1, 0.2),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.MEADOW), 0.5, 0.3, 0.2),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.CHERRY_GROVE), 0.5, 0.5, 0.2),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.CHERRY_GROVE), 0.5, 0.7, 0.2),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.MANGROVE_SWAMP), 0.5, 0.9, 0.2),
 
-                    new VoronoiPointBiome(Biomes.SNOWY_PLAINS.location(), 0.3, 0.1, 0.2),
-                    new VoronoiPointBiome(Biomes.OLD_GROWTH_PINE_TAIGA.location(), 0.3, 0.3, 0.2),
-                    new VoronoiPointBiome(Biomes.OLD_GROWTH_PINE_TAIGA.location(), 0.3, 0.5, 0.2),
-                    new VoronoiPointBiome(Biomes.GROVE.location(), 0.3, 0.7, 0.2),
-                    new VoronoiPointBiome(Biomes.GROVE.location(), 0.3, 0.9, 0.2),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.SNOWY_PLAINS), 0.3, 0.1, 0.2),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.OLD_GROWTH_PINE_TAIGA), 0.3, 0.3, 0.2),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.OLD_GROWTH_PINE_TAIGA), 0.3, 0.5, 0.2),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.GROVE), 0.3, 0.7, 0.2),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.GROVE), 0.3, 0.9, 0.2),
 
-                    new VoronoiPointBiome(Biomes.SNOWY_PLAINS.location(), 0.1, 0.1, 0.2),
-                    new VoronoiPointBiome(Biomes.SNOWY_PLAINS.location(), 0.1, 0.3, 0.2),
-                    new VoronoiPointBiome(Biomes.SNOWY_PLAINS.location(), 0.1, 0.5, 0.2),
-                    new VoronoiPointBiome(Biomes.SNOWY_SLOPES.location(), 0.1, 0.7, 0.2),
-                    new VoronoiPointBiome(Biomes.SNOWY_SLOPES.location(), 0.1, 0.9, 0.2),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.SNOWY_PLAINS), 0.1, 0.1, 0.2),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.SNOWY_PLAINS), 0.1, 0.3, 0.2),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.SNOWY_PLAINS), 0.1, 0.5, 0.2),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.SNOWY_SLOPES), 0.1, 0.7, 0.2),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.SNOWY_SLOPES), 0.1, 0.9, 0.2),
 
                     // Mutated Biomes 2
 
-                    new VoronoiPointBiome(Biomes.BADLANDS.location(), 0.9, 0.1, 0.8),
-                    new VoronoiPointBiome(Biomes.PLAINS.location(), 0.9, 0.3, 0.8),
-                    new VoronoiPointBiome(Biomes.SPARSE_JUNGLE.location(), 0.9, 0.5, 0.8),
-                    new VoronoiPointBiome(Biomes.SPARSE_JUNGLE.location(), 0.9, 0.7, 0.8),
-                    new VoronoiPointBiome(Biomes.MUSHROOM_FIELDS.location(), 0.9, 0.9, 0.8),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.BADLANDS), 0.9, 0.1, 0.8),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.PLAINS), 0.9, 0.3, 0.8),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.SPARSE_JUNGLE), 0.9, 0.5, 0.8),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.SPARSE_JUNGLE), 0.9, 0.7, 0.8),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.MUSHROOM_FIELDS), 0.9, 0.9, 0.8),
 
-                    new VoronoiPointBiome(Biomes.SAVANNA.location(), 0.7, 0.1, 0.8),
-                    new VoronoiPointBiome(Biomes.PLAINS.location(), 0.7, 0.3, 0.8),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.SAVANNA), 0.7, 0.1, 0.8),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.PLAINS), 0.7, 0.3, 0.8),
                     //? if >=1.21.4 {
-                    new VoronoiPointBiome(Biomes.PALE_GARDEN.location(), 0.7, 0.5, 0.8),
-                    new VoronoiPointBiome(Biomes.PALE_GARDEN.location(), 0.7, 0.7, 0.8),
-                    new VoronoiPointBiome(Biomes.PALE_GARDEN.location(), 0.7, 0.9, 0.8),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.PALE_GARDEN), 0.7, 0.5, 0.8),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.PALE_GARDEN), 0.7, 0.7, 0.8),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.PALE_GARDEN), 0.7, 0.9, 0.8),
                     //?}
 
-                    new VoronoiPointBiome(Biomes.PLAINS.location(), 0.5, 0.1, 0.8),
-                    new VoronoiPointBiome(Biomes.PLAINS.location(), 0.5, 0.3, 0.8),
-                    new VoronoiPointBiome(Biomes.OLD_GROWTH_BIRCH_FOREST.location(), 0.5, 0.5, 0.8),
-                    new VoronoiPointBiome(Biomes.OLD_GROWTH_BIRCH_FOREST.location(), 0.5, 0.7, 0.8),
-                    new VoronoiPointBiome(Biomes.MANGROVE_SWAMP.location(), 0.5, 0.9, 0.8),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.PLAINS), 0.5, 0.1, 0.8),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.PLAINS), 0.5, 0.3, 0.8),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.OLD_GROWTH_BIRCH_FOREST), 0.5, 0.5, 0.8),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.OLD_GROWTH_BIRCH_FOREST), 0.5, 0.7, 0.8),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.MANGROVE_SWAMP), 0.5, 0.9, 0.8),
 
-                    new VoronoiPointBiome(Biomes.SNOWY_PLAINS.location(), 0.3, 0.1, 0.8),
-                    new VoronoiPointBiome(Biomes.OLD_GROWTH_SPRUCE_TAIGA.location(), 0.3, 0.3, 0.8),
-                    new VoronoiPointBiome(Biomes.OLD_GROWTH_SPRUCE_TAIGA.location(), 0.3, 0.5, 0.8),
-                    new VoronoiPointBiome(Biomes.GROVE.location(), 0.3, 0.7, 0.8),
-                    new VoronoiPointBiome(Biomes.GROVE.location(), 0.3, 0.9, 0.8),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.SNOWY_PLAINS), 0.3, 0.1, 0.8),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.OLD_GROWTH_SPRUCE_TAIGA), 0.3, 0.3, 0.8),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.OLD_GROWTH_SPRUCE_TAIGA), 0.3, 0.5, 0.8),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.GROVE), 0.3, 0.7, 0.8),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.GROVE), 0.3, 0.9, 0.8),
 
-                    new VoronoiPointBiome(Biomes.SNOWY_PLAINS.location(), 0.1, 0.1, 0.8),
-                    new VoronoiPointBiome(Biomes.SNOWY_PLAINS.location(), 0.1, 0.3, 0.8),
-                    new VoronoiPointBiome(Biomes.SNOWY_PLAINS.location(), 0.1, 0.5, 0.8),
-                    new VoronoiPointBiome(Biomes.ICE_SPIKES.location(), 0.1, 0.7, 0.8),
-                    new VoronoiPointBiome(Biomes.ICE_SPIKES.location(), 0.1, 0.9, 0.8)
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.SNOWY_PLAINS), 0.1, 0.1, 0.8),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.SNOWY_PLAINS), 0.1, 0.3, 0.8),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.SNOWY_PLAINS), 0.1, 0.5, 0.8),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.ICE_SPIKES), 0.1, 0.7, 0.8),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.ICE_SPIKES), 0.1, 0.9, 0.8)
                 ))
                 .add(BIOME_INJECTION_RULES, BiomeInjectionRules.standardRules(lookup,
                         BiomeInjectionRules.makeModernOceanRule(lookup)))
@@ -1036,11 +1054,12 @@ public final class ModernBetaSettingsPresets {
     
     private static ModernBetaSettingsPreset presetAlphaWinter(BootstrapContext<ModernBetaSettingsPreset> context) {
         RegistryOps.RegistryInfoLookup lookup = new BootstrapDataContextInfoLookup<>(context);
+        HolderGetter<Biome> biomeRegistry = context.lookup(Registries.BIOME);
 
         ModernBetaSettingsPreset basePreset = presetAlpha(context);
         return new ModernBetaSettingsPreset(
             basePreset.chunkSettings(),
-            ModernBetaSettings.singleBiome(ModernBetaBiomes.ALPHA_WINTER)
+            ModernBetaSettings.singleBiome(biomeRegistry.getOrThrow(ModernBetaBiomes.ALPHA_WINTER))
                 .add(BIOME_INJECTION_RULES, BiomeInjectionRules.emptyRules(lookup))
                 .build(),
             basePreset.caveBiomeSettings()
@@ -1049,6 +1068,7 @@ public final class ModernBetaSettingsPresets {
     
     private static ModernBetaSettingsPreset presetIndevParadise(BootstrapContext<ModernBetaSettingsPreset> context) {
         RegistryOps.RegistryInfoLookup lookup = new BootstrapDataContextInfoLookup<>(context);
+        HolderGetter<Biome> biomeRegistry = context.lookup(Registries.BIOME);
 
         ModernBetaSettingsPreset basePreset = presetIndev(context);
         return new ModernBetaSettingsPreset(
@@ -1062,7 +1082,7 @@ public final class ModernBetaSettingsPresets {
                 ))
                 .add(WORLD_BORDER, WorldBorderLocation.indev(256, 64))
                 .build(),
-            ModernBetaSettings.singleBiome(ModernBetaBiomes.INDEV_PARADISE)
+            ModernBetaSettings.singleBiome(biomeRegistry.getOrThrow(ModernBetaBiomes.INDEV_PARADISE))
                 .add(BIOME_INJECTION_RULES, BiomeInjectionRules.emptyRules(lookup))
                 .build(),
             basePreset.caveBiomeSettings()
@@ -1071,6 +1091,7 @@ public final class ModernBetaSettingsPresets {
     
     private static ModernBetaSettingsPreset presetIndevWoods(BootstrapContext<ModernBetaSettingsPreset> context) {
         RegistryOps.RegistryInfoLookup lookup = new BootstrapDataContextInfoLookup<>(context);
+        HolderGetter<Biome> biomeRegistry = context.lookup(Registries.BIOME);
 
         ModernBetaSettingsPreset basePreset = presetIndev(context);
         return new ModernBetaSettingsPreset(
@@ -1084,7 +1105,7 @@ public final class ModernBetaSettingsPresets {
                 ))
                 .add(WORLD_BORDER, WorldBorderLocation.indev(256, 64))
                 .build(),
-            ModernBetaSettings.singleBiome(ModernBetaBiomes.INDEV_WOODS)
+            ModernBetaSettings.singleBiome(biomeRegistry.getOrThrow(ModernBetaBiomes.INDEV_WOODS))
                 .add(BIOME_INJECTION_RULES, BiomeInjectionRules.emptyRules(lookup))
                 .build(),
             basePreset.caveBiomeSettings()
@@ -1093,6 +1114,7 @@ public final class ModernBetaSettingsPresets {
     
     private static ModernBetaSettingsPreset presetIndevHell(BootstrapContext<ModernBetaSettingsPreset> context) {
         RegistryOps.RegistryInfoLookup lookup = new BootstrapDataContextInfoLookup<>(context);
+        HolderGetter<Biome> biomeRegistry = context.lookup(Registries.BIOME);
 
         ModernBetaSettingsPreset basePreset = presetIndev(context);
         return new ModernBetaSettingsPreset(
@@ -1106,7 +1128,7 @@ public final class ModernBetaSettingsPresets {
                 ))
                 .add(WORLD_BORDER, WorldBorderLocation.indev(256, 64))
                 .build(),
-            ModernBetaSettings.singleBiome(ModernBetaBiomes.INDEV_HELL)
+            ModernBetaSettings.singleBiome(biomeRegistry.getOrThrow(ModernBetaBiomes.INDEV_HELL))
                 .add(BIOME_INJECTION_RULES, BiomeInjectionRules.emptyRules(lookup))
                 .build(),
             basePreset.caveBiomeSettings()

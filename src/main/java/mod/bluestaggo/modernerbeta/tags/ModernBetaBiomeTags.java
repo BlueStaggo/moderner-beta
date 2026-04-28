@@ -74,6 +74,13 @@ public class ModernBetaBiomeTags {
     public static final TagKey<Biome> HEIGHT_CONFIG_PLATEAU_HILL = keyOf("height_config/plateau_hill");
     public static final TagKey<Biome> HEIGHT_CONFIG_DEEP_OCEAN = keyOf("height_config/deep_ocean");
 
+    public static final TagKey<Biome> REPLACE_WITH_FROZEN_OCEAN = keyOf("replace_with_frozen_ocean");
+    public static final TagKey<Biome> REPLACE_WITH_COLD_OCEAN = keyOf("replace_with_cold_ocean");
+    public static final TagKey<Biome> REPLACE_WITH_OCEAN = keyOf("replace_with_ocean");
+    public static final TagKey<Biome> REPLACE_WITH_LUKEWARM_OCEAN = keyOf("replace_with_lukewarm_ocean");
+    public static final TagKey<Biome> REPLACE_WITH_WARM_OCEAN = keyOf("replace_with_warm_ocean");
+
+
     private static TagKey<Biome> keyOf(String id) {
         return TagKey.create(Registries.BIOME, ModernerBeta.createId(id));
     }

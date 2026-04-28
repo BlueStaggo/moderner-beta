@@ -10,6 +10,7 @@ import mod.bluestaggo.modernerbeta.settings.component.PerlinNoiseSettings;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkCache;
+import mod.bluestaggo.modernerbeta.util.noise.OctaveNoise;
 import mod.bluestaggo.modernerbeta.util.noise.PerlinOctaveNoise;
 import mod.bluestaggo.modernerbeta.util.noise.SimpleNoisePos;
 import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomeSource;
@@ -60,12 +61,12 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
     private final boolean infdevUsePyramid;
     private final boolean infdevUseWall;
 
-    private final PerlinOctaveNoise octaveNoiseA;
-    private final PerlinOctaveNoise octaveNoiseB;
-    private final PerlinOctaveNoise octaveNoiseC;
-    private final PerlinOctaveNoise octaveNoiseD;
-    private final PerlinOctaveNoise octaveNoiseE;
-    private final PerlinOctaveNoise octaveNoiseF;
+    private final PerlinOctaveNoise primaryOctaveNoise;
+    private final PerlinOctaveNoise secondaryOctaveNoise;
+    private final PerlinOctaveNoise highOctaveNoise;
+    private final PerlinOctaveNoise lowOctaveNoise;
+    private final PerlinOctaveNoise selectorOctaveNoise;
+    private final PerlinOctaveNoise detailOctaveNoise;
     private final PerlinOctaveNoise forestOctaveNoise;
     
     private final ChunkCache<int[]> chunkCacheHeightmap;
@@ -96,12 +97,12 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
         this.infdevUsePyramid = structures.brickPyramids();
         this.infdevUseWall = structures.obsidianWalls();
         
-        this.octaveNoiseA = new PerlinOctaveNoise(this.random, 16, perlinSettings);
-        this.octaveNoiseB = new PerlinOctaveNoise(this.random, 16, perlinSettings);
-        this.octaveNoiseC = new PerlinOctaveNoise(this.random, 8, perlinSettings);
-        this.octaveNoiseD = new PerlinOctaveNoise(this.random, 4, perlinSettings);
-        this.octaveNoiseE = new PerlinOctaveNoise(this.random, 4, perlinSettings);
-        this.octaveNoiseF = new PerlinOctaveNoise(this.random, 5, perlinSettings);
+        this.primaryOctaveNoise = new PerlinOctaveNoise(this.random, 16, perlinSettings);
+        this.secondaryOctaveNoise = new PerlinOctaveNoise(this.random, 16, perlinSettings);
+        this.highOctaveNoise = new PerlinOctaveNoise(this.random, 8, perlinSettings);
+        this.lowOctaveNoise = new PerlinOctaveNoise(this.random, 4, perlinSettings);
+        this.selectorOctaveNoise = new PerlinOctaveNoise(this.random, 4, perlinSettings);
+        this.detailOctaveNoise = new PerlinOctaveNoise(this.random, 5, perlinSettings);
         this.forestOctaveNoise = new PerlinOctaveNoise(this.random, 5, perlinSettings);
         
         this.chunkCacheHeightmap = new ChunkCache<>("heightmap", this::sampleHeightmapChunk);
@@ -328,26 +329,26 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
     }
     
     @Override
-    protected PerlinOctaveNoise getForestOctaveNoise() {
+    protected OctaveNoise getForestOctaveNoise() {
         return this.forestOctaveNoise;
     }
     
     private int sampleHeightmap(int x, int z) {
-        float noiseA = (float)(
-            this.octaveNoiseA.sample(x * 32.0f, 0.0, z * 32.0f) - 
-            this.octaveNoiseB.sample(x * 64.0f, 0.0, z * 64.0f)) / 512.0f / 4.0f;
-        float noiseB = (float)this.octaveNoiseE.sampleXY(x / 4.0f, z / 4.0f);
-        float noiseC = (float)this.octaveNoiseF.sampleXY(x / 8.0f, z / 8.0f) / 8.0f;
+        float baseHeight = (float)(
+            this.primaryOctaveNoise.sample(x * 32.0f, 0.0, z * 32.0f) -
+            this.secondaryOctaveNoise.sample(x * 64.0f, 0.0, z * 64.0f)) / 512.0f / 4.0f;
+        float selector = (float)this.selectorOctaveNoise.sampleXY(x / 4.0f, z / 4.0f);
+        float detail = (float)this.detailOctaveNoise.sampleXY(x / 8.0f, z / 8.0f) / 8.0f;
         
-        noiseB = noiseB > 0.0f ? 
-            ((float)(this.octaveNoiseC.sampleXY(x / 3.888889f * 2.0f, z / 3.888889f * 2.0f) * noiseC / 4.0)) :
-            ((float)(this.octaveNoiseD.sampleXY(x / 3.888889f, z / 3.888889f) * noiseC));
+        float addedHeight = selector > 0.0f ?
+            ((float)(this.highOctaveNoise.sampleXY(x / 3.888889f * 2.0f, z / 3.888889f * 2.0f) * detail / 4.0)) :
+            ((float)(this.lowOctaveNoise.sampleXY(x / 3.888889f, z / 3.888889f) * detail));
             
-        int heightVal = (int)(noiseA + this.seaLevel + noiseB);
+        int heightVal = (int)(baseHeight + this.seaLevel + addedHeight);
 
-        if ((float)this.octaveNoiseE.sampleXY(x, z) < 0.0f) {
+        if ((float)this.selectorOctaveNoise.sampleXY(x, z) < 0.0f) {
             heightVal = heightVal / 2 << 1;
-            if ((float)this.octaveNoiseE.sampleXY(x / 5, z / 5) < 0.0f) {
+            if ((float)this.selectorOctaveNoise.sampleXY(x / 5, z / 5) < 0.0f) {
                 ++heightVal;
             }
         }

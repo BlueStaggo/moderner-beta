@@ -4,6 +4,7 @@ package mod.bluestaggo.modernerbeta.client.gui.screen.config.graphical;
 
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DynamicOps;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.client.registry.ModernBetaClientRegistries;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
@@ -16,6 +17,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.worldselection.WorldCreationContext;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
@@ -88,6 +90,8 @@ public abstract class ModernBetaGraphicalComponentedSettingsScreen extends Moder
 
     @SuppressWarnings("unchecked")
     protected void addOptionsForComponents(OptionsList list, ModernBetaSettings settings, List<SettingsComponentType<?>> componentTypes) {
+        DynamicOps<Tag> ops = settings.getOpsForSettings(NbtOps.INSTANCE);
+
         for (SettingsComponentType<?> componentType : componentTypes) {
             ModernBetaRegistries.SETTINGS_COMPONENT_TYPE.getResourceKey(componentType)
                 .ifPresent(componentTypeKey -> {
@@ -108,7 +112,7 @@ public abstract class ModernBetaGraphicalComponentedSettingsScreen extends Moder
                             componentTypeId.toString(),
                             VersionCompat.getOrThrow(
                                 ((Codec<Object>)componentType.codec())
-                                    .encodeStart(NbtOps.INSTANCE, componentType.defaultValueGetter().getDefault(settings))
+                                    .encodeStart(ops, componentType.defaultValueGetter().getDefault(settings))
                             )
                         );
                     }

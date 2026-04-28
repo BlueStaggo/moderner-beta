@@ -14,9 +14,6 @@ import mod.bluestaggo.modernerbeta.level.biome.voronoi.VoronoiPointBiome;
 import mod.bluestaggo.modernerbeta.level.biome.voronoi.VoronoiPointRules;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.biome.Biome;
 
@@ -24,7 +21,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class BiomeProviderVoronoi extends BiomeProvider implements DebugTextProvider2D {
     private final VoronoiClimateSampler climateSampler;
@@ -50,20 +46,14 @@ public class BiomeProviderVoronoi extends BiomeProvider implements DebugTextProv
     public Holder<Biome> getBiome(int biomeX, int biomeY, int biomeZ) {
         ClimateMapping climateMapping = this.getClimateMapping(biomeX, biomeZ);
         
-        return this.biomeRegistry.getOrThrow(climateMapping.getBiome());
+        return climateMapping.biome();
     }
 
     @Override
     public Set<Holder<Biome>> getBiomes() {
-        Set<ResourceLocation> biomes = new HashSet<>();
-
+        Set<Holder<Biome>> biomes = new HashSet<>();
         this.rules.getItems().forEach(key -> biomes.add(key.biome()));
-        
-        return biomes
-            .stream()
-            .distinct()
-            .map(key -> this.biomeRegistry.getOrThrow(ResourceKey.create(Registries.BIOME, key)))
-            .collect(Collectors.toSet());
+        return biomes;
     }
     
     private ClimateMapping getClimateMapping(int biomeX, int biomeZ) {
@@ -79,7 +69,7 @@ public class BiomeProviderVoronoi extends BiomeProvider implements DebugTextProv
         VoronoiPointRules.Builder<ClimateMapping, Clime> builder = new VoronoiPointRules.Builder<>();
         
         for (VoronoiPointBiome point : points) {
-            ResourceLocation biome = point.biome();
+            Holder<Biome> biome = point.biome();
             
             double temp = Mth.clamp(point.temp(), 0.0, 1.0);
             double rain = Mth.clamp(point.rain(), 0.0, 1.0);

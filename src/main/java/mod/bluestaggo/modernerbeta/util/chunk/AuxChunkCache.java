@@ -2,16 +2,14 @@ package mod.bluestaggo.modernerbeta.util.chunk;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectLinkedOpenHashMap;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.LevelHeightAccessor;
-import org.apache.commons.lang3.function.TriFunction;
 
 import java.util.concurrent.locks.StampedLock;
 
 /*
- * Generic threadsafe(???) cache for anything that outputs T given a world context and a pair of integer chunk coordinates.
+ * Generic threadsafe(???) cache for anything that outputs T given an auxiliary context and a pair of integer chunk coordinates.
  * 
  */
-public class LevelChunkCache<T> {
+public class AuxChunkCache<A, T> {
     public static final int DEFAULT_SIZE = 512;
     public static final boolean DEFAULT_EVICT = true;
 
@@ -20,12 +18,12 @@ public class LevelChunkCache<T> {
     private final int capacity;
     private final boolean evictOldChunks;
 
-    private final TriFunction<LevelHeightAccessor, Integer, Integer, T> chunkFunc;
+    private final AuxIntFunction<A, T> chunkFunc;
     private final Long2ObjectLinkedOpenHashMap<T> chunkMap;
 
     private final StampedLock lock;
 
-    public LevelChunkCache(String name, int capacity, boolean evictOldChunks, TriFunction<LevelHeightAccessor, Integer, Integer, T> chunkFunc) {
+    public AuxChunkCache(String name, int capacity, boolean evictOldChunks, AuxIntFunction<A, T> chunkFunc) {
         this.name = name;
         this.capacity = capacity;
         this.evictOldChunks = evictOldChunks;
@@ -36,11 +34,11 @@ public class LevelChunkCache<T> {
         this.lock = new StampedLock();
     }
 
-    public LevelChunkCache(String name, int capacity, TriFunction<LevelHeightAccessor, Integer, Integer, T> chunkFunc) {
+    public AuxChunkCache(String name, int capacity, AuxIntFunction<A, T> chunkFunc) {
         this(name, capacity, DEFAULT_EVICT, chunkFunc);
     }
 
-    public LevelChunkCache(String name, TriFunction<LevelHeightAccessor, Integer, Integer, T> chunkFunc) {
+    public AuxChunkCache(String name, AuxIntFunction<A, T> chunkFunc) {
         this(name, DEFAULT_SIZE, DEFAULT_EVICT, chunkFunc);
     }
     
@@ -54,7 +52,7 @@ public class LevelChunkCache<T> {
         }
     }
     
-    public T get(LevelHeightAccessor level, int chunkX, int chunkZ) {
+    public T get(A aux, int chunkX, int chunkZ) {
         T chunk;
         
         long key = ChunkPos.asLong(chunkX, chunkZ);
@@ -70,7 +68,7 @@ public class LevelChunkCache<T> {
                 // => blocked write is acquired anyway (see below)
                 if (writeStamp != 0) {
                     stamp = writeStamp;
-                    chunk = this.createChunk(key, level, chunkX, chunkZ);
+                    chunk = this.createChunk(key, aux, chunkX, chunkZ);
                     
                     break;
                 }
@@ -86,15 +84,20 @@ public class LevelChunkCache<T> {
         return chunk;
     }
     
-    private T createChunk(long key, LevelHeightAccessor level, int chunkX, int chunkZ) {
+    private T createChunk(long key, A aux, int chunkX, int chunkZ) {
         // Ensure cache size remains below capacity
         if (this.evictOldChunks && this.chunkMap.size() >= this.capacity) {
             this.chunkMap.removeFirst();
         }
         
-        T chunk = this.chunkFunc.apply(level, chunkX, chunkZ);
+        T chunk = this.chunkFunc.apply(aux, chunkX, chunkZ);
         this.chunkMap.put(key, chunk);
         
         return chunk;
+    }
+    
+    @FunctionalInterface
+    public interface AuxIntFunction<A, T> {
+        T apply(A aux, int i, int j);
     }
 }

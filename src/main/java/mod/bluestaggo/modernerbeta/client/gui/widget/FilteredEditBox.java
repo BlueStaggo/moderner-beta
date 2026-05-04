@@ -69,7 +69,7 @@ public class FilteredEditBox extends EditBox {
 
             String updated = new StringBuilder(value).replace(start, end, text).toString();
             if (this.filter.test(updated)) {
-                accessor.setValue(updated);
+                accessor.setValueRaw(updated);
                 int newCursorPos = start + insertionLength;
                 this.setCursorPosition(newCursorPos);
                 this.setHighlightPos(newCursorPos);
@@ -94,7 +94,7 @@ public class FilteredEditBox extends EditBox {
                 if (start != end) {
                     String updated = new StringBuilder(value).delete(start, end).toString();
                     if (this.filter.test(updated)) {
-                        accessor.setValue(updated);
+                        accessor.setValueRaw(updated);
                         this.setCursorPosition(start);
                         accessor.invokeOnValueChange(updated);
                         this.moveCursorTo(start, false);

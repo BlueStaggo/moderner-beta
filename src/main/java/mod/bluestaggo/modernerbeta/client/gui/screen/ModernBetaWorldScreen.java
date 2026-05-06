@@ -30,7 +30,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.chunk.ChunkGenerator;
-import org.apache.logging.log4j.util.TriConsumer;
 
 import java.util.Random;
 
@@ -60,7 +59,7 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
         "createWorld.customize.modern_beta.hint.settings"
     };
     
-    private final TriConsumer<ModernBetaSettings, ModernBetaSettings, ModernBetaSettings> onDone;
+    private final OnSettingsSave onDone;
     private final String hintString;
     private final WorldCreationContext context;
     private final Registry<ModernBetaSettingsPreset> presetRegistry;
@@ -69,7 +68,7 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
     private ModernBetaSettingsPreset preset;
     private Button buttonPreset;
 
-    public ModernBetaWorldScreen(Screen parent, WorldCreationContext context, TriConsumer<ModernBetaSettings, ModernBetaSettings, ModernBetaSettings> onDone) {
+    public ModernBetaWorldScreen(Screen parent, WorldCreationContext context, OnSettingsSave onDone) {
         super(Component.translatable(TEXT_TITLE), parent, 33, 40);
         this.layout.setContentMarginTop(0);
         
@@ -119,28 +118,28 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
                     (ModernBetaSettingsPresetCategoryTags.SELECTABLE)
                     .stream()
                     .toList(),
-                    (screen, name, preset) -> {
-                        this.minecraft.setScreen(new ModernBetaSettingsPresetScreen<>(
-                            screen,
-                            this.presetRegistry
-                                //? if >=1.21.2 {
-                                .getOrThrow
-                                //?} else {
-                                /*.getOrCreateTag
-                                 *///?}
-                                (preset.presetTag())
-                                .stream()
-                                .toList(),
-                            (parentScreen, presetName, settingsPreset) -> {
-                                this.setPreset(ModernBetaSettingsPreset.referenced(presetName));
+                (screen, name, preset) -> {
+                    this.minecraft.setScreen(new ModernBetaSettingsPresetScreen<>(
+                        screen,
+                        this.presetRegistry
+                            //? if >=1.21.2 {
+                            .getOrThrow
+                            //?} else {
+                            /*.getOrCreateTag
+                             *///?}
+                            (preset.presetTag())
+                            .stream()
+                            .toList(),
+                        (parentScreen, presetName, settingsPreset) -> {
+                            this.setPreset(ModernBetaSettingsPreset.referenced(presetName));
 
-                                while (this.minecraft.screen instanceof ModernBetaSettingsPresetScreen<?> subPresetScreen) {
-                                    this.minecraft.setScreen(subPresetScreen.parent);
-                                }
-                            },
-                            true
-                        ));
-                    },
+                            while (this.minecraft.screen instanceof ModernBetaSettingsPresetScreen<?> subPresetScreen) {
+                                this.minecraft.setScreen(subPresetScreen.parent);
+                            }
+                        },
+                        true
+                    ));
+                },
                 false
             ))
         ).size(BUTTON_LENGTH_PRESET, BUTTON_HEIGHT_PRESET).build();
@@ -332,7 +331,7 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
         mainRow.addChild(gridWidgetActions);
 
         Button doneButton = Button.builder(CommonComponents.GUI_DONE, button -> {
-            this.onDone.accept(
+            this.onDone.onSave(
                 this.preset.chunkSettings(),
                 this.preset.biomeSettings(),
                 this.preset.caveBiomeSettings()
@@ -378,5 +377,9 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
         );
 
         return presetText;
+    }
+
+    public interface OnSettingsSave {
+        void onSave(ModernBetaSettings chunkSettings, ModernBetaSettings biomeSettings, ModernBetaSettings caveBiomeSettings);
     }
 }

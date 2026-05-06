@@ -216,6 +216,19 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
         }
     }
 
+    /**
+     * Gets the surface height for the given coordinate
+     *
+     * @param rand The {@link Random} instance to use.
+     * @param x    The X coordinate to get the height for.
+     * @param z    The Z coordinate to get the height for
+     * @return The height for the given coordinates.
+     */
+    @Override
+    public int getSurfaceDepth(Random rand, int x, int z) {
+        return 1;
+    }
+
     @Override
     public int getHeight(LevelHeightAccessor level, int x, int z, Types type) {
         int chunkX = x >> 4;

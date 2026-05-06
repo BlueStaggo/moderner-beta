@@ -18,7 +18,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.CommonColors;
 import net.minecraft.util.FormattedCharSequence;
-import org.apache.logging.log4j.util.TriConsumer;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -28,7 +27,7 @@ public class ModernBetaSettingsPresetScreen<T extends NameAndDescriptionItem> ex
 
     private final List<Holder<T>> presets;
     private final boolean enableSelect;
-    private final TriConsumer<ModernBetaSettingsPresetScreen<?>, ResourceLocation, T> onSelected;
+    private final OnSelectedItem<T> onSelected;
 
     private PresetsListWidget listWidget;
     private Button selectPresetButton;
@@ -36,7 +35,7 @@ public class ModernBetaSettingsPresetScreen<T extends NameAndDescriptionItem> ex
     public ModernBetaSettingsPresetScreen(
         ModernBetaScreen parent,
         List<Holder<T>> presets,
-        TriConsumer<ModernBetaSettingsPresetScreen<?>, ResourceLocation, T> onSelected,
+        OnSelectedItem<T> onSelected,
         boolean enableSelect
     ) {
         super(Component.translatable(TEXT_TITLE), parent);
@@ -74,7 +73,7 @@ public class ModernBetaSettingsPresetScreen<T extends NameAndDescriptionItem> ex
                 PresetsListWidget.PresetEntry entry = this.listWidget.getSelected();
 
                 if (entry != null) {
-                    this.onSelected.accept(this, entry.presetName, entry.preset);
+                    this.onSelected.onSelect(this, entry.presetName, entry.preset);
                 }
             }
         ).size(150, 20).build();
@@ -130,6 +129,11 @@ public class ModernBetaSettingsPresetScreen<T extends NameAndDescriptionItem> ex
 
     private void updateSelectButton(boolean hasSelected) {
         this.selectPresetButton.active = hasSelected;
+    }
+
+    @FunctionalInterface
+    public interface OnSelectedItem<T extends NameAndDescriptionItem> {
+        void onSelect(ModernBetaSettingsPresetScreen<T> screen, ResourceLocation name, T preset);
     }
 
     private class PresetsListWidget extends ObjectSelectionList<PresetsListWidget.PresetEntry> {
@@ -315,7 +319,7 @@ public class ModernBetaSettingsPresetScreen<T extends NameAndDescriptionItem> ex
                     );
 
                     ModernBetaSettingsPresetScreen.this.onSelected
-                        .accept(ModernBetaSettingsPresetScreen.this, this.presetName, this.preset);
+                        .onSelect(ModernBetaSettingsPresetScreen.this, this.presetName, this.preset);
                 }
 
                 //? if <1.21.9

@@ -15,9 +15,9 @@ import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.settings.component.*;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
+import mod.bluestaggo.modernerbeta.util.chunk.AuxChunkCache;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkCache;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkHeightmap;
-import mod.bluestaggo.modernerbeta.util.chunk.LevelChunkCache;
 import mod.bluestaggo.modernerbeta.util.noise.SimpleNoisePos;
 import mod.bluestaggo.modernerbeta.util.noise.SimplexNoise;
 import net.minecraft.Util;
@@ -61,7 +61,7 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
     protected final int noiseTopY;  // Number of positive (y >= 0) vertical subchunks
 
     private final ChunkCache<NoiseProviderBase> chunkCacheNoise;
-    private final LevelChunkCache<ChunkHeightmap> chunkCacheHeightmap;
+    private final AuxChunkCache<LevelHeightAccessor, ChunkHeightmap> chunkCacheHeightmap;
     
     protected final List<NoisePostProcessor> noisePostProcessors = new ArrayList<>();
     private final SimplexNoise islandNoise;
@@ -118,7 +118,7 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
                 return noiseProviderBase;
             }
         );
-        this.chunkCacheHeightmap = new LevelChunkCache<>("heightmap", this::sampleHeightmap);
+        this.chunkCacheHeightmap = new AuxChunkCache<>("heightmap", this::sampleHeightmap);
 
         this.islandNoise = new SimplexNoise(this.createRandom(this.seed));
 

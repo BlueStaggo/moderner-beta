@@ -5,6 +5,7 @@ import com.google.common.base.Suppliers;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.api.level.chunk.surface.SurfaceConfig;
 import mod.bluestaggo.modernerbeta.compat.ModCompat;
+import mod.bluestaggo.modernerbeta.imixin.ModernBetaSurfaceSystem;
 import mod.bluestaggo.modernerbeta.level.biome.injection.BiomeInjectionHandler;
 import mod.bluestaggo.modernerbeta.mixin.ChunkGeneratorStructureStateAccessor;
 import mod.bluestaggo.modernerbeta.mixin.NoiseBasedChunkGeneratorAccessor;
@@ -291,6 +292,14 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
     ) {
         NoiseChunk noiseChunk = chunk.getOrCreateNoiseChunk(chunkAccess -> this.createNoiseChunk(chunkAccess, structureManager, blender, random));
         NoiseGeneratorSettings noiseGeneratorSettings = this.generatorSettings().value();
+        if (random.surfaceSystem() instanceof ModernBetaSurfaceSystem modernBetaSurfaceSystem) {
+            modernBetaSurfaceSystem.modernerBeta$setupChunkContext(this.chunkProvider);
+
+            if (this.biomeSource instanceof ModernBetaBiomeSource modernBetaBiomeSource) {
+                modernBetaSurfaceSystem.modernerBeta$setupBiomeContext(modernBetaBiomeSource.getBiomeProvider());
+            }
+        }
+
         random.surfaceSystem()
             .buildSurface(
                 random,

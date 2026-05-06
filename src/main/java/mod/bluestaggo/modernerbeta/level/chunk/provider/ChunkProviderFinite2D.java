@@ -22,6 +22,8 @@ import net.minecraft.world.level.block.SnowyDirtBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 
+import java.util.Random;
+
 public class ChunkProviderFinite2D extends ChunkProviderFinite {
     private CombinedOctaveNoise minHeightOctaveNoise;
     private CombinedOctaveNoise maxHeightOctaveNoise;
@@ -494,6 +496,19 @@ public class ChunkProviderFinite2D extends ChunkProviderFinite {
                 }
             }
         }
+    }
+
+    /**
+     * Gets the surface height for the given coordinate
+     *
+     * @param rand The {@link Random} instance to use.
+     * @param x    The X coordinate to get the height for.
+     * @param z    The Z coordinate to get the height for
+     * @return The height for the given coordinates.
+     */
+    @Override
+    public int getSurfaceDepth(Random rand, int x, int z) {
+        return 0; //TODO
     }
 
     private void plantSurface() {

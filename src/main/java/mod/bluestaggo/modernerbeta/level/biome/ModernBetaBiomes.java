@@ -20,8 +20,6 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 
-import java.util.function.BiFunction;
-
 public class ModernBetaBiomes {
     public static final ResourceKey<Biome> BETA_FOREST = keyOf(ModernerBeta.createId(ModernBetaBiomeIDs.BETA_FOREST));
     public static final ResourceKey<Biome> BETA_OAK_FOREST = keyOf(ModernerBeta.createId(ModernBetaBiomeIDs.BETA_OAK_FOREST));
@@ -157,14 +155,19 @@ public class ModernBetaBiomes {
         register(biomeRegisterable, EARLY_RELEASE_TAIGA, EarlyReleaseTaigaBiome::create);
     }
     
-    private static void register(BootstrapContext<Biome> biomeRegisterable, ResourceKey<Biome> biome, BiFunction<HolderGetter<PlacedFeature>, HolderGetter<ConfiguredWorldCarver<?>>, Biome> biomeCreator) {
+    private static void register(BootstrapContext<Biome> biomeRegisterable, ResourceKey<Biome> biome, BiomeCreator biomeCreator) {
         HolderGetter<PlacedFeature> registryFeature = biomeRegisterable.lookup(Registries.PLACED_FEATURE);
         HolderGetter<ConfiguredWorldCarver<?>> registryCarver = biomeRegisterable.lookup(Registries.CONFIGURED_CARVER);
         
-        biomeRegisterable.register(biome, biomeCreator.apply(registryFeature, registryCarver));
+        biomeRegisterable.register(biome, biomeCreator.create(registryFeature, registryCarver));
     }
     
     private static ResourceKey<Biome> keyOf(ResourceLocation id) {
         return ResourceKey.create(Registries.BIOME, id);
+    }
+
+    @FunctionalInterface
+    private interface BiomeCreator {
+        Biome create(HolderGetter<PlacedFeature> registryFeature, HolderGetter<ConfiguredWorldCarver<?>> registryCarver);
     }
 }

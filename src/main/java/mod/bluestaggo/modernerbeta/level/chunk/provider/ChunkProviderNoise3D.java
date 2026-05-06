@@ -7,11 +7,11 @@ import mod.bluestaggo.modernerbeta.api.level.chunk.surface.SurfaceBlocks;
 import mod.bluestaggo.modernerbeta.api.level.chunk.surface.SurfaceConfig;
 import mod.bluestaggo.modernerbeta.api.level.spawn.SpawnLocator;
 import mod.bluestaggo.modernerbeta.level.spawn.SpawnLocatorPE;
-import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.settings.component.*;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
+import mod.bluestaggo.modernerbeta.util.chunk.ChunkCache;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkHeightmap;
 import mod.bluestaggo.modernerbeta.util.noise.OctaveNoise;
 import mod.bluestaggo.modernerbeta.util.noise.PerlinOctaveNoise;
@@ -62,6 +62,7 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
     private final PerlinOctaveNoise depthOctaveNoise;
     private final PerlinOctaveNoise forestOctaveNoise;
 
+    private final ChunkCache<double[]> surfaceNoiseCache;
     private final ClimateSampler climateSampler;
 
     public ChunkProviderNoise3D(ModernBetaChunkGenerator chunkGenerator, long seed) {
@@ -109,6 +110,18 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
 
         this.forestOctaveNoise = new PerlinOctaveNoise(this.random, noiseScale.forestNoiseOctaves(), perlinSettings);
 
+        this.surfaceNoiseCache = new ChunkCache<>("surface_noise", (chunkX, chunkZ) -> {
+            float surfaceScale = surfaceProperties.surfaceNoiseScale();
+
+            return !noise3DSettings.simplexSurfaceNoise() && noise3DSettings.arraySurfaceNoise()
+                ? surfaceOctaveNoise.sampleArray(
+                    chunkX * 16, chunkZ * 16, 0.0D,
+                    16, 16, 1,
+                    surfaceScale, surfaceScale, surfaceScale
+                )
+                : null;
+        });
+
         this.climateSampler = !this.noise3DSettings.climateHeightScaling() ? null :
             this.chunkGenerator.getBiomeSource() instanceof ModernBetaBiomeSource biomeSource
             ? biomeSource.getBiomeProvider() instanceof ClimateSampler climateSampler
@@ -151,14 +164,12 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
 
         Aquifer aquiferSampler = this.getAquiferSampler(chunk, noiseConfig);
-        ChunkHeightmap heightmapChunk = this.getChunkHeightmap(region, chunkX, chunkZ);
         SimpleNoisePos noisePos = new SimpleNoisePos();
 
         boolean generateBeaches = surfaceProperties.generateBeaches();
 
         float sandScale = surfaceProperties.sandBeachScale();
         float gravelScale = surfaceProperties.gravelBeachScale();
-        float surfaceScale = surfaceProperties.surfaceNoiseScale();
 
         boolean initBeachArrays = surfaceProperties.enableBeaches() && generateBeaches && noise3DSettings.arraySurfaceNoise();
         double[] sandNoise = initBeachArrays ? beachOctaveNoise.sampleArray(
@@ -171,12 +182,6 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
             chunkX * 16, 109.0134D, chunkZ * 16,
             16, 1, 16,
             gravelScale, 1.0D, gravelScale
-        ) : null;
-
-        double[] surfaceNoise = !noise3DSettings.simplexSurfaceNoise() && noise3DSettings.arraySurfaceNoise() ? surfaceOctaveNoise.sampleArray(
-            chunkX * 16, chunkZ * 16, 0.0D,
-            16, 16, 1,
-            surfaceScale, surfaceScale, surfaceScale
         ) : null;
 
         for (int localZ = 0; localZ < 16; localZ++) {
@@ -212,16 +217,6 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
                 boolean genSandBeach = generateBeaches && sandValue + rand.nextDouble() * 0.2D > 0.0D;
                 boolean genGravelBeach = generateBeaches && gravelValue + rand.nextDouble() * 0.2D > 3.0D;
 
-                double surfaceSample = surfaceNoise != null
-                    ? surfaceNoise[noiseCoord]
-                    : surfaceOctaveNoise.sampleXZ(
-                            x, z, surfaceScale, surfaceScale, noise3DSettings.simplexSurfaceNoise() ? 1.0D : 0.5D);
-                int surfaceDepth = (int) (surfaceSample / 3D + 3D + rand.nextDouble() * 0.25D);
-
-                if (!this.surfaceProperties.erosion() && surfaceDepth < 1) {
-                    surfaceDepth = 1;
-                }
-
                 int runDepth = -1;
 
                 Holder<Biome> biome = biomeSource.getBiomeForSurfaceGen(region, pos.set(x, surfaceTopY, z));
@@ -255,6 +250,8 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
                     if (!blockAt.is(this.defaultBlock.getBlock())) { // Skip if not stone
                         continue;
                     }
+
+                    int surfaceDepth = this.getSurfaceDepth(rand, x, z);
 
                     // At the first default block
                     if (runDepth == -1) {
@@ -356,7 +353,6 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
 
         float sandScale = surfaceProperties.sandBeachScale();
         float gravelScale = surfaceProperties.gravelBeachScale();
-        float surfaceScale = surfaceProperties.surfaceNoiseScale();
 
         boolean initBeachArrays = surfaceProperties.enableBeaches() && generateBeaches && noise3DSettings.arraySurfaceNoise();
         double[] sandNoise = initBeachArrays ? beachOctaveNoise.sampleArray(
@@ -369,12 +365,6 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
             chunkX * 16, 109.0134D, chunkZ * 16,
             16, 1, 16,
             gravelScale, 1.0D, gravelScale
-        ) : null;
-
-        double[] surfaceNoise = !noise3DSettings.simplexSurfaceNoise() && noise3DSettings.arraySurfaceNoise() ? surfaceOctaveNoise.sampleArray(
-            chunkX * 16, chunkZ * 16, 0.0D,
-            16, 16, 1,
-            surfaceScale, surfaceScale, surfaceScale
         ) : null;
 
         for (int localZ = 0; localZ < 16; localZ++) {
@@ -414,11 +404,7 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
                 boolean genSandBeach = generateBeaches && sandValue + rand.nextDouble() * 0.2D > 0.0D;
                 boolean genGravelBeach = generateBeaches && gravelValue + rand.nextDouble() * 0.2D > 3.0D;
 
-                double surfaceSample = !surfaceProperties.erosion() ? 1.0D
-                    : surfaceNoise != null ? surfaceNoise[noiseCoord]
-                    : surfaceOctaveNoise.sampleXZ(
-                            x, z, surfaceScale, surfaceScale, noise3DSettings.simplexSurfaceNoise() ? 1.0D : 0.5D);
-                int surfaceDepth = (int) (surfaceSample / 3D + 3D + rand.nextDouble() * 0.25D);
+                double surfaceDepth = this.getSurfaceDepth(rand, x, z);
 
                 Holder<Biome> biome = biomeSource.getBiomeForSurfaceGen(region, pos.set(x, surfaceTopY, z));
                 SurfaceConfig surfaceConfig = this.surfaceBuilder.getSurfaceConfig(biome);
@@ -472,6 +458,40 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
                 }
             }
         }
+    }
+
+    /**
+     * Gets the surface height for the given coordinate
+     *
+     * @param rand The {@link Random} instance for the height.
+     * @param x    The X coordinate to get the height for.
+     * @param z    The Z coordinate to get the height for
+     * @return The height for the given coordinates.
+     */
+    @Override
+    public int getSurfaceDepth(Random rand, int x, int z) {
+        int chunkX = x >> 4;
+        int chunkZ = z >> 4;
+
+        int localX = x & 15;
+        int localZ = z & 15;
+
+        int noiseCoord = this.surfaceProperties.flipNoiseCoordinates()
+            ? localX + localZ * 16
+            : localZ + localX * 16;
+
+        float surfaceScale = surfaceProperties.surfaceNoiseScale();
+        double surfaceSample = this.surfaceNoiseCache != null
+            ? this.surfaceNoiseCache.get(chunkX, chunkZ)[noiseCoord]
+            : surfaceOctaveNoise.sampleXZ(
+            x, z, surfaceScale, surfaceScale, noise3DSettings.simplexSurfaceNoise() ? 1.0D : 0.5D);
+        int surfaceDepth = (int) (surfaceSample / 3D + 3D + rand.nextDouble() * 0.25D);
+
+        if (!this.surfaceProperties.erosion() && surfaceDepth < 1) {
+            surfaceDepth = 1;
+        }
+
+        return surfaceDepth;
     }
 
     @Override
@@ -686,7 +706,7 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
     }
 
     @Override
-    protected Random createSurfaceRandom(int chunkX, int chunkZ) {
+    public Random createSurfaceRandom(int chunkX, int chunkZ) {
         if (this.noise3DSettings.pocketEditionRng()) {
             long seed = (long)chunkX * 0x14609048 + (long)chunkZ * 0x7ebe2d5;
             return new MTRandom(seed);

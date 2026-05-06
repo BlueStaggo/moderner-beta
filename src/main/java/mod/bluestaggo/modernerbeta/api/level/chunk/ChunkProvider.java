@@ -124,6 +124,16 @@ public abstract class ChunkProvider {
     }
 
     /**
+     * Gets the surface height for the given coordinate
+     *
+     * @param rand The {@link Random} instance to use.
+     * @param x    The X coordinate to get the height for.
+     * @param z    The Z coordinate to get the height for
+     * @return The height for the given coordinates.
+     */
+    public abstract int getSurfaceDepth(Random rand, int x, int z);
+
+    /**
      * Sample height at given x/z coordinate. Initially generates heightmap for entire chunk,
      * if chunk containing x/z coordinates has never been sampled.
      *
@@ -279,7 +289,7 @@ public abstract class ChunkProvider {
      * 
      * @return New Random object initialized with chunk coordinates for seed.
      */
-    protected Random createSurfaceRandom(int chunkX, int chunkZ) {
+    public Random createSurfaceRandom(int chunkX, int chunkZ) {
         long seed = (long)chunkX * 0x4f9939f508L + (long)chunkZ * 0x1ef1565bd5L;
         return this.createRandom(seed);
     }

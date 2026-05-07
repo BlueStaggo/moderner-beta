@@ -53,21 +53,17 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
         Set<ExtendedBiomeId> allExtendedBiomes = new HashSet<>();
 
 		this.layer = this.configuredLayers.getOutputOrThrow(ModernBetaBuiltInTypes.LayerOutput.BIOME.id);
-		this.layer.init(seed);
         this.layer.addPossibleBiomesRecursive(allExtendedBiomes);
 
 		this.heightLayer = this.configuredLayers.getOutput(ModernBetaBuiltInTypes.LayerOutput.HEIGHT.id)
 			.orElse(this.layer);
-		this.heightLayer.init(seed);
 
         if (this.settings.getOrDefault(SettingsComponentTypes.USE_OCEAN_BIOMES)) {
             this.oceanLayer = this.configuredLayers.getOutputOrThrow(ModernBetaBuiltInTypes.LayerOutput.OCEAN.id);
-            this.oceanLayer.init(seed);
             this.oceanLayer.addPossibleBiomesRecursive(allExtendedBiomes);
 
             this.deepOceanLayer = this.configuredLayers.getOutput(ModernBetaBuiltInTypes.LayerOutput.DEEP_OCEAN.id)
                 .orElse(this.oceanLayer);
-            this.deepOceanLayer.init(seed);
             this.deepOceanLayer.addPossibleBiomesRecursive(allExtendedBiomes);
         } else {
             this.oceanLayer = null;
@@ -80,6 +76,21 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 			.map(Optional::get)
 			.distinct()
 			.toList();
+	}
+
+	/**
+	 * Initializes the biome provider
+	 */
+	@Override
+	public void init() {
+		this.layer.init(seed);
+		this.heightLayer.init(seed);
+
+		if (this.oceanLayer != null)
+			this.oceanLayer.init(seed);
+
+		if (this.deepOceanLayer != null)
+			this.deepOceanLayer.init(seed);
 	}
 
 	@SuppressWarnings("unchecked")

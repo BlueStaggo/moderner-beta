@@ -109,10 +109,12 @@ public class ModernBetaBiomeSource extends BiomeSource {
         this.biomeProvider = ModernBetaRegistries.BIOME
             .getValue(biomeSettings.getProvider())
             .apply(biomeSettings, this.biomeRegistry, seed);
+        this.biomeProvider.init();
         
         this.caveBiomeProvider = ModernBetaRegistries.CAVE_BIOME
             .getValue(caveBiomeSettings.getProvider())
             .apply(caveBiomeSettings, this.biomeRegistry, seed);
+        this.caveBiomeProvider.init();
     }
     
     @Override
@@ -294,7 +296,7 @@ public class ModernBetaBiomeSource extends BiomeSource {
         ModernBetaSettings biomeSettings = this.biomeSettings.mapPreset(this.presetRegistry, ModernBetaSettingsPreset::biomeSettings);
         ModernBetaSettings caveBiomeSettings = this.caveBiomeSettings.mapPreset(this.presetRegistry, ModernBetaSettingsPreset::caveBiomeSettings);
         
-        BiomeProvider biomeProvider  = ModernBetaRegistries.BIOME
+        BiomeProvider biomeProvider = ModernBetaRegistries.BIOME
             .getValue(biomeSettings.getProvider())
             .apply(biomeSettings, biomeRegistry, 0L);
         

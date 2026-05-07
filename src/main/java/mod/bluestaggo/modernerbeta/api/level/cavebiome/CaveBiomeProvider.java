@@ -24,6 +24,11 @@ public abstract class CaveBiomeProvider {
         this.biomeRegistry = biomeRegistry;
         this.seed = seed;
     }
+
+    /**
+     * Initializes the biome provider
+     */
+    public void init() {}
     
     /**
      * Gets a cave biome to overwrite the original biome at given biome coordinates.

@@ -53,10 +53,19 @@ public class BiomeProviderBetaFractal extends BiomeProviderFractal implements Cl
 
         this.temperatureLayer = new IntZoomLayer(1001, new IntZoomLayer(1000, temperatureLayer));
         this.downfallLayer = new IntZoomLayer(1001, new IntZoomLayer(1000, downfallLayer));
-        this.temperatureLayer.init(seed);
-        this.downfallLayer.init(seed);
 
         this.distribution = settings.getOrDefault(SettingsComponentTypes.CLIMATE_DISTRIBUTION);
+    }
+
+    /**
+     * Initializes the biome provider
+     */
+    @Override
+    public void init() {
+        super.init();
+
+        this.temperatureLayer.init(seed);
+        this.downfallLayer.init(seed);
     }
 
     @Override

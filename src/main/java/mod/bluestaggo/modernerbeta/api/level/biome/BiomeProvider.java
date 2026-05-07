@@ -32,6 +32,11 @@ public abstract class BiomeProvider {
 
         this.temperatureHeightScaling = settings.getOrDefault(SettingsComponentTypes.TEMPERATURE_HEIGHT_SCALING);
     }
+
+    /**
+     * Initializes the biome provider
+     */
+    public void init() {}
     
     /**
      * Gets a biome for biome source at given biome coordinates.

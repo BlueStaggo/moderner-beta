@@ -1,3 +1,9 @@
+# 4.1.4
+
+## Fixes
+- Fixed Fractal biome provider being seeded wrongly on world first load.
+- (26.1) Fixed text boxes being broken with Moderner Beta.
+
 # 4.1.3
 
 ## Fixes

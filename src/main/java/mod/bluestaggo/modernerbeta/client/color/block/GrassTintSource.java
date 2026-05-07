@@ -48,6 +48,11 @@ public class GrassTintSource extends GrassBlockTintSource {
 
     //? if >=26.1 {
     /*@Override
+    public int colorAsTerrainParticle(BlockState state, BlockAndTintGetter level, BlockPos pos) {
+        return this.colorInWorld(state, level, pos);
+    }
+
+    @Override
     public java.util.Set<net.minecraft.world.level.block.state.properties.Property<?>> relevantProperties() {
         return doubleTall ? java.util.Set.of(DoublePlantBlock.HALF) : java.util.Set.of();
     }

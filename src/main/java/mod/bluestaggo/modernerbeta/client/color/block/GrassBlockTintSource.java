@@ -59,4 +59,11 @@ public class GrassBlockTintSource implements net.minecraft.client.color.block.Bl
 
         return BiomeColors.getAverageGrassColor(level, pos);
     }
+
+    //? if >=26.1 {
+    /*@Override
+    public int colorAsTerrainParticle(BlockState state, BlockAndTintGetter level, BlockPos pos) {
+        return 0xFFFFFFFF;
+    }
+    *///? }
 }

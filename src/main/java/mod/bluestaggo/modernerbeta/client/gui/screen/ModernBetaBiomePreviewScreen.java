@@ -78,6 +78,7 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                     context.worldgenLoadContext().lookupOrThrow(Registries.BIOME),
                     context.options().seed()
                 );
+            biomeProvider.init();
             surfaceConfigLookup = context.worldgenLoadContext().lookupOrThrow(ModernBetaResourceKeys.SURFACE_CONFIG);
         } catch (Exception exception) {
             exception.printStackTrace();

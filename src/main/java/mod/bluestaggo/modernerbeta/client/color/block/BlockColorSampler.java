@@ -159,7 +159,7 @@ public final class BlockColorSampler {
             }
         }
 
-        return (r / 27) << 16 | (g / 27) << 8 | (b / 27);
+        return 0xFF000000 | (r / 27) << 16 | (g / 27) << 8 | (b / 27);
     }
 
     private int sampleModifiedColor(BiomeManager biomeAccess, BlockPos pos,
@@ -175,7 +175,7 @@ public final class BlockColorSampler {
         int finalColor = climateColor;
 
         if (biomeEntry.is(ModernBetaBiomeTags.HAS_EARLY_RELEASE_SWAMP_COLORS)) {
-            finalColor = ((finalColor & 0xFEFEFE) + 0x4E0E4E) / 2;
+            finalColor = ((finalColor & 0xFEFEFE) + 0x4E0E4E) >> 1;
         } else {
             Biome biome = biomeEntry.value();
 
@@ -213,7 +213,7 @@ public final class BlockColorSampler {
             }
         }
 
-        return postSampleModifier.apply(finalColor, biomeEntry, pos);
+        return 0xFF000000 | postSampleModifier.apply(finalColor, biomeEntry, pos);
     }
 
     BiomeManager getBiomeAccessFromView(BlockAndTintGetter tintGetter) {

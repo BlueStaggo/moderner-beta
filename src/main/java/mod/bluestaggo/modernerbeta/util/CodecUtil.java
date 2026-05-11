@@ -54,7 +54,7 @@ public class CodecUtil {
 
     public static <A> MapCodec<Holder<A>> lookupIfEmpty(MapCodec<Holder<A>> codec, ResourceKey<A> key) {
         return lookupIfEmpty(codec, lookup -> {
-            HolderGetter<A> getter = lookup.lookup(key.registryKey()).orElseThrow().getter();
+            HolderGetter<A> getter = lookup.<A>lookup(ResourceKey.createRegistryKey(key.registry())).orElseThrow().getter();
             return getter.getOrThrow(key);
         });
     }

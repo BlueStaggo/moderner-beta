@@ -2,7 +2,6 @@ package mod.bluestaggo.modernerbeta.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import mod.bluestaggo.modernerbeta.api.level.biome.BiomeResolverBlock;
 import mod.bluestaggo.modernerbeta.api.level.chunk.ChunkProvider;
 import mod.bluestaggo.modernerbeta.imixin.ModernBetaSurfaceSystem;
 import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomeSource;
@@ -83,13 +82,29 @@ public class SurfaceSystemMixin implements ModernBetaSurfaceSystem {
         Function<BlockPos, Holder<Biome>> biomeGetter,
         Registry<Biome> biomes,
         WorldGenerationContext context,
-        Operation<Object> original
+        Operation<Object> original,
+        RandomState randomState2,
+        BiomeManager biomeManager,
+        Registry<Biome> biomes2,
+        boolean useLegacyRandomSource,
+        WorldGenerationContext context2,
+        ChunkAccess chunk2,
+        NoiseChunk noiseChunk2,
+        SurfaceRules.RuleSource ruleSource
     ) {
-        //TODO: this needs to handle biome injection
-        if (this.modernerBeta$biomeProvider != null &&
-                this.modernerBeta$biomeProvider instanceof BiomeResolverBlock biomeResolver) {
+        //TODO: this needs to handle biome injection better (?)
+        if (this.modernerBeta$biomeProvider != null/* &&
+                this.modernerBeta$biomeProvider instanceof BiomeResolverBlock biomeResolver*/) {
             biomeGetter = pos ->
-                biomeResolver.getBiomeBlock(pos.getX(), pos.getY(), pos.getZ());
+                this.modernerBeta$biomeProvider.getBiomeInjectionHandler().getBiomeAtBlock(
+                    chunk,
+                    this.modernerBeta$biomeProvider.getBiomeProvider(),
+                    ((BiomeManagerAccessor) biomeManager).getBiomeZoomSeed(),
+                    pos.getX(), pos.getY(), pos.getZ(),
+                    BiomeInjectionRule.Step.PRE,
+                    InjectionNeeds.all(),
+                    true
+                );
         }
 
         return original.call(system, randomState, chunk, noiseChunk, biomeGetter, biomes, context);

@@ -13,8 +13,10 @@ import net.minecraft.core.Registry;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeManager;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.levelgen.*;
+import net.minecraft.world.level.levelgen.carver.CarvingContext;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -23,6 +25,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.Optional;
 import java.util.Random;
 import java.util.function.Function;
 
@@ -58,6 +61,25 @@ public class SurfaceSystemMixin implements ModernBetaSurfaceSystem {
         NoiseChunk noiseChunk,
         SurfaceRules.RuleSource ruleSource,
         CallbackInfo ci
+    ) {
+        if (this.modernerBeta$chunkProvider == null)
+            return;
+
+        ChunkPos chunkPos = chunk.getPos();
+        Random surfaceRandom = this.modernerBeta$chunkProvider.createSurfaceRandom(chunkPos.x, chunkPos.z);
+        this.modernerBeta$surfaceRandom.set(surfaceRandom);
+    }
+
+    @Inject(method = "topMaterial", at = @At("HEAD"))
+    private void setupTopMaterialRandom(
+        SurfaceRules.RuleSource rule,
+        CarvingContext context,
+        Function<BlockPos, Holder<Biome>> biomeGetter,
+        ChunkAccess chunk,
+        NoiseChunk noiseChunk,
+        BlockPos pos,
+        boolean hasFluid,
+        CallbackInfoReturnable<Optional<BlockState>> cir
     ) {
         if (this.modernerBeta$chunkProvider == null)
             return;

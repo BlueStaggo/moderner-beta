@@ -7,6 +7,7 @@ import mod.bluestaggo.modernerbeta.api.level.chunk.surface.SurfaceConfig;
 import mod.bluestaggo.modernerbeta.compat.ModCompat;
 import mod.bluestaggo.modernerbeta.imixin.ModernBetaSurfaceSystem;
 import mod.bluestaggo.modernerbeta.level.biome.injection.InjectionNeeds;
+import mod.bluestaggo.modernerbeta.mixin.BiomeManagerAccessor;
 import mod.bluestaggo.modernerbeta.mixin.ChunkGeneratorStructureStateAccessor;
 import mod.bluestaggo.modernerbeta.mixin.NoiseBasedChunkGeneratorAccessor;
 import mod.bluestaggo.modernerbeta.level.biome.injection.BiomeInjectionRule;
@@ -415,7 +416,30 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
                             betaCaveCarverConfig.useSurfaceRules = Optional.of(this.useSurfaceRules);
                         }
 
-                        configuredCarver.carve(carverContext, chunk, biomeAccessWithSource::getBiome, random, aquiferSampler, carverPos, carvingMask);
+                        configuredCarver.carve(
+                            carverContext,
+                            chunk,
+                            pos -> {
+                                //todo: maybe improve this
+                                if (this.biomeSource instanceof ModernBetaBiomeSource modernBetaBiomeSource) {
+                                    return modernBetaBiomeSource.getBiomeInjectionHandler().getBiomeAtBlock(
+                                        chunk,
+                                        modernBetaBiomeSource.getBiomeProvider(),
+                                        ((BiomeManagerAccessor) biomeAccessWithSource).getBiomeZoomSeed(),
+                                        pos.getX(), pos.getY(), pos.getZ(),
+                                        BiomeInjectionRule.Step.POST,
+                                        InjectionNeeds.all(),
+                                        true
+                                    );
+                                }
+
+                                return biomeAccessWithSource.getBiome(pos);
+                            },
+                            random,
+                            aquiferSampler,
+                            carverPos,
+                            carvingMask
+                        );
                     }
 
                     ++salt;

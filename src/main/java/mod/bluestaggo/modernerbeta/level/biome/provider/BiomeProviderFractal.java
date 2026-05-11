@@ -52,12 +52,10 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
         Set<ExtendedIdentifier> allExtendedBiomes = new HashSet<>();
 
 		this.layer = this.configuredLayers.getOutputOrThrow(ModernBetaBuiltInTypes.LayerOutput.BIOME.id);
-		this.layer.init(seed);
         this.layer.addPossibleBiomesRecursive(allExtendedBiomes);
 
 		this.heightLayer = this.configuredLayers.getOutput(ModernBetaBuiltInTypes.LayerOutput.HEIGHT.id)
 			.orElse(this.layer);
-		this.heightLayer.init(seed);
 
 		this.chunkCacheBiomes = new ChunkCache<>(
 			"biomes",
@@ -69,6 +67,15 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 			.filter(Optional::isPresent)
 			.map(Optional::get)
 			.collect(Collectors.toSet());
+	}
+
+	/**
+	 * Initializes the biome provider
+	 */
+	@Override
+	public void init() {
+		this.layer.init(seed);
+		this.heightLayer.init(seed);
 	}
 
 	@SuppressWarnings("unchecked")

@@ -109,10 +109,12 @@ public class ModernBetaBiomeSource extends BiomeSource {
         this.biomeProvider = ModernBetaRegistries.BIOME
             .getValue(biomeSettings.getProvider())
             .apply(biomeSettings, this.biomeRegistry, seed);
-        
+        this.biomeProvider.init();
+
         this.caveBiomeProvider = ModernBetaRegistries.CAVE_BIOME
             .getValue(caveBiomeSettings.getProvider())
             .apply(caveBiomeSettings, this.biomeRegistry, seed);
+        this.caveBiomeProvider.init();
 
         this.biomeInjectionHandler = new SimpleBiomeInjectionHandler(this.chunkGenerator, this);
     }
@@ -214,7 +216,7 @@ public class ModernBetaBiomeSource extends BiomeSource {
         
         return null;
     }
-    
+
     public Holder<Biome> getCaveBiome(int biomeX, int biomeY, int biomeZ) {
         return this.caveBiomeProvider.getBiome(biomeX, biomeY, biomeZ);
     }
@@ -254,7 +256,7 @@ public class ModernBetaBiomeSource extends BiomeSource {
     public HolderGetter<ModernBetaSettingsPreset> getPresetRegistry() {
         return this.presetRegistry;
     }
-    
+
     public BiomeProvider getBiomeProvider() {
         return this.biomeProvider;
     }
@@ -266,7 +268,7 @@ public class ModernBetaBiomeSource extends BiomeSource {
     public BiomeInjectionHandler getBiomeInjectionHandler() {
         return this.biomeInjectionHandler;
     }
-    
+
     public ModernBetaSettings getBiomeSettings() {
         return this.biomeSettings;
     }
@@ -290,7 +292,7 @@ public class ModernBetaBiomeSource extends BiomeSource {
     protected @NotNull Stream<Holder<Biome>> collectPossibleBiomes() {
         ModernBetaSettings biomeSettings = this.biomeSettings.mapPreset(this.presetRegistry, ModernBetaSettingsPreset::biomeSettings);
         ModernBetaSettings caveBiomeSettings = this.caveBiomeSettings.mapPreset(this.presetRegistry, ModernBetaSettingsPreset::caveBiomeSettings);
-
+        
         BiomeProvider biomeProvider = ModernBetaRegistries.BIOME
             .getValue(biomeSettings.getProvider())
             .apply(biomeSettings, biomeRegistry, 0L);
@@ -307,7 +309,7 @@ public class ModernBetaBiomeSource extends BiomeSource {
         for (BiomeInjectionRule injectionRule : injectionRules) {
             biomes.addAll(injectionRule.getPossibleBiomes());
         }
-        
+
         return biomes.stream();
     }
 }

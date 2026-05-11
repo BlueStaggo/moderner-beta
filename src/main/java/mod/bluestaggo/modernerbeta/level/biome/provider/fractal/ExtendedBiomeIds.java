@@ -1,10 +1,6 @@
 package mod.bluestaggo.modernerbeta.level.biome.provider.fractal;
 
-import com.mojang.serialization.Codec;
-import mod.bluestaggo.modernerbeta.registry.ExtendedHolder;
-import mod.bluestaggo.modernerbeta.registry.ExtendedRegistryFileCodec;
 import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
@@ -15,8 +11,6 @@ import java.util.stream.IntStream;
 import static mod.bluestaggo.modernerbeta.util.ExtendedIdentifier.*;
 
 public final class ExtendedBiomeIds {
-    public static final Codec<ExtendedHolder<Biome>> CODEC = ExtendedRegistryFileCodec.create(Registries.BIOME, Biome.DIRECT_CODEC);
-
     public static final String TRANSLATION_KEY = "createWorld.customize.modern_beta.settings.preview.extended_biome_id";
 
     public static final ExtendedIdentifier

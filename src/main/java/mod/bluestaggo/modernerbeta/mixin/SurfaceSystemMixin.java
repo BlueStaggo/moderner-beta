@@ -2,18 +2,21 @@ package mod.bluestaggo.modernerbeta.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import mod.bluestaggo.modernerbeta.api.level.biome.BiomeProvider;
-import mod.bluestaggo.modernerbeta.api.level.biome.BiomeResolverBlock;
 import mod.bluestaggo.modernerbeta.api.level.chunk.ChunkProvider;
 import mod.bluestaggo.modernerbeta.imixin.ModernBetaSurfaceSystem;
+import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomeSource;
+import mod.bluestaggo.modernerbeta.level.biome.injection.BiomeInjectionRule;
+import mod.bluestaggo.modernerbeta.level.biome.injection.InjectionNeeds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeManager;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.levelgen.*;
+import net.minecraft.world.level.levelgen.carver.CarvingContext;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -22,13 +25,14 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.Optional;
 import java.util.Random;
 import java.util.function.Function;
 
 @Mixin(SurfaceSystem.class)
 public class SurfaceSystemMixin implements ModernBetaSurfaceSystem {
     @Unique private ChunkProvider modernerBeta$chunkProvider;
-    @Unique private BiomeProvider modernerBeta$biomeProvider;
+    @Unique private ModernBetaBiomeSource modernerBeta$biomeProvider;
     @Unique private final ThreadLocal<Random> modernerBeta$surfaceRandom = new ThreadLocal<>();
 
     @Override
@@ -37,8 +41,8 @@ public class SurfaceSystemMixin implements ModernBetaSurfaceSystem {
     }
 
     @Override
-    public void modernerBeta$setupBiomeContext(BiomeProvider biomeProvider) {
-        this.modernerBeta$biomeProvider = biomeProvider;
+    public void modernerBeta$setupBiomeContext(ModernBetaBiomeSource biomeSource) {
+        this.modernerBeta$biomeProvider = biomeSource;
     }
 
     @Override
@@ -66,6 +70,25 @@ public class SurfaceSystemMixin implements ModernBetaSurfaceSystem {
         this.modernerBeta$surfaceRandom.set(surfaceRandom);
     }
 
+    @Inject(method = "topMaterial", at = @At("HEAD"))
+    private void setupTopMaterialRandom(
+        SurfaceRules.RuleSource rule,
+        CarvingContext context,
+        Function<BlockPos, Holder<Biome>> biomeGetter,
+        ChunkAccess chunk,
+        NoiseChunk noiseChunk,
+        BlockPos pos,
+        boolean hasFluid,
+        CallbackInfoReturnable<Optional<BlockState>> cir
+    ) {
+        if (this.modernerBeta$chunkProvider == null)
+            return;
+
+        ChunkPos chunkPos = chunk.getPos();
+        Random surfaceRandom = this.modernerBeta$chunkProvider.createSurfaceRandom(chunkPos.x, chunkPos.z);
+        this.modernerBeta$surfaceRandom.set(surfaceRandom);
+    }
+
     @WrapOperation(
         method = "buildSurface",
         at = @At(
@@ -81,13 +104,29 @@ public class SurfaceSystemMixin implements ModernBetaSurfaceSystem {
         Function<BlockPos, Holder<Biome>> biomeGetter,
         Registry<Biome> biomes,
         WorldGenerationContext context,
-        Operation<Object> original
+        Operation<Object> original,
+        RandomState randomState2,
+        BiomeManager biomeManager,
+        Registry<Biome> biomes2,
+        boolean useLegacyRandomSource,
+        WorldGenerationContext context2,
+        ChunkAccess chunk2,
+        NoiseChunk noiseChunk2,
+        SurfaceRules.RuleSource ruleSource
     ) {
-        //TODO: this needs to handle biome injection
-        if (this.modernerBeta$biomeProvider != null &&
-                this.modernerBeta$biomeProvider instanceof BiomeResolverBlock biomeResolver) {
+        //TODO: this needs to handle biome injection better (?)
+        if (this.modernerBeta$biomeProvider != null/* &&
+                this.modernerBeta$biomeProvider instanceof BiomeResolverBlock biomeResolver*/) {
             biomeGetter = pos ->
-                biomeResolver.getBiomeBlock(pos.getX(), pos.getY(), pos.getZ());
+                this.modernerBeta$biomeProvider.getBiomeInjectionHandler().getBiomeAtBlock(
+                    chunk,
+                    this.modernerBeta$biomeProvider.getBiomeProvider(),
+                    ((BiomeManagerAccessor) biomeManager).getBiomeZoomSeed(),
+                    pos.getX(), pos.getY(), pos.getZ(),
+                    BiomeInjectionRule.Step.PRE,
+                    InjectionNeeds.all(),
+                    true
+                );
         }
 
         return original.call(system, randomState, chunk, noiseChunk, biomeGetter, biomes, context);
@@ -100,11 +139,32 @@ public class SurfaceSystemMixin implements ModernBetaSurfaceSystem {
             target = "Lnet/minecraft/world/level/biome/BiomeManager;getBiome(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/core/Holder;"
         )
     )
-    private Holder<Biome> getProperBiomeForMB(BiomeManager instance, BlockPos pos, Operation<Holder<Biome>> original) {
-        //TODO: this needs to handle biome injection
-        if (this.modernerBeta$biomeProvider != null &&
-                this.modernerBeta$biomeProvider instanceof BiomeResolverBlock biomeResolver) {
-            return biomeResolver.getBiomeBlock(pos.getX(), pos.getY(), pos.getZ());
+    private Holder<Biome> getProperBiomeForMB(
+        BiomeManager instance,
+        BlockPos pos,
+        Operation<Holder<Biome>> original,
+        RandomState randomState,
+        BiomeManager biomeManager,
+        Registry<Biome> biomes,
+        boolean useLegacyRandomSource,
+        WorldGenerationContext context,
+        ChunkAccess chunk,
+        NoiseChunk noiseChunk,
+        SurfaceRules.RuleSource ruleSource
+    ) {
+        //TODO: this needs to handle biome injection better (?)
+        if (this.modernerBeta$biomeProvider != null/* &&
+                this.modernerBeta$biomeProvider instanceof BiomeResolverBlock biomeResolver*/) {
+//            return biomeResolver.getBiomeBlock(pos.getX(), pos.getY(), pos.getZ());
+            return this.modernerBeta$biomeProvider.getBiomeInjectionHandler().getBiomeAtBlock(
+                chunk,
+                this.modernerBeta$biomeProvider.getBiomeProvider(),
+                ((BiomeManagerAccessor) instance).getBiomeZoomSeed(),
+                pos.getX(), pos.getY(), pos.getZ(),
+                BiomeInjectionRule.Step.PRE,
+                InjectionNeeds.all(),
+                true
+            );
         }
 
         return original.call(instance, pos);

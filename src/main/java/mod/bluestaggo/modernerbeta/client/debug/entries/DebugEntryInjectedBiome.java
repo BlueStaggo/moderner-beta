@@ -1,6 +1,7 @@
 //~dotLocation
 package mod.bluestaggo.modernerbeta.client.debug.entries;
 
+import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.level.biome.injection.BiomeInjectionRule;
 import mod.bluestaggo.modernerbeta.level.biome.injection.InjectionNeeds;
 import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaChunkGenerator;
@@ -13,6 +14,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.chunk.LevelChunk;
 import org.jetbrains.annotations.Nullable;
 *///?}
+import mod.bluestaggo.modernerbeta.mixin.BiomeManagerAccessor;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.ChunkGenerator;
@@ -45,9 +47,17 @@ public class DebugEntryInjectedBiome /*? >=1.21.9 {*/ /*implements DebugScreenEn
         ChunkGenerator chunkGenerator = serverLevel.getChunkSource().getGenerator();
 
         if (chunkGenerator instanceof ModernBetaChunkGenerator modernBetaChunkGenerator &&
-                modernBetaChunkGenerator.getBiomeInjector() != null) {
-            String biome = modernBetaChunkGenerator.getBiomeInjector()
-                    .getBiomeAtBlock(level, x, y, z, null, BiomeInjectionRule.Step.ALL, InjectionNeeds.all())
+                chunkGenerator.getBiomeSource() instanceof ModernBetaBiomeSource modernBetaBiomeSource) {
+            String biome = modernBetaBiomeSource.getBiomeInjectionHandler()
+                    .getBiomeAtBlock(
+                        level,
+                        modernBetaBiomeSource.getBiomeProvider(),
+                        ((BiomeManagerAccessor) serverLevel.getBiomeManager()).getBiomeZoomSeed(),
+                        x, y, z,
+                        BiomeInjectionRule.Step.ALL,
+                        InjectionNeeds.all(),
+                        true
+                    )
                     .unwrapKey()
                     .map(key -> key.location().toString())
                     .orElse("[unregistered]");

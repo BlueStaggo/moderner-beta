@@ -73,7 +73,7 @@ public final class BiomeInjectionContext {
         return this;
     }
 
-    void setupContext() {
+    public void setupContext() {
         ModernBetaSettings settingsChunk = this.chunkGenerator.getChunkSettings()
                 .mapPreset(this.chunkGenerator.getPresetRegistry(), ModernBetaSettingsPreset::chunkSettings);
 

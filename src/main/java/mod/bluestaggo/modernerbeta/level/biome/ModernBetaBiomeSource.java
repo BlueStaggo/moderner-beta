@@ -11,6 +11,8 @@ import mod.bluestaggo.modernerbeta.api.level.biome.BiomeResolverBlock;
 import mod.bluestaggo.modernerbeta.api.level.biome.BiomeResolverExtendedId;
 import mod.bluestaggo.modernerbeta.level.biome.injection.BiomeInjectionRule;
 import mod.bluestaggo.modernerbeta.level.biome.injection.InjectionNeeds;
+import mod.bluestaggo.modernerbeta.level.biome.injection.handler.BiomeInjectionHandler;
+import mod.bluestaggo.modernerbeta.level.biome.injection.handler.SimpleBiomeInjectionHandler;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.api.level.cavebiome.CaveBiomeProvider;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
@@ -62,6 +64,7 @@ public class ModernBetaBiomeSource extends BiomeSource {
 
     private BiomeProvider biomeProvider;
     private CaveBiomeProvider caveBiomeProvider;
+    private BiomeInjectionHandler biomeInjectionHandler;
 
     private ModernBetaChunkGenerator chunkGenerator;
 
@@ -106,10 +109,14 @@ public class ModernBetaBiomeSource extends BiomeSource {
         this.biomeProvider = ModernBetaRegistries.BIOME
             .getValue(biomeSettings.getProvider())
             .apply(biomeSettings, this.biomeRegistry, seed);
-        
+        this.biomeProvider.init();
+
         this.caveBiomeProvider = ModernBetaRegistries.CAVE_BIOME
             .getValue(caveBiomeSettings.getProvider())
             .apply(caveBiomeSettings, this.biomeRegistry, seed);
+        this.caveBiomeProvider.init();
+
+        this.biomeInjectionHandler = new SimpleBiomeInjectionHandler(this.chunkGenerator, this);
     }
     
     @Override
@@ -121,30 +128,34 @@ public class ModernBetaBiomeSource extends BiomeSource {
     public @NotNull Set<Holder<Biome>> getBiomesWithin(int startX, int startY, int startZ, int radius, Sampler noiseSampler) {
         if (this.chunkGenerator == null)
             return super.getBiomesWithin(startX, startY, startZ, radius, noiseSampler);
-        
+
         int minX = QuartPos.fromBlock(startX - radius);
         int minZ = QuartPos.fromBlock(startZ - radius);
-        
+
         int maxX = QuartPos.fromBlock(startX + radius);
         int maxZ = QuartPos.fromBlock(startZ + radius);
-        
+
         int rangeX = maxX - minX + 1;
         int rangeZ = maxZ - minZ + 1;
-        
+
         HashSet<Holder<Biome>> set = Sets.newHashSet();
         for (int localZ = 0; localZ < rangeZ; ++localZ) {
             for (int localX = 0; localX < rangeX; ++localX) {
                 int biomeX = minX + localX;
                 int biomeZ = minZ + localZ;
-                
-                int x = biomeX << 2;
-                int z = biomeZ << 2;
-                int y = this.chunkGenerator.getHeight(x, z, Heightmap.Types.OCEAN_FLOOR_WG, null);
-                
-                set.add(this.chunkGenerator.getBiomeInjector().getBiomeAtBlock(null, x, y, z, noiseSampler, BiomeInjectionRule.Step.ALL, InjectionNeeds.all()));
+
+                int y = this.chunkGenerator.getHeight(biomeX << 2, biomeZ << 2, Heightmap.Types.OCEAN_FLOOR_WG, null);
+
+                set.add(this.biomeInjectionHandler.getBiome(
+                    null,
+                    biomeX, QuartPos.fromBlock(y), biomeZ,
+                    BiomeInjectionRule.Step.ALL,
+                    InjectionNeeds.all(),
+                    true
+                ));
             }
         }
-        
+
         return set;
     }
     
@@ -194,9 +205,8 @@ public class ModernBetaBiomeSource extends BiomeSource {
             for (int y : sections) {
                 int biomeY = QuartPos.fromBlock(y);
                 
-                Holder<Biome> biome = this.chunkGenerator
-                    .getBiomeInjector()
-                    .getBiome(level, biomeX, biomeY, biomeZ, noiseSampler, BiomeInjectionRule.Step.ALL, InjectionNeeds.cheapToFulfill());
+                Holder<Biome> biome = this.biomeInjectionHandler
+                    .getBiome(level, biomeX, biomeY, biomeZ, BiomeInjectionRule.Step.ALL, InjectionNeeds.cheapToFulfill(), true);
 
                 if (!biomeSet.contains(biome)) continue;
                 
@@ -206,7 +216,7 @@ public class ModernBetaBiomeSource extends BiomeSource {
         
         return null;
     }
-    
+
     public Holder<Biome> getCaveBiome(int biomeX, int biomeY, int biomeZ) {
         return this.caveBiomeProvider.getBiome(biomeX, biomeY, biomeZ);
     }
@@ -242,7 +252,11 @@ public class ModernBetaBiomeSource extends BiomeSource {
     public void setChunkGenerator(ModernBetaChunkGenerator chunkGenerator) {
         this.chunkGenerator = chunkGenerator;
     }
-    
+
+    public HolderGetter<ModernBetaSettingsPreset> getPresetRegistry() {
+        return this.presetRegistry;
+    }
+
     public BiomeProvider getBiomeProvider() {
         return this.biomeProvider;
     }
@@ -250,7 +264,11 @@ public class ModernBetaBiomeSource extends BiomeSource {
     public CaveBiomeProvider getCaveBiomeProvider() {
         return this.caveBiomeProvider;
     }
-    
+
+    public BiomeInjectionHandler getBiomeInjectionHandler() {
+        return this.biomeInjectionHandler;
+    }
+
     public ModernBetaSettings getBiomeSettings() {
         return this.biomeSettings;
     }
@@ -274,7 +292,7 @@ public class ModernBetaBiomeSource extends BiomeSource {
     protected @NotNull Stream<Holder<Biome>> collectPossibleBiomes() {
         ModernBetaSettings biomeSettings = this.biomeSettings.mapPreset(this.presetRegistry, ModernBetaSettingsPreset::biomeSettings);
         ModernBetaSettings caveBiomeSettings = this.caveBiomeSettings.mapPreset(this.presetRegistry, ModernBetaSettingsPreset::caveBiomeSettings);
-
+        
         BiomeProvider biomeProvider = ModernBetaRegistries.BIOME
             .getValue(biomeSettings.getProvider())
             .apply(biomeSettings, biomeRegistry, 0L);
@@ -291,7 +309,7 @@ public class ModernBetaBiomeSource extends BiomeSource {
         for (BiomeInjectionRule injectionRule : injectionRules) {
             biomes.addAll(injectionRule.getPossibleBiomes());
         }
-        
+
         return biomes.stream();
     }
 }

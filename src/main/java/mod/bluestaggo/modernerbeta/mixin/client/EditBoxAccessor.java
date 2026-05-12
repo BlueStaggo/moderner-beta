@@ -13,7 +13,7 @@ public interface EditBoxAccessor {
     @Accessor("maxLength")
     int getMaxLength();
     @Accessor("value")
-    void setValue(String value);
+    void setValueRaw(String value);
 
     @Invoker("onValueChange")
     void invokeOnValueChange(String value);

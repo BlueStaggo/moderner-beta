@@ -328,6 +328,19 @@ public class ModernBetaSettingsPresetScreen<T extends NameAndDescriptionItem> ex
                 return true;
             }
 
+            @Override
+            public boolean keyPressed(/*? >=1.21.9 {*/ /*net.minecraft.client.input.KeyEvent event *//*? } else {*/ int keyCode, int scanCode, int modifiers /*? }*/) {
+                if (/*? >=1.21.9 {*/ /*event.isSelection() *//*? } else {*/ net.minecraft.client.gui.navigation.CommonInputs.selected(keyCode) /*? }*/) {
+                    minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+
+                    ModernBetaSettingsPresetScreen.this.onSelected
+                        .onSelect(ModernBetaSettingsPresetScreen.this, this.presetName, this.preset);
+                }
+
+                return super.keyPressed(/*? >=1.21.9 {*/ /*event *//*? } else {*/ keyCode, scanCode, modifiers /*? }*/);
+            }
+
+
             private void draw(GuiGraphics graphics, int x, int y, ResourceLocation textureId) {
                 graphics.blit(
                     //? if >= 1.21.6 {

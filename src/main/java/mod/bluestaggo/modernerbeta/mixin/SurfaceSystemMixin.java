@@ -95,13 +95,13 @@ public class SurfaceSystemMixin implements ModernBetaSurfaceSystem {
         method = "buildSurface",
         at = @At(
             value = "NEW",
-                target = "(Lnet/minecraft/world/level/levelgen/SurfaceSystem;Lnet/minecraft/world/level/levelgen/RandomState;Lnet/minecraft/world/level/chunk/ChunkAccess;Lnet/minecraft/world/level/levelgen/NoiseChunk;Ljava/util/function/Function;"
-                        //? if <26.2
-                        + "Lnet/minecraft/core/Registry;"
-                        + "Lnet/minecraft/world/level/levelgen/WorldGenerationContext;"
-                        //? if >=26.2
-                        //+ "Ljava/util/Set;"
-                        + ")Lnet/minecraft/world/level/levelgen/SurfaceRules$Context;"
+            target = "(Lnet/minecraft/world/level/levelgen/SurfaceSystem;Lnet/minecraft/world/level/levelgen/RandomState;Lnet/minecraft/world/level/chunk/ChunkAccess;Lnet/minecraft/world/level/levelgen/NoiseChunk;Ljava/util/function/Function;"
+                    //? if <26.2
+                    + "Lnet/minecraft/core/Registry;"
+                    + "Lnet/minecraft/world/level/levelgen/WorldGenerationContext;"
+                    //? if >=26.2
+                    //+ "Ljava/util/Set;"
+                    + ")Lnet/minecraft/world/level/levelgen/SurfaceRules$Context;"
         )
     )
     private @Coerce Object replaceBiomeGetterForMB(

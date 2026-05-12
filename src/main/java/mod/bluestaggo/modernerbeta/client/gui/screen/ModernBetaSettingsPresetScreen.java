@@ -334,7 +334,7 @@ public class ModernBetaSettingsPresetScreen<T extends NameAndDescriptionItem> ex
                     minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 
                     ModernBetaSettingsPresetScreen.this.onSelected
-                        .accept(ModernBetaSettingsPresetScreen.this, this.presetName, this.preset);
+                        .onSelect(ModernBetaSettingsPresetScreen.this, this.presetName, this.preset);
                 }
 
                 return super.keyPressed(/*? >=1.21.9 {*/ /*event *//*? } else {*/ keyCode, scanCode, modifiers /*? }*/);

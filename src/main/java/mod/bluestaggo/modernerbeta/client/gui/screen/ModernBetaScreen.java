@@ -195,6 +195,15 @@ public abstract class ModernBetaScreen extends Screen {
             this.contentsFrame.setPosition(0, Math.min(contentMin, contentMax));
         }
 
+        //? if >=26.2 {
+        /*@Override
+        public void removeChildren() {
+            this.headerFrame.removeChildren();
+            this.footerFrame.removeChildren();
+            this.contentsFrame.removeChildren();
+        }
+        *///? }
+
         public <T extends LayoutElement> T addToHeader(T child) {
             return this.headerFrame.addChild(child);
         }

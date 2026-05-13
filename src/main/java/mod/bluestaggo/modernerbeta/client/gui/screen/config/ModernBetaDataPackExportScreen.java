@@ -21,6 +21,7 @@ import net.minecraft.client.gui.components.*;
 import net.minecraft.client.gui.layouts.GridLayout;
 import net.minecraft.client.gui.layouts.LayoutSettings;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.data.DataProvider;
@@ -74,7 +75,7 @@ public class ModernBetaDataPackExportScreen extends ModernBetaScreen {
     private ResourceLocation presetID;
     private String presetName = "";
     private String presetDescription = "";
-    private ResourceLocation presetCategory;
+    private Holder<ModernBetaSettingsPresetCategory> presetCategory;
 
     private EditBox idBox;
     private EditBox nameBox;
@@ -140,7 +141,7 @@ public class ModernBetaDataPackExportScreen extends ModernBetaScreen {
                     (ModernBetaSettingsPresetCategoryTags.SELECTABLE)
                     .stream()
                     .toList(),
-                    (screen, category, preset) -> {
+                    (screen, category) -> {
                         this.presetCategory = category;
                         this.categoryButton.setMessage(this.getCategoryButtonLabel());
 
@@ -252,8 +253,8 @@ public class ModernBetaDataPackExportScreen extends ModernBetaScreen {
     private Component getCategoryButtonLabel() {
         MutableComponent category = Component.translatable(TEXT_PRESET_CATEGORY).append(": ");
         category.append(this.presetCategory == null ?
-            Component.translatable("gui.none").withStyle(ChatFormatting.AQUA) :
-            Component.translatable(TEXT_PRESET_CATEGORY_NAME + "." + presetCategory.toLanguageKey()).withStyle(ChatFormatting.YELLOW)
+            Component.translatable("gui.none").withStyle(ChatFormatting.YELLOW) :
+            presetCategory.value().makeOrGetTitleComponent(presetCategory.unwrapKey().orElseThrow().location())
         );
 
         return category;
@@ -293,14 +294,7 @@ public class ModernBetaDataPackExportScreen extends ModernBetaScreen {
 
         try (DataPackExporter exporter = new DataPackExporter(outputPath)) {
             if (this.presetCategory != null) {
-                ModernBetaSettingsPresetCategory category = this.presetCategoryRegistry
-                        //? if >=1.21.2 {
-                        .getValue
-                        //? } else {
-                        /*.get
-                         *///? }
-                        (this.presetCategory);
-                TagKey<ModernBetaSettingsPreset> tagKey = category.presetTag();
+                TagKey<ModernBetaSettingsPreset> tagKey = presetCategory.value().presetTag();
 
                 FileToIdConverter converter = FileToIdConverter.json(VersionCompat.tagsDirPath(ModernBetaResourceKeys.SETTINGS_PRESET));
                 ResourceLocation pathLocation = converter.idToFile(tagKey.location());

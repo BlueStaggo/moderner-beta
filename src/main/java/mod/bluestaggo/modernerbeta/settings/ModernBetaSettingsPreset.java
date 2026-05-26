@@ -71,10 +71,10 @@ public record ModernBetaSettingsPreset(
     }
 
     public ModernBetaSettingsPreset(
-            ResourceLocation presetId,
-            ModernBetaSettings chunkSettings,
-            ModernBetaSettings biomeSettings,
-            ModernBetaSettings caveBiomeSettings
+        ResourceLocation presetId,
+        ModernBetaSettings chunkSettings,
+        ModernBetaSettings biomeSettings,
+        ModernBetaSettings caveBiomeSettings
     ) {
         this(
             Optional.of(makeTitleComponent(presetId)),
@@ -85,12 +85,33 @@ public record ModernBetaSettingsPreset(
         );
     }
 
+    public static ModernBetaSettingsPreset referenced(Holder<ModernBetaSettingsPreset> preset) {
+        ModernBetaSettingsPreset presetValue = preset.value();
+        ResourceLocation presetId = preset.unwrapKey().orElseThrow().location();
+        RegistryOps.RegistryInfoLookup lookup = presetValue.chunkSettings.registries;
+
+        return new ModernBetaSettingsPreset(
+            Optional.of(presetValue.makeOrGetTitleComponent(presetId)),
+            Optional.of(presetValue.makeOrGetDescriptionComponent(presetId)),
+            ModernBetaSettings.builder(lookup)
+                .add(SettingsComponentTypes.PRESET, presetId)
+                .build(),
+            ModernBetaSettings.builder(lookup)
+                .add(SettingsComponentTypes.PRESET, presetId)
+                .build(),
+            ModernBetaSettings.builder(lookup)
+                .add(SettingsComponentTypes.PRESET, presetId)
+                .build()
+        );
+    }
+
     public static ModernBetaSettingsPreset referenced(ResourceLocation presetId) {
         return referenced(presetId, null);
     }
 
     public static ModernBetaSettingsPreset referenced(ResourceLocation presetId, RegistryOps.RegistryInfoLookup lookup) {
         return new ModernBetaSettingsPreset(
+            presetId,
             ModernBetaSettings.builder(lookup)
                 .add(SettingsComponentTypes.PRESET, presetId)
                 .build(),

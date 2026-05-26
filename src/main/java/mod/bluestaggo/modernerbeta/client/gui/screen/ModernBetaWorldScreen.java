@@ -118,20 +118,20 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
                     (ModernBetaSettingsPresetCategoryTags.SELECTABLE)
                     .stream()
                     .toList(),
-                (screen, name, preset) -> {
-                    this.minecraft.setScreen(new ModernBetaSettingsPresetScreen<>(
-                        screen,
-                        this.presetRegistry
-                            //? if >=1.21.2 {
-                            .getOrThrow
-                            //?} else {
-                            /*.getOrCreateTag
-                             *///?}
-                            (preset.presetTag())
-                            .stream()
-                            .toList(),
-                        (parentScreen, presetName, settingsPreset) -> {
-                            this.setPreset(ModernBetaSettingsPreset.referenced(presetName));
+                    (screen, preset) -> {
+                        this.minecraft.setScreen(new ModernBetaSettingsPresetScreen<>(
+                            screen,
+                            this.presetRegistry
+                                //? if >=1.21.2 {
+                                .getOrThrow
+                                //?} else {
+                                /*.getOrCreateTag
+                                 *///?}
+                                (preset.value().presetTag())
+                                .stream()
+                                .toList(),
+                            (parentScreen, settingsPreset) -> {
+                                this.setPreset(ModernBetaSettingsPreset.referenced(settingsPreset));
 
                             while (this.minecraft.screen instanceof ModernBetaSettingsPresetScreen<?> subPresetScreen) {
                                 this.minecraft.setScreen(subPresetScreen.parent);
@@ -370,10 +370,14 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
 
     private Component getPresetButtonLabel() {
         MutableComponent presetText = Component.translatable(TEXT_PRESET).append(": ");
-        ResourceLocation presetKey = this.getPresetKey();
-        presetText.append(presetKey == null ?
-            Component.translatable(TEXT_PRESET_CUSTOM).withStyle(ChatFormatting.AQUA) :
-            Component.translatable(TEXT_PRESET_NAME + "." + presetKey.toLanguageKey()).withStyle(ChatFormatting.YELLOW)
+        presetText.append(
+            preset.presetName().orElseGet(() -> {
+                ResourceLocation presetKey = this.getPresetKey();
+
+                return presetKey == null ?
+                    Component.translatable(TEXT_PRESET_CUSTOM).withStyle(ChatFormatting.AQUA) :
+                    Component.translatable(TEXT_PRESET_NAME + "." + presetKey.toLanguageKey()).withStyle(ChatFormatting.YELLOW);
+            })
         );
 
         return presetText;

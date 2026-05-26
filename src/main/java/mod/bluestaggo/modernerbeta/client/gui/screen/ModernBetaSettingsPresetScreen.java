@@ -73,7 +73,7 @@ public class ModernBetaSettingsPresetScreen<T extends NameAndDescriptionItem> ex
                 PresetsListWidget.PresetEntry entry = this.listWidget.getSelected();
 
                 if (entry != null) {
-                    this.onSelected.onSelect(this, entry.presetName, entry.preset);
+                    this.onSelected.onSelect(this, entry.preset);
                 }
             }
         ).size(150, 20).build();
@@ -133,7 +133,7 @@ public class ModernBetaSettingsPresetScreen<T extends NameAndDescriptionItem> ex
 
     @FunctionalInterface
     public interface OnSelectedItem<T extends NameAndDescriptionItem> {
-        void onSelect(ModernBetaSettingsPresetScreen<T> screen, ResourceLocation name, T preset);
+        void onSelect(ModernBetaSettingsPresetScreen<T> screen, Holder<T> preset);
     }
 
     private class PresetsListWidget extends ObjectSelectionList<PresetsListWidget.PresetEntry> {
@@ -161,7 +161,7 @@ public class ModernBetaSettingsPresetScreen<T extends NameAndDescriptionItem> ex
             *///?}
 
             presets.forEach(holder ->
-                this.addEntry(new PresetEntry(holder.unwrapKey().orElseThrow().location(), holder.value())));
+                this.addEntry(new PresetEntry(holder)));
         }
         
         @Override
@@ -207,19 +207,19 @@ public class ModernBetaSettingsPresetScreen<T extends NameAndDescriptionItem> ex
             private final Component presetTitle;
             private final Component presetDesc;
 
-            protected final T preset;
-            protected final ResourceLocation presetName;
+            protected final Holder<T> preset;
 
             //? if <1.21.9
             private long time;
             
-            public PresetEntry(ResourceLocation presetName, T preset) {
+            public PresetEntry(Holder<T> preset) {
                 this.preset = preset;
-                this.presetName = presetName;
 
-                this.presetTexture = preset.getTextureLocation(presetName);
-                this.presetTitle = preset.makeOrGetTitleComponent(presetName);
-                this.presetDesc = preset.makeOrGetDescriptionComponent(presetName);
+                ResourceLocation presetName = preset.unwrapKey().orElseThrow().location();
+
+                this.presetTexture = preset.value().getTextureLocation(presetName);
+                this.presetTitle = preset.value().makeOrGetTitleComponent(presetName);
+                this.presetDesc = preset.value().makeOrGetDescriptionComponent(presetName);
             }
 
             @Override
@@ -319,7 +319,7 @@ public class ModernBetaSettingsPresetScreen<T extends NameAndDescriptionItem> ex
                     );
 
                     ModernBetaSettingsPresetScreen.this.onSelected
-                        .onSelect(ModernBetaSettingsPresetScreen.this, this.presetName, this.preset);
+                        .onSelect(ModernBetaSettingsPresetScreen.this, this.preset);
                 }
 
                 //? if <1.21.9
@@ -334,7 +334,7 @@ public class ModernBetaSettingsPresetScreen<T extends NameAndDescriptionItem> ex
                     minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 
                     ModernBetaSettingsPresetScreen.this.onSelected
-                        .onSelect(ModernBetaSettingsPresetScreen.this, this.presetName, this.preset);
+                        .onSelect(ModernBetaSettingsPresetScreen.this, this.preset);
                 }
 
                 return super.keyPressed(/*? >=1.21.9 {*/ /*event *//*? } else {*/ keyCode, scanCode, modifiers /*? }*/);

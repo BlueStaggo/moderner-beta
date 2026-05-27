@@ -1,4 +1,3 @@
-//~dotLocation
 package mod.bluestaggo.modernerbeta.client.gui.screen.config;
 
 import com.google.gson.JsonElement;
@@ -255,6 +254,7 @@ public class ModernBetaDataPackExportScreen extends ModernBetaScreen {
         MutableComponent category = Component.translatable(TEXT_PRESET_CATEGORY).append(": ");
         category.append(this.presetCategory == null ?
             Component.translatable("gui.none").withStyle(ChatFormatting.YELLOW) :
+            //~ if >=1.21.11 '.location' -> '.identifier'
             presetCategory.value().makeOrGetTitleComponent(presetCategory.unwrapKey().orElseThrow().location())
         );
 

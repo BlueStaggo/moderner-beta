@@ -1,3 +1,4 @@
+//~dotLocation
 package mod.bluestaggo.modernerbeta.settings;
 
 import com.google.gson.Gson;

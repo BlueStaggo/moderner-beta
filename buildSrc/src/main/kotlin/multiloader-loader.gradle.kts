@@ -42,6 +42,9 @@ publishMods {
         accessToken = System.getenv("CURSEFORGE_TOKEN")
         projectId = commonMod.prop("curseforge_project_id")
         minecraftVersions.addAll(commonMod.prop("supported_versions").split(",").toList())
+
+        client = true
+        server = true
     }
 
     github {

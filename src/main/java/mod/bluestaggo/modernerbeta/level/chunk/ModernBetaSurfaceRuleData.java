@@ -252,10 +252,22 @@ public class ModernBetaSurfaceRuleData {
                     //Moderner Beta: removed frozen ocean condition
                     SurfaceRules.ifTrue(
                         hole,
+                        //Moderner Beta: redone to handle shallow erosion at sea level
                         SurfaceRules.sequence(
-                            SurfaceRules.ifTrue(aboveWater, AIR),
-                            //Moderner Beta: ice only applies to surface
-                            SurfaceRules.ifTrue(notUnderwater, SurfaceRules.ifTrue(SurfaceRules.temperature(), ICE)),
+                            SurfaceRules.ifTrue(
+                                aboveWater,
+                                SurfaceRules.sequence(
+                                    SurfaceRules.ifTrue(
+                                        SurfaceRules.not(aboveOverworldSeaLevel),
+                                        SurfaceRules.sequence(
+                                            //Moderner Beta: ice only applies to surface
+                                            SurfaceRules.ifTrue(SurfaceRules.temperature(), ICE),
+                                            WATER
+                                        )
+                                    ),
+                                    AIR
+                                )
+                            ),
                             WATER
                         )
                     ),
@@ -266,8 +278,7 @@ public class ModernBetaSurfaceRuleData {
             SurfaceRules.ifTrue(
                 notUnderDeepWater,
                 SurfaceRules.sequence(
-                    //Moderner Beta: removed hole rules here?
-                    //SurfaceRules.ifTrue(SurfaceRules.ON_FLOOR, SurfaceRules.ifTrue(hole, WATER)),
+                    //Moderner Beta: removed hole rules here
                     SurfaceRules.ifTrue(SurfaceRules.UNDER_FLOOR, biomeUnderSurfaceRule),
                     SurfaceRules.ifTrue(biomesWithSandAndSandstone, SurfaceRules.ifTrue(SurfaceRules.DEEP_UNDER_FLOOR, SANDSTONE)),
                     SurfaceRules.ifTrue(biomesWithSandAndVeryDeepSandstone, SurfaceRules.ifTrue(SurfaceRules.VERY_DEEP_UNDER_FLOOR, SANDSTONE))

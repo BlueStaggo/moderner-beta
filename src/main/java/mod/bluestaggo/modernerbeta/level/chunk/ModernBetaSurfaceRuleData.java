@@ -259,8 +259,7 @@ public class ModernBetaSurfaceRuleData {
                                 SurfaceRules.sequence(
                                     SurfaceRules.ifTrue(aboveOverworldSeaLevel, AIR),
                                     //Moderner Beta: ice only applies to surface
-                                    SurfaceRules.ifTrue(SurfaceRules.temperature(), ICE),
-                                    WATER
+                                    SurfaceRules.ifTrue(SurfaceRules.temperature(), ICE)
                                 )
                             ),
                             WATER

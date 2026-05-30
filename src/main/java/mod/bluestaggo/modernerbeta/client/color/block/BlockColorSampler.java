@@ -13,7 +13,7 @@ import mod.bluestaggo.modernerbeta.tags.ModernBetaBiomeTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.util.Mth;
-import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.client.renderer.block.BlockAndTintGetter;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
@@ -96,7 +96,7 @@ public final class BlockColorSampler {
 
     private Clime sampleClime(int x, int z) {
         synchronized (this.climeCache) {
-            long coord = ChunkPos.asLong(x, z);
+            long coord = ChunkPos.pack(x, z);
             Clime clime = this.climeCache.get(coord);
             if (clime != null) {
                 return clime;

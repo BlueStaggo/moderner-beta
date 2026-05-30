@@ -14,7 +14,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 
@@ -28,7 +28,7 @@ public class ModernerBetaFabricClient implements ClientModInitializer {
 
         ModernerBetaInitializer.setupRegistryHandlers(ModernerBetaClient.CUSTOM_REGISTRY_HANDLERS);
 
-        BlockColors.register(net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry.BLOCK::register);
+        BlockColors.register(net.fabricmc.fabric.api.client.rendering.v1.BlockColorRegistry::register);
 
         registerReloadListener(
             ModernerBeta.createId("water_colormap"),
@@ -60,21 +60,21 @@ public class ModernerBetaFabricClient implements ClientModInitializer {
     }
 
     private <T> void registerReloadListener(
-        ResourceLocation id,
+        Identifier id,
         SimplePreparableReloadListener<T> listener
     ) {
         //? if >=1.21.9 {
-        /*net.fabricmc.fabric.api.resource.v1.ResourceLoader resourceManager =
+        net.fabricmc.fabric.api.resource.v1.ResourceLoader resourceManager =
                 net.fabricmc.fabric.api.resource.v1.ResourceLoader.get(PackType.CLIENT_RESOURCES);
         //~ if >=26.1 'registerReloader' -> 'registerReloadListener'
-        resourceManager.registerReloader(id, listener);
-        *///? } else {
-        net.fabricmc.fabric.api.resource.ResourceManagerHelper resourceManager =
+        resourceManager.registerReloadListener(id, listener);
+        //? } else {
+        /*net.fabricmc.fabric.api.resource.ResourceManagerHelper resourceManager =
                 net.fabricmc.fabric.api.resource.ResourceManagerHelper.get(PackType.CLIENT_RESOURCES);
 
         resourceManager.registerReloadListener(new net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener() {
             @Override
-            public ResourceLocation getFabricId() {
+            public Identifier getFabricId() {
                 return id;
             }
 
@@ -83,9 +83,9 @@ public class ModernerBetaFabricClient implements ClientModInitializer {
                 PreparationBarrier barrier,
                 net.minecraft.server.packs.resources.ResourceManager manager,
                 //? if <1.21.2 {
-                /*net.minecraft.util.profiling.ProfilerFiller preparationsProfiler,
+                /^net.minecraft.util.profiling.ProfilerFiller preparationsProfiler,
                 net.minecraft.util.profiling.ProfilerFiller reloadProfiler,
-                *///? }
+                ^///? }
                 java.util.concurrent.Executor backgroundExecutor,
                 java.util.concurrent.Executor gameExecutor
             ) {
@@ -93,14 +93,14 @@ public class ModernerBetaFabricClient implements ClientModInitializer {
                     barrier,
                     manager,
                     //? if <1.21.2 {
-                    /*preparationsProfiler,
+                    /^preparationsProfiler,
                     reloadProfiler,
-                    *///? }
+                    ^///? }
                     backgroundExecutor,
                     gameExecutor
                 );
             }
         });
-        //? }
+        *///? }
     }
 }

@@ -33,7 +33,7 @@ public class ExtendedBiomeIdToColorMapScreen extends ModernBetaGraphicalMapSetti
 
     @Override
     protected String getDefaultKey() {
-        return Biomes.PLAINS.location().toString();
+        return Biomes.PLAINS.identifier().toString();
     }
 
     @Override

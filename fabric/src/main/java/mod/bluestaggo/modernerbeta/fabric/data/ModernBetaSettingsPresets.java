@@ -32,7 +32,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.random.WeightedList;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
@@ -121,8 +121,8 @@ public final class ModernBetaSettingsPresets {
     public static ModernBetaSettingsPreset DEFAULT_MAJOR;
 
     public static void bootstrap(BootstrapContext<ModernBetaSettingsPreset> context) {
-        ResourceLocation betaId = ModernerBeta.createId("beta");
-        ResourceLocation majorId = ModernerBeta.createId("release_1_12_2");
+        Identifier betaId = ModernerBeta.createId("beta");
+        Identifier majorId = ModernerBeta.createId("release_1_12_2");
 
         DEFAULT_BETA = presetBeta(context, false);
         DEFAULT_MAJOR = preset1122(context, false, 0, false);
@@ -201,7 +201,7 @@ public final class ModernBetaSettingsPresets {
     }
 
     private static void register(BootstrapContext<ModernBetaSettingsPreset> context, ResourceKey<ModernBetaSettingsPreset> key, ModernBetaSettingsPreset preset) {
-        context.register(key, preset.withNameAndDesc(key.location()));
+        context.register(key, preset.withNameAndDesc(key.identifier()));
     }
 
     private static ResourceKey<ModernBetaSettingsPreset> keyOf(String id) {
@@ -612,7 +612,7 @@ public final class ModernBetaSettingsPresets {
         );
     }
     
-    private static ModernBetaSettingsPreset presetIsles(ResourceLocation initialId) {
+    private static ModernBetaSettingsPreset presetIsles(Identifier initialId) {
         return new ModernBetaSettingsPreset(
             ModernBetaSettings.builder()
                 .add(PRESET, initialId)
@@ -627,7 +627,7 @@ public final class ModernBetaSettingsPresets {
         );
     }
 
-    private static ModernBetaSettingsPreset presetWaterWorld(ModernBetaSettingsPreset initialSettings, ResourceLocation initialId) {
+    private static ModernBetaSettingsPreset presetWaterWorld(ModernBetaSettingsPreset initialSettings, Identifier initialId) {
         NoiseScale baseNoiseScale = initialSettings.chunkSettings().getOrDefault(NOISE_SCALE);
         Map<ExtendedIdentifier, HeightConfig> baseHeightOverrides = initialSettings.chunkSettings().getOrDefault(FORCED_BIOME_HEIGHT).heightOverrides();
         boolean baseForcedBiomeHeightEnabled = initialSettings.chunkSettings().getOrDefault(FORCED_BIOME_HEIGHT).enabled();
@@ -673,7 +673,7 @@ public final class ModernBetaSettingsPresets {
         );
     }
 
-    private static ModernBetaSettingsPreset presetIsleLand(ModernBetaSettingsPreset initialSettings, ResourceLocation initialId) {
+    private static ModernBetaSettingsPreset presetIsleLand(ModernBetaSettingsPreset initialSettings, Identifier initialId) {
         NoiseScale baseNoiseScale = initialSettings.chunkSettings().getOrDefault(NOISE_SCALE);
 
         return new ModernBetaSettingsPreset(
@@ -708,7 +708,7 @@ public final class ModernBetaSettingsPresets {
     }
     
 
-    private static ModernBetaSettingsPreset presetCaveDelight(ModernBetaSettingsPreset initialSettings, ResourceLocation initialId) {
+    private static ModernBetaSettingsPreset presetCaveDelight(ModernBetaSettingsPreset initialSettings, Identifier initialId) {
         NoiseScale baseNoiseScale = initialSettings.chunkSettings().getOrDefault(NOISE_SCALE);
         Map<ExtendedIdentifier, HeightConfig> baseHeightOverrides = initialSettings.chunkSettings().getOrDefault(FORCED_BIOME_HEIGHT).heightOverrides();
         boolean baseForcedBiomeHeightEnabled = initialSettings.chunkSettings().getOrDefault(FORCED_BIOME_HEIGHT).enabled();
@@ -753,7 +753,7 @@ public final class ModernBetaSettingsPresets {
         );
     }
 
-    private static ModernBetaSettingsPreset presetMountainMadness(ModernBetaSettingsPreset initialSettings, ResourceLocation initialId, boolean modifyBaseSize) {
+    private static ModernBetaSettingsPreset presetMountainMadness(ModernBetaSettingsPreset initialSettings, Identifier initialId, boolean modifyBaseSize) {
         NoiseScale baseNoiseScale = initialSettings.chunkSettings().getOrDefault(NOISE_SCALE);
         Map<ExtendedIdentifier, HeightConfig> baseHeightOverrides = initialSettings.chunkSettings().getOrDefault(FORCED_BIOME_HEIGHT).heightOverrides();
         boolean baseForcedBiomeHeightEnabled = initialSettings.chunkSettings().getOrDefault(FORCED_BIOME_HEIGHT).enabled();
@@ -798,7 +798,7 @@ public final class ModernBetaSettingsPresets {
         );
     }
 
-    private static ModernBetaSettingsPreset presetDrought(ModernBetaSettingsPreset initialSettings, ResourceLocation initialId) {
+    private static ModernBetaSettingsPreset presetDrought(ModernBetaSettingsPreset initialSettings, Identifier initialId) {
         NoiseScale baseNoiseScale = initialSettings.chunkSettings().getOrDefault(NOISE_SCALE);
 
         return new ModernBetaSettingsPreset(
@@ -833,7 +833,7 @@ public final class ModernBetaSettingsPresets {
         );
     }
 
-    private static ModernBetaSettingsPreset presetCaveChaos(ModernBetaSettingsPreset initialSettings, ResourceLocation initialId) {
+    private static ModernBetaSettingsPreset presetCaveChaos(ModernBetaSettingsPreset initialSettings, Identifier initialId) {
         NoiseScale baseNoiseScale = initialSettings.chunkSettings().getOrDefault(NOISE_SCALE);
 
         return new ModernBetaSettingsPreset(
@@ -1135,8 +1135,8 @@ public final class ModernBetaSettingsPresets {
         );
     }
 
-    private static Map<ResourceLocation, String> earlyReleaseLayerOutputs(int biomeScale) {
-        ImmutableMap.Builder<ResourceLocation, String> builder = new ImmutableMap.Builder<>();
+    private static Map<Identifier, String> earlyReleaseLayerOutputs(int biomeScale) {
+        ImmutableMap.Builder<Identifier, String> builder = new ImmutableMap.Builder<>();
         builder.put(ModernBetaBuiltInTypes.LayerOutput.BIOME.id, "land");
         for (int i = 0; i < 4 + biomeScale; i++) {
             builder.put(ModernerBeta.createId("climate_" + i), "land_" + i);

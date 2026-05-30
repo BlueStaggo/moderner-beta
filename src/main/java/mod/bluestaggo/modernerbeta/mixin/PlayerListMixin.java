@@ -7,7 +7,7 @@ import mod.bluestaggo.modernerbeta.network.BiomeProviderInfoPayload;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaChunkGenerator;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
@@ -36,9 +36,9 @@ public abstract class PlayerListMixin {
         if (biomeSource instanceof ModernBetaBiomeSource modernBetaBiomeSource) {
             //FIXME: I hate this
             BiomeProvider provider = modernBetaBiomeSource.getBiomeProvider();
-            ResourceLocation id = ModernBetaRegistries.BIOME.entrySet().stream()
+            Identifier id = ModernBetaRegistries.BIOME.entrySet().stream()
                     .filter(c -> c.getValue().providerClass() == provider.getClass())
-                    .findFirst().orElseThrow().getKey().location();
+                    .findFirst().orElseThrow().getKey().identifier();
 
             payload = new BiomeProviderInfoPayload(
                     true,

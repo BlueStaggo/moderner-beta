@@ -47,7 +47,7 @@ public class Cache2DBiomeInjector implements BiomeInjector {
     @Override
     public Holder<Biome> apply(BiomeInjectionContext context, int biomeX, int biomeY, int biomeZ) {
         ChunkPos chunkPos = context.getChunkPos();
-        Int2ObjectMap<Holder<Biome>> lookup = this.biomeCache.get(chunkPos.x, chunkPos.z);
+        Int2ObjectMap<Holder<Biome>> lookup = this.biomeCache.get(chunkPos.x(), chunkPos.z());
 
         int localBiomeX = biomeX & 3;
         int localBiomeZ = biomeZ & 3;

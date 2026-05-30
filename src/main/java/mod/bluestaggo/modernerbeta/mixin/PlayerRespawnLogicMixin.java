@@ -4,10 +4,10 @@ import mod.bluestaggo.modernerbeta.api.level.spawn.SpawnLocator;
 import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaChunkGenerator;
 import net.minecraft.core.BlockPos;
 //? if >=1.21.9 {
-/*import net.minecraft.server.level.PlayerSpawnFinder;
-*///?} else {
-import net.minecraft.server.level.PlayerRespawnLogic;
-//?}
+import net.minecraft.server.level.PlayerSpawnFinder;
+//?} else {
+/*import net.minecraft.server.level.PlayerRespawnLogic;
+*///?}
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import org.spongepowered.asm.mixin.Mixin;
@@ -17,10 +17,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(
     //? if >=1.21.9 {
-    /*PlayerSpawnFinder.class
-    *///?} else {
-    PlayerRespawnLogic.class
-    //?}
+    PlayerSpawnFinder.class
+    //?} else {
+    /*PlayerRespawnLogic.class
+    *///?}
 )
 public abstract class PlayerRespawnLogicMixin {
     /*
@@ -43,10 +43,10 @@ public abstract class PlayerRespawnLogicMixin {
         ) {
             int spawnY = level.getLevelData()
                 //? if >=1.21.9 {
-                /*.getRespawnData().globalPos().pos().getY();
-                *///?} else if >=1.20.5 {
-                .getSpawnPos().getY();
-                //?} else {
+                .getRespawnData().globalPos().pos().getY();
+                //?} else if >=1.20.5 {
+                /*.getSpawnPos().getY();
+                *///?} else {
                 /*.getYSpawn();
                 *///?}
 

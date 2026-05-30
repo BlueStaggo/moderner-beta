@@ -38,7 +38,7 @@ public abstract class IntLayer {
     public int sample(HolderGetter<Biome> biomeRegistry, int x, int z) {
         Long2IntLinkedOpenHashMap cache = this.cache.get();
 
-        long coord = ChunkPos.asLong(x, z);
+        long coord = ChunkPos.pack(x, z);
         int value = cache.get(coord);
 
         if (value != Integer.MIN_VALUE) {

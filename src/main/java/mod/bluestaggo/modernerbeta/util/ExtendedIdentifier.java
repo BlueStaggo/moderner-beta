@@ -4,13 +4,13 @@ package mod.bluestaggo.modernerbeta.util;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-public record ExtendedIdentifier(ResourceLocation baseId, String ext, boolean weak) {
+public record ExtendedIdentifier(Identifier baseId, String ext, boolean weak) {
     public static final Codec<ExtendedIdentifier> CODEC = Codec.STRING.comapFlatMap(ExtendedIdentifier::validate, ExtendedIdentifier::toString);
 
     public static ExtendedIdentifier of(String id) {
@@ -27,34 +27,34 @@ public record ExtendedIdentifier(ResourceLocation baseId, String ext, boolean we
         return new ExtendedIdentifier(VersionCompat.id(baseId), ext, weak);
     }
 
-    public static ExtendedIdentifier of(ResourceLocation baseId) {
+    public static ExtendedIdentifier of(Identifier baseId) {
         return new ExtendedIdentifier(baseId, "", false);
     }
 
-    public static ExtendedIdentifier of(ResourceLocation baseId, String ext) {
+    public static ExtendedIdentifier of(Identifier baseId, String ext) {
         if (ext == null) {
             ext = "";
         }
         return new ExtendedIdentifier(baseId, ext, false);
     }
 
-    public static ExtendedIdentifier ofWeak(ResourceLocation baseId) {
+    public static ExtendedIdentifier ofWeak(Identifier baseId) {
         return new ExtendedIdentifier(baseId, "", true);
     }
 
     public static <T> ExtendedIdentifier of(ResourceKey<T> baseId) {
-        return new ExtendedIdentifier(baseId.location(), "", false);
+        return new ExtendedIdentifier(baseId.identifier(), "", false);
     }
 
     public static <T> ExtendedIdentifier of(ResourceKey<T> baseId, String ext) {
         if (ext == null) {
             ext = "";
         }
-        return new ExtendedIdentifier(baseId.location(), ext, false);
+        return new ExtendedIdentifier(baseId.identifier(), ext, false);
     }
 
     public static <T> ExtendedIdentifier ofWeak(ResourceKey<T> baseId) {
-        return new ExtendedIdentifier(baseId.location(), "", true);
+        return new ExtendedIdentifier(baseId.identifier(), "", true);
     }
 
     public static List<ExtendedIdentifier> listOf(String... ids) {
@@ -81,10 +81,10 @@ public record ExtendedIdentifier(ResourceLocation baseId, String ext, boolean we
     }
 
     public <T> boolean isOf(ResourceKey<T> key) {
-        return this.baseId.equals(key.location());
+        return this.baseId.equals(key.identifier());
     }
 
-    public boolean isOf(ResourceLocation id) {
+    public boolean isOf(Identifier id) {
         return this.baseId.equals(id);
     }
 
@@ -138,6 +138,6 @@ public record ExtendedIdentifier(ResourceLocation baseId, String ext, boolean we
             string = string.substring(0, asterisk);
         }
 
-        return ResourceLocation.read(string).flatMap(id -> DataResult.success(new ExtendedIdentifier(id, ext, weak)));
+        return Identifier.read(string).flatMap(id -> DataResult.success(new ExtendedIdentifier(id, ext, weak)));
     }
 }

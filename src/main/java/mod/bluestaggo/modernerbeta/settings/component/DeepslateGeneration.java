@@ -4,20 +4,20 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.util.CodecUtil;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public record DeepslateGeneration(
     boolean enabled,
     int minY,
     int maxY,
-    ResourceLocation block
+    Identifier block
 ) {
     public static final Codec<DeepslateGeneration> CODEC = RecordCodecBuilder.create(
         instance -> instance.group(
             Codec.BOOL.fieldOf("enabled").orElse(true).forGetter(DeepslateGeneration::enabled),
             Codec.INT.fieldOf("minY").orElse(0).forGetter(DeepslateGeneration::minY),
             Codec.INT.fieldOf("maxY").orElse(8).forGetter(DeepslateGeneration::maxY),
-            ResourceLocation.CODEC.fieldOf("block").orElse(VersionCompat.vanillaId("deepslate")).forGetter(DeepslateGeneration::block)
+            Identifier.CODEC.fieldOf("block").orElse(VersionCompat.vanillaId("deepslate")).forGetter(DeepslateGeneration::block)
         ).apply(instance, DeepslateGeneration::new)
     );
     public static final DeepslateGeneration DEFAULT = CodecUtil.getDefaultByMap(CODEC);

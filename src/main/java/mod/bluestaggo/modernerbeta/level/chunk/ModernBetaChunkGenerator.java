@@ -31,7 +31,7 @@ import mod.bluestaggo.modernerbeta.util.random.BedrockWorldgenRandom;
 import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.level.carver.BetaCaveCarverConfiguration;
 import mod.bluestaggo.modernerbeta.level.carver.configured.ModernBetaConfiguredCarvers;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.core.*;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -242,7 +242,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
         Blender blender, RandomState noiseConfig, StructureManager structureAccessor, ChunkAccess chunk
     ) {
         ChunkPos chunkPos = chunk.getPos();
-        if (ModCompat.skipGeneratingChunk(chunkPos.x, chunkPos.z))
+        if (ModCompat.skipGeneratingChunk(chunkPos.x(), chunkPos.z()))
             return CompletableFuture.completedFuture(chunk);
 
         return this.chunkProvider.provideChunk(Blender.empty(), structureAccessor, chunk, noiseConfig);
@@ -252,12 +252,12 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
     public void buildSurface(WorldGenRegion chunkRegion, StructureManager structureAccessor, RandomState noiseConfig, ChunkAccess chunk) {
         ChunkPos chunkPos = chunk.getPos();
 
-        if (ModCompat.skipGeneratingChunk(chunkPos.x, chunkPos.z))
+        if (ModCompat.skipGeneratingChunk(chunkPos.x(), chunkPos.z()))
             return;
 
         this.injectBiomes(chunk, BiomeInjectionRule.Step.PRE);
 
-        if (!this.chunkProvider.skipChunk(chunkPos.x, chunkPos.z, ModernBetaGenerationStep.SURFACE)) {
+        if (!this.chunkProvider.skipChunk(chunkPos.x(), chunkPos.z(), ModernBetaGenerationStep.SURFACE)) {
             if (this.biomeSource instanceof ModernBetaBiomeSource modernBetaBiomeSource) {
                 if (this.useSurfaceRules) {
                     this.buildDefaultSurface(chunkRegion, structureAccessor, noiseConfig, chunk);
@@ -323,14 +323,14 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
     ) {
         ChunkPos chunkPos = chunk.getPos();
 
-        if (ModCompat.skipGeneratingChunk(chunkPos.x, chunkPos.z) ||
-            this.chunkProvider.skipChunk(chunkPos.x, chunkPos.z, ModernBetaGenerationStep.CARVERS))
+        if (ModCompat.skipGeneratingChunk(chunkPos.x(), chunkPos.z()) ||
+            this.chunkProvider.skipChunk(chunkPos.x(), chunkPos.z(), ModernBetaGenerationStep.CARVERS))
             return;
 
         BiomeManager biomeAccessWithSource = biomeAccess.withDifferentSource((biomeX, biomeY, biomeZ) -> this.biomeSource.getNoiseBiome(biomeX, biomeY, biomeZ, noiseConfig.sampler()));
 
-        int mainChunkX = chunkPos.x;
-        int mainChunkZ = chunkPos.z;
+        int mainChunkX = chunkPos.x();
+        int mainChunkZ = chunkPos.z();
         
         Aquifer aquiferSampler = this.chunkProvider.getAquiferSampler(chunk, noiseConfig);
         
@@ -467,7 +467,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
     public void applyBiomeDecoration(WorldGenLevel level, ChunkAccess chunk, StructureManager structureAccessor) {
         ChunkPos chunkPos = chunk.getPos();
         
-        if (this.chunkProvider.skipChunk(chunkPos.x, chunkPos.z, ModernBetaGenerationStep.FEATURES))
+        if (this.chunkProvider.skipChunk(chunkPos.x(), chunkPos.z(), ModernBetaGenerationStep.FEATURES))
             return;
 
         super.applyBiomeDecoration(level, chunk, structureAccessor);
@@ -477,8 +477,8 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
     public void spawnOriginalMobs(WorldGenRegion region) {
         ChunkPos chunkPos = region.getCenter();
         
-        if (ModCompat.skipGeneratingChunk(chunkPos.x, chunkPos.z) ||
-            this.chunkProvider.skipChunk(chunkPos.x, chunkPos.z, ModernBetaGenerationStep.ENTITY_SPAWN))
+        if (ModCompat.skipGeneratingChunk(chunkPos.x(), chunkPos.z()) ||
+            this.chunkProvider.skipChunk(chunkPos.x(), chunkPos.z(), ModernBetaGenerationStep.ENTITY_SPAWN))
             return;
         
         super.spawnOriginalMobs(region);

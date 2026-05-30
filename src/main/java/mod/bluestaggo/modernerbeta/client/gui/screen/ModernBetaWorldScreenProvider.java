@@ -10,7 +10,7 @@ import net.minecraft.client.gui.screens.worldselection.WorldCreationContext;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
 
@@ -42,7 +42,7 @@ public class ModernBetaWorldScreenProvider {
         };
     }
     
-    private static ResourceKey<NoiseGeneratorSettings> keyOfSettings(ResourceLocation id) {
+    private static ResourceKey<NoiseGeneratorSettings> keyOfSettings(Identifier id) {
         return ResourceKey.create(Registries.NOISE_SETTINGS, id);
     }
 }

@@ -1,7 +1,7 @@
 package mod.bluestaggo.modernerbeta;
 
 import mod.bluestaggo.modernerbeta.tags.ModernBetaBiomeTags;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public final class ModernBetaBuiltInTypes {
     public enum SettingsComponentType {
@@ -47,7 +47,7 @@ public final class ModernBetaBuiltInTypes {
         CONFIG_MISCELLANEOUS("config/miscellaneous"),
         ;
 
-        public final ResourceLocation id;
+        public final Identifier id;
 
         SettingsComponentType(String id) {
             this.id = ModernerBeta.createId(id);
@@ -60,7 +60,7 @@ public final class ModernBetaBuiltInTypes {
         NOISE_3D("noise_3d"),
         ;
 
-        public final ResourceLocation id;
+        public final Identifier id;
         
         Chunk(String id) {
             this.id = ModernerBeta.createId(id);
@@ -76,7 +76,7 @@ public final class ModernBetaBuiltInTypes {
         BETA_FRACTAL("beta_fractal"),
         ;
 
-        public final ResourceLocation id;
+        public final Identifier id;
         
         Biome(String id) { this.id = ModernerBeta.createId(id); }
     }
@@ -87,7 +87,7 @@ public final class ModernBetaBuiltInTypes {
         VORONOI("voronoi"),
         ;
 
-        public final ResourceLocation id;
+        public final Identifier id;
         
         CaveBiome(String id) {
             this.id = ModernerBeta.createId(id);
@@ -118,7 +118,7 @@ public final class ModernBetaBuiltInTypes {
         HEIGHT_CONFIG_DEEP_OCEAN(ModernBetaBiomeTags.HEIGHT_CONFIG_DEEP_OCEAN.location().getPath()),
         ;
 
-        public final ResourceLocation id;
+        public final Identifier id;
 
         HeightConfig(String id) {
             this.id = ModernerBeta.createId(id);
@@ -130,7 +130,7 @@ public final class ModernBetaBuiltInTypes {
         HEIGHT("height"),
         ;
 
-        public final ResourceLocation id;
+        public final Identifier id;
 
         LayerOutput(String id) {
             this.id = ModernerBeta.createId(id);

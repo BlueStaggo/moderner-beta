@@ -4,7 +4,7 @@ import mod.bluestaggo.modernerbeta.registry.IRegistryBuilder;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHelper;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 //? if neoforge {
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 import net.neoforged.neoforge.registries.RegistryBuilder;
@@ -26,7 +26,7 @@ public record RegistryHelperImpl(NewRegistryEvent event) implements IRegistryHel
     }
 
     @Override
-    public <T> IRegistryBuilder<T> createDefaulted(ResourceKey<Registry<T>> key, ResourceLocation defaultKey) {
+    public <T> IRegistryBuilder<T> createDefaulted(ResourceKey<Registry<T>> key, Identifier defaultKey) {
         RegistryBuilder<T> registryBuilder =
             //? if neoforge {
             new RegistryBuilder<>(key).defaultKey(defaultKey);

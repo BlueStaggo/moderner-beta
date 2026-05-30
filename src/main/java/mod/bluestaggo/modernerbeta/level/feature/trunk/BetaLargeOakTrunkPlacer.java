@@ -9,7 +9,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.LevelSimulatedReader;
+import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
@@ -45,11 +45,11 @@ public class BetaLargeOakTrunkPlacer extends TrunkPlacer {
     }
 
     @Override
-    public @NotNull List<FoliagePlacer.FoliageAttachment> placeTrunk(LevelSimulatedReader level, BiConsumer<BlockPos, BlockState> replacer, RandomSource random, int height, BlockPos basePos, TreeConfiguration config) {
+    public @NotNull List<FoliagePlacer.FoliageAttachment> placeTrunk(WorldGenLevel level, BiConsumer<BlockPos, BlockState> replacer, RandomSource random, int height, BlockPos basePos, TreeConfiguration config) {
         int foliageHeight = 5;
         double branchDensity = 1.0;
 
-        setDirtAt(level, replacer, random, basePos.below(), config);
+        placeBelowTrunkBlock(level, replacer, random, basePos.below(), config);
         int treeHeight = Mth.floor(height * HEIGHT_SCALE);
 
         if (treeHeight >= height) {
@@ -120,7 +120,7 @@ public class BetaLargeOakTrunkPlacer extends TrunkPlacer {
         return this.baseHeight + random.nextInt(this.heightRandA + 1);
     }
 
-    private boolean makeOrCheckBranch(LevelSimulatedReader level, BiConsumer<BlockPos, BlockState> replacer, RandomSource random, BlockPos startPos, BlockPos branchPos, boolean make, TreeConfiguration config) {
+    private boolean makeOrCheckBranch(WorldGenLevel level, BiConsumer<BlockPos, BlockState> replacer, RandomSource random, BlockPos startPos, BlockPos branchPos, boolean make, TreeConfiguration config) {
         if (!make && Objects.equals(startPos, branchPos)) {
             return true;
         }
@@ -171,7 +171,7 @@ public class BetaLargeOakTrunkPlacer extends TrunkPlacer {
         return height >= treeHeight * 0.2;
     }
 
-    private void makeBranches(LevelSimulatedReader level, BiConsumer<BlockPos, BlockState> replacer, RandomSource random, int treeHeight, BlockPos startPos, List<BranchPosition> branchPositions, TreeConfiguration config) {
+    private void makeBranches(WorldGenLevel level, BiConsumer<BlockPos, BlockState> replacer, RandomSource random, int treeHeight, BlockPos startPos, List<BranchPosition> branchPositions, TreeConfiguration config) {
         for (BranchPosition branchPosition : branchPositions) {
             int endY = branchPosition.endY;
             BlockPos blockPos = new BlockPos(startPos.getX(), endY, startPos.getZ());

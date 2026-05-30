@@ -34,18 +34,18 @@ public class ModernerBetaFabric implements ModInitializer {
         ModContainer modContainer = FabricLoader.getInstance().getModContainer(ModernerBeta.MOD_ID).orElseThrow();
         for (String pack : ModernerBeta.BUILT_IN_PACKS) {
             //? if >=1.21.11 {
-            /*net.fabricmc.fabric.api.resource.v1.ResourceLoader.registerBuiltinPack(
-            *///? } else {
-            net.fabricmc.fabric.api.resource.ResourceManagerHelper.registerBuiltinResourcePack(
-            //? }
+            net.fabricmc.fabric.api.resource.v1.ResourceLoader.registerBuiltinPack(
+            //? } else {
+            /*net.fabricmc.fabric.api.resource.ResourceManagerHelper.registerBuiltinResourcePack(
+            *///? }
                 ModernerBeta.createId(pack),
                 modContainer,
                 Component.translatable("dataPack.moderner_beta." + pack + ".name"),
                 //? if >=1.21.11 {
-                /*net.fabricmc.fabric.api.resource.v1.pack.PackActivationType.NORMAL
-                *///? } else {
-                net.fabricmc.fabric.api.resource.ResourcePackActivationType.NORMAL
-                //? }
+                net.fabricmc.fabric.api.resource.v1.pack.PackActivationType.NORMAL
+                //? } else {
+                /*net.fabricmc.fabric.api.resource.ResourcePackActivationType.NORMAL
+                *///? }
             );
         }
 
@@ -70,7 +70,7 @@ public class ModernerBetaFabric implements ModInitializer {
         ModernerBeta.networkHelper = new NetworkHelperImpl();
 
         //? if >=1.20.2 {
-        PayloadTypeRegistry.playS2C().register(BiomeProviderInfoPayload.ID, BiomeProviderInfoPayload.CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(BiomeProviderInfoPayload.ID, BiomeProviderInfoPayload.CODEC);
         //?}
     }
 }

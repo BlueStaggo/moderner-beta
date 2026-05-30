@@ -55,7 +55,7 @@ public class AuxChunkCache<A, T> {
     public T get(A aux, int chunkX, int chunkZ) {
         T chunk;
         
-        long key = ChunkPos.asLong(chunkX, chunkZ);
+        long key = ChunkPos.pack(chunkX, chunkZ);
         long stamp = this.lock.readLock();
         
         try {

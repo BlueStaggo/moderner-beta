@@ -6,7 +6,7 @@ import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomeFeatures;
 import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomeMobs;
 import net.minecraft.core.HolderGetter;
 //? if >=1.21.11
-//import net.minecraft.world.attribute.*;
+import net.minecraft.world.attribute.*;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeGenerationSettings;
 import net.minecraft.world.level.biome.MobSpawnSettings;
@@ -30,17 +30,17 @@ public class IndevWoodsBiome {
                 ModernBetaBiomeColors.OLD_WATER_COLOR,
                 ModernBetaBiomeColors.OLD_WATER_FOG_COLOR)
             //? if <1.21.11
-            .hasPrecipitation(false)
+            //.hasPrecipitation(false)
             .temperature(0.6F)
             .downfall(0.6F)
             .mobSpawnSettings(spawnSettings.build())
             .generationSettings(genSettings.build())
             //? if >=1.21.11 {
-            /*.putAttributes(EnvironmentAttributeMap.builder()
+            .putAttributes(EnvironmentAttributeMap.builder()
                 .set(EnvironmentAttributes.SKY_LIGHT_FACTOR, 9.0F / 15.0F)
                 .set(EnvironmentAttributes.CLOUD_COLOR, 0xFF4D5A5B)
                 .build())
-            *///? }
+            //? }
             .build();
     }
 }

@@ -10,7 +10,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 //?} else {
 /*import net.minecraft.network.FriendlyByteBuf;
 *///?}
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -19,7 +19,7 @@ public record BiomeProviderInfoPayload(
         boolean isModernBetaLevel,
         boolean hasBiomeProvider,
         Optional<Long> seed,
-        Optional<ResourceLocation> providerId,
+        Optional<Identifier> providerId,
         Optional<CompoundTag> settings
 ) implements ModernBetaPayload
 //? if >=1.20.2 {
@@ -36,7 +36,7 @@ public record BiomeProviderInfoPayload(
         /*ByteBufCodecs.VAR_LONG
         *///?}
             .apply(ByteBufCodecs::optional), BiomeProviderInfoPayload::seed,
-        ResourceLocation.STREAM_CODEC.apply(ByteBufCodecs::optional), BiomeProviderInfoPayload::providerId,
+        Identifier.STREAM_CODEC.apply(ByteBufCodecs::optional), BiomeProviderInfoPayload::providerId,
         ByteBufCodecs.COMPOUND_TAG.apply(ByteBufCodecs::optional), BiomeProviderInfoPayload::settings,
 
         BiomeProviderInfoPayload::new
@@ -50,14 +50,14 @@ public record BiomeProviderInfoPayload(
 
 //?} else {
 /*{
-    public static final ResourceLocation ID = ModernBetaNetworkConstants.BIOME_PROVIDER_INFO_PACKET_ID;
+    public static final Identifier ID = ModernBetaNetworkConstants.BIOME_PROVIDER_INFO_PACKET_ID;
 
     public static BiomeProviderInfoPayload fromFriendlyByteBuf(FriendlyByteBuf friendlyByteBuf) {
         return new BiomeProviderInfoPayload(
             friendlyByteBuf.readBoolean(),
             friendlyByteBuf.readBoolean(),
             friendlyByteBuf.readOptional(FriendlyByteBuf::readLong),
-            friendlyByteBuf.readOptional(FriendlyByteBuf::readResourceLocation),
+            friendlyByteBuf.readOptional(FriendlyByteBuf::readIdentifier),
             friendlyByteBuf.readOptional(FriendlyByteBuf::readNbt)
         );
     }
@@ -67,12 +67,12 @@ public record BiomeProviderInfoPayload(
         friendlyByteBuf.writeBoolean(this.isModernBetaLevel());
         friendlyByteBuf.writeBoolean(this.hasBiomeProvider());
         friendlyByteBuf.writeOptional(this.seed(), FriendlyByteBuf::writeLong);
-        friendlyByteBuf.writeOptional(this.providerId(), FriendlyByteBuf::writeResourceLocation);
+        friendlyByteBuf.writeOptional(this.providerId(), FriendlyByteBuf::writeIdentifier);
         friendlyByteBuf.writeOptional(this.settings(), FriendlyByteBuf::writeNbt);
     }
 
     @Override
-    public ResourceLocation getId() {
+    public Identifier getId() {
         return ID;
     }
 }

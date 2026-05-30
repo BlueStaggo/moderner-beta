@@ -36,7 +36,7 @@ import mod.bluestaggo.modernerbeta.util.LoggingUtil;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.slf4j.event.Level;
 
 import java.io.BufferedReader;
@@ -104,14 +104,14 @@ public class ModernerBeta {
         );
     }
 
-    public static ResourceLocation createId(String name) {
-        return ResourceLocation./*? >=1.21 {*/fromNamespaceAndPath/*?} else {*//*tryBuild*//*?}*/(MOD_ID, name);
+    public static Identifier createId(String name) {
+        return Identifier./*? >=1.21 {*/fromNamespaceAndPath/*?} else {*//*tryBuild*//*?}*/(MOD_ID, name);
     }
 
     public static GsonBuilder getSettingsGson() {
         GsonBuilder gson = new GsonBuilder();
         CodecUtil.registerTypeAdapter(gson, ConfiguredLayers.class, ConfiguredLayers.CODEC);
-        CodecUtil.registerTypeAdapter(gson, ResourceLocation.class, ResourceLocation.CODEC);
+        CodecUtil.registerTypeAdapter(gson, Identifier.class, Identifier.CODEC);
         return gson;
     }
 

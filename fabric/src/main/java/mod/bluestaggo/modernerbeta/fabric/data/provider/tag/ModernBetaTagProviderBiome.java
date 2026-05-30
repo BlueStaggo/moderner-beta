@@ -2,8 +2,8 @@ package mod.bluestaggo.modernerbeta.fabric.data.provider.tag;
 
 import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomes;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBiomeTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderLookup.Provider;
@@ -18,8 +18,8 @@ import java.util.concurrent.CompletableFuture;
 import static mod.bluestaggo.modernerbeta.tags.ModernBetaBiomeTags.*;
 
 @SuppressWarnings("unchecked")
-public class ModernBetaTagProviderBiome extends FabricTagProvider<Biome> {
-    public ModernBetaTagProviderBiome(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
+public class ModernBetaTagProviderBiome extends FabricTagsProvider<Biome> {
+    public ModernBetaTagProviderBiome(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
         super(output, Registries.BIOME, registriesFuture);
     }
 

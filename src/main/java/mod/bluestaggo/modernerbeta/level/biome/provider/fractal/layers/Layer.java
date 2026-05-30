@@ -8,7 +8,7 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectLinkedOpenHashMap;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ColumnPos;
 import net.minecraft.util.LinearCongruentialGenerator;
 
@@ -167,7 +167,7 @@ public abstract class Layer {
     protected String getName() {
         return ModernBetaRegistries.FRACTAL_LAYER.getResourceKey(this.getType())
             .map(key -> {
-                ResourceLocation identifier = key.location();
+                Identifier identifier = key.identifier();
                 if (ModernerBeta.MOD_ID.equals(identifier.getNamespace())) {
                     return identifier.getPath();
                 }

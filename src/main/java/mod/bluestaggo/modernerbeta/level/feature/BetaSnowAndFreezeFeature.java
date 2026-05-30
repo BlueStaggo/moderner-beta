@@ -13,7 +13,7 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeSource;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.SnowyDirtBlock;
+import net.minecraft.world.level.block.SnowyBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.Heightmap;
@@ -79,8 +79,8 @@ public class BetaSnowAndFreezeFeature extends Feature<NoneFeatureConfiguration> 
                     level.setBlock(mutable, Blocks.SNOW.defaultBlockState(), Block.UPDATE_CLIENTS);
 
                     BlockState blockState = level.getBlockState(mutableDown);
-                    if (blockState.hasProperty(SnowyDirtBlock.SNOWY)) {
-                        level.setBlock(mutableDown, blockState.setValue(SnowyDirtBlock.SNOWY, true), Block.UPDATE_CLIENTS);
+                    if (blockState.hasProperty(SnowyBlock.SNOWY)) {
+                        level.setBlock(mutableDown, blockState.setValue(SnowyBlock.SNOWY, true), Block.UPDATE_CLIENTS);
                     }
                 }
             }

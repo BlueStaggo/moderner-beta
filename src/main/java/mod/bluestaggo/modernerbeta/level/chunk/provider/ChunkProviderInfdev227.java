@@ -16,7 +16,7 @@ import mod.bluestaggo.modernerbeta.util.noise.SimpleNoisePos;
 import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.level.blocksource.BlockSourceRules;
 import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaChunkGenerator;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -122,8 +122,8 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
         
         ChunkPos chunkPos = chunk.getPos();
-        int chunkX = chunkPos.x;
-        int chunkZ = chunkPos.z;
+        int chunkX = chunkPos.x();
+        int chunkZ = chunkPos.z();
 
         int startX = chunk.getPos().getMinBlockX();
         int startZ = chunk.getPos().getMinBlockZ();
@@ -195,8 +195,8 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
     @Override
     public void provideSurfaceExtra(WorldGenRegion region, StructureManager structureAccessor, ChunkAccess chunk, ModernBetaBiomeSource biomeSource, RandomState noiseConfig) {
         ChunkPos chunkPos = chunk.getPos();
-        int chunkX = chunkPos.x;
-        int chunkZ = chunkPos.z;
+        int chunkX = chunkPos.x();
+        int chunkZ = chunkPos.z();
 
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
         Random bedrockRand = this.createSurfaceRandom(chunkX, chunkZ);
@@ -253,8 +253,8 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
         BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
         SimpleNoisePos noisePos = new SimpleNoisePos();
         
-        int chunkX = chunk.getPos().x;
-        int chunkZ = chunk.getPos().z;
+        int chunkX = chunk.getPos().x();
+        int chunkZ = chunk.getPos().z();
         
         int startX = chunk.getPos().getMinBlockX();
         int startZ = chunk.getPos().getMinBlockZ();

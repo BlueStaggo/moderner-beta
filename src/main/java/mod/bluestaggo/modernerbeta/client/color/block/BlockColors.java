@@ -31,21 +31,21 @@ public final class BlockColors {
 
         // Petal blocks
         //? if <26.1
-        GrassTintSource petalGrassTint = new GrassTintSource(BlockColorSampler.INSTANCE, false);
+        //GrassTintSource petalGrassTint = new GrassTintSource(BlockColorSampler.INSTANCE, false);
         registerer.register(
             //? if >=26.1 {
-            /*java.util.List.of(
-                net.minecraft.client.color.block.BlockColors.constant(0xFFFFFFFF),
+            java.util.List.of(
+                net.minecraft.client.color.block.BlockTintSources.constant(0xFFFFFFFF),
                 new GrassTintSource(BlockColorSampler.INSTANCE, false)
             ),
-            *///? } else {
-            (state, view, pos, tintIndex) -> {
+            //? } else {
+            /*(state, view, pos, tintIndex) -> {
                 if (tintIndex == 0)
                     return 0xFFFFFFFF;
 
                 return petalGrassTint.getColor(state, view, pos, tintIndex);
             },
-            //? }
+            *///? }
             Blocks.PINK_PETALS
             //? if >=1.21.5
             , Blocks.WILDFLOWERS
@@ -68,11 +68,11 @@ public final class BlockColors {
                 BlockColorSampler.INSTANCE,
                 0xFFFFFFFF,
                 //? if >=26.1 {
-                /*net.minecraft.client.color.block.BlockColors.sugarCane()
-                *///? } else {
-                (state, level, pos, tintIndex) ->
+                net.minecraft.client.color.block.BlockTintSources.sugarCane()
+                //? } else {
+                /*(state, level, pos, tintIndex) ->
                     net.minecraft.client.renderer.BiomeColors.getAverageGrassColor(level, pos)
-                //? }
+                *///? }
             ),
             Blocks.SUGAR_CANE
         );
@@ -89,13 +89,13 @@ public final class BlockColors {
     @FunctionalInterface
     public interface BlockColorRegisterer {
         //? if >=26.1 {
-        /*default void register(net.minecraft.client.color.block.BlockColor source, Block... blocks) {
+        default void register(net.minecraft.client.color.block.BlockTintSource source, Block... blocks) {
             register(java.util.List.of(source), blocks);
         }
 
-        void register(java.util.List<net.minecraft.client.color.block.BlockColor> sources, Block... blocks);
-        *///? } else {
-        void register(net.minecraft.client.color.block.BlockColor provider, Block... blocks);
-        //? }
+        void register(java.util.List<net.minecraft.client.color.block.BlockTintSource> sources, Block... blocks);
+        //? } else {
+        /*void register(net.minecraft.client.color.block.BlockTintSource provider, Block... blocks);
+        *///? }
     }
 }

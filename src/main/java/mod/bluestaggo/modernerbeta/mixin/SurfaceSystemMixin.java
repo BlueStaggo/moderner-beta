@@ -68,7 +68,7 @@ public class SurfaceSystemMixin implements ModernBetaSurfaceSystem {
             return;
 
         ChunkPos chunkPos = chunk.getPos();
-        Random surfaceRandom = this.modernerBeta$chunkProvider.createSurfaceRandom(chunkPos.x, chunkPos.z);
+        Random surfaceRandom = this.modernerBeta$chunkProvider.createSurfaceRandom(chunkPos.x(), chunkPos.z());
         this.modernerBeta$surfaceRandom.set(surfaceRandom);
     }
 
@@ -87,7 +87,7 @@ public class SurfaceSystemMixin implements ModernBetaSurfaceSystem {
             return;
 
         ChunkPos chunkPos = chunk.getPos();
-        Random surfaceRandom = this.modernerBeta$chunkProvider.createSurfaceRandom(chunkPos.x, chunkPos.z);
+        Random surfaceRandom = this.modernerBeta$chunkProvider.createSurfaceRandom(chunkPos.x(), chunkPos.z());
         this.modernerBeta$surfaceRandom.set(surfaceRandom);
     }
 

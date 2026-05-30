@@ -147,7 +147,7 @@ public class ModernBetaVegetationPlacedFeatures {
         HolderGetter<ConfiguredFeature<?, ?>> registryConfigured = context.lookup(Registries.CONFIGURED_FEATURE);
 
         //? if >=26.1 {
-        /*Holder.Reference<ConfiguredFeature<?, ?>> patchCactus = registryConfigured.getOrThrow(VegetationFeatures.CACTUS);
+        Holder.Reference<ConfiguredFeature<?, ?>> patchCactus = registryConfigured.getOrThrow(VegetationFeatures.CACTUS);
         Holder.Reference<ConfiguredFeature<?, ?>> patchBrownMushroom = registryConfigured.getOrThrow(VegetationFeatures.BROWN_MUSHROOM);
         Holder.Reference<ConfiguredFeature<?, ?>> patchRedMushroom = registryConfigured.getOrThrow(VegetationFeatures.RED_MUSHROOM);
         Holder.Reference<ConfiguredFeature<?, ?>> mushroomHell = registryConfigured.getOrThrow(ModernBetaVegetationConfiguredFeatures.MUSHROOM_HELL);
@@ -158,8 +158,8 @@ public class ModernBetaVegetationPlacedFeatures {
 
         Holder.Reference<ConfiguredFeature<?, ?>> patchGrass = registryConfigured.getOrThrow(ModernBetaVegetationConfiguredFeatures.GRASS);
         Holder.Reference<ConfiguredFeature<?, ?>> patchGrassLush = registryConfigured.getOrThrow(ModernBetaVegetationConfiguredFeatures.GRASS_LUSH);
-        *///? } else {
-        Holder.Reference<ConfiguredFeature<?, ?>> patchCactus = registryConfigured.getOrThrow(VegetationFeatures.PATCH_CACTUS);
+        //? } else {
+        /*Holder.Reference<ConfiguredFeature<?, ?>> patchCactus = registryConfigured.getOrThrow(VegetationFeatures.PATCH_CACTUS);
         Holder.Reference<ConfiguredFeature<?, ?>> patchBrownMushroom = registryConfigured.getOrThrow(ModernBetaVegetationConfiguredFeatures.PATCH_BROWN_MUSHROOM);
         Holder.Reference<ConfiguredFeature<?, ?>> patchRedMushroom = registryConfigured.getOrThrow(ModernBetaVegetationConfiguredFeatures.PATCH_RED_MUSHROOM);
         Holder.Reference<ConfiguredFeature<?, ?>> mushroomHell = registryConfigured.getOrThrow(ModernBetaVegetationConfiguredFeatures.MUSHROOM_HELL);
@@ -170,7 +170,7 @@ public class ModernBetaVegetationPlacedFeatures {
 
         Holder.Reference<ConfiguredFeature<?, ?>> patchGrass = registryConfigured.getOrThrow(ModernBetaVegetationConfiguredFeatures.PATCH_GRASS);
         Holder.Reference<ConfiguredFeature<?, ?>> patchGrassLush = registryConfigured.getOrThrow(ModernBetaVegetationConfiguredFeatures.PATCH_GRASS_LUSH);
-        //? }
+        *///? }
         Holder.Reference<ConfiguredFeature<?, ?>> flowerDefault = registryConfigured.getOrThrow(VegetationFeatures.FLOWER_DEFAULT);
 
         Holder.Reference<ConfiguredFeature<?, ?>> treesAlpha = registryConfigured.getOrThrow(ModernBetaVegetationConfiguredFeatures.TREES_ALPHA);
@@ -298,10 +298,10 @@ public class ModernBetaVegetationPlacedFeatures {
                 .collect(Collectors.toCollection(ArrayList::new));
 
         //? if >=26.1 {
-        /*list.add(CountPlacement.of(count));
+        list.add(CountPlacement.of(count));
         list.add(RandomOffsetPlacement.ofTriangle(7, 3));
         list.add(BlockPredicateFilter.forPredicate(blockPredicate));
-        *///? }
+        //? }
 
         return list;
     }

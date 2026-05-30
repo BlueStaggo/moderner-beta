@@ -13,7 +13,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.dimension.LevelStem;
 
@@ -24,7 +24,7 @@ public class ModernBetaGraphicalProviderSettingsScreen extends ModernBetaGraphic
     private final ModernBetaSettings settingsObject;
 
     private final Registry<? extends ProviderType> providerRegistry;
-    private final ResourceLocation[] providers;
+    private final Identifier[] providers;
 
     public final int worldMinY;
     public final int worldMaxY;
@@ -44,9 +44,9 @@ public class ModernBetaGraphicalProviderSettingsScreen extends ModernBetaGraphic
         this.providers = providerRegistry.listElements()
             .map(Holder::unwrapKey)
             .flatMap(Optional::stream)
-            .map(ResourceKey::location)
+            .map(ResourceKey::identifier)
             .sorted()
-            .toArray(ResourceLocation[]::new);
+            .toArray(Identifier[]::new);
 
         DimensionType dimensionType = context.selectedDimensions().get(LevelStem.OVERWORLD)
             .map(LevelStem::type).map(Holder::value).orElse(null);
@@ -62,7 +62,7 @@ public class ModernBetaGraphicalProviderSettingsScreen extends ModernBetaGraphic
     @Override
     protected void addOptions(OptionsList list) {
         String providerKey = ModernBetaBuiltInTypes.SettingsComponentType.PROVIDER.id.toString();
-        ResourceLocation providerId = VersionCompat.id(VersionCompat.unwrap(this.settings.getString(providerKey)));
+        Identifier providerId = VersionCompat.id(VersionCompat.unwrap(this.settings.getString(providerKey)));
 
         list.addBig(this.primarySelectionOption(providerKey, this.providers));
 

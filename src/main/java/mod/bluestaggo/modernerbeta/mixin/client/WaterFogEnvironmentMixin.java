@@ -9,11 +9,11 @@ import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.fog.environment.WaterFogEnvironment;
 //? if >=1.21.11 {
-/*import net.minecraft.world.attribute.EnvironmentAttribute;
+import net.minecraft.world.attribute.EnvironmentAttribute;
 import net.minecraft.world.attribute.EnvironmentAttributeProbe;
-*///? } else {
-import net.minecraft.world.level.biome.Biome;
-//? }
+//? } else {
+/*import net.minecraft.world.level.biome.Biome;
+*///? }
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -27,28 +27,28 @@ public abstract class WaterFogEnvironmentMixin {
     private static Vec3 modernBeta_pos;
 
     //? if >=1.21.11
-    //@SuppressWarnings("rawtypes")
+    @SuppressWarnings("rawtypes")
     @WrapOperation(
         method = "getBaseColor",
         at = @At(
             value = "INVOKE",
             target =
                 //? if >=1.21.11 {
-                /*"Lnet/minecraft/world/attribute/EnvironmentAttributeProbe;getValue(Lnet/minecraft/world/attribute/EnvironmentAttribute;F)Ljava/lang/Object;"
-                *///? } else {
-                "Lnet/minecraft/world/level/biome/Biome;getWaterFogColor()I"
-                //? }
+                "Lnet/minecraft/world/attribute/EnvironmentAttributeProbe;getValue(Lnet/minecraft/world/attribute/EnvironmentAttribute;F)Ljava/lang/Object;"
+                //? } else {
+                /*"Lnet/minecraft/world/level/biome/Biome;getWaterFogColor()I"
+                *///? }
         )
     )
-    private /*? >=1.21.11 {*//*Object*//*?} else {*/int/*?}*/ modifyWaterFogColor(
+    private /*? >=1.21.11 {*/Object/*?} else {*//*int*//*?}*/ modifyWaterFogColor(
         //? if >=1.21.11 {
-        /*EnvironmentAttributeProbe instance,
+        EnvironmentAttributeProbe instance,
         EnvironmentAttribute environmentAttribute,
         float f,
         Operation original
-        *///? } else {
-        Biome instance, Operation<Integer> original
-        //? }
+        //? } else {
+        /*Biome instance, Operation<Integer> original
+        *///? }
     ) {
         if (BlockColorSampler.INSTANCE.useWaterColor()) {
             int x = (int)modernBeta_pos.x();
@@ -59,12 +59,12 @@ public abstract class WaterFogEnvironmentMixin {
             return BlockColorSampler.INSTANCE.colormapUnderwater.getColor(clime.temp(), clime.rain());
         }
 
-        return original.call(instance /*? >=1.21.11{*//*, environmentAttribute, f*//*?}*/);
+        return original.call(instance /*? >=1.21.11{*/, environmentAttribute, f/*?}*/);
     }
 
     @Inject(method = "getBaseColor", at = @At("HEAD"))
     private void captureVars(ClientLevel level, Camera camera, int viewDistance, float skyDarkness, CallbackInfoReturnable<Integer> cir) {
-        modernBeta_pos = camera/*? >=1.21.11 {*//*.position()*//*?} else {*/.getPosition()/*?}*/;
+        modernBeta_pos = camera/*? >=1.21.11 {*/.position()/*?} else {*//*.getPosition()*//*?}*/;
     }
 }
 //?}

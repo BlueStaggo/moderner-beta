@@ -1,8 +1,8 @@
 package mod.bluestaggo.modernerbeta.fabric.data.provider.tag;
 
 import mod.bluestaggo.modernerbeta.tags.ModernBetaBlockTags;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderLookup.Provider;
 //? if >=26.2 {
@@ -16,12 +16,12 @@ import java.util.concurrent.CompletableFuture;
 public class ModernBetaTagProviderBlock
         extends
         //? if >=1.21.6 {
-        FabricTagProvider.BlockTagProvider
+        FabricTagsProvider.BlockTagsProvider
         //?} else {
-        /*FabricTagProvider<net.minecraft.world.level.block.Block>
+        /*FabricTagsProvider<net.minecraft.world.level.block.Block>
         *///?}
 {
-    public ModernBetaTagProviderBlock(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
+    public ModernBetaTagProviderBlock(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
         super(output, /*? <1.21.6 {*/ /*net.minecraft.core.registries.Registries.BLOCK, *//*?}*/ registriesFuture);
     }
 

@@ -1,8 +1,8 @@
 package mod.bluestaggo.modernerbeta.network;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public final class ModernBetaNetworkConstants {
-    public static final ResourceLocation BIOME_PROVIDER_INFO_PACKET_ID = ModernerBeta.createId("biome_provider_info");
+    public static final Identifier BIOME_PROVIDER_INFO_PACKET_ID = ModernerBeta.createId("biome_provider_info");
 }

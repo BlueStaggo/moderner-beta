@@ -241,7 +241,7 @@ public class ModernBetaBiomeSource extends BiomeSource {
         if (this.biomeProvider instanceof BiomeResolverExtendedId biomeResolver) {
             biome = biomeResolver.getExtendedBiomeId(biomeX, biomeY, biomeZ);
         } else {
-            biome = ExtendedIdentifier.of(this.biomeProvider.getBiome(biomeX, biomeY, biomeZ).unwrapKey().orElseThrow().location());
+            biome = ExtendedIdentifier.of(this.biomeProvider.getBiome(biomeX, biomeY, biomeZ).unwrapKey().orElseThrow().identifier());
         }
 
 //        this.chunkGenerator.getBiomeInjector().getOptionalBiome(null, biomeX, biomeY, biomeZ, )

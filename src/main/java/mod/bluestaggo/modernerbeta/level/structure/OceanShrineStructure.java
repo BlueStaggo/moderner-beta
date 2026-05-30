@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.levelgen.Heightmap.Types;
 import net.minecraft.world.level.levelgen.structure.Structure;
@@ -12,7 +12,7 @@ import net.minecraft.world.level.levelgen.structure.StructureType;
 
 public class OceanShrineStructure extends Structure {
     public static final com.mojang.serialization.MapCodec<OceanShrineStructure> CODEC = simpleCodec(OceanShrineStructure::new);
-    private static final ResourceLocation SHRINE_BASE = ModernerBeta.createId("ocean_shrine/base");
+    private static final Identifier SHRINE_BASE = ModernerBeta.createId("ocean_shrine/base");
 
     public OceanShrineStructure(Structure.StructureSettings config) {
         super(config);

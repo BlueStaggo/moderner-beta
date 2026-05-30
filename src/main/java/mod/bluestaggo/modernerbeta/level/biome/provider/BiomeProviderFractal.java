@@ -19,7 +19,7 @@ import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeManager;
 
@@ -79,12 +79,12 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 	}
 
 	@SuppressWarnings("unchecked")
-    private Optional<Holder<Biome>> getBiomeEntry(ResourceLocation id) {
+    private Optional<Holder<Biome>> getBiomeEntry(Identifier id) {
 		ResourceKey<Biome> key = ResourceKey.create(Registries.BIOME, id);
 		return (Optional<Holder<Biome>>)(Object)this.biomeRegistry.get(key);
 	}
 
-    private Holder<Biome> getBiomeHolderFromId(ResourceLocation id) {
+    private Holder<Biome> getBiomeHolderFromId(Identifier id) {
         return this.getBiomeEntry(id)
             .orElseThrow(() -> new NoSuchElementException("Biome \"" + id + "\" does not exist."));
     }
@@ -118,7 +118,7 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 
 	@Override
 	public Holder<Biome> getBiomeForStep(int biomeX, int biomeY, int biomeZ, int step) {
-		ResourceLocation baseId = this.getExtendedBiomeIdForStep(biomeX, biomeY, biomeZ, step).baseId();
+		Identifier baseId = this.getExtendedBiomeIdForStep(biomeX, biomeY, biomeZ, step).baseId();
 		return this.getBiomeEntry(baseId)
 			.orElseThrow(() -> new NoSuchElementException("Biome \"" + baseId + "\" does not exist."));
 	}
@@ -141,7 +141,7 @@ public class BiomeProviderFractal extends BiomeProvider implements BiomeResolver
 	private Component getExtendedBiomeName(ExtendedIdentifier extendedBiomeId) {
 		Component text = this.getBiomeEntry(extendedBiomeId.baseId())
 			.map(entry -> entry.unwrapKey()
-				.map(key -> Component.translatable(key.location().toLanguageKey("biome")))
+				.map(key -> Component.translatable(key.identifier().toLanguageKey("biome")))
 				.orElse(Component.literal("[unregistered]")))
 			.orElse(Component.literal("[unregistered]"));
 

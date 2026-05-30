@@ -36,11 +36,11 @@ public abstract class ChunkProviderForcedHeight extends ChunkProviderNoise {
             ModernBetaRegistries.HEIGHT_CONFIG.listElements()
                 .filter(Holder::isBound)
                 .flatMap(entry -> {
-                    TagKey<Biome> heightConfigTag = TagKey.create(Registries.BIOME, entry.unwrapKey().orElseThrow().location());
+                    TagKey<Biome> heightConfigTag = TagKey.create(Registries.BIOME, entry.unwrapKey().orElseThrow().identifier());
                     HeightConfig heightConfig = entry.value();
                     return chunkGenerator.getBiomeSource().possibleBiomes().stream()
                         .filter(biome -> biome.is(heightConfigTag))
-                        .map(biome -> ExtendedIdentifier.of(biome.unwrapKey().orElseThrow().location(), heightConfig.type()))
+                        .map(biome -> ExtendedIdentifier.of(biome.unwrapKey().orElseThrow().identifier(), heightConfig.type()))
                         .filter(extId -> !this.forcedBiomeHeight.heightOverrides().containsKey(extId))
                         .map(extId -> Map.entry(extId, heightConfig));
                 })
@@ -62,7 +62,7 @@ public abstract class ChunkProviderForcedHeight extends ChunkProviderNoise {
         if (this.chunkGenerator.getBiomeSource() instanceof ModernBetaBiomeSource modernBetaBiomeSource) {
             return modernBetaBiomeSource.getBiomeForHeightGen(biomeX, 16, biomeZ);
         } else {
-            return ExtendedIdentifier.of(this.getBiome(biomeX, 16, biomeZ, null).unwrapKey().orElseThrow().location());
+            return ExtendedIdentifier.of(this.getBiome(biomeX, 16, biomeZ, null).unwrapKey().orElseThrow().identifier());
         }
     }
 

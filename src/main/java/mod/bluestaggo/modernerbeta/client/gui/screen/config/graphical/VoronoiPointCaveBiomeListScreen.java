@@ -25,7 +25,7 @@ public class VoronoiPointCaveBiomeListScreen extends ModernBetaGraphicalListSett
     @Override
     protected Tag getDefaultElement() {
         return new CompoundTagBuilder()
-            .putString("biome", Biomes.LUSH_CAVES.location().toString())
+            .putString("biome", Biomes.LUSH_CAVES.identifier().toString())
             .putFloat("temp", 0.5F)
             .putFloat("rain", 0.5F)
             .putFloat("depth", 0.5F)

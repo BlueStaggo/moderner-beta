@@ -1,5 +1,5 @@
 //? if >=1.21.11 {
-/*package mod.bluestaggo.modernerbeta.mixin.client;
+package mod.bluestaggo.modernerbeta.mixin.client;
 
 import mod.bluestaggo.modernerbeta.client.color.SkyColorSampler;
 import net.minecraft.world.attribute.EnvironmentAttributeSystem;
@@ -31,4 +31,4 @@ public abstract class EnvironmentAttributeSystemMixin {
         });
     }
 }
-*///? }
+//? }

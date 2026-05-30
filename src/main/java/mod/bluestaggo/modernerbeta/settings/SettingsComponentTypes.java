@@ -18,7 +18,7 @@ import mod.bluestaggo.modernerbeta.settings.component.validation.ComponentValida
 import mod.bluestaggo.modernerbeta.settings.component.validation.ValidationResult;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
@@ -31,8 +31,8 @@ import java.util.Map;
 public class SettingsComponentTypes {
     private static IRegistryHandler<SettingsComponentType<?>> registryHandler;
 
-    public static SettingsComponentType<ResourceLocation> PRESET;
-    public static SettingsComponentType<ResourceLocation> PROVIDER;
+    public static SettingsComponentType<Identifier> PRESET;
+    public static SettingsComponentType<Identifier> PROVIDER;
 
     // Chunk provider
     public static SettingsComponentType<DeepslateGeneration> DEEPSLATE_GENERATION;
@@ -80,12 +80,12 @@ public class SettingsComponentTypes {
     public static SettingsComponentType<Map<String, Integer>> CONFIG_BIOME_PREVIEW_COLORS;
     public static SettingsComponentType<MiscConfig> CONFIG_MISCELLANEOUS;
 
-    private static <T> SettingsComponentType<T> register(ResourceLocation id, Codec<T> codec, T defaultValue, ComponentValidator<T> validator) {
+    private static <T> SettingsComponentType<T> register(Identifier id, Codec<T> codec, T defaultValue, ComponentValidator<T> validator) {
         return registryHandler.register(id, new SettingsComponentType<>(codec, defaultValue, validator));
     }
 
     private static <T> SettingsComponentType<T> registerWithDefaultGetter(
-        ResourceLocation id,
+        Identifier id,
         Codec<T> codec,
         SettingsComponentType.DefaultValueGetter<T> defaultValueGetter,
         ComponentValidator<T> validator
@@ -99,12 +99,12 @@ public class SettingsComponentTypes {
 
         PRESET = register(
             ModernBetaBuiltInTypes.SettingsComponentType.PRESET.id,
-            ResourceLocation.CODEC,
+            Identifier.CODEC,
             null,
             ValidationResult.Valid::new);
         PROVIDER = register(
             ModernBetaBuiltInTypes.SettingsComponentType.PROVIDER.id,
-            ResourceLocation.CODEC,
+            Identifier.CODEC,
             null,
             ValidationResult.Valid::new);
 
@@ -475,7 +475,7 @@ public class SettingsComponentTypes {
 
         CONFIG_BIOME_PREVIEW_COLORS = register(
             ModernBetaBuiltInTypes.SettingsComponentType.CONFIG_BIOME_PREVIEW_COLORS.id,
-            Codec.unboundedMap(Codec.STRING, /*? if >=1.21.11 {*/ /*net.minecraft.util.ExtraCodecs.STRING_RGB_COLOR *//*? } else {*/ Codec.INT /*? }*/),
+            Codec.unboundedMap(Codec.STRING, /*? if >=1.21.11 {*/ net.minecraft.util.ExtraCodecs.STRING_RGB_COLOR /*? } else {*/ /*Codec.INT *//*? }*/),
             biomePreviewColors,
             ValidationResult.Valid::new);
         CONFIG_MISCELLANEOUS = register(

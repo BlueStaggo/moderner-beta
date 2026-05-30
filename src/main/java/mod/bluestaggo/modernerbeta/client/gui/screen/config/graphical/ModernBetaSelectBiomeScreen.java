@@ -6,7 +6,7 @@ package mod.bluestaggo.modernerbeta.client.gui.screen.config.graphical;
 import com.ibm.icu.text.Collator;
 import mod.bluestaggo.modernerbeta.client.gui.screen.ModernBetaScreen;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.ObjectSelectionList;
@@ -19,7 +19,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
 import org.jetbrains.annotations.Nullable;
@@ -198,7 +198,7 @@ public class ModernBetaSelectBiomeScreen extends ModernBetaScreen {
 
             public Entry(final Holder.Reference<Biome> biome) {
                 this.biome = biome;
-                ResourceLocation id = biome.key().location();
+                Identifier id = biome.key().identifier();
                 String name = id.toLanguageKey("biome");
                 if (Language.getInstance().has(name)) {
                     this.text = Component.translatable(name);
@@ -215,28 +215,28 @@ public class ModernBetaSelectBiomeScreen extends ModernBetaScreen {
             @Override
             public void
             //? if >=26.1 {
-            /*extractContent
-            *///? } else if >=1.21.9 {
+            extractContent
+            //? } else if >=1.21.9 {
             /*renderContent
             *///? } else {
-            render
-            //? }
-            (GuiGraphics graphics,
+            /*render
+            *///? }
+            (GuiGraphicsExtractor graphics,
                 //? if <1.21.9
-                int index, int y, int x, int entryWidth, int entryHeight,
+                //int index, int y, int x, int entryWidth, int entryHeight,
                 int mouseX, int mouseY, boolean hovered, float tickDelta) {
                 //? if >=1.21.9 {
-                /*int x = this.getContentX();
+                int x = this.getContentX();
                 int y = this.getContentY();
-                *///?}
+                //?}
 
-                graphics.drawString(ModernBetaSelectBiomeScreen.this.font, this.text, x + 5, y + 2, 0xFFFFFFFF);
+                graphics.text(ModernBetaSelectBiomeScreen.this.font, this.text, x + 5, y + 2, 0xFFFFFFFF);
             }
 
             @Override
-            public boolean mouseClicked(/*? if <1.21.9 {*/ double mouseX, double mouseY, int button /*?} else {*/ /*net.minecraft.client.input.MouseButtonEvent click, boolean doubleClick *//*?}*/) {
+            public boolean mouseClicked(/*? if <1.21.9 {*/ /*double mouseX, double mouseY, int button *//*?} else {*/ net.minecraft.client.input.MouseButtonEvent click, boolean doubleClick /*?}*/) {
                 BiomeList.this.setSelected(this);
-                return super.mouseClicked(/*? if <1.21.9 {*/ mouseX, mouseY, button /*?} else {*/ /*click, doubleClick *//*?}*/);
+                return super.mouseClicked(/*? if <1.21.9 {*/ /*mouseX, mouseY, button *//*?} else {*/ click, doubleClick /*?}*/);
             }
         }
     }

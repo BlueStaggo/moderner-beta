@@ -18,7 +18,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.Rotation;
-import net.minecraft.world.level.block.SnowyDirtBlock;
+import net.minecraft.world.level.block.SnowyBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 
@@ -176,7 +176,7 @@ public class ChunkProviderFinite2D extends ChunkProviderFinite {
         if (!this.inWorldBounds(x, z)) {
             if (y == seaLevel) {
                 if (isCold && blockState.equals(topBlock)) {
-                    blockState = topBlock.setValue(SnowyDirtBlock.SNOWY, true);
+                    blockState = topBlock.setValue(SnowyBlock.SNOWY, true);
                 }
                 
             } else if (y == seaLevel - 1 && this.levelTheme != IndevTheme.HELL) {

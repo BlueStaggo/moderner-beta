@@ -12,7 +12,7 @@ import mod.bluestaggo.modernerbeta.forgelike.registry.RegistryHelperImpl;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHelper;
 import mod.bluestaggo.modernerbeta.services.ModernBetaServices;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 //? if neoforge {
 import mod.bluestaggo.modernerbeta.registry.VanillaRegistryHandler;
@@ -106,7 +106,7 @@ public class ModEventsClient {
     }
 
     @SubscribeEvent
-    public static void registerBlockColors(RegisterColorHandlersEvent.Block event) {
+    public static void registerBlockColors(RegisterColorHandlersEvent.BlockTintSources event) {
         BlockColors.register(event::register);
     }
 
@@ -120,7 +120,7 @@ public class ModEventsClient {
         /*RegisterClientReloadListenersEvent event
         *///?}
     ) {
-        BiConsumer<ResourceLocation, PreparableReloadListener> addListener = (id, resourceReloader) -> {
+        BiConsumer<Identifier, PreparableReloadListener> addListener = (id, resourceReloader) -> {
             //? if neoforge && >=1.21.4 {
             event.addListener(id, resourceReloader);
              //?} else if neoforge && >=1.21.2 {

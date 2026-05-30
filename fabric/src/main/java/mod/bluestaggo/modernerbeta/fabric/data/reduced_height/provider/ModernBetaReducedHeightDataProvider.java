@@ -5,7 +5,7 @@ import mod.bluestaggo.modernerbeta.fabric.data.reduced_height.ModernBetaReducedH
 import mod.bluestaggo.modernerbeta.level.carver.configured.ModernBetaConfiguredCarvers;
 import mod.bluestaggo.modernerbeta.level.feature.configured.ModernBetaConfiguredFeatures;
 import mod.bluestaggo.modernerbeta.mixin.NoiseRouterDataAccessor;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;
 import net.minecraft.core.*;
 import net.minecraft.core.HolderLookup.Provider;
@@ -14,13 +14,13 @@ import net.minecraft.data.worldgen.SurfaceRuleData;
 import net.minecraft.data.worldgen.features.OreFeatures;
 import net.minecraft.data.worldgen.placement.OrePlacements;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.valueproviders.ConstantFloat;
 import net.minecraft.util.valueproviders.UniformInt;
 //? if >=1.21.11
-//import net.minecraft.world.attribute.*;
+import net.minecraft.world.attribute.*;
 import net.minecraft.world.level.biome.OverworldBiomeBuilder;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -55,7 +55,7 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
 
     private static boolean isGeneratingData;
 
-    public ModernBetaReducedHeightDataProvider(FabricDataOutput output, CompletableFuture<Provider> registriesFuture) {
+    public ModernBetaReducedHeightDataProvider(FabricPackOutput output, CompletableFuture<Provider> registriesFuture) {
         super(output, registriesFuture);
     }
 
@@ -70,23 +70,23 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
             BuiltinDimensionTypes.OVERWORLD,
             new DimensionType(
                 //? if <1.21.11 {
-                java.util.OptionalLong.empty(),
+                /*java.util.OptionalLong.empty(),
                 true,
                 false,
                 false,
                 true,
-                //? } else {
-                /*false,
+                *///? } else {
+                false,
                 true,
                 false,
                 //? if >=26.1
-                //false,
-                *///? }
-                1.0,
-                //? if <1.21.11 {
-                true,
                 false,
                 //? }
+                1.0,
+                //? if <1.21.11 {
+                /*true,
+                false,
+                *///? }
                 0,
                 320,
                 320,
@@ -96,14 +96,14 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
                 BlockTags.INFINIBURN_OVERWORLD,
                 //? }
                 //? if <1.21.11
-                BuiltinDimensionTypes.OVERWORLD_EFFECTS,
+                //BuiltinDimensionTypes.OVERWORLD_EFFECTS,
                 0.0F,
                 //? if >=1.21.6 && <1.21.11
-                Optional.empty(),
-                new DimensionType.MonsterSettings(/*? if <1.21.11 {*/ false, true, /*?}*/ UniformInt.of(0, 7), 0)
+                //Optional.empty(),
+                new DimensionType.MonsterSettings(/*? if <1.21.11 {*/ /*false, true, *//*?}*/ UniformInt.of(0, 7), 0)
                 //? if >=1.21.11 {
-                /*, DimensionType.Skybox.OVERWORLD,
-                DimensionType.CardinalLightType.DEFAULT,
+                , DimensionType.Skybox.OVERWORLD,
+                net.minecraft.world.level.CardinalLighting.Type.DEFAULT,
                 EnvironmentAttributeMap.builder()
                     .set(EnvironmentAttributes.FOG_COLOR, 0xFFC0D8FF)
                     .set(EnvironmentAttributes.SKY_COLOR,
@@ -117,10 +117,10 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
                     .set(EnvironmentAttributes.AMBIENT_SOUNDS, AmbientSounds.LEGACY_CAVE_SETTINGS)
                     .build(),
                 provider.lookupOrThrow(Registries.TIMELINE).getOrThrow(net.minecraft.tags.TimelineTags.IN_OVERWORLD)
-                *///? }
+                //? }
                 //? if >=26.1 {
-                /*, Optional.of(provider.lookupOrThrow(Registries.WORLD_CLOCK).getOrThrow(net.minecraft.world.clock.WorldClocks.OVERWORLD))
-                *///? }
+                , Optional.of(provider.lookupOrThrow(Registries.WORLD_CLOCK).getOrThrow(net.minecraft.world.clock.WorldClocks.OVERWORLD))
+                //? }
             )
         );
 
@@ -382,14 +382,14 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
             }
 
             //? if >=26.1 {
-            /*@Override
+            @Override
             public boolean areComponentsBound() {
                 return holder.areComponentsBound();
             }
-            *///? }
+            //? }
 
             @Override
-            public boolean is(ResourceLocation id) {
+            public boolean is(Identifier id) {
                 return holder.is(id);
             }
 
@@ -422,11 +422,11 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
             }
 
             //? if >=26.1 {
-            /*@Override
+            @Override
             public net.minecraft.core.component.DataComponentMap components() {
                 return holder.components();
             }
-            *///? }
+            //? }
 
             @Override
             public @NotNull Either<ResourceKey<T>, T> unwrap() {

@@ -152,8 +152,8 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
     @Override
     public void provideSurface(WorldGenRegion region, StructureManager structureAccessor, ChunkAccess chunk, ModernBetaBiomeSource biomeSource, RandomState noiseConfig) {
         ChunkPos chunkPos = chunk.getPos();
-        int chunkX = chunkPos.x;
-        int chunkZ = chunkPos.z;
+        int chunkX = chunkPos.x();
+        int chunkZ = chunkPos.z();
 
         int startX = chunk.getPos().getMinBlockX();
         int startZ = chunk.getPos().getMinBlockZ();
@@ -336,8 +336,8 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
     @Override
     public void provideSurfaceExtra(WorldGenRegion region, StructureManager structureAccessor, ChunkAccess chunk, ModernBetaBiomeSource biomeSource, RandomState noiseConfig) {
         ChunkPos chunkPos = chunk.getPos();
-        int chunkX = chunkPos.x;
-        int chunkZ = chunkPos.z;
+        int chunkX = chunkPos.x();
+        int chunkZ = chunkPos.z();
 
         int startX = chunk.getPos().getMinBlockX();
         int startZ = chunk.getPos().getMinBlockZ();

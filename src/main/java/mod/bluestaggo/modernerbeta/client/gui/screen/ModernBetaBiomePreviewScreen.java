@@ -21,8 +21,8 @@ import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers.LayerRandom;
 import mod.bluestaggo.modernerbeta.util.LoggingUtil;
 import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.util.Util;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.layouts.GridLayout;
@@ -38,7 +38,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.biome.Biome;
@@ -163,7 +163,7 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
     }
 
     class BiomeDisplayWidget extends AbstractWidget implements AutoCloseable {
-        static final ResourceLocation TEXTURE_ID = ModernerBeta.createId("biome_preview");
+        static final Identifier TEXTURE_ID = ModernerBeta.createId("biome_preview");
         static final int EMPTY_COLOR = 0x7F000000;
 
         final Object imageLock = new Object();
@@ -270,7 +270,7 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
         }
 
         @Override
-        protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float deltaTicks) {
+        protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTicks) {
             int step = this.step.get();
 
             if (this.renderThread.uploadRequested) {
@@ -296,17 +296,17 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                 MutableComponent stepName = Component.literal((step + 1) + "/" + resolverStepped.getStepCount() + " - ");
                 stepName.append(resolverStepped.getStepName(step));
                 graphics.fill(this.getX(), this.getY(), this.getX() + font.width(stepName) + 8, this.getY() + 16, 0xAA000000);
-                graphics.drawString(font, stepName, this.getX() + 4, this.getY() + 4, 0xFFFFFFFF, false);
+                graphics.text(font, stepName, this.getX() + 4, this.getY() + 4, 0xFFFFFFFF, false);
             }
 
             double zoomLevel = (double)this.zoomOut.get() * 4.0 / (double)this.zoomIn.get();
             Component zoomLabel = Component.literal("1:" + (zoomLevel % 1.0 == 0.0 ? Integer.toString((int)zoomLevel) : Double.toString(zoomLevel)));
             int zoomLabelWidth = font.width(zoomLabel);
             graphics.fill(this.getX() + this.getWidth() - zoomLabelWidth - 8, this.getY(), this.getX() + this.getWidth(), this.getY() + 16, 0xAA000000);
-            graphics.drawString(font, zoomLabel, this.getX() + this.getWidth() - zoomLabelWidth - 4, this.getY() + 4, 0xFFFFFFFF, false);
+            graphics.text(font, zoomLabel, this.getX() + this.getWidth() - zoomLabelWidth - 4, this.getY() + 4, 0xFFFFFFFF, false);
 
             if (exceptionMessage != null) {
-                graphics.drawCenteredString(
+                graphics.centeredText(
                     font,
                     Component.literal(exceptionMessage)
                         .withStyle(ChatFormatting.RED),
@@ -341,7 +341,7 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                 );
 
                 //? if >=1.21.9
-                //graphics.requestCursor(com.mojang.blaze3d.platform.cursor.CursorTypes.RESIZE_ALL);
+                graphics.requestCursor(com.mojang.blaze3d.platform.cursor.CursorTypes.RESIZE_ALL);
             }
 
             this.prevMouseX = mouseX;
@@ -349,7 +349,7 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
         }
 
         @Override
-        protected void onDrag(/*? if <1.21.9 {*/ double mouseX, double mouseY, /*?} else {*/ /*net.minecraft.client.input.MouseButtonEvent click, *//*?}*/ double deltaX, double deltaY) {
+        protected void onDrag(/*? if <1.21.9 {*/ /*double mouseX, double mouseY, *//*?} else {*/ net.minecraft.client.input.MouseButtonEvent click, /*?}*/ double deltaX, double deltaY) {
             assert minecraft != null;
             double prevOffsetX = this.offsetX.getAndAdd(-deltaX);
             double prevOffsetY = this.offsetY.getAndAdd(-deltaY);
@@ -596,7 +596,7 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
             }
 
             private int getBiomeColor(Holder<Biome> biomeEntry, String ext, int x, int y, Int2IntMap randColors, Random random) {
-                String id = biomeEntry.unwrapKey().map(key -> key.location().toString()).orElse("[unregistered]");
+                String id = biomeEntry.unwrapKey().map(key -> key.identifier().toString()).orElse("[unregistered]");
                 if (ext != null && !ext.isEmpty()) {
                     String extId = id + "*" + ext;
                     Integer registeredExtColor = ModernerBeta.config.getOrDefault(SettingsComponentTypes.CONFIG_BIOME_PREVIEW_COLORS).get(extId);

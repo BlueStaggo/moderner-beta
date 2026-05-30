@@ -16,7 +16,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.util.StringRepresentable;
 
@@ -64,7 +64,7 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
         return defaultPair;
     }
 
-    public OptionInstance<ResourceLocation> primarySelectionOption(String key, ResourceLocation... options) {
+    public OptionInstance<Identifier> primarySelectionOption(String key, Identifier... options) {
         Pair<CompoundTag, String> resolvedSettings = this.resolveSettings(key);
         CompoundTag settings = resolvedSettings.getFirst();
         String subKey = resolvedSettings.getSecond();
@@ -78,7 +78,7 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
             new OptionInstance.LazyEnum<>(
                 () -> Arrays.stream(options).toList(),
                 value -> Arrays.stream(options).filter(value::equals).findFirst(),
-                ResourceLocation.CODEC
+                Identifier.CODEC
             ),
             VersionCompat.id(stringSupplier.get()),
             value -> {
@@ -268,8 +268,8 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
 
     public OptionInstance<String> blockOption(String key) {
         return this.stringOption(key, new TextFieldCallbacks(
-            value -> BuiltInRegistries.BLOCK.containsKey(ResourceLocation.tryParse(value)),
-            value -> ResourceLocation.read(value).error().isEmpty()
+            value -> BuiltInRegistries.BLOCK.containsKey(Identifier.tryParse(value)),
+            value -> Identifier.read(value).error().isEmpty()
         ));
     }
 

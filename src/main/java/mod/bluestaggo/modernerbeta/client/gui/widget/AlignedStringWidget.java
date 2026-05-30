@@ -26,12 +26,12 @@ public class AlignedStringWidget extends AbstractStringWidget {
     }
 
     //? <1.21.11 {
-    @Override
+    /*@Override
     public AlignedStringWidget setColor(int textColor) {
         super.setColor(textColor);
         return this;
     }
-    //? }
+    *///? }
 
     public AlignedStringWidget align(float horizontalAlignment) {
         this.horizontalAlignment = horizontalAlignment;
@@ -52,10 +52,10 @@ public class AlignedStringWidget extends AbstractStringWidget {
 
     @Override
     //? if >=1.21.11 {
-    /*public void visitLines(net.minecraft.client.gui.ActiveTextCollector collector) {
-    *///? } else {
-    public void renderWidget(net.minecraft.client.gui.GuiGraphics graphics, int mouseX, int mouseY, float deltaTicks) {
-    //? }
+    public void visitLines(net.minecraft.client.gui.ActiveTextCollector collector) {
+    //? } else {
+    /*public void extractWidgetRenderState(net.minecraft.client.gui.GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTicks) {
+    *///? }
         Component message = this.getMessage();
         Font textRenderer = this.getFont();
 
@@ -66,10 +66,10 @@ public class AlignedStringWidget extends AbstractStringWidget {
         int y = this.getY() + (this.getHeight() - 9) / 2;
         FormattedCharSequence orderedText = textWidth > width ? this.trim(message, width) : message.getVisualOrderText();
         //? if >=1.21.11 {
-        /*collector.accept(x, y, orderedText);
-        *///? } else {
-        graphics.drawString(textRenderer, orderedText, x, y, this.getColor());
-        //? }
+        collector.accept(x, y, orderedText);
+        //? } else {
+        /*graphics.text(textRenderer, orderedText, x, y, this.getColor());
+        *///? }
     }
 
     private FormattedCharSequence trim(Component text, int width) {

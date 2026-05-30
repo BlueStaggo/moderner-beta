@@ -40,9 +40,9 @@ public abstract class ModernBetaScreen extends Screen {
 
     //? if <1.20.5 {
     /*@Override
-    public void render(net.minecraft.client.gui.GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+    public void extractRenderState(net.minecraft.client.gui.GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
         this.renderBackground(graphics);
-        super.render(graphics, mouseX, mouseY, delta);
+        super.extractRenderState(graphics, mouseX, mouseY, delta);
     }
     *///? }
     

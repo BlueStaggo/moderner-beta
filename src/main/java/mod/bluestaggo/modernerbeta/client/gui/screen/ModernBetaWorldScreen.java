@@ -28,7 +28,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 
 import java.util.Random;
@@ -352,10 +352,10 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
                 ModernerBeta.config.getOrDefault(SettingsComponentTypes.CONFIG_MISCELLANEOUS).defaultSettingsPreset()));
     }
 
-    private ResourceLocation getPresetKey() {
-        ResourceLocation presetKey = null;
+    private Identifier getPresetKey() {
+        Identifier presetKey = null;
         for (ModernBetaSettings settings : this.preset.asList()) {
-            ResourceLocation subPresetKey = settings.get(SettingsComponentTypes.PRESET);
+            Identifier subPresetKey = settings.get(SettingsComponentTypes.PRESET);
             if (ModernBetaSettings.DEFAULT_PRESET_ID.equals(subPresetKey)) {
                 subPresetKey = ModernerBeta.config.getOrDefault(SettingsComponentTypes.CONFIG_MISCELLANEOUS).defaultSettingsPreset();
             }
@@ -372,7 +372,7 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
         MutableComponent presetText = Component.translatable(TEXT_PRESET).append(": ");
         presetText.append(
             preset.presetName().orElseGet(() -> {
-                ResourceLocation presetKey = this.getPresetKey();
+                Identifier presetKey = this.getPresetKey();
 
                 return presetKey == null ?
                     Component.translatable(TEXT_PRESET_CUSTOM).withStyle(ChatFormatting.AQUA) :

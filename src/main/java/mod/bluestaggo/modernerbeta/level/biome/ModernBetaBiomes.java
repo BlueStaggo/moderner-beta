@@ -15,7 +15,7 @@ import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
@@ -162,7 +162,7 @@ public class ModernBetaBiomes {
         biomeRegisterable.register(biome, biomeCreator.create(registryFeature, registryCarver));
     }
     
-    private static ResourceKey<Biome> keyOf(ResourceLocation id) {
+    private static ResourceKey<Biome> keyOf(Identifier id) {
         return ResourceKey.create(Registries.BIOME, id);
     }
 

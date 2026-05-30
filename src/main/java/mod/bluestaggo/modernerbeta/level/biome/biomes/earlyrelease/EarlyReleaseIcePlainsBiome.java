@@ -16,7 +16,7 @@ import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 public class EarlyReleaseIcePlainsBiome {
     public static Biome create(HolderGetter<PlacedFeature> featureLookup, HolderGetter<ConfiguredWorldCarver<?>> carverLookup) {
 		MobSpawnSettings.Builder spawnSettings = new MobSpawnSettings.Builder();
-        BiomeDefaultFeatures.snowySpawns(spawnSettings /*? >=1.21.11 {*//*, true *//*?}*/);
+        BiomeDefaultFeatures.snowySpawns(spawnSettings /*? >=1.21.11 {*/, true /*?}*/);
         ModernBetaBiomeMobs.addSquid(spawnSettings);
 
         BiomeGenerationSettings.Builder genSettings = new BiomeGenerationSettings.Builder(featureLookup, carverLookup);

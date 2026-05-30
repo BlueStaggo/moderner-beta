@@ -19,13 +19,13 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.List;
 import java.util.function.Consumer;
 
 public abstract class ModernBetaGraphicalComponentedSettingsScreen extends ModernBetaGraphicalCompoundSettingsScreen {
-    private ResourceLocation currentComponentType;
+    private Identifier currentComponentType;
 
     public ModernBetaGraphicalComponentedSettingsScreen(
         String title,
@@ -95,7 +95,7 @@ public abstract class ModernBetaGraphicalComponentedSettingsScreen extends Moder
         for (SettingsComponentType<?> componentType : componentTypes) {
             ModernBetaRegistries.SETTINGS_COMPONENT_TYPE.getResourceKey(componentType)
                 .ifPresent(componentTypeKey -> {
-                    ResourceLocation componentTypeId = componentTypeKey.location();
+                    Identifier componentTypeId = componentTypeKey.identifier();
 
                     GraphicalConfigBuilder configBuilder
                         = ModernBetaClientRegistries.SETTINGS_COMPONENT_TYPE_GUI.getValue(componentTypeId);

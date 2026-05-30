@@ -56,7 +56,7 @@ public class ChunkCache<T> {
     public T get(int chunkX, int chunkZ) {
         T chunk;
         
-        long key = ChunkPos.asLong(chunkX, chunkZ);
+        long key = ChunkPos.pack(chunkX, chunkZ);
         long stamp = this.lock.readLock();
         
         try {

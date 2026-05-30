@@ -15,7 +15,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
 import org.jetbrains.annotations.NotNull;
@@ -29,9 +29,9 @@ public record BiomePickerCallbacks(Consumer<Screen> screenChangeHandler, Screen 
     //~ if >=26.2 'Consumer<' -> 'OptionInstance.ValueUpdateListener<? super '
     public @NotNull Function<OptionInstance<String>, AbstractWidget> createButton(OptionInstance.TooltipSupplier<String> tooltipFactory, Options gameOptions, int x, int y, int width, Consumer<String> changeCallback) {
         return option -> {
-            ResourceLocation biomeId = ResourceLocation.tryParse(option.get());
+            Identifier biomeId = Identifier.tryParse(option.get());
             if (biomeId == null) {
-                biomeId = Biomes.PLAINS.location();
+                biomeId = Biomes.PLAINS.identifier();
             }
             String biomeTranslationKey = biomeId.toLanguageKey("biome");
 
@@ -48,12 +48,12 @@ public record BiomePickerCallbacks(Consumer<Screen> screenChangeHandler, Screen 
                         biome -> {
                             if (biome != null) {
                                 ResourceKey<Biome> key = biome.unwrapKey().orElse(Biomes.PLAINS);
-                                option.set(key.location().toString());
+                                option.set(key.identifier().toString());
                             } else {
                                 if (allowNone) {
                                     option.set("");
                                 } else {
-                                    option.set(Biomes.PLAINS.location().toString());
+                                    option.set(Biomes.PLAINS.identifier().toString());
                                 }
                             }
                         },
@@ -67,7 +67,7 @@ public record BiomePickerCallbacks(Consumer<Screen> screenChangeHandler, Screen 
     @Override
     public @NotNull Optional<String> validateValue(String value) {
         return (allowNone && "".equals(value)) || generatorOptionsHolder.worldgenLoadContext()
-            .lookupOrThrow(Registries.BIOME).containsKey(ResourceLocation.tryParse(value))
+            .lookupOrThrow(Registries.BIOME).containsKey(Identifier.tryParse(value))
             ? Optional.of(value) : Optional.empty();
     }
 

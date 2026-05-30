@@ -8,7 +8,7 @@ plugins {
 }
 
 plugins.apply("dev.kikugie.stonecutter")
-stonecutter.active("1.21.6")
+stonecutter.active("26.1")
 
 publishMods {
     @Suppress("LocalVariableName")

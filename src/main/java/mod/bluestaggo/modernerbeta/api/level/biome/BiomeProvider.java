@@ -89,7 +89,7 @@ public abstract class BiomeProvider {
      */
     public Component getBiomeName(int biomeX, int biomeY, int biomeZ) {
         return this.getBiome(biomeX, biomeY, biomeZ).unwrapKey()
-            .map(key -> Component.translatable(key.location().toLanguageKey("biome")))
+            .map(key -> Component.translatable(key.identifier().toLanguageKey("biome")))
             .orElse(Component.literal("[unregistered]"));
     }
 }

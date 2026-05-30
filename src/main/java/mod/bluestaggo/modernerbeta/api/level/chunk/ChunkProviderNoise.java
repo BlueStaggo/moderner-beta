@@ -20,7 +20,7 @@ import mod.bluestaggo.modernerbeta.util.chunk.ChunkCache;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkHeightmap;
 import mod.bluestaggo.modernerbeta.util.noise.SimpleNoisePos;
 import mod.bluestaggo.modernerbeta.util.noise.SimplexNoise;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.ChunkPos;
@@ -424,8 +424,8 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
      */
     private void generateTerrain(ChunkAccess chunk, StructureManager structureAccessor, RandomState noiseConfig, int minimumCellY, int cellHeight) {
         ChunkPos chunkPos = chunk.getPos();
-        int chunkX = chunkPos.x;
-        int chunkZ = chunkPos.z;
+        int chunkX = chunkPos.x();
+        int chunkZ = chunkPos.z();
         int startX = chunkPos.getMinBlockX();
         int startZ = chunkPos.getMinBlockZ();
         

@@ -21,48 +21,48 @@ public final class ModernBetaSettingsPresetCategories {
 
     public static void bootstrap(BootstrapContext<ModernBetaSettingsPresetCategory> context) {
         context.register(BETA, new ModernBetaSettingsPresetCategory(
-            ModernBetaSettingsPresets.BETA_1_7_3.location(),
-            BETA.location(),
+            ModernBetaSettingsPresets.BETA_1_7_3.identifier(),
+            BETA.identifier(),
             ModernBetaSettingsPresetTags.BETA
         ));
         context.register(ALPHA_INFDEV, new ModernBetaSettingsPresetCategory(
-            ModernBetaSettingsPresets.ALPHA_1_1_2_01.location(),
-            ALPHA_INFDEV.location(),
+            ModernBetaSettingsPresets.ALPHA_1_1_2_01.identifier(),
+            ALPHA_INFDEV.identifier(),
             ModernBetaSettingsPresetTags.ALPHA_INFDEV
         ));
         context.register(FINITE, new ModernBetaSettingsPresetCategory(
-            ModernBetaSettingsPresets.INDEV.location(),
-            FINITE.location(),
+            ModernBetaSettingsPresets.INDEV.identifier(),
+            FINITE.identifier(),
             ModernBetaSettingsPresetTags.FINITE
         ));
         context.register(EARLY_RELEASE, new ModernBetaSettingsPresetCategory(
-            ModernBetaSettingsPresets.RELEASE_1_6_4.location(),
-            EARLY_RELEASE.location(),
+            ModernBetaSettingsPresets.RELEASE_1_6_4.identifier(),
+            EARLY_RELEASE.identifier(),
             ModernBetaSettingsPresetTags.EARLY_RELEASE
         ));
         context.register(EARLY_RELEASE_LARGE_BIOMES, new ModernBetaSettingsPresetCategory(
-            ModernBetaSettingsPresets.RELEASE_1_1_LARGE_BIOMES.location(),
-            EARLY_RELEASE_LARGE_BIOMES.location(),
+            ModernBetaSettingsPresets.RELEASE_1_1_LARGE_BIOMES.identifier(),
+            EARLY_RELEASE_LARGE_BIOMES.identifier(),
             ModernBetaSettingsPresetTags.EARLY_RELEASE_LARGE_BIOMES
         ));
         context.register(EARLY_RELEASE_AMPLIFIED, new ModernBetaSettingsPresetCategory(
-            ModernBetaSettingsPresets.RELEASE_1_1_AMPLIFIED.location(),
-            EARLY_RELEASE_AMPLIFIED.location(),
+            ModernBetaSettingsPresets.RELEASE_1_1_AMPLIFIED.identifier(),
+            EARLY_RELEASE_AMPLIFIED.identifier(),
             ModernBetaSettingsPresetTags.EARLY_RELEASE_AMPLIFIED
         ));
         context.register(MAJOR_RELEASE, new ModernBetaSettingsPresetCategory(
-            ModernBetaSettingsPresets.RELEASE_1_12_2.location(),
-            MAJOR_RELEASE.location(),
+            ModernBetaSettingsPresets.RELEASE_1_12_2.identifier(),
+            MAJOR_RELEASE.identifier(),
             ModernBetaSettingsPresetTags.MAJOR_RELEASE
         ));
         context.register(BETA_CUSTOM, new ModernBetaSettingsPresetCategory(
-            ModernBetaSettingsPresets.BETA_SKYLANDS.location(),
-            BETA_CUSTOM.location(),
+            ModernBetaSettingsPresets.BETA_SKYLANDS.identifier(),
+            BETA_CUSTOM.identifier(),
             ModernBetaSettingsPresetTags.BETA_CUSTOM
         ));
         context.register(RELEASE_CUSTOM, new ModernBetaSettingsPresetCategory(
-            ModernBetaSettingsPresets.ISLE_LAND.location(),
-            RELEASE_CUSTOM.location(),
+            ModernBetaSettingsPresets.ISLE_LAND.identifier(),
+            RELEASE_CUSTOM.identifier(),
             ModernBetaSettingsPresetTags.RELEASE_CUSTOM
         ));
     }

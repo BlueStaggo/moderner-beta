@@ -17,10 +17,10 @@ public class ModernBetaLevelInitializer {
     public static void initStarting(MinecraftServer server) {
         Registry<LevelStem> registryDimensionOptions = server.registries().compositeAccess().lookupOrThrow(Registries.LEVEL_STEM);
         //? if >=26.1 {
-        /*long seed = server.getWorldGenSettings().options().seed();
-        *///? } else {
-        long seed = server.getWorldData().worldGenOptions().seed();
-        //? }
+        long seed = server.getWorldGenSettings().options().seed();
+        //? } else {
+        /*long seed = server.getWorldData().worldGenOptions().seed();
+        *///? }
         
         registryDimensionOptions.entrySet().forEach(entry -> {
             LevelStem dimensionOptions = entry.getValue();

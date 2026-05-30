@@ -23,7 +23,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.slf4j.event.Level;
 
 import java.util.List;
@@ -49,7 +49,7 @@ public record ModernBetaSettingsPreset(
 
     public static final Codec<ModernBetaSettingsPreset> PRESET_REFERENCE_CODEC = RecordCodecBuilder.create(
         instance -> instance.group(
-            ResourceLocation.CODEC.fieldOf("preset").forGetter(preset -> null),
+            Identifier.CODEC.fieldOf("preset").forGetter(preset -> null),
             CodecUtil.registryLookupCodec()
         ).apply(instance, ModernBetaSettingsPreset::referenced)
     );
@@ -72,7 +72,7 @@ public record ModernBetaSettingsPreset(
     }
 
     public ModernBetaSettingsPreset(
-        ResourceLocation presetId,
+        Identifier presetId,
         ModernBetaSettings chunkSettings,
         ModernBetaSettings biomeSettings,
         ModernBetaSettings caveBiomeSettings
@@ -88,7 +88,7 @@ public record ModernBetaSettingsPreset(
 
     public static ModernBetaSettingsPreset referenced(Holder<ModernBetaSettingsPreset> preset) {
         ModernBetaSettingsPreset presetValue = preset.value();
-        ResourceLocation presetId = preset.unwrapKey().orElseThrow().location();
+        Identifier presetId = preset.unwrapKey().orElseThrow().identifier();
         RegistryOps.RegistryInfoLookup lookup = presetValue.chunkSettings.registries;
 
         return new ModernBetaSettingsPreset(
@@ -106,11 +106,11 @@ public record ModernBetaSettingsPreset(
         );
     }
 
-    public static ModernBetaSettingsPreset referenced(ResourceLocation presetId) {
+    public static ModernBetaSettingsPreset referenced(Identifier presetId) {
         return referenced(presetId, null);
     }
 
-    public static ModernBetaSettingsPreset referenced(ResourceLocation presetId, RegistryOps.RegistryInfoLookup lookup) {
+    public static ModernBetaSettingsPreset referenced(Identifier presetId, RegistryOps.RegistryInfoLookup lookup) {
         return new ModernBetaSettingsPreset(
             presetId,
             ModernBetaSettings.builder(lookup)
@@ -271,7 +271,7 @@ public record ModernBetaSettingsPreset(
         return new Pair<>(new ModernBetaSettingsPreset(chunkSettings, biomeSettings, caveBiomeSettings), successful);
     }
 
-    public static Optional<ModernBetaSettingsPreset> getPreset(ResourceLocation presetId, HolderGetter<ModernBetaSettingsPreset> presetRegistry) {
+    public static Optional<ModernBetaSettingsPreset> getPreset(Identifier presetId, HolderGetter<ModernBetaSettingsPreset> presetRegistry) {
         if (presetId == null) {
             return Optional.empty();
         }
@@ -308,7 +308,7 @@ public record ModernBetaSettingsPreset(
         );
     }
 
-    public ModernBetaSettingsPreset withNameAndDesc(ResourceLocation id) {
+    public ModernBetaSettingsPreset withNameAndDesc(Identifier id) {
         return this.withNameAndDesc(makeTitleComponent(id), makeDescriptionComponent(id));
     }
 
@@ -317,20 +317,20 @@ public record ModernBetaSettingsPreset(
     }
 
     @Override
-    public Component makeOrGetTitleComponent(ResourceLocation fallbackId) {
+    public Component makeOrGetTitleComponent(Identifier fallbackId) {
         return presetName.orElseGet(() -> makeTitleComponent(fallbackId));
     }
 
     @Override
-    public Component makeOrGetDescriptionComponent(ResourceLocation fallbackId) {
+    public Component makeOrGetDescriptionComponent(Identifier fallbackId) {
         return presetDescription.orElseGet(() -> makeDescriptionComponent(fallbackId));
     }
 
-    private static Component makeTitleComponent(ResourceLocation id) {
+    private static Component makeTitleComponent(Identifier id) {
         return Component.translatable("createWorld.customize.modern_beta.preset.name." + id.toLanguageKey()).withStyle(ChatFormatting.YELLOW);
     }
 
-    private static Component makeDescriptionComponent(ResourceLocation id) {
+    private static Component makeDescriptionComponent(Identifier id) {
         return Component.translatable("createWorld.customize.modern_beta.preset.desc." + id.toLanguageKey());
     }
 

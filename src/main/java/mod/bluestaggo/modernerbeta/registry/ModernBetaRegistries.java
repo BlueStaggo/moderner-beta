@@ -13,7 +13,7 @@ import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers.LayerType
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.predicates.BiomePredicateType;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public final class ModernBetaRegistries {
     private static IRegistryHelper registryHelper;
@@ -33,7 +33,7 @@ public final class ModernBetaRegistries {
         return registryHelper.createSimple(key).build();
     }
 
-    private static <T> Registry<T> registerDefaulted(ResourceKey<Registry<T>> key, ResourceLocation defaultKey) {
+    private static <T> Registry<T> registerDefaulted(ResourceKey<Registry<T>> key, Identifier defaultKey) {
         return registryHelper.createDefaulted(key, defaultKey).build();
     }
 

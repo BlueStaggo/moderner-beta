@@ -280,8 +280,11 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
         RandomState random,
         StructureManager structureManager,
         BiomeManager biomeManager,
+        //? if <26.2
         Registry<Biome> biomes,
         Blender blender
+        //? if >=26.2
+        //, Set<Holder<Biome>> possibleBiomes
     ) {
         NoiseChunk noiseChunk = chunk.getOrCreateNoiseChunk(chunkAccess -> this.createNoiseChunk(chunkAccess, structureManager, blender, random));
         NoiseGeneratorSettings noiseGeneratorSettings = this.generatorSettings().value();
@@ -294,7 +297,19 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
         }
 
         random.surfaceSystem()
-            .buildSurface(random, biomeManager, biomes, noiseGeneratorSettings.useLegacyRandomSource(), context, chunk, noiseChunk, noiseGeneratorSettings.surfaceRule());
+            .buildSurface(
+                random,
+                biomeManager,
+                //? if <26.2
+                biomes,
+                noiseGeneratorSettings.useLegacyRandomSource(),
+                context,
+                chunk,
+                noiseChunk,
+                noiseGeneratorSettings.surfaceRule()
+                //? if >=26.2
+                //, possibleBiomes
+            );
     }
 
     public void buildDefaultSurface(WorldGenRegion chunkRegion, StructureManager structureAccessor, RandomState noiseConfig, ChunkAccess chunk) {

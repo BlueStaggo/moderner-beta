@@ -62,6 +62,8 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
     @Override
     protected void configure(Provider provider, Entries entries) {
         isGeneratingData = true;
+        //? >=26.2
+        //HolderGetter<Block> blocks = provider.lookupOrThrow(Registries.BLOCK);
 
         //Dimension types
         entries.add(
@@ -88,7 +90,11 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
                 0,
                 320,
                 320,
+                //? if >=26.2 {
+                /*blocks.getOrThrow(BlockTags.INFINIBURN_OVERWORLD),
+                *///? } else {
                 BlockTags.INFINIBURN_OVERWORLD,
+                //? }
                 //? if <1.21.11
                 BuiltinDimensionTypes.OVERWORLD_EFFECTS,
                 0.0F,
@@ -237,7 +243,7 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
             Blocks.WATER.defaultBlockState(),
             mod.bluestaggo.modernerbeta.fabric.mixin.NoiseRouterDataAccessor.invokeOverworld(provider.lookupOrThrow(Registries.DENSITY_FUNCTION),
                 provider.lookupOrThrow(Registries.NOISE), largeBiomes, amplified),
-            SurfaceRuleData.overworld(),
+            SurfaceRuleData.overworld(/*? >=26.2 {*//*provider.lookupOrThrow(Registries.BIOME)*//*?}*/),
             (new OverworldBiomeBuilder()).spawnTarget(),
             63,
             false,
@@ -254,7 +260,7 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
             Blocks.WATER.defaultBlockState(),
             mod.bluestaggo.modernerbeta.fabric.mixin.NoiseRouterDataAccessor.invokeNether(provider.lookupOrThrow(Registries.DENSITY_FUNCTION),
                 provider.lookupOrThrow(Registries.NOISE)),
-            SurfaceRuleData.overworldLike(false, true, true),
+            SurfaceRuleData.overworldLike(/*? >=26.2 {*//*provider.lookupOrThrow(Registries.BIOME), *//*?}*/ false, true, true),
             List.of(),
             32,
             false,
@@ -273,10 +279,17 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
         DensityFunction spaghettiThickness = DensityFunctions.mappedNoise(
                 noiseParametersLookup.getOrThrow(Noises.SPAGHETTI_3D_THICKNESS), -0.065, -0.088);
 
+        //? >=26.2 {
+        /*DensityFunction weirdSpaghetti1 = NoiseRouterData.QuantizedSpaghettiRarity.wrapRarity3d(spaghettiRarity,
+                noiseParametersLookup.getOrThrow(Noises.SPAGHETTI_3D_1));
+        DensityFunction weirdSpaghetti2 = NoiseRouterData.QuantizedSpaghettiRarity.wrapRarity3d(spaghettiRarity,
+                noiseParametersLookup.getOrThrow(Noises.SPAGHETTI_3D_2));
+        *///? } else {
         DensityFunction weirdSpaghetti1 = DensityFunctions.weirdScaledSampler(spaghettiRarity,
                 noiseParametersLookup.getOrThrow(Noises.SPAGHETTI_3D_1), DensityFunctions.WeirdScaledSampler.RarityValueMapper.TYPE1);
         DensityFunction weirdSpaghetti2 = DensityFunctions.weirdScaledSampler(spaghettiRarity,
                 noiseParametersLookup.getOrThrow(Noises.SPAGHETTI_3D_2), DensityFunctions.WeirdScaledSampler.RarityValueMapper.TYPE1);
+        //? }
 
         DensityFunction mainSpaghetti = DensityFunctions.add(DensityFunctions.max(weirdSpaghetti1, weirdSpaghetti2), spaghettiThickness).clamp(-1.0, 1.0);
         DensityFunction spaghettiRoughness = new DensityFunctions.HolderHolder(
@@ -323,8 +336,13 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
     ) {
         DensityFunction spaghettiModulator = DensityFunctions.noise(noiseParametersLookup.getOrThrow(
                 Noises.SPAGHETTI_2D_MODULATOR), 2.0, 1.0);
+        //? if >=26.2 {
+        /*DensityFunction weirdSpaghetti = NoiseRouterData.QuantizedSpaghettiRarity.wrapRarity2d(spaghettiModulator,
+                noiseParametersLookup.getOrThrow(Noises.SPAGHETTI_2D));
+        *///? } else {
         DensityFunction weirdSpaghetti = DensityFunctions.weirdScaledSampler(spaghettiModulator, noiseParametersLookup.getOrThrow(
                 Noises.SPAGHETTI_2D), DensityFunctions.WeirdScaledSampler.RarityValueMapper.TYPE2);
+        //? }
         DensityFunction spaghettiElevation = DensityFunctions.mappedNoise(noiseParametersLookup.getOrThrow(
                 Noises.SPAGHETTI_2D_ELEVATION), 0.0, Math.floorDiv(-64, 8), 8.0);
         DensityFunction spaghettiThicknessModulator = new DensityFunctions.HolderHolder(

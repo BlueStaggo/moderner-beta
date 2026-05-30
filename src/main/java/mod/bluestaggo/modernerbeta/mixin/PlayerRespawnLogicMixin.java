@@ -27,11 +27,18 @@ public abstract class PlayerRespawnLogicMixin {
      * Override vanilla behavior of moving player to highest solid block, 
      * even after finding initial spawn point.
      */
-    @Inject(method = "getOverworldRespawnPos", at = @At("HEAD"), cancellable = true)
+    @Inject(
+        //? if >=26.2 {
+        /*method = "getLevelRespawnPos",
+        *///? } else {
+        method = "getOverworldRespawnPos",
+        //? }
+        at = @At("HEAD"), cancellable = true
+    )
     private static void injectGetOverworldRespawnPos(ServerLevel level, int x, int z, CallbackInfoReturnable<BlockPos> info) {
         ChunkGenerator chunkGenerator = level.getChunkSource().getGenerator();
-        
-        if (chunkGenerator instanceof ModernBetaChunkGenerator modernBetaChunkGenerator && 
+
+        if (chunkGenerator instanceof ModernBetaChunkGenerator modernBetaChunkGenerator &&
             modernBetaChunkGenerator.getChunkProvider().getSpawnLocator() != SpawnLocator.DEFAULT
         ) {
             int spawnY = level.getLevelData()
@@ -42,7 +49,7 @@ public abstract class PlayerRespawnLogicMixin {
                 //?} else {
                 /*.getYSpawn();
                 *///?}
-            
+
             info.setReturnValue(new BlockPos(x, spawnY, z));
         }
     }

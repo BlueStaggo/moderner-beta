@@ -11,10 +11,18 @@ extendable class net/minecraft/client/OptionInstance$ValueSet
 extendable class net/minecraft/client/OptionInstance$SliderableValueSet
 extendable class net/minecraft/client/OptionInstance$IntRangeBase
 
+#? if >=26.2 {
+#extendable class net/minecraft/core/Holder
+#? }
+
 extendable method net/minecraft/world/level/levelgen/carver/WorldCarver getCarveState (Lnet/minecraft/world/level/levelgen/carver/CarvingContext;Lnet/minecraft/world/level/levelgen/carver/CarverConfiguration;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/levelgen/Aquifer;)Lnet/minecraft/world/level/block/state/BlockState;
 
 accessible field net/minecraft/world/level/levelgen/carver/CaveCarverConfiguration floorLevel Lnet/minecraft/util/valueproviders/FloatProvider;
 
 accessible method net/minecraft/world/level/levelgen/NoiseChunk cachedClimateSampler (Lnet/minecraft/world/level/levelgen/NoiseRouter;Ljava/util/List;)Lnet/minecraft/world/level/biome/Climate$Sampler;
 
+#? if >=26.2 {
+#accessible class net/minecraft/world/level/levelgen/NoiseRouterData$QuantizedSpaghettiRarity
+#? } else {
 accessible class net/minecraft/world/level/levelgen/DensityFunctions$WeirdScaledSampler
+#? }

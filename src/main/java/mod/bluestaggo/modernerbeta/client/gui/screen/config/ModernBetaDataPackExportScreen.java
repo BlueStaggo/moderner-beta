@@ -161,8 +161,7 @@ public class ModernBetaDataPackExportScreen extends ModernBetaScreen {
             if (parsed != null) {
                 this.idBox.setTextColor(EditBox.DEFAULT_TEXT_COLOR);
             } else {
-                //noinspection DataFlowIssue
-                this.idBox.setTextColor(ChatFormatting.RED.getColor() | 0xFF000000);
+                this.idBox.setTextColor(0xFFFF0000);
             }
 
             this.presetID = parsed;

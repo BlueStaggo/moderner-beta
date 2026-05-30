@@ -3,6 +3,7 @@ package mod.bluestaggo.modernerbeta;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
@@ -36,7 +37,6 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Tuple;
 import org.slf4j.event.Level;
 
 import java.io.BufferedReader;
@@ -60,20 +60,20 @@ public class ModernerBeta {
         "deepslate_blobs"
     );
 
-    public static final List<Tuple<Registry<?>, Consumer<IRegistryHandler<?>>>> REGISTRY_HANDLERS = List.of(
-        new Tuple<>(BuiltInRegistries.FOLIAGE_PLACER_TYPE, ModernBetaFoliagePlacers::register),
-        new Tuple<>(BuiltInRegistries.TRUNK_PLACER_TYPE, ModernBetaTrunkPlacers::register),
-        new Tuple<>(BuiltInRegistries.PLACEMENT_MODIFIER_TYPE, ModernBetaPlacementTypes::register),
-        new Tuple<>(BuiltInRegistries.STRUCTURE_TYPE, ModernBetaStructureTypes::register),
-        new Tuple<>(BuiltInRegistries.STRUCTURE_PIECE, ModernBetaStructurePieceTypes::register),
-        new Tuple<>(BuiltInRegistries.FEATURE, ModernBetaFeatures::register),
-        new Tuple<>(BuiltInRegistries.CARVER, ModernBetaCarvers::register),
-        new Tuple<>(BuiltInRegistries.BIOME_SOURCE, ModernBetaBiomeSource::register),
-        new Tuple<>(BuiltInRegistries.CHUNK_GENERATOR, ModernBetaChunkGenerator::register)
+    public static final List<Pair<Registry<?>, Consumer<IRegistryHandler<?>>>> REGISTRY_HANDLERS = List.of(
+        new Pair<>(BuiltInRegistries.FOLIAGE_PLACER_TYPE, ModernBetaFoliagePlacers::register),
+        new Pair<>(BuiltInRegistries.TRUNK_PLACER_TYPE, ModernBetaTrunkPlacers::register),
+        new Pair<>(BuiltInRegistries.PLACEMENT_MODIFIER_TYPE, ModernBetaPlacementTypes::register),
+        new Pair<>(BuiltInRegistries.STRUCTURE_TYPE, ModernBetaStructureTypes::register),
+        new Pair<>(BuiltInRegistries.STRUCTURE_PIECE, ModernBetaStructurePieceTypes::register),
+        new Pair<>(BuiltInRegistries.FEATURE, ModernBetaFeatures::register),
+        new Pair<>(BuiltInRegistries.CARVER, ModernBetaCarvers::register),
+        new Pair<>(BuiltInRegistries.BIOME_SOURCE, ModernBetaBiomeSource::register),
+        new Pair<>(BuiltInRegistries.CHUNK_GENERATOR, ModernBetaChunkGenerator::register)
     );
 
-    public static List<Tuple<Registry<?>, Consumer<IRegistryHandler<?>>>> CUSTOM_REGISTRY_HANDLERS;
-    public static List<Tuple<ResourceKey<?>, Codec<?>>> CUSTOM_DYNAMIC_REGISTRIES;
+    public static List<Pair<Registry<?>, Consumer<IRegistryHandler<?>>>> CUSTOM_REGISTRY_HANDLERS;
+    public static List<Pair<ResourceKey<?>, Codec<?>>> CUSTOM_DYNAMIC_REGISTRIES;
     public static INetworkHelper networkHelper;
     public static ModernBetaSettings config;
 
@@ -83,24 +83,24 @@ public class ModernerBeta {
 
     public static void setupCustomRegistryHandlers() {
         CUSTOM_REGISTRY_HANDLERS = List.of(
-            new Tuple<>(ModernBetaRegistries.SETTINGS_COMPONENT_TYPE, SettingsComponentTypes::init),
-            new Tuple<>(ModernBetaRegistries.CHUNK, ModernBetaBuiltInProviders::registerChunkProviders),
-            new Tuple<>(ModernBetaRegistries.BIOME, ModernBetaBuiltInProviders::registerBiomeProviders),
-            new Tuple<>(ModernBetaRegistries.CAVE_BIOME, ModernBetaBuiltInProviders::registerCaveBiomeProviders),
-            new Tuple<>(ModernBetaRegistries.HEIGHT_CONFIG, ModernBetaBuiltInProviders::registerHeightConfigs),
-            new Tuple<>(ModernBetaRegistries.BLOCKSOURCE, ModernBetaBuiltInProviders::registerBlockSources),
-            new Tuple<>(ModernBetaRegistries.FRACTAL_LAYER, LayerType::init),
-            new Tuple<>(ModernBetaRegistries.BIOME_PREDICATE, BiomePredicateType::init),
-            new Tuple<>(ModernBetaRegistries.BIOME_INJECTOR, BiomeInjectorType::init),
-            new Tuple<>(ModernBetaRegistries.INJECTION_PREDICATE, InjectionPredicateType::init)
+            new Pair<>(ModernBetaRegistries.SETTINGS_COMPONENT_TYPE, SettingsComponentTypes::init),
+            new Pair<>(ModernBetaRegistries.CHUNK, ModernBetaBuiltInProviders::registerChunkProviders),
+            new Pair<>(ModernBetaRegistries.BIOME, ModernBetaBuiltInProviders::registerBiomeProviders),
+            new Pair<>(ModernBetaRegistries.CAVE_BIOME, ModernBetaBuiltInProviders::registerCaveBiomeProviders),
+            new Pair<>(ModernBetaRegistries.HEIGHT_CONFIG, ModernBetaBuiltInProviders::registerHeightConfigs),
+            new Pair<>(ModernBetaRegistries.BLOCKSOURCE, ModernBetaBuiltInProviders::registerBlockSources),
+            new Pair<>(ModernBetaRegistries.FRACTAL_LAYER, LayerType::init),
+            new Pair<>(ModernBetaRegistries.BIOME_PREDICATE, BiomePredicateType::init),
+            new Pair<>(ModernBetaRegistries.BIOME_INJECTOR, BiomeInjectorType::init),
+            new Pair<>(ModernBetaRegistries.INJECTION_PREDICATE, InjectionPredicateType::init)
         );
     }
 
     public static void setupCustomDynamicRegistries() {
         CUSTOM_DYNAMIC_REGISTRIES = List.of(
-                new Tuple<>(ModernBetaResourceKeys.SETTINGS_PRESET, ModernBetaSettingsPreset.CODEC),
-                new Tuple<>(ModernBetaResourceKeys.SETTINGS_PRESET_CATEGORY, ModernBetaSettingsPresetCategory.CODEC),
-                new Tuple<>(ModernBetaResourceKeys.SURFACE_CONFIG, SurfaceConfig.CODEC)
+                new Pair<>(ModernBetaResourceKeys.SETTINGS_PRESET, ModernBetaSettingsPreset.CODEC),
+                new Pair<>(ModernBetaResourceKeys.SETTINGS_PRESET_CATEGORY, ModernBetaSettingsPresetCategory.CODEC),
+                new Pair<>(ModernBetaResourceKeys.SURFACE_CONFIG, SurfaceConfig.CODEC)
         );
     }
 

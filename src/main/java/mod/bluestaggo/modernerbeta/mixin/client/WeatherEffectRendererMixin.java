@@ -1,4 +1,4 @@
-//? if >=1.21.2 {
+//? if >=1.21.2 && <26.2 {
 package mod.bluestaggo.modernerbeta.mixin.client;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;

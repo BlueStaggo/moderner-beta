@@ -1,5 +1,6 @@
 package mod.bluestaggo.modernerbeta.client.gui.screen.config.graphical;
 
+import com.mojang.datafixers.util.Pair;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.gui.components.OptionsList;
@@ -8,7 +9,6 @@ import net.minecraft.client.gui.screens.worldselection.WorldCreationContext;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.Tuple;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -121,11 +121,11 @@ public abstract class ModernBetaGraphicalMapSettingsScreen extends ModernBetaGra
     }
 
     @Override
-    protected Tuple<CompoundTag, String> resolveSettings(String key) {
+    protected Pair<CompoundTag, String> resolveSettings(String key) {
         if (key.startsWith(KEY)) {
-            return new Tuple<>(keys, key.substring(KEY.length()));
+            return new Pair<>(keys, key.substring(KEY.length()));
         } else if (key.startsWith(VALUE)) {
-            return new Tuple<>(values, key.substring(VALUE.length()));
+            return new Pair<>(values, key.substring(VALUE.length()));
         }
         return super.resolveSettings(key);
     }

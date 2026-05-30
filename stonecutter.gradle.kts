@@ -147,5 +147,17 @@ stonecutter.parameters {
             replace("LevelSimulatedReader", "WorldGenLevel")
             replace("setDirtAt", "placeBelowTrunkBlock")
         }
+
+        string(eval(current.version, ">=26.2")) {
+            replace(".setScreen(", ".gui.setScreen(")
+            replace("::setScreen", ".gui::setScreen")
+            replace("this.minecraft.screen", "this.minecraft.gui.screen()")
+            replace("markPosForPostprocessing", "markPosForPostProcessing")
+        }
+
+        regex(eval(current.version, ">=26.2")) {
+            replace("EntityType.([A-Z_]+)" to "EntityTypes.$1",
+                "EntityTypes.([A-Z_]+)" to "EntityType.$1")
+        }
     }
 }

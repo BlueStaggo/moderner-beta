@@ -1,5 +1,6 @@
 package mod.bluestaggo.modernerbeta.client.gui.screen.config.graphical;
 
+import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import mod.bluestaggo.modernerbeta.client.gui.optioncallbacks.*;
 import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
@@ -18,7 +19,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.util.StringRepresentable;
-import net.minecraft.util.Tuple;
 
 import java.util.Arrays;
 import java.util.List;
@@ -36,9 +36,9 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
         super(title, parent, context, type, settings, onDone);
     }
 
-    protected Tuple<CompoundTag, String> resolveSettings(String key) {
+    protected Pair<CompoundTag, String> resolveSettings(String key) {
         String[] subKeys = key.split("\\.");
-        var defaultPair = new Tuple<>(this.settings, key);
+        var defaultPair = new Pair<>(this.settings, key);
         if (subKeys.length <= 1) {
             return defaultPair;
         }
@@ -59,15 +59,15 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
         }
 
         if (element instanceof CompoundTag compound) {
-            return new Tuple<>(compound, subKeys[subKeys.length - 1]);
+            return new Pair<>(compound, subKeys[subKeys.length - 1]);
         }
         return defaultPair;
     }
 
     public OptionInstance<ResourceLocation> primarySelectionOption(String key, ResourceLocation... options) {
-        Tuple<CompoundTag, String> resolvedSettings = this.resolveSettings(key);
-        CompoundTag settings = resolvedSettings.getA();
-        String subKey = resolvedSettings.getB();
+        Pair<CompoundTag, String> resolvedSettings = this.resolveSettings(key);
+        CompoundTag settings = resolvedSettings.getFirst();
+        String subKey = resolvedSettings.getSecond();
         String textKey = this.getTextKey(key);
         Supplier<String> stringSupplier = () -> VersionCompat.unwrap(settings.getString(subKey));
 
@@ -96,9 +96,9 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
     }
 
     public OptionInstance<String> selectionOption(String key, String... options) {
-        Tuple<CompoundTag, String> resolvedSettings = this.resolveSettings(key);
-        CompoundTag settings = resolvedSettings.getA();
-        String subKey = resolvedSettings.getB();
+        Pair<CompoundTag, String> resolvedSettings = this.resolveSettings(key);
+        CompoundTag settings = resolvedSettings.getFirst();
+        String subKey = resolvedSettings.getSecond();
         String textKey = this.getTextKey(key);
         Supplier<String> stringSupplier = () -> VersionCompat.unwrap(settings.getString(subKey));
 
@@ -117,9 +117,9 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
     }
 
     public OptionInstance<Boolean> booleanOption(String key) {
-        Tuple<CompoundTag, String> resolvedSettings = this.resolveSettings(key);
-        CompoundTag settings = resolvedSettings.getA();
-        String subKey = resolvedSettings.getB();
+        Pair<CompoundTag, String> resolvedSettings = this.resolveSettings(key);
+        CompoundTag settings = resolvedSettings.getFirst();
+        String subKey = resolvedSettings.getSecond();
         BooleanSupplier booleanSupplier = () -> VersionCompat.unwrapOrElse(settings.getBoolean(subKey), false);
 
         return OptionInstance.createBoolean(
@@ -148,9 +148,9 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
     }
 
     public OptionInstance<Integer> intRangeOption(String key, OptionInstance.IntRangeBase intSliderCallbacks, OptionInstance.CaptionBasedToString<Integer> valueTextGetter) {
-        Tuple<CompoundTag, String> resolvedSettings = this.resolveSettings(key);
-        CompoundTag settings = resolvedSettings.getA();
-        String subKey = resolvedSettings.getB();
+        Pair<CompoundTag, String> resolvedSettings = this.resolveSettings(key);
+        CompoundTag settings = resolvedSettings.getFirst();
+        String subKey = resolvedSettings.getSecond();
         IntSupplier intSupplier = () -> VersionCompat.unwrapOrElse(settings.getInt(subKey), 0);
 
         return new OptionInstance<>(
@@ -182,9 +182,9 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
             prefix += ": ";
         }
 
-        Tuple<CompoundTag, String> resolvedSettings = this.resolveSettings(key);
-        CompoundTag settings = resolvedSettings.getA();
-        String subKey = resolvedSettings.getB();
+        Pair<CompoundTag, String> resolvedSettings = this.resolveSettings(key);
+        CompoundTag settings = resolvedSettings.getFirst();
+        String subKey = resolvedSettings.getSecond();
         IntSupplier intSupplier = () -> VersionCompat.unwrapOrElse(settings.getInt(subKey), 0);
 
         return new OptionInstance<>(
@@ -208,9 +208,9 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
             prefix += ": ";
         }
 
-        Tuple<CompoundTag, String> resolvedSettings = this.resolveSettings(key);
-        CompoundTag settings = resolvedSettings.getA();
-        String subKey = resolvedSettings.getB();
+        Pair<CompoundTag, String> resolvedSettings = this.resolveSettings(key);
+        CompoundTag settings = resolvedSettings.getFirst();
+        String subKey = resolvedSettings.getSecond();
         Supplier<String> stringSupplier = () -> VersionCompat.unwrapOrElse(settings.getString(subKey), "0");
 
         int defaultValue = 0;
@@ -230,9 +230,9 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
     }
 
     public OptionInstance<Float> floatRangeOption(String key, float min, float max) {
-        Tuple<CompoundTag, String> resolvedSettings = this.resolveSettings(key);
-        CompoundTag settings = resolvedSettings.getA();
-        String subKey = resolvedSettings.getB();
+        Pair<CompoundTag, String> resolvedSettings = this.resolveSettings(key);
+        CompoundTag settings = resolvedSettings.getFirst();
+        String subKey = resolvedSettings.getSecond();
         String textKey = this.getTextKey(key);
         FloatSupplier floatSupplier = () -> VersionCompat.unwrapOrElse(settings.getFloat(subKey), 0.0F);
 
@@ -251,9 +251,9 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
     }
 
     public OptionInstance<String> stringOption(String key, TextFieldCallbacks callbacks) {
-        Tuple<CompoundTag, String> resolvedSettings = this.resolveSettings(key);
-        CompoundTag settings = resolvedSettings.getA();
-        String subKey = resolvedSettings.getB();
+        Pair<CompoundTag, String> resolvedSettings = this.resolveSettings(key);
+        CompoundTag settings = resolvedSettings.getFirst();
+        String subKey = resolvedSettings.getSecond();
         Supplier<String> stringSupplier = () -> VersionCompat.unwrap(settings.getString(subKey));
 
         return new OptionInstance<>(
@@ -274,9 +274,9 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
     }
 
     public OptionInstance<String> biomeOption(String key, boolean allowNone) {
-        Tuple<CompoundTag, String> resolvedSettings = this.resolveSettings(key);
-        CompoundTag settings = resolvedSettings.getA();
-        String subKey = resolvedSettings.getB();
+        Pair<CompoundTag, String> resolvedSettings = this.resolveSettings(key);
+        CompoundTag settings = resolvedSettings.getFirst();
+        String subKey = resolvedSettings.getSecond();
         Supplier<String> stringSupplier = () -> VersionCompat.unwrap(settings.getString(subKey));
 
         return new OptionInstance<>(
@@ -293,9 +293,9 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
     }
 
     public OptionInstance<?> extendedIdOption(String key) {
-        Tuple<CompoundTag, String> resolvedSettings = this.resolveSettings(key);
-        CompoundTag settings = resolvedSettings.getA();
-        String subKey = resolvedSettings.getB();
+        Pair<CompoundTag, String> resolvedSettings = this.resolveSettings(key);
+        CompoundTag settings = resolvedSettings.getFirst();
+        String subKey = resolvedSettings.getSecond();
         Supplier<String> stringSupplier = () -> VersionCompat.unwrap(settings.getString(subKey));
 
         return new OptionInstance<>(
@@ -309,9 +309,9 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
     }
 
     public List<OptionInstance<?>> heightConfigOption(String key) {
-        Tuple<CompoundTag, String> resolvedSettings = this.resolveSettings(key);
-        CompoundTag settings = resolvedSettings.getA();
-        String subKey = resolvedSettings.getB();
+        Pair<CompoundTag, String> resolvedSettings = this.resolveSettings(key);
+        CompoundTag settings = resolvedSettings.getFirst();
+        String subKey = resolvedSettings.getSecond();
         Supplier<String> stringSupplier = () -> VersionCompat.unwrap(settings.getString(subKey));
         Supplier<String> defaultedStringSupplier = () -> VersionCompat.unwrapOrElse(settings.getString(subKey), "");
 
@@ -353,9 +353,9 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
         Component text, String key, int type,
         ModernBetaGraphicalListSettingsScreen.Constructor listSettingsScreenConstructor
     ) {
-        Tuple<CompoundTag, String> resolvedSettings = this.resolveSettings(key);
-        CompoundTag settings = resolvedSettings.getA();
-        String subKey = resolvedSettings.getB();
+        Pair<CompoundTag, String> resolvedSettings = this.resolveSettings(key);
+        CompoundTag settings = resolvedSettings.getFirst();
+        String subKey = resolvedSettings.getSecond();
         Supplier<ListTag> listSupplier = () -> VersionCompat.unwrap(settings.getList(
             subKey
             //? if <1.21.5
@@ -378,9 +378,9 @@ public abstract class ModernBetaGraphicalCompoundSettingsScreen extends ModernBe
         Component text, String key,
         ModernBetaGraphicalMapSettingsScreen.Constructor mapSettingsScreenConstructor
     ) {
-        Tuple<CompoundTag, String> resolvedSettings = this.resolveSettings(key);
-        CompoundTag settings = resolvedSettings.getA();
-        String subKey = resolvedSettings.getB();
+        Pair<CompoundTag, String> resolvedSettings = this.resolveSettings(key);
+        CompoundTag settings = resolvedSettings.getFirst();
+        String subKey = resolvedSettings.getSecond();
         Supplier<CompoundTag> compoundSupplier = () -> VersionCompat.unwrap(settings.getCompound(subKey));
 
         return this.customButton(

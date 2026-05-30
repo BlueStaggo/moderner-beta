@@ -9,7 +9,6 @@ import mod.bluestaggo.modernerbeta.level.biome.injection.BiomeInjectionRule;
 import mod.bluestaggo.modernerbeta.level.biome.injection.InjectionNeeds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeManager;
@@ -54,12 +53,15 @@ public class SurfaceSystemMixin implements ModernBetaSurfaceSystem {
     private void setupSurfaceRandom(
         RandomState randomState,
         BiomeManager biomeManager,
-        Registry<Biome> biomes,
+        //? if <26.2
+        net.minecraft.core.Registry<Biome> biomes,
         boolean useLegacyRandomSource,
         WorldGenerationContext context,
         ChunkAccess chunk,
         NoiseChunk noiseChunk,
         SurfaceRules.RuleSource ruleSource,
+        //? if >=26.2
+        //java.util.Set<Holder<Biome>> possibleBiomes,
         CallbackInfo ci
     ) {
         if (this.modernerBeta$chunkProvider == null)
@@ -93,7 +95,13 @@ public class SurfaceSystemMixin implements ModernBetaSurfaceSystem {
         method = "buildSurface",
         at = @At(
             value = "NEW",
-            target = "(Lnet/minecraft/world/level/levelgen/SurfaceSystem;Lnet/minecraft/world/level/levelgen/RandomState;Lnet/minecraft/world/level/chunk/ChunkAccess;Lnet/minecraft/world/level/levelgen/NoiseChunk;Ljava/util/function/Function;Lnet/minecraft/core/Registry;Lnet/minecraft/world/level/levelgen/WorldGenerationContext;)Lnet/minecraft/world/level/levelgen/SurfaceRules$Context;"
+            target = "(Lnet/minecraft/world/level/levelgen/SurfaceSystem;Lnet/minecraft/world/level/levelgen/RandomState;Lnet/minecraft/world/level/chunk/ChunkAccess;Lnet/minecraft/world/level/levelgen/NoiseChunk;Ljava/util/function/Function;"
+                    //? if <26.2
+                    + "Lnet/minecraft/core/Registry;"
+                    + "Lnet/minecraft/world/level/levelgen/WorldGenerationContext;"
+                    //? if >=26.2
+                    //+ "Ljava/util/Set;"
+                    + ")Lnet/minecraft/world/level/levelgen/SurfaceRules$Context;"
         )
     )
     private @Coerce Object replaceBiomeGetterForMB(
@@ -102,17 +110,23 @@ public class SurfaceSystemMixin implements ModernBetaSurfaceSystem {
         ChunkAccess chunk,
         NoiseChunk noiseChunk,
         Function<BlockPos, Holder<Biome>> biomeGetter,
-        Registry<Biome> biomes,
+        //? if <26.2
+        net.minecraft.core.Registry<Biome> biomes,
         WorldGenerationContext context,
+        //? if >=26.2
+        //java.util.Set<Holder<Biome>> possibleBiomes,
         Operation<Object> original,
         RandomState randomState2,
         BiomeManager biomeManager,
-        Registry<Biome> biomes2,
+        //? if <26.2
+        net.minecraft.core.Registry<Biome> biomes2,
         boolean useLegacyRandomSource,
         WorldGenerationContext context2,
         ChunkAccess chunk2,
         NoiseChunk noiseChunk2,
         SurfaceRules.RuleSource ruleSource
+        //? if >=26.2
+        //, java.util.Set<Holder<Biome>> possibleBiomes2
     ) {
         //TODO: this needs to handle biome injection better (?)
         if (this.modernerBeta$biomeProvider != null/* &&
@@ -129,7 +143,7 @@ public class SurfaceSystemMixin implements ModernBetaSurfaceSystem {
                 );
         }
 
-        return original.call(system, randomState, chunk, noiseChunk, biomeGetter, biomes, context);
+        return original.call(system, randomState, chunk, noiseChunk, biomeGetter, /*? <26.2 {*/ biomes, /*? }*/ context /*? >=26.2 {*//*, possibleBiomes *//*? }*/);
     }
 
     @WrapOperation(
@@ -145,7 +159,8 @@ public class SurfaceSystemMixin implements ModernBetaSurfaceSystem {
         Operation<Holder<Biome>> original,
         RandomState randomState,
         BiomeManager biomeManager,
-        Registry<Biome> biomes,
+        //? if <26.2
+        net.minecraft.core.Registry<Biome> biomes,
         boolean useLegacyRandomSource,
         WorldGenerationContext context,
         ChunkAccess chunk,

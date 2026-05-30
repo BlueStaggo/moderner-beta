@@ -1,5 +1,6 @@
 package mod.bluestaggo.modernerbeta.forgelike;
 
+import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.compat.ModCompat;
@@ -17,7 +18,6 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackSource;
-import net.minecraft.util.Tuple;
 //? if neoforge {
 import mod.bluestaggo.modernerbeta.registry.VanillaRegistryHandler;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -115,11 +115,11 @@ public class ModEventsCommon {
         /*ForgeRegistryHandler<?> registryHandler = new ForgeRegistryHandler<>(event);
         *///?}
         ModernerBeta.REGISTRY_HANDLERS.stream()
-            .filter(pair -> pair.getA().key().equals(event.getRegistryKey()))
-            .forEach(pair -> pair.getB().accept(registryHandler));
+            .filter(pair -> pair.getFirst().key().equals(event.getRegistryKey()))
+            .forEach(pair -> pair.getSecond().accept(registryHandler));
         ModernerBeta.CUSTOM_REGISTRY_HANDLERS.stream()
-            .filter(pair -> pair.getA().key().equals(event.getRegistryKey()))
-            .forEach(pair -> pair.getB().accept(registryHandler));
+            .filter(pair -> pair.getFirst().key().equals(event.getRegistryKey()))
+            .forEach(pair -> pair.getSecond().accept(registryHandler));
     }
 
     @SubscribeEvent
@@ -133,8 +133,8 @@ public class ModEventsCommon {
     @SuppressWarnings("unchecked")
     public static void registerDatapackRegistries(DataPackRegistryEvent.NewRegistry event) {
         ModernerBeta.setupCustomDynamicRegistries();
-        for (Tuple<ResourceKey<?>, Codec<?>> dynamicRegistry : ModernerBeta.CUSTOM_DYNAMIC_REGISTRIES) {
-            event.dataPackRegistry((ResourceKey<Registry<Object>>)dynamicRegistry.getA(), (Codec<Object>)dynamicRegistry.getB());
+        for (Pair<ResourceKey<?>, Codec<?>> dynamicRegistry : ModernerBeta.CUSTOM_DYNAMIC_REGISTRIES) {
+            event.dataPackRegistry((ResourceKey<Registry<Object>>)dynamicRegistry.getFirst(), (Codec<Object>)dynamicRegistry.getSecond());
         }
     }
 

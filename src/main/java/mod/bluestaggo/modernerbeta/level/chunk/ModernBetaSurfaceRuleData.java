@@ -16,8 +16,13 @@ import net.minecraft.world.level.levelgen.synth.NormalNoise;
 public class ModernBetaSurfaceRuleData {
     private static final SurfaceRules.RuleSource AIR = makeStateRule(Blocks.AIR);
     private static final SurfaceRules.RuleSource BEDROCK = makeStateRule(Blocks.BEDROCK);
+    //? if >=26.2 {
+    /*private static final SurfaceRules.RuleSource WHITE_TERRACOTTA = makeStateRule(Blocks.DYED_TERRACOTTA.white());
+    private static final SurfaceRules.RuleSource ORANGE_TERRACOTTA = makeStateRule(Blocks.DYED_TERRACOTTA.orange());
+    *///? } else {
     private static final SurfaceRules.RuleSource WHITE_TERRACOTTA = makeStateRule(Blocks.WHITE_TERRACOTTA);
     private static final SurfaceRules.RuleSource ORANGE_TERRACOTTA = makeStateRule(Blocks.ORANGE_TERRACOTTA);
+    //? }
     private static final SurfaceRules.RuleSource TERRACOTTA = makeStateRule(Blocks.TERRACOTTA);
     private static final SurfaceRules.RuleSource RED_SAND = makeStateRule(Blocks.RED_SAND);
     private static final SurfaceRules.RuleSource RED_SANDSTONE = makeStateRule(Blocks.RED_SANDSTONE);
@@ -38,6 +43,10 @@ public class ModernBetaSurfaceRuleData {
     private static final SurfaceRules.RuleSource POWDER_SNOW = makeStateRule(Blocks.POWDER_SNOW);
     private static final SurfaceRules.RuleSource ICE = makeStateRule(Blocks.ICE);
     private static final SurfaceRules.RuleSource WATER = makeStateRule(Blocks.WATER);
+    //? if >=26.2 {
+    /*private static final SurfaceRules.RuleSource CINNABAR = makeStateRule(Blocks.CINNABAR);
+    private static final SurfaceRules.RuleSource SULFUR = makeStateRule(Blocks.SULFUR);
+    *///? }
 
     private static SurfaceRules.RuleSource makeStateRule(final Block block) {
         return SurfaceRules.state(block.defaultBlockState());
@@ -297,6 +306,7 @@ public class ModernBetaSurfaceRuleData {
     }
 
     private static SurfaceRules.ConditionSource surfaceNoiseAbove(final double threshold) {
+        //~ if >=26.2 'noiseCondition' -> 'noiseCondition2d'
         return SurfaceRules.noiseCondition(Noises.SURFACE, threshold / 8.25, Double.MAX_VALUE);
     }
 

@@ -17,7 +17,10 @@ public class ModernerBetaMixinPlugin implements IMixinConfigPlugin {
         //? if <1.21.2
         //"mod.bluestaggo.modernerbeta.mixin.client.LevelRendererMixin", () -> !ModernBetaServices.PLATFORM.isModPresent("sereneseasons"),
         "mod.bluestaggo.modernerbeta.mixin.BiomeMixin", () -> !ModernBetaServices.PLATFORM.isModPresent("sereneseasons"),
-        "mod.bluestaggo.modernerbeta.mixin.compat.sereneseasons.SeasonHooksMixin", () -> ModernBetaServices.PLATFORM.isModPresent("sereneseasons")
+        "mod.bluestaggo.modernerbeta.mixin.compat.sereneseasons.SeasonHooksMixin", () -> ModernBetaServices.PLATFORM.isModPresent("sereneseasons"),
+        //? if <26.1
+        "mod.bluestaggo.modernerbeta.mixin.compat.terrablender.LevelUtilsMixin", () -> ModernBetaServices.PLATFORM.isModPresent("terrablender"),
+        "mod.bluestaggo.modernerbeta.mixin.compat.terrablender.SurfaceRuleManagerMixin", () -> ModernBetaServices.PLATFORM.isModPresent("terrablender")
     );
 
     @Override

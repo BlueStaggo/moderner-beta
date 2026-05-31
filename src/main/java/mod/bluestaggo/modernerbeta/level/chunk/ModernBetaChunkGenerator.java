@@ -232,8 +232,10 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
     ) {
         NoiseChunk noiseChunk = chunk.getOrCreateNoiseChunk(chunkAccess -> this.createNoiseChunk(chunkAccess, structureManager, blender, random));
         NoiseGeneratorSettings noiseGeneratorSettings = this.generatorSettings().value();
+        ModCompat.useModernBetaSurfaceRules = true;
         random.surfaceSystem()
             .buildSurface(random, biomeManager, biomes, noiseGeneratorSettings.useLegacyRandomSource(), context, chunk, noiseChunk, noiseGeneratorSettings.surfaceRule());
+        ModCompat.useModernBetaSurfaceRules = false;
     }
 
     public void buildDefaultSurface(WorldGenRegion chunkRegion, StructureManager structureAccessor, RandomState noiseConfig, ChunkAccess chunk) {
@@ -262,7 +264,9 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
         NoiseChunk chunkNoiseSampler = chunk.getOrCreateNoiseChunk(c -> this.createNoiseChunk(c, structureAccessor, Blender.of(chunkRegion), noiseConfig));
 
         Registry<ConfiguredWorldCarver<?>> configuredCarverRegistry = chunkRegion.registryAccess().lookupOrThrow(Registries.CONFIGURED_CARVER);
+        ModCompat.useModernBetaSurfaceRules = true;
         CarvingContext carverContext = new CarvingContext(this, chunkRegion.registryAccess(), chunk.getHeightAccessorForGeneration(), chunkNoiseSampler, noiseConfig, this.generatorSettings().value().surfaceRule());
+        ModCompat.useModernBetaSurfaceRules = false;
         CarvingMask carvingMask = ((ProtoChunk)chunk).getOrCreateCarvingMask(
             //? if <1.21.2
             //carverStep

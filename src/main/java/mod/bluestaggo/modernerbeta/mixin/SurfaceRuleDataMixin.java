@@ -4,9 +4,17 @@ import com.google.common.collect.ImmutableList;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
+import com.llamalad7.mixinextras.sugar.ref.LocalRef;
+import mod.bluestaggo.modernerbeta.compat.ModCompat;
 import net.minecraft.data.worldgen.SurfaceRuleData;
+import net.minecraft.world.level.levelgen.SurfaceRules;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.List;
 
 import static mod.bluestaggo.modernerbeta.level.chunk.ModernBetaNoiseGeneratorSettings.useModernBetaSurfaceRules;
 
@@ -69,5 +77,20 @@ public class SurfaceRuleDataMixin {
         }
 
         return original.call(instance, element);
+    }
+
+    @Inject(method = "overworldLike", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/levelgen/SurfaceRules;abovePreliminarySurface()Lnet/minecraft/world/level/levelgen/SurfaceRules$ConditionSource;"))
+    private static void addCustomRulesIfPossible(CallbackInfoReturnable<SurfaceRules.RuleSource> cir, @Local(ordinal = 8) LocalRef<SurfaceRules.RuleSource> ruleSource) {
+        if (useModernBetaSurfaceRules()) {
+            List<SurfaceRules.RuleSource> rules = ModCompat.getCustomRules();
+
+            if (rules.isEmpty())
+                return;
+
+            ImmutableList.Builder<SurfaceRules.RuleSource> newRules = ImmutableList.builder();
+            newRules.addAll(rules);
+            newRules.add(ruleSource.get());
+            ruleSource.set(SurfaceRules.sequence(newRules.build().toArray(SurfaceRules.RuleSource[]::new)));
+        }
     }
 }

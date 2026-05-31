@@ -8,24 +8,24 @@ import org.slf4j.event.Level;
 public class LoggingUtil {
     private static final Logger LOGGER = LoggerFactory.getLogger(ModernerBeta.MOD_NAME);
 
-    public static void log(Level level, String message) {
-        String template = "[" + ModernerBeta.MOD_NAME + "] {}";
+    public static void log(Level level, String message, Object... args) {
+        String template = "[" + ModernerBeta.MOD_NAME + "] " + message;
 
         switch (level) {
             case TRACE:
-                LOGGER.trace(template, message);
+                LOGGER.trace(template, args);
                 break;
             case DEBUG:
-                LOGGER.debug(template, message);
+                LOGGER.debug(template, args);
                 break;
             case INFO:
-                LOGGER.info(template, message);
+                LOGGER.info(template, args);
                 break;
             case WARN:
-                LOGGER.warn(template, message);
+                LOGGER.warn(template, args);
                 break;
             case ERROR:
-                LOGGER.error(template, message);
+                LOGGER.error(template, args);
                 break;
             default:
                 throw new IllegalArgumentException("Unknown logging level: " + level);

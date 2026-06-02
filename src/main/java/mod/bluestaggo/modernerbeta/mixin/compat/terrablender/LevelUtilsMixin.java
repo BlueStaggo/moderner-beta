@@ -1,7 +1,6 @@
 //? if <26.1 {
 package mod.bluestaggo.modernerbeta.mixin.compat.terrablender;
 
-import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceKey;
@@ -31,8 +30,9 @@ public class LevelUtilsMixin {
         ResourceKey<LevelStem> levelResourceKey,
         ChunkGenerator chunkGenerator,
         long seed,
-        CallbackInfo ci,
-        @Local NoiseGeneratorSettings generatorSettings
+        CallbackInfo ci
+        //? if >=1.20.4
+        , @com.llamalad7.mixinextras.sugar.Local NoiseGeneratorSettings generatorSettings
     ) {
         try {
             //Annoying that I cannot shadow this method.
@@ -51,7 +51,11 @@ public class LevelUtilsMixin {
             Method meth = extendedSettings.getMethod("setRuleCategory", ruleCategoryClass);
             meth.invoke(generatorSettings, ruleCategory);
             //? } else {
-            /*Class<?> regionTypeClass = Class.forName("terrablender.api.RegionType");
+            /*if (!(chunkGenerator instanceof net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator noiseBasedChunkGenerator))
+                return;
+
+            NoiseGeneratorSettings generatorSettings = noiseBasedChunkGenerator.generatorSettings().value();
+            Class<?> regionTypeClass = Class.forName("terrablender.api.RegionType");
 
             Method meth = extendedSettings.getMethod("setRegionType", regionTypeClass);
             meth.invoke(generatorSettings, regionType);

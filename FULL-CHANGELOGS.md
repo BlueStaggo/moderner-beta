@@ -1,3 +1,9 @@
+# 4.1.7
+
+## Fixes
+- Fixed where pressing ESC in the graphical settings screen causing to return to the title screen.
+- (1.20.1) Fixed crash with TerraBlender
+
 # 4.1.6
 
 ## Additions

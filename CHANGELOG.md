@@ -1,5 +1,3 @@
-## Additions
-- Added keyboard input support to preset selection GUI
-
 ## Fixes
-- Fixed issues with TerraBlender and surface rules in Moderner Beta
+- Fixed where pressing ESC in the graphical settings screen causing to return to the title screen.
+- (1.20.1) Fixed crash with TerraBlender

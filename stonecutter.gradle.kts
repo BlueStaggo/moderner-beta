@@ -156,8 +156,8 @@ stonecutter.parameters {
         }
 
         regex(eval(current.version, ">=26.2")) {
-            replace("EntityType.([A-Z_]+)" to "EntityTypes.$1",
-                "EntityTypes.([A-Z_]+)" to "EntityType.$1")
+            replace("EntityType\\.([A-Z_]+)", "EntityTypes.$1",
+                "EntityTypes\\.([A-Z_]+)", "EntityType.$1")
         }
     }
 }

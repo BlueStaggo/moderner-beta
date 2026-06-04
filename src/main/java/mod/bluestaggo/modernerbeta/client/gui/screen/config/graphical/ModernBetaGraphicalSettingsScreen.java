@@ -75,7 +75,7 @@ public abstract class ModernBetaGraphicalSettingsScreen<T extends Tag> extends O
 
     @Override
     public void onClose() {
-        this.minecraft.setScreen(null);
+        this.minecraft.setScreen(this.lastScreen);
     }
 
     @Override

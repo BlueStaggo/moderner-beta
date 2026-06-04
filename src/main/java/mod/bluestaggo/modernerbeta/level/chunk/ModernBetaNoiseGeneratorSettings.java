@@ -2,6 +2,7 @@ package mod.bluestaggo.modernerbeta.level.chunk;
 
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
+import mod.bluestaggo.modernerbeta.compat.ModCompat;
 import mod.bluestaggo.modernerbeta.mixin.NoiseRouterDataAccessor;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
 import net.minecraft.core.Holder.Reference;

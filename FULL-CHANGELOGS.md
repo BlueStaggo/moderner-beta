@@ -1,3 +1,17 @@
+# 4.1.7
+
+## Fixes
+- Fixed where pressing ESC in the graphical settings screen causing to return to the title screen.
+- (1.20.1) Fixed crash with TerraBlender
+
+# 4.1.6
+
+## Additions
+- Added keyboard input support to preset selection GUI
+
+## Fixes
+- Fixed issues with TerraBlender and surface rules in Moderner Beta
+
 # 4.1.5
 
 ## Fixes

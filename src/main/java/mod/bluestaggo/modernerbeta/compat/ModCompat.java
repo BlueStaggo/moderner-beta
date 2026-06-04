@@ -45,7 +45,7 @@ public class ModCompat {
     }
 
     public static List<SurfaceRules.RuleSource> getCustomRules() {
-        if (worldGenHelpers.isEmpty())
+        if (surfaceRuleHelpers.isEmpty())
             return List.of();
 
         ImmutableList.Builder<SurfaceRules.RuleSource> builder = ImmutableList.builder();

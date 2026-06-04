@@ -1,3 +1,3 @@
 ## Fixes
-- Fixed where pressing ESC in the graphical settings screen causing to return to the title screen.
-- (1.20.1) Fixed crash with TerraBlender
+- Fixed custom surface rules not being added by mods in Moderner Beta in most cases
+- Fixed up invoker mixin to not cause warning

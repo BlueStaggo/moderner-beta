@@ -101,7 +101,8 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
         NoiseBasedChunkGeneratorAccessor accessor = (NoiseBasedChunkGeneratorAccessor) this;
         Holder<NoiseGeneratorSettings> settings = DefferedDirectHolder.of(this::noiseGeneratorSettings);
         accessor.setSettings(settings);
-        accessor.setGlobalFluidPicker(Suppliers.memoize(() -> accessor.invokeCreateFluidPicker(settings.value())));
+        accessor.setGlobalFluidPicker(Suppliers.memoize(() ->
+            NoiseBasedChunkGeneratorAccessor.invokeCreateFluidPicker(settings.value())));
 
         if (this.biomeSource instanceof ModernBetaBiomeSource modernBetaBiomeSource) {
             modernBetaBiomeSource.setChunkGenerator(this);

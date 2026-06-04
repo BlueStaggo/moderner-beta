@@ -22,5 +22,7 @@ public interface NoiseBasedChunkGeneratorAccessor {
     void setGlobalFluidPicker(Supplier<Aquifer.FluidPicker> supplier);
 
     @Invoker("createFluidPicker")
-    Aquifer.FluidPicker invokeCreateFluidPicker(NoiseGeneratorSettings settings);
+    static Aquifer.FluidPicker invokeCreateFluidPicker(NoiseGeneratorSettings settings) {
+        throw new AssertionError();
+    }
 }

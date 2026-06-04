@@ -2,7 +2,6 @@ package mod.bluestaggo.modernerbeta.level.chunk;
 
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
-import mod.bluestaggo.modernerbeta.compat.ModCompat;
 import mod.bluestaggo.modernerbeta.mixin.NoiseRouterDataAccessor;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
 import net.minecraft.core.Holder.Reference;
@@ -10,7 +9,6 @@ import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
-import net.minecraft.data.worldgen.SurfaceRuleData;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.levelgen.DensityFunction;
 import net.minecraft.world.level.levelgen.DensityFunctions;
@@ -129,7 +127,7 @@ public class ModernBetaNoiseGeneratorSettings {
         int seaLevel,
         boolean useAquifers
     ) {
-        SurfaceRules.RuleSource materialRule = ModernBetaSurfaceRuleData.overworldLike(biomeLookup, true, false, false, false, seaLevel);
+        SurfaceRules.RuleSource materialRule = ModernBetaSurfaceRuleData.overworldLike(biomeLookup, true, false, false, false);
 
         return new NoiseGeneratorSettings(
             shapeConfig,

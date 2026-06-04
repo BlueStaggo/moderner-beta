@@ -1,6 +1,7 @@
 package mod.bluestaggo.modernerbeta.level.chunk;
 
 import com.google.common.collect.ImmutableList;
+import mod.bluestaggo.modernerbeta.compat.ModCompat;
 import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomes;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.resources.ResourceKey;
@@ -12,6 +13,8 @@ import net.minecraft.world.level.levelgen.Noises;
 import net.minecraft.world.level.levelgen.SurfaceRules;
 import net.minecraft.world.level.levelgen.VerticalAnchor;
 import net.minecraft.world.level.levelgen.synth.NormalNoise;
+
+import java.util.List;
 
 public class ModernBetaSurfaceRuleData {
     private static final SurfaceRules.RuleSource AIR = makeStateRule(Blocks.AIR);
@@ -56,7 +59,7 @@ public class ModernBetaSurfaceRuleData {
     //Any modifications are appended with comments, noting changes in case
     //  modifications have to be redone.
     public static SurfaceRules.RuleSource overworldLike(
-        HolderGetter<Biome> biomes, boolean doPreliminarySurfaceCheck, boolean bedrockRoof, boolean bedrockFloor, boolean deepslate, int seaLevel
+        HolderGetter<Biome> biomes, boolean doPreliminarySurfaceCheck, boolean bedrockRoof, boolean bedrockFloor, boolean deepslate
     ) {
         //Moderner Beta: changed constant from 97
         SurfaceRules.ConditionSource woodedBadlandsTop = SurfaceRules.yBlockCheck(VerticalAnchor.absolute(86), 2);
@@ -289,12 +292,28 @@ public class ModernBetaSurfaceRuleData {
             )
         );
         ImmutableList.Builder<SurfaceRules.RuleSource> builder = ImmutableList.builder();
+
+        //Moderner Beta: mod compat custom rules (pre-bedrock)
+        List<SurfaceRules.RuleSource> preBedrockCustomRules = ModCompat.getPreBedrockCustomRules();
+        builder.addAll(preBedrockCustomRules);
+
         if (bedrockRoof) {
             builder.add(SurfaceRules.ifTrue(SurfaceRules.not(SurfaceRules.verticalGradient("bedrock_roof", VerticalAnchor.belowTop(5), VerticalAnchor.top())), BEDROCK));
         }
 
         if (bedrockFloor) {
             builder.add(SurfaceRules.ifTrue(SurfaceRules.verticalGradient("bedrock_floor", VerticalAnchor.bottom(), VerticalAnchor.aboveBottom(5)), BEDROCK));
+        }
+
+        //Moderner Beta: mod compat custom rules (post-bedrock)
+        List<SurfaceRules.RuleSource> postBedrockCustomRules = ModCompat.getPostBedrockCustomRules();
+
+        if (!postBedrockCustomRules.isEmpty()) {
+            ImmutableList.Builder<SurfaceRules.RuleSource> mainRebuilder = ImmutableList.builder();
+
+            mainRebuilder.addAll(postBedrockCustomRules);
+            mainRebuilder.add(mainRuleCloseToSurface);
+            mainRuleCloseToSurface = SurfaceRules.sequence(mainRebuilder.build().toArray(SurfaceRules.RuleSource[]::new));
         }
 
         SurfaceRules.RuleSource ruleAbovePreliminarySurface = SurfaceRules.ifTrue(SurfaceRules.abovePreliminarySurface(), mainRuleCloseToSurface);

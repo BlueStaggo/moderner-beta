@@ -5,5 +5,6 @@ import net.minecraft.world.level.levelgen.SurfaceRules;
 import java.util.List;
 
 public interface SurfaceRuleCompatHelper {
-    List<SurfaceRules.RuleSource> getCustomRules();
+    List<SurfaceRules.RuleSource> getPreBedrockCustomRules();
+    List<SurfaceRules.RuleSource> getPostBedrockCustomRules();
 }

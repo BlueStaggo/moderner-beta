@@ -481,8 +481,10 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
             : localZ + localX * 16;
 
         float surfaceScale = surfaceProperties.surfaceNoiseScale();
-        double surfaceSample = this.surfaceNoiseCache != null
-            ? this.surfaceNoiseCache.get(chunkX, chunkZ)[noiseCoord]
+
+        double[] surfaceNoise = this.surfaceNoiseCache.get(chunkX, chunkZ);
+        double surfaceSample = surfaceNoise != null
+            ? surfaceNoise[noiseCoord]
             : surfaceOctaveNoise.sampleXZ(
             x, z, surfaceScale, surfaceScale, noise3DSettings.simplexSurfaceNoise() ? 1.0D : 0.5D);
         int surfaceDepth = (int) (surfaceSample / 3D + 3D + rand.nextDouble() * 0.25D);

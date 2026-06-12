@@ -531,15 +531,7 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
         int cellHeight = Mth.floorDiv(noiseSettings.height(), noiseSettings.getCellHeight());
         int seaLevel = this.getSeaLevel();
 
-        //NoiseProviderBase noiseProvider = this.chunkCacheNoise.get(chunkX, chunkZ);
-        NoiseProviderBase noiseProvider = new NoiseProviderBase(
-            this.noiseSizeX,
-            this.noiseSizeY,
-            this.noiseSizeZ,
-            this::sampleNoiseColumn,
-            this.isDensityModified() ? this::modifyEdgeDensity : null
-        );
-        noiseProvider.sampleInitialNoise(chunkX * this.noiseSizeX, chunkZ * this.noiseSizeZ);
+        NoiseProviderBase noiseProvider = this.chunkCacheNoise.get(chunkX, chunkZ);
         NoiseSampler noiseSampler = noiseProvider.getSamplerForHeightmap();
 
         short[] heightmapSurface = new short[256];

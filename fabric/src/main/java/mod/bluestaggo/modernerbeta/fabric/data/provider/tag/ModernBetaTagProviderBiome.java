@@ -792,6 +792,68 @@ public class ModernBetaTagProviderBiome extends FabricTagProvider<Biome> {
     }
 
     private void configureModded(Provider provider) {
+        //? if <1.20.5 {
+        /*this.builder(forge("is_water"))
+            .addTag(IS_OCEAN);
+
+        this.builder(forge("is_cold"))
+            .addTag(IS_TAIGA)
+            .addTag(IS_TUNDRA);
+
+        this.builder(forge("is_dry"))
+            .addTag(IS_DESERT)
+            .addTag(IS_PLAINS)
+            .addTag(IS_SAVANNA)
+            .addTag(IS_SHRUBLAND)
+            .addTag(IS_TUNDRA);
+
+        this.builder(forge("is_hot"))
+            .addTag(IS_DESERT)
+            .addTag(IS_PLAINS)
+            .addTag(IS_SEASONAL_FOREST)
+            .addTag(IS_RAINFOREST);
+
+        this.builder(forge("is_wet"))
+            .addTag(IS_OCEAN)
+            .addTag(IS_SWAMP)
+            .addTag(IS_RAINFOREST);
+
+        this.builder(forge("is_desert"))
+            .addTag(IS_DESERT);
+
+        this.builder(forge("is_forest"))
+            .addTag(IS_FOREST)
+            .addTag(IS_SEASONAL_FOREST);
+
+        this.builder(forge("is_plains"))
+            .addTag(IS_PLAINS)
+            .addTag(IS_SHRUBLAND);
+
+        this.builder(forge("is_water"))
+            .addTag(IS_OCEAN);
+
+        this.builder(forge("is_snowy"))
+            .addTag(IS_TAIGA)
+            .addTag(IS_TUNDRA);
+
+        this.builder(forge("is_swamp"))
+            .addTag(IS_SWAMP);
+
+        this.builder(forge("is_coniferous"))
+            .addTag(IS_TAIGA);
+
+        this.builder(forge("is_dense"))
+            .addTag(IS_RAINFOREST)
+            .addTag(IS_PLAINS);
+
+        this.builder(forge("is_sparse"))
+            .addTag(IS_DESERT)
+            .addTag(IS_SAVANNA)
+            .addTag(IS_SHRUBLAND)
+            .addTag(IS_TUNDRA)
+            .addTag(IS_EXTREME_HILLS);
+        *///? }
+
         //TODO: maybe clean these up?
         this.builder(TagKey.create(Registries.BIOME, VersionCompat.id("sereneseasons", "blacklisted_biomes")))
             .addTag(IS_INDEV)
@@ -808,4 +870,10 @@ public class ModernBetaTagProviderBiome extends FabricTagProvider<Biome> {
             .addTag(IS_SWAMP)
             .addTag(IS_SEASONAL_FOREST);
     }
+
+    //? if <1.20.5 {
+    /*private static TagKey<Biome> forge(String location) {
+        return TagKey.create(Registries.BIOME, VersionCompat.id("forge", location));
+    }
+    *///? }
 }

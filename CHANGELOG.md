@@ -22,13 +22,13 @@ which may include bugs and issues, and can be prone to breaking with future rele
 - Surface rules now use precise biome for certain biome providers
   - This is mostly noticeable with the Beta biome provider.
 - Refactored biome generators to use biome references directly
-  - NOTE: This does not apply to the fractal biome generators, as those use an extended ID system.
+  - NOTE: This does not apply to the fractal biome generators, as those use an extended ID system that requires a rework.
 - Refactored noise generation to use a common interface
 - `/locate` can now locate injected biomes from some biome injectors.
 - General optimisations for world generation.
 
 ## Fixes
-- Fixed cave biome and ocean biome injection occurring before surface generation.
+- Fixed cave biome and ocean biome injection occurring after surface generation.
   - This notably fixes frozen ocean biome generation, along with sulfur cave generation.
 - Fixed certain Moderner Beta biomes not generating properly with surface rules enabled.
 

@@ -35,17 +35,18 @@ value class ModData(private val project: Project) {
     fun prop(key: String): String = requireNotNull(propOrNull(key)) { "Missing '$key'" }
 
     fun getReleaseType(): String {
-        val semverExt = version.indexOf("-")
+        val semverExtIdx = version.indexOf("-")
 
-        if (semverExt == -1)
+        if (semverExtIdx == -1)
             return "STABLE"
 
         val extType: String
-        val extVer = version.indexOf(".")
+        val semverExt = version.substring(semverExtIdx + 1)
+        val extVer = semverExt.indexOf(".")
         if (extVer != -1) {
-            extType = version.substring(semverExt + 1, extVer)
+            extType = semverExt.substring(0, extVer)
         } else {
-            extType = version.substring(semverExt + 1)
+            extType = semverExt
         }
 
         return extType.uppercase()

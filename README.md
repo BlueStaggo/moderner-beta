@@ -14,7 +14,13 @@
 Moderner Beta is the successor to [b3spectacled](https://codeberg.org/b3spectacled/)'s [Modern Beta](https://github.com/b3spectacled/modern-beta-fabric).
 It originally started as a pull request for the original Modern Beta to add in world generation from Beta 1.8 to 1.6.4,
 however due to b3spectacled's inactivity it has become its own project.
-The mod is currently supported for 1.20.1, 1.21.1, 1.21.6-1.21.8, 1.21.9-1.21.10, 1.21.11, and 26.1.
+The mod is currently supported for 1.20.1, 1.21.1, 1.21.6-1.21.8 (<5.0.0), 1.21.9-1.21.10 (<5.0.0), 1.21.11 (<5.0.0), 26.1, and 26.2 (5.0.0+).
+
+## Notice
+
+Moderner Beta 5.0.0 is currently in alpha. There may be bugs and issues, and can be prone to breaking with future releases.
+4.1.x will continue to be supported until 5.0.0 exits development. Development may take quite some time. If you could help, then please
+consider applying as a developer [here](https://docs.google.com/forms/d/e/1FAIpQLSftC3Sl78p2v26ywvxaYFDBNq_7AFzFZkQ2fu0vOVDiTAN8lg/viewform?usp=dialog).
 
 ## Features
 

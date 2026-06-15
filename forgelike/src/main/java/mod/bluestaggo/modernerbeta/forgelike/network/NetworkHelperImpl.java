@@ -21,10 +21,10 @@ public class NetworkHelperImpl implements INetworkHelper {
     @Override
     public void sendToServer(ModernBetaPayload payload) {
         //? if >=1.21.7 {
-        /*net.neoforged.neoforge.client.network.ClientPacketDistributor.sendToServer(payload);
-         *///?} else {
-        PacketDistributor.sendToServer(payload);
-        //?}
+        net.neoforged.neoforge.client.network.ClientPacketDistributor.sendToServer(payload);
+         //?} else {
+        /*PacketDistributor.sendToServer(payload);
+        *///?}
     }
 
     @Override

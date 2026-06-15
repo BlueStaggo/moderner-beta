@@ -13,9 +13,9 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 public interface RenderSectionRegionAccessor {
     @Accessor
     //? if >=26.1 {
-    /*net.minecraft.client.multiplayer.ClientLevel
-    *///? } else {
-    net.minecraft.world.level.Level
-    //? }
+    net.minecraft.client.multiplayer.ClientLevel
+    //? } else {
+    /*net.minecraft.world.level.Level
+    *///? }
     getLevel();
 }

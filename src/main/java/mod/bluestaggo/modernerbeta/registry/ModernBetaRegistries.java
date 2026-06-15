@@ -5,13 +5,15 @@ import mod.bluestaggo.modernerbeta.api.level.BlockSourceCreator;
 import mod.bluestaggo.modernerbeta.api.level.provider.BiomeProviderType;
 import mod.bluestaggo.modernerbeta.api.level.provider.CaveBiomeProviderType;
 import mod.bluestaggo.modernerbeta.api.level.provider.ChunkProviderType;
+import mod.bluestaggo.modernerbeta.level.biome.injection.injector.BiomeInjectorType;
+import mod.bluestaggo.modernerbeta.level.biome.injection.predicates.InjectionPredicateType;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentType;
 import mod.bluestaggo.modernerbeta.level.biome.HeightConfig;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers.LayerType;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.predicates.BiomePredicateType;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public final class ModernBetaRegistries {
     private static IRegistryHelper registryHelper;
@@ -24,12 +26,14 @@ public final class ModernBetaRegistries {
     public static Registry<BlockSourceCreator> BLOCKSOURCE;
     public static Registry<LayerType<?>> FRACTAL_LAYER;
     public static Registry<BiomePredicateType<?>> BIOME_PREDICATE;
+    public static Registry<BiomeInjectorType<?>> BIOME_INJECTOR;
+    public static Registry<InjectionPredicateType<?>> INJECTION_PREDICATE;
 
     private static <T> Registry<T> register(ResourceKey<Registry<T>> key) {
         return registryHelper.createSimple(key).build();
     }
 
-    private static <T> Registry<T> registerDefaulted(ResourceKey<Registry<T>> key, ResourceLocation defaultKey) {
+    private static <T> Registry<T> registerDefaulted(ResourceKey<Registry<T>> key, Identifier defaultKey) {
         return registryHelper.createDefaulted(key, defaultKey).build();
     }
 
@@ -44,5 +48,7 @@ public final class ModernBetaRegistries {
         BLOCKSOURCE = register(ModernBetaResourceKeys.BLOCKSOURCE);
         FRACTAL_LAYER = register(ModernBetaResourceKeys.FRACTAL_LAYER);
         BIOME_PREDICATE = register(ModernBetaResourceKeys.BIOME_PREDICATE);
+        BIOME_INJECTOR = register(ModernBetaResourceKeys.BIOME_INJECTOR);
+        INJECTION_PREDICATE = register(ModernBetaResourceKeys.INJECTION_PREDICATE);
     }
 }

@@ -2,7 +2,7 @@ package mod.bluestaggo.modernerbeta.level.biome;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
-import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeId;
+import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
@@ -34,230 +34,230 @@ public record HeightConfig(float depth, float scale, String type) {
 	public static final HeightConfig PLATEAU_HILL = new HeightConfig(1.8F, 0.2F, "hills");
 	public static final HeightConfig DEEP_OCEAN = new HeightConfig(-1.8F, 0.2F);
 
-	public static final Map<ExtendedBiomeId, HeightConfig> MAJOR_RELEASE_CONFIGS;
+	public static final Map<ExtendedIdentifier, HeightConfig> MAJOR_RELEASE_CONFIGS;
 
 	static {
-		Map<ExtendedBiomeId, HeightConfig> majorReleaseHeightConfigs = new HashMap<>();
+		Map<ExtendedIdentifier, HeightConfig> majorReleaseHeightConfigs = new HashMap<>();
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:ocean"),
+			ExtendedIdentifier.of("minecraft:ocean"),
 			new HeightConfig(-1.0f, 0.2f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:warm_ocean"),
+			ExtendedIdentifier.of("minecraft:warm_ocean"),
 			new HeightConfig(-1.0f, 0.2f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:lukewarm_ocean"),
+			ExtendedIdentifier.of("minecraft:lukewarm_ocean"),
 			new HeightConfig(-1.0f, 0.2f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:cold_ocean"),
+			ExtendedIdentifier.of("minecraft:cold_ocean"),
 			new HeightConfig(-1.0f, 0.2f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:plains"),
+			ExtendedIdentifier.of("minecraft:plains"),
 			new HeightConfig(0.125f, 0.1f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:desert"),
+			ExtendedIdentifier.of("minecraft:desert"),
 			new HeightConfig(0.125f, 0.1f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:windswept_hills"),
+			ExtendedIdentifier.of("minecraft:windswept_hills"),
 			new HeightConfig(1.0f, 1.0f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:forest"),
+			ExtendedIdentifier.of("minecraft:forest"),
 			new HeightConfig(0.1f, 0.4f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:taiga"),
+			ExtendedIdentifier.of("minecraft:taiga"),
 			new HeightConfig(0.2f, 0.4f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:swamp"),
+			ExtendedIdentifier.of("minecraft:swamp"),
 			new HeightConfig(-0.2f, 0.2f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:river"),
+			ExtendedIdentifier.of("minecraft:river"),
 			new HeightConfig(-0.5f, 0f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:frozen_ocean"),
+			ExtendedIdentifier.of("minecraft:frozen_ocean"),
 			new HeightConfig(-1.0f, 0.2f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:frozen_river"),
+			ExtendedIdentifier.of("minecraft:frozen_river"),
 			new HeightConfig(-0.5f, 0f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:snowy_plains"),
+			ExtendedIdentifier.of("minecraft:snowy_plains"),
 			new HeightConfig(0.125f, 0.1f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:snowy_plains*hills"),
+			ExtendedIdentifier.of("minecraft:snowy_plains*hills"),
 			new HeightConfig(0.45f, 0.6f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:mushroom_fields"),
+			ExtendedIdentifier.of("minecraft:mushroom_fields"),
 			new HeightConfig(0.2f, 0.6f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:mushroom_fields*shore"),
+			ExtendedIdentifier.of("minecraft:mushroom_fields*shore"),
 			new HeightConfig(0.0f, 0.05f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:beach"),
+			ExtendedIdentifier.of("minecraft:beach"),
 			new HeightConfig(0.0f, 0.05f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:desert*hills"),
+			ExtendedIdentifier.of("minecraft:desert*hills"),
 			new HeightConfig(0.45f, 0.6f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:forest*hills"),
+			ExtendedIdentifier.of("minecraft:forest*hills"),
 			new HeightConfig(0.45f, 0.6f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:taiga*hills"),
+			ExtendedIdentifier.of("minecraft:taiga*hills"),
 			new HeightConfig(0.45f, 0.6f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:windswept_hills*edge"),
+			ExtendedIdentifier.of("minecraft:windswept_hills*edge"),
 			new HeightConfig(0.8f, 0.6f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:jungle"),
+			ExtendedIdentifier.of("minecraft:jungle"),
 			new HeightConfig(0.1f, 0.4f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:jungle*hills"),
+			ExtendedIdentifier.of("minecraft:jungle*hills"),
 			new HeightConfig(0.45f, 0.6f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:bamboo_jungle"),
+			ExtendedIdentifier.of("minecraft:bamboo_jungle"),
 			new HeightConfig(0.1f, 0.4f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:bamboo_jungle*hills"),
+			ExtendedIdentifier.of("minecraft:bamboo_jungle*hills"),
 			new HeightConfig(0.45f, 0.6f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:sparse_jungle"),
+			ExtendedIdentifier.of("minecraft:sparse_jungle"),
 			new HeightConfig(0.1f, 0.4f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:deep_ocean"),
+			ExtendedIdentifier.of("minecraft:deep_ocean"),
 			new HeightConfig(-1.8f, 0.2f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:warm_ocean*deep"),
+			ExtendedIdentifier.of("minecraft:warm_ocean*deep"),
 			new HeightConfig(-1.0f, 0.2f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:deep_lukewarm_ocean"),
+			ExtendedIdentifier.of("minecraft:deep_lukewarm_ocean"),
 			new HeightConfig(-1.8f, 0.2f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:deep_cold_ocean"),
+			ExtendedIdentifier.of("minecraft:deep_cold_ocean"),
 			new HeightConfig(-1.8f, 0.2f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:deep_frozen_ocean"),
+			ExtendedIdentifier.of("minecraft:deep_frozen_ocean"),
 			new HeightConfig(-1.8f, 0.2f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:stony_shore"),
+			ExtendedIdentifier.of("minecraft:stony_shore"),
 			new HeightConfig(0.1f, 1.6f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:snowy_beach"),
+			ExtendedIdentifier.of("minecraft:snowy_beach"),
 			new HeightConfig(0.0f, 0.05f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:birch_forest"),
+			ExtendedIdentifier.of("minecraft:birch_forest"),
 			new HeightConfig(0.1f, 0.4f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:birch_forest*hills"),
+			ExtendedIdentifier.of("minecraft:birch_forest*hills"),
 			new HeightConfig(0.45f, 0.6f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:dark_forest"),
+			ExtendedIdentifier.of("minecraft:dark_forest"),
 			new HeightConfig(0.1f, 0.4f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:snowy_taiga"),
+			ExtendedIdentifier.of("minecraft:snowy_taiga"),
 			new HeightConfig(0.2f, 0.4f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:snowy_taiga*hills"),
+			ExtendedIdentifier.of("minecraft:snowy_taiga*hills"),
 			new HeightConfig(0.45f, 0.6f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:old_growth_pine_taiga"),
+			ExtendedIdentifier.of("minecraft:old_growth_pine_taiga"),
 			new HeightConfig(0.2f, 0.4f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:old_growth_pine_taiga*hills"),
+			ExtendedIdentifier.of("minecraft:old_growth_pine_taiga*hills"),
 			new HeightConfig(0.45f, 0.6f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:windswept_forest"),
+			ExtendedIdentifier.of("minecraft:windswept_forest"),
 			new HeightConfig(1.0f, 1.0f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:savanna"),
+			ExtendedIdentifier.of("minecraft:savanna"),
 			new HeightConfig(0.125f, 0.1f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:savanna_plateau"),
+			ExtendedIdentifier.of("minecraft:savanna_plateau"),
 			new HeightConfig(1.5f, 0.05f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:badlands"),
+			ExtendedIdentifier.of("minecraft:badlands"),
 			new HeightConfig(0.1f, 0.4f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:wooded_badlands"),
+			ExtendedIdentifier.of("minecraft:wooded_badlands"),
 			new HeightConfig(1.5f, 0.05f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:badlands*plateau"),
+			ExtendedIdentifier.of("minecraft:badlands*plateau"),
 			new HeightConfig(1.5f, 0.05f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:sunflower_plains"),
+			ExtendedIdentifier.of("minecraft:sunflower_plains"),
 			new HeightConfig(0.125f, 0.1f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:desert*lakes"),
+			ExtendedIdentifier.of("minecraft:desert*lakes"),
 			new HeightConfig(0.225f, 0.5f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:windswept_gravelly_hills"),
+			ExtendedIdentifier.of("minecraft:windswept_gravelly_hills"),
 			new HeightConfig(1.0f, 1.0f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:windswept_gravelly_hills*modified"),
+			ExtendedIdentifier.of("minecraft:windswept_gravelly_hills*modified"),
 			new HeightConfig(1.0f, 1.0f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:flower_forest"),
+			ExtendedIdentifier.of("minecraft:flower_forest"),
 			new HeightConfig(0.1f, 0.8f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:taiga*mountains"),
+			ExtendedIdentifier.of("minecraft:taiga*mountains"),
 			new HeightConfig(0.3f, 0.8f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:swamp*hills"),
+			ExtendedIdentifier.of("minecraft:swamp*hills"),
 			new HeightConfig(-0.1f, 0.6f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:ice_spikes"),
+			ExtendedIdentifier.of("minecraft:ice_spikes"),
 			new HeightConfig(0.425f, 0.9f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:jungle*modified"),
+			ExtendedIdentifier.of("minecraft:jungle*modified"),
 			new HeightConfig(0.2f, 0.8f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:sparse_jungle*modified"),
+			ExtendedIdentifier.of("minecraft:sparse_jungle*modified"),
 			new HeightConfig(0.2f, 0.8f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:old_growth_birch_forest"),
+			ExtendedIdentifier.of("minecraft:old_growth_birch_forest"),
 			new HeightConfig(0.2f, 0.8f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:old_growth_birch_forest*hills"),
+			ExtendedIdentifier.of("minecraft:old_growth_birch_forest*hills"),
 			new HeightConfig(0.55f, 1.0f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:dark_forest*hills"),
+			ExtendedIdentifier.of("minecraft:dark_forest*hills"),
 			new HeightConfig(0.2f, 0.8f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:snowy_taiga*mountains"),
+			ExtendedIdentifier.of("minecraft:snowy_taiga*mountains"),
 			new HeightConfig(0.3f, 0.8f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:old_growth_spruce_taiga"),
+			ExtendedIdentifier.of("minecraft:old_growth_spruce_taiga"),
 			new HeightConfig(0.2f, 0.4f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:old_growth_spruce_taiga*hills"),
+			ExtendedIdentifier.of("minecraft:old_growth_spruce_taiga*hills"),
 			new HeightConfig(0.2f, 0.4f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:windswept_savanna"),
+			ExtendedIdentifier.of("minecraft:windswept_savanna"),
 			new HeightConfig(0.3625f, 2.45f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:windswept_savanna*plateau"),
+			ExtendedIdentifier.of("minecraft:windswept_savanna*plateau"),
 			new HeightConfig(1.05f, 2.425f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:eroded_badlands"),
+			ExtendedIdentifier.of("minecraft:eroded_badlands"),
 			new HeightConfig(0.1f, 0.4f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:wooded_badlands*modified"),
+			ExtendedIdentifier.of("minecraft:wooded_badlands*modified"),
 			new HeightConfig(0.45f, 0.6f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:badlands*modified_plateau"),
+			ExtendedIdentifier.of("minecraft:badlands*modified_plateau"),
 			new HeightConfig(0.45f, 0.6f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:cherry_grove"),
+			ExtendedIdentifier.of("minecraft:cherry_grove"),
 			new HeightConfig(1.5f, 0.6f));
 		//? if >=1.21.4 {
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:pale_garden"),
+			ExtendedIdentifier.of("minecraft:pale_garden"),
 			new HeightConfig(1.5f, 0.6f));
 		//?}
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:mangrove_swamp"),
+			ExtendedIdentifier.of("minecraft:mangrove_swamp"),
 			new HeightConfig(-0.2f, 0.2f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:mangrove_swamp*hills"),
+			ExtendedIdentifier.of("minecraft:mangrove_swamp*hills"),
 			new HeightConfig(-0.1f, 0.6f));
 		majorReleaseHeightConfigs.put(
-			ExtendedBiomeId.of("minecraft:meadow"),
+			ExtendedIdentifier.of("minecraft:meadow"),
 			new HeightConfig(1.0f, 1.0f));
 		MAJOR_RELEASE_CONFIGS = Collections.unmodifiableMap(majorReleaseHeightConfigs);
 	}

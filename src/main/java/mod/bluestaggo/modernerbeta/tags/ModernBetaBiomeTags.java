@@ -31,7 +31,6 @@ public class ModernBetaBiomeTags {
     public static final TagKey<Biome> IS_RELEASE_SPAWN = keyOf("is_early_release_spawn");
     public static final TagKey<Biome> HAS_EARLY_RELEASE_SWAMP_COLORS = keyOf("has_early_release_swamp_colors");
 
-    public static final TagKey<Biome> INDEV_STRONGHOLD_HAS_STRUCTURE = keyOf("has_structure/indev_stronghold");
     public static final TagKey<Biome> OCEAN_SHRINE_HAS_STRUCTURE = keyOf("has_structure/ocean_shrine");
 
     public static final TagKey<Biome> SURFACE_CONFIG_SAND = keyOf("surface_config/sand");
@@ -74,6 +73,13 @@ public class ModernBetaBiomeTags {
     public static final TagKey<Biome> HEIGHT_CONFIG_SWAMPLAND_HILLS = keyOf("height_config/swampland_hills");
     public static final TagKey<Biome> HEIGHT_CONFIG_PLATEAU_HILL = keyOf("height_config/plateau_hill");
     public static final TagKey<Biome> HEIGHT_CONFIG_DEEP_OCEAN = keyOf("height_config/deep_ocean");
+
+    public static final TagKey<Biome> REPLACE_WITH_FROZEN_OCEAN = keyOf("replace_with_frozen_ocean");
+    public static final TagKey<Biome> REPLACE_WITH_COLD_OCEAN = keyOf("replace_with_cold_ocean");
+    public static final TagKey<Biome> REPLACE_WITH_OCEAN = keyOf("replace_with_ocean");
+    public static final TagKey<Biome> REPLACE_WITH_LUKEWARM_OCEAN = keyOf("replace_with_lukewarm_ocean");
+    public static final TagKey<Biome> REPLACE_WITH_WARM_OCEAN = keyOf("replace_with_warm_ocean");
+
 
     private static TagKey<Biome> keyOf(String id) {
         return TagKey.create(Registries.BIOME, ModernerBeta.createId(id));

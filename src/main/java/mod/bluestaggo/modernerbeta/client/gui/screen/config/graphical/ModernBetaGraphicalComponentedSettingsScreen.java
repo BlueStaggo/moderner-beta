@@ -2,7 +2,9 @@
 //~dotLocation
 package mod.bluestaggo.modernerbeta.client.gui.screen.config.graphical;
 
+import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DynamicOps;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.client.registry.ModernBetaClientRegistries;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
@@ -15,15 +17,15 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.worldselection.WorldCreationContext;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Tuple;
+import net.minecraft.resources.Identifier;
 
 import java.util.List;
 import java.util.function.Consumer;
 
 public abstract class ModernBetaGraphicalComponentedSettingsScreen extends ModernBetaGraphicalCompoundSettingsScreen {
-    private ResourceLocation currentComponentType;
+    private Identifier currentComponentType;
 
     public ModernBetaGraphicalComponentedSettingsScreen(
         String title,
@@ -45,10 +47,10 @@ public abstract class ModernBetaGraphicalComponentedSettingsScreen extends Moder
     }
 
     @Override
-    protected Tuple<CompoundTag, String> resolveSettings(String key) {
+    protected Pair<CompoundTag, String> resolveSettings(String key) {
         if (this.currentComponentType != null) {
             if ("self".equals(key)) {
-                return new Tuple<>(this.settings, this.currentComponentType.toString());
+                return new Pair<>(this.settings, this.currentComponentType.toString());
             }
             if (key.isEmpty()) {
                 key = this.currentComponentType.toString();
@@ -88,10 +90,12 @@ public abstract class ModernBetaGraphicalComponentedSettingsScreen extends Moder
 
     @SuppressWarnings("unchecked")
     protected void addOptionsForComponents(OptionsList list, ModernBetaSettings settings, List<SettingsComponentType<?>> componentTypes) {
+        DynamicOps<Tag> ops = settings.getOpsForSettings(NbtOps.INSTANCE);
+
         for (SettingsComponentType<?> componentType : componentTypes) {
             ModernBetaRegistries.SETTINGS_COMPONENT_TYPE.getResourceKey(componentType)
                 .ifPresent(componentTypeKey -> {
-                    ResourceLocation componentTypeId = componentTypeKey.location();
+                    Identifier componentTypeId = componentTypeKey.identifier();
 
                     GraphicalConfigBuilder configBuilder
                         = ModernBetaClientRegistries.SETTINGS_COMPONENT_TYPE_GUI.getValue(componentTypeId);
@@ -108,7 +112,7 @@ public abstract class ModernBetaGraphicalComponentedSettingsScreen extends Moder
                             componentTypeId.toString(),
                             VersionCompat.getOrThrow(
                                 ((Codec<Object>)componentType.codec())
-                                    .encodeStart(NbtOps.INSTANCE, componentType.defaultValueGetter().getDefault(settings))
+                                    .encodeStart(ops, componentType.defaultValueGetter().getDefault(settings))
                             )
                         );
                     }

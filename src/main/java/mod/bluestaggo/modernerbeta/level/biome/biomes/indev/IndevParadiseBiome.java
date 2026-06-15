@@ -6,7 +6,7 @@ import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomeFeatures;
 import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomeMobs;
 import net.minecraft.core.HolderGetter;
 //? if >=1.21.11
-//import net.minecraft.world.attribute.*;
+import net.minecraft.world.attribute.*;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeGenerationSettings;
 import net.minecraft.world.level.biome.MobSpawnSettings;
@@ -35,10 +35,10 @@ public class IndevParadiseBiome {
             .mobSpawnSettings(spawnSettings.build())
             .generationSettings(genSettings.build())
             //? if >=1.21.11 {
-            /*.putAttributes(EnvironmentAttributeMap.builder()
+            .putAttributes(EnvironmentAttributeMap.builder()
                 .set(EnvironmentAttributes.CLOUD_COLOR, 0xFFEEEEFF)
                 .build())
-            *///? }
+            //? }
             .build();
     }
 }

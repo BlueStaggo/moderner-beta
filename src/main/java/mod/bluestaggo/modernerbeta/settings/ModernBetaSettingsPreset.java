@@ -1,8 +1,10 @@
+//~dotLocation
 package mod.bluestaggo.modernerbeta.settings;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.mojang.datafixers.util.Either;
+import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JsonOps;
@@ -21,8 +23,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Tuple;
+import net.minecraft.resources.Identifier;
 import org.slf4j.event.Level;
 
 import java.util.List;
@@ -48,7 +49,7 @@ public record ModernBetaSettingsPreset(
 
     public static final Codec<ModernBetaSettingsPreset> PRESET_REFERENCE_CODEC = RecordCodecBuilder.create(
         instance -> instance.group(
-            ResourceLocation.CODEC.fieldOf("preset").forGetter(preset -> null),
+            Identifier.CODEC.fieldOf("preset").forGetter(preset -> null),
             CodecUtil.registryLookupCodec()
         ).apply(instance, ModernBetaSettingsPreset::referenced)
     );
@@ -71,10 +72,10 @@ public record ModernBetaSettingsPreset(
     }
 
     public ModernBetaSettingsPreset(
-            ResourceLocation presetId,
-            ModernBetaSettings chunkSettings,
-            ModernBetaSettings biomeSettings,
-            ModernBetaSettings caveBiomeSettings
+        Identifier presetId,
+        ModernBetaSettings chunkSettings,
+        ModernBetaSettings biomeSettings,
+        ModernBetaSettings caveBiomeSettings
     ) {
         this(
             Optional.of(makeTitleComponent(presetId)),
@@ -85,12 +86,33 @@ public record ModernBetaSettingsPreset(
         );
     }
 
-    public static ModernBetaSettingsPreset referenced(ResourceLocation presetId) {
+    public static ModernBetaSettingsPreset referenced(Holder<ModernBetaSettingsPreset> preset) {
+        ModernBetaSettingsPreset presetValue = preset.value();
+        Identifier presetId = preset.unwrapKey().orElseThrow().identifier();
+        RegistryOps.RegistryInfoLookup lookup = presetValue.chunkSettings.registries;
+
+        return new ModernBetaSettingsPreset(
+            Optional.of(presetValue.makeOrGetTitleComponent(presetId)),
+            Optional.of(presetValue.makeOrGetDescriptionComponent(presetId)),
+            ModernBetaSettings.builder(lookup)
+                .add(SettingsComponentTypes.PRESET, presetId)
+                .build(),
+            ModernBetaSettings.builder(lookup)
+                .add(SettingsComponentTypes.PRESET, presetId)
+                .build(),
+            ModernBetaSettings.builder(lookup)
+                .add(SettingsComponentTypes.PRESET, presetId)
+                .build()
+        );
+    }
+
+    public static ModernBetaSettingsPreset referenced(Identifier presetId) {
         return referenced(presetId, null);
     }
 
-    public static ModernBetaSettingsPreset referenced(ResourceLocation presetId, RegistryOps.RegistryInfoLookup lookup) {
+    public static ModernBetaSettingsPreset referenced(Identifier presetId, RegistryOps.RegistryInfoLookup lookup) {
         return new ModernBetaSettingsPreset(
+            presetId,
             ModernBetaSettings.builder(lookup)
                 .add(SettingsComponentTypes.PRESET, presetId)
                 .build(),
@@ -116,9 +138,9 @@ public record ModernBetaSettingsPreset(
         );
     }
 
-    public static Tuple<ModernBetaSettingsPreset, Boolean> fromJson(HolderLookup.Provider registries, String jsonString) {
+    public static Pair<ModernBetaSettingsPreset, Boolean> fromJson(HolderLookup.Provider registries, String jsonString) {
         if (jsonString == null || jsonString.isBlank())
-            return new Tuple<>(null, false);
+            return new Pair<>(null, false);
 
         DynamicOps<JsonElement> ops = registries != null ? RegistryOps.create(JsonOps.INSTANCE, registries) : JsonOps.INSTANCE;
 
@@ -137,10 +159,10 @@ public record ModernBetaSettingsPreset(
             LoggingUtil.log(Level.ERROR, String.format("Reason: %s", e.getMessage()));
         }
 
-        return new Tuple<>(newPreset, success);
+        return new Pair<>(newPreset, success);
     }
 
-    public Tuple<ModernBetaSettingsPreset, Boolean> setJson(HolderLookup.Provider registries, String stringChunk, String stringBiome, String stringCaveBiome) {
+    public Pair<ModernBetaSettingsPreset, Boolean> setJson(HolderLookup.Provider registries, String stringChunk, String stringBiome, String stringCaveBiome) {
         ModernBetaSettings chunkSettings;
         ModernBetaSettings biomeSettings;
         ModernBetaSettings caveBiomeSettings;
@@ -185,11 +207,11 @@ public record ModernBetaSettingsPreset(
             caveBiomeSettings = this.caveBiomeSettings;
         }
 
-        return new Tuple<>(new ModernBetaSettingsPreset(chunkSettings, biomeSettings, caveBiomeSettings), successful);
+        return new Pair<>(new ModernBetaSettingsPreset(chunkSettings, biomeSettings, caveBiomeSettings), successful);
     }
 
     @SuppressWarnings("ConstantValue")
-    public Tuple<ModernBetaSettingsPreset, Boolean> setNbt(
+    public Pair<ModernBetaSettingsPreset, Boolean> setNbt(
         HolderLookup.Provider registries,
         CompoundTag nbtChunk,
         CompoundTag nbtBiome,
@@ -246,10 +268,10 @@ public record ModernBetaSettingsPreset(
             caveBiomeSettings = this.caveBiomeSettings;
         }
 
-        return new Tuple<>(new ModernBetaSettingsPreset(chunkSettings, biomeSettings, caveBiomeSettings), successful);
+        return new Pair<>(new ModernBetaSettingsPreset(chunkSettings, biomeSettings, caveBiomeSettings), successful);
     }
 
-    public static Optional<ModernBetaSettingsPreset> getPreset(ResourceLocation presetId, HolderGetter<ModernBetaSettingsPreset> presetRegistry) {
+    public static Optional<ModernBetaSettingsPreset> getPreset(Identifier presetId, HolderGetter<ModernBetaSettingsPreset> presetRegistry) {
         if (presetId == null) {
             return Optional.empty();
         }
@@ -286,7 +308,7 @@ public record ModernBetaSettingsPreset(
         );
     }
 
-    public ModernBetaSettingsPreset withNameAndDesc(ResourceLocation id) {
+    public ModernBetaSettingsPreset withNameAndDesc(Identifier id) {
         return this.withNameAndDesc(makeTitleComponent(id), makeDescriptionComponent(id));
     }
 
@@ -295,20 +317,20 @@ public record ModernBetaSettingsPreset(
     }
 
     @Override
-    public Component makeOrGetTitleComponent(ResourceLocation fallbackId) {
+    public Component makeOrGetTitleComponent(Identifier fallbackId) {
         return presetName.orElseGet(() -> makeTitleComponent(fallbackId));
     }
 
     @Override
-    public Component makeOrGetDescriptionComponent(ResourceLocation fallbackId) {
+    public Component makeOrGetDescriptionComponent(Identifier fallbackId) {
         return presetDescription.orElseGet(() -> makeDescriptionComponent(fallbackId));
     }
 
-    private static Component makeTitleComponent(ResourceLocation id) {
+    private static Component makeTitleComponent(Identifier id) {
         return Component.translatable("createWorld.customize.modern_beta.preset.name." + id.toLanguageKey()).withStyle(ChatFormatting.YELLOW);
     }
 
-    private static Component makeDescriptionComponent(ResourceLocation id) {
+    private static Component makeDescriptionComponent(Identifier id) {
         return Component.translatable("createWorld.customize.modern_beta.preset.desc." + id.toLanguageKey());
     }
 

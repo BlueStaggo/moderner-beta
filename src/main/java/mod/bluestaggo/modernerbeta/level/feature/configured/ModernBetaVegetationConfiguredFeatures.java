@@ -21,7 +21,7 @@ import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.WeightedPlacedFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.RandomFeatureConfiguration;
 //? <26.1
-import net.minecraft.world.level.levelgen.feature.configurations.RandomPatchConfiguration;
+//import net.minecraft.world.level.levelgen.feature.configurations.RandomPatchConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.SimpleBlockConfiguration;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 import net.minecraft.world.level.levelgen.feature.stateproviders.WeightedStateProvider;
@@ -39,19 +39,19 @@ public class ModernBetaVegetationConfiguredFeatures {
 
     public static final ResourceKey<ConfiguredFeature<?, ?>> MUSHROOM_HELL = ModernBetaConfiguredFeatures.of(ModernBetaFeatureTags.MUSHROOM_HELL);
     //? if >=26.1 {
-    /*public static final ResourceKey<ConfiguredFeature<?, ?>> DANDELION = ModernBetaConfiguredFeatures.of(ModernBetaFeatureTags.DANDELION);
+    public static final ResourceKey<ConfiguredFeature<?, ?>> DANDELION = ModernBetaConfiguredFeatures.of(ModernBetaFeatureTags.DANDELION);
     public static final ResourceKey<ConfiguredFeature<?, ?>> POPPY = ModernBetaConfiguredFeatures.of(ModernBetaFeatureTags.POPPY);
     public static final ResourceKey<ConfiguredFeature<?, ?>> GRASS = ModernBetaConfiguredFeatures.of(ModernBetaFeatureTags.GRASS);
     public static final ResourceKey<ConfiguredFeature<?, ?>> GRASS_LUSH = ModernBetaConfiguredFeatures.of(ModernBetaFeatureTags.GRASS_LUSH);
-    *///? } else {
-    public static final ResourceKey<ConfiguredFeature<?, ?>> PATCH_BROWN_MUSHROOM = ModernBetaConfiguredFeatures.of(ModernBetaFeatureTags.PATCH_BROWN_MUSHROOM);
+    //? } else {
+    /*public static final ResourceKey<ConfiguredFeature<?, ?>> PATCH_BROWN_MUSHROOM = ModernBetaConfiguredFeatures.of(ModernBetaFeatureTags.PATCH_BROWN_MUSHROOM);
     public static final ResourceKey<ConfiguredFeature<?, ?>> PATCH_RED_MUSHROOM = ModernBetaConfiguredFeatures.of(ModernBetaFeatureTags.PATCH_RED_MUSHROOM);
     public static final ResourceKey<ConfiguredFeature<?, ?>> PATCH_DANDELION = ModernBetaConfiguredFeatures.of(ModernBetaFeatureTags.PATCH_DANDELION);
     public static final ResourceKey<ConfiguredFeature<?, ?>> PATCH_POPPY = ModernBetaConfiguredFeatures.of(ModernBetaFeatureTags.PATCH_POPPY);
     public static final ResourceKey<ConfiguredFeature<?, ?>> PATCH_DANDELION_INFDEV_227 = ModernBetaConfiguredFeatures.of(ModernBetaFeatureTags.PATCH_DANDELION_INFDEV_227);
     public static final ResourceKey<ConfiguredFeature<?, ?>> PATCH_GRASS = ModernBetaConfiguredFeatures.of(ModernBetaFeatureTags.PATCH_GRASS);
     public static final ResourceKey<ConfiguredFeature<?, ?>> PATCH_GRASS_LUSH = ModernBetaConfiguredFeatures.of(ModernBetaFeatureTags.PATCH_GRASS_LUSH);
-    //? }
+    *///? }
 
     public static final ResourceKey<ConfiguredFeature<?, ?>> TREES_ALPHA = ModernBetaConfiguredFeatures.of(ModernBetaFeatureTags.TREES_ALPHA);
     public static final ResourceKey<ConfiguredFeature<?, ?>> TREES_INFDEV_611 = ModernBetaConfiguredFeatures.of(ModernBetaFeatureTags.TREES_INFDEV_611);
@@ -105,13 +105,13 @@ public class ModernBetaVegetationConfiguredFeatures {
         HolderGetter<PlacedFeature> registryPlaced = featureContext.lookup(Registries.PLACED_FEATURE);
 
         //? if >=26.1 {
-        /*FeatureUtils.register(featureContext, MUSHROOM_HELL, Feature.SIMPLE_BLOCK, ModernBetaRandomPatchConfigs.MUSHROOM_HELL_FEATURE_CONFIG);
+        FeatureUtils.register(featureContext, MUSHROOM_HELL, Feature.SIMPLE_BLOCK, ModernBetaRandomPatchConfigs.MUSHROOM_HELL_FEATURE_CONFIG);
         FeatureUtils.register(featureContext, DANDELION, Feature.SIMPLE_BLOCK, ModernBetaRandomPatchConfigs.DANDELION_FEATURE_CONFIG);
         FeatureUtils.register(featureContext, POPPY, Feature.SIMPLE_BLOCK, ModernBetaRandomPatchConfigs.POPPY_FEATURE_CONFIG);
         FeatureUtils.register(featureContext, GRASS, Feature.SIMPLE_BLOCK, ModernBetaRandomPatchConfigs.GRASS_FEATURE_CONFIG);
         FeatureUtils.register(featureContext, GRASS_LUSH, Feature.SIMPLE_BLOCK, ModernBetaRandomPatchConfigs.LUSH_GRASS_FEATURE_CONFIG);
-        *///? } else {
-        FeatureUtils.register(featureContext, MUSHROOM_HELL, Feature.FLOWER, ModernBetaRandomPatchConfigs.MUSHROOM_HELL);
+        //? } else {
+        /*FeatureUtils.register(featureContext, MUSHROOM_HELL, Feature.FLOWER, ModernBetaRandomPatchConfigs.MUSHROOM_HELL);
         FeatureUtils.register(featureContext, PATCH_BROWN_MUSHROOM, Feature.RANDOM_PATCH, ModernBetaRandomPatchConfigs.BROWN_MUSHROOM);
         FeatureUtils.register(featureContext, PATCH_RED_MUSHROOM, Feature.RANDOM_PATCH, ModernBetaRandomPatchConfigs.RED_MUSHROOM);
         FeatureUtils.register(featureContext, PATCH_DANDELION, Feature.FLOWER, ModernBetaRandomPatchConfigs.DANDELION_CONFIG);
@@ -119,7 +119,7 @@ public class ModernBetaVegetationConfiguredFeatures {
         FeatureUtils.register(featureContext, PATCH_DANDELION_INFDEV_227, Feature.SIMPLE_BLOCK, new SimpleBlockConfiguration(BlockStateProvider.simple(Blocks.DANDELION)));
         FeatureUtils.register(featureContext, PATCH_GRASS, Feature.RANDOM_PATCH, ModernBetaRandomPatchConfigs.GRASS_CONFIG);
         FeatureUtils.register(featureContext, PATCH_GRASS_LUSH, Feature.RANDOM_PATCH, ModernBetaRandomPatchConfigs.LUSH_GRASS_CONFIG);
-        //? }
+        *///? }
 
         FeatureUtils.register(featureContext, TREES_ALPHA, Feature.RANDOM_SELECTOR, createDefaultRandomTreeConfig(registryPlaced, false));
         FeatureUtils.register(featureContext, TREES_INFDEV_611, Feature.RANDOM_SELECTOR, createOakTreeConfig(registryPlaced, false));
@@ -325,13 +325,13 @@ public class ModernBetaVegetationConfiguredFeatures {
         public static final SimpleBlockConfiguration LUSH_GRASS_FEATURE_CONFIG;
 
         //? if <26.1 {
-        public static final SimpleBlockConfiguration BROWN_MUSHROOM_FEATURE_CONFIG;
+        /*public static final SimpleBlockConfiguration BROWN_MUSHROOM_FEATURE_CONFIG;
         public static final SimpleBlockConfiguration RED_MUSHROOM_FEATURE_CONFIG;
-        //? }
+        *///? }
         public static final SimpleBlockConfiguration MUSHROOM_HELL_FEATURE_CONFIG;
 
         //? if <26.1 {
-        public static final RandomPatchConfiguration GRASS_CONFIG;
+        /*public static final RandomPatchConfiguration GRASS_CONFIG;
         public static final RandomPatchConfiguration LUSH_GRASS_CONFIG;
         
         public static final RandomPatchConfiguration DANDELION_CONFIG;
@@ -348,7 +348,7 @@ public class ModernBetaVegetationConfiguredFeatures {
         public static RandomPatchConfiguration createRandomPatchFeatureConfig(int tries, SimpleBlockConfiguration featureConfig, BlockPredicate filter) {
             return new RandomPatchConfiguration(tries, XZ_SPREAD, Y_SPREAD, PlacementUtils.filtered(Feature.SIMPLE_BLOCK, featureConfig, filter));
         }
-        //? }
+        *///? }
         
         private static WeightedList.Builder<BlockState> pool() {
             return WeightedList.builder();
@@ -362,13 +362,13 @@ public class ModernBetaVegetationConfiguredFeatures {
             LUSH_GRASS_FEATURE_CONFIG = new SimpleBlockConfiguration(new WeightedStateProvider(pool().add(BlockStates.SHORT_GRASS, 1).add(BlockStates.FERN, 4)));
 
             //? if <26.1 {
-            BROWN_MUSHROOM_FEATURE_CONFIG = new SimpleBlockConfiguration(BlockStateProvider.simple(Blocks.BROWN_MUSHROOM));
+            /*BROWN_MUSHROOM_FEATURE_CONFIG = new SimpleBlockConfiguration(BlockStateProvider.simple(Blocks.BROWN_MUSHROOM));
             RED_MUSHROOM_FEATURE_CONFIG = new SimpleBlockConfiguration(BlockStateProvider.simple(Blocks.RED_MUSHROOM));
-            //? }
+            *///? }
             MUSHROOM_HELL_FEATURE_CONFIG = new SimpleBlockConfiguration(new WeightedStateProvider(pool().add(Blocks.BROWN_MUSHROOM.defaultBlockState(), 2).add(Blocks.RED_MUSHROOM.defaultBlockState(), 1)));
 
             //? if <26.1 {
-            // # of tries in Beta equivalent is 128, but here it seems to generate too much grass,
+            /*// # of tries in Beta equivalent is 128, but here it seems to generate too much grass,
             // so keep # of tries at 64 for now.
             GRASS_CONFIG = createRandomPatchFeatureConfig(GRASS_TRIES, GRASS_FEATURE_CONFIG);
             LUSH_GRASS_CONFIG = createRandomPatchFeatureConfig(GRASS_TRIES, LUSH_GRASS_FEATURE_CONFIG);
@@ -379,7 +379,7 @@ public class ModernBetaVegetationConfiguredFeatures {
             BROWN_MUSHROOM = createRandomPatchFeatureConfig(TRIES, BROWN_MUSHROOM_FEATURE_CONFIG, BlockPredicate.matchesBlocks(Blocks.AIR, Blocks.CAVE_AIR));
             RED_MUSHROOM = createRandomPatchFeatureConfig(TRIES, RED_MUSHROOM_FEATURE_CONFIG, BlockPredicate.matchesBlocks(Blocks.AIR, Blocks.CAVE_AIR));
             MUSHROOM_HELL = createRandomPatchFeatureConfig(TRIES, MUSHROOM_HELL_FEATURE_CONFIG);
-            //? }
+            *///? }
         }
     }
 }

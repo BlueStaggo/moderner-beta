@@ -28,13 +28,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(MinecraftServer.class)
 public abstract class MinecraftServerMixin {
     @Inject(method = "setInitialSpawn", at = @At("RETURN"))
-    private static void injectSetInitialSpawn(ServerLevel level, ServerLevelData levelData, boolean bonusChest, boolean debugWorld, /*? >=1.21.9 {*/ /*net.minecraft.server.level.progress.LevelLoadListener arg, *//*?}*/ CallbackInfo ci) {
+    private static void injectSetInitialSpawn(ServerLevel level, ServerLevelData levelData, boolean bonusChest, boolean debugWorld, /*? >=1.21.9 {*/ net.minecraft.server.level.progress.LevelLoadListener arg, /*?}*/ CallbackInfo ci) {
         ChunkGenerator chunkGenerator = level.getChunkSource().getGenerator();
 
         // Set old spawn angle (doesn't seem to work?)
         if (chunkGenerator instanceof ModernBetaChunkGenerator) {
             //? if >=1.21.9 {
-            /*net.minecraft.world.level.storage.LevelData.RespawnData respawnData = levelData.getRespawnData();
+            net.minecraft.world.level.storage.LevelData.RespawnData respawnData = levelData.getRespawnData();
             levelData.setSpawn(
                     new net.minecraft.world.level.storage.LevelData.RespawnData(
                             respawnData.globalPos(),
@@ -42,20 +42,20 @@ public abstract class MinecraftServerMixin {
                             respawnData.yaw()
                     )
             );
-            *///?} else {
-            levelData.setSpawn(
+            //?} else {
+            /*levelData.setSpawn(
                 //? if >=1.20.5 {
                 levelData.getSpawnPos(),
                 //?} else {
-                /*new BlockPos(
+                /^new BlockPos(
                     levelData.getXSpawn(),
                     levelData.getYSpawn(),
                     levelData.getZSpawn()
                 ),
-                *///?}
+                ^///?}
                 -90.0f
             );
-            //?}
+            *///?}
         }
     }
 
@@ -65,10 +65,10 @@ public abstract class MinecraftServerMixin {
             value = "INVOKE", 
             target = "Lnet/minecraft/server/level/" +
                 //? if >=1.21.9 {
-                /*"PlayerSpawnFinder"
-                *///? } else {
-                "PlayerRespawnLogic"
-                //? }
+                "PlayerSpawnFinder"
+                //? } else {
+                /*"PlayerRespawnLogic"
+                *///? }
                 + ";getSpawnPosInChunk(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/level/ChunkPos;)Lnet/minecraft/core/BlockPos;"
         )
     )
@@ -82,10 +82,10 @@ public abstract class MinecraftServerMixin {
 
         // Ensure a centered spawn
         //? if >=1.21.11 {
-        /*level.getGameRules().set(net.minecraft.world.level.gamerules.GameRules.RESPAWN_RADIUS,
-        *///? } else {
-        level.getGameRules().getRule(net.minecraft.world.level.GameRules.RULE_SPAWN_RADIUS).set(
-        //? }
+        level.getGameRules().set(net.minecraft.world.level.gamerules.GameRules.RESPAWN_RADIUS,
+        //? } else {
+        /*level.getGameRules().getRule(net.minecraft.world.level.GameRules.RULE_SPAWN_RADIUS).set(
+        *///? }
             0, level.getServer());
         BlockPos spawnPos = chunkProvider.getSpawnLocator().locateSpawn(level).orElseGet(() -> original.call(level, chunkPos));
 
@@ -125,7 +125,7 @@ public abstract class MinecraftServerMixin {
             worldBorder.setSize(width);
             worldBorder.setCenter(center, center);
             //? if <1.21.9
-            ((ServerLevelData) level.getLevelData()).setWorldBorder(worldBorder.createSettings());
+            //((ServerLevelData) level.getLevelData()).setWorldBorder(worldBorder.createSettings());
         }
 
         return spawnPos;
@@ -137,24 +137,24 @@ public abstract class MinecraftServerMixin {
             case HELL -> {
                 disableWeatherCycle(level);
                 //? if <1.21.11 {
-                disableDayCycle(level);
+                /*disableDayCycle(level);
                 level.setDayTime(18000);
-                //? }
+                *///? }
             } case PARADISE -> {
                 disableWeatherCycle(level);
                 disableDayCycle(level);
                 //? if >=26.1 {
-                /*net.minecraft.core.Holder<net.minecraft.world.clock.WorldClock> clock =
+                net.minecraft.core.Holder<net.minecraft.world.clock.WorldClock> clock =
                         level.dimensionType().defaultClock().orElseThrow();
                 level.clockManager().setTotalTicks(clock, 6000);
-                *///? } else {
-                level.setDayTime(6000);
-                //? }
+                //? } else {
+                /*level.setDayTime(6000);
+                *///? }
             //? if <1.21.11 {
-            } case WOODS -> {
+            /*} case WOODS -> {
                 disableWeatherCycle(level);
                 level.setWeatherParameters(0, Integer.MAX_VALUE, true, false);
-            //? }
+            *///? }
             } default -> {}
         }
     }
@@ -162,18 +162,18 @@ public abstract class MinecraftServerMixin {
     @Unique
     private static void disableWeatherCycle(ServerLevel level) {
         //? if >=1.21.11 {
-        /*level.getGameRules().set(net.minecraft.world.level.gamerules.GameRules.ADVANCE_WEATHER, false, null);
-        *///? } else {
-        level.getGameRules().getRule(net.minecraft.world.level.GameRules.RULE_WEATHER_CYCLE).set(false, null);
-        //? }
+        level.getGameRules().set(net.minecraft.world.level.gamerules.GameRules.ADVANCE_WEATHER, false, null);
+        //? } else {
+        /*level.getGameRules().getRule(net.minecraft.world.level.GameRules.RULE_WEATHER_CYCLE).set(false, null);
+        *///? }
     }
 
     @Unique
     private static void disableDayCycle(ServerLevel level) {
         //? if >=1.21.11 {
-        /*level.getGameRules().set(net.minecraft.world.level.gamerules.GameRules.ADVANCE_TIME, false, null);
-        *///? } else {
-        level.getGameRules().getRule(net.minecraft.world.level.GameRules.RULE_DAYLIGHT).set(false, null);
-        //? }
+        level.getGameRules().set(net.minecraft.world.level.gamerules.GameRules.ADVANCE_TIME, false, null);
+        //? } else {
+        /*level.getGameRules().getRule(net.minecraft.world.level.GameRules.RULE_DAYLIGHT).set(false, null);
+        *///? }
     }
 }

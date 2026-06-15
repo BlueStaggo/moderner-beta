@@ -2,7 +2,7 @@ package mod.bluestaggo.modernerbeta.client.resource;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import net.minecraft.client.resources.LegacyStuffWrapper;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.function.Consumer;
 
 public class ModernBetaColormapReloadListener extends SimplePreparableReloadListener<int[]> {
-    private final ResourceLocation id;
+    private final Identifier id;
     private final Consumer<int[]> consumer;
     
     public ModernBetaColormapReloadListener(String path, Consumer<int[]> consumer) {

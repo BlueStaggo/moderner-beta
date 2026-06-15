@@ -17,14 +17,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(
     //? if >=1.21.11 {
-    /*net.minecraft.client.renderer.fog.environment.AtmosphericFogEnvironment.class
-    *///? } else {
-    net.minecraft.client.renderer.fog.environment.AirBasedFogEnvironment.class
-    //? }
+    net.minecraft.client.renderer.fog.environment.AtmosphericFogEnvironment.class
+    //? } else {
+    /*net.minecraft.client.renderer.fog.environment.AirBasedFogEnvironment.class
+    *///? }
 )
 public abstract class AirBasedFogEnvironmentMixin {
     //? if <1.21.11 {
-    @Unique private static int modernBeta_renderDistance = 16;
+    /*@Unique private static int modernBeta_renderDistance = 16;
     @Unique private static float modernBeta_fogWeight = FogUtils.calculateFogWeight(16);
     @Unique private static boolean modernBeta_isModernBetaLevel = false;
 
@@ -39,7 +39,7 @@ public abstract class AirBasedFogEnvironmentMixin {
         // old fog weighting won't be used if not.
         modernBeta_isModernBetaLevel = ((ModernBetaLevel)level).modernerBeta$isModded();
     }
-    //? }
+    *///? }
 
     @WrapOperation(
         method = "getBaseColor",
@@ -51,12 +51,12 @@ public abstract class AirBasedFogEnvironmentMixin {
     )
     private double modifyFogWeighting(double a, double b, Operation<Double> original, ClientLevel level, Camera camera, int renderDistance, float partialTick) {
         //? if >=1.21.11 {
-        /*double baseWeight = ((ModernBetaLevel)level).modernerBeta$isModded() && ModernerBeta.config.getOrDefault(SettingsComponentTypes.CONFIG_MISCELLANEOUS).oldFogColorWeighting() ?
+        double baseWeight = ((ModernBetaLevel)level).modernerBeta$isModded() && ModernerBeta.config.getOrDefault(SettingsComponentTypes.CONFIG_MISCELLANEOUS).oldFogColorWeighting() ?
                 FogUtils.calculateFogWeight(renderDistance, camera, partialTick) : a;
-        *///? } else {
-        double baseWeight = modernBeta_isModernBetaLevel && ModernerBeta.config.getOrDefault(SettingsComponentTypes.CONFIG_MISCELLANEOUS).oldFogColorWeighting() ?
+        //? } else {
+        /*double baseWeight = modernBeta_isModernBetaLevel && ModernerBeta.config.getOrDefault(SettingsComponentTypes.CONFIG_MISCELLANEOUS).oldFogColorWeighting() ?
                 modernBeta_fogWeight : a;
-        //? }
+        *///? }
         return original.call(baseWeight, b);
     }
 }

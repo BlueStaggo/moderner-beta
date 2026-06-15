@@ -10,7 +10,7 @@ import java.util.Map;
 //? if <1.20.5 {
 /*import com.google.common.collect.ImmutableMap;
 import com.mojang.datafixers.util.Pair;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.List;
 *///?}
@@ -34,7 +34,7 @@ public record SettingsComponentType<T>(Codec<T> codec, DefaultValueGetter<T> def
                 public <T2> DataResult<T2> encode(Map<SettingsComponentType<?>, Object> input, DynamicOps<T2> ops, T2 prefix) {
                     var recordBuilder = (RecordBuilder<Object>) ops.mapBuilder();
                     for (Map.Entry<SettingsComponentType<?>, Object> entry : input.entrySet()) {
-                        DataResult<T2> identifierResult = ResourceLocation.CODEC.encodeStart(
+                        DataResult<T2> identifierResult = Identifier.CODEC.encodeStart(
                             ops, ModernBetaRegistries.SETTINGS_COMPONENT_TYPE.getKey(entry.getKey()));
                         if (identifierResult.result().isEmpty()) {
                             return DataResult.error(identifierResult.error().orElseThrow()::message);
@@ -61,7 +61,7 @@ public record SettingsComponentType<T>(Codec<T> codec, DefaultValueGetter<T> def
 
                     List<DataResult<Pair<SettingsComponentType<?>, Object>>> entries = mapResult.result().orElseThrow().entries()
                         .<DataResult<Pair<SettingsComponentType<?>, Object>>>map(pair -> {
-                            DataResult<ResourceLocation> identifierResult = ResourceLocation.CODEC.decode(ops, pair.getFirst()).map(Pair::getFirst);
+                            DataResult<Identifier> identifierResult = Identifier.CODEC.decode(ops, pair.getFirst()).map(Pair::getFirst);
                             if (identifierResult.result().isEmpty()) {
                                 return DataResult.error(identifierResult.error().orElseThrow()::message);
                             }

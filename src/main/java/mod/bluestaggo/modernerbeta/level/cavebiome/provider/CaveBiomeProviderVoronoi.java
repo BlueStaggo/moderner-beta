@@ -7,24 +7,22 @@ import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.settings.component.CaveBiomeVoronoi;
 import mod.bluestaggo.modernerbeta.settings.component.PerlinNoiseSettings;
-import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.util.noise.PerlinOctaveNoise;
 import mod.bluestaggo.modernerbeta.level.biome.voronoi.VoronoiPointCaveBiome;
 import mod.bluestaggo.modernerbeta.level.biome.voronoi.VoronoiPointRules;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.biome.Biome;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 public class CaveBiomeProviderVoronoi extends CaveBiomeProvider implements CaveClimateSampler {
     private final VoronoiCaveClimateSampler climateSampler;
-    private final VoronoiPointRules<ResourceKey<Biome>, CaveClime> rules;
+    private final VoronoiPointRules<Holder<Biome>, CaveClime> rules;
 
     public CaveBiomeProviderVoronoi(ModernBetaSettings settings, HolderGetter<Biome> biomeRegistry, long seed) {
         super(settings, biomeRegistry, seed);
@@ -43,14 +41,12 @@ public class CaveBiomeProviderVoronoi extends CaveBiomeProvider implements CaveC
     @Override
     public Holder<Biome> getBiome(int biomeX, int biomeY, int biomeZ) {
         CaveClime clime = this.sample(biomeX, biomeY, biomeZ);
-        ResourceKey<Biome> biomeKey = this.rules.calculateClosestTo(clime);
-        
-        return biomeKey == null ? null : this.biomeRegistry.getOrThrow(biomeKey);
+        return this.rules.calculateClosestTo(clime);
     }
     
     @Override
-    public List<Holder<Biome>> getBiomes() {        
-        return this.rules.getItems().stream().distinct().map(key -> this.biomeRegistry.getOrThrow(key)).collect(Collectors.toList());
+    public Set<Holder<Biome>> getBiomes() {
+        return new HashSet<>(this.rules.getItems());
     }
 
     @Override
@@ -58,11 +54,11 @@ public class CaveBiomeProviderVoronoi extends CaveBiomeProvider implements CaveC
         return this.climateSampler.sample(x, y, z);
     }
     
-    private static VoronoiPointRules<ResourceKey<Biome>, CaveClime> buildRules(List<VoronoiPointCaveBiome> points) {
-        VoronoiPointRules.Builder<ResourceKey<Biome>, CaveClime> builder = new VoronoiPointRules.Builder<>();
+    private static VoronoiPointRules<Holder<Biome>, CaveClime> buildRules(List<VoronoiPointCaveBiome> points) {
+        VoronoiPointRules.Builder<Holder<Biome>, CaveClime> builder = new VoronoiPointRules.Builder<>();
         
         for (VoronoiPointCaveBiome point : points) {
-            ResourceKey<Biome> biomeKey = point.biome().isBlank() ? null : ResourceKey.create(Registries.BIOME, VersionCompat.id(point.biome()));
+            Holder<Biome> biomeKey = point.biome().isEmpty() ? null : point.biome().get();
             
             double temp = Mth.clamp(point.temp(), 0.0, 1.0);
             double rain = Mth.clamp(point.rain(), 0.0, 1.0);

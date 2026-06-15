@@ -11,7 +11,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -23,7 +22,8 @@ public record TextFieldCallbacks(Predicate<String> validationFunction, Predicate
     }
 
     @Override
-    public @NotNull Function<OptionInstance<String>, AbstractWidget> createButton(OptionInstance.TooltipSupplier<String> tooltipFactory, Options gameOptions, int x, int y, int width, Consumer<String> changeCallback) {
+    //~ if >=26.2 'java.util.function.Consumer<' -> 'OptionInstance.ValueUpdateListener<? super '
+    public @NotNull Function<OptionInstance<String>, AbstractWidget> createButton(OptionInstance.TooltipSupplier<String> tooltipFactory, Options gameOptions, int x, int y, int width, java.util.function.Consumer<String> changeCallback) {
         return option -> {
             var widget = new FilteredEditBox(
                 Minecraft.getInstance().fontFilterFishy,

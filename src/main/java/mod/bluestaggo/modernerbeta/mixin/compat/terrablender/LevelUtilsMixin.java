@@ -1,5 +1,5 @@
 //? if <26.1 {
-package mod.bluestaggo.modernerbeta.mixin.compat.terrablender;
+/*package mod.bluestaggo.modernerbeta.mixin.compat.terrablender;
 
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
@@ -23,7 +23,7 @@ public class LevelUtilsMixin {
     //This is a unique case of an upstream issue that has to be patched within Moderner Beta
     //  as upstream no longer supports versions older than 26.1
     @SuppressWarnings({"unchecked", "rawtypes"})
-    @Inject(method = "initializeBiomes", at = @At(value = "RETURN", ordinal = /*? >=1.20.4 {*/ 2 /*? } else {*/ /*0 *//*? }*/))
+    @Inject(method = "initializeBiomes", at = @At(value = "RETURN", ordinal = /^? >=1.20.4 {^/ 2 /^? } else {^/ /^0 ^//^? }^/))
     private static void fixUpOopsie(
         RegistryAccess registryAccess,
         Holder<DimensionType> dimensionType,
@@ -51,7 +51,7 @@ public class LevelUtilsMixin {
             Method meth = extendedSettings.getMethod("setRuleCategory", ruleCategoryClass);
             meth.invoke(generatorSettings, ruleCategory);
             //? } else {
-            /*if (!(chunkGenerator instanceof net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator noiseBasedChunkGenerator))
+            /^if (!(chunkGenerator instanceof net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator noiseBasedChunkGenerator))
                 return;
 
             NoiseGeneratorSettings generatorSettings = noiseBasedChunkGenerator.generatorSettings().value();
@@ -59,10 +59,10 @@ public class LevelUtilsMixin {
 
             Method meth = extendedSettings.getMethod("setRegionType", regionTypeClass);
             meth.invoke(generatorSettings, regionType);
-            *///? }
+            ^///? }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 }
-//? }
+*///? }

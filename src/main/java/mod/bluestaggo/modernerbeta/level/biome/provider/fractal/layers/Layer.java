@@ -7,8 +7,8 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.longs.Long2ObjectLinkedOpenHashMap;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
-import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeId;
-import net.minecraft.resources.ResourceLocation;
+import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ColumnPos;
 import net.minecraft.util.LinearCongruentialGenerator;
 
@@ -30,7 +30,7 @@ public abstract class Layer {
     private transient ThreadLocal<LayerRandom> random = ThreadLocal.withInitial(() -> new LayerRandom(0));
     private transient int initialSkip;
 
-    private transient ThreadLocal<Long2ObjectLinkedOpenHashMap<ExtendedBiomeId>> cache = createCache();
+    private transient ThreadLocal<Long2ObjectLinkedOpenHashMap<ExtendedIdentifier>> cache = createCache();
 
     protected static <L extends Layer> Products.P2<
         RecordCodecBuilder.Mu<L>,
@@ -56,7 +56,7 @@ public abstract class Layer {
 
     public abstract LayerType<?> getType();
 
-    protected abstract ExtendedBiomeId generate(int x, int z);
+    protected abstract ExtendedIdentifier generate(int x, int z);
 
     public void configure(Function<String, Layer> layerMap) {
     }
@@ -65,7 +65,7 @@ public abstract class Layer {
         this.initialSkip = initialSkip;
     }
 
-    protected void addPossibleBiomes(Set<ExtendedBiomeId> biomes) {
+    protected void addPossibleBiomes(Set<ExtendedIdentifier> biomes) {
     }
 
     protected List<Layer> getParents() {
@@ -102,10 +102,10 @@ public abstract class Layer {
         this.random = ThreadLocal.withInitial(() -> new LayerRandom(0));
     }
 
-    public ExtendedBiomeId sample(int x, int z) {
-        Long2ObjectLinkedOpenHashMap<ExtendedBiomeId> cache = this.cache.get();
+    public ExtendedIdentifier sample(int x, int z) {
+        Long2ObjectLinkedOpenHashMap<ExtendedIdentifier> cache = this.cache.get();
         long pos = ColumnPos.asLong(x, z);
-        ExtendedBiomeId biome = cache.get(pos);
+        ExtendedIdentifier biome = cache.get(pos);
         if (biome != null) {
             return biome;
         }
@@ -131,15 +131,15 @@ public abstract class Layer {
         return this.saltedSeed;
     }
 
-    public final void addPossibleBiomesRecursive(Set<ExtendedBiomeId> biomes) {
+    public final void addPossibleBiomesRecursive(Set<ExtendedIdentifier> biomes) {
         for (Layer parent : this.getParents()) {
             parent.addPossibleBiomesRecursive(biomes);
         }
         this.addPossibleBiomes(biomes);
     }
 
-    public final ExtendedBiomeId[] sampleNeighbors(int x, int z) {
-        return new ExtendedBiomeId[] {
+    public final ExtendedIdentifier[] sampleNeighbors(int x, int z) {
+        return new ExtendedIdentifier[] {
             this.sample(x - 1, z),
             this.sample(x + 1, z),
             this.sample(x, z - 1),
@@ -147,8 +147,8 @@ public abstract class Layer {
         };
     }
 
-    public final ExtendedBiomeId[] sampleDiagonalNeighbors(int x, int z) {
-        return new ExtendedBiomeId[] {
+    public final ExtendedIdentifier[] sampleDiagonalNeighbors(int x, int z) {
+        return new ExtendedIdentifier[] {
             this.sample(x - 1, z - 1),
             this.sample(x + 1, z - 1),
             this.sample(x - 1, z + 1),
@@ -167,7 +167,7 @@ public abstract class Layer {
     protected String getName() {
         return ModernBetaRegistries.FRACTAL_LAYER.getResourceKey(this.getType())
             .map(key -> {
-                ResourceLocation identifier = key.location();
+                Identifier identifier = key.identifier();
                 if (ModernerBeta.MOD_ID.equals(identifier.getNamespace())) {
                     return identifier.getPath();
                 }
@@ -193,15 +193,15 @@ public abstract class Layer {
         return string;
     }
 
-    public static boolean allNeighborsEqual(ExtendedBiomeId[] neighbors, ExtendedBiomeId i) {
+    public static boolean allNeighborsEqual(ExtendedIdentifier[] neighbors, ExtendedIdentifier i) {
         return neighbors[0].equals(i) && neighbors[1].equals(i) && neighbors[2].equals(i) && neighbors[3].equals(i);
     }
 
-    public static boolean neighborsContain(ExtendedBiomeId[] neighbors, ExtendedBiomeId i) {
+    public static boolean neighborsContain(ExtendedIdentifier[] neighbors, ExtendedIdentifier i) {
         return neighbors[0].equals(i) || neighbors[1].equals(i) || neighbors[2].equals(i) || neighbors[3].equals(i);
     }
 
-    private static ThreadLocal<Long2ObjectLinkedOpenHashMap<ExtendedBiomeId>> createCache() {
+    private static ThreadLocal<Long2ObjectLinkedOpenHashMap<ExtendedIdentifier>> createCache() {
         return ThreadLocal.withInitial(() -> new Long2ObjectLinkedOpenHashMap<>(CACHE_CAPACITY));
     }
 }

@@ -2,7 +2,7 @@ package mod.bluestaggo.modernerbeta.level.feature.placement;
 
 import com.mojang.serialization.Codec;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
-import mod.bluestaggo.modernerbeta.util.noise.PerlinOctaveNoise;
+import mod.bluestaggo.modernerbeta.util.noise.OctaveNoise;
 import mod.bluestaggo.modernerbeta.level.feature.placement.noise.NoiseBasedCountInfdev415;
 import net.minecraft.world.level.levelgen.placement.PlacementModifierType;
 import org.jetbrains.annotations.NotNull;
@@ -24,7 +24,7 @@ public class NoiseBasedCountPlacementModifierInfdev415 extends NoiseBasedCountPl
     }
     
     @Override
-    public void setOctaves(PerlinOctaveNoise octaves) {
+    public void setOctaves(OctaveNoise octaves) {
         this.noiseDecorator = new NoiseBasedCountInfdev415(octaves);
     }
     

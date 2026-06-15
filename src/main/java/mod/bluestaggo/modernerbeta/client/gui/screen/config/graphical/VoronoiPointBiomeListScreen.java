@@ -25,9 +25,7 @@ public class VoronoiPointBiomeListScreen extends ModernBetaGraphicalListSettings
     @Override
     protected Tag getDefaultElement() {
         return new CompoundTagBuilder()
-            .putString("biome", Biomes.PLAINS.location().toString())
-            .putString("oceanBiome", Biomes.OCEAN.location().toString())
-            .putString("deepOceanBiome", Biomes.DEEP_OCEAN.location().toString())
+            .putString("biome", Biomes.PLAINS.identifier().toString())
             .putFloat("temp", 0.5F)
             .putFloat("rain", 0.5F)
             .putFloat("weird", 0.5F)

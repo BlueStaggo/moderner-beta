@@ -1,20 +1,20 @@
 package mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers;
 
+import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
-import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeId;
 
 import java.util.Set;
 
 public class ConstantBiomeLayer extends Layer {
     public static final com.mojang.serialization.MapCodec<ConstantBiomeLayer> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> fillLayerFields(instance)
-            .and(ExtendedBiomeId.CODEC.fieldOf("biome").forGetter(layer -> layer.biome))
+            .and(ExtendedIdentifier.CODEC.fieldOf("biome").forGetter(layer -> layer.biome))
             .apply(instance, ConstantBiomeLayer::new)
     );
 
-    private final ExtendedBiomeId biome;
+    private final ExtendedIdentifier biome;
 
-    public ConstantBiomeLayer(String id, long seed, ExtendedBiomeId biome) {
+    public ConstantBiomeLayer(String id, long seed, ExtendedIdentifier biome) {
         super(id, seed);
         this.biome = biome;
     }
@@ -25,17 +25,17 @@ public class ConstantBiomeLayer extends Layer {
     }
 
     @Override
-    protected ExtendedBiomeId generate(int x, int z) {
+    protected ExtendedIdentifier generate(int x, int z) {
         return this.biome;
     }
 
     @Override
-    public ExtendedBiomeId sample(int x, int z) {
+    public ExtendedIdentifier sample(int x, int z) {
         return this.biome;
     }
 
     @Override
-    protected void addPossibleBiomes(Set<ExtendedBiomeId> biomes) {
+    protected void addPossibleBiomes(Set<ExtendedIdentifier> biomes) {
         biomes.add(this.biome);
     }
 }

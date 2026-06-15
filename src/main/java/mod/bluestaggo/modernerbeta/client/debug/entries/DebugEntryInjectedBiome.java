@@ -1,23 +1,27 @@
+//~dotLocation
 package mod.bluestaggo.modernerbeta.client.debug.entries;
 
-import mod.bluestaggo.modernerbeta.level.biome.injector.BiomeInjector;
+import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomeSource;
+import mod.bluestaggo.modernerbeta.level.biome.injection.BiomeInjectionRule;
+import mod.bluestaggo.modernerbeta.level.biome.injection.InjectionNeeds;
 import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaChunkGenerator;
 //? if >=1.21.9 {
-/*import net.minecraft.client.Minecraft;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.debug.DebugScreenDisplayer;
 import net.minecraft.client.gui.components.debug.DebugScreenEntry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.chunk.LevelChunk;
 import org.jetbrains.annotations.Nullable;
-*///?}
+//?}
+import mod.bluestaggo.modernerbeta.mixin.BiomeManagerAccessor;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 
-public class DebugEntryInjectedBiome /*? >=1.21.9 {*/ /*implements DebugScreenEntry *//*?}*/ {
+public class DebugEntryInjectedBiome /*? >=1.21.9 {*/ implements DebugScreenEntry /*?}*/ {
     //? if >=1.21.9 {
-    /*@Override
+    @Override
     public void display(DebugScreenDisplayer lines, @Nullable Level level, @Nullable LevelChunk clientChunk, @Nullable LevelChunk chunk) {
         Minecraft client = Minecraft.getInstance();
         Entity entity = client.getCameraEntity();
@@ -34,7 +38,7 @@ public class DebugEntryInjectedBiome /*? >=1.21.9 {*/ /*implements DebugScreenEn
         if (!line.isEmpty())
             lines.addLine(line);
     }
-    *///?}
+    //?}
 
     public static String getLine(Level level, int x, int y, int z) {
         if (!(level instanceof ServerLevel serverLevel))
@@ -43,8 +47,20 @@ public class DebugEntryInjectedBiome /*? >=1.21.9 {*/ /*implements DebugScreenEn
         ChunkGenerator chunkGenerator = serverLevel.getChunkSource().getGenerator();
 
         if (chunkGenerator instanceof ModernBetaChunkGenerator modernBetaChunkGenerator &&
-                modernBetaChunkGenerator.getBiomeInjector() != null) {
-            String biome = modernBetaChunkGenerator.getBiomeInjector().getBiomeNameAtBlock(level, x, y, z, null, BiomeInjector.BiomeInjectionStep.ALL);
+                chunkGenerator.getBiomeSource() instanceof ModernBetaBiomeSource modernBetaBiomeSource) {
+            String biome = modernBetaBiomeSource.getBiomeInjectionHandler()
+                    .getBiomeAtBlock(
+                        level,
+                        modernBetaBiomeSource.getBiomeProvider(),
+                        ((BiomeManagerAccessor) serverLevel.getBiomeManager()).getBiomeZoomSeed(),
+                        x, y, z,
+                        BiomeInjectionRule.Step.ALL,
+                        InjectionNeeds.all(),
+                        true
+                    )
+                    .unwrapKey()
+                    .map(key -> key.identifier().toString())
+                    .orElse("[unregistered]");
             return String.format("[Modern Beta] Injected biome: %s", biome);
         }
 

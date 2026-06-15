@@ -1,10 +1,10 @@
 package mod.bluestaggo.modernerbeta.util.noise;
 
-public final class PerlinOctaveNoiseCombined {
-    private PerlinOctaveNoise firstNoise;
-    private PerlinOctaveNoise secondNoise;
+public final class CombinedOctaveNoise {
+    private final OctaveNoise firstNoise;
+    private final OctaveNoise secondNoise;
     
-    public PerlinOctaveNoiseCombined(PerlinOctaveNoise firstNoise, PerlinOctaveNoise secondNoise) {
+    public CombinedOctaveNoise(OctaveNoise firstNoise, OctaveNoise secondNoise) {
         this.firstNoise = firstNoise;
         this.secondNoise = secondNoise;
     }

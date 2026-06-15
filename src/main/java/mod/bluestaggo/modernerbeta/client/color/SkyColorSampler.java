@@ -17,7 +17,7 @@ public class SkyColorSampler {
         this.climateSampler = climateSampler;
     }
 
-    public /*? >=1.21.11 {*//*int*//*?} else {*/Vec3/*?}*/ getSkyColor(Vec3 cameraPos) {
+    public /*? >=1.21.11 {*/int/*?} else {*//*Vec3*//*?}*/ getSkyColor(Vec3 cameraPos) {
         int x = (int)cameraPos.x();
         int z = (int)cameraPos.z();
 
@@ -27,10 +27,10 @@ public class SkyColorSampler {
 
         int color = Mth.hsvToRgb(0.6222222F - temp * 0.05F, 0.5F + temp * 0.1F, 1.0F);
         //? if >=1.21.11 {
-        /*return color;
-        *///? } else {
-        return Vec3.fromRGB24(color);
-        //? }
+        return color;
+        //? } else {
+        /*return Vec3.fromRGB24(color);
+        *///? }
     }
 
     public boolean useSkyColor() {

@@ -2,8 +2,8 @@ package mod.bluestaggo.modernerbeta.fabric.data.provider.tag;
 
 import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomes;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBiomeTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderLookup.Provider;
@@ -18,8 +18,8 @@ import java.util.concurrent.CompletableFuture;
 import static mod.bluestaggo.modernerbeta.tags.ModernBetaBiomeTags.*;
 
 @SuppressWarnings("unchecked")
-public class ModernBetaTagProviderBiome extends FabricTagProvider<Biome> {
-    public ModernBetaTagProviderBiome(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
+public class ModernBetaTagProviderBiome extends FabricTagsProvider<Biome> {
+    public ModernBetaTagProviderBiome(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
         super(output, Registries.BIOME, registriesFuture);
     }
 
@@ -268,12 +268,9 @@ public class ModernBetaTagProviderBiome extends FabricTagProvider<Biome> {
         );
 
         /* Modern Beta Biome Structure Tags */
-        
-        this.builder(INDEV_STRONGHOLD_HAS_STRUCTURE)
-            .addTag(IS_INDEV);
 
         this.builder(OCEAN_SHRINE_HAS_STRUCTURE)
-            .addTag(IS_OCEAN);
+            .addTag(BiomeTags.IS_OCEAN);
         
         /* Modern Beta Surface Config Tags */
         
@@ -504,6 +501,26 @@ public class ModernBetaTagProviderBiome extends FabricTagProvider<Biome> {
                 Biomes.DEEP_COLD_OCEAN,
                 Biomes.DEEP_LUKEWARM_OCEAN
             );
+
+        this.builder(REPLACE_WITH_FROZEN_OCEAN)
+            .addTag(IS_TUNDRA)
+            .addTag(IS_TAIGA);
+
+        this.builder(REPLACE_WITH_COLD_OCEAN)
+            .addTag(IS_SWAMP);
+
+        this.builder(REPLACE_WITH_OCEAN)
+            .addTag(IS_DESERT)
+            .addTag(IS_FOREST)
+            .addTag(IS_PLAINS)
+            .addTag(IS_SAVANNA)
+            .addTag(IS_SHRUBLAND);
+
+        this.builder(REPLACE_WITH_LUKEWARM_OCEAN)
+            .addTag(IS_SEASONAL_FOREST);
+
+        this.builder(REPLACE_WITH_WARM_OCEAN)
+            .addTag(IS_RAINFOREST);
     }
     
     private void configureVanilla(Provider provider) {
@@ -591,6 +608,7 @@ public class ModernBetaTagProviderBiome extends FabricTagProvider<Biome> {
             .addTag(IS_BETA)
             .addTag(IS_PE)
             .addTag(IS_ALPHA)
+            .addTag(IS_INDEV)
             .addTag(IS_INFDEV)
             .addTag(IS_LATE_BETA)
             .addTag(IS_EARLY_RELEASE)

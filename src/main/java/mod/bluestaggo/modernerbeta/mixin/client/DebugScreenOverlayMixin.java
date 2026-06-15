@@ -1,5 +1,5 @@
 //? if <1.21.9 {
-package mod.bluestaggo.modernerbeta.mixin.client;
+/*package mod.bluestaggo.modernerbeta.mixin.client;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.client.debug.entries.*;
@@ -55,4 +55,4 @@ public abstract class DebugScreenOverlayMixin {
             lines.add(str);
     }
 }
-//?}
+*///?}

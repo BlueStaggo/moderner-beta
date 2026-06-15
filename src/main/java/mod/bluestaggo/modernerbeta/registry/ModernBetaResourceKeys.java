@@ -6,6 +6,8 @@ import mod.bluestaggo.modernerbeta.api.level.chunk.surface.SurfaceConfig;
 import mod.bluestaggo.modernerbeta.api.level.provider.BiomeProviderType;
 import mod.bluestaggo.modernerbeta.api.level.provider.CaveBiomeProviderType;
 import mod.bluestaggo.modernerbeta.api.level.provider.ChunkProviderType;
+import mod.bluestaggo.modernerbeta.level.biome.injection.injector.BiomeInjectorType;
+import mod.bluestaggo.modernerbeta.level.biome.injection.predicates.InjectionPredicateType;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPresetCategory;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentType;
@@ -26,6 +28,8 @@ public final class ModernBetaResourceKeys {
     public static final ResourceKey<Registry<ModernBetaSettingsPresetCategory>> SETTINGS_PRESET_CATEGORY = of("settings_preset_category");
     public static final ResourceKey<Registry<LayerType<?>>> FRACTAL_LAYER = of("fractal_layer");
     public static final ResourceKey<Registry<BiomePredicateType<?>>> BIOME_PREDICATE = of("biome_predicate_type");
+    public static final ResourceKey<Registry<BiomeInjectorType<?>>> BIOME_INJECTOR = of("biome_injector");
+    public static final ResourceKey<Registry<InjectionPredicateType<?>>> INJECTION_PREDICATE = of("injection_predicate_type");
     public static final ResourceKey<Registry<SettingsComponentType<?>>> SETTINGS_COMPONENT_TYPE = of("settings_component_type");
 
     private static <T> ResourceKey<Registry<T>> of(String id) {

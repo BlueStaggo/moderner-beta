@@ -1,5 +1,5 @@
 //? if >=26.1 {
-/*package mod.bluestaggo.modernerbeta.mixin.client;
+package mod.bluestaggo.modernerbeta.mixin.client;
 
 import net.minecraft.client.gui.components.EditBox;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,4 +18,4 @@ public interface EditBoxAccessor {
     @Invoker("onValueChange")
     void invokeOnValueChange(String value);
 }
-*///? }
+//? }

@@ -1,3 +1,4 @@
+//~holders
 package mod.bluestaggo.modernerbeta.api.level.chunk;
 
 import mod.bluestaggo.modernerbeta.api.level.blocksource.BlockSource;
@@ -17,6 +18,7 @@ import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.settings.component.PerlinNoiseSettings;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
+import mod.bluestaggo.modernerbeta.util.noise.OctaveNoise;
 import mod.bluestaggo.modernerbeta.util.noise.PerlinOctaveNoise;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
@@ -122,6 +124,16 @@ public abstract class ChunkProvider {
     }
 
     /**
+     * Gets the surface height for the given coordinate
+     *
+     * @param rand The {@link Random} instance to use.
+     * @param x    The X coordinate to get the height for.
+     * @param z    The Z coordinate to get the height for
+     * @return The height for the given coordinates.
+     */
+    public abstract int getSurfaceDepth(Random rand, int x, int z);
+
+    /**
      * Sample height at given x/z coordinate. Initially generates heightmap for entire chunk,
      * if chunk containing x/z coordinates has never been sampled.
      *
@@ -207,7 +219,7 @@ public abstract class ChunkProvider {
     }
 
     /**
-     * Sets forest density using PerlinOctaveNoise sampler created with world seed.
+     * Sets forest density using OctaveNoise sampler created with world seed.
      * Checks every placed feature in the biome source feature list,
      * and if it uses ModernBetaNoiseBasedCountPlacementModifier, replaces the noise sampler.
      */
@@ -277,17 +289,17 @@ public abstract class ChunkProvider {
      * 
      * @return New Random object initialized with chunk coordinates for seed.
      */
-    protected Random createSurfaceRandom(int chunkX, int chunkZ) {
+    public Random createSurfaceRandom(int chunkX, int chunkZ) {
         long seed = (long)chunkX * 0x4f9939f508L + (long)chunkZ * 0x1ef1565bd5L;
         return this.createRandom(seed);
     }
     
     /**
-     * Get Perlin octave noise sampler for tree placement.
+     * Gets an octave noise sampler for tree placement.
      * 
-     * @return Perlin octave noise sampler.
+     * @return An octave noise sampler.
      */
-    protected PerlinOctaveNoise getForestOctaveNoise() {
+    protected OctaveNoise getForestOctaveNoise() {
         return new PerlinOctaveNoise(new Random(this.seed), 8, PerlinNoiseSettings.DEFAULT);
     }
 }

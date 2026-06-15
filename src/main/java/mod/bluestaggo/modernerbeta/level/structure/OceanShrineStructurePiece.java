@@ -2,7 +2,7 @@ package mod.bluestaggo.modernerbeta.level.structure;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
@@ -25,7 +25,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 
 public class OceanShrineStructurePiece extends TemplateStructurePiece {
-    public OceanShrineStructurePiece(StructureTemplateManager manager, BlockPos pos, ResourceLocation template, Rotation rot) {
+    public OceanShrineStructurePiece(StructureTemplateManager manager, BlockPos pos, Identifier template, Rotation rot) {
         super(ModernBetaStructurePieceTypes.OCEAN_SHRINE, 0, manager, template, template.toString(), getPlacementData(rot), pos);
     }
 

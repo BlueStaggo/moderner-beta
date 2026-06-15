@@ -4,9 +4,9 @@ package mod.bluestaggo.modernerbeta.client.gui.screen;
 import mod.bluestaggo.modernerbeta.settings.NameAndDescriptionItem;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 //? if <1.21.9
-import net.minecraft.Util;
+//import net.minecraft.util.Util;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.client.gui.layouts.GridLayout;
@@ -14,11 +14,10 @@ import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.CommonColors;
 import net.minecraft.util.FormattedCharSequence;
-import org.apache.logging.log4j.util.TriConsumer;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -28,7 +27,7 @@ public class ModernBetaSettingsPresetScreen<T extends NameAndDescriptionItem> ex
 
     private final List<Holder<T>> presets;
     private final boolean enableSelect;
-    private final TriConsumer<ModernBetaSettingsPresetScreen<?>, ResourceLocation, T> onSelected;
+    private final OnSelectedItem<T> onSelected;
 
     private PresetsListWidget listWidget;
     private Button selectPresetButton;
@@ -36,7 +35,7 @@ public class ModernBetaSettingsPresetScreen<T extends NameAndDescriptionItem> ex
     public ModernBetaSettingsPresetScreen(
         ModernBetaScreen parent,
         List<Holder<T>> presets,
-        TriConsumer<ModernBetaSettingsPresetScreen<?>, ResourceLocation, T> onSelected,
+        OnSelectedItem<T> onSelected,
         boolean enableSelect
     ) {
         super(Component.translatable(TEXT_TITLE), parent);
@@ -74,7 +73,7 @@ public class ModernBetaSettingsPresetScreen<T extends NameAndDescriptionItem> ex
                 PresetsListWidget.PresetEntry entry = this.listWidget.getSelected();
 
                 if (entry != null) {
-                    this.onSelected.accept(this, entry.presetName, entry.preset);
+                    this.onSelected.onSelect(this, entry.preset);
                 }
             }
         ).size(150, 20).build();
@@ -96,17 +95,17 @@ public class ModernBetaSettingsPresetScreen<T extends NameAndDescriptionItem> ex
 
     //? if <1.20.5 {
     /*@Override
-    public void renderBackground(GuiGraphics graphics) {
+    public void renderBackground(GuiGraphicsExtractor graphics) {
     }
     *///?}
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
         //? if <1.20.5
-        //this.listWidget.render(graphics, mouseX, mouseY, delta);
-        super.render(graphics, mouseX, mouseY, delta);
+        //this.listWidget.extractRenderState(graphics, mouseX, mouseY, delta);
+        super.extractRenderState(graphics, mouseX, mouseY, delta);
         //? if >=1.20.5
-        this.listWidget.render(graphics, mouseX, mouseY, delta);
+        this.listWidget.extractRenderState(graphics, mouseX, mouseY, delta);
     }
 
     @Override
@@ -130,6 +129,11 @@ public class ModernBetaSettingsPresetScreen<T extends NameAndDescriptionItem> ex
 
     private void updateSelectButton(boolean hasSelected) {
         this.selectPresetButton.active = hasSelected;
+    }
+
+    @FunctionalInterface
+    public interface OnSelectedItem<T extends NameAndDescriptionItem> {
+        void onSelect(ModernBetaSettingsPresetScreen<T> screen, Holder<T> preset);
     }
 
     private class PresetsListWidget extends ObjectSelectionList<PresetsListWidget.PresetEntry> {
@@ -157,7 +161,7 @@ public class ModernBetaSettingsPresetScreen<T extends NameAndDescriptionItem> ex
             *///?}
 
             presets.forEach(holder ->
-                this.addEntry(new PresetEntry(holder.unwrapKey().orElseThrow().location(), holder.value())));
+                this.addEntry(new PresetEntry(holder)));
         }
         
         @Override
@@ -188,10 +192,10 @@ public class ModernBetaSettingsPresetScreen<T extends NameAndDescriptionItem> ex
         
         private class PresetEntry extends ObjectSelectionList.Entry<PresetEntry> {
             //? if >=1.20.2 {
-            private static final ResourceLocation TEXTURE_JOIN = VersionCompat.vanillaId("world_list/join");
-            private static final ResourceLocation TEXTURE_JOIN_HIGHLIGHTED =  VersionCompat.vanillaId("world_list/join_highlighted");
+            private static final Identifier TEXTURE_JOIN = VersionCompat.vanillaId("world_list/join");
+            private static final Identifier TEXTURE_JOIN_HIGHLIGHTED =  VersionCompat.vanillaId("world_list/join_highlighted");
             //?} else {
-            /*private static final ResourceLocation TEXTURE_WORLD_SELECT = new ResourceLocation("textures/gui/world_selection.png");
+            /*private static final Identifier TEXTURE_WORLD_SELECT = new Identifier("textures/gui/world_selection.png");
             private static final int TEXTURE_WORLD_SELECT_ATLAS_SIZE = 256;
             private static final int TEXTURE_WORLD_SELECT_SIZE= 32;
             *///?}
@@ -199,23 +203,23 @@ public class ModernBetaSettingsPresetScreen<T extends NameAndDescriptionItem> ex
             private static final int TEXT_SPACING = 11;
             private static final int TEXT_LENGTH = 240;
             
-            private final ResourceLocation presetTexture;
+            private final Identifier presetTexture;
             private final Component presetTitle;
             private final Component presetDesc;
 
-            protected final T preset;
-            protected final ResourceLocation presetName;
+            protected final Holder<T> preset;
 
             //? if <1.21.9
-            private long time;
+            //private long time;
             
-            public PresetEntry(ResourceLocation presetName, T preset) {
+            public PresetEntry(Holder<T> preset) {
                 this.preset = preset;
-                this.presetName = presetName;
 
-                this.presetTexture = preset.getTextureLocation(presetName);
-                this.presetTitle = preset.makeOrGetTitleComponent(presetName);
-                this.presetDesc = preset.makeOrGetDescriptionComponent(presetName);
+                Identifier presetName = preset.unwrapKey().orElseThrow().identifier();
+
+                this.presetTexture = preset.value().getTextureLocation(presetName);
+                this.presetTitle = preset.value().makeOrGetTitleComponent(presetName);
+                this.presetDesc = preset.value().makeOrGetDescriptionComponent(presetName);
             }
 
             @Override
@@ -226,42 +230,42 @@ public class ModernBetaSettingsPresetScreen<T extends NameAndDescriptionItem> ex
             @Override
             public void
             //? if >=26.1 {
-            /*extractContent
-            *///? } else if >=1.21.9 {
+            extractContent
+            //? } else if >=1.21.9 {
             /*renderContent
             *///? } else {
-            render
-            //? }
-            (GuiGraphics graphics,
+            /*render
+            *///? }
+            (GuiGraphicsExtractor graphics,
                 //? if <1.21.9
-                int index, int y, int x, int entryWidth, int entryHeight,
+                //int index, int y, int x, int entryWidth, int entryHeight,
                 int mouseX, int mouseY, boolean hovered, float tickDelta) {
                 //? if >=1.21.9 {
-                /*int x = this.getContentX();
+                int x = this.getContentX();
                 int y = this.getContentY();
-                *///?}
+                //?}
 
                 List<FormattedCharSequence> presetDescTexts = this.splitText(font, this.presetDesc);
 
                 int textStartX = x + ICON_SIZE + 3;
                 int textStartY = 1;
                 
-                graphics.drawString(font, this.presetTitle, textStartX, y + textStartY, CommonColors.WHITE, false);
+                graphics.text(font, this.presetTitle, textStartX, y + textStartY, CommonColors.WHITE, false);
                 
                 int descSpacing = TEXT_SPACING + textStartY + 1;
                 for (FormattedCharSequence line : presetDescTexts) {
-                    graphics.drawString(font, line, textStartX, y + descSpacing, CommonColors.GRAY, false);
+                    graphics.text(font, line, textStartX, y + descSpacing, CommonColors.GRAY, false);
                     descSpacing += TEXT_SPACING;
                 }
 
                 this.draw(graphics, x, y, this.presetTexture);
 
-                if (minecraft.options.touchscreen().get() || hovered) {
+                if (/*? <26.2 {*/minecraft.options.touchscreen().get() || /*?}*/ hovered) {
                     boolean isMouseHovering = (mouseX - x) < ICON_SIZE;
 
                     graphics.fill(x, y, x + ICON_SIZE, y + ICON_SIZE, -1601138544);
                     //? if >=1.20.2 {
-                    ResourceLocation texture = isMouseHovering ? TEXTURE_JOIN_HIGHLIGHTED : TEXTURE_JOIN;
+                    Identifier texture = isMouseHovering ? TEXTURE_JOIN_HIGHLIGHTED : TEXTURE_JOIN;
                     graphics.blitSprite(
                         //? if >=1.21.6 {
                         net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED,
@@ -294,13 +298,13 @@ public class ModernBetaSettingsPresetScreen<T extends NameAndDescriptionItem> ex
             }
             
             @Override
-            public boolean mouseClicked(/*? if <1.21.9 {*/ double mouseX, double mouseY, int button /*?} else {*/ /*net.minecraft.client.input.MouseButtonEvent click, boolean doubleClick *//*?}*/) {
+            public boolean mouseClicked(/*? if <1.21.9 {*/ /*double mouseX, double mouseY, int button *//*?} else {*/ net.minecraft.client.input.MouseButtonEvent click, boolean doubleClick /*?}*/) {
                 //? if >=1.21.9 {
-                /*double mouseX = click.x();
+                double mouseX = click.x();
                 double mouseY = click.y();
 
                 int button = click.button();
-                *///?}
+                //?}
 
                 if (button != 0) {
                     return false;
@@ -309,35 +313,35 @@ public class ModernBetaSettingsPresetScreen<T extends NameAndDescriptionItem> ex
                 PresetsListWidget.this.setSelected(this);
                 
                 if (mouseX - PresetsListWidget.this.getRowLeft() <= ICON_SIZE ||
-                        /*? >=1.21.9 {*/ /*doubleClick *//*?} else {*/ Util.getMillis() - this.time < 250L /*?}*/) {
+                        /*? >=1.21.9 {*/ doubleClick /*?} else {*/ /*Util.getMillis() - this.time < 250L *//*?}*/) {
                     minecraft.getSoundManager().play(
                         SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0f)
                     );
 
                     ModernBetaSettingsPresetScreen.this.onSelected
-                        .accept(ModernBetaSettingsPresetScreen.this, this.presetName, this.preset);
+                        .onSelect(ModernBetaSettingsPresetScreen.this, this.preset);
                 }
 
                 //? if <1.21.9
-                this.time = Util.getMillis();
+                //this.time = Util.getMillis();
                 
                 return true;
             }
 
             @Override
-            public boolean keyPressed(/*? >=1.21.9 {*/ /*net.minecraft.client.input.KeyEvent event *//*? } else {*/ int keyCode, int scanCode, int modifiers /*? }*/) {
-                if (/*? >=1.21.9 {*/ /*event.isSelection() *//*? } else {*/ net.minecraft.client.gui.navigation.CommonInputs.selected(keyCode) /*? }*/) {
+            public boolean keyPressed(/*? >=1.21.9 {*/ net.minecraft.client.input.KeyEvent event /*? } else {*/ /*int keyCode, int scanCode, int modifiers *//*? }*/) {
+                if (/*? >=1.21.9 {*/ event.isSelection() /*? } else {*/ /*net.minecraft.client.gui.navigation.CommonInputs.selected(keyCode) *//*? }*/) {
                     minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 
                     ModernBetaSettingsPresetScreen.this.onSelected
-                        .accept(ModernBetaSettingsPresetScreen.this, this.presetName, this.preset);
+                        .onSelect(ModernBetaSettingsPresetScreen.this, this.preset);
                 }
 
-                return super.keyPressed(/*? >=1.21.9 {*/ /*event *//*? } else {*/ keyCode, scanCode, modifiers /*? }*/);
+                return super.keyPressed(/*? >=1.21.9 {*/ event /*? } else {*/ /*keyCode, scanCode, modifiers *//*? }*/);
             }
 
 
-            private void draw(GuiGraphics graphics, int x, int y, ResourceLocation textureId) {
+            private void draw(GuiGraphicsExtractor graphics, int x, int y, Identifier textureId) {
                 graphics.blit(
                     //? if >= 1.21.6 {
                     net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED,

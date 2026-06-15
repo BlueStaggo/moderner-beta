@@ -26,14 +26,14 @@ public class ExtendedBiomeIdToColorMapScreen extends ModernBetaGraphicalMapSetti
         ArrayList<OptionInstance<?>> options = new ArrayList<>();
         options.add(this.headerOption(Component.translatable(this.getTextKey("item"), i).withStyle(ChatFormatting.BOLD)));
         options.add(null);
-        options.add(this.extendedBiomeIdOption(KEY + i));
+        options.add(this.extendedIdOption(KEY + i));
         options.add(this.rgbFieldOption(VALUE + i, ""));
         return options;
     }
 
     @Override
     protected String getDefaultKey() {
-        return Biomes.PLAINS.location().toString();
+        return Biomes.PLAINS.identifier().toString();
     }
 
     @Override

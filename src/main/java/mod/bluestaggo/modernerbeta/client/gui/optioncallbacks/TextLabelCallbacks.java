@@ -10,7 +10,6 @@ import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 public record TextLabelCallbacks(Component text, float alignment) implements OptionInstance.ValueSet<Void> {
@@ -19,7 +18,8 @@ public record TextLabelCallbacks(Component text, float alignment) implements Opt
     }
 
     @Override
-    public @NotNull Function<OptionInstance<Void>, AbstractWidget> createButton(OptionInstance.TooltipSupplier<Void> tooltipFactory, Options gameOptions, int x, int y, int width, Consumer<Void> changeCallback) {
+    //~ if >=26.2 'java.util.function.Consumer<' -> 'OptionInstance.ValueUpdateListener<? super '
+    public @NotNull Function<OptionInstance<Void>, AbstractWidget> createButton(OptionInstance.TooltipSupplier<Void> tooltipFactory, Options gameOptions, int x, int y, int width, java.util.function.Consumer<Void> changeCallback) {
         return option -> {
             AlignedStringWidget textWidget = new AlignedStringWidget(x, y, width, 20, text, Minecraft.getInstance().fontFilterFishy);
             textWidget.align(alignment);

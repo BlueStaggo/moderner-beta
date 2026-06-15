@@ -12,6 +12,6 @@ public interface BiomeResolverStepped {
 
     default Component getBiomeNameForStep(int biomeX, int biomeY, int biomeZ, int step) {
         return Component.literal(this.getBiomeForStep(biomeX, biomeY, biomeZ, step)
-            .unwrapKey().map(key -> key.location().toString()).orElse("[unregistered]"));
+            .unwrapKey().map(key -> key.identifier().toString()).orElse("[unregistered]"));
     }
 }

@@ -7,7 +7,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.PacketListener;
 import net.minecraft.network.protocol.Packet;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 *///?}
 
 public interface ModernBetaPayload
@@ -19,7 +19,7 @@ public interface ModernBetaPayload
 {
     //? if <1.20.2 {
     /*void write(FriendlyByteBuf FriendlyByteBuf);
-    ResourceLocation getId();
+    Identifier getId();
 
     @Override
     default void handle(PacketListener listener) {

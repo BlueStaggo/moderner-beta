@@ -5,7 +5,7 @@ import mod.bluestaggo.modernerbeta.api.level.chunk.surface.SurfaceConfig;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaResourceKeys;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPresetCategory;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderLookup.Provider;
@@ -23,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.concurrent.CompletableFuture;
 
 public class ModernBetaWorldGenProvider extends FabricDynamicRegistryProvider {
-    public ModernBetaWorldGenProvider(FabricDataOutput output, CompletableFuture<Provider> registriesFuture) {
+    public ModernBetaWorldGenProvider(FabricPackOutput output, CompletableFuture<Provider> registriesFuture) {
         super(output, registriesFuture);
     }
 

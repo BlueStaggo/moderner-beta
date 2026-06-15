@@ -44,13 +44,25 @@ public class ModCompat {
         return false;
     }
 
-    public static List<SurfaceRules.RuleSource> getCustomRules() {
+    public static List<SurfaceRules.RuleSource> getPreBedrockCustomRules() {
         if (surfaceRuleHelpers.isEmpty())
             return List.of();
 
         ImmutableList.Builder<SurfaceRules.RuleSource> builder = ImmutableList.builder();
         for (SurfaceRuleCompatHelper helper : surfaceRuleHelpers) {
-            builder.addAll(helper.getCustomRules());
+            builder.addAll(helper.getPreBedrockCustomRules());
+        }
+
+        return builder.build();
+    }
+
+    public static List<SurfaceRules.RuleSource> getPostBedrockCustomRules() {
+        if (surfaceRuleHelpers.isEmpty())
+            return List.of();
+
+        ImmutableList.Builder<SurfaceRules.RuleSource> builder = ImmutableList.builder();
+        for (SurfaceRuleCompatHelper helper : surfaceRuleHelpers) {
+            builder.addAll(helper.getPostBedrockCustomRules());
         }
 
         return builder.build();

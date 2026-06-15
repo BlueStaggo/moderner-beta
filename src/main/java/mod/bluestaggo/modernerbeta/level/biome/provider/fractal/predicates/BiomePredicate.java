@@ -2,9 +2,9 @@ package mod.bluestaggo.modernerbeta.level.biome.provider.fractal.predicates;
 
 import com.mojang.serialization.Codec;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
-import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeId;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers.Layer;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers.LayerRandom;
+import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
 
 import java.util.List;
 import java.util.Set;
@@ -42,11 +42,11 @@ public interface BiomePredicate {
         return new NeighborMatchBiomePredicate(neighborCount, true, predicate);
     }
 
-    static BiomePredicate diagonalNeighborsMatch(ExtendedBiomeId biome, int neighborCount) {
+    static BiomePredicate diagonalNeighborsMatch(ExtendedIdentifier biome, int neighborCount) {
         return diagonalNeighborsMatch(of(biome), neighborCount);
     }
 
-    static BiomePredicate diagonalNeighborsMatch(List<Set<ExtendedBiomeId>> categories, int neighborCount) {
+    static BiomePredicate diagonalNeighborsMatch(List<Set<ExtendedIdentifier>> categories, int neighborCount) {
         return new CategorizedNeighborBiomePredicate(neighborCount, true, categories);
     }
 
@@ -62,11 +62,11 @@ public interface BiomePredicate {
         return new InRangeBiomePredicate(centerX, centerZ, width, length, evenSize, shape);
     }
 
-    static BiomePredicate inSet(ExtendedBiomeId... biomes) {
+    static BiomePredicate inSet(ExtendedIdentifier... biomes) {
         return new InSetBiomePredicate(Set.of(biomes));
     }
 
-    static BiomePredicate inSet(Set<ExtendedBiomeId> biomes) {
+    static BiomePredicate inSet(Set<ExtendedIdentifier> biomes) {
         return new InSetBiomePredicate(biomes);
     }
 
@@ -78,11 +78,11 @@ public interface BiomePredicate {
         return new NeighborMatchBiomePredicate(neighborCount, false, predicate);
     }
 
-    static BiomePredicate neighborsMatch(ExtendedBiomeId biome, int neighborCount) {
+    static BiomePredicate neighborsMatch(ExtendedIdentifier biome, int neighborCount) {
         return neighborsMatch(of(biome), neighborCount);
     }
 
-    static BiomePredicate neighborsMatch(List<Set<ExtendedBiomeId>> categories, int neighborCount) {
+    static BiomePredicate neighborsMatch(List<Set<ExtendedIdentifier>> categories, int neighborCount) {
         return new CategorizedNeighborBiomePredicate(neighborCount, false, categories);
     }
 
@@ -94,15 +94,15 @@ public interface BiomePredicate {
         return anyOf(predicates).invert();
     }
 
-    static BiomePredicate noneInSet(ExtendedBiomeId... biomes) {
+    static BiomePredicate noneInSet(ExtendedIdentifier... biomes) {
         return inSet(biomes).invert();
     }
 
-    static BiomePredicate noneInSet(Set<ExtendedBiomeId> biomes) {
+    static BiomePredicate noneInSet(Set<ExtendedIdentifier> biomes) {
         return inSet(biomes).invert();
     }
 
-    static BiomePredicate of(ExtendedBiomeId biome) {
+    static BiomePredicate of(ExtendedIdentifier biome) {
         return new SingleMatchBiomePredicate(biome);
     }
 
@@ -118,7 +118,7 @@ public interface BiomePredicate {
         return new RandomChanceBiomePredicate(numerator, denominator);
     }
 
-    static BiomePredicate simpleHills(Set<ExtendedBiomeId> affectedBiomes) {
+    static BiomePredicate simpleHills(Set<ExtendedIdentifier> affectedBiomes) {
         return BiomePredicate.inSet(affectedBiomes)
             .and(BiomePredicate.interior())
             .and(BiomePredicate.oneIn(3));
@@ -146,5 +146,5 @@ public interface BiomePredicate {
 
     BiomePredicateType<?> getType();
 
-    boolean matches(ExtendedBiomeId biome, Layer layer, Supplier<LayerRandom> randomSupplier, int x, int z);
+    boolean matches(ExtendedIdentifier biome, Layer layer, Supplier<LayerRandom> randomSupplier, int x, int z);
 }

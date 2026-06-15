@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.util.CodecUtil;
 import mod.bluestaggo.modernerbeta.level.biome.voronoi.VoronoiPointCaveBiome;
+import net.minecraft.resources.RegistryOps;
 
 import java.util.List;
 
@@ -20,8 +21,18 @@ public record CaveBiomeVoronoi(
             Codec.FLOAT.fieldOf("verticalScale").orElse(16.0f).forGetter(CaveBiomeVoronoi::verticalScale),
             Codec.INT.fieldOf("depthMinY").orElse(-64).forGetter(CaveBiomeVoronoi::depthMinY),
             Codec.INT.fieldOf("depthMaxY").orElse(64).forGetter(CaveBiomeVoronoi::depthMaxY),
-            VoronoiPointCaveBiome.CODEC.listOf().fieldOf("points").orElse(VoronoiPointCaveBiome.DEFAULT_POINTS).forGetter(CaveBiomeVoronoi::points)
+            CodecUtil.lookupIfEmpty(VoronoiPointCaveBiome.CODEC.listOf().fieldOf("points"),
+                    VoronoiPointCaveBiome::getDefaultPoints).forGetter(CaveBiomeVoronoi::points)
         ).apply(instance, CaveBiomeVoronoi::new)
     );
-    public static final CaveBiomeVoronoi DEFAULT = CodecUtil.getDefaultByMap(CODEC);
+
+    public static CaveBiomeVoronoi getDefault(RegistryOps.RegistryInfoLookup lookup) {
+        return new CaveBiomeVoronoi(
+            32.0f,
+            16.0f,
+            -64,
+            64,
+            VoronoiPointCaveBiome.getDefaultPoints(lookup)
+        );
+    }
 }

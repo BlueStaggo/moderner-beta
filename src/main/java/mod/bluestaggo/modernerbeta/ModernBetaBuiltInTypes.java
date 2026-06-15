@@ -1,7 +1,7 @@
 package mod.bluestaggo.modernerbeta;
 
 import mod.bluestaggo.modernerbeta.tags.ModernBetaBiomeTags;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public final class ModernBetaBuiltInTypes {
     public enum SettingsComponentType {
@@ -29,6 +29,7 @@ public final class ModernBetaBuiltInTypes {
         SPAWN_INDEV_HOUSE("spawn_indev_house"),
         ISLES_PROPERTIES("isles_properties"),
         WORLD_BORDER("world_border"),
+        STRUCTURE_MODIFIERS("structure_modifiers"),
         SINGLE_BIOME("single_biome"),
         CLIMATE_SCALE("climate_scale"),
         CLIMATE_MAPPINGS("climate_mappings"),
@@ -36,10 +37,8 @@ public final class ModernBetaBuiltInTypes {
         VORONOI_POINTS("voronoi_points"),
         FRACTAL_LAYERS("fractal_layers"),
         USE_32BIT_LAYER_SEED("use_32bit_layer_seed"),
-        USE_OCEAN_BIOMES("use_ocean_biomes"),
         TEMPERATURE_HEIGHT_SCALING("temperature_height_scaling"),
-        BIOME_INJECTION_THRESHOLDS("biome_injection_thresholds"),
-        OUT_OF_BOUNDS_BIOME("out_of_bounds_biome"),
+        BIOME_INJECTION_RULES("biome_injection_rules"),
         CAVE_BIOME_VORONOI("cave_biome_voronoi"),
         CONFIG_BETA_CLIMATIC_COLORS("config/beta_climatic_colors"),
         CONFIG_PE_CLIMATIC_COLORS("config/pe_climatic_colors"),
@@ -48,7 +47,7 @@ public final class ModernBetaBuiltInTypes {
         CONFIG_MISCELLANEOUS("config/miscellaneous"),
         ;
 
-        public final ResourceLocation id;
+        public final Identifier id;
 
         SettingsComponentType(String id) {
             this.id = ModernerBeta.createId(id);
@@ -61,7 +60,7 @@ public final class ModernBetaBuiltInTypes {
         NOISE_3D("noise_3d"),
         ;
 
-        public final ResourceLocation id;
+        public final Identifier id;
         
         Chunk(String id) {
             this.id = ModernerBeta.createId(id);
@@ -77,7 +76,7 @@ public final class ModernBetaBuiltInTypes {
         BETA_FRACTAL("beta_fractal"),
         ;
 
-        public final ResourceLocation id;
+        public final Identifier id;
         
         Biome(String id) { this.id = ModernerBeta.createId(id); }
     }
@@ -88,7 +87,7 @@ public final class ModernBetaBuiltInTypes {
         VORONOI("voronoi"),
         ;
 
-        public final ResourceLocation id;
+        public final Identifier id;
         
         CaveBiome(String id) {
             this.id = ModernerBeta.createId(id);
@@ -119,20 +118,9 @@ public final class ModernBetaBuiltInTypes {
         HEIGHT_CONFIG_DEEP_OCEAN(ModernBetaBiomeTags.HEIGHT_CONFIG_DEEP_OCEAN.location().getPath()),
         ;
 
-        public final ResourceLocation id;
+        public final Identifier id;
 
         HeightConfig(String id) {
-            this.id = ModernerBeta.createId(id);
-        }
-    }
-    
-    public enum BlockSource {
-        DEEPSLATE("deepslate"),
-        ;
-        
-        public final ResourceLocation id;
-        
-        BlockSource(String id) {
             this.id = ModernerBeta.createId(id);
         }
     }
@@ -140,11 +128,9 @@ public final class ModernBetaBuiltInTypes {
     public enum LayerOutput {
         BIOME("biome"),
         HEIGHT("height"),
-        OCEAN("ocean"),
-        DEEP_OCEAN("deep_ocean"),
         ;
 
-        public final ResourceLocation id;
+        public final Identifier id;
 
         LayerOutput(String id) {
             this.id = ModernerBeta.createId(id);

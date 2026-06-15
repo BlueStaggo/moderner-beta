@@ -10,11 +10,11 @@ public class ModernBetaFeatureTags {
     public static final String CAVE_INFDEV_325 = "cave_infdev_325";
 
     //? if >=26.1 {
-    /*public static final String DANDELION = "dandelion";
+    public static final String DANDELION = "dandelion";
     public static final String POPPY = "poppy";
     public static final String GRASS = "grass";
     public static final String GRASS_LUSH = "grass_lush";
-    *///? }
+    //? }
 
     public static final String PATCH_CACTUS_ALPHA = "patch_cactus";
     public static final String PATCH_CACTUS_PE = "patch_cactus_pe";
@@ -31,9 +31,9 @@ public class ModernBetaFeatureTags {
     public static final String PATCH_DANDELION_INFDEV_227 = "patch_dandelion_infdev_227";
 
     //? if <26.1 {
-    public static final String PATCH_GRASS = "patch_grass";
+    /*public static final String PATCH_GRASS = "patch_grass";
     public static final String PATCH_GRASS_LUSH = "patch_grass_lush";
-    //? }
+    *///? }
     public static final String PATCH_GRASS_PLAINS_10 = "patch_grass_plains_10";
     public static final String PATCH_GRASS_TAIGA_1 = "patch_grass_taiga_1";
     public static final String PATCH_GRASS_RAINFOREST_10 = "patch_grass_rainforest_10";

@@ -12,7 +12,7 @@ repositories {
 dependencies {
     fun plugin(id: String, version: String) = "$id:$id.gradle.plugin:$version"
     //FIXME: This is hardcoded! Bad!
-    implementation("dev.kikugie:stonecutter:0.9.4")
+    implementation("dev.kikugie:stonecutter:0.9.5")
     implementation(plugin("me.modmuss50.mod-publish-plugin", "2.0.0-beta.2"))
 
     implementation("org.ow2.asm:asm:9.9")

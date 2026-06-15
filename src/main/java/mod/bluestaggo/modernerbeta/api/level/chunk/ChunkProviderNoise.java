@@ -15,12 +15,12 @@ import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.settings.component.*;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
+import mod.bluestaggo.modernerbeta.util.chunk.AuxChunkCache;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkCache;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkHeightmap;
-import mod.bluestaggo.modernerbeta.util.chunk.LevelChunkCache;
 import mod.bluestaggo.modernerbeta.util.noise.SimpleNoisePos;
 import mod.bluestaggo.modernerbeta.util.noise.SimplexNoise;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.ChunkPos;
@@ -61,7 +61,7 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
     protected final int noiseTopY;  // Number of positive (y >= 0) vertical subchunks
 
     private final ChunkCache<NoiseProviderBase> chunkCacheNoise;
-    private final LevelChunkCache<ChunkHeightmap> chunkCacheHeightmap;
+    private final AuxChunkCache<LevelHeightAccessor, ChunkHeightmap> chunkCacheHeightmap;
     
     protected final List<NoisePostProcessor> noisePostProcessors = new ArrayList<>();
     private final SimplexNoise islandNoise;
@@ -118,7 +118,7 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
                 return noiseProviderBase;
             }
         );
-        this.chunkCacheHeightmap = new LevelChunkCache<>("heightmap", this::sampleHeightmap);
+        this.chunkCacheHeightmap = new AuxChunkCache<>("heightmap", this::sampleHeightmap);
 
         this.islandNoise = new SimplexNoise(this.createRandom(this.seed));
 
@@ -333,7 +333,7 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
         double islandOffset = VersionCompat.clampedLerp(0.0, oceanSlideTarget, islandDelta);
             
         if (this.islesProperties.useOuterIslands() && distance > centerOceanRadius) {
-            double islandAddition = (float)this.islandNoise.sample(
+            double islandAddition = this.islandNoise.sample(
                 noiseX / outerIslandNoiseScale,
                 noiseZ / outerIslandNoiseScale,
                 1.0,
@@ -424,8 +424,8 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
      */
     private void generateTerrain(ChunkAccess chunk, StructureManager structureAccessor, RandomState noiseConfig, int minimumCellY, int cellHeight) {
         ChunkPos chunkPos = chunk.getPos();
-        int chunkX = chunkPos.x;
-        int chunkZ = chunkPos.z;
+        int chunkX = chunkPos.x();
+        int chunkZ = chunkPos.z();
         int startX = chunkPos.getMinBlockX();
         int startZ = chunkPos.getMinBlockZ();
         
@@ -531,15 +531,7 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
         int cellHeight = Mth.floorDiv(noiseSettings.height(), noiseSettings.getCellHeight());
         int seaLevel = this.getSeaLevel();
 
-        //NoiseProviderBase noiseProvider = this.chunkCacheNoise.get(chunkX, chunkZ);
-        NoiseProviderBase noiseProvider = new NoiseProviderBase(
-            this.noiseSizeX,
-            this.noiseSizeY,
-            this.noiseSizeZ,
-            this::sampleNoiseColumn,
-            this.isDensityModified() ? this::modifyEdgeDensity : null
-        );
-        noiseProvider.sampleInitialNoise(chunkX * this.noiseSizeX, chunkZ * this.noiseSizeZ);
+        NoiseProviderBase noiseProvider = this.chunkCacheNoise.get(chunkX, chunkZ);
         NoiseSampler noiseSampler = noiseProvider.getSamplerForHeightmap();
 
         short[] heightmapSurface = new short[256];

@@ -3,7 +3,6 @@ package mod.bluestaggo.modernerbeta.level.biome.provider;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.api.level.biome.BiomeProvider;
 import mod.bluestaggo.modernerbeta.api.level.biome.BiomeResolverBlock;
-import mod.bluestaggo.modernerbeta.api.level.biome.BiomeResolverOcean;
 import mod.bluestaggo.modernerbeta.api.level.biome.climate.ClimateSampler;
 import mod.bluestaggo.modernerbeta.api.level.biome.climate.ClimateSamplerSky;
 import mod.bluestaggo.modernerbeta.api.level.biome.climate.Clime;
@@ -17,18 +16,16 @@ import mod.bluestaggo.modernerbeta.util.chunk.ChunkClimateSky;
 import mod.bluestaggo.modernerbeta.util.noise.SimplexOctaveNoise;
 import mod.bluestaggo.modernerbeta.level.biome.provider.climate.ClimateMap;
 import mod.bluestaggo.modernerbeta.level.biome.provider.climate.ClimateMapping;
-import mod.bluestaggo.modernerbeta.level.biome.provider.climate.ClimateType;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.biome.Biome;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.stream.Collectors;
+import java.util.Set;
 
-public class BiomeProviderBeta extends BiomeProvider implements ClimateSampler, ClimateSamplerSky, BiomeResolverBlock, BiomeResolverOcean {
+public class BiomeProviderBeta extends BiomeProvider implements ClimateSampler, ClimateSamplerSky, BiomeResolverBlock {
     private final ClimateMap climateMap;
     private final BetaClimateSampler climateSampler;
     private final BetaClimateSamplerSky climateSamplerSky;
@@ -64,31 +61,7 @@ public class BiomeProviderBeta extends BiomeProvider implements ClimateSampler, 
         double temp = clime.temp();
         double rain = clime.rain();
         
-        return this.biomeRegistry.getOrThrow(this.climateMap.getBiome(temp, rain, ClimateType.LAND));
-    }
- 
-    @Override
-    public Holder<Biome> getOceanBiome(int biomeX, int biomeY, int biomeZ) {
-        int x = biomeX << 2;
-        int z = biomeZ << 2;
-        
-        Clime clime = this.climateSampler.sample(x, z);
-        double temp = clime.temp();
-        double rain = clime.rain();
-        
-        return this.biomeRegistry.getOrThrow(this.climateMap.getBiome(temp, rain, ClimateType.OCEAN));
-    }
-    
-    @Override
-    public Holder<Biome> getDeepOceanBiome(int biomeX, int biomeY, int biomeZ) {
-        int x = biomeX << 2;
-        int z = biomeZ << 2;
-        
-        Clime clime = this.climateSampler.sample(x, z);
-        double temp = clime.temp();
-        double rain = clime.rain();
-        
-        return this.biomeRegistry.getOrThrow(this.climateMap.getBiome(temp, rain, ClimateType.DEEP_OCEAN));
+        return this.climateMap.getBiome(temp, rain);
     }
     
     @Override
@@ -97,16 +70,12 @@ public class BiomeProviderBeta extends BiomeProvider implements ClimateSampler, 
         double temp = clime.temp();
         double rain = clime.rain();
         
-        return this.biomeRegistry.getOrThrow(this.climateMap.getBiome(temp, rain, ClimateType.LAND));
+        return this.climateMap.getBiome(temp, rain);
     }
 
     @Override
-    public List<Holder<Biome>> getBiomes() {
-        return this.climateMap
-            .getBiomeKeys()
-            .stream()
-            .map(this.biomeRegistry::getOrThrow)
-            .collect(Collectors.toList());
+    public Set<Holder<Biome>> getBiomes() {
+        return this.climateMap.getBiomes();
     }
 
     @Override
@@ -178,9 +147,9 @@ public class BiomeProviderBeta extends BiomeProvider implements ClimateSampler, 
         }
         
         public Clime sampleNoise(int x, int z) {
-            double temp = this.tempOctaveNoise.sample(x, z, this.tempNoiseScale, 0.25D);
-            double rain = this.rainOctaveNoise.sample(x, z, this.rainNoiseScale, 0.33333333333333331D);
-            double detail = this.detailOctaveNoise.sample(x, z, this.detailNoiseScale, 0.58823529411764708D);
+            double temp = this.tempOctaveNoise.sampleXZ(x, z, this.tempNoiseScale, this.tempNoiseScale, 1.0 / 4.0);
+            double rain = this.rainOctaveNoise.sampleXZ(x, z, this.rainNoiseScale, this.rainNoiseScale, 1.0 / 3.0);
+            double detail = this.detailOctaveNoise.sampleXZ(x, z, this.detailNoiseScale, this.detailNoiseScale, 1.0 / 1.7);
 
             detail = detail * 1.1D + 0.5D;
 
@@ -227,7 +196,7 @@ public class BiomeProviderBeta extends BiomeProvider implements ClimateSampler, 
         }
         
         private double sampleNoise(int x, int z) {
-            return this.tempOctaveNoise.sample(x, z, this.tempNoiseScale, this.tempNoiseScale, 0.5D);
+            return this.tempOctaveNoise.sampleXZ(x, z, this.tempNoiseScale, this.tempNoiseScale, 0.5D);
         }
     }
 }

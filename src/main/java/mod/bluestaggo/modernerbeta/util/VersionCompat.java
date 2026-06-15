@@ -6,7 +6,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 //? if >=1.21.5
@@ -15,9 +15,9 @@ import net.minecraft.util.random.WeightedList;
 //? if <1.21.5
 //import net.minecraft.util.random.WeightedEntry;
 //? if >=1.21.11 {
-/*import net.minecraft.world.attribute.EnvironmentAttributeMap;
+import net.minecraft.world.attribute.EnvironmentAttributeMap;
 import net.minecraft.world.attribute.EnvironmentAttributes;
-*///? }
+//? }
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.LevelHeightAccessor;
@@ -143,27 +143,27 @@ public final class VersionCompat {
         *///?}
     }
     
-    public static ResourceLocation id(String string) {
+    public static Identifier id(String string) {
         //? if >=1.21 {
-        return ResourceLocation.parse(string);
+        return Identifier.parse(string);
         //?} else {
-        /*return new ResourceLocation(string);
+        /*return new Identifier(string);
         *///?}
     }
 
-    public static ResourceLocation id(String namespace, String location) {
+    public static Identifier id(String namespace, String location) {
         //? if >=1.21 {
-        return ResourceLocation.fromNamespaceAndPath(namespace, location);
+        return Identifier.fromNamespaceAndPath(namespace, location);
         //?} else {
-        /*return new ResourceLocation(namespace, location);
+        /*return new Identifier(namespace, location);
         *///?}
     }
 
-    public static ResourceLocation vanillaId(String string) {
+    public static Identifier vanillaId(String string) {
         //? if >=1.21 {
-        return ResourceLocation.withDefaultNamespace(string);
+        return Identifier.withDefaultNamespace(string);
          //?} else {
-        /*return new ResourceLocation(string);
+        /*return new Identifier(string);
         *///?}
     }
 
@@ -179,7 +179,7 @@ public final class VersionCompat {
         //? if >=1.21 {
         return net.minecraft.core.registries.Registries.elementsDirPath(resourceKey);
         //? } else {
-        /*ResourceLocation id = resourceKey.location();
+        /*Identifier id = resourceKey.location();
         if (!id.getNamespace().equals("minecraft")) {
             return id.getNamespace() + "/" + id.getPath();
         }
@@ -209,19 +209,19 @@ public final class VersionCompat {
     ) {
         return builder
             //? if >=1.21.11 {
-            /*.putAttributes(EnvironmentAttributeMap.builder()
+            .putAttributes(EnvironmentAttributeMap.builder()
                 .set(EnvironmentAttributes.SKY_COLOR, skyColor)
                 .set(EnvironmentAttributes.FOG_COLOR, fogColor)
                 .set(EnvironmentAttributes.WATER_FOG_COLOR, waterFogColor))
-            *///? }
+            //? }
             .specialEffects((new BiomeSpecialEffects.Builder())
                 .grassColorOverride(grassColor)
                 .foliageColorOverride(foliageColor)
                 //? if <1.21.11 {
-                .skyColor(skyColor)
+                /*.skyColor(skyColor)
                 .fogColor(fogColor)
                 .waterFogColor(waterFogColor)
-                //? }
+                *///? }
                 .waterColor(waterColor)
                 .build());
     }
@@ -235,26 +235,26 @@ public final class VersionCompat {
     ) {
         return builder
             //? if >=1.21.11 {
-            /*.putAttributes(EnvironmentAttributeMap.builder()
+            .putAttributes(EnvironmentAttributeMap.builder()
                 .set(EnvironmentAttributes.SKY_COLOR, skyColor)
                 .set(EnvironmentAttributes.FOG_COLOR, fogColor)
                 .set(EnvironmentAttributes.WATER_FOG_COLOR, waterFogColor))
-            *///? }
+            //? }
             .specialEffects((new BiomeSpecialEffects.Builder())
                 //? if <1.21.11 {
-                .skyColor(skyColor)
+                /*.skyColor(skyColor)
                 .fogColor(fogColor)
                 .waterFogColor(waterFogColor)
-                //? }
+                *///? }
                 .waterColor(waterColor)
                 .build());
     }
 
     public static double clampedLerp(double start, double end, double delta) {
         //? if >=1.21.11 {
-        /*return Mth.clampedLerp(delta, start, end);
-        *///? } else {
-        return Mth.clampedLerp(start, end, delta);
-        //? }
+        return Mth.clampedLerp(delta, start, end);
+        //? } else {
+        /*return Mth.clampedLerp(start, end, delta);
+        *///? }
     }
 }

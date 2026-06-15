@@ -6,7 +6,7 @@ import com.mojang.serialization.Lifecycle;
 import mod.bluestaggo.modernerbeta.forgelike.mixin.HolderReferenceMixin;
 import net.minecraft.core.*;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -74,7 +74,7 @@ public class ForgeRegistryWrapper<T> implements Registry<T> {
     }
 
     @Override
-    public @Nullable ResourceLocation getKey(@NotNull T value) {
+    public @Nullable Identifier getKey(@NotNull T value) {
         return this.getForgeRegistry().getKey(value);
     }
 
@@ -107,7 +107,7 @@ public class ForgeRegistryWrapper<T> implements Registry<T> {
     }
 
     @Override
-    public @Nullable T get(@Nullable ResourceLocation id) {
+    public @Nullable T get(@Nullable Identifier id) {
         return this.getForgeRegistry().getValue(id);
     }
 
@@ -122,7 +122,7 @@ public class ForgeRegistryWrapper<T> implements Registry<T> {
     }
 
     @Override
-    public @NotNull Set<ResourceLocation> keySet() {
+    public @NotNull Set<Identifier> keySet() {
         return this.getForgeRegistry().getKeys();
     }
 
@@ -144,13 +144,13 @@ public class ForgeRegistryWrapper<T> implements Registry<T> {
             return Optional.empty();
         }
 
-        Collection<ResourceLocation> keys = this.getForgeRegistry().getKeys();
+        Collection<Identifier> keys = this.getForgeRegistry().getKeys();
         int index = random.nextInt(keys.size());
         return Optional.of(this.createIntrusiveHolder(ResourceKey.create(this.key(), keys.stream().skip(index).findAny().orElseThrow())));
     }
 
     @Override
-    public boolean containsKey(@NotNull ResourceLocation id) {
+    public boolean containsKey(@NotNull Identifier id) {
         return this.getForgeRegistry().containsKey(id);
     }
 

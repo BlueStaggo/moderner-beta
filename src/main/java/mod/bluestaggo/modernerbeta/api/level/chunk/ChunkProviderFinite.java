@@ -15,7 +15,7 @@ import mod.bluestaggo.modernerbeta.util.BlockStates;
 import mod.bluestaggo.modernerbeta.util.LoggingUtil;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.util.noise.SimpleNoisePos;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.WorldGenRegion;
@@ -276,8 +276,8 @@ public abstract class ChunkProviderFinite extends ChunkProvider implements Chunk
     protected abstract BlockState postProcessSurfaceState(BlockState blockState, SurfaceConfig config, BlockPos pos, boolean isCold);
     
     protected void generateTerrain(ChunkAccess chunk, StructureManager structureAccessor) {
-        int chunkX = chunk.getPos().x;
-        int chunkZ = chunk.getPos().z;
+        int chunkX = chunk.getPos().x();
+        int chunkZ = chunk.getPos().z();
         
         int offsetX = (chunkX + this.levelWidth / 16 / 2) * 16;
         int offsetZ = (chunkZ + this.levelLength / 16 / 2) * 16;

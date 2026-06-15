@@ -3,16 +3,16 @@ package mod.bluestaggo.modernerbeta.fabric.data.provider.tag;
 import mod.bluestaggo.modernerbeta.fabric.data.ModernBetaSettingsPresets;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaResourceKeys;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
 import net.minecraft.core.HolderLookup;
 
 import java.util.concurrent.CompletableFuture;
 
 import static mod.bluestaggo.modernerbeta.tags.ModernBetaSettingsPresetTags.*;
 
-public class ModernBetaTagProviderSettingsPreset extends FabricTagProvider<ModernBetaSettingsPreset> {
-    public ModernBetaTagProviderSettingsPreset(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
+public class ModernBetaTagProviderSettingsPreset extends FabricTagsProvider<ModernBetaSettingsPreset> {
+    public ModernBetaTagProviderSettingsPreset(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
         super(output, ModernBetaResourceKeys.SETTINGS_PRESET, registriesFuture);
     }
 

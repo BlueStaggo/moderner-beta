@@ -5,28 +5,26 @@ import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.biome.Biome;
 
-import java.util.List;
+import java.util.Set;
 
 public class BiomeProviderSingle extends BiomeProvider {
-    private final ResourceKey<Biome> biomeKey;
+    private final Holder<Biome> biome;
     
     public BiomeProviderSingle(ModernBetaSettings settings, HolderGetter<Biome> biomeRegistry, long seed) {
         super(settings, biomeRegistry, seed);
 
-        this.biomeKey = ResourceKey.create(Registries.BIOME, this.settings.getOrThrow(SettingsComponentTypes.SINGLE_BIOME));
+        this.biome = this.settings.getOrThrow(SettingsComponentTypes.SINGLE_BIOME);
     }
 
     @Override
     public Holder<Biome> getBiome(int biomeX, int biomeY, int biomeZ) {
-        return this.biomeRegistry.getOrThrow(this.biomeKey);
+        return this.biome;
     }
     
     @Override
-    public List<Holder<Biome>> getBiomes() {
-        return List.of(this.biomeRegistry.getOrThrow(this.biomeKey));
+    public Set<Holder<Biome>> getBiomes() {
+        return Set.of(this.biome);
     }
 }

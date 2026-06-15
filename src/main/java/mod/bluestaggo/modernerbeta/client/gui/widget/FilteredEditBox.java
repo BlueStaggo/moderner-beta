@@ -1,9 +1,9 @@
 package mod.bluestaggo.modernerbeta.client.gui.widget;
 
 //? if >=26.1 {
-/*import mod.bluestaggo.modernerbeta.mixin.client.EditBoxAccessor;
+import mod.bluestaggo.modernerbeta.mixin.client.EditBoxAccessor;
 import net.minecraft.util.StringUtil;
-*///? }
+//? }
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
@@ -14,11 +14,11 @@ import java.util.function.Predicate;
 
 public class FilteredEditBox extends EditBox {
     //? if >=26.1 {
-    /*/^*
+    /**
      * Called to check if the text is valid
-     ^/
+     */
     private Predicate<String> filter = Objects::nonNull;
-    *///? }
+    //? }
 
     public FilteredEditBox(Font font, int width, int height, Component narration) {
         super(font, 0, 0, width, height, narration);
@@ -33,7 +33,7 @@ public class FilteredEditBox extends EditBox {
     }
 
     //? if >=26.1 {
-    /*@Override
+    @Override
     public void setValue(final String text) {
         if (this.filter.test(text)) {
             super.setValue(text);
@@ -103,5 +103,5 @@ public class FilteredEditBox extends EditBox {
             }
         }
     }
-    *///? }
+    //? }
 }

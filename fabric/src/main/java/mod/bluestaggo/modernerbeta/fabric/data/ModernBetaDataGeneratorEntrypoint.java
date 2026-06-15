@@ -12,7 +12,6 @@ import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaNoiseGeneratorSettings;
 import mod.bluestaggo.modernerbeta.level.feature.configured.ModernBetaConfiguredFeatures;
 import mod.bluestaggo.modernerbeta.level.feature.placed.ModernBetaPlacedFeatures;
 import mod.bluestaggo.modernerbeta.level.preset.ModernBetaWorldPresets;
-import mod.bluestaggo.modernerbeta.level.structure.ModernBetaStructureSets;
 import mod.bluestaggo.modernerbeta.level.structure.ModernBetaStructures;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
@@ -37,8 +36,7 @@ public class ModernBetaDataGeneratorEntrypoint implements DataGeneratorEntrypoin
         pack.addProvider(ModernBetaWorldGenProvider::new);
         pack.addProvider(ModernBetaTagProviderBiome::new);
         //? if >=26.1
-        //pack.addProvider(ModernBetaTagProviderConfiguredFeature::new);
-        pack.addProvider(ModernBetaTagProviderStructure::new);
+        pack.addProvider(ModernBetaTagProviderConfiguredFeature::new);
         pack.addProvider(ModernBetaTagProviderBlock::new);
         pack.addProvider(ModernBetaTagProviderWorldPreset::new);
         pack.addProvider(ModernBetaTagProviderSettingsPreset::new);
@@ -63,7 +61,6 @@ public class ModernBetaDataGeneratorEntrypoint implements DataGeneratorEntrypoin
         registryBuilder.add(Registries.BIOME, ModernBetaBiomes::bootstrap);
         registryBuilder.add(Registries.NOISE_SETTINGS, ModernBetaNoiseGeneratorSettings::bootstrap);
         registryBuilder.add(Registries.STRUCTURE, ModernBetaStructures::bootstrap);
-        registryBuilder.add(Registries.STRUCTURE_SET, ModernBetaStructureSets::bootstrap);
         registryBuilder.add(Registries.WORLD_PRESET, ModernBetaWorldPresets::bootstrap);
         registryBuilder.add(ModernBetaResourceKeys.SETTINGS_PRESET, ModernBetaSettingsPresets::bootstrap);
         registryBuilder.add(ModernBetaResourceKeys.SETTINGS_PRESET_CATEGORY, ModernBetaSettingsPresetCategories::bootstrap);

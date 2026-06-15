@@ -8,7 +8,7 @@ import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.core.WritableRegistry;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class RegistryHelperImpl implements IRegistryHelper {
     private <T> IRegistryBuilder<T> from(WritableRegistry<T> registry) {
@@ -21,7 +21,7 @@ public class RegistryHelperImpl implements IRegistryHelper {
     }
 
     @Override
-    public <T> IRegistryBuilder<T> createDefaulted(ResourceKey<Registry<T>> key, ResourceLocation defaultKey) {
+    public <T> IRegistryBuilder<T> createDefaulted(ResourceKey<Registry<T>> key, Identifier defaultKey) {
         return from(new DefaultedMappedRegistry<>(defaultKey.toString(), key, Lifecycle.stable(), false));
     }
 }

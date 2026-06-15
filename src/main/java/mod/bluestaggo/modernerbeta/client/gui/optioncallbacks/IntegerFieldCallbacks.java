@@ -10,14 +10,14 @@ import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.function.ToIntFunction;
 
 public record IntegerFieldCallbacks(String prefix, IntFunction<String> serializer, ToIntFunction<String> deserializer) implements OptionInstance.ValueSet<Integer> {
     @Override
-    public @NotNull Function<OptionInstance<Integer>, AbstractWidget> createButton(OptionInstance.TooltipSupplier<Integer> tooltipFactory, Options gameOptions, int x, int y, int width, Consumer<Integer> changeCallback) {
+    //~ if >=26.2 'java.util.function.Consumer<' -> 'OptionInstance.ValueUpdateListener<? super '
+    public @NotNull Function<OptionInstance<Integer>, AbstractWidget> createButton(OptionInstance.TooltipSupplier<Integer> tooltipFactory, Options gameOptions, int x, int y, int width, java.util.function.Consumer<Integer> changeCallback) {
         return option -> {
             var widget = new FilteredEditBox(
                 Minecraft.getInstance().fontFilterFishy,

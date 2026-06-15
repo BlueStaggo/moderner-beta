@@ -1,7 +1,7 @@
 package mod.bluestaggo.modernerbeta.api.level.biome;
 
-import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeId;
+import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
 
 public interface BiomeResolverExtendedIdStepped extends BiomeResolverExtendedId, BiomeResolverStepped {
-    ExtendedBiomeId getExtendedBiomeIdForStep(int biomeX, int biomeY, int biomeZ, int step);
+    ExtendedIdentifier getExtendedBiomeIdForStep(int biomeX, int biomeY, int biomeZ, int step);
 }

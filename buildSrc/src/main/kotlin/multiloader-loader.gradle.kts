@@ -1,3 +1,5 @@
+import me.modmuss50.mpp.ReleaseType
+
 plugins {
     id("java")
     id("idea")
@@ -28,7 +30,7 @@ publishMods {
     version = project.version.toString() + "-" + loader
 
     changelog = rootProject.file("CHANGELOG.md").readText()
-    type = STABLE
+    type = ReleaseType.of(commonMod.getReleaseType())
 
     modLoaders.addAll(supported_loaders!!)
 

@@ -1,9 +1,9 @@
 package mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers;
 
+import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
-import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeId;
 
-import static mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeId.*;
+import static mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeIds.*;
 
 public class InitRiverLayer extends SingleParentLayer {
     public static final com.mojang.serialization.MapCodec<InitRiverLayer> CODEC = VersionCompat.createMaybeMapCodec(
@@ -21,8 +21,8 @@ public class InitRiverLayer extends SingleParentLayer {
     }
 
     @Override
-    protected ExtendedBiomeId generate(int x, int z) {
-        ExtendedBiomeId baseBiome = this.parentLayer.sample(x, z);
+    protected ExtendedIdentifier generate(int x, int z) {
+        ExtendedIdentifier baseBiome = this.parentLayer.sample(x, z);
         if (baseBiome.baseId().equals(OCEAN.baseId())) {
             return baseBiome;
         }

@@ -33,4 +33,21 @@ value class ModData(private val project: Project) {
 
     fun propOrNull(key: String): String? = project.prop(key)
     fun prop(key: String): String = requireNotNull(propOrNull(key)) { "Missing '$key'" }
+
+    fun getReleaseType(): String {
+        val semverExt = version.indexOf("-")
+
+        if (semverExt == -1)
+            return "STABLE"
+
+        val extType: String
+        val extVer = version.indexOf(".")
+        if (extVer != -1) {
+            extType = version.substring(semverExt + 1, extVer)
+        } else {
+            extType = version.substring(semverExt + 1)
+        }
+
+        return extType.uppercase()
+    }
 }

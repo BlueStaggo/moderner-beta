@@ -1,10 +1,10 @@
 package mod.bluestaggo.modernerbeta.util.chunk;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectLinkedOpenHashMap;
+import mod.bluestaggo.modernerbeta.util.function.BiIntegerFunction;
 import net.minecraft.world.level.ChunkPos;
 
 import java.util.concurrent.locks.StampedLock;
-import java.util.function.BiFunction;
 
 /*
  * Generic threadsafe(???) cache for anything that outputs T given pair of integer chunk coordinates.
@@ -19,12 +19,12 @@ public class ChunkCache<T> {
     private final int capacity;
     private final boolean evictOldChunks;
     
-    private final BiFunction<Integer, Integer, T> chunkFunc;
+    private final BiIntegerFunction<T> chunkFunc;
     private final Long2ObjectLinkedOpenHashMap<T> chunkMap;
     
     private final StampedLock lock;
 
-    public ChunkCache(String name, int capacity, boolean evictOldChunks, BiFunction<Integer, Integer, T> chunkFunc) {
+    public ChunkCache(String name, int capacity, boolean evictOldChunks, BiIntegerFunction<T> chunkFunc) {
         this.name = name;
         this.capacity = capacity;
         this.evictOldChunks = evictOldChunks;
@@ -35,11 +35,11 @@ public class ChunkCache<T> {
         this.lock = new StampedLock();
     }
     
-    public ChunkCache(String name, int capacity, BiFunction<Integer, Integer, T> chunkFunc) {
+    public ChunkCache(String name, int capacity, BiIntegerFunction<T> chunkFunc) {
         this(name, capacity, DEFAULT_EVICT, chunkFunc);
     }
     
-    public ChunkCache(String name, BiFunction<Integer, Integer, T> chunkFunc) {
+    public ChunkCache(String name, BiIntegerFunction<T> chunkFunc) {
         this(name, DEFAULT_SIZE, DEFAULT_EVICT, chunkFunc);
     }
     
@@ -56,7 +56,7 @@ public class ChunkCache<T> {
     public T get(int chunkX, int chunkZ) {
         T chunk;
         
-        long key = ChunkPos.asLong(chunkX, chunkZ);
+        long key = ChunkPos.pack(chunkX, chunkZ);
         long stamp = this.lock.readLock();
         
         try {

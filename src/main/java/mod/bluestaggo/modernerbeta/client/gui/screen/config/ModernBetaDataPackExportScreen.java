@@ -21,6 +21,7 @@ import net.minecraft.client.gui.components.*;
 import net.minecraft.client.gui.layouts.GridLayout;
 import net.minecraft.client.gui.layouts.LayoutSettings;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.data.DataProvider;
@@ -30,7 +31,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.RegistryOps;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.metadata.pack.PackMetadataSection;
 import net.minecraft.tags.TagEntry;
@@ -71,10 +72,10 @@ public class ModernBetaDataPackExportScreen extends ModernBetaScreen {
     private final RegistryAccess registries;
 
     private final ModernBetaSettingsPreset preset;
-    private ResourceLocation presetID;
+    private Identifier presetID;
     private String presetName = "";
     private String presetDescription = "";
-    private ResourceLocation presetCategory;
+    private Holder<ModernBetaSettingsPresetCategory> presetCategory;
 
     private EditBox idBox;
     private EditBox nameBox;
@@ -140,7 +141,7 @@ public class ModernBetaDataPackExportScreen extends ModernBetaScreen {
                     (ModernBetaSettingsPresetCategoryTags.SELECTABLE)
                     .stream()
                     .toList(),
-                    (screen, category, preset) -> {
+                    (screen, category) -> {
                         this.presetCategory = category;
                         this.categoryButton.setMessage(this.getCategoryButtonLabel());
 
@@ -155,13 +156,12 @@ public class ModernBetaDataPackExportScreen extends ModernBetaScreen {
         this.idBox = new EditBox(this.minecraft.fontFilterFishy, 0, 0, TEXT_BOX_LENGTH, 20, Component.empty());
         this.idBox.setValue(this.presetID.toString());
         this.idBox.setResponder(string -> {
-            ResourceLocation parsed = ResourceLocation.tryParse(string);
+            Identifier parsed = Identifier.tryParse(string);
 
             if (parsed != null) {
                 this.idBox.setTextColor(EditBox.DEFAULT_TEXT_COLOR);
             } else {
-                //noinspection DataFlowIssue
-                this.idBox.setTextColor(ChatFormatting.RED.getColor() | 0xFF000000);
+                this.idBox.setTextColor(0xFFFF0000);
             }
 
             this.presetID = parsed;
@@ -237,7 +237,7 @@ public class ModernBetaDataPackExportScreen extends ModernBetaScreen {
         footerContent.addChild(widgetCancel);
     }
 
-    private ResourceLocation getDefaultPresetID() {
+    private Identifier getDefaultPresetID() {
         assert this.minecraft != null;
 
         String playerName = this.minecraft.getUser().getName().toLowerCase(Locale.ROOT);
@@ -252,8 +252,9 @@ public class ModernBetaDataPackExportScreen extends ModernBetaScreen {
     private Component getCategoryButtonLabel() {
         MutableComponent category = Component.translatable(TEXT_PRESET_CATEGORY).append(": ");
         category.append(this.presetCategory == null ?
-            Component.translatable("gui.none").withStyle(ChatFormatting.AQUA) :
-            Component.translatable(TEXT_PRESET_CATEGORY_NAME + "." + presetCategory.toLanguageKey()).withStyle(ChatFormatting.YELLOW)
+            Component.translatable("gui.none").withStyle(ChatFormatting.YELLOW) :
+            //~ if >=1.21.11 '.location' -> '.identifier'
+            presetCategory.value().makeOrGetTitleComponent(presetCategory.unwrapKey().orElseThrow().identifier())
         );
 
         return category;
@@ -293,24 +294,17 @@ public class ModernBetaDataPackExportScreen extends ModernBetaScreen {
 
         try (DataPackExporter exporter = new DataPackExporter(outputPath)) {
             if (this.presetCategory != null) {
-                ModernBetaSettingsPresetCategory category = this.presetCategoryRegistry
-                        //? if >=1.21.2 {
-                        .getValue
-                        //? } else {
-                        /*.get
-                         *///? }
-                        (this.presetCategory);
-                TagKey<ModernBetaSettingsPreset> tagKey = category.presetTag();
+                TagKey<ModernBetaSettingsPreset> tagKey = presetCategory.value().presetTag();
 
                 FileToIdConverter converter = FileToIdConverter.json(VersionCompat.tagsDirPath(ModernBetaResourceKeys.SETTINGS_PRESET));
-                ResourceLocation pathLocation = converter.idToFile(tagKey.location());
+                Identifier pathLocation = converter.idToFile(tagKey.location());
 
                 TagFile tagFile = new TagFile(List.of(TagEntry.element(this.presetID)), false);
                 exporter.addJson(objectToJson(tagFile, TagFile.CODEC), "data", pathLocation);
             }
 
             FileToIdConverter converter = FileToIdConverter.json(VersionCompat.elementsDirPath(ModernBetaResourceKeys.SETTINGS_PRESET));
-            ResourceLocation pathLocation = converter.idToFile(this.presetID);
+            Identifier pathLocation = converter.idToFile(this.presetID);
 
             ModernBetaSettingsPreset expanded = this.preset
                     .mapped(this.presetRegistry/*? if <1.21.2 {*//*.asLookup()*//*?}*/)
@@ -331,19 +325,19 @@ public class ModernBetaDataPackExportScreen extends ModernBetaScreen {
                 *///? }
                 (PackType.SERVER_DATA)
                 //? if >=1.21.9
-                    //.minorRange()
+                    .minorRange()
                 //? if >=1.20.2 && <1.21.9
-                , Optional.empty()
+                //, Optional.empty()
             );
             JsonElement metadataElement =
                     //? if >=1.20.2 {
                     objectToJson(
                         metadataSection,
                         //? if >=1.21.9 {
-                        /*PackMetadataSection.SERVER_TYPE.codec()
-                        *///? } else {
-                        PackMetadataSection.CODEC
-                        //? }
+                        PackMetadataSection.SERVER_TYPE.codec()
+                        //? } else {
+                        /*PackMetadataSection.CODEC
+                        *///? }
                     );
                     //? } else {
                     /*PackMetadataSection.TYPE.toJson(metadataSection);
@@ -371,11 +365,11 @@ public class ModernBetaDataPackExportScreen extends ModernBetaScreen {
             this.stream = new ZipOutputStream(fileOutputStream);
         }
 
-        private void addJson(JsonElement json, String parent, ResourceLocation path) throws IOException {
+        private void addJson(JsonElement json, String parent, Identifier path) throws IOException {
             this.addJson(json, parent, path.getNamespace() + "/" + path.getPath());
         }
 
-        private void addJson(JsonElement json, ResourceLocation path) throws IOException {
+        private void addJson(JsonElement json, Identifier path) throws IOException {
             this.addJson(json, "", path);
         }
 

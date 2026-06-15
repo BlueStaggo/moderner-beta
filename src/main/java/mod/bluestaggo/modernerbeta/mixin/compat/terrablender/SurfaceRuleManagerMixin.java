@@ -3,7 +3,7 @@ package mod.bluestaggo.modernerbeta.mixin.compat.terrablender;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import mod.bluestaggo.modernerbeta.compat.ModCompat;
-import net.minecraft.data.worldgen.SurfaceRuleData;
+import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaSurfaceRuleData;
 import net.minecraft.world.level.levelgen.SurfaceRules;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
@@ -17,15 +17,22 @@ public abstract class SurfaceRuleManagerMixin {
         method = "getDefaultSurfaceRules",
         at = @At(
             value = "INVOKE",
-            target = "Lterrablender/worldgen/TBSurfaceRuleData;overworld()Lnet/minecraft/world/level/levelgen/SurfaceRules$RuleSource;"
+            target =
+                "Lterrablender/worldgen/TBSurfaceRuleData;overworld(" +
+                //? if >=26.2
+                //"Lnet/minecraft/core/HolderGetter;" +
+                ")Lnet/minecraft/world/level/levelgen/SurfaceRules$RuleSource;"
         )
     )
-    private static SurfaceRules.RuleSource useModernBetaOverworldSurfaceRules(Operation<SurfaceRules.RuleSource> original) {
-        //How anticlimactic...
+    private static SurfaceRules.RuleSource useModernBetaOverworldSurfaceRules(
+        //? if >=26.2
+        //net.minecraft.core.HolderGetter<net.minecraft.world.level.biome.Biome> biomeLookup,
+        Operation<SurfaceRules.RuleSource> original
+    ) {
         if (ModCompat.useModernBetaSurfaceRules) {
-            return SurfaceRuleData.overworld();
+            return ModernBetaSurfaceRuleData.overworldLike(/*? >=26.2 {*//*biomeLookup*//*?} else { */null/*?}*/, true, false, false, false);
         }
 
-        return original.call();
+        return original.call(/*? >=26.2 {*//*biomeLookup*//*?}*/);
     }
 }

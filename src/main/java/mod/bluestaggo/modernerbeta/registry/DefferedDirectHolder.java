@@ -4,7 +4,7 @@ import com.mojang.datafixers.util.Either;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderOwner;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 
 import java.util.Optional;
@@ -16,32 +16,32 @@ public class DefferedDirectHolder<T> implements Holder<T> {
     private final Supplier<T> supplier;
     private T value;
     //? if >=26.1 {
-    /*private final Supplier<net.minecraft.core.component.DataComponentMap> componentSupplier;
+    private final Supplier<net.minecraft.core.component.DataComponentMap> componentSupplier;
     private net.minecraft.core.component.DataComponentMap components;
-    *///? }
+    //? }
 
     private DefferedDirectHolder(
         Supplier<T> supplier
         //? >=26.1
-        //, Supplier<net.minecraft.core.component.DataComponentMap> componentSupplier
+        , Supplier<net.minecraft.core.component.DataComponentMap> componentSupplier
     ) {
         this.supplier = supplier;
         //? >=26.1
-        //this.componentSupplier = componentSupplier;
+        this.componentSupplier = componentSupplier;
     }
 
     public static <T> DefferedDirectHolder<T> of(Supplier<T> supplier) {
-        return new DefferedDirectHolder<>(supplier /*? >=26.1 {*//*, () -> net.minecraft.core.component.DataComponentMap.EMPTY*//*?}*/);
+        return new DefferedDirectHolder<>(supplier /*? >=26.1 {*/, () -> net.minecraft.core.component.DataComponentMap.EMPTY/*?}*/);
     }
 
     //? if >=26.1 {
-    /*public static <T> DefferedDirectHolder<T> of(
+    public static <T> DefferedDirectHolder<T> of(
         Supplier<T> supplier,
         Supplier<net.minecraft.core.component.DataComponentMap> components
     ) {
         return new DefferedDirectHolder<>(supplier, components);
     }
-    *///? }
+    //? }
 
     private void initIfNull() {
         if (value == null) {
@@ -61,14 +61,14 @@ public class DefferedDirectHolder<T> implements Holder<T> {
     }
 
     //? if >=26.1 {
-    /*@Override
+    @Override
     public boolean areComponentsBound() {
         return true;
     }
-    *///? }
+    //? }
 
     @Override
-    public boolean is(ResourceLocation location) {
+    public boolean is(Identifier location) {
         return false;
     }
 
@@ -101,7 +101,7 @@ public class DefferedDirectHolder<T> implements Holder<T> {
     }
 
     //? if >=26.1 {
-    /*@Override
+    @Override
     public net.minecraft.core.component.DataComponentMap components() {
         if (components == null) {
             components = componentSupplier.get();
@@ -109,7 +109,7 @@ public class DefferedDirectHolder<T> implements Holder<T> {
 
         return components;
     }
-    *///? }
+    //? }
 
     @Override
     public Either<ResourceKey<T>, T> unwrap() {

@@ -6,7 +6,7 @@ import mod.bluestaggo.modernerbeta.level.feature.ModernBetaFoliagePlacers;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.valueproviders.IntProvider;
-import net.minecraft.world.level.LevelSimulatedReader;
+import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
 import net.minecraft.world.level.levelgen.feature.foliageplacers.BlobFoliagePlacer;
 import net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacerType;
@@ -26,7 +26,7 @@ public class BetaLargeOakFoliagePlacer extends BlobFoliagePlacer {
     }
 
     @Override
-    protected void createFoliage(LevelSimulatedReader level, FoliageSetter placer, RandomSource random, TreeConfiguration config, int trunkHeight, FoliageAttachment treeNode, int foliageHeight, int radius, int offset) {
+    protected void createFoliage(WorldGenLevel level, FoliageSetter placer, RandomSource random, TreeConfiguration config, int trunkHeight, FoliageAttachment treeNode, int foliageHeight, int radius, int offset) {
         for (int curY = offset; curY >= offset - foliageHeight; curY--) {
             float blobRadius = curY != offset && curY != offset - foliageHeight ? radius + 1 : radius;
 

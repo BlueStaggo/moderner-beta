@@ -2,7 +2,7 @@ package mod.bluestaggo.modernerbeta.util;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class CompoundTagBuilder {
     private final CompoundTag compound;
@@ -15,7 +15,7 @@ public class CompoundTagBuilder {
         this.compound = initial.copy();
     }
 
-    public CompoundTagBuilder putResourceLocation(String key, ResourceLocation value) {
+    public CompoundTagBuilder putIdentifier(String key, Identifier value) {
         this.compound.putString(key, value.toString());
 
         return this;

@@ -4,20 +4,27 @@ import mod.bluestaggo.modernerbeta.api.level.chunk.ChunkProvider;
 import mod.bluestaggo.modernerbeta.api.level.chunk.ChunkProviderNoiseImitable;
 import mod.bluestaggo.modernerbeta.api.level.chunk.surface.SurfaceConfig;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
+import mod.bluestaggo.modernerbeta.settings.component.DeepslateGeneration;
 import mod.bluestaggo.modernerbeta.settings.component.Infdev227Structures;
 import mod.bluestaggo.modernerbeta.settings.component.PerlinNoiseSettings;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkCache;
+import mod.bluestaggo.modernerbeta.util.noise.OctaveNoise;
 import mod.bluestaggo.modernerbeta.util.noise.PerlinOctaveNoise;
 import mod.bluestaggo.modernerbeta.util.noise.SimpleNoisePos;
 import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.level.blocksource.BlockSourceRules;
 import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaChunkGenerator;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.WorldGenRegion;
+import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.LevelHeightAccessor;
 import net.minecraft.world.level.StructureManager;
@@ -44,6 +51,9 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
     private final int seaLevel;
 
     private final int bedrockFloor;
+
+    private final DeepslateGeneration deepslateGeneration;
+    private final BlockState deepslateBlock;
     
     private final BlockState defaultBlock;
     private final BlockState defaultFluid;
@@ -51,12 +61,12 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
     private final boolean infdevUsePyramid;
     private final boolean infdevUseWall;
 
-    private final PerlinOctaveNoise octaveNoiseA;
-    private final PerlinOctaveNoise octaveNoiseB;
-    private final PerlinOctaveNoise octaveNoiseC;
-    private final PerlinOctaveNoise octaveNoiseD;
-    private final PerlinOctaveNoise octaveNoiseE;
-    private final PerlinOctaveNoise octaveNoiseF;
+    private final PerlinOctaveNoise primaryOctaveNoise;
+    private final PerlinOctaveNoise secondaryOctaveNoise;
+    private final PerlinOctaveNoise highOctaveNoise;
+    private final PerlinOctaveNoise lowOctaveNoise;
+    private final PerlinOctaveNoise selectorOctaveNoise;
+    private final PerlinOctaveNoise detailOctaveNoise;
     private final PerlinOctaveNoise forestOctaveNoise;
     
     private final ChunkCache<int[]> chunkCacheHeightmap;
@@ -73,6 +83,12 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
         this.seaLevel = generatorSettings.seaLevel();
         this.bedrockFloor = 0;
 
+        this.deepslateGeneration = this.getChunkSettings().getOrDefault(SettingsComponentTypes.DEEPSLATE_GENERATION);
+        this.deepslateBlock = BuiltInRegistries.BLOCK.getOrThrow(ResourceKey.create(Registries.BLOCK, this.deepslateGeneration.block()))
+                //? if >=1.21.2
+                .value()
+                .defaultBlockState();
+
         this.defaultBlock = generatorSettings.defaultBlock();
         this.defaultFluid = generatorSettings.defaultFluid();
 
@@ -81,12 +97,12 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
         this.infdevUsePyramid = structures.brickPyramids();
         this.infdevUseWall = structures.obsidianWalls();
         
-        this.octaveNoiseA = new PerlinOctaveNoise(this.random, 16, perlinSettings);
-        this.octaveNoiseB = new PerlinOctaveNoise(this.random, 16, perlinSettings);
-        this.octaveNoiseC = new PerlinOctaveNoise(this.random, 8, perlinSettings);
-        this.octaveNoiseD = new PerlinOctaveNoise(this.random, 4, perlinSettings);
-        this.octaveNoiseE = new PerlinOctaveNoise(this.random, 4, perlinSettings);
-        this.octaveNoiseF = new PerlinOctaveNoise(this.random, 5, perlinSettings);
+        this.primaryOctaveNoise = new PerlinOctaveNoise(this.random, 16, perlinSettings);
+        this.secondaryOctaveNoise = new PerlinOctaveNoise(this.random, 16, perlinSettings);
+        this.highOctaveNoise = new PerlinOctaveNoise(this.random, 8, perlinSettings);
+        this.lowOctaveNoise = new PerlinOctaveNoise(this.random, 4, perlinSettings);
+        this.selectorOctaveNoise = new PerlinOctaveNoise(this.random, 4, perlinSettings);
+        this.detailOctaveNoise = new PerlinOctaveNoise(this.random, 5, perlinSettings);
         this.forestOctaveNoise = new PerlinOctaveNoise(this.random, 5, perlinSettings);
         
         this.chunkCacheHeightmap = new ChunkCache<>("heightmap", this::sampleHeightmapChunk);
@@ -106,8 +122,8 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
         
         ChunkPos chunkPos = chunk.getPos();
-        int chunkX = chunkPos.x;
-        int chunkZ = chunkPos.z;
+        int chunkX = chunkPos.x();
+        int chunkZ = chunkPos.z();
 
         int startX = chunk.getPos().getMinBlockX();
         int startZ = chunk.getPos().getMinBlockZ();
@@ -120,51 +136,57 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
             for (int localZ = 0; localZ < 16; ++localZ) {
                 int x = startX + localX;
                 int z = startZ + localZ;
-                int surfaceTopY = chunk.getOrCreateHeightmapUnprimed(Types.OCEAN_FLOOR_WG).getFirstAvailable(localX, localZ) - 1;
-                
+                int surfaceTopY = chunk.getHeight(Heightmap.Types.WORLD_SURFACE_WG, x, z) + 1;
+
                 Holder<Biome> biome = biomeSource.getBiomeForSurfaceGen(region, pos.set(x, surfaceTopY, z));
-                int surfaceMinY = this.getHeight(region, x, z, Types.OCEAN_FLOOR_WG) - 8;
-                
+
                 SurfaceConfig surfaceConfig = this.surfaceBuilder.getSurfaceConfig(biome);
                 BlockState topBlock = surfaceConfig.normal().topBlock();
                 BlockState fillerBlock = surfaceConfig.normal().fillerBlock();
 
                 int runDepth = 0;
 
-                for (int y = this.worldTopY; y >= this.worldMinY; --y) {
-                    BlockState blockState;
-                    
+                for (int y = surfaceTopY; y >= this.worldMinY; --y) {
                     pos.set(localX, y, localZ);
-                    blockState = chunk.getBlockState(pos);
+                    BlockState blockAt = chunk.getBlockState(pos);
+                    BlockState blockToSet = null;
                     
                     // Place bedrock
                     if (y <= bedrockFloor + bedrockRand.nextInt(5)) {
-                        VersionCompat.setBlockState(chunk, pos, BlockStates.BEDROCK);
-                        continue;
+                        blockToSet = BlockStates.BEDROCK;
                     }
-
-                    // Skip if at surface min y
-                    if (y < surfaceMinY) {
-                        continue;
-                    }
-
-                    boolean inFluid = blockState.equals(BlockStates.AIR) || blockState.equals(this.defaultFluid);
                     
-                    if (inFluid) {
+                    if (blockAt.equals(BlockStates.AIR) || blockAt.equals(this.defaultFluid)) {
                         runDepth = 0;
                         continue;
                     }
                     
-                    if (!blockState.is(this.defaultBlock.getBlock())) {
+                    if (!blockAt.is(this.defaultBlock.getBlock())) {
                         continue;
                     }
-                        
-                    if (runDepth == 0) blockState = (y >= this.seaLevel) ? topBlock : fillerBlock;
-                    if (runDepth == 1) blockState = fillerBlock;
-                    
+
+                    if (runDepth == 0) blockToSet = (y >= this.seaLevel) ? topBlock : fillerBlock;
+                    if (runDepth == 1) blockToSet = fillerBlock;
+
                     runDepth++;
 
-                    VersionCompat.setBlockState(chunk, pos, blockState);
+                    if (blockToSet == null && this.deepslateGeneration.enabled()) {
+                        if (y <= this.deepslateGeneration.minY()) {
+                            blockToSet = this.deepslateBlock;
+                        } else {
+                            int minY = this.deepslateGeneration.minY();
+                            int maxY = this.deepslateGeneration.maxY();
+
+                            double yThreshold = Mth.lerp(Mth.inverseLerp(y, minY, maxY), 1.0, 0.0);
+                            RandomSource random = this.randomFactory.at(x, y, z);
+
+                            blockToSet = (double) random.nextFloat() < yThreshold ? this.deepslateBlock : null;
+                        }
+                    }
+
+                    if (blockToSet != null) {
+                        VersionCompat.setBlockState(chunk, pos, blockToSet);
+                    }
                 }
             }
         }
@@ -173,8 +195,8 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
     @Override
     public void provideSurfaceExtra(WorldGenRegion region, StructureManager structureAccessor, ChunkAccess chunk, ModernBetaBiomeSource biomeSource, RandomState noiseConfig) {
         ChunkPos chunkPos = chunk.getPos();
-        int chunkX = chunkPos.x;
-        int chunkZ = chunkPos.z;
+        int chunkX = chunkPos.x();
+        int chunkZ = chunkPos.z();
 
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
         Random bedrockRand = this.createSurfaceRandom(chunkX, chunkZ);
@@ -192,6 +214,19 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
                 }
             }
         }
+    }
+
+    /**
+     * Gets the surface height for the given coordinate
+     *
+     * @param rand The {@link Random} instance to use.
+     * @param x    The X coordinate to get the height for.
+     * @param z    The Z coordinate to get the height for
+     * @return The height for the given coordinates.
+     */
+    @Override
+    public int getSurfaceDepth(Random rand, int x, int z) {
+        return 1;
     }
 
     @Override
@@ -218,8 +253,8 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
         BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
         SimpleNoisePos noisePos = new SimpleNoisePos();
         
-        int chunkX = chunk.getPos().x;
-        int chunkZ = chunk.getPos().z;
+        int chunkX = chunk.getPos().x();
+        int chunkZ = chunk.getPos().z();
         
         int startX = chunk.getPos().getMinBlockX();
         int startZ = chunk.getPos().getMinBlockZ();
@@ -307,26 +342,26 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
     }
     
     @Override
-    protected PerlinOctaveNoise getForestOctaveNoise() {
+    protected OctaveNoise getForestOctaveNoise() {
         return this.forestOctaveNoise;
     }
     
     private int sampleHeightmap(int x, int z) {
-        float noiseA = (float)(
-            this.octaveNoiseA.sample(x * 32.0f, 0.0, z * 32.0f) - 
-            this.octaveNoiseB.sample(x * 64.0f, 0.0, z * 64.0f)) / 512.0f / 4.0f;
-        float noiseB = (float)this.octaveNoiseE.sampleXY(x / 4.0f, z / 4.0f);
-        float noiseC = (float)this.octaveNoiseF.sampleXY(x / 8.0f, z / 8.0f) / 8.0f;
+        float baseHeight = (float)(
+            this.primaryOctaveNoise.sample(x * 32.0f, 0.0, z * 32.0f) -
+            this.secondaryOctaveNoise.sample(x * 64.0f, 0.0, z * 64.0f)) / 512.0f / 4.0f;
+        float selector = (float)this.selectorOctaveNoise.sampleXY(x / 4.0f, z / 4.0f);
+        float detail = (float)this.detailOctaveNoise.sampleXY(x / 8.0f, z / 8.0f) / 8.0f;
         
-        noiseB = noiseB > 0.0f ? 
-            ((float)(this.octaveNoiseC.sampleXY(x / 3.888889f * 2.0f, z / 3.888889f * 2.0f) * noiseC / 4.0)) :
-            ((float)(this.octaveNoiseD.sampleXY(x / 3.888889f, z / 3.888889f) * noiseC));
+        float addedHeight = selector > 0.0f ?
+            ((float)(this.highOctaveNoise.sampleXY(x / 3.888889f * 2.0f, z / 3.888889f * 2.0f) * detail / 4.0)) :
+            ((float)(this.lowOctaveNoise.sampleXY(x / 3.888889f, z / 3.888889f) * detail));
             
-        int heightVal = (int)(noiseA + this.seaLevel + noiseB);
+        int heightVal = (int)(baseHeight + this.seaLevel + addedHeight);
 
-        if ((float)this.octaveNoiseE.sampleXY(x, z) < 0.0f) {
+        if ((float)this.selectorOctaveNoise.sampleXY(x, z) < 0.0f) {
             heightVal = heightVal / 2 << 1;
-            if ((float)this.octaveNoiseE.sampleXY(x / 5, z / 5) < 0.0f) {
+            if ((float)this.selectorOctaveNoise.sampleXY(x / 5, z / 5) < 0.0f) {
                 ++heightVal;
             }
         }

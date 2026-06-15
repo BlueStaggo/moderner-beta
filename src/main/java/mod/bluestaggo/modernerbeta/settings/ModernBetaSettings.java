@@ -17,14 +17,14 @@ import mod.bluestaggo.modernerbeta.util.CodecUtil;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ConfiguredLayers;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers.Layer;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.RegistryOps;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.biome.Biome;
 import org.jetbrains.annotations.NotNull;
 
@@ -48,7 +48,7 @@ public class ModernBetaSettings implements Iterable<SettingsComponent<?>> {
         ).apply(instance, ModernBetaSettings::new)
     );
 
-    public static final ResourceLocation DEFAULT_PRESET_ID = ModernerBeta.createId("default");
+    public static final Identifier DEFAULT_PRESET_ID = ModernerBeta.createId("default");
 
     private final Map<SettingsComponentType<?>, Object> components;
     protected RegistryOps.RegistryInfoLookup registries;
@@ -70,11 +70,11 @@ public class ModernBetaSettings implements Iterable<SettingsComponent<?>> {
             .addAll(settings);
     }
 
-    public static Builder betaFractalLayers(Map<ResourceLocation, String> outputs, ClimateDistribution climateDistribution, Layer... pipeline) {
+    public static Builder betaFractalLayers(Map<Identifier, String> outputs, ClimateDistribution climateDistribution, Layer... pipeline) {
         return betaFractalLayers(outputs, climateDistribution, Arrays.asList(pipeline));
     }
 
-    public static Builder betaFractalLayers(Map<ResourceLocation, String> outputs, ClimateDistribution climateDistribution, List<Layer> pipeline) {
+    public static Builder betaFractalLayers(Map<Identifier, String> outputs, ClimateDistribution climateDistribution, List<Layer> pipeline) {
         return betaFractalLayers(new ConfiguredLayers(pipeline, outputs), climateDistribution);
     }
 
@@ -85,11 +85,11 @@ public class ModernBetaSettings implements Iterable<SettingsComponent<?>> {
             .add(SettingsComponentTypes.CLIMATE_DISTRIBUTION, climateDistribution);
     }
 
-    public static Builder fractalLayers(Map<ResourceLocation, String> outputs, Layer... pipeline) {
+    public static Builder fractalLayers(Map<Identifier, String> outputs, Layer... pipeline) {
         return fractalLayers(outputs, Arrays.asList(pipeline));
     }
 
-    public static Builder fractalLayers(Map<ResourceLocation, String> outputs, List<Layer> pipeline) {
+    public static Builder fractalLayers(Map<Identifier, String> outputs, List<Layer> pipeline) {
         return fractalLayers(new ConfiguredLayers(pipeline, outputs));
     }
 
@@ -99,11 +99,10 @@ public class ModernBetaSettings implements Iterable<SettingsComponent<?>> {
             .add(SettingsComponentTypes.FRACTAL_LAYERS, configuredLayers);
     }
 
-    public static ModernBetaSettings singleBiome(ResourceKey<Biome> biome) {
+    public static Builder singleBiome(Holder<Biome> biome) {
         return new Builder()
             .add(SettingsComponentTypes.PROVIDER, ModernBetaBuiltInTypes.Biome.SINGLE.id)
-            .add(SettingsComponentTypes.SINGLE_BIOME, biome.location())
-            .build();
+            .add(SettingsComponentTypes.SINGLE_BIOME, biome);
     }
 
     public static ModernBetaSettings noCaveBiomes() {
@@ -133,7 +132,7 @@ public class ModernBetaSettings implements Iterable<SettingsComponent<?>> {
         this.registries = registries;
     }
 
-    public ResourceLocation getProvider() {
+    public Identifier getProvider() {
         return this.getOrThrow(SettingsComponentTypes.PROVIDER);
     }
 
@@ -141,7 +140,7 @@ public class ModernBetaSettings implements Iterable<SettingsComponent<?>> {
         ModernBetaSettings settings = this;
 
         while (true) {
-            ResourceLocation presetId = settings.get(SettingsComponentTypes.PRESET);
+            Identifier presetId = settings.get(SettingsComponentTypes.PRESET);
             Optional<ModernBetaSettingsPreset> preset = ModernBetaSettingsPreset.getPreset(presetId, presetRegistry);
 
             if (preset.isEmpty())
@@ -156,7 +155,7 @@ public class ModernBetaSettings implements Iterable<SettingsComponent<?>> {
     }
 
     public Optional<ModernBetaSettings> getBasePresetSettings(HolderGetter<ModernBetaSettingsPreset> presetRegistry, Function<ModernBetaSettingsPreset, ModernBetaSettings> settingsProvider) {
-        ResourceLocation presetId = this.get(SettingsComponentTypes.PRESET);
+        Identifier presetId = this.get(SettingsComponentTypes.PRESET);
         Optional<ModernBetaSettingsPreset> preset = ModernBetaSettingsPreset.getPreset(presetId, presetRegistry);
 
         return preset.map(settingsPreset -> settingsProvider.apply(settingsPreset)
@@ -181,7 +180,7 @@ public class ModernBetaSettings implements Iterable<SettingsComponent<?>> {
     public <T> T getOrThrow(SettingsComponentType<T> type) {
         T value = this.get(type);
         if (value == null) {
-            ResourceLocation id = ModernBetaRegistries.SETTINGS_COMPONENT_TYPE.getKey(type);
+            Identifier id = ModernBetaRegistries.SETTINGS_COMPONENT_TYPE.getKey(type);
             throw new IllegalArgumentException("Component of type \"" + id + "\" supplied a null value!");
         }
         return value;
@@ -194,7 +193,7 @@ public class ModernBetaSettings implements Iterable<SettingsComponent<?>> {
 
     @SuppressWarnings("unchecked")
     public ModernBetaSettings getDifference(ModernBetaSettings newSettings, HolderGetter<ModernBetaSettingsPreset> presetRegistry, Function<ModernBetaSettingsPreset, ModernBetaSettings> settingsProvider) {
-        ResourceLocation basePreset = this.get(SettingsComponentTypes.PRESET);
+        Identifier basePreset = this.get(SettingsComponentTypes.PRESET);
         if (basePreset == null)
             return newSettings;
 
@@ -205,7 +204,7 @@ public class ModernBetaSettings implements Iterable<SettingsComponent<?>> {
         ModernBetaSettings baseSettings = basePresetSettings.get();
         Builder builder = new Builder(this.registries);
         builder.add(SettingsComponentTypes.PRESET, basePreset);
-        DynamicOps<Tag> ops = newSettings.registries != null ? RegistryOps.create(NbtOps.INSTANCE, newSettings.registries) : NbtOps.INSTANCE;
+        DynamicOps<Tag> ops = newSettings.getOpsForSettings(NbtOps.INSTANCE);
 
         newSettings.stream()
             .filter(component -> {
@@ -217,6 +216,10 @@ public class ModernBetaSettings implements Iterable<SettingsComponent<?>> {
             })
             .forEach(builder::add);
         return builder.build();
+    }
+
+    public <T> DynamicOps<T> getOpsForSettings(DynamicOps<T> ops) {
+        return this.registries != null ? RegistryOps.create(ops, this.registries) : ops;
     }
 
     public int size() {
@@ -240,7 +243,7 @@ public class ModernBetaSettings implements Iterable<SettingsComponent<?>> {
     }
 
     public CompoundTag toCompound() {
-        DynamicOps<Tag> ops = registries != null ? RegistryOps.create(NbtOps.INSTANCE, registries) : NbtOps.INSTANCE;
+        DynamicOps<Tag> ops = getOpsForSettings(NbtOps.INSTANCE);
         return (CompoundTag)VersionCompat.getOrThrow(CODEC.encode(this, ops, new CompoundTag()));
     }
 

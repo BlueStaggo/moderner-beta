@@ -2,7 +2,6 @@ package mod.bluestaggo.modernerbeta.level.chunk;
 
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
-import mod.bluestaggo.modernerbeta.compat.ModCompat;
 import mod.bluestaggo.modernerbeta.mixin.NoiseRouterDataAccessor;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
 import net.minecraft.core.Holder.Reference;
@@ -10,7 +9,6 @@ import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
-import net.minecraft.data.worldgen.SurfaceRuleData;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.levelgen.DensityFunction;
 import net.minecraft.world.level.levelgen.DensityFunctions;
@@ -25,8 +23,6 @@ import net.minecraft.world.level.levelgen.synth.NormalNoise.NoiseParameters;
 import java.util.List;
 
 public class ModernBetaNoiseGeneratorSettings {
-    private static boolean useModernBetaSurfaceRules;
-
     public static final ResourceKey<NoiseGeneratorSettings> INFDEV_415;
     public static final ResourceKey<NoiseGeneratorSettings> FINITE_2D;
     public static final ResourceKey<NoiseGeneratorSettings> SKY_128;
@@ -105,8 +101,9 @@ public class ModernBetaNoiseGeneratorSettings {
     ) {
         HolderGetter<DensityFunction> densityFunctionLookup = context.lookup(Registries.DENSITY_FUNCTION);
         HolderGetter<NormalNoise.NoiseParameters> noiseParametersLookup = context.lookup(Registries.NOISE);
+        HolderGetter<net.minecraft.world.level.biome.Biome> biomeLookup = context.lookup(Registries.BIOME);
 
-        return createNoiseGeneratorSettings(densityFunctionLookup, noiseParametersLookup, shapeConfig, seaLevel, useAquifers);
+        return createNoiseGeneratorSettings(densityFunctionLookup, noiseParametersLookup, biomeLookup, shapeConfig, seaLevel, useAquifers);
     }
 
     public static NoiseGeneratorSettings createNoiseGeneratorSettings(
@@ -117,20 +114,20 @@ public class ModernBetaNoiseGeneratorSettings {
     ) {
         HolderGetter<DensityFunction> densityFunctionLookup = lookup.lookupOrThrow(Registries.DENSITY_FUNCTION);
         HolderGetter<NormalNoise.NoiseParameters> noiseParametersLookup = lookup.lookupOrThrow(Registries.NOISE);
+        HolderGetter<net.minecraft.world.level.biome.Biome> biomeLookup = lookup.lookupOrThrow(Registries.BIOME);
 
-        return createNoiseGeneratorSettings(densityFunctionLookup, noiseParametersLookup, shapeConfig, seaLevel, useAquifers);
+        return createNoiseGeneratorSettings(densityFunctionLookup, noiseParametersLookup, biomeLookup, shapeConfig, seaLevel, useAquifers);
     }
     
     private static NoiseGeneratorSettings createNoiseGeneratorSettings(
         HolderGetter<DensityFunction> densityFunctionLookup,
         HolderGetter<NormalNoise.NoiseParameters> noiseParametersLookup,
+        HolderGetter<net.minecraft.world.level.biome.Biome> biomeLookup,
         NoiseSettings shapeConfig,
         int seaLevel,
         boolean useAquifers
     ) {
-        useModernBetaSurfaceRules = true;
-        SurfaceRules.RuleSource materialRule = SurfaceRuleData.overworld();
-        useModernBetaSurfaceRules = false;
+        SurfaceRules.RuleSource materialRule = ModernBetaSurfaceRuleData.overworldLike(biomeLookup, true, false, false, false);
 
         return new NoiseGeneratorSettings(
             shapeConfig,
@@ -145,11 +142,6 @@ public class ModernBetaNoiseGeneratorSettings {
             false,
             true
         );
-    }
-
-    public static boolean useModernBetaSurfaceRules() {
-        //TODO: make this more proper
-        return useModernBetaSurfaceRules || ModCompat.useModernBetaSurfaceRules;
     }
 
     static {

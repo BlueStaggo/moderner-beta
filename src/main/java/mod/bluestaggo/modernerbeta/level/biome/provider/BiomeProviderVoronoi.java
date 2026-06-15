@@ -1,7 +1,6 @@
 package mod.bluestaggo.modernerbeta.level.biome.provider;
 
 import mod.bluestaggo.modernerbeta.api.level.biome.BiomeProvider;
-import mod.bluestaggo.modernerbeta.api.level.biome.BiomeResolverOcean;
 import mod.bluestaggo.modernerbeta.api.level.biome.climate.Clime;
 import mod.bluestaggo.modernerbeta.api.debug.DebugTextProvider2D;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
@@ -11,23 +10,19 @@ import mod.bluestaggo.modernerbeta.util.chunk.ChunkCache;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkClimate;
 import mod.bluestaggo.modernerbeta.util.noise.SimplexOctaveNoise;
 import mod.bluestaggo.modernerbeta.level.biome.provider.climate.ClimateMapping;
-import mod.bluestaggo.modernerbeta.level.biome.provider.climate.ClimateType;
 import mod.bluestaggo.modernerbeta.level.biome.voronoi.VoronoiPointBiome;
 import mod.bluestaggo.modernerbeta.level.biome.voronoi.VoronoiPointRules;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.biome.Biome;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
+import java.util.Set;
 
-public class BiomeProviderVoronoi extends BiomeProvider implements BiomeResolverOcean, DebugTextProvider2D {
+public class BiomeProviderVoronoi extends BiomeProvider implements DebugTextProvider2D {
     private final VoronoiClimateSampler climateSampler;
     private final VoronoiPointRules<ClimateMapping, Clime> rules;
     
@@ -51,38 +46,14 @@ public class BiomeProviderVoronoi extends BiomeProvider implements BiomeResolver
     public Holder<Biome> getBiome(int biomeX, int biomeY, int biomeZ) {
         ClimateMapping climateMapping = this.getClimateMapping(biomeX, biomeZ);
         
-        return this.biomeRegistry.getOrThrow(climateMapping.getBiome(ClimateType.LAND));
-    }
- 
-    @Override
-    public Holder<Biome> getOceanBiome(int biomeX, int biomeY, int biomeZ) {
-        ClimateMapping climateMapping = this.getClimateMapping(biomeX, biomeZ);
-        
-        return this.biomeRegistry.getOrThrow(climateMapping.getBiome(ClimateType.OCEAN));
-    }
-    
-    @Override
-    public Holder<Biome> getDeepOceanBiome(int biomeX, int biomeY, int biomeZ) {
-        ClimateMapping climateMapping = this.getClimateMapping(biomeX, biomeZ);
-        
-        return this.biomeRegistry.getOrThrow(climateMapping.getBiome(ClimateType.DEEP_OCEAN));
+        return climateMapping.biome();
     }
 
     @Override
-    public List<Holder<Biome>> getBiomes() {
-        List<ResourceLocation> biomes = new ArrayList<>();
-
-        this.rules.getItems().forEach(key -> {
-            biomes.add(key.biome());
-            biomes.add(key.oceanBiome());
-            biomes.add(key.deepOceanBiome());
-        });
-        
-        return biomes
-            .stream()
-            .distinct()
-            .map(key -> this.biomeRegistry.getOrThrow(ResourceKey.create(Registries.BIOME, key)))
-            .collect(Collectors.toList());
+    public Set<Holder<Biome>> getBiomes() {
+        Set<Holder<Biome>> biomes = new HashSet<>();
+        this.rules.getItems().forEach(key -> biomes.add(key.biome()));
+        return biomes;
     }
     
     private ClimateMapping getClimateMapping(int biomeX, int biomeZ) {
@@ -98,15 +69,13 @@ public class BiomeProviderVoronoi extends BiomeProvider implements BiomeResolver
         VoronoiPointRules.Builder<ClimateMapping, Clime> builder = new VoronoiPointRules.Builder<>();
         
         for (VoronoiPointBiome point : points) {
-            ResourceLocation biome = point.biome();
-            ResourceLocation oceanBiome = point.oceanBiome();
-            ResourceLocation deepOceanBiome = point.deepOceanBiome();
+            Holder<Biome> biome = point.biome();
             
             double temp = Mth.clamp(point.temp(), 0.0, 1.0);
             double rain = Mth.clamp(point.rain(), 0.0, 1.0);
             double weird = Mth.clamp(point.weird(), 0.0, 1.0);
             
-            ClimateMapping climateMapping = new ClimateMapping(biome, oceanBiome, deepOceanBiome);
+            ClimateMapping climateMapping = new ClimateMapping(biome);
             Clime clime = new Clime(temp, rain, weird);
             
             builder.add(climateMapping, clime);
@@ -158,10 +127,10 @@ public class BiomeProviderVoronoi extends BiomeProvider implements BiomeResolver
         }
         
         public Clime sampleNoise(int x, int z) {
-            double temp = this.tempOctaveNoise.sample(x, z, this.tempNoiseScale, 0.25D);
-            double rain = this.rainOctaveNoise.sample(x, z, this.rainNoiseScale, 0.33333333333333331D);
-            double detail = this.detailOctaveNoise.sample(x, z, this.detailNoiseScale, 0.58823529411764708D);
-            double weird = this.weirdOctaveNoise.sample(x, z, this.weirdNoiseScale, 0.2941176471D);
+            double temp = this.tempOctaveNoise.sampleXZ(x, z, this.tempNoiseScale, this.tempNoiseScale, 1.0 / 4.0);
+            double rain = this.rainOctaveNoise.sampleXZ(x, z, this.rainNoiseScale, this.rainNoiseScale, 1.0 / 3.0);
+            double detail = this.detailOctaveNoise.sampleXZ(x, z, this.detailNoiseScale, this.detailNoiseScale, 1.0 / 1.7);
+            double weird = this.weirdOctaveNoise.sampleXZ(x, z, this.weirdNoiseScale, this.weirdNoiseScale, 0.5 / 1.7);
 
             detail = detail * 1.1D + 0.5D;
             weird = (weird / 1.525D + 1.0D) / 2.0D;

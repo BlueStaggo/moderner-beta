@@ -5,7 +5,7 @@ import mod.bluestaggo.modernerbeta.imixin.ModernBetaClearableWidget;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.OptionInstance;
 //? if <1.21
-//import net.minecraft.client.gui.GuiGraphics;
+//import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.OptionsList;
 import net.minecraft.client.gui.layouts.GridLayout;
@@ -19,7 +19,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.function.Consumer;
 
@@ -167,7 +167,7 @@ public abstract class ModernBetaGraphicalSettingsScreen<T extends Tag> extends O
 
     //? if <1.21 {
     /*@Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float tickDelta) {
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float tickDelta) {
         this.basicListRender(graphics, this.list, mouseX, mouseY, tickDelta);
     }
     *///?}
@@ -192,7 +192,7 @@ public abstract class ModernBetaGraphicalSettingsScreen<T extends Tag> extends O
         return text;
     }
 
-    protected String getTextKey(String key, ResourceLocation subKey) {
+    protected String getTextKey(String key, Identifier subKey) {
         return getTextKey(key, subKey != null ? subKey.getPath() : null);
     }
 
@@ -212,7 +212,7 @@ public abstract class ModernBetaGraphicalSettingsScreen<T extends Tag> extends O
         return Component.translatable(getTextKey(key, subKey));
     }
 
-    public MutableComponent getText(String key, ResourceLocation subKey) {
+    public MutableComponent getText(String key, Identifier subKey) {
         return Component.translatable(getTextKey(key, subKey));
     }
 

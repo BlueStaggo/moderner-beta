@@ -5,16 +5,16 @@ import mod.bluestaggo.modernerbeta.api.level.chunk.ChunkProviderNoise;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkHeightmap;
 import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaChunkGenerator;
 //? if >=1.21.9 {
-/*import mod.bluestaggo.modernerbeta.ModernerBeta;
+import mod.bluestaggo.modernerbeta.ModernerBeta;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.debug.DebugScreenDisplayer;
 import net.minecraft.client.gui.components.debug.DebugScreenEntry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.chunk.LevelChunk;
 import org.jetbrains.annotations.Nullable;
-*///?}
+//?}
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.ChunkGenerator;
@@ -24,9 +24,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class DebugEntryHeightmap /*? >=1.21.9 {*/ /*implements DebugScreenEntry *//*?}*/ {
+public class DebugEntryHeightmap /*? >=1.21.9 {*/ implements DebugScreenEntry /*?}*/ {
     //? if >=1.21.9 {
-    /*private static final ResourceLocation SECTION_ID = ModernerBeta.createId("heightmap");
+    private static final Identifier SECTION_ID = ModernerBeta.createId("heightmap");
 
     @Override
     public void display(DebugScreenDisplayer lines, @Nullable Level level, @Nullable LevelChunk clientChunk, @Nullable LevelChunk chunk) {
@@ -42,7 +42,7 @@ public class DebugEntryHeightmap /*? >=1.21.9 {*/ /*implements DebugScreenEntry 
 
         lines.addToGroup(SECTION_ID, getLines(level, x, z));
     }
-    *///?}
+    //?}
 
     public static Collection<String> getLines(Level level, int x, int z) {
         if (!(level instanceof ServerLevel serverLevel))

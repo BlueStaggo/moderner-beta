@@ -4,20 +4,23 @@ import com.mojang.serialization.Codec;
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.api.level.biome.climate.TemperatureHeightScaling;
+import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomes;
+import mod.bluestaggo.modernerbeta.level.biome.injection.BiomeInjectionRule;
+import mod.bluestaggo.modernerbeta.level.biome.injection.BiomeInjectionRules;
 import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaNoiseGeneratorSettings;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import mod.bluestaggo.modernerbeta.settings.component.*;
 import mod.bluestaggo.modernerbeta.level.biome.provider.climate.ClimateMapping;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ConfiguredLayers;
 import mod.bluestaggo.modernerbeta.level.biome.voronoi.VoronoiPointBiome;
-import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import net.minecraft.core.Holder;
 import mod.bluestaggo.modernerbeta.settings.component.validation.ComponentValidator;
 import mod.bluestaggo.modernerbeta.settings.component.validation.ValidationResult;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
 import net.minecraft.world.level.levelgen.NoiseSettings;
 
@@ -28,8 +31,8 @@ import java.util.Map;
 public class SettingsComponentTypes {
     private static IRegistryHandler<SettingsComponentType<?>> registryHandler;
 
-    public static SettingsComponentType<ResourceLocation> PRESET;
-    public static SettingsComponentType<ResourceLocation> PROVIDER;
+    public static SettingsComponentType<Identifier> PRESET;
+    public static SettingsComponentType<Identifier> PROVIDER;
 
     // Chunk provider
     public static SettingsComponentType<DeepslateGeneration> DEEPSLATE_GENERATION;
@@ -54,19 +57,18 @@ public class SettingsComponentTypes {
     public static SettingsComponentType<Boolean> SPAWN_INDEV_HOUSE;
     public static SettingsComponentType<IslesProperties> ISLES_PROPERTIES;
     public static SettingsComponentType<WorldBorderLocation> WORLD_BORDER;
+    public static SettingsComponentType<StructureModifiers> STRUCTURE_MODIFERS;
 
     // Biome provider
-    public static SettingsComponentType<ResourceLocation> SINGLE_BIOME;
+    public static SettingsComponentType<Holder<Biome>> SINGLE_BIOME;
     public static SettingsComponentType<ClimateScale> CLIMATE_SCALE;
     public static SettingsComponentType<Map<String, ClimateMapping>> CLIMATE_MAPPINGS;
     public static SettingsComponentType<ClimateDistribution> CLIMATE_DISTRIBUTION;
     public static SettingsComponentType<List<VoronoiPointBiome>> VORONOI_POINTS;
     public static SettingsComponentType<ConfiguredLayers> FRACTAL_LAYERS;
     public static SettingsComponentType<Boolean> USE_32BIT_LAYER_SEED;
-    public static SettingsComponentType<Boolean> USE_OCEAN_BIOMES;
     public static SettingsComponentType<TemperatureHeightScaling> TEMPERATURE_HEIGHT_SCALING;
-    public static SettingsComponentType<BiomeInjectionThresholds> BIOME_INJECTION_THRESHOLDS;
-    public static SettingsComponentType<ResourceLocation> OUT_OF_BOUNDS_BIOME;
+    public static SettingsComponentType<List<BiomeInjectionRule>> BIOME_INJECTION_RULES;
 
     // Cave biome provider
     public static SettingsComponentType<CaveBiomeVoronoi> CAVE_BIOME_VORONOI;
@@ -78,12 +80,12 @@ public class SettingsComponentTypes {
     public static SettingsComponentType<Map<String, Integer>> CONFIG_BIOME_PREVIEW_COLORS;
     public static SettingsComponentType<MiscConfig> CONFIG_MISCELLANEOUS;
 
-    private static <T> SettingsComponentType<T> register(ResourceLocation id, Codec<T> codec, T defaultValue, ComponentValidator<T> validator) {
+    private static <T> SettingsComponentType<T> register(Identifier id, Codec<T> codec, T defaultValue, ComponentValidator<T> validator) {
         return registryHandler.register(id, new SettingsComponentType<>(codec, defaultValue, validator));
     }
 
     private static <T> SettingsComponentType<T> registerWithDefaultGetter(
-        ResourceLocation id,
+        Identifier id,
         Codec<T> codec,
         SettingsComponentType.DefaultValueGetter<T> defaultValueGetter,
         ComponentValidator<T> validator
@@ -97,12 +99,12 @@ public class SettingsComponentTypes {
 
         PRESET = register(
             ModernBetaBuiltInTypes.SettingsComponentType.PRESET.id,
-            ResourceLocation.CODEC,
+            Identifier.CODEC,
             null,
             ValidationResult.Valid::new);
         PROVIDER = register(
             ModernBetaBuiltInTypes.SettingsComponentType.PROVIDER.id,
-            ResourceLocation.CODEC,
+            Identifier.CODEC,
             null,
             ValidationResult.Valid::new);
 
@@ -115,7 +117,7 @@ public class SettingsComponentTypes {
         USE_SURFACE_RULES = register(
             ModernBetaBuiltInTypes.SettingsComponentType.USE_SURFACE_RULES.id,
             Codec.BOOL,
-            false,
+            true,
             ValidationResult.Valid::new);
         SEA_LEVEL = registerWithDefaultGetter(
             ModernBetaBuiltInTypes.SettingsComponentType.SEA_LEVEL.id,
@@ -221,22 +223,30 @@ public class SettingsComponentTypes {
             WorldBorderLocation.CODEC,
             WorldBorderLocation.DEFAULT,
             ValidationResult.Valid::new);
+        STRUCTURE_MODIFERS = registerWithDefaultGetter(
+            ModernBetaBuiltInTypes.SettingsComponentType.STRUCTURE_MODIFIERS.id,
+            StructureModifiers.CODEC,
+            (settings, registry) ->
+                StructureModifiers.getDefault(registry.lookup(Registries.STRUCTURE).orElseThrow().getter()),
+            ValidationResult.Valid::new);
 
         // Biome provider
-        SINGLE_BIOME = register(
+        SINGLE_BIOME = registerWithDefaultGetter(
             ModernBetaBuiltInTypes.SettingsComponentType.SINGLE_BIOME.id,
-            ResourceLocation.CODEC,
-            ModernerBeta.createId("beta_plains"),
+            Biome.CODEC,
+            (settings, registry) ->
+                registry.lookup(Registries.BIOME).orElseThrow().getter().getOrThrow(ModernBetaBiomes.BETA_PLAINS),
             ValidationResult.Valid::new);
         CLIMATE_SCALE = register(
             ModernBetaBuiltInTypes.SettingsComponentType.CLIMATE_SCALE.id,
             ClimateScale.CODEC,
             ClimateScale.DEFAULT,
             ValidationResult.Valid::new);
-        CLIMATE_MAPPINGS = register(
+        CLIMATE_MAPPINGS = registerWithDefaultGetter(
             ModernBetaBuiltInTypes.SettingsComponentType.CLIMATE_MAPPINGS.id,
             ClimateMapping.MAP_CODEC,
-            ClimateMapping.DEFAULT_MAPPINGS,
+            (settings, registry) ->
+                ClimateMapping.getDefaultMappings(registry),
             component -> {
                 for (Map.Entry<String, ClimateMapping> entry : component.entrySet()) {
                     String base = entry.getKey();
@@ -244,14 +254,6 @@ public class SettingsComponentTypes {
 
                     if (mapping.biome() == null) {
                         return new ValidationResult.Invalid<>(Component.literal("Biome mapping %s contains no biome value!"));
-                    }
-
-                    if (mapping.oceanBiome() == null) {
-                        return new ValidationResult.Invalid<>(Component.literal("Biome mapping %s contains no ocean biome value!"));
-                    }
-
-                    if (mapping.deepOceanBiome() == null) {
-                        return new ValidationResult.Invalid<>(Component.literal("Biome mapping %s contains no deep ocean biome value!"));
                     }
                 }
 
@@ -287,32 +289,24 @@ public class SettingsComponentTypes {
             Codec.BOOL,
             false,
             ValidationResult.Valid::new);
-        USE_OCEAN_BIOMES = register(
-            ModernBetaBuiltInTypes.SettingsComponentType.USE_OCEAN_BIOMES.id,
-            Codec.BOOL,
-            false,
-            ValidationResult.Valid::new);
         TEMPERATURE_HEIGHT_SCALING = register(
             ModernBetaBuiltInTypes.SettingsComponentType.TEMPERATURE_HEIGHT_SCALING.id,
             StringRepresentable.fromEnum(TemperatureHeightScaling::values),
             TemperatureHeightScaling.NONE,
             ValidationResult.Valid::new);
-        BIOME_INJECTION_THRESHOLDS = register(
-            ModernBetaBuiltInTypes.SettingsComponentType.BIOME_INJECTION_THRESHOLDS.id,
-            BiomeInjectionThresholds.CODEC,
-            BiomeInjectionThresholds.DEFAULT,
-            ValidationResult.Valid::new);
-        OUT_OF_BOUNDS_BIOME = register(
-            ModernBetaBuiltInTypes.SettingsComponentType.OUT_OF_BOUNDS_BIOME.id,
-            ResourceLocation.CODEC,
-            VersionCompat.vanillaId("the_void"),
+        BIOME_INJECTION_RULES = registerWithDefaultGetter(
+            ModernBetaBuiltInTypes.SettingsComponentType.BIOME_INJECTION_RULES.id,
+            BiomeInjectionRule.CODEC.listOf(),
+            (settings, registries) ->
+                    BiomeInjectionRules.standardRules(registries),
             ValidationResult.Valid::new);
 
         // Cave biome provider
-        CAVE_BIOME_VORONOI = register(
+        CAVE_BIOME_VORONOI = registerWithDefaultGetter(
             ModernBetaBuiltInTypes.SettingsComponentType.CAVE_BIOME_VORONOI.id,
             CaveBiomeVoronoi.CODEC,
-            CaveBiomeVoronoi.DEFAULT,
+            (settings, registries) ->
+                CaveBiomeVoronoi.getDefault(registries),
             ValidationResult.Valid::new);
 
         // Config
@@ -481,7 +475,7 @@ public class SettingsComponentTypes {
 
         CONFIG_BIOME_PREVIEW_COLORS = register(
             ModernBetaBuiltInTypes.SettingsComponentType.CONFIG_BIOME_PREVIEW_COLORS.id,
-            Codec.unboundedMap(Codec.STRING, /*? if >=1.21.11 {*/ /*net.minecraft.util.ExtraCodecs.STRING_RGB_COLOR *//*? } else {*/ Codec.INT /*? }*/),
+            Codec.unboundedMap(Codec.STRING, /*? if >=1.21.11 {*/ net.minecraft.util.ExtraCodecs.STRING_RGB_COLOR /*? } else {*/ /*Codec.INT *//*? }*/),
             biomePreviewColors,
             ValidationResult.Valid::new);
         CONFIG_MISCELLANEOUS = register(

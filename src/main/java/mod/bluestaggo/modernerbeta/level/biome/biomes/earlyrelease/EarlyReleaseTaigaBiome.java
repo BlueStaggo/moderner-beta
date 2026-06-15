@@ -5,7 +5,6 @@ import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomeColors;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.data.worldgen.BiomeDefaultFeatures;
 import net.minecraft.data.worldgen.biome.OverworldBiomes;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeGenerationSettings;
@@ -17,9 +16,12 @@ public class EarlyReleaseTaigaBiome {
     public static Biome create(HolderGetter<PlacedFeature> featureLookup, HolderGetter<ConfiguredWorldCarver<?>> carverLookup) {
         MobSpawnSettings.Builder spawnSettings = new MobSpawnSettings.Builder();
         BiomeDefaultFeatures.farmAnimals(spawnSettings);
-        VersionCompat.addSpawnEntry(spawnSettings, MobCategory.CREATURE, EntityType.WOLF, 8, 4, 4);
-        VersionCompat.addSpawnEntry(spawnSettings, MobCategory.CREATURE, EntityType.RABBIT, 4, 2, 3);
-        VersionCompat.addSpawnEntry(spawnSettings, MobCategory.CREATURE, EntityType.FOX, 8, 2, 4);
+        VersionCompat.addSpawnEntry(spawnSettings, MobCategory.CREATURE,
+            net.minecraft.world.entity.EntityType.WOLF, 8, 4, 4);
+        VersionCompat.addSpawnEntry(spawnSettings, MobCategory.CREATURE,
+            net.minecraft.world.entity.EntityType.RABBIT, 4, 2, 3);
+        VersionCompat.addSpawnEntry(spawnSettings, MobCategory.CREATURE,
+            net.minecraft.world.entity.EntityType.FOX, 8, 2, 4);
         BiomeDefaultFeatures.commonSpawns(spawnSettings);
 
         BiomeGenerationSettings.Builder genSettings = new BiomeGenerationSettings.Builder(featureLookup, carverLookup);

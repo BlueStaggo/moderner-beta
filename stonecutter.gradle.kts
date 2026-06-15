@@ -8,7 +8,7 @@ plugins {
 }
 
 plugins.apply("dev.kikugie.stonecutter")
-stonecutter.active("1.21.6")
+stonecutter.active("26.1")
 
 publishMods {
     @Suppress("LocalVariableName")
@@ -87,12 +87,14 @@ stonecutter.parameters {
         string(eval(current.version, "<1.21.2")) {
             replace(".getMinSectionY()", ".getMinSection()")
             replace(".getMaxSectionY() + 1", ".getMaxSection()")
-
-            replace(".listElements()", ".holders()")
         }
 
         string(eval(current.version, "<1.21.2"), "minBuild") {
             replace(".getMinY()", ".getMinBuildHeight()")
+        }
+
+        string(eval(current.version, "<1.21.2"), "holders") {
+            replace(".listElements()", ".holders()")
         }
 
         string(eval(current.version, "<1.21.5")) {
@@ -106,6 +108,7 @@ stonecutter.parameters {
         }
 
         string(eval(current.version, ">=1.21.11")) {
+            replace("ExtendedIdentifier", "ExtendedIdentifier")
             replace("ResourceLocation", "Identifier")
             replace("ResourceKey::location", "ResourceKey::identifier")
             replace("net.minecraft.Util", "net.minecraft.util.Util")
@@ -143,6 +146,18 @@ stonecutter.parameters {
         string(eval(current.version, ">=26.1"), "worldGenLevel") {
             replace("LevelSimulatedReader", "WorldGenLevel")
             replace("setDirtAt", "placeBelowTrunkBlock")
+        }
+
+        string(eval(current.version, ">=26.2")) {
+            replace(".setScreen(", ".gui.setScreen(")
+            replace("::setScreen", ".gui::setScreen")
+            replace("this.minecraft.screen", "this.minecraft.gui.screen()")
+            replace("markPosForPostprocessing", "markPosForPostProcessing")
+        }
+
+        regex(eval(current.version, ">=26.2")) {
+            replace("EntityType\\.([A-Z_]+)", "EntityTypes.$1",
+                "EntityTypes\\.([A-Z_]+)", "EntityType.$1")
         }
     }
 }

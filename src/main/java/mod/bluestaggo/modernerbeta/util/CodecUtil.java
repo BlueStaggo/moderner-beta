@@ -6,6 +6,8 @@ import com.google.gson.*;
 import com.mojang.serialization.*;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.mixin.RegistryOpsAccessor;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.RegistryOps;
@@ -14,6 +16,7 @@ import net.minecraft.util.ExtraCodecs;
 
 import java.lang.reflect.Type;
 import java.util.Set;
+import java.util.function.Function;
 
 public class CodecUtil {
     public static <T> RecordCodecBuilder<T, RegistryOps.RegistryInfoLookup> registryLookupCodec() {
@@ -47,6 +50,34 @@ public class CodecUtil {
                     .orElseGet(() -> DataResult.error(() -> "Unknown registry: " + registryOps))
                 : DataResult.error(() -> "Not a registry ops")
         ).forGetter(object -> null);
+    }
+
+    public static <A> MapCodec<Holder<A>> lookupIfEmpty(MapCodec<Holder<A>> codec, ResourceKey<A> key) {
+        return lookupIfEmpty(codec, lookup -> {
+            HolderGetter<A> getter = lookup.<A>lookup(ResourceKey.createRegistryKey(key.registry())).orElseThrow().getter();
+            return getter.getOrThrow(key);
+        });
+    }
+
+    public static <A> MapCodec<A> lookupIfEmpty(
+        MapCodec<A> codec,
+        Function<RegistryOps.RegistryInfoLookup, A> getter
+    ) {
+        return codec.mapResult(new MapCodec.ResultFunction<>() {
+            @Override
+            public <T> DataResult<A> apply(DynamicOps<T> ops, MapLike<T> input, DataResult<A> a) {
+                if (!(ops instanceof RegistryOps<?> registryOps))
+                    return DataResult.error(() -> "Not a registry ops");
+
+                RegistryOps.RegistryInfoLookup lookup = ((RegistryOpsAccessor) registryOps).getLookupProvider();
+                return DataResult.success(a.result().orElseGet(() -> getter.apply(lookup)));
+            }
+
+            @Override
+            public <T> RecordBuilder<T> coApply(DynamicOps<T> ops, A input, RecordBuilder<T> t) {
+                return t;
+            }
+        });
     }
 
     public static <T> Codec<Set<T>> set(Codec<T> elementType) {

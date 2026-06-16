@@ -90,7 +90,7 @@ public abstract class ModernBetaGraphicalComponentedSettingsScreen extends Moder
 
     @SuppressWarnings("unchecked")
     protected void addOptionsForComponents(OptionsList list, ModernBetaSettings settings, List<SettingsComponentType<?>> componentTypes) {
-        DynamicOps<Tag> ops = settings.getOpsForSettings(NbtOps.INSTANCE);
+        DynamicOps<Tag> ops = settings != null ? settings.getOpsForSettings(NbtOps.INSTANCE) : NbtOps.INSTANCE;
 
         for (SettingsComponentType<?> componentType : componentTypes) {
             ModernBetaRegistries.SETTINGS_COMPONENT_TYPE.getResourceKey(componentType)

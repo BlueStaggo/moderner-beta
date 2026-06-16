@@ -43,7 +43,10 @@ publishMods {
     curseforge {
         accessToken = System.getenv("CURSEFORGE_TOKEN")
         projectId = commonMod.prop("curseforge_project_id")
-        minecraftVersions.addAll(commonMod.prop("supported_versions").split(",").toList())
+
+        val curseforgeTemp = commonMod.propOrNull("curseforge_temp_supported_versions")?.split(",")?.toList()
+        minecraftVersions.addAll(curseforgeTemp ?:
+                commonMod.prop("supported_versions").split(",").toList())
 
         client = true
         server = true

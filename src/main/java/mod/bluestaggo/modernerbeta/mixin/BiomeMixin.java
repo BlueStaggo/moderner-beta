@@ -22,7 +22,7 @@ public abstract class BiomeMixin {
         at = @At("HEAD"),
         cancellable = true
     )
-    private void shouldFreezeWithModernBetaClimate(LevelReader level, BlockPos pos, boolean doWaterCheck, CallbackInfoReturnable<Boolean> cir) {
+    private void shouldFreezeWithModernBetaClimate(LevelReader level, BlockPos pos, boolean checkNeighbors, CallbackInfoReturnable<Boolean> cir) {
         if (!(level instanceof ModernBetaLevel modernBetaLevel))
             return;
 
@@ -33,7 +33,7 @@ public abstract class BiomeMixin {
         cir.setReturnValue(ClimateHelper.shouldFreeze(
             level,
             pos,
-            doWaterCheck,
+            checkNeighbors,
             climateSampler.sampleModifiedTemperature(pos, this.climateSettings.temperatureModifier()),
             climateSampler.getSnowThreshold(),
             climateSampler.getHeightType()

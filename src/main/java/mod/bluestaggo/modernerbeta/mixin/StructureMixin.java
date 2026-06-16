@@ -18,8 +18,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(Structure.class)
 public abstract class StructureMixin {
     @Inject(method = "isValidBiome", at = @At("HEAD"), cancellable = true)
-    private static void injectIsValidBiome(GenerationStub result, GenerationContext context, CallbackInfoReturnable<Boolean> info) {
-        BlockPos blockPos = result.position();
+    private static void injectIsValidBiome(GenerationStub stub, GenerationContext context, CallbackInfoReturnable<Boolean> info) {
+        BlockPos blockPos = stub.position();
         
         if (context.biomeSource() instanceof ModernBetaBiomeSource biomeSource) {
             if (biomeSource.getBiomeInjectionHandler() != null) {

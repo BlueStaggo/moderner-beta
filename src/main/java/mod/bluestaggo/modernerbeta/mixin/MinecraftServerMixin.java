@@ -2,6 +2,7 @@ package mod.bluestaggo.modernerbeta.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.api.level.chunk.ChunkProvider;
 import mod.bluestaggo.modernerbeta.api.level.chunk.ChunkProviderFinite;
@@ -28,7 +29,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(MinecraftServer.class)
 public abstract class MinecraftServerMixin {
     @Inject(method = "setInitialSpawn", at = @At("RETURN"))
-    private static void injectSetInitialSpawn(ServerLevel level, ServerLevelData levelData, boolean bonusChest, boolean debugWorld, /*? >=1.21.9 {*/ net.minecraft.server.level.progress.LevelLoadListener arg, /*?}*/ CallbackInfo ci) {
+    private static void injectSetInitialSpawn(
+        CallbackInfo ci,
+        @Local(argsOnly = true) ServerLevel level,
+        @Local(argsOnly = true) ServerLevelData levelData
+    ) {
         ChunkGenerator chunkGenerator = level.getChunkSource().getGenerator();
 
         // Set old spawn angle (doesn't seem to work?)

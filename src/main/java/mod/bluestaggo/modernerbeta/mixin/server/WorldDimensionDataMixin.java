@@ -7,7 +7,6 @@ import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.JsonOps;
 import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaChunkGenerator;
-import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaNoiseGeneratorSettings;
 import mod.bluestaggo.modernerbeta.level.preset.ModernBetaWorldPresets;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaResourceKeys;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
@@ -16,7 +15,6 @@ import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.server.dedicated.DedicatedServerProperties;
-import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
 import net.minecraft.world.level.levelgen.WorldDimensions;
 import net.minecraft.world.level.levelgen.presets.WorldPreset;
 import org.slf4j.Logger;
@@ -40,10 +38,10 @@ public abstract class WorldDimensionDataMixin {
     private void injectCustomSettings(
         net.minecraft.core./*? >=1.21.2 {*/HolderLookup.Provider/*?} else {*//*RegistryAccess*//*?}*/ registries,
         CallbackInfoReturnable<WorldDimensions> cir,
-        @Local Holder<WorldPreset> presetHolder,
+        @Local Holder<WorldPreset> worldPreset,
         @Local WorldDimensions worldDimensions
     ) {
-        if (presetHolder.is(ModernBetaWorldPresets.MODERN_BETA)) {
+        if (worldPreset.is(ModernBetaWorldPresets.MODERN_BETA)) {
             RegistryOps<JsonElement> registryOps = RegistryOps.create(JsonOps.INSTANCE, registries);
             Optional<ModernBetaSettingsPreset> optional = ModernBetaSettingsPreset.SETTINGS_TEXT_CODEC
                     .parse(new Dynamic<>(registryOps, this.generatorSettings()))

@@ -35,7 +35,7 @@ which may include bugs and issues, and can be prone to breaking with future rele
 ## Removals
 - Removed support for Minecraft 1.21.6-1.21.8, 1.21.9-1.21.10, and 1.21.11
 - Removed GUI settings for biome injectors
-  - It is currently not known if these will be added back due to the complexity of biome injectors now.
+  - It is currently not known if these will be added back due to the complexity of biome injectors.
 - Removed climate mappings for Ocean and Deep Ocean biomes
   - These are now to be handled by the biome injector.
 - Removed Ocean and Deep Ocean layer types

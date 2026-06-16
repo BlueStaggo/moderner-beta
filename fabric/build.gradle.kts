@@ -10,17 +10,17 @@ loom {
     accessWidenerPath = stonecutter.process(commonProject.file("../../src/main/resources/moderner_beta.accesswidener"), "build/dev.aw")
 
     runConfigs.all {
-        ideConfigGenerated(true)
-        runDir = "../../../run"
+        generateRunConfig = true
+        runDirectory.set(project.file("../../../run"))
     }
 
     runs {
         register("datagen") {
             server()
-            name("Data Generation")
-            vmArg("-Dfabric-api.datagen")
-            vmArg("-Dfabric-api.datagen.output-dir=${commonProject.file("src/main/generated")}")
-            vmArg("-Dfabric-api.datagen.modid=moderner_beta")
+            displayName = "Data Generation"
+            jvmArguments.add("-Dfabric-api.datagen")
+            jvmArguments.add("-Dfabric-api.datagen.output-dir=${commonProject.file("src/main/generated")}")
+            jvmArguments.add("-Dfabric-api.datagen.modid=moderner_beta")
         }
     }
 }

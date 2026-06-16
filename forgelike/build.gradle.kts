@@ -45,14 +45,14 @@ neoForge {
     runs {
         register("client") {
             client()
-            ideName = "Minecraft Client (${project.path})"
-            gameDirectory = project.file("../../../run")
+            ideName = "Minecraft Client ($path)"
+            gameDirectory = file("../../../run")
         }
 
         register("server") {
             server()
-            ideName = "Minecraft Server (${project.path})"
-            gameDirectory = project.file("../../../run")
+            ideName = "Minecraft Server ($path)"
+            gameDirectory = file("../../../run")
         }
     }
 

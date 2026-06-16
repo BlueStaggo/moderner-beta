@@ -13,7 +13,7 @@ which may include bugs and issues, and can be prone to breaking with future rele
 - (1.20.1) Added support for Forge biome tags.
 
 ## Changes
-- Ocean Shrines now generate in presets without Deep Ocean biomes
+- Ocean Shrines now generate in most presets without Deep Ocean biomes
   - Previously they only generated in Moderner Beta Ocean biomes.
 - Strongholds now generate properly in LCE presets
 - Moved erosion generation to surface rules

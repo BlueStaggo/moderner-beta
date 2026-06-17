@@ -16,10 +16,10 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.levelgen.LegacyRandomSource;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
 
 public class BiomeProviderVoronoi extends BiomeProvider implements DebugTextProvider2D {
@@ -103,10 +103,10 @@ public class BiomeProviderVoronoi extends BiomeProvider implements DebugTextProv
         private final double weirdNoiseScale;
         
         public VoronoiClimateSampler(long seed, double tempNoiseScale, double rainNoiseScale, double detailNoiseScale, double weirdNoiseScale) {
-            this.tempOctaveNoise = new SimplexOctaveNoise(new Random(seed * 9871L), 4);
-            this.rainOctaveNoise = new SimplexOctaveNoise(new Random(seed * 39811L), 4);
-            this.detailOctaveNoise = new SimplexOctaveNoise(new Random(seed * 543321L), 2);
-            this.weirdOctaveNoise = new SimplexOctaveNoise(new Random(seed * 134714L), 2);
+            this.tempOctaveNoise = new SimplexOctaveNoise(new LegacyRandomSource(seed * 9871L), 4);
+            this.rainOctaveNoise = new SimplexOctaveNoise(new LegacyRandomSource(seed * 39811L), 4);
+            this.detailOctaveNoise = new SimplexOctaveNoise(new LegacyRandomSource(seed * 543321L), 2);
+            this.weirdOctaveNoise = new SimplexOctaveNoise(new LegacyRandomSource(seed * 134714L), 2);
             
             this.chunkCacheClimate = new ChunkCache<>(
                 "climate",

@@ -5,8 +5,8 @@ import mod.bluestaggo.modernerbeta.settings.component.PerlinNoiseSettings;
 import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.util.noise.PerlinNoise;
-
-import java.util.Random;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.levelgen.LegacyRandomSource;
 
 public class PerlinZoomLayer extends SingleParentLayer {
     public static final com.mojang.serialization.MapCodec<PerlinZoomLayer> CODEC = VersionCompat.createMaybeMapCodec(
@@ -35,14 +35,14 @@ public class PerlinZoomLayer extends SingleParentLayer {
     @Override
     public void init(long worldSeed) {
         super.init(worldSeed);
-        Random noiseRandom = new Random(this.getSaltedSeed());
+        RandomSource noiseRandom = new LegacyRandomSource(this.getSaltedSeed());
         this.xOffsetNoise = new PerlinNoise(noiseRandom, PerlinNoiseSettings.RELEASE);
         this.zOffsetNoise = new PerlinNoise(noiseRandom, PerlinNoiseSettings.RELEASE);
     }
 
     public void initUnsalted() {
         super.initUnsalted();
-        Random noiseRandom = new Random(this.getSaltedSeed());
+        RandomSource noiseRandom = new LegacyRandomSource(this.getSaltedSeed());
         this.xOffsetNoise = new PerlinNoise(noiseRandom, PerlinNoiseSettings.RELEASE);
         this.zOffsetNoise = new PerlinNoise(noiseRandom, PerlinNoiseSettings.RELEASE);
     }

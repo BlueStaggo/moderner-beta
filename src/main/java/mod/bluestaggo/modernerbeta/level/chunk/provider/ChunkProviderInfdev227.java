@@ -41,7 +41,6 @@ import net.minecraft.world.level.levelgen.NoiseSettings;
 import net.minecraft.world.level.levelgen.RandomState;
 import net.minecraft.world.level.levelgen.blending.Blender;
 
-import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 
 public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProviderNoiseImitable {
@@ -130,7 +129,7 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
 
         int bedrockFloor = this.worldMinY + this.bedrockFloor;
 
-        Random bedrockRand = this.createSurfaceRandom(chunkX, chunkZ);
+        RandomSource bedrockRand = this.createSurfaceRandom(chunkX, chunkZ);
         
         for (int localX = 0; localX < 16; ++localX) {
             for (int localZ = 0; localZ < 16; ++localZ) {
@@ -199,7 +198,7 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
         int chunkZ = chunkPos.z();
 
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
-        Random bedrockRand = this.createSurfaceRandom(chunkX, chunkZ);
+        RandomSource bedrockRand = this.createSurfaceRandom(chunkX, chunkZ);
 
         int bedrockFloor = this.worldMinY + this.bedrockFloor;
 
@@ -219,13 +218,13 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
     /**
      * Gets the surface height for the given coordinate
      *
-     * @param rand The {@link Random} instance to use.
+     * @param rand The {@link RandomSource} instance to use.
      * @param x    The X coordinate to get the height for.
      * @param z    The Z coordinate to get the height for
      * @return The height for the given coordinates.
      */
     @Override
-    public int getSurfaceDepth(Random rand, int x, int z) {
+    public int getSurfaceDepth(RandomSource rand, int x, int z) {
         return 1;
     }
 
@@ -244,7 +243,7 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
     }
     
     protected void generateTerrain(ChunkAccess chunk, StructureManager structureAccessor) {
-        Random rand = new Random();
+        RandomSource rand = RandomSource.create();
         
         Heightmap heightmapOcean = chunk.getOrCreateHeightmapUnprimed(Heightmap.Types.OCEAN_FLOOR_WG);
         Heightmap heightmapSurface = chunk.getOrCreateHeightmapUnprimed(Heightmap.Types.WORLD_SURFACE_WG);

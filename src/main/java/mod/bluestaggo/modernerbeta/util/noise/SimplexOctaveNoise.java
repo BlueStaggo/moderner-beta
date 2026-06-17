@@ -1,8 +1,8 @@
 package mod.bluestaggo.modernerbeta.util.noise;
 
-import java.util.Random;
+import net.minecraft.util.RandomSource;
 
-/* 
+/*
  * Used for additional reference: https://www.reddit.com/r/proceduralgeneration/comments/6eubj7/how_can_i_add_octaves_persistence_lacunarity/ 
  * 
  * */
@@ -11,7 +11,7 @@ public class SimplexOctaveNoise implements OctaveNoise {
     private final int octaves;
     private final double noiseScale;
     
-    public SimplexOctaveNoise(Random random, int octaves) {
+    public SimplexOctaveNoise(RandomSource random, int octaves) {
         this.noises = new SimplexNoise[octaves];
         this.octaves = octaves;
         this.noiseScale = 1.5D;

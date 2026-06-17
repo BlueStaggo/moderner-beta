@@ -24,6 +24,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.server.level.WorldGenRegion;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.LevelHeightAccessor;
 import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.biome.Biome;
@@ -39,7 +40,6 @@ import net.minecraft.world.level.levelgen.placement.PlacementModifier;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 
 public abstract class ChunkProvider {    
@@ -51,9 +51,8 @@ public abstract class ChunkProvider {
     protected final Holder<NoiseGeneratorSettings> generatorSettings;
     protected final ModernBetaSettings chunkSettings;
     protected final boolean skipCarvers;
-    protected final Random random;
+    protected final RandomSource random;
 
-    protected final WorldgenRandom.Algorithm randomSource;
     protected final PositionalRandomFactory randomFactory;
     
     protected final List<BlockSource> blockSources;
@@ -74,8 +73,7 @@ public abstract class ChunkProvider {
         this.random = this.createRandom(this.seed);
 
         this.defaultFluidLevelSampler = (x, y, z) -> new FluidStatus(this.getSeaLevel(), BlockStates.AIR);
-        this.randomSource = chunkGenerator.generatorSettings().value().getRandomSource();
-        this.randomFactory = this.randomSource.newInstance(this.seed).forkPositional();
+        this.randomFactory = this.createRandom(this.seed).forkPositional();
         
         this.blockSources = ModernBetaRegistries.BLOCKSOURCE
             .listElements()
@@ -126,12 +124,12 @@ public abstract class ChunkProvider {
     /**
      * Gets the surface height for the given coordinate
      *
-     * @param rand The {@link Random} instance to use.
+     * @param rand The {@link RandomSource} instance to use.
      * @param x    The X coordinate to get the height for.
      * @param z    The Z coordinate to get the height for
      * @return The height for the given coordinates.
      */
-    public abstract int getSurfaceDepth(Random rand, int x, int z);
+    public abstract int getSurfaceDepth(RandomSource rand, int x, int z);
 
     /**
      * Sample height at given x/z coordinate. Initially generates heightmap for entire chunk,
@@ -277,8 +275,8 @@ public abstract class ChunkProvider {
         return this.chunkSettings;
     }
 
-    protected Random createRandom(long seed) {
-        return new Random(seed);
+    protected RandomSource createRandom(long seed) {
+        return new LegacyRandomSource(seed);
     }
 
     /**
@@ -289,7 +287,7 @@ public abstract class ChunkProvider {
      * 
      * @return New Random object initialized with chunk coordinates for seed.
      */
-    public Random createSurfaceRandom(int chunkX, int chunkZ) {
+    public RandomSource createSurfaceRandom(int chunkX, int chunkZ) {
         long seed = (long)chunkX * 0x4f9939f508L + (long)chunkZ * 0x1ef1565bd5L;
         return this.createRandom(seed);
     }
@@ -300,6 +298,6 @@ public abstract class ChunkProvider {
      * @return An octave noise sampler.
      */
     protected OctaveNoise getForestOctaveNoise() {
-        return new PerlinOctaveNoise(new Random(this.seed), 8, PerlinNoiseSettings.DEFAULT);
+        return new PerlinOctaveNoise(new LegacyRandomSource(this.seed), 8, PerlinNoiseSettings.DEFAULT);
     }
 }

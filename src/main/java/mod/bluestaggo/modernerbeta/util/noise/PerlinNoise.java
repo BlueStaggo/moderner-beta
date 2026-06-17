@@ -2,8 +2,7 @@ package mod.bluestaggo.modernerbeta.util.noise;
 
 import mod.bluestaggo.modernerbeta.settings.component.PerlinNoiseSettings;
 import net.minecraft.util.Mth;
-
-import java.util.Random;
+import net.minecraft.util.RandomSource;
 
 /*
  * Used for additional info: https://adrianb.io/2014/08/09/perlinnoise.html
@@ -18,10 +17,10 @@ public class PerlinNoise {
     private final PerlinNoiseSettings settings;
 
     public PerlinNoise() {
-        this(new Random(), PerlinNoiseSettings.DEFAULT);
+        this(RandomSource.create(), PerlinNoiseSettings.DEFAULT);
     }
 
-    public PerlinNoise(Random random, PerlinNoiseSettings settings) {
+    public PerlinNoise(RandomSource random, PerlinNoiseSettings settings) {
         this.settings = settings;
 
         // Generate permutation array

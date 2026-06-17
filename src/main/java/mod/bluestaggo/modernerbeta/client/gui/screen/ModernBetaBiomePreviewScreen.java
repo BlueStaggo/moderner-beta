@@ -21,6 +21,7 @@ import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers.LayerRandom;
 import mod.bluestaggo.modernerbeta.util.LoggingUtil;
 import net.minecraft.ChatFormatting;
+import net.minecraft.util.RandomSource;
 import net.minecraft.util.Util;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -50,7 +51,6 @@ import org.slf4j.event.Level;
 import java.awt.*;
 import java.io.File;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -445,7 +445,7 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                 int genY = 0;
                 boolean full = true;
                 Int2IntMap randColors = new Int2IntAVLTreeMap();
-                Random random = new Random();
+                RandomSource random = RandomSource.create();
                 LayerRandom voronoiRandom = new LayerRandom(RandomSupport.generateUniqueSeed());
 
                 try {
@@ -595,7 +595,7 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                 }
             }
 
-            private int getBiomeColor(Holder<Biome> biomeEntry, String ext, int x, int y, Int2IntMap randColors, Random random) {
+            private int getBiomeColor(Holder<Biome> biomeEntry, String ext, int x, int y, Int2IntMap randColors, RandomSource random) {
                 String id = biomeEntry.unwrapKey().map(key -> key.identifier().toString()).orElse("[unregistered]");
                 if (ext != null && !ext.isEmpty()) {
                     String extId = id + "*" + ext;

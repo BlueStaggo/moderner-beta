@@ -31,8 +31,6 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 
-import java.util.Random;
-
 public class ModernBetaWorldScreen extends ModernBetaScreen {
     private static final String TEXT_TITLE = "createWorld.customize.modern_beta.title"; 
     private static final String TEXT_TITLE_CHUNK = "createWorld.customize.modern_beta.title.chunk"; 
@@ -54,13 +52,9 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
     private static final String TEXT_SETTINGS_RESET = "createWorld.customize.modern_beta.settings.reset";
     private static final String TEXT_SETTINGS_RESET_MESSAGE = "createWorld.customize.modern_beta.settings.reset.message";
     private static final String TEXT_SETTINGS_PREVIEW = "createWorld.customize.modern_beta.settings.preview";
-    
-    private static final String[] TEXT_HINTS = new String[] {
-        "createWorld.customize.modern_beta.hint.settings"
-    };
+    private static final String TEXT_HINT_SETTINGS = "createWorld.customize.modern_beta.hint.settings";
     
     private final OnSettingsSave onDone;
-    private final String hintString;
     private final WorldCreationContext context;
     private final Registry<ModernBetaSettingsPreset> presetRegistry;
     private final Registry<ModernBetaSettingsPresetCategory> presetCategoryRegistry;
@@ -80,7 +74,6 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
         this.presetCategoryRegistry = context.worldgenLoadContext().lookupOrThrow(ModernBetaResourceKeys.SETTINGS_PRESET_CATEGORY);
 
         this.onDone = onDone;
-        this.hintString = TEXT_HINTS[new Random().nextInt(TEXT_HINTS.length)];
         
         this.preset = new ModernBetaSettingsPreset(
             modernBetaChunkGenerator.getChunkSettings(),
@@ -318,7 +311,7 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
         GridLayout.RowHelper mainRow = footerLayout.createRowHelper(1);
         GridLayout.RowHelper actionRow = gridWidgetActions.createRowHelper(2);
 
-        Component hintText = Component.translatable(this.hintString).withStyle(ChatFormatting.GRAY);
+        Component hintText = Component.translatable(TEXT_HINT_SETTINGS).withStyle(ChatFormatting.GRAY);
         int hintTextWidth = this.font.width(hintText.getVisualOrderText());
         int hintTextHeight = this.font.lineHeight;
 

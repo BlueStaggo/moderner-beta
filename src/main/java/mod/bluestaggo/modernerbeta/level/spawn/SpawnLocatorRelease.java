@@ -8,6 +8,7 @@ import mod.bluestaggo.modernerbeta.util.LoggingUtil;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkHeightmap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.LevelHeightAccessor;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeSource;
@@ -15,19 +16,18 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import org.slf4j.event.Level;
 
 import java.util.Optional;
-import java.util.Random;
 
 /*
  * Port of Beta 1.8+ player spawn locator.
  * 
  */
 public class SpawnLocatorRelease implements SpawnLocator {
-    private final Random rand;
+    private final RandomSource rand;
 
     private final ChunkProvider chunkProvider;
     private final BiomeSource biomeSource;
 
-    public SpawnLocatorRelease(ChunkProvider chunkProvider, Random rand) {
+    public SpawnLocatorRelease(ChunkProvider chunkProvider, RandomSource rand) {
         this.rand = rand;
         
         this.chunkProvider = chunkProvider;

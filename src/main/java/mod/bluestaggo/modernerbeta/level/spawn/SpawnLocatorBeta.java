@@ -10,25 +10,25 @@ import mod.bluestaggo.modernerbeta.util.noise.OctaveNoise;
 import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomeSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.LevelHeightAccessor;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.Heightmap;
 import org.slf4j.event.Level;
 
 import java.util.Optional;
-import java.util.Random;
 
 /*
  * Port of Beta 1.7.3 player spawn locator.
  * 
  */
 public class SpawnLocatorBeta implements SpawnLocator {
-    private final Random rand;
+    private final RandomSource rand;
     
     private final ChunkProvider chunkProvider;
     private final OctaveNoise beachOctaveNoise;
     
-    public SpawnLocatorBeta(ChunkProvider chunkProvider, OctaveNoise beachOctaveNoise, Random rand) {
+    public SpawnLocatorBeta(ChunkProvider chunkProvider, OctaveNoise beachOctaveNoise, RandomSource rand) {
         this.rand = rand;
         
         this.chunkProvider = chunkProvider;

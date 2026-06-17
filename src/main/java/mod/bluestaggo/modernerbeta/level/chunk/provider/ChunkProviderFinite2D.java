@@ -15,14 +15,13 @@ import mod.bluestaggo.modernerbeta.level.chunk.provider.indev.IndevType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.SnowyBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
-
-import java.util.Random;
 
 public class ChunkProviderFinite2D extends ChunkProviderFinite {
     private CombinedOctaveNoise minHeightOctaveNoise;
@@ -501,13 +500,13 @@ public class ChunkProviderFinite2D extends ChunkProviderFinite {
     /**
      * Gets the surface height for the given coordinate
      *
-     * @param rand The {@link Random} instance to use.
+     * @param rand The {@link RandomSource} instance to use.
      * @param x    The X coordinate to get the height for.
      * @param z    The Z coordinate to get the height for
      * @return The height for the given coordinates.
      */
     @Override
-    public int getSurfaceDepth(Random rand, int x, int z) {
+    public int getSurfaceDepth(RandomSource rand, int x, int z) {
         return 0; //TODO
     }
 

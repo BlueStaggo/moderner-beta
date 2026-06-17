@@ -1,16 +1,16 @@
 package mod.bluestaggo.modernerbeta.level.feature.placement.noise;
 
-
 import mod.bluestaggo.modernerbeta.settings.component.PerlinNoiseSettings;
 import mod.bluestaggo.modernerbeta.util.noise.OctaveNoise;
 import mod.bluestaggo.modernerbeta.util.noise.PerlinOctaveNoise;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.levelgen.LegacyRandomSource;
 
 public class NoiseBasedCountAlpha implements NoiseBasedCount {
     private final OctaveNoise noiseSampler;
     
     public NoiseBasedCountAlpha(RandomSource random) {
-        this.noiseSampler = new PerlinOctaveNoise(new java.util.Random(random.nextLong()), 8, PerlinNoiseSettings.ALPHA);
+        this.noiseSampler = new PerlinOctaveNoise(new LegacyRandomSource(random.nextLong()), 8, PerlinNoiseSettings.ALPHA);
     }
     
     public NoiseBasedCountAlpha(OctaveNoise noiseSampler) {

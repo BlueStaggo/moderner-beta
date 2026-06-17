@@ -62,8 +62,9 @@ public class BedrockRandomSource extends LegacyRandomSource {
     }
 
     private void setSeed(int seed) {
+        //FIXME: MersenneTwister itself is not thread-safe, at least not without making it synchronous
         if (!this.seed.compareAndSet(this.seed.get(), seed)) {
-            throw ThreadingDetector.makeThreadingException("BedrockCheckedRandom", null);
+            throw ThreadingDetector.makeThreadingException("BedrockRandomSource", null);
         } else {
             this.haveNextNextGaussian = false;
             this.nextNextGaussian = 0;

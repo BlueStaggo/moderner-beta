@@ -222,7 +222,7 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
     public Aquifer getAquiferSampler(ChunkAccess chunk, RandomState noiseConfig) {
         SurfaceProperties surfaceProperties = this.getChunkSettings().getOrDefault(SettingsComponentTypes.SURFACE_PROPERTIES);
 
-        PositionalRandomFactory randomDeriver = this.randomSource.newInstance(this.seed).forkPositional();
+        PositionalRandomFactory randomDeriver = this.createRandom(this.seed).forkPositional();
         NoiseChunk noiseSampler = ModernBetaChunkNoiseSampler.create(
             chunk,
             noiseConfig,

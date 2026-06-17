@@ -14,10 +14,10 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.levelgen.LegacyRandomSource;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
 
 public class CaveBiomeProviderVoronoi extends CaveBiomeProvider implements CaveClimateSampler {
@@ -87,9 +87,9 @@ public class CaveBiomeProviderVoronoi extends CaveBiomeProvider implements CaveC
         private final int depthMaxY;
         
         public VoronoiCaveClimateSampler(long seed, float verticalScale, float horizontalScale, int depthMinY, int depthMaxY) {
-            this.tempOctaveNoise = new PerlinOctaveNoise(new Random(seed * 9871L), 2, PerlinNoiseSettings.DEFAULT);
-            this.rainOctaveNoise = new PerlinOctaveNoise(new Random(seed * 39811L), 2, PerlinNoiseSettings.DEFAULT);
-            this.detailOctaveNoise = new PerlinOctaveNoise(new Random(seed * 543321L), 1, PerlinNoiseSettings.DEFAULT);
+            this.tempOctaveNoise = new PerlinOctaveNoise(new LegacyRandomSource(seed * 9871L), 2, PerlinNoiseSettings.DEFAULT);
+            this.rainOctaveNoise = new PerlinOctaveNoise(new LegacyRandomSource(seed * 39811L), 2, PerlinNoiseSettings.DEFAULT);
+            this.detailOctaveNoise = new PerlinOctaveNoise(new LegacyRandomSource(seed * 543321L), 1, PerlinNoiseSettings.DEFAULT);
             
             this.verticalScale = verticalScale;
             this.horizontalScale = horizontalScale;

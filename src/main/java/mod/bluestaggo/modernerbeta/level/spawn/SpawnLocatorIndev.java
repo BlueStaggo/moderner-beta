@@ -4,6 +4,7 @@ import mod.bluestaggo.modernerbeta.api.level.chunk.ChunkProviderFinite;
 import mod.bluestaggo.modernerbeta.api.level.spawn.SpawnLocator;
 import mod.bluestaggo.modernerbeta.util.LoggingUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.LevelHeightAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -11,7 +12,6 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import org.slf4j.event.Level;
 
 import java.util.Optional;
-import java.util.Random;
 
 /*
  * Port of Indev 20100223 player spawn locator.
@@ -27,7 +27,7 @@ public class SpawnLocatorIndev implements SpawnLocator {
     
     @Override
     public Optional<BlockPos> locateSpawn(LevelHeightAccessor level) {
-        Random random = new Random();
+        RandomSource random = RandomSource.create();
         
         int spawnX;
         int spawnY;

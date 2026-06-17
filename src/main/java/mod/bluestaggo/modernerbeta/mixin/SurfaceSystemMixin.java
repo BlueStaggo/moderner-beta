@@ -10,6 +10,7 @@ import mod.bluestaggo.modernerbeta.level.biome.injection.BiomeInjectionRule;
 import mod.bluestaggo.modernerbeta.level.biome.injection.InjectionNeeds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeManager;
@@ -25,14 +26,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Optional;
-import java.util.Random;
 import java.util.function.Function;
 
 @Mixin(SurfaceSystem.class)
 public class SurfaceSystemMixin implements ModernBetaSurfaceSystem {
     @Unique private ChunkProvider modernerBeta$chunkProvider;
     @Unique private ModernBetaBiomeSource modernerBeta$biomeProvider;
-    @Unique private final ThreadLocal<Random> modernerBeta$surfaceRandom = new ThreadLocal<>();
+    @Unique private final ThreadLocal<RandomSource> modernerBeta$surfaceRandom = new ThreadLocal<>();
 
     @Override
     public void modernerBeta$setupChunkContext(ChunkProvider chunkProvider) {
@@ -58,7 +58,7 @@ public class SurfaceSystemMixin implements ModernBetaSurfaceSystem {
             return;
 
         ChunkPos chunkPos = protoChunk.getPos();
-        Random surfaceRandom = this.modernerBeta$chunkProvider.createSurfaceRandom(chunkPos.x(), chunkPos.z());
+        RandomSource surfaceRandom = this.modernerBeta$chunkProvider.createSurfaceRandom(chunkPos.x(), chunkPos.z());
         this.modernerBeta$surfaceRandom.set(surfaceRandom);
     }
 
@@ -71,7 +71,7 @@ public class SurfaceSystemMixin implements ModernBetaSurfaceSystem {
             return;
 
         ChunkPos chunkPos = protoChunk.getPos();
-        Random surfaceRandom = this.modernerBeta$chunkProvider.createSurfaceRandom(chunkPos.x(), chunkPos.z());
+        RandomSource surfaceRandom = this.modernerBeta$chunkProvider.createSurfaceRandom(chunkPos.x(), chunkPos.z());
         this.modernerBeta$surfaceRandom.set(surfaceRandom);
     }
 

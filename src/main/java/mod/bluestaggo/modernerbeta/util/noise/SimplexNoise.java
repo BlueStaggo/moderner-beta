@@ -1,6 +1,6 @@
 package mod.bluestaggo.modernerbeta.util.noise;
 
-import java.util.Random;
+import net.minecraft.util.RandomSource;
 
 /*
  * Reference: http://weber.itn.liu.se/~stegu/simplexnoise/simplexnoise.pdf
@@ -22,10 +22,10 @@ public class SimplexNoise {
     private static final double SKEW_FACTOR_3D = 1.0 / 3.0;
 
     public SimplexNoise() {
-        this(new Random());
+        this(RandomSource.create());
     }
     
-    public SimplexNoise(Random random) {
+    public SimplexNoise(RandomSource random) {
         this.permutations = new int[512];
         this.xOrigin = random.nextDouble() * 256.0;
         this.yOrigin = random.nextDouble() * 256.0;

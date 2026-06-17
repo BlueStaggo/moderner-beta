@@ -20,9 +20,9 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.levelgen.LegacyRandomSource;
 
 import java.util.Map;
-import java.util.Random;
 import java.util.Set;
 
 public class BiomeProviderBeta extends BiomeProvider implements ClimateSampler, ClimateSamplerSky, BiomeResolverBlock {
@@ -125,9 +125,9 @@ public class BiomeProviderBeta extends BiomeProvider implements ClimateSampler, 
         private final double detailNoiseScale;
         
         public BetaClimateSampler(long seed, double tempNoiseScale, double rainNoiseScale, double detailNoiseScale) {
-            this.tempOctaveNoise = new SimplexOctaveNoise(new Random(seed * 9871L), 4);
-            this.rainOctaveNoise = new SimplexOctaveNoise(new Random(seed * 39811L), 4);
-            this.detailOctaveNoise = new SimplexOctaveNoise(new Random(seed * 543321L), 2);
+            this.tempOctaveNoise = new SimplexOctaveNoise(new LegacyRandomSource(seed * 9871L), 4);
+            this.rainOctaveNoise = new SimplexOctaveNoise(new LegacyRandomSource(seed * 39811L), 4);
+            this.detailOctaveNoise = new SimplexOctaveNoise(new LegacyRandomSource(seed * 543321L), 2);
             
             this.chunkCacheClimate = new ChunkCache<>(
                 "climate",
@@ -178,7 +178,7 @@ public class BiomeProviderBeta extends BiomeProvider implements ClimateSampler, 
         private final double tempNoiseScale;
         
         public BetaClimateSamplerSky(long seed, double tempNoiseScale) {
-            this.tempOctaveNoise = new SimplexOctaveNoise(new Random(seed * 9871L), 4);
+            this.tempOctaveNoise = new SimplexOctaveNoise(new LegacyRandomSource(seed * 9871L), 4);
             
             this.chunkCacheClimateSky = new ChunkCache<>(
                 "sky",

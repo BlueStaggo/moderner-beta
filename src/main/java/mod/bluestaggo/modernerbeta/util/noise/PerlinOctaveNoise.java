@@ -2,15 +2,14 @@ package mod.bluestaggo.modernerbeta.util.noise;
 
 import mod.bluestaggo.modernerbeta.settings.component.PerlinNoiseSettings;
 import net.minecraft.util.Mth;
-
-import java.util.Random;
+import net.minecraft.util.RandomSource;
 
 public class PerlinOctaveNoise implements OctaveNoise {
     private final PerlinNoiseSettings settings;
     private final PerlinNoise[] noises;
     private final int octaves;
     
-    public PerlinOctaveNoise(Random random, int octaves, PerlinNoiseSettings settings) {
+    public PerlinOctaveNoise(RandomSource random, int octaves, PerlinNoiseSettings settings) {
         this.noises = new PerlinNoise[octaves];
         this.octaves = octaves;
         this.settings = settings;

@@ -17,7 +17,7 @@ import mod.bluestaggo.modernerbeta.util.noise.OctaveNoise;
 import mod.bluestaggo.modernerbeta.util.noise.PerlinOctaveNoise;
 import mod.bluestaggo.modernerbeta.util.noise.SimpleNoisePos;
 import mod.bluestaggo.modernerbeta.util.noise.SimplexOctaveNoise;
-import mod.bluestaggo.modernerbeta.util.random.mersenne.MTRandom;
+import mod.bluestaggo.modernerbeta.util.random.BedrockRandomSource;
 import mod.bluestaggo.modernerbeta.level.biome.HeightConfig;
 import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.level.biome.provider.BiomeProviderBeta;
@@ -42,8 +42,6 @@ import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.levelgen.Aquifer;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.RandomState;
-
-import java.util.Random;
 
 public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
     private final Noise3DSettings noise3DSettings;
@@ -160,7 +158,7 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
 
         int seaLevel = this.getSeaLevel();
 
-        Random rand = this.createSurfaceRandom(chunkX, chunkZ);
+        RandomSource rand = this.createSurfaceRandom(chunkX, chunkZ);
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
 
         Aquifer aquiferSampler = this.getAquiferSampler(chunk, noiseConfig);
@@ -344,7 +342,7 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
 
         int seaLevel = this.getSeaLevel();
 
-        Random rand = this.createSurfaceRandom(chunkX, chunkZ);
+        RandomSource rand = this.createSurfaceRandom(chunkX, chunkZ);
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
 
         ChunkHeightmap heightmapChunk = this.hasNoisePostProcessor() ? this.getChunkHeightmap(region, chunkX, chunkZ) : null;
@@ -463,13 +461,13 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
     /**
      * Gets the surface height for the given coordinate
      *
-     * @param rand The {@link Random} instance for the height.
+     * @param rand The {@link RandomSource} instance for the height.
      * @param x    The X coordinate to get the height for.
      * @param z    The Z coordinate to get the height for
      * @return The height for the given coordinates.
      */
     @Override
-    public int getSurfaceDepth(Random rand, int x, int z) {
+    public int getSurfaceDepth(RandomSource rand, int x, int z) {
         int chunkX = x >> 4;
         int chunkZ = z >> 4;
 
@@ -700,18 +698,18 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
     }
 
     @Override
-    protected Random createRandom(long seed) {
+    protected RandomSource createRandom(long seed) {
         if (this.getChunkSettings().getOrDefault(SettingsComponentTypes.NOISE_3D_SETTINGS).pocketEditionRng()) {
-            return new MTRandom(seed);
+            return new BedrockRandomSource(seed);
         }
         return super.createRandom(seed);
     }
 
     @Override
-    public Random createSurfaceRandom(int chunkX, int chunkZ) {
+    public RandomSource createSurfaceRandom(int chunkX, int chunkZ) {
         if (this.noise3DSettings.pocketEditionRng()) {
             long seed = (long)chunkX * 0x14609048 + (long)chunkZ * 0x7ebe2d5;
-            return new MTRandom(seed);
+            return new BedrockRandomSource(seed);
         }
         return super.createSurfaceRandom(chunkX, chunkZ);
     }

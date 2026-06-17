@@ -13,7 +13,7 @@ import mod.bluestaggo.modernerbeta.settings.component.ClimateScale;
 import mod.bluestaggo.modernerbeta.settings.component.PerlinNoiseSettings;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkCache;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkClimate;
-import mod.bluestaggo.modernerbeta.util.random.mersenne.MTRandom;
+import mod.bluestaggo.modernerbeta.util.random.BedrockRandomSource;
 import mod.bluestaggo.modernerbeta.util.noise.PerlinOctaveNoise;
 import mod.bluestaggo.modernerbeta.level.biome.provider.climate.ClimateMap;
 import mod.bluestaggo.modernerbeta.level.biome.provider.climate.ClimateMapping;
@@ -120,9 +120,9 @@ public class BiomeProviderPE extends BiomeProvider implements ClimateSampler, Cl
         private final double detailNoiseScale;
         
         public PEClimateSampler(long seed, double tempNoiseScale, double rainNoiseScale, double detailNoiseScale) {
-            this.tempOctaveNoise = new PerlinOctaveNoise(new MTRandom(seed * 9871L), 4, PerlinNoiseSettings.DEFAULT);
-            this.rainOctaveNoise = new PerlinOctaveNoise(new MTRandom(seed * 39811L), 4, PerlinNoiseSettings.DEFAULT);
-            this.detailOctaveNoise = new PerlinOctaveNoise(new MTRandom(seed * 543321L), 2, PerlinNoiseSettings.DEFAULT);
+            this.tempOctaveNoise = new PerlinOctaveNoise(new BedrockRandomSource(seed * 9871L), 4, PerlinNoiseSettings.DEFAULT);
+            this.rainOctaveNoise = new PerlinOctaveNoise(new BedrockRandomSource(seed * 39811L), 4, PerlinNoiseSettings.DEFAULT);
+            this.detailOctaveNoise = new PerlinOctaveNoise(new BedrockRandomSource(seed * 543321L), 2, PerlinNoiseSettings.DEFAULT);
             
             this.chunkCacheClimate = new ChunkCache<>(
                 "climate",

@@ -138,17 +138,17 @@ public class SimpleBiomeInjectionHandler implements BiomeInjectionHandler {
         BiomeInjectionContext context = this.context.get();
 
         if (ableToFulfill.contains(InjectionNeeds.HEIGHTS)) {
-            int worldMinY = this.modernBetaChunkGenerator.getMinY();
             int topHeight = this.sampleTopHeight(level, biomeX, biomeZ);
             int minHeight = this.sampleMinHeight(level, biomeX, biomeZ);
 
-            context.setHeights(worldMinY, topHeight, minHeight);
+            context.setHeights(topHeight, minHeight);
         }
 
         return context
             .setBiome(null)
             .setFulfillableNeeds(ableToFulfill)
-            .setPosition((biomeX << 2) + 2, biomeY << 2, (biomeZ << 2) + 2);
+            .setPosition((biomeX << 2) + 2, biomeY << 2, (biomeZ << 2) + 2)
+            .setupWorldGenContext(level);
     }
 
     private int sampleTopHeight(LevelHeightAccessor level, int biomeX, int biomeZ) {

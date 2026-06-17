@@ -21,7 +21,7 @@ public record BelowSurfaceInjectionPredicate(int threshold) implements Injection
 
     @Override
     public boolean shouldApply(BiomeInjectionContext context) {
-        return context.getY() >= context.worldMinY && context.getY() + threshold < context.minHeight;
+        return context.getY() >= context.getMinGenY() && context.getY() + threshold < context.minHeight;
     }
 
     @Override

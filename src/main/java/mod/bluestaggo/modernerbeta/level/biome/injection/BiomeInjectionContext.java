@@ -9,7 +9,9 @@ import mod.bluestaggo.modernerbeta.settings.component.WorldBorderLocation;
 import net.minecraft.core.Holder;
 import net.minecraft.core.SectionPos;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.LevelHeightAccessor;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.levelgen.WorldGenerationContext;
 
 import java.util.EnumSet;
 
@@ -19,7 +21,7 @@ public final class BiomeInjectionContext {
 
     public WorldBorderLocation borderLocation;
 
-    public int worldMinY;
+    public WorldGenerationContext context;
     public int topHeight;
     public int minHeight;
 
@@ -36,11 +38,18 @@ public final class BiomeInjectionContext {
         this.biomeSource = biomeSource;
     }
 
-    public BiomeInjectionContext setHeights(int worldMinY, int topHeight, int minHeight) {
-        this.worldMinY = worldMinY;
+    public BiomeInjectionContext setHeights(int topHeight, int minHeight) {
         this.topHeight = topHeight;
         this.minHeight = minHeight;
         this.y = topHeight;
+
+        return this;
+    }
+
+    public BiomeInjectionContext setupWorldGenContext(LevelHeightAccessor accessor) {
+        if (this.context == null) {
+            this.context = new WorldGenerationContext(this.chunkGenerator, accessor);
+        }
 
         return this;
     }
@@ -90,6 +99,14 @@ public final class BiomeInjectionContext {
 
     public int getZ() {
         return this.z;
+    }
+
+    public int getMinGenY() {
+        return this.context.getMinGenY();
+    }
+
+    public int getGenDepth() {
+        return this.context.getGenDepth();
     }
 
     public ChunkPos getChunkPos() {

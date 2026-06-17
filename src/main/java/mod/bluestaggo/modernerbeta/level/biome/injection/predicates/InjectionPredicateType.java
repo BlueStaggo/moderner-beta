@@ -14,6 +14,7 @@ public record InjectionPredicateType<P extends InjectionPredicate>(com.mojang.se
     public static InjectionPredicateType<InvertedInjectionPredicate> INVERTED;
     public static InjectionPredicateType<OutOfBoundsInjectionPredicate> OUT_OF_BOUNDS;
     public static InjectionPredicateType<SurfaceBelowSeaLevelInjectionPredicate> SURFACE_BELOW_SEA_LEVEL;
+    public static InjectionPredicateType<YAboveInjectionPredicate> Y_ABOVE;
 
     private static <P extends InjectionPredicate> InjectionPredicateType<P> register(String id, com.mojang.serialization.MapCodec<P> codec) {
         return registryHandler.register(ModernerBeta.createId(id), new InjectionPredicateType<>(codec));
@@ -31,5 +32,6 @@ public record InjectionPredicateType<P extends InjectionPredicate>(com.mojang.se
         INVERTED = register("inverted", InvertedInjectionPredicate.CODEC);
         OUT_OF_BOUNDS = register("out_of_bounds", OutOfBoundsInjectionPredicate.CODEC);
         SURFACE_BELOW_SEA_LEVEL = register("surface_below_sea_level", SurfaceBelowSeaLevelInjectionPredicate.CODEC);
+        Y_ABOVE = register("y_above", YAboveInjectionPredicate.CODEC);
     }
 }

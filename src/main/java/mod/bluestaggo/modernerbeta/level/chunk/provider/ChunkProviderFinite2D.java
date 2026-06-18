@@ -429,7 +429,7 @@ public class ChunkProviderFinite2D extends ChunkProviderFinite {
             return;
         }
 
-        int lavaSourceCount = this.levelWidth * this.levelLength / poolSettings.lavaRarity();
+        int lavaSourceCount = this.levelWidth * this.levelHeight * this.levelLength / poolSettings.lavaRarity();
          
         for (int i = 0; i < lavaSourceCount; ++i) {
             int randX = random.nextInt(this.levelWidth);

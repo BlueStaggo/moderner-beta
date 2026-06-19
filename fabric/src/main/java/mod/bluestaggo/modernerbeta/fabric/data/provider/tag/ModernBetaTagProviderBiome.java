@@ -855,15 +855,15 @@ public class ModernBetaTagProviderBiome extends FabricTagProvider<Biome> {
         *///? }
 
         //TODO: maybe clean these up?
-        this.builder(TagKey.create(Registries.BIOME, VersionCompat.id("sereneseasons", "blacklisted_biomes")))
+        this.builder(TagKey.create(registryKey, VersionCompat.id("sereneseasons", "blacklisted_biomes")))
             .addTag(IS_INDEV)
             .addTag(IS_INFDEV)
             .addTag(IS_ALPHA);
 
-        this.builder(TagKey.create(Registries.BIOME, VersionCompat.id("sereneseasons", "lesser_color_change_biomes")))
+        this.builder(TagKey.create(registryKey, VersionCompat.id("sereneseasons", "lesser_color_change_biomes")))
             .add(ModernBetaBiomes.EARLY_RELEASE_SWAMPLAND);
 
-        this.builder(TagKey.create(Registries.BIOME, VersionCompat.id("sereneseasons", "tropical_biomes")))
+        this.builder(TagKey.create(registryKey, VersionCompat.id("sereneseasons", "tropical_biomes")))
             .addTag(IS_RAINFOREST)
             .addTag(IS_DESERT)
             .addTag(IS_SAVANNA)
@@ -873,7 +873,7 @@ public class ModernBetaTagProviderBiome extends FabricTagProvider<Biome> {
 
     //? if <1.20.5 {
     /*private static TagKey<Biome> forge(String location) {
-        return TagKey.create(Registries.BIOME, VersionCompat.id("forge", location));
+        return TagKey.create(registryKey, VersionCompat.id("forge", location));
     }
     *///? }
 }

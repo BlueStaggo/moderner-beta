@@ -36,6 +36,7 @@ public class ModernBetaDataGeneratorEntrypoint implements DataGeneratorEntrypoin
                 outputx -> new ModernBetaStructureDatafixProvider(outputx, inputs));
         pack.addProvider(ModernBetaWorldGenProvider::new);
         pack.addProvider(ModernBetaTagProviderBiome::new);
+        pack.addProvider(ModernBetaTagProviderBiomeSource::new);
         //? if >=26.1
         //pack.addProvider(ModernBetaTagProviderConfiguredFeature::new);
         pack.addProvider(ModernBetaTagProviderStructure::new);

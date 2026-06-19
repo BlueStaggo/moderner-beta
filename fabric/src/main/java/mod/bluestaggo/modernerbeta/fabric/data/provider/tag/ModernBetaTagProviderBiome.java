@@ -873,7 +873,7 @@ public class ModernBetaTagProviderBiome extends FabricTagProvider<Biome> {
 
     //? if <1.20.5 {
     /*private static TagKey<Biome> forge(String location) {
-        return TagKey.create(registryKey, VersionCompat.id("forge", location));
+        return TagKey.create(Registries.BIOME, VersionCompat.id("forge", location));
     }
     *///? }
 }

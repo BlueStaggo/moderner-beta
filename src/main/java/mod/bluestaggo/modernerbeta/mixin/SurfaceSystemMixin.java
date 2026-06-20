@@ -3,6 +3,7 @@ package mod.bluestaggo.modernerbeta.mixin;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
+import mod.bluestaggo.modernerbeta.api.level.biome.BiomeResolverBlock;
 import mod.bluestaggo.modernerbeta.api.level.chunk.ChunkProvider;
 import mod.bluestaggo.modernerbeta.imixin.ModernBetaSurfaceSystem;
 import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomeSource;
@@ -31,7 +32,7 @@ import java.util.function.Function;
 @Mixin(SurfaceSystem.class)
 public class SurfaceSystemMixin implements ModernBetaSurfaceSystem {
     @Unique private ChunkProvider modernerBeta$chunkProvider;
-    @Unique private ModernBetaBiomeSource modernerBeta$biomeProvider;
+    @Unique private ModernBetaBiomeSource modernerBeta$biomeSource;
     @Unique private final ThreadLocal<RandomSource> modernerBeta$surfaceRandom = new ThreadLocal<>();
 
     @Override
@@ -41,7 +42,7 @@ public class SurfaceSystemMixin implements ModernBetaSurfaceSystem {
 
     @Override
     public void modernerBeta$setupBiomeContext(ModernBetaBiomeSource biomeSource) {
-        this.modernerBeta$biomeProvider = biomeSource;
+        this.modernerBeta$biomeSource = biomeSource;
     }
 
     @Override
@@ -94,11 +95,12 @@ public class SurfaceSystemMixin implements ModernBetaSurfaceSystem {
         @Local(argsOnly = true) BiomeManager biomeManager,
         @Local(argsOnly = true) ChunkAccess protoChunk
     ) {
-        if (this.modernerBeta$biomeProvider != null) {
+        if (this.modernerBeta$biomeSource != null &&
+                this.modernerBeta$biomeSource.getBiomeProvider() instanceof BiomeResolverBlock) {
             return pos ->
-                this.modernerBeta$biomeProvider.getBiomeInjectionHandler().getBiomeAtBlock(
+                this.modernerBeta$biomeSource.getBiomeInjectionHandler().getBiomeAtBlock(
                     protoChunk,
-                    this.modernerBeta$biomeProvider.getBiomeProvider(),
+                    this.modernerBeta$biomeSource.getBiomeProvider(),
                     ((BiomeManagerAccessor) biomeManager).getBiomeZoomSeed(),
                     pos.getX(), pos.getY(), pos.getZ(),
                     BiomeInjectionRule.Step.PRE,
@@ -123,10 +125,11 @@ public class SurfaceSystemMixin implements ModernBetaSurfaceSystem {
         Operation<Holder<Biome>> original,
         @Local(argsOnly = true) ChunkAccess protoChunk
     ) {
-        if (this.modernerBeta$biomeProvider != null) {
-            return this.modernerBeta$biomeProvider.getBiomeInjectionHandler().getBiomeAtBlock(
+        if (this.modernerBeta$biomeSource != null &&
+                this.modernerBeta$biomeSource.getBiomeProvider() instanceof BiomeResolverBlock) {
+            return this.modernerBeta$biomeSource.getBiomeInjectionHandler().getBiomeAtBlock(
                 protoChunk,
-                this.modernerBeta$biomeProvider.getBiomeProvider(),
+                this.modernerBeta$biomeSource.getBiomeProvider(),
                 ((BiomeManagerAccessor) instance).getBiomeZoomSeed(),
                 pos.getX(), pos.getY(), pos.getZ(),
                 BiomeInjectionRule.Step.PRE,

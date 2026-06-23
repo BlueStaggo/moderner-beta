@@ -1,5 +1,7 @@
 package mod.bluestaggo.modernerbeta.level.feature;
 
+//? if >=26.3
+//import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.util.Mth;
@@ -18,7 +20,7 @@ import java.util.List;
 //~ if >=26.3 'Feature<OreConfiguration>' -> 'AbstractOreFeature'
 public class BetaOreClayFeature extends Feature<OreConfiguration> {
     //? if >=26.3 {
-    /*public static final com.mojang.serialization.MapCodec<BetaOreClayFeature> CODEC = makeCodec(BetaOreClayFeature::new);
+    /*public static final MapCodec<BetaOreClayFeature> CODEC = makeCodec(BetaOreClayFeature::new);
 
     public BetaOreClayFeature(List<BlockReplacement> targetStates, int size, float discardChanceOnAirExposure) {
         super(targetStates, size, discardChanceOnAirExposure);
@@ -33,7 +35,7 @@ public class BetaOreClayFeature extends Feature<OreConfiguration> {
     }
 
     @Override
-    public com.mojang.serialization.MapCodec<BetaOreClayFeature> codec() {
+    public MapCodec<BetaOreClayFeature> codec() {
         return CODEC;
     }
     *///? } else {

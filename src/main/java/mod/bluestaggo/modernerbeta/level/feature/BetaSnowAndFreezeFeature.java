@@ -1,5 +1,7 @@
 package mod.bluestaggo.modernerbeta.level.feature;
 
+//? if >=26.3
+//import com.mojang.serialization.MapCodec;
 import mod.bluestaggo.modernerbeta.api.level.biome.climate.TemperatureHeightScaling;
 import mod.bluestaggo.modernerbeta.api.level.biome.climate.ClimateSampler;
 import mod.bluestaggo.modernerbeta.level.biome.ClimateHelper;
@@ -26,14 +28,13 @@ import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConf
 public class BetaSnowAndFreezeFeature extends Feature<NoneFeatureConfiguration> {
     //? if >=26.3 {
     /*public static final BetaSnowAndFreezeFeature INSTANCE = new BetaSnowAndFreezeFeature();
-    public static final com.mojang.serialization.MapCodec<BetaSnowAndFreezeFeature> CODEC =
-            com.mojang.serialization.MapCodec.unit(INSTANCE);
+    public static final MapCodec<BetaSnowAndFreezeFeature> CODEC = MapCodec.unit(INSTANCE);
 
     public BetaSnowAndFreezeFeature() {
     }
 
     @Override
-    public com.mojang.serialization.MapCodec<? extends Feature> codec() {
+    public MapCodec<? extends Feature> codec() {
         return CODEC;
     }
     *///? } else {

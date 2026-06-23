@@ -148,7 +148,7 @@ public class ModernBetaVegetationPlacedFeatures {
     public static final ResourceKey<PlacedFeature> TREES_CLASSIC_14A_08_BEES = ModernBetaPlacedFeatures.of(ModernBetaFeatureTags.TREES_CLASSIC_14A_08_BEES);
 
     public static void bootstrap(BootstrapContext<PlacedFeature> context) {
-        //~ if >=26.3 'ConfiguredFeature<?, ?>' -> 'Feature', 'CONFIGURED_FEATURE' -> 'FEATURE' {
+        //~ if >=26.3 'ConfiguredFeature<?, ?>>' -> 'Feature>', 'CONFIGURED_FEATURE' -> 'FEATURE' {
         HolderGetter<ConfiguredFeature<?, ?>> registryConfigured = context.lookup(Registries.CONFIGURED_FEATURE);
 
         //? if >=26.1 {

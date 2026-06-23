@@ -48,6 +48,10 @@ public final class BiomeInjectionContext {
 
     public BiomeInjectionContext setupWorldGenContext(LevelHeightAccessor accessor) {
         if (this.context == null) {
+            if (accessor == null) {
+                accessor = LevelHeightAccessor.create(this.chunkGenerator.getMinY(), this.chunkGenerator.getGenDepth());
+            }
+
             this.context = new WorldGenerationContext(this.chunkGenerator, accessor);
         }
 

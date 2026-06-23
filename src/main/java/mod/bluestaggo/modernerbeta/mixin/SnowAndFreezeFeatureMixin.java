@@ -16,8 +16,8 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeSource;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
-import net.minecraft.world.level.levelgen.feature.SnowAndFreezeFeature;
+import net.minecraft.world.level.levelgen.feature.*;
+//? if <26.3
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import org.spongepowered.asm.mixin.Mixin;
@@ -43,11 +43,23 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(SnowAndFreezeFeature.class)
 public abstract class SnowAndFreezeFeatureMixin {
     @Inject(method = "place", at = @At("HEAD"), cancellable = true)
-    private void injectPlace(FeaturePlaceContext<NoneFeatureConfiguration> context, CallbackInfoReturnable<Boolean> info) {
+    private void injectPlace(
+        //? if >=26.3 {
+        /*WorldGenLevel level,
+        ChunkGenerator chunkGenerator,
+        net.minecraft.util.RandomSource random,
+        BlockPos pos,
+        *///? } else {
+        FeaturePlaceContext<NoneFeatureConfiguration> context,
+        //? }
+        CallbackInfoReturnable<Boolean> info
+    ) {
+        //? if <26.3 {
         WorldGenLevel level = context.level();
         BlockPos pos = context.origin();
-        
         ChunkGenerator chunkGenerator = context.chunkGenerator();
+        //? }
+
         BiomeSource biomeSource = chunkGenerator.getBiomeSource();
 
         if (chunkGenerator instanceof ModernBetaChunkGenerator modernBetaChunkGenerator
@@ -64,12 +76,12 @@ public abstract class SnowAndFreezeFeatureMixin {
         if (hasClimateSampler) {
             int x = pos.getX();
             int z = pos.getZ();
-            int y = context.level().getHeight(Heightmap.Types.OCEAN_FLOOR_WG, x, z);
+            int y = level.getHeight(Heightmap.Types.OCEAN_FLOOR_WG, x, z);
             
             BlockPos topPos = new BlockPos(x, y, z);
-            Holder<Biome> topBiome = context.level().getBiome(topPos);
+            Holder<Biome> topBiome = level.getBiome(topPos);
             
-            Reference<PlacedFeature> betaFreezeTopLayer = context.level()
+            Reference<PlacedFeature> betaFreezeTopLayer = level
                 .registryAccess()
                 .lookupOrThrow(Registries.PLACED_FEATURE)
                 //? if >=1.21.2 {

@@ -19,7 +19,11 @@ extendable method net/minecraft/world/level/levelgen/carver/WorldCarver getCarve
 
 accessible field net/minecraft/world/level/levelgen/carver/CaveCarverConfiguration floorLevel Lnet/minecraft/util/valueproviders/FloatProvider;
 
+#? if >=26.3 {
+#accessible method net/minecraft/world/level/levelgen/NoiseChunk cachedClimateSampler (Lnet/minecraft/world/level/levelgen/NoiseRouter;)Lnet/minecraft/world/level/biome/Climate$Sampler;
+#? } else {
 accessible method net/minecraft/world/level/levelgen/NoiseChunk cachedClimateSampler (Lnet/minecraft/world/level/levelgen/NoiseRouter;Ljava/util/List;)Lnet/minecraft/world/level/biome/Climate$Sampler;
+#? }
 
 #? if >=26.2 {
 #accessible class net/minecraft/world/level/levelgen/NoiseRouterData$QuantizedSpaghettiRarity

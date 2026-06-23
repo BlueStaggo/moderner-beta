@@ -1,3 +1,4 @@
+//? if <26.3 {
 package mod.bluestaggo.modernerbeta.mixin.compat.terrablender;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -36,3 +37,4 @@ public abstract class SurfaceRuleManagerMixin {
         return original.call(/*? >=26.2 {*//*biomeLookup*//*?}*/);
     }
 }
+//? }

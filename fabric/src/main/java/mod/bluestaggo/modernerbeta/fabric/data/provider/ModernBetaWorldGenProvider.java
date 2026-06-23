@@ -13,7 +13,11 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
 import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
+//? if >=26.3 {
+/*import net.minecraft.world.level.levelgen.feature.Feature;
+*///? } else {
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+//? }
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.levelgen.presets.WorldPreset;
 import net.minecraft.world.level.levelgen.structure.Structure;
@@ -30,6 +34,8 @@ public class ModernBetaWorldGenProvider extends FabricDynamicRegistryProvider {
     @Override
     protected void configure(HolderLookup.Provider provider, Entries entries) {
         HolderLookup.RegistryLookup<Biome> registryBiome = provider.lookupOrThrow(Registries.BIOME);
+
+        //~ if >=26.3 'ConfiguredFeature<?, ?>>' -> 'Feature>', 'CONFIGURED_FEATURE' -> 'FEATURE'
         HolderLookup.RegistryLookup<ConfiguredFeature<?, ?>> registryConfiguredFeature = provider.lookupOrThrow(Registries.CONFIGURED_FEATURE);
         HolderLookup.RegistryLookup<PlacedFeature> registryPlacedFeature = provider.lookupOrThrow(Registries.PLACED_FEATURE);
         HolderLookup.RegistryLookup<ConfiguredWorldCarver<?>> registryConfiguredCarver = provider.lookupOrThrow(Registries.CONFIGURED_CARVER);

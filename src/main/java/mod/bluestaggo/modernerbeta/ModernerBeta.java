@@ -10,6 +10,7 @@ import com.mojang.serialization.JsonOps;
 import mod.bluestaggo.modernerbeta.api.level.chunk.surface.SurfaceConfig;
 import mod.bluestaggo.modernerbeta.level.biome.injection.injector.BiomeInjectorType;
 import mod.bluestaggo.modernerbeta.level.biome.injection.predicates.InjectionPredicateType;
+import mod.bluestaggo.modernerbeta.level.feature.ModernBetaFeatures;
 import mod.bluestaggo.modernerbeta.network.INetworkHelper;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
@@ -26,7 +27,6 @@ import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers.LayerType
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.predicates.BiomePredicateType;
 import mod.bluestaggo.modernerbeta.level.carver.ModernBetaCarvers;
 import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaChunkGenerator;
-import mod.bluestaggo.modernerbeta.level.feature.ModernBetaFeatures;
 import mod.bluestaggo.modernerbeta.level.feature.ModernBetaFoliagePlacers;
 import mod.bluestaggo.modernerbeta.level.feature.ModernBetaTrunkPlacers;
 import mod.bluestaggo.modernerbeta.level.feature.placement.ModernBetaPlacementTypes;
@@ -66,6 +66,7 @@ public class ModernerBeta {
         new Pair<>(BuiltInRegistries.PLACEMENT_MODIFIER_TYPE, ModernBetaPlacementTypes::register),
         new Pair<>(BuiltInRegistries.STRUCTURE_TYPE, ModernBetaStructureTypes::register),
         new Pair<>(BuiltInRegistries.STRUCTURE_PIECE, ModernBetaStructurePieceTypes::register),
+        //~ if >=26.3 'FEATURE' -> 'FEATURE_TYPE'
         new Pair<>(BuiltInRegistries.FEATURE, ModernBetaFeatures::register),
         new Pair<>(BuiltInRegistries.CARVER, ModernBetaCarvers::register),
         new Pair<>(BuiltInRegistries.BIOME_SOURCE, ModernBetaBiomeSource::register),

@@ -1,3 +1,4 @@
+//? if <26.3 {
 package mod.bluestaggo.modernerbeta.level.chunk;
 
 import com.google.common.collect.ImmutableList;
@@ -348,3 +349,4 @@ public class ModernBetaSurfaceRuleData {
         return SurfaceRules.noiseCondition(noise, minRange, maxRange);
     }
 }
+//? } 

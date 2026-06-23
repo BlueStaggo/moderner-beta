@@ -1,6 +1,5 @@
 package mod.bluestaggo.modernerbeta.level.feature;
 
-import com.mojang.serialization.Codec;
 import mod.bluestaggo.modernerbeta.api.level.biome.climate.TemperatureHeightScaling;
 import mod.bluestaggo.modernerbeta.api.level.biome.climate.ClimateSampler;
 import mod.bluestaggo.modernerbeta.level.biome.ClimateHelper;
@@ -18,20 +17,48 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.Feature;
+//? if <26.3 {
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
+//? }
 
+//~ if >=26.3 'extends Feature<NoneFeatureConfiguration>' -> 'implements Feature'
 public class BetaSnowAndFreezeFeature extends Feature<NoneFeatureConfiguration> {
-    public BetaSnowAndFreezeFeature(Codec<NoneFeatureConfiguration> codec) {
-        super(codec);
+    //? if >=26.3 {
+    /*public static final BetaSnowAndFreezeFeature INSTANCE = new BetaSnowAndFreezeFeature();
+    public static final com.mojang.serialization.MapCodec<BetaSnowAndFreezeFeature> CODEC =
+            com.mojang.serialization.MapCodec.unit(INSTANCE);
+
+    public BetaSnowAndFreezeFeature() {
     }
 
     @Override
-    public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> context) {
+    public com.mojang.serialization.MapCodec<? extends Feature> codec() {
+        return CODEC;
+    }
+    *///? } else {
+    public BetaSnowAndFreezeFeature(com.mojang.serialization.Codec<NoneFeatureConfiguration> codec) {
+        super(codec);
+    }
+    //? }
+
+    @Override
+    public boolean place(
+        //? if >=26.3 {
+        /*WorldGenLevel level,
+        ChunkGenerator chunkGenerator,
+        net.minecraft.util.RandomSource random,
+        BlockPos pos
+        *///? } else {
+        FeaturePlaceContext<NoneFeatureConfiguration> context
+        //? }
+    ) {
+        //? if <26.3 {
         WorldGenLevel level = context.level();
         BlockPos pos = context.origin();
-        
         ChunkGenerator chunkGenerator = context.chunkGenerator();
+        //? }
+
         BiomeSource biomeSource = chunkGenerator.getBiomeSource();
         
         setFreezeTopLayer(level, pos, biomeSource, false);

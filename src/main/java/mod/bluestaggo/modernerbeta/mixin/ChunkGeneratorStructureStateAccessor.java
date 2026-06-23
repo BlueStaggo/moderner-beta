@@ -13,7 +13,15 @@ import java.util.List;
 @Mixin(ChunkGeneratorStructureState.class)
 public interface ChunkGeneratorStructureStateAccessor {
     @Invoker("<init>")
-    static ChunkGeneratorStructureState invokeInit(RandomState randomState, BiomeSource biomeSource, long levelSeed, long concentricRingsSeed, List<Holder<StructureSet>> possibleStructureSets) {
+    static ChunkGeneratorStructureState invokeInit(
+        RandomState randomState,
+        BiomeSource biomeSource,
+        long levelSeed,
+        //? if >=26.3
+        //net.minecraft.world.level.ChunkPos origin,
+        long concentricRingsSeed,
+        List<Holder<StructureSet>> possibleStructureSets
+    ) {
         throw new AssertionError();
     }
 

@@ -1,3 +1,4 @@
+//? if <26.3 {
 package mod.bluestaggo.modernerbeta.compat.levelgen;
 
 import mod.bluestaggo.modernerbeta.util.LoggingUtil;
@@ -55,3 +56,4 @@ public class TerraBlenderCompat implements SurfaceRuleCompatHelper {
         return List.of();
     }
 }
+//? }

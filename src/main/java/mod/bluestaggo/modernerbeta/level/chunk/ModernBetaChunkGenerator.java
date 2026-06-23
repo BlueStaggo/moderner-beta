@@ -143,6 +143,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
         if (noiseSettings == null && seaLevel == null && !deepslateEnabled)
             return unboxed;
 
+        //~ if >=26.3 '.surfaceRule()' -> '.materialRule().value()'
         SurfaceRules.RuleSource surfaceRules = unboxed.surfaceRule();
         if (deepslateEnabled) {
             SurfaceRules.RuleSource deepslateRule = SurfaceRules.ifTrue(
@@ -164,13 +165,16 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
             }
         }
 
+        //? if >=26.3
+        //Holder<SurfaceRules.RuleSource> boxedSurfaceRules = Holder.direct(surfaceRules);
+
         //noinspection deprecation
         unboxed = new NoiseGeneratorSettings(
             noiseSettings != null ? noiseSettings : unboxed.noiseSettings(),
             unboxed.defaultBlock(),
             unboxed.defaultFluid(),
             unboxed.noiseRouter(),
-            surfaceRules,
+            /*? >=26.3 {*/ /*boxedSurfaceRules *//*? } else {*/ surfaceRules /*? }*/,
             unboxed.spawnTarget(),
             seaLevel != null ? seaLevel : unboxed.seaLevel(),
             unboxed.disableMobGeneration(),
@@ -219,7 +223,15 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
             list.add(Holder.direct(override.getValue()));
         }
 
-        return ChunkGeneratorStructureStateAccessor.invokeInit(randomState, biomeSource, seed, seed, list);
+        return ChunkGeneratorStructureStateAccessor.invokeInit(
+            randomState,
+            biomeSource,
+            seed,
+            //? if >=26.3
+            //this.getOrigin(randomState),
+            seed,
+            list
+        );
     }
 
     @Override
@@ -230,7 +242,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
     ) {
         return CompletableFuture.supplyAsync(Util.name(() -> {
             NoiseChunk noiseSampler = chunk.getOrCreateNoiseChunk(c -> this.createNoiseChunk(c, structureAccessor, blender, noiseConfig));
-            chunk.fillBiomesFromNoise(this.biomeSource, noiseSampler.cachedClimateSampler(noiseConfig.router(), this.generatorSettings().value().spawnTarget()));
+            chunk.fillBiomesFromNoise(this.biomeSource, noiseSampler.cachedClimateSampler(noiseConfig.router() /*? <26.3 {*/, this.generatorSettings().value().spawnTarget() /*? }*/));
             
             return chunk;
         }, () -> "init_biomes"), Util.backgroundExecutor());
@@ -297,6 +309,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
             }
         }
 
+        //? if <26.3
         ModCompat.useModernBetaSurfaceRules = true;
         random.surfaceSystem()
             .buildSurface(
@@ -308,10 +321,12 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
                 context,
                 chunk,
                 noiseChunk,
+                //~ if >=26.3 '.surfaceRule()' -> '.materialRule().value()'
                 noiseGeneratorSettings.surfaceRule()
                 //? if >=26.2
                 //, possibleBiomes
             );
+        //? if <26.3
         ModCompat.useModernBetaSurfaceRules = false;
     }
 
@@ -341,8 +356,18 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
         NoiseChunk chunkNoiseSampler = chunk.getOrCreateNoiseChunk(c -> this.createNoiseChunk(c, structureAccessor, Blender.of(chunkRegion), noiseConfig));
 
         Registry<ConfiguredWorldCarver<?>> configuredCarverRegistry = chunkRegion.registryAccess().lookupOrThrow(Registries.CONFIGURED_CARVER);
+        //? if <26.3
         ModCompat.useModernBetaSurfaceRules = true;
-        CarvingContext carverContext = new CarvingContext(this, chunkRegion.registryAccess(), chunk.getHeightAccessorForGeneration(), chunkNoiseSampler, noiseConfig, this.generatorSettings().value().surfaceRule());
+        CarvingContext carverContext = new CarvingContext(
+            this,
+            chunkRegion.registryAccess(),
+            chunk.getHeightAccessorForGeneration(),
+            chunkNoiseSampler,
+            noiseConfig,
+            //~ if >=26.3 '.surfaceRule()' -> '.materialRule().value()'
+            this.generatorSettings().value().surfaceRule()
+        );
+        //? if <26.3
         ModCompat.useModernBetaSurfaceRules = false;
         CarvingMask carvingMask = ((ProtoChunk)chunk).getOrCreateCarvingMask(
             //? if <1.21.2

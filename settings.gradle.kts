@@ -64,7 +64,7 @@ stonecutter {
 
     create(getRootProject()) {
         versions("1.20.1", "1.21.1")
-        versions("26.1", "26.2").buildscript("build-unobf.gradle.kts")
+        versions("26.1", "26.2", "26.3").buildscript("build-unobf.gradle.kts")
         branch("fabric")
         branch("forgelike") {
             versions("1.20.1").buildscript("build-lexforge.gradle.kts")

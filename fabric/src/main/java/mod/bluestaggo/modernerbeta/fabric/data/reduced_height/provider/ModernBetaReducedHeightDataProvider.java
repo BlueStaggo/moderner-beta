@@ -10,6 +10,7 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider
 import net.minecraft.core.*;
 import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.core.registries.Registries;
+//? if <26.3
 import net.minecraft.data.worldgen.SurfaceRuleData;
 import net.minecraft.data.worldgen.features.OreFeatures;
 import net.minecraft.data.worldgen.placement.OrePlacements;
@@ -30,10 +31,11 @@ import net.minecraft.world.level.levelgen.*;
 import net.minecraft.world.level.levelgen.carver.CarverDebugSettings;
 import net.minecraft.world.level.levelgen.carver.CaveCarverConfiguration;
 import net.minecraft.world.level.levelgen.carver.WorldCarver;
-import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
-import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.*;
+//? if <26.3 {
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration;
+//? }
 import net.minecraft.world.level.levelgen.heightproviders.ConstantHeight;
 import net.minecraft.world.level.levelgen.placement.*;
 import net.minecraft.world.level.levelgen.structure.templatesystem.RuleTest;
@@ -50,8 +52,10 @@ import java.util.stream.Stream;
 import static mod.bluestaggo.modernerbeta.level.chunk.ModernBetaNoiseGeneratorSettings.*;
 
 public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryProvider {
+    //~ if >=26.3 'ConfiguredFeature<?, ?>>' -> 'Feature>' {
     public static final ResourceKey<ConfiguredFeature<?, ?>> ORE_DEEPSLATE_OLD = ModernBetaConfiguredFeatures.of("ore_deepslate_old");
     public static final ResourceKey<ConfiguredFeature<?, ?>> ORE_DIAMOND_OLD = ModernBetaConfiguredFeatures.of("ore_diamond_old");
+    //~ }
 
     private static boolean isGeneratingData;
 
@@ -143,20 +147,22 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
         RuleTest overworldStone = new TagMatchTest(BlockTags.BASE_STONE_OVERWORLD);
         RuleTest deepslateReplacers = new TagMatchTest(BlockTags.DEEPSLATE_ORE_REPLACEABLES);
 
+        //~ if >=26.3 'new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(' -> '(new OreFeature(' {
         entries.add(OreFeatures.ORE_GRANITE, new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(overworldStone, Blocks.GRANITE.defaultBlockState(), 33)));
         entries.add(OreFeatures.ORE_DIORITE, new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(overworldStone, Blocks.DIORITE.defaultBlockState(), 33)));
         entries.add(OreFeatures.ORE_ANDESITE, new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(overworldStone, Blocks.ANDESITE.defaultBlockState(), 33)));
         entries.add(OreFeatures.ORE_TUFF, new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(overworldStone, Blocks.TUFF.defaultBlockState(), 33)));
 
         entries.add(ORE_DEEPSLATE_OLD, new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(overworldStone, Blocks.DEEPSLATE.defaultBlockState(), 64)));
-        entries.add(ORE_DIAMOND_OLD, new ConfiguredFeature<>(Feature.ORE,
-            new OreConfiguration(
-                List.of(
-                    OreConfiguration.target(overworldStone, Blocks.DIAMOND_ORE.defaultBlockState()),
-                    OreConfiguration.target(deepslateReplacers, Blocks.DEEPSLATE_DIAMOND_ORE.defaultBlockState())
-                ), 8
-            )
-        ));
+        entries.add(ORE_DIAMOND_OLD, new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(
+            List.of(
+                //~ if >=26.3 'OreConfiguration.target' -> 'BlockReplacement.replace' {
+                OreConfiguration.target(overworldStone, Blocks.DIAMOND_ORE.defaultBlockState()),
+                OreConfiguration.target(deepslateReplacers, Blocks.DEEPSLATE_DIAMOND_ORE.defaultBlockState())
+                //~ }
+            ), 8
+        )));
+        //~ }
 
         //Chunk generator settings
         entries.add(NoiseGeneratorSettings.OVERWORLD, createVanillaSurfaceSettings(provider, false, false));
@@ -177,7 +183,9 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
         entries.add(NoiseRouterDataAccessor.getNoodleKey(), createCavesNoodleOverworldFunction(densityFunctionLookup, noiseParametersLookup));
 
         //Placed features
+        //~ if >=26.3 'ConfiguredFeature<?, ?>>' -> 'Feature>', 'CONFIGURED_FEATURE' -> 'FEATURE' {
         HolderGetter<ConfiguredFeature<?, ?>> registryConfiguredFeature = provider.lookupOrThrow(Registries.CONFIGURED_FEATURE);
+        //~ if >=26.3 'new ConfiguredFeature<>(Feature.NO_OP, NoneFeatureConfiguration.NONE)' -> 'new NoOpFeature()'
         Holder<ConfiguredFeature<?, ?>> noOp = Holder.direct(new ConfiguredFeature<>(Feature.NO_OP, NoneFeatureConfiguration.NONE));
         Holder<ConfiguredFeature<?, ?>> dirt = registryConfiguredFeature.getOrThrow(OreFeatures.ORE_DIRT);
         Holder<ConfiguredFeature<?, ?>> gravel = registryConfiguredFeature.getOrThrow(OreFeatures.ORE_GRAVEL);
@@ -191,6 +199,7 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
         Holder<ConfiguredFeature<?, ?>> diamond = alwaysSerializableHolder(entries.ref(ORE_DIAMOND_OLD));
         Holder<ConfiguredFeature<?, ?>> lapis = registryConfiguredFeature.getOrThrow(OreFeatures.ORE_LAPIS);
         Holder<ConfiguredFeature<?, ?>> copperSmall = registryConfiguredFeature.getOrThrow(OreFeatures.ORE_COPPPER_SMALL);
+        //~ }
 
         entries.add(OrePlacements.ORE_ANDESITE_UPPER, new PlacedFeature(noOp, List.of(CountPlacement.of(0))));
         entries.add(OrePlacements.ORE_ANDESITE_LOWER, new PlacedFeature(andesite,
@@ -243,7 +252,11 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
             Blocks.WATER.defaultBlockState(),
             mod.bluestaggo.modernerbeta.fabric.mixin.NoiseRouterDataAccessor.invokeOverworld(provider.lookupOrThrow(Registries.DENSITY_FUNCTION),
                 provider.lookupOrThrow(Registries.NOISE), largeBiomes, amplified),
+            //? if >=26.3 {
+            /*provider.lookupOrThrow(Registries.MATERIAL_RULE).getOrThrow(net.minecraft.data.worldgen.material.OverworldMaterialRules.OVERWORLD),
+            *///? } else {
             SurfaceRuleData.overworld(/*? >=26.2 {*//*provider.lookupOrThrow(Registries.BIOME)*//*?}*/),
+            //? }
             (new OverworldBiomeBuilder()).spawnTarget(),
             63,
             false,
@@ -260,7 +273,11 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
             Blocks.WATER.defaultBlockState(),
             mod.bluestaggo.modernerbeta.fabric.mixin.NoiseRouterDataAccessor.invokeNether(provider.lookupOrThrow(Registries.DENSITY_FUNCTION),
                 provider.lookupOrThrow(Registries.NOISE)),
+            //? if >=26.3 {
+            /*provider.lookupOrThrow(Registries.MATERIAL_RULE).getOrThrow(net.minecraft.data.worldgen.material.OverworldMaterialRules.OVERWORLD_CAVES),
+            *///? } else {
             SurfaceRuleData.overworldLike(/*? >=26.2 {*//*provider.lookupOrThrow(Registries.BIOME), *//*?}*/ false, true, true),
+            //? }
             List.of(),
             32,
             false,

@@ -1,22 +1,26 @@
 package mod.bluestaggo.modernerbeta.compat;
 
+//? if <26.3
 import com.google.common.collect.ImmutableList;
-import mod.bluestaggo.modernerbeta.compat.levelgen.SurfaceRuleCompatHelper;
-import mod.bluestaggo.modernerbeta.compat.levelgen.TerraBlenderCompat;
+import mod.bluestaggo.modernerbeta.compat.levelgen.*;
 import mod.bluestaggo.modernerbeta.compat.levelgen.ValkyrienSkiesCompat;
 import mod.bluestaggo.modernerbeta.compat.levelgen.LevelGenCompatHelper;
+//? if <26.3
 import net.minecraft.world.level.levelgen.SurfaceRules;
 
 import java.util.HashSet;
+//? if <26.3
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 
 public class ModCompat {
     public static Set<LevelGenCompatHelper> worldGenHelpers = new HashSet<>();
+    //? if <26.3
     public static Set<SurfaceRuleCompatHelper> surfaceRuleHelpers = new HashSet<>();
     private static boolean compatChecked;
 
+    //? if <26.3
     public static boolean useModernBetaSurfaceRules;
 
     public static void initialise(Function<String, Boolean> modPresenceFunction) {
@@ -26,8 +30,10 @@ public class ModCompat {
         if (modPresenceFunction.apply("valkyrienskies"))
             worldGenHelpers.add(new ValkyrienSkiesCompat());
 
+        //? if <26.3 {
         if (modPresenceFunction.apply("terrablender"))
             surfaceRuleHelpers.add(new TerraBlenderCompat());
+        //? }
 
         compatChecked = true;
     }
@@ -44,6 +50,7 @@ public class ModCompat {
         return false;
     }
 
+    //? if <26.3 {
     public static List<SurfaceRules.RuleSource> getPreBedrockCustomRules() {
         if (surfaceRuleHelpers.isEmpty())
             return List.of();
@@ -67,4 +74,5 @@ public class ModCompat {
 
         return builder.build();
     }
+    //? }
 }

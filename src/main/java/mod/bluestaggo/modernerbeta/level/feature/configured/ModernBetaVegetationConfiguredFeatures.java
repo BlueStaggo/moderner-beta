@@ -8,6 +8,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
+//? if <26.3
 import net.minecraft.data.worldgen.features.FeatureUtils;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.data.worldgen.placement.TreePlacements;
@@ -16,19 +17,21 @@ import net.minecraft.util.random.WeightedList;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
-import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
-import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.feature.WeightedPlacedFeature;
-import net.minecraft.world.level.levelgen.feature.configurations.RandomFeatureConfiguration;
-//? <26.1
+import net.minecraft.world.level.levelgen.feature.*;
+//? if <26.1
 //import net.minecraft.world.level.levelgen.feature.configurations.RandomPatchConfiguration;
+//? if <26.3 {
+import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
+import net.minecraft.world.level.levelgen.feature.configurations.RandomFeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.SimpleBlockConfiguration;
+//? }
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 import net.minecraft.world.level.levelgen.feature.stateproviders.WeightedStateProvider;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 
 import java.util.List;
 
+@SuppressWarnings("deprecation")
 public class ModernBetaVegetationConfiguredFeatures {
     private static final ResourceKey<PlacedFeature> OAK_BEES_0002 =
             //? if >=1.21.5 {
@@ -37,6 +40,7 @@ public class ModernBetaVegetationConfiguredFeatures {
             /*TreePlacements.OAK_BEES_0002;
             *///? }
 
+    //~ if >=26.3 'ConfiguredFeature<?, ?>>' -> 'Feature>' {
     public static final ResourceKey<ConfiguredFeature<?, ?>> MUSHROOM_HELL = ModernBetaConfiguredFeatures.of(ModernBetaFeatureTags.MUSHROOM_HELL);
     //? if >=26.1 {
     public static final ResourceKey<ConfiguredFeature<?, ?>> DANDELION = ModernBetaConfiguredFeatures.of(ModernBetaFeatureTags.DANDELION);
@@ -98,18 +102,20 @@ public class ModernBetaVegetationConfiguredFeatures {
     public static final ResourceKey<ConfiguredFeature<?, ?>> TREES_INDEV_BEES = ModernBetaConfiguredFeatures.of(ModernBetaFeatureTags.TREES_INDEV_BEES);
     public static final ResourceKey<ConfiguredFeature<?, ?>> TREES_INDEV_WOODS_BEES = ModernBetaConfiguredFeatures.of(ModernBetaFeatureTags.TREES_INDEV_WOODS_BEES);
     public static final ResourceKey<ConfiguredFeature<?, ?>> TREES_CLASSIC_14A_08_BEES = ModernBetaConfiguredFeatures.of(ModernBetaFeatureTags.TREES_CLASSIC_14A_08_BEES);
+    //~ }
 
     @SuppressWarnings("unchecked")
     public static void bootstrap(BootstrapContext<?> context) {
+        //~ if >=26.3 'ConfiguredFeature<?, ?>' -> 'Feature'
         BootstrapContext<ConfiguredFeature<?, ?>> featureContext = (BootstrapContext<ConfiguredFeature<?, ?>>)context;
         HolderGetter<PlacedFeature> registryPlaced = featureContext.lookup(Registries.PLACED_FEATURE);
 
         //? if >=26.1 {
-        FeatureUtils.register(featureContext, MUSHROOM_HELL, Feature.SIMPLE_BLOCK, ModernBetaRandomPatchConfigs.MUSHROOM_HELL_FEATURE_CONFIG);
-        FeatureUtils.register(featureContext, DANDELION, Feature.SIMPLE_BLOCK, ModernBetaRandomPatchConfigs.DANDELION_FEATURE_CONFIG);
-        FeatureUtils.register(featureContext, POPPY, Feature.SIMPLE_BLOCK, ModernBetaRandomPatchConfigs.POPPY_FEATURE_CONFIG);
-        FeatureUtils.register(featureContext, GRASS, Feature.SIMPLE_BLOCK, ModernBetaRandomPatchConfigs.GRASS_FEATURE_CONFIG);
-        FeatureUtils.register(featureContext, GRASS_LUSH, Feature.SIMPLE_BLOCK, ModernBetaRandomPatchConfigs.LUSH_GRASS_FEATURE_CONFIG);
+        registerSimpleBlock(featureContext, MUSHROOM_HELL, ModernBetaRandomPatchConfigs.MUSHROOM_HELL_FEATURE_CONFIG);
+        registerSimpleBlock(featureContext, DANDELION, ModernBetaRandomPatchConfigs.DANDELION_FEATURE_CONFIG);
+        registerSimpleBlock(featureContext, POPPY, ModernBetaRandomPatchConfigs.POPPY_FEATURE_CONFIG);
+        registerSimpleBlock(featureContext, GRASS, ModernBetaRandomPatchConfigs.GRASS_FEATURE_CONFIG);
+        registerSimpleBlock(featureContext, GRASS_LUSH, ModernBetaRandomPatchConfigs.LUSH_GRASS_FEATURE_CONFIG);
         //? } else {
         /*FeatureUtils.register(featureContext, MUSHROOM_HELL, Feature.FLOWER, ModernBetaRandomPatchConfigs.MUSHROOM_HELL);
         FeatureUtils.register(featureContext, PATCH_BROWN_MUSHROOM, Feature.RANDOM_PATCH, ModernBetaRandomPatchConfigs.BROWN_MUSHROOM);
@@ -121,53 +127,84 @@ public class ModernBetaVegetationConfiguredFeatures {
         FeatureUtils.register(featureContext, PATCH_GRASS_LUSH, Feature.RANDOM_PATCH, ModernBetaRandomPatchConfigs.LUSH_GRASS_CONFIG);
         *///? }
 
-        FeatureUtils.register(featureContext, TREES_ALPHA, Feature.RANDOM_SELECTOR, createDefaultRandomTreeConfig(registryPlaced, false));
-        FeatureUtils.register(featureContext, TREES_INFDEV_611, Feature.RANDOM_SELECTOR, createOakTreeConfig(registryPlaced, false));
-        FeatureUtils.register(featureContext, TREES_INFDEV_420, Feature.RANDOM_SELECTOR, createInfdevRandomTreeConfig(registryPlaced, false));
-        FeatureUtils.register(featureContext, TREES_INFDEV_415, Feature.RANDOM_SELECTOR, createInfdevRandomTreeConfig(registryPlaced, false));
-        FeatureUtils.register(featureContext, TREES_INFDEV_325, Feature.RANDOM_SELECTOR, createOakTreeConfig(registryPlaced, false));
-        FeatureUtils.register(featureContext, TREES_INFDEV_227, Feature.RANDOM_SELECTOR, createOakTreeConfig(registryPlaced, false));
+        registerRandomSelector(featureContext, TREES_ALPHA, createDefaultRandomTreeConfig(registryPlaced, false));
+        registerRandomSelector(featureContext, TREES_INFDEV_611, createOakTreeConfig(registryPlaced, false));
+        registerRandomSelector(featureContext, TREES_INFDEV_420, createInfdevRandomTreeConfig(registryPlaced, false));
+        registerRandomSelector(featureContext, TREES_INFDEV_415, createInfdevRandomTreeConfig(registryPlaced, false));
+        registerRandomSelector(featureContext, TREES_INFDEV_325, createOakTreeConfig(registryPlaced, false));
+        registerRandomSelector(featureContext, TREES_INFDEV_227, createOakTreeConfig(registryPlaced, false));
         
-        FeatureUtils.register(featureContext, TREES_ALPHA_BEES, Feature.RANDOM_SELECTOR, createDefaultRandomTreeConfig(registryPlaced, true));
-        FeatureUtils.register(featureContext, TREES_INFDEV_611_BEES, Feature.RANDOM_SELECTOR, createOakTreeConfig(registryPlaced, true));
-        FeatureUtils.register(featureContext, TREES_INFDEV_420_BEES, Feature.RANDOM_SELECTOR, createInfdevRandomTreeConfig(registryPlaced, true));
-        FeatureUtils.register(featureContext, TREES_INFDEV_415_BEES, Feature.RANDOM_SELECTOR, createInfdevRandomTreeConfig(registryPlaced, true));
-        FeatureUtils.register(featureContext, TREES_INFDEV_325_BEES, Feature.RANDOM_SELECTOR, createOakTreeConfig(registryPlaced, true));
-        FeatureUtils.register(featureContext, TREES_INFDEV_227_BEES, Feature.RANDOM_SELECTOR, createOakTreeConfig(registryPlaced, true));
+        registerRandomSelector(featureContext, TREES_ALPHA_BEES, createDefaultRandomTreeConfig(registryPlaced, true));
+        registerRandomSelector(featureContext, TREES_INFDEV_611_BEES, createOakTreeConfig(registryPlaced, true));
+        registerRandomSelector(featureContext, TREES_INFDEV_420_BEES, createInfdevRandomTreeConfig(registryPlaced, true));
+        registerRandomSelector(featureContext, TREES_INFDEV_415_BEES, createInfdevRandomTreeConfig(registryPlaced, true));
+        registerRandomSelector(featureContext, TREES_INFDEV_325_BEES, createOakTreeConfig(registryPlaced, true));
+        registerRandomSelector(featureContext, TREES_INFDEV_227_BEES, createOakTreeConfig(registryPlaced, true));
 
-        FeatureUtils.register(featureContext, TREES_BETA_FOREST, Feature.RANDOM_SELECTOR, createForestRandomTreeConfig(registryPlaced, false));
-        FeatureUtils.register(featureContext, TREES_BETA_RAINFOREST, Feature.RANDOM_SELECTOR, createRainforestRandomTreeConfig(registryPlaced, false));
-        FeatureUtils.register(featureContext, TREES_BETA_SEASONAL_FOREST, Feature.RANDOM_SELECTOR, createSeasonalForestRandomTreeConfig(registryPlaced, false));
-        FeatureUtils.register(featureContext, TREES_BETA_SPARSE, Feature.RANDOM_SELECTOR, createDefaultRandomTreeConfig(registryPlaced, false));
-        FeatureUtils.register(featureContext, TREES_BETA_TAIGA, Feature.RANDOM_SELECTOR, createTaigaRandomTreeConfig(registryPlaced));
-        FeatureUtils.register(featureContext, TREES_BETA_OAK_FOREST, Feature.RANDOM_SELECTOR, createOakForestRandomTreeConfig(registryPlaced, false));
+        registerRandomSelector(featureContext, TREES_BETA_FOREST, createForestRandomTreeConfig(registryPlaced, false));
+        registerRandomSelector(featureContext, TREES_BETA_RAINFOREST, createRainforestRandomTreeConfig(registryPlaced, false));
+        registerRandomSelector(featureContext, TREES_BETA_SEASONAL_FOREST, createSeasonalForestRandomTreeConfig(registryPlaced, false));
+        registerRandomSelector(featureContext, TREES_BETA_SPARSE, createDefaultRandomTreeConfig(registryPlaced, false));
+        registerRandomSelector(featureContext, TREES_BETA_TAIGA, createTaigaRandomTreeConfig(registryPlaced));
+        registerRandomSelector(featureContext, TREES_BETA_OAK_FOREST, createOakForestRandomTreeConfig(registryPlaced, false));
 
-        FeatureUtils.register(featureContext, TREES_BETA_FOREST_BEES, Feature.RANDOM_SELECTOR, createForestRandomTreeConfig(registryPlaced, true));
-        FeatureUtils.register(featureContext, TREES_BETA_RAINFOREST_BEES, Feature.RANDOM_SELECTOR, createRainforestRandomTreeConfig(registryPlaced, true));
-        FeatureUtils.register(featureContext, TREES_BETA_SEASONAL_FOREST_BEES, Feature.RANDOM_SELECTOR, createSeasonalForestRandomTreeConfig(registryPlaced, true));
-        FeatureUtils.register(featureContext, TREES_BETA_SPARSE_BEES, Feature.RANDOM_SELECTOR, createDefaultRandomTreeConfig(registryPlaced, true));
-        FeatureUtils.register(featureContext, TREES_BETA_OAK_FOREST_BEES, Feature.RANDOM_SELECTOR, createOakForestRandomTreeConfig(registryPlaced, true));
+        registerRandomSelector(featureContext, TREES_BETA_FOREST_BEES, createForestRandomTreeConfig(registryPlaced, true));
+        registerRandomSelector(featureContext, TREES_BETA_RAINFOREST_BEES, createRainforestRandomTreeConfig(registryPlaced, true));
+        registerRandomSelector(featureContext, TREES_BETA_SEASONAL_FOREST_BEES, createSeasonalForestRandomTreeConfig(registryPlaced, true));
+        registerRandomSelector(featureContext, TREES_BETA_SPARSE_BEES, createDefaultRandomTreeConfig(registryPlaced, true));
+        registerRandomSelector(featureContext, TREES_BETA_OAK_FOREST_BEES, createOakForestRandomTreeConfig(registryPlaced, true));
 
-        FeatureUtils.register(featureContext, TREES_PE_FOREST, Feature.RANDOM_SELECTOR, createPEForestRandomTreeConfig(registryPlaced, false));
-        FeatureUtils.register(featureContext, TREES_PE_RAINFOREST, Feature.RANDOM_SELECTOR, createOakTreeConfig(registryPlaced, false));
-        FeatureUtils.register(featureContext, TREES_PE_SEASONAL_FOREST, Feature.RANDOM_SELECTOR, createOakTreeConfig(registryPlaced, false));
-        FeatureUtils.register(featureContext, TREES_PE_SPARSE, Feature.RANDOM_SELECTOR, createOakTreeConfig(registryPlaced, false));
-        FeatureUtils.register(featureContext, TREES_PE_TAIGA, Feature.RANDOM_SELECTOR, createTaigaRandomTreeConfig(registryPlaced));
+        registerRandomSelector(featureContext, TREES_PE_FOREST, createPEForestRandomTreeConfig(registryPlaced, false));
+        registerRandomSelector(featureContext, TREES_PE_RAINFOREST, createOakTreeConfig(registryPlaced, false));
+        registerRandomSelector(featureContext, TREES_PE_SEASONAL_FOREST, createOakTreeConfig(registryPlaced, false));
+        registerRandomSelector(featureContext, TREES_PE_SPARSE, createOakTreeConfig(registryPlaced, false));
+        registerRandomSelector(featureContext, TREES_PE_TAIGA, createTaigaRandomTreeConfig(registryPlaced));
         
-        FeatureUtils.register(featureContext, TREES_PE_FOREST_BEES, Feature.RANDOM_SELECTOR, createPEForestRandomTreeConfig(registryPlaced, true));
-        FeatureUtils.register(featureContext, TREES_PE_RAINFOREST_BEES, Feature.RANDOM_SELECTOR, createOakTreeConfig(registryPlaced, true));
-        FeatureUtils.register(featureContext, TREES_PE_SEASONAL_FOREST_BEES, Feature.RANDOM_SELECTOR, createOakTreeConfig(registryPlaced, true));
-        FeatureUtils.register(featureContext, TREES_PE_SPARSE_BEES, Feature.RANDOM_SELECTOR, createOakTreeConfig(registryPlaced, true));
+        registerRandomSelector(featureContext, TREES_PE_FOREST_BEES, createPEForestRandomTreeConfig(registryPlaced, true));
+        registerRandomSelector(featureContext, TREES_PE_RAINFOREST_BEES, createOakTreeConfig(registryPlaced, true));
+        registerRandomSelector(featureContext, TREES_PE_SEASONAL_FOREST_BEES, createOakTreeConfig(registryPlaced, true));
+        registerRandomSelector(featureContext, TREES_PE_SPARSE_BEES, createOakTreeConfig(registryPlaced, true));
         
-        FeatureUtils.register(featureContext, TREES_INDEV, Feature.RANDOM_SELECTOR, createOakTreeConfig(registryPlaced, false));
-        FeatureUtils.register(featureContext, TREES_INDEV_WOODS, Feature.RANDOM_SELECTOR, createOakTreeConfig(registryPlaced, false));
-        FeatureUtils.register(featureContext, TREES_CLASSIC_14A_08, Feature.RANDOM_SELECTOR, createOak14a08TreeConfig(registryPlaced, false));
+        registerRandomSelector(featureContext, TREES_INDEV, createOakTreeConfig(registryPlaced, false));
+        registerRandomSelector(featureContext, TREES_INDEV_WOODS, createOakTreeConfig(registryPlaced, false));
+        registerRandomSelector(featureContext, TREES_CLASSIC_14A_08, createOak14a08TreeConfig(registryPlaced, false));
 
-        FeatureUtils.register(featureContext, TREES_INDEV_BEES, Feature.RANDOM_SELECTOR, createOakTreeConfig(registryPlaced, true));
-        FeatureUtils.register(featureContext, TREES_INDEV_WOODS_BEES, Feature.RANDOM_SELECTOR, createOakTreeConfig(registryPlaced, true));
-        FeatureUtils.register(featureContext, TREES_CLASSIC_14A_08_BEES, Feature.RANDOM_SELECTOR, createOak14a08TreeConfig(registryPlaced, false));
+        registerRandomSelector(featureContext, TREES_INDEV_BEES, createOakTreeConfig(registryPlaced, true));
+        registerRandomSelector(featureContext, TREES_INDEV_WOODS_BEES, createOakTreeConfig(registryPlaced, true));
+        registerRandomSelector(featureContext, TREES_CLASSIC_14A_08_BEES, createOak14a08TreeConfig(registryPlaced, false));
     }
 
+    //? if >=26.1 {
+    @SuppressWarnings("unchecked")
+    private static <T> void registerSimpleBlock(BootstrapContext<T> context, ResourceKey<T> key, Object value) {
+        //? if >=26.3 {
+        /*context.register(key, (T) value);
+        *///? } else {
+        FeatureUtils.register(
+            (BootstrapContext<ConfiguredFeature<?, ?>>) context,
+            (ResourceKey<ConfiguredFeature<?, ?>>) key,
+            Feature.SIMPLE_BLOCK,
+            (SimpleBlockConfiguration) value
+        );
+        //? }
+    }
+    //? }
+
+    @SuppressWarnings("unchecked")
+    private static <T> void registerRandomSelector(BootstrapContext<T> context, ResourceKey<T> key, Object value) {
+        //? if >=26.3 {
+        /*context.register(key, (T) value);
+        *///? } else {
+        FeatureUtils.register(
+            (BootstrapContext<ConfiguredFeature<?, ?>>) context,
+            (ResourceKey<ConfiguredFeature<?, ?>>) key,
+            Feature.RANDOM_SELECTOR,
+            (RandomFeatureConfiguration) value
+        );
+        //? }
+    }
+
+    //~ if >=26.3 'RandomFeatureConfiguration' -> 'RandomSelectorFeature' {
     private static RandomFeatureConfiguration createOakTreeConfig(HolderGetter<PlacedFeature> registryPlaced, boolean bees) {
         Holder.Reference<PlacedFeature> oak = registryPlaced.getOrThrow(TreePlacements.OAK_CHECKED);
         Holder.Reference<PlacedFeature> oakBees = registryPlaced.getOrThrow(OAK_BEES_0002);
@@ -307,6 +344,7 @@ public class ModernBetaVegetationConfiguredFeatures {
 
         return new RandomFeatureConfiguration(List.of(), bees ? oakBees : oak);
     }
+    //~ }
     
     private static WeightedPlacedFeature withChance(Holder<PlacedFeature> feature, float chance) {
         return new WeightedPlacedFeature(feature, chance);
@@ -317,7 +355,8 @@ public class ModernBetaVegetationConfiguredFeatures {
         private static final int Y_SPREAD = 3;
         private static final int TRIES = 64;
         private static final int GRASS_TRIES = 64;
-        
+
+        //~ if >=26.3 'SimpleBlockConfiguration' -> 'SimpleBlockFeature' {
         public static final SimpleBlockConfiguration DANDELION_FEATURE_CONFIG;
         public static final SimpleBlockConfiguration POPPY_FEATURE_CONFIG;
         
@@ -381,5 +420,6 @@ public class ModernBetaVegetationConfiguredFeatures {
             MUSHROOM_HELL = createRandomPatchFeatureConfig(TRIES, MUSHROOM_HELL_FEATURE_CONFIG);
             *///? }
         }
+        //~ }
     }
 }

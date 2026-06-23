@@ -250,6 +250,11 @@ public record HeightConfig(float depth, float scale, String type) {
 			ExtendedIdentifier.of("minecraft:pale_garden"),
 			new HeightConfig(1.5f, 0.6f));
 		//?}
+		//? if >=26.3 {
+		/*majorReleaseHeightConfigs.put(
+			ExtendedIdentifier.of("minecraft:dappled_forest"),
+			new HeightConfig(0.1f, 0.4f));
+		*///? }
 		majorReleaseHeightConfigs.put(
 			ExtendedIdentifier.of("minecraft:mangrove_swamp"),
 			new HeightConfig(-0.2f, 0.2f));

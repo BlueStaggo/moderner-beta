@@ -1028,8 +1028,13 @@ public final class ModernBetaSettingsPresets {
                     //?}
 
                     new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.PLAINS), 0.5, 0.1, 0.8),
+                    //? if >=26.3 {
+                    /*new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.DAPPLED_FOREST), 0.5, 0.3, 0.8),
+                    new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.DAPPLED_FOREST), 0.5, 0.5, 0.8),
+                    *///? } else {
                     new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.PLAINS), 0.5, 0.3, 0.8),
                     new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.OLD_GROWTH_BIRCH_FOREST), 0.5, 0.5, 0.8),
+                    //? }
                     new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.OLD_GROWTH_BIRCH_FOREST), 0.5, 0.7, 0.8),
                     new VoronoiPointBiome(biomeRegistry.getOrThrow(Biomes.MANGROVE_SWAMP), 0.5, 0.9, 0.8),
 
@@ -1541,6 +1546,8 @@ public final class ModernBetaSettingsPresets {
             ExtendedIdentifier.of("minecraft:dark_forest").mapTo("minecraft:pale_garden"),
             ExtendedIdentifier.of("minecraft:windswept_hills").mapTo("minecraft:meadow"),
             ExtendedIdentifier.of("minecraft:taiga").mapTo("minecraft:cherry_grove"),
+            //? if >=26.3
+            //ExtendedIdentifier.of("minecraft:birch_forest").mapTo("minecraft:dappled_forest"),
             ExtendedIdentifier.of("minecraft:swamp").mapTo("minecraft:mangrove_swamp")
         );
 
@@ -1566,6 +1573,8 @@ public final class ModernBetaSettingsPresets {
                 "~minecraft:old_growth_birch_forest",
                 //? if >=1.21.4
                 "~minecraft:pale_garden",
+                //? if >=26.3
+                //"~minecraft:dappled_forest",
                 "~minecraft:cherry_grove"
             )),
             Map.entry("snowy_plains", ExtendedIdentifier.setOf(
@@ -2142,6 +2151,8 @@ public final class ModernBetaSettingsPresets {
             ExtendedIdentifier.of("minecraft:savanna").mapTo("minecraft:savanna_plateau"),
             ExtendedIdentifier.of("minecraft:dark_forest").mapTo("minecraft:plains"),
             ExtendedIdentifier.of("minecraft:birch_forest").mapTo("*hills"),
+            //? if >=26.3
+            //ExtendedIdentifier.of("minecraft:dappled_forest").mapTo("*hills"),
             ExtendedIdentifier.of("minecraft:old_growth_birch_forest").mapTo("*hills"),
             ExtendedIdentifier.of("minecraft:wooded_badlands").mapTo("minecraft:badlands"),
             ExtendedIdentifier.of("minecraft:mangrove_swamp").mapTo("*hills"),
@@ -2182,6 +2193,8 @@ public final class ModernBetaSettingsPresets {
                         //? if >=1.21.4
                         Map.entry(ExtendedIdentifier.of("minecraft:pale_garden*hills"), new HeightConfig(0.3f, 0.7f)),
                         Map.entry(ExtendedIdentifier.of("minecraft:birch_forest*hills"), new HeightConfig(0.3f, 0.7f)),
+                        //? if >=26.3
+                        //Map.entry(ExtendedIdentifier.of("minecraft:dappled_forest*hills"), new HeightConfig(0.3f, 0.7f)),
                         Map.entry(ExtendedIdentifier.of("minecraft:old_growth_birch_forest"), new HeightConfig(0.1f, 0.8f)),
                         Map.entry(ExtendedIdentifier.of("minecraft:old_growth_birch_forest*hills"), new HeightConfig(0.3f, 1.3f)),
                         Map.entry(ExtendedIdentifier.of("minecraft:flower_forest"), new HeightConfig(0.1f, 0.8f)),
@@ -2243,7 +2256,11 @@ public final class ModernBetaSettingsPresets {
                     // Forests
                     "minecraft:forest",
                     "minecraft:forest",
+                    //? if >=26.3 {
+                    /*"minecraft:dappled_forest",
+                    *///? } else {
                     "minecraft:forest",
+                    //? }
                     "minecraft:dark_forest",
                     "minecraft:birch_forest",
                     "minecraft:cherry_grove",

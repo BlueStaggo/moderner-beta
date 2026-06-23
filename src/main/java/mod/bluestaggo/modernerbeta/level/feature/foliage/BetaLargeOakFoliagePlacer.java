@@ -7,7 +7,11 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.valueproviders.IntProvider;
 import net.minecraft.world.level.WorldGenLevel;
+//? if >=26.3 {
+/*import net.minecraft.world.level.levelgen.feature.TreeFeature;
+*///? } else {
 import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
+//? }
 import net.minecraft.world.level.levelgen.feature.foliageplacers.BlobFoliagePlacer;
 import net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacerType;
 import org.jetbrains.annotations.NotNull;
@@ -26,12 +30,13 @@ public class BetaLargeOakFoliagePlacer extends BlobFoliagePlacer {
     }
 
     @Override
-    protected void createFoliage(WorldGenLevel level, FoliageSetter placer, RandomSource random, TreeConfiguration config, int trunkHeight, FoliageAttachment treeNode, int foliageHeight, int radius, int offset) {
+    //~ if >=26.3 'TreeConfiguration' -> 'TreeFeature'
+    protected void createFoliage(WorldGenLevel level, FoliageSetter placer, RandomSource random, TreeConfiguration tree, int trunkHeight, FoliageAttachment treeNode, int foliageHeight, int radius, int offset) {
         for (int curY = offset; curY >= offset - foliageHeight; curY--) {
             float blobRadius = curY != offset && curY != offset - foliageHeight ? radius + 1 : radius;
 
             // Generate blob layer at curY
-            this.placeLeavesRow(level, placer, random, config, treeNode.pos(), (int) (blobRadius + 0.618D), curY, treeNode.doubleTrunk());
+            this.placeLeavesRow(level, placer, random, tree, treeNode.pos(), (int) (blobRadius + 0.618D), curY, treeNode.doubleTrunk());
         }
     }
 

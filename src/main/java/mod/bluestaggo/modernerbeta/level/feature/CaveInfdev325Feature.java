@@ -1,6 +1,5 @@
 package mod.bluestaggo.modernerbeta.level.feature;
 
-import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.util.Mth;
@@ -10,27 +9,62 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.BulkSectionAccess;
 import net.minecraft.world.level.chunk.LevelChunkSection;
-import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
-import net.minecraft.world.level.levelgen.feature.OreFeature;
+import net.minecraft.world.level.levelgen.feature.*;
+//? if <26.3
 import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration;
 
+import java.util.List;
+
+//~ if >=26.3 'Feature<OreConfiguration>' -> 'AbstractOreFeature'
 public class CaveInfdev325Feature extends Feature<OreConfiguration> {
-    public CaveInfdev325Feature(Codec<OreConfiguration> codec) {
-        super(codec);
+    //? if >=26.3 {
+    /*public static final com.mojang.serialization.MapCodec<CaveInfdev325Feature> CODEC = makeCodec(CaveInfdev325Feature::new);
+
+    public CaveInfdev325Feature(List<BlockReplacement> targetStates, int size, float discardChanceOnAirExposure) {
+        super(targetStates, size, discardChanceOnAirExposure);
+    }
+
+    public CaveInfdev325Feature(
+        net.minecraft.world.level.levelgen.structure.templatesystem.RuleTest target,
+        BlockState state,
+        int size
+    ) {
+        this(List.of(new BlockReplacement(target, state)), size, 0.0F);
     }
 
     @Override
-    public boolean place(FeaturePlaceContext<OreConfiguration> context) {
+    public com.mojang.serialization.MapCodec<CaveInfdev325Feature> codec() {
+        return CODEC;
+    }
+    *///? } else {
+    public CaveInfdev325Feature(com.mojang.serialization.Codec<OreConfiguration> configCodec) {
+        super(configCodec);
+    }
+    //? }
+
+    @Override
+    public boolean place(
+        //? if >=26.3 {
+        /*WorldGenLevel level,
+        net.minecraft.world.level.chunk.ChunkGenerator chunkGenerator,
+        RandomSource random,
+        BlockPos pos
+        *///? } else {
+        FeaturePlaceContext<OreConfiguration> context
+        //? }
+    ) {
+        //? if <26.3 {
         WorldGenLevel level = context.level();
         BlockPos pos = context.origin();
         OreConfiguration config = context.config();
         RandomSource random = context.random();
+        //? }
 
         int baseX = pos.getX();
         int baseY = pos.getY();
         int baseZ = pos.getZ();
 
+        //~ if >=26.3 'config.' -> 'this.'
         int numberOfBlocks = config.size;
 
         BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
@@ -90,8 +124,11 @@ public class CaveInfdev325Feature extends Feature<OreConfiguration> {
                                 int localZ = SectionPos.sectionRelative(z);
                                 BlockState state = chunkSection.getBlockState(localX, localY, localZ);
 
+                                //~ if >=26.3 'OreConfiguration.TargetBlockState' -> 'BlockReplacement', 'config.' -> 'this.'
                                 for (final OreConfiguration.TargetBlockState target : config.targetStates) {
-                                    if (OreFeature.canPlaceOre(state, chunkSectionCache::getBlockState, random, config, target, mutablePos)) {
+                                    //~ if >=26.3 'OreFeature.' -> 'this.'
+                                    if (OreFeature.canPlaceOre(state, chunkSectionCache::getBlockState, random, /*? <26.3 {*/config, /*? }*/ target, mutablePos)) {
+                                        //~ if >=26.3 '.state' -> '.state()'
                                         chunkSection.setBlockState(localX, localY, localZ, target.state, false);
                                     }
                                 }

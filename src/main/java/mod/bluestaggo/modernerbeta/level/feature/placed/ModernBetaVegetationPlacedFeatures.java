@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import mod.bluestaggo.modernerbeta.level.feature.ModernBetaFeatureTags;
 import mod.bluestaggo.modernerbeta.level.feature.configured.ModernBetaVegetationConfiguredFeatures;
 import mod.bluestaggo.modernerbeta.level.feature.placement.*;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.Vec3i;
@@ -14,11 +13,16 @@ import net.minecraft.data.worldgen.features.VegetationFeatures;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.valueproviders.UniformInt;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.VerticalAnchor;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
+//? if >=26.3 {
+/*import net.minecraft.world.level.levelgen.feature.Feature;
+*///? } else {
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+//? }
 import net.minecraft.world.level.levelgen.placement.*;
 
 import java.util.ArrayList;
@@ -40,7 +44,7 @@ public class ModernBetaVegetationPlacedFeatures {
                             IntStream.range(0, 25 * 6)
                                     .mapToObj(i -> new Vec3i((i % 5) - 2, i / 25, (i / 5 % 5) - 2))
                                     .filter(v -> v.getX() % 2 != 0 || v.getZ() % 2 != 0)
-                                    .map(v -> BlockPredicate.matchesBlocks(v, Blocks.OAK_LEAVES, Blocks.OAK_LOG)).toList())));
+                                    .map(v -> BlockPredicate.matchesBlocks(v, List.of(Blocks.OAK_LEAVES, Blocks.OAK_LOG))).toList())));
 
     private static ImmutableList.Builder<PlacementModifier> withBaseTreeModifiers(PlacementModifier modifier) {
         return ImmutableList.<PlacementModifier>builder()
@@ -144,6 +148,7 @@ public class ModernBetaVegetationPlacedFeatures {
     public static final ResourceKey<PlacedFeature> TREES_CLASSIC_14A_08_BEES = ModernBetaPlacedFeatures.of(ModernBetaFeatureTags.TREES_CLASSIC_14A_08_BEES);
 
     public static void bootstrap(BootstrapContext<PlacedFeature> context) {
+        //~ if >=26.3 'ConfiguredFeature<?, ?>' -> 'Feature', 'CONFIGURED_FEATURE' -> 'FEATURE' {
         HolderGetter<ConfiguredFeature<?, ?>> registryConfigured = context.lookup(Registries.CONFIGURED_FEATURE);
 
         //? if >=26.1 {
@@ -218,9 +223,10 @@ public class ModernBetaVegetationPlacedFeatures {
         Holder.Reference<ConfiguredFeature<?, ?>> treesIndevBees = registryConfigured.getOrThrow(ModernBetaVegetationConfiguredFeatures.TREES_INDEV_BEES);
         Holder.Reference<ConfiguredFeature<?, ?>> treesIndevWoodsBees = registryConfigured.getOrThrow(ModernBetaVegetationConfiguredFeatures.TREES_INDEV_WOODS_BEES);
         Holder.Reference<ConfiguredFeature<?, ?>> treesClassic14a08Bees = registryConfigured.getOrThrow(ModernBetaVegetationConfiguredFeatures.TREES_CLASSIC_14A_08_BEES);
+        //~ }
 
-        PlacementUtils.register(context, PATCH_CACTUS_ALPHA, patchCactus, makePatch(10, BlockPredicate.allOf(BlockPredicate.ONLY_IN_AIR_PREDICATE, BlockPredicate.wouldSurvive(Blocks.CACTUS.defaultBlockState(), BlockPos.ZERO)), CountPlacement.of(2), InSquarePlacement.spread(), HEIGHTMAP_SPREAD_DOUBLE, BiomeFilter.biome()));
-        PlacementUtils.register(context, PATCH_CACTUS_PE, patchCactus, makePatch(10, BlockPredicate.allOf(BlockPredicate.ONLY_IN_AIR_PREDICATE, BlockPredicate.wouldSurvive(Blocks.CACTUS.defaultBlockState(), BlockPos.ZERO)), CountPlacement.of(5), InSquarePlacement.spread(), HEIGHTMAP_SPREAD_DOUBLE, BiomeFilter.biome()));
+        PlacementUtils.register(context, PATCH_CACTUS_ALPHA, patchCactus, makePatch(10, BlockPredicate.allOf(BlockPredicate.ONLY_IN_AIR_PREDICATE, wouldSurvive(Blocks.CACTUS)), CountPlacement.of(2), InSquarePlacement.spread(), HEIGHTMAP_SPREAD_DOUBLE, BiomeFilter.biome()));
+        PlacementUtils.register(context, PATCH_CACTUS_PE, patchCactus, makePatch(10, BlockPredicate.allOf(BlockPredicate.ONLY_IN_AIR_PREDICATE, wouldSurvive(Blocks.CACTUS)), CountPlacement.of(5), InSquarePlacement.spread(), HEIGHTMAP_SPREAD_DOUBLE, BiomeFilter.biome()));
         PlacementUtils.register(context, PATCH_BROWN_MUSHROOM, patchBrownMushroom, makePatch(64, BlockPredicate.matchesBlocks(Blocks.AIR, Blocks.CAVE_AIR), RarityFilter.onAverageOnceEvery(4), InSquarePlacement.spread(), HEIGHT_RANGE_128, BiomeFilter.biome()));
         PlacementUtils.register(context, PATCH_RED_MUSHROOM, patchRedMushroom, makePatch(64, BlockPredicate.matchesBlocks(Blocks.AIR, Blocks.CAVE_AIR), RarityFilter.onAverageOnceEvery(8), InSquarePlacement.spread(), HEIGHT_RANGE_128, BiomeFilter.biome()));
         PlacementUtils.register(context, MUSHROOM_HELL, mushroomHell, makePatch(CountPlacement.of(1), InSquarePlacement.spread(), MOTION_BLOCKING_HEIGHTMAP, BiomeFilter.biome()));
@@ -304,5 +310,13 @@ public class ModernBetaVegetationPlacedFeatures {
         //? }
 
         return list;
+    }
+
+    private static BlockPredicate wouldSurvive(Block block) {
+        //? if >=26.3 {
+        /*return BlockPredicate.wouldSurvive(block);
+        *///? } else {
+        return BlockPredicate.wouldSurvive(block.defaultBlockState(), Vec3i.ZERO);
+        //? }
     }
 }

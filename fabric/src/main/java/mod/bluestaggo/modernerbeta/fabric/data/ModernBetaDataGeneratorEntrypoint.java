@@ -57,6 +57,7 @@ public class ModernBetaDataGeneratorEntrypoint implements DataGeneratorEntrypoin
     @Override
     public void buildRegistry(RegistrySetBuilder registryBuilder) {
         registryBuilder.add(Registries.PLACED_FEATURE, ModernBetaPlacedFeatures::bootstrap);
+        //~ if >=26.3 'CONFIGURED_FEATURE' -> 'FEATURE'
         registryBuilder.add(Registries.CONFIGURED_FEATURE, ModernBetaConfiguredFeatures::bootstrap);
         registryBuilder.add(Registries.CONFIGURED_CARVER, ModernBetaConfiguredCarvers::bootstrap);
         registryBuilder.add(Registries.BIOME, ModernBetaBiomes::bootstrap);

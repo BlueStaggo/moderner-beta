@@ -8,7 +8,11 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.features.OreFeatures;
 import net.minecraft.data.worldgen.placement.OrePlacements;
 import net.minecraft.world.level.levelgen.VerticalAnchor;
+//? if >=26.3 {
+/*import net.minecraft.world.level.levelgen.feature.Feature;
+*///? } else {
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+ //? }
 import net.minecraft.world.level.levelgen.placement.HeightRangePlacement;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 
@@ -24,9 +28,11 @@ public class ModernBetaDeepslateBlobsDataProvider extends FabricDynamicRegistryP
 
     @Override
     protected void configure(HolderLookup.Provider provider, Entries entries) {
+        //~ if >=26.3 'ConfiguredFeature<?, ?>>' -> 'Feature>', 'CONFIGURED_FEATURE' -> 'FEATURE' {
         HolderLookup.RegistryLookup<ConfiguredFeature<?, ?>> registryConfiguredFeature = provider.lookupOrThrow(Registries.CONFIGURED_FEATURE);
         Holder<ConfiguredFeature<?, ?>> deepslate = alwaysSerializableHolder(entries.ref(ModernBetaReducedHeightDataProvider.ORE_DEEPSLATE_OLD));
         Holder<ConfiguredFeature<?, ?>> tuff = registryConfiguredFeature.getOrThrow(OreFeatures.ORE_TUFF);
+        //~ }
 
         entries.add(OrePlacements.ORE_COAL_UPPER, new PlacedFeature(deepslate,
                 modifiersWithCount(2, HeightRangePlacement.uniform(VerticalAnchor.aboveBottom(0), VerticalAnchor.aboveBottom(16)))));

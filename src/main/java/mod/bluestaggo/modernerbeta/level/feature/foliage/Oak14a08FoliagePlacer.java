@@ -7,7 +7,11 @@ import mod.bluestaggo.modernerbeta.level.feature.ModernBetaFoliagePlacers;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.valueproviders.IntProvider;
 import net.minecraft.world.level.WorldGenLevel;
+//? if >=26.3 {
+/*import net.minecraft.world.level.levelgen.feature.TreeFeature;
+*///? } else {
 import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
+//? }
 import net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacer;
 import net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacerType;
 import org.jetbrains.annotations.NotNull;
@@ -30,14 +34,16 @@ public class Oak14a08FoliagePlacer extends FoliagePlacer {
 	}
 
 	@Override
-	protected void createFoliage(WorldGenLevel level, FoliageSetter placer, RandomSource random, TreeConfiguration config, int trunkHeight, FoliageAttachment treeNode, int foliageHeight, int radius, int offset) {
+	//~ if >=26.3 'TreeConfiguration' -> 'TreeFeature'
+	protected void createFoliage(WorldGenLevel level, FoliageSetter placer, RandomSource random, TreeConfiguration tree, int trunkHeight, FoliageAttachment treeNode, int foliageHeight, int radius, int offset) {
 		for (int y = offset; y >= offset - foliageHeight; --y) {
-			this.placeLeavesRow(level, placer, random, config, treeNode.pos(), radius, y, treeNode.doubleTrunk());
+			this.placeLeavesRow(level, placer, random, tree, treeNode.pos(), radius, y, treeNode.doubleTrunk());
 		}
 	}
 
 	@Override
-	public int foliageHeight(RandomSource random, int trunkHeight, TreeConfiguration config) {
+	//~ if >=26.3 'TreeConfiguration' -> 'TreeFeature'
+	public int foliageHeight(RandomSource random, int trunkHeight, TreeConfiguration tree) {
 		return this.height;
 	}
 

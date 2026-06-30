@@ -4,13 +4,13 @@ package mod.bluestaggo.modernerbeta.level.carver;
 //import com.mojang.serialization.MapCodec;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
-import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
+import net.minecraft.world.level.levelgen.carver.*;
 
 public class ModernBetaCarvers {
     //~ if >=26.3 'WorldCarver<?>>' -> 'MapCodec<? extends WorldCarver>>' {
     private static IRegistryHandler<WorldCarver<?>> registryHandler;
     //? if <26.3
-    public static WorldCarver<BetaCaveCarverConfiguration> BETA_CAVE;
+    public static WorldCarver<?> BETA_CAVE;
 
     //~ if >=26.3 'WorldCarver<?>' -> 'MapCodec<? extends WorldCarver>'
     private static WorldCarver<?> register(String id, WorldCarver<?> carver) {

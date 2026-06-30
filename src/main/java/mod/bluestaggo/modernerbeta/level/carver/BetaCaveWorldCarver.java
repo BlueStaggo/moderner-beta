@@ -14,10 +14,11 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.valueproviders.*;
 import net.minecraft.world.level.ChunkPos;
-//? if <26.3 {
+//? if <26.3
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+//? if <26.3 {
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 //? }
@@ -460,7 +461,7 @@ public class BetaCaveWorldCarver extends WorldCarver<BetaCaveCarverConfiguration
             maxZ = 16;
         }
 
-        if (isRegionUncarvable(context, /*? if <26.3 {*/ config, chunk, /*? }*/ chunkPos, minX, maxX, minY, maxY, minZ, maxZ)) {
+        if (isRegionUncarvable(context, /*? if >=26.3 {*/ /*output, *//*? } else {*/ config, chunk, /*? }*/ chunkPos, minX, maxX, minY, maxY, minZ, maxZ)) {
             return false;
         }
 
@@ -603,9 +604,12 @@ public class BetaCaveWorldCarver extends WorldCarver<BetaCaveCarverConfiguration
         return true;
     }
 
+    //? if <26.3
+    @SuppressWarnings("ConstantValue")
     private boolean isRegionUncarvable(
         //? if >=26.3 {
         /*WorldGenerationContext context,
+        CarverOutput output,
         *///? } else {
         CarvingContext context,
         BetaCaveCarverConfiguration config,
@@ -619,7 +623,6 @@ public class BetaCaveWorldCarver extends WorldCarver<BetaCaveCarverConfiguration
         int relMinZ, 
         int relMaxZ
     ) {
-        //? if <26.3
         BlockPos.MutableBlockPos blockPos = new BlockPos.MutableBlockPos();
         
         boolean useAquifers = config.useAquifers.orElse(false);
@@ -631,21 +634,28 @@ public class BetaCaveWorldCarver extends WorldCarver<BetaCaveCarverConfiguration
                         continue;
                     }
 
-                    //TODO: figure out a way to avoid carving into water in 26.3
-                    //? if <26.3 {
-                    int lavaLevel = config.lavaLevel.resolveY(context);
-                    Block block = chunk.getBlockState(blockPos.set(relX, relY, relZ)).getBlock();
+                    if (/*? >=26.3 {*/ /*output instanceof ReferenceCarvingMask refMask *//*? } else { */ true /*? }*/) {
+                        //TODO: lavaLevel on 26.3
+                        //? if <26.3
+                        int lavaLevel = config.lavaLevel.resolveY(context);
+                        //? if >=26.3 {
+                        /*Block block = refMask.getBlockAt(blockPos.set(relX, relY, relZ));
+                        *///? } else {
+                        Block block = chunk.getBlockState(blockPos.set(relX, relY, relZ)).getBlock();
+                        //? }
 
-                    // Don't carve into water bodies, unless useAquifers enabled
-                    if (!useAquifers && block == Blocks.WATER) {
-                        return true;
-                    }
+                        // Don't carve into water bodies, unless useAquifers enabled
+                        if (!useAquifers && block == Blocks.WATER) {
+                            return true;
+                        }
 
-                    // Don't carve into lava aquifers that spawn above lava level, unless useAquifers enabled
-                    if (!useAquifers && block == Blocks.LAVA && relY > lavaLevel) {
-                        return true;
+                        // Don't carve into lava aquifers that spawn above lava level, unless useAquifers enabled
+                        //? if <26.3 {
+                        if (!useAquifers && block == Blocks.LAVA && relY > lavaLevel) {
+                            return true;
+                        }
+                        //? }
                     }
-                    //? }
 
                     if (relY != minY - 1 && isOnBoundary(relMinX, relMaxX, relMinZ, relMaxZ, relX, relZ)) {
                         relY = minY;

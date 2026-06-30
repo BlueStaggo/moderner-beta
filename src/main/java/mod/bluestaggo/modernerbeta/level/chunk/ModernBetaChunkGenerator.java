@@ -367,7 +367,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
         /*WorldGenerationContext carverContext = new WorldGenerationContext(this, chunk.getHeightAccessorForGeneration());
         int protectedBlocksOnTop = chunk.isUpgrading() ? 0 : 7;
         int maxY = carverContext.getMinGenY() + carverContext.getGenDepth() - 1 - protectedBlocksOnTop;
-        CarvingMask carvingMask = new CarvingMask(carverContext.getMinGenY() + 1, maxY);
+        CarvingMask carvingMask = new ReferenceCarvingMask(chunk, carverContext.getMinGenY() + 1, maxY);
         *///? } else {
         ModCompat.useModernBetaSurfaceRules = true;
         CarvingContext carverContext = new CarvingContext(

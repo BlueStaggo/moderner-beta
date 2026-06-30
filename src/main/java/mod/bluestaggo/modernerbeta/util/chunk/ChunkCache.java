@@ -52,6 +52,14 @@ public class ChunkCache<T> {
             this.lock.unlock(stamp);
         }
     }
+
+    public T get(int chunkX, int chunkZ, boolean cached) {
+        if (cached) {
+            return this.get(chunkX, chunkZ);
+        }
+
+        return this.chunkFunc.apply(chunkX, chunkZ);
+    }
     
     public T get(int chunkX, int chunkZ) {
         T chunk;

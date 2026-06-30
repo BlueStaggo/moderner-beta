@@ -17,7 +17,8 @@ public enum SimpleDensityFunction implements DensityFunctions.BeardifierOrMarker
     public void fillArray(double[] densities, DensityFunction.ContextProvider applier) {
         Arrays.fill(densities, 0.0);
     }
-    
+
+    //? if <26.3 {
     @Override
     public double maxValue() {
         return 0;
@@ -27,4 +28,5 @@ public enum SimpleDensityFunction implements DensityFunctions.BeardifierOrMarker
     public double minValue() {
         return 0;
     }
+    //? }
 }

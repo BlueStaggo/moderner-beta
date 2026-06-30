@@ -1,20 +1,26 @@
 package mod.bluestaggo.modernerbeta.level.feature.placement;
 
 import com.mojang.serialization.Codec;
+//? if >=26.3
+//import com.mojang.serialization.MapCodec;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.util.noise.OctaveNoise;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.levelgen.placement.PlacementContext;
 import net.minecraft.world.level.levelgen.placement.PlacementModifier;
-import net.minecraft.world.level.levelgen.placement.PlacementModifierType;
+//? if <26.3
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+//? if >=26.3
+//import java.util.function.Consumer;
 import java.util.stream.IntStream;
+//? if <26.3
 import java.util.stream.Stream;
 
+//~ if >=26.3 'extends' -> 'implements'
 public class Infdev325CavePlacementModifier extends PlacementModifier {
     public static final com.mojang.serialization.MapCodec<Infdev325CavePlacementModifier> MODIFIER_CODEC = VersionCompat.createMaybeMapCodec(
         instance -> instance.group(
@@ -40,13 +46,24 @@ public class Infdev325CavePlacementModifier extends PlacementModifier {
         this.octaves = octaves;
     }
 
+    //? if >=26.3 {
+    /*@Override
+    public MapCodec<? extends PlacementModifier> codec() {
+        return MODIFIER_CODEC;
+    }
+    *///? } else {
     @Override
-    public @NotNull PlacementModifierType<?> type() {
+    public @NotNull net.minecraft.world.level.levelgen.placement.PlacementModifierType<?> type() {
         return ModernBetaPlacementTypes.INFDEV_325_CAVES;
     }
+    //? }
 
     @Override
+    //? if >=26.3 {
+    /*public void modify(PlacementContext context, RandomSource random, BlockPos pos, Consumer<BlockPos> output) {
+    *///? } else {
     public @NotNull Stream<BlockPos> getPositions(PlacementContext context, RandomSource random, BlockPos pos) {
+    //? }
         int x = pos.getX();
         int z = pos.getZ();
         List<BlockPos> positions = new ArrayList<>();
@@ -58,6 +75,12 @@ public class Infdev325CavePlacementModifier extends PlacementModifier {
             positions.addAll(IntStream.range(0, count).mapToObj(i -> pos.atY(fsection * 16).offset(random.nextInt(16), random.nextInt(16), random.nextInt(16))).toList());
         }
 
+        //? if >=26.3 {
+        /*for (BlockPos position : positions) {
+            output.accept(position);
+        }
+        *///? } else {
         return positions.stream();
+        //? }
     }
 }

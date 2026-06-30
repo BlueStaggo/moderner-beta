@@ -68,6 +68,7 @@ public class ModernerBeta {
         new Pair<>(BuiltInRegistries.STRUCTURE_PIECE, ModernBetaStructurePieceTypes::register),
         //~ if >=26.3 'FEATURE' -> 'FEATURE_TYPE'
         new Pair<>(BuiltInRegistries.FEATURE, ModernBetaFeatures::register),
+        //~ if >=26.3 'CARVER' -> 'CARVER_TYPE'
         new Pair<>(BuiltInRegistries.CARVER, ModernBetaCarvers::register),
         new Pair<>(BuiltInRegistries.BIOME_SOURCE, ModernBetaBiomeSource::register),
         new Pair<>(BuiltInRegistries.CHUNK_GENERATOR, ModernBetaChunkGenerator::register)

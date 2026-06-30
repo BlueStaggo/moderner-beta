@@ -159,5 +159,10 @@ stonecutter.parameters {
             replace("EntityType\\.([A-Z_]+)", "EntityTypes.$1",
                 "EntityTypes\\.([A-Z_]+)", "EntityType.$1")
         }
+
+        string(eval(current.version, ">=26.3")) {
+            replace("ConfiguredWorldCarver<?>>", "WorldCarver>")
+            replace("import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver", "import net.minecraft.world.level.levelgen.carver.WorldCarver")
+        }
     }
 }

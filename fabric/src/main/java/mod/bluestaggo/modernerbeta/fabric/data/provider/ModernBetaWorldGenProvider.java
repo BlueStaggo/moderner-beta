@@ -38,6 +38,7 @@ public class ModernBetaWorldGenProvider extends FabricDynamicRegistryProvider {
         //~ if >=26.3 'ConfiguredFeature<?, ?>>' -> 'Feature>', 'CONFIGURED_FEATURE' -> 'FEATURE'
         HolderLookup.RegistryLookup<ConfiguredFeature<?, ?>> registryConfiguredFeature = provider.lookupOrThrow(Registries.CONFIGURED_FEATURE);
         HolderLookup.RegistryLookup<PlacedFeature> registryPlacedFeature = provider.lookupOrThrow(Registries.PLACED_FEATURE);
+        //~ if >=26.3 'CONFIGURED_CARVER' -> 'CARVER'
         HolderLookup.RegistryLookup<ConfiguredWorldCarver<?>> registryConfiguredCarver = provider.lookupOrThrow(Registries.CONFIGURED_CARVER);
         HolderLookup.RegistryLookup<NoiseGeneratorSettings> registrySettings = provider.lookupOrThrow(Registries.NOISE_SETTINGS);
         HolderLookup.RegistryLookup<Structure> registryStructure = provider.lookupOrThrow(Registries.STRUCTURE);

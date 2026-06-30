@@ -7,6 +7,7 @@ import mod.bluestaggo.modernerbeta.api.level.chunk.surface.SurfaceConfig;
 import mod.bluestaggo.modernerbeta.compat.ModCompat;
 import mod.bluestaggo.modernerbeta.imixin.ModernBetaSurfaceSystem;
 import mod.bluestaggo.modernerbeta.level.biome.injection.InjectionNeeds;
+import mod.bluestaggo.modernerbeta.level.carver.*;
 import mod.bluestaggo.modernerbeta.mixin.BiomeManagerAccessor;
 import mod.bluestaggo.modernerbeta.mixin.ChunkGeneratorStructureStateAccessor;
 import mod.bluestaggo.modernerbeta.mixin.NoiseBasedChunkGeneratorAccessor;
@@ -23,13 +24,14 @@ import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.settings.component.CaveGeneration;
 import mod.bluestaggo.modernerbeta.settings.component.DeepslateGeneration;
 import mod.bluestaggo.modernerbeta.settings.component.StructureModifiers;
+//? if >=26.3
+//import mod.bluestaggo.modernerbeta.tags.ModernBetaBlockTags;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
 import mod.bluestaggo.modernerbeta.util.CodecUtil;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.util.random.BedrockRandomSource;
 import mod.bluestaggo.modernerbeta.util.random.BedrockWorldgenRandom;
 import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomeSource;
-import mod.bluestaggo.modernerbeta.level.carver.BetaCaveCarverConfiguration;
 import mod.bluestaggo.modernerbeta.level.carver.configured.ModernBetaConfiguredCarvers;
 import net.minecraft.util.Util;
 import net.minecraft.core.*;
@@ -49,20 +51,21 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeGenerationSettings;
 import net.minecraft.world.level.biome.BiomeManager;
 import net.minecraft.world.level.biome.BiomeSource;
-import net.minecraft.world.level.biome.Climate.Sampler;
+//? if >=26.3
+//import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.*;
 import net.minecraft.world.level.levelgen.*;
 //? if <1.21.2
 //import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.blending.Blender;
-import net.minecraft.world.level.levelgen.carver.CarvingContext;
-import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
+import net.minecraft.world.level.levelgen.carver.*;
 import net.minecraft.world.level.levelgen.structure.StructureSet;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 //? if <1.21
 //import java.util.concurrent.Executor;
@@ -317,6 +320,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
                 biomeManager,
                 //? if <26.2
                 biomes,
+                //? if <26.3
                 noiseGeneratorSettings.useLegacyRandomSource(),
                 context,
                 chunk,
@@ -336,6 +340,8 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
 
     @Override
     public void applyCarvers(WorldGenRegion chunkRegion, long seed, RandomState noiseConfig, BiomeManager biomeAccess, StructureManager structureAccessor, ChunkAccess chunk
+                      //? if >=26.3
+                      //, CarvingMask.Filter filter
                       //? if <1.21.2
                       //, GenerationStep.Carving carverStep
     ) {
@@ -355,8 +361,14 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
         // Chunk Noise Sampler used to sample surface level
         NoiseChunk chunkNoiseSampler = chunk.getOrCreateNoiseChunk(c -> this.createNoiseChunk(c, structureAccessor, Blender.of(chunkRegion), noiseConfig));
 
+        //~ if >=26.3 'CONFIGURED_CARVER' -> 'CARVER'
         Registry<ConfiguredWorldCarver<?>> configuredCarverRegistry = chunkRegion.registryAccess().lookupOrThrow(Registries.CONFIGURED_CARVER);
-        //? if <26.3
+        //? if >=26.3 {
+        /*WorldGenerationContext carverContext = new WorldGenerationContext(this, chunk.getHeightAccessorForGeneration());
+        int protectedBlocksOnTop = chunk.isUpgrading() ? 0 : 7;
+        int maxY = carverContext.getMinGenY() + carverContext.getGenDepth() - 1 - protectedBlocksOnTop;
+        CarvingMask carvingMask = new CarvingMask(carverContext.getMinGenY() + 1, maxY);
+        *///? } else {
         ModCompat.useModernBetaSurfaceRules = true;
         CarvingContext carverContext = new CarvingContext(
             this,
@@ -364,15 +376,14 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
             chunk.getHeightAccessorForGeneration(),
             chunkNoiseSampler,
             noiseConfig,
-            //~ if >=26.3 '.surfaceRule()' -> '.materialRule().value()'
             this.generatorSettings().value().surfaceRule()
         );
-        //? if <26.3
         ModCompat.useModernBetaSurfaceRules = false;
         CarvingMask carvingMask = ((ProtoChunk)chunk).getOrCreateCarvingMask(
             //? if <1.21.2
             //carverStep
         );
+        //? }
 
         CaveGeneration.SeedMethod seedMethod = this.caveSettings.seedMethod();
 
@@ -393,6 +404,23 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
             case MODERN, BEDROCK -> 0;
         };
 
+        Function<BlockPos, Holder<Biome>> blockToBiomeFunc = pos -> {
+            //todo: maybe improve this
+            if (this.biomeSource instanceof ModernBetaBiomeSource modernBetaBiomeSource) {
+                return modernBetaBiomeSource.getBiomeInjectionHandler().getBiomeAtBlock(
+                    chunk,
+                    modernBetaBiomeSource.getBiomeProvider(),
+                    ((BiomeManagerAccessor) biomeAccessWithSource).getBiomeZoomSeed(),
+                    pos.getX(), pos.getY(), pos.getZ(),
+                    BiomeInjectionRule.Step.POST,
+                    InjectionNeeds.all(),
+                    true
+                );
+            }
+
+            return biomeAccessWithSource.getBiome(pos);
+        };
+
         for (int chunkX = mainChunkX - 8; chunkX <= mainChunkX + 8; ++chunkX) {
             for (int chunkZ = mainChunkZ - 8; chunkZ <= mainChunkZ + 8; ++chunkZ) {
                 ChunkPos carverPos = new ChunkPos(chunkX, chunkZ);
@@ -409,6 +437,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
 
                 int salt = 0;
                 for(Holder<ConfiguredWorldCarver<?>> carverEntry : carverList) {
+                    //~ if >=26.3 'ConfiguredWorldCarver<?>' -> 'WorldCarver'
                     ConfiguredWorldCarver<?> configuredCarver = carverEntry.value();
                     if (random instanceof WorldgenRandom chunkRandom) {
                         chunkRandom.setLargeFeatureSeed(seed + salt, chunkX, chunkZ);
@@ -419,6 +448,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
                     if (this.caveSettings.forceBetaCaves() || this.caveSettings.forceBetaCanyons()) {
                         ResourceKey<ConfiguredWorldCarver<?>> carverKey = carverEntry.unwrapKey().orElse(null);
                         if (carverKey != null) {
+                            //~ if >=26.3 'ConfiguredWorldCarver<?>' -> 'WorldCarver'
                             ConfiguredWorldCarver<?> replacementCarver = null;
                             if (this.caveSettings.forceBetaCaves()) {
                                 if (carverKey.equals(Carvers.CAVE)) {
@@ -456,32 +486,38 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
                     }
 
                     if (configuredCarver.isStartChunk(random)) {
+                        //? if >=26.3 {
+                        /*if (configuredCarver instanceof BetaCaveWorldCarver betaCaveWorldCarver) {
+                            //records be damned
+                            configuredCarver = new BetaCaveWorldCarver(
+                                betaCaveWorldCarver.probability(),
+                                betaCaveWorldCarver.y(),
+                                betaCaveWorldCarver.roomVerticalRadiusMultiplier(),
+                                betaCaveWorldCarver.horizontalRadiusMultiplier(),
+                                betaCaveWorldCarver.verticalRadiusMultiplier(),
+                                betaCaveWorldCarver.floorLevel(),
+                                Optional.of(this.caveSettings.fixCaveBorders()),
+                                betaCaveWorldCarver.useAquifers()
+                            );
+                        }
+                        *///? } else {
                         if (configuredCarver.config() instanceof BetaCaveCarverConfiguration betaCaveCarverConfig) {
                             betaCaveCarverConfig.useFixedCaves = Optional.of(this.caveSettings.fixCaveBorders());
                             betaCaveCarverConfig.useSurfaceRules = Optional.of(this.useSurfaceRules);
                         }
+                        //? }
 
                         configuredCarver.carve(
                             carverContext,
+                            //? if <26.3 {
                             chunk,
-                            pos -> {
-                                //todo: maybe improve this
-                                if (this.biomeSource instanceof ModernBetaBiomeSource modernBetaBiomeSource) {
-                                    return modernBetaBiomeSource.getBiomeInjectionHandler().getBiomeAtBlock(
-                                        chunk,
-                                        modernBetaBiomeSource.getBiomeProvider(),
-                                        ((BiomeManagerAccessor) biomeAccessWithSource).getBiomeZoomSeed(),
-                                        pos.getX(), pos.getY(), pos.getZ(),
-                                        BiomeInjectionRule.Step.POST,
-                                        InjectionNeeds.all(),
-                                        true
-                                    );
-                                }
-
-                                return biomeAccessWithSource.getBiome(pos);
-                            },
+                            blockToBiomeFunc,
+                            //? }
                             random,
+                            //? if <26.3
                             aquiferSampler,
+                            //? if >=26.3
+                            //chunk.getPos(),
                             carverPos,
                             carvingMask
                         );
@@ -491,7 +527,99 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
                 }
             }
         }
+
+        //? if >=26.3 {
+        /*if (!carvingMask.isEmpty()) {
+            this.applyCarvingMask(chunk, carvingMask, noiseConfig, carverContext, chunkNoiseSampler, blockToBiomeFunc, filter);
+        }
+        *///? }
     }
+
+    //? if >=26.3 {
+    /*@SuppressWarnings("deprecation")
+    private void applyCarvingMask(
+        ChunkAccess chunk,
+        CarvingMask mask,
+        RandomState randomState,
+        WorldGenerationContext context,
+        NoiseChunk noiseChunk,
+        Function<BlockPos, Holder<Biome>> biomeGetter,
+        CarvingMask.Filter filter
+    ) {
+        ChunkPos chunkPos = chunk.getPos();
+        BlockPos.MutableBlockPos blockPos = new BlockPos.MutableBlockPos();
+        BlockPos.MutableBlockPos helperPos = new BlockPos.MutableBlockPos();
+        Aquifer aquifer = noiseChunk.aquifer();
+        SurfaceRules.RuleSource materialRule = this.generatorSettings().value().materialRule().value();
+        mask.visit((x, z, bottomY, topY) -> {
+            boolean hasGrass = false;
+            int worldX = chunkPos.getBlockX(x);
+            int worldZ = chunkPos.getBlockZ(z);
+
+            for (int worldY = topY; worldY >= bottomY; worldY--) {
+                if (filter == null || filter.test(x, worldY, z)) {
+                    blockPos.set(worldX, worldY, worldZ);
+                    BlockState blockState = chunk.getBlockState(blockPos);
+                    if (blockState.is(Blocks.GRASS_BLOCK) || blockState.is(Blocks.MYCELIUM)) {
+                        hasGrass = true;
+                    }
+
+                    //TODO: #minecraft:overworld_carver_replaceables was removed, but this change does not translate well
+                    //      in Moderner Beta. Investigate a proper solution.
+                    if (blockState.is(ModernBetaBlockTags.OVERWORLD_CARVER_REPLACEABLES)) {
+                        BlockState state = this.getCarveState(blockPos, aquifer);
+                        if (state == null) {
+                            return;
+                        }
+                        VersionCompat.setBlockState(chunk, blockPos, state);
+                        if (aquifer.shouldScheduleFluidUpdate() && !state.getFluidState().isEmpty()) {
+                            chunk.markPosForPostprocessing(blockPos);
+                        }
+
+                        if (hasGrass) {
+                            helperPos.setWithOffset(blockPos, Direction.DOWN);
+                            if (chunk.getBlockState(helperPos).is(Blocks.DIRT)) {
+                                if (useSurfaceRules) {
+                                    randomState.surfaceSystem()
+                                        .topMaterial(materialRule, randomState, context, biomeGetter, chunk, noiseChunk, helperPos, !state.getFluidState().isEmpty())
+                                        .ifPresent(topMaterial -> {
+                                            VersionCompat.setBlockState(chunk, helperPos, topMaterial);
+                                            if (!topMaterial.getFluidState().isEmpty()) {
+                                                chunk.markPosForPostprocessing(helperPos);
+                                            }
+                                        });
+                                } else {
+                                    VersionCompat.setBlockState(chunk, helperPos, BlockStates.GRASS_BLOCK);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    public BlockState getCarveState(BlockPos pos, Aquifer aquiferSampler) {
+        //TODO: implement something for this
+        /^if (pos.getY() <= this.lavaLevel.resolveY(context)) {
+            return BlockStates.LAVA;
+        }^/
+
+        //TODO: implement something for this
+        boolean useAquifers = true;//this.useAquifers.orElse(false);
+
+        if (!useAquifers) {
+            return BlockStates.AIR;
+        }
+
+        // TODO: Produces too many flooded caves, re-visit this later.
+
+        int x = pos.getX();
+        int y = pos.getY();
+        int z = pos.getZ();
+        return aquiferSampler.computeSubstance(new DensityFunction.SinglePointContext(x, y, z), 0.0);
+    }
+    *///? }
 
     @Override
     public void applyBiomeDecoration(WorldGenLevel level, ChunkAccess chunk, StructureManager structureAccessor) {

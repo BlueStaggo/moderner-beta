@@ -18,8 +18,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
-import net.minecraft.util.valueproviders.ConstantFloat;
-import net.minecraft.util.valueproviders.UniformInt;
+import net.minecraft.util.valueproviders.*;
 //? if >=1.21.11
 import net.minecraft.world.attribute.*;
 import net.minecraft.world.level.biome.OverworldBiomeBuilder;
@@ -28,9 +27,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.levelgen.*;
-import net.minecraft.world.level.levelgen.carver.CarverDebugSettings;
-import net.minecraft.world.level.levelgen.carver.CaveCarverConfiguration;
-import net.minecraft.world.level.levelgen.carver.WorldCarver;
+import net.minecraft.world.level.levelgen.carver.*;
 import net.minecraft.world.level.levelgen.feature.*;
 //? if <26.3 {
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
@@ -130,18 +127,28 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
 
         //Configured carvers
         @SuppressWarnings("deprecation")
+        //~ if >=26.3 'CaveCarverConfiguration' -> 'CaveWorldCarver'
         CaveCarverConfiguration configCaveDeep = new CaveCarverConfiguration(
             0.0f,
             ConstantHeight.of(VerticalAnchor.absolute(-2032)),
+            //? if >=26.3 {
+            /*ConstantInt.of(0),
+            ConstantFloat.of(0.0F),
+            true,
+            *///? }
             ConstantFloat.of(0.0f),
+            //? if <26.3 {
             VerticalAnchor.absolute(-2032),
             CarverDebugSettings.of(false, Blocks.CRIMSON_BUTTON.defaultBlockState()),
             HolderSet.direct(Block::builtInRegistryHolder, Blocks.AIR),
+            //? }
             ConstantFloat.of(0.0f),
             ConstantFloat.of(0.0f),
+            //? if >=26.3
+            //ConstantFloat.of(0.0F),
             ConstantFloat.of(0.0f)
         );
-        entries.add(ModernBetaConfiguredCarvers.BETA_CAVE_DEEP, WorldCarver.CAVE.configured(configCaveDeep));
+        entries.add(ModernBetaConfiguredCarvers.BETA_CAVE_DEEP, /*? if >=26.3 {*/ /*configCaveDeep *//*? } else {*/ WorldCarver.CAVE.configured(configCaveDeep) /*? }*/);
 
         //Configured features
         RuleTest overworldStone = new TagMatchTest(BlockTags.BASE_STONE_OVERWORLD);
@@ -246,18 +253,28 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
     }
 
     private static NoiseGeneratorSettings createVanillaSurfaceSettings(Provider provider, boolean amplified, boolean largeBiomes) {
+        HolderLookup.RegistryLookup<DensityFunction> functions = provider.lookupOrThrow(Registries.DENSITY_FUNCTION);
+
         return new NoiseGeneratorSettings(
             ModernBetaReducedHeightNoiseSettings.VANILLA_SURFACE,
             Blocks.STONE.defaultBlockState(),
             Blocks.WATER.defaultBlockState(),
-            mod.bluestaggo.modernerbeta.fabric.mixin.NoiseRouterDataAccessor.invokeOverworld(provider.lookupOrThrow(Registries.DENSITY_FUNCTION),
+            mod.bluestaggo.modernerbeta.fabric.mixin.NoiseRouterDataAccessor.invokeOverworld(functions,
                 provider.lookupOrThrow(Registries.NOISE), largeBiomes, amplified),
             //? if >=26.3 {
             /*provider.lookupOrThrow(Registries.MATERIAL_RULE).getOrThrow(net.minecraft.data.worldgen.material.OverworldMaterialRules.OVERWORLD),
             *///? } else {
             SurfaceRuleData.overworld(/*? >=26.2 {*//*provider.lookupOrThrow(Registries.BIOME)*//*?}*/),
             //? }
-            (new OverworldBiomeBuilder()).spawnTarget(),
+            (new OverworldBiomeBuilder()).spawnTarget(
+                //? if >=26.3 {
+                /*functions.getOrThrow(largeBiomes ? NoiseRouterData.TEMPERATURE_LARGE : NoiseRouterData.TEMPERATURE),
+                functions.getOrThrow(largeBiomes ? NoiseRouterData.VEGETATION_LARGE : NoiseRouterData.VEGETATION),
+                functions.getOrThrow(largeBiomes ? NoiseRouterData.CONTINENTS_LARGE : NoiseRouterData.CONTINENTS),
+                functions.getOrThrow(largeBiomes ? NoiseRouterData.EROSION_LARGE : NoiseRouterData.EROSION),
+                functions.getOrThrow(NoiseRouterData.RIDGES)
+                *///? }
+            ),
             63,
             false,
             true,

@@ -8,6 +8,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.levelgen.SingleThreadedRandomSource;
 import net.minecraft.world.level.levelgen.placement.RepeatingPlacement;
 
+//~ if >=26.3 'extends' -> 'implements'
 public abstract class NoiseBasedCountPlacementModifier extends RepeatingPlacement {
     protected final int count;
     protected final double extraChance;
@@ -24,7 +25,7 @@ public abstract class NoiseBasedCountPlacementModifier extends RepeatingPlacemen
     }
     
     @Override
-    protected int count(RandomSource random, BlockPos pos) {
+    public int count(RandomSource random, BlockPos pos) {
         int chunkX = pos.getX() >> 4;
         int chunkZ = pos.getZ() >> 4;
         

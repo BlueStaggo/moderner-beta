@@ -157,6 +157,7 @@ public class ModernBetaBiomes {
     
     private static void register(BootstrapContext<Biome> biomeRegisterable, ResourceKey<Biome> biome, BiomeCreator biomeCreator) {
         HolderGetter<PlacedFeature> registryFeature = biomeRegisterable.lookup(Registries.PLACED_FEATURE);
+        //~ if >=26.3 'CONFIGURED_CARVER' -> 'CARVER'
         HolderGetter<ConfiguredWorldCarver<?>> registryCarver = biomeRegisterable.lookup(Registries.CONFIGURED_CARVER);
         
         biomeRegisterable.register(biome, biomeCreator.create(registryFeature, registryCarver));

@@ -15,9 +15,11 @@ extendable class net/minecraft/client/OptionInstance$IntRangeBase
 #extendable class net/minecraft/core/Holder
 #? }
 
+#? if <26.3 {
 extendable method net/minecraft/world/level/levelgen/carver/WorldCarver getCarveState (Lnet/minecraft/world/level/levelgen/carver/CarvingContext;Lnet/minecraft/world/level/levelgen/carver/CarverConfiguration;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/levelgen/Aquifer;)Lnet/minecraft/world/level/block/state/BlockState;
 
 accessible field net/minecraft/world/level/levelgen/carver/CaveCarverConfiguration floorLevel Lnet/minecraft/util/valueproviders/FloatProvider;
+#? }
 
 #? if >=26.3 {
 #accessible method net/minecraft/world/level/levelgen/NoiseChunk cachedClimateSampler (Lnet/minecraft/world/level/levelgen/NoiseRouter;)Lnet/minecraft/world/level/biome/Climate$Sampler;

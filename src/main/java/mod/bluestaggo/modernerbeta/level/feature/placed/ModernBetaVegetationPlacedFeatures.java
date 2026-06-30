@@ -305,6 +305,7 @@ public class ModernBetaVegetationPlacedFeatures {
 
         //? if >=26.1 {
         list.add(CountPlacement.of(count));
+        //~ if >=26.3 'RandomOffsetPlacement' -> 'OffsetPlacement'
         list.add(RandomOffsetPlacement.ofTriangle(7, 3));
         list.add(BlockPredicateFilter.forPredicate(blockPredicate));
         //? }

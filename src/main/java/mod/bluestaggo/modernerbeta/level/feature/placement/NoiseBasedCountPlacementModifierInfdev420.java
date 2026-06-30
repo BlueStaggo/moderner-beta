@@ -1,10 +1,12 @@
 package mod.bluestaggo.modernerbeta.level.feature.placement;
 
 import com.mojang.serialization.Codec;
+//? if >=26.3
+//import com.mojang.serialization.MapCodec;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.util.noise.OctaveNoise;
 import mod.bluestaggo.modernerbeta.level.feature.placement.noise.NoiseBasedCountInfdev420;
-import net.minecraft.world.level.levelgen.placement.PlacementModifierType;
+//? if <26.3
 import org.jetbrains.annotations.NotNull;
 
 public class NoiseBasedCountPlacementModifierInfdev420 extends NoiseBasedCountPlacementModifier {
@@ -27,10 +29,16 @@ public class NoiseBasedCountPlacementModifierInfdev420 extends NoiseBasedCountPl
     public void setOctaves(OctaveNoise octaves) {
         this.noiseDecorator = new NoiseBasedCountInfdev420(octaves);
     }
-    
+
+    //? if >=26.3 {
+    /*@Override
+    public MapCodec<? extends net.minecraft.world.level.levelgen.placement.RepeatingPlacement> codec() {
+        return MODIFIER_CODEC;
+    }
+    *///? } else {
     @Override
-    public @NotNull PlacementModifierType<?> type() {
+    public @NotNull net.minecraft.world.level.levelgen.placement.PlacementModifierType<?> type() {
         return ModernBetaPlacementTypes.INFDEV_420_NOISE_BASED_COUNT;
     }
-
+    //? }
 }

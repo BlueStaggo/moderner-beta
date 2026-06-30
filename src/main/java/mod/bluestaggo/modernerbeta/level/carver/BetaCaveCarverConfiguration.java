@@ -1,3 +1,4 @@
+//? if <26.3 {
 package mod.bluestaggo.modernerbeta.level.carver;
 
 import com.mojang.serialization.Codec;
@@ -79,3 +80,4 @@ public class BetaCaveCarverConfiguration extends CaveCarverConfiguration {
         );
     }
 }
+//? }

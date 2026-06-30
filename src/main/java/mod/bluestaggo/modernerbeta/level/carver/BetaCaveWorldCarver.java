@@ -123,7 +123,7 @@ public class BetaCaveWorldCarver extends WorldCarver<BetaCaveCarverConfiguration
 
             int tunnelCount = 1;
             if (random.nextInt(4) == 0) {
-                //~ if >=26.3 '.yScale' -> '.roomVerticalRadiusMultiplier'
+                //~ if >=26.3 'yScale.' -> 'roomVerticalRadiusMultiplier.'
                 double yScale = config.yScale.sample(random);
                 
                 carveCave(

@@ -10,10 +10,10 @@ public class ModernBetaCarvers {
     //~ if >=26.3 'WorldCarver<?>>' -> 'MapCodec<? extends WorldCarver>>' {
     private static IRegistryHandler<WorldCarver<?>> registryHandler;
     //? if <26.3
-    public static WorldCarver<?> BETA_CAVE;
+    public static WorldCarver<BetaCaveCarverConfiguration> BETA_CAVE;
 
-    //~ if >=26.3 'WorldCarver<?>' -> 'MapCodec<? extends WorldCarver>'
-    private static WorldCarver<?> register(String id, WorldCarver<?> carver) {
+    //~ if >=26.3 '<C extends CarverConfiguration>' -> '<C extends WorldCarver>', 'WorldCarver<C>' -> 'MapCodec<C>'
+    private static <C extends CarverConfiguration> WorldCarver<C> register(String id, WorldCarver<C> carver) {
         return registryHandler.register(ModernerBeta.createId(id), carver);
     }
     

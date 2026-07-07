@@ -27,6 +27,7 @@ public record VoronoiPointCaveBiome(Optional<Holder<Biome>> biome, double temp, 
     }
 
     public static List<VoronoiPointCaveBiome> getDefaultPoints(RegistryOps.RegistryInfoLookup lookup) {
+        //~ if >=26.3 '.getter();' -> ';'
         HolderGetter<Biome> biomeRegistry = lookup.lookup(Registries.BIOME).orElseThrow().getter();
 
         return List.of(

@@ -6,12 +6,8 @@ import com.google.gson.*;
 import com.mojang.serialization.*;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.mixin.RegistryOpsAccessor;
-import net.minecraft.core.Holder;
-import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.Registry;
 import net.minecraft.resources.RegistryOps;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.ExtraCodecs;
 
 import java.lang.reflect.Type;
@@ -25,38 +21,6 @@ public class CodecUtil {
                     ? DataResult.success(((RegistryOpsAccessor) registryOps).getLookupProvider())
                     : DataResult.error(() -> "Not a registry ops")
         ).forGetter(object -> null);
-    }
-
-    @SuppressWarnings("unchecked")
-    public static <E, O> RecordCodecBuilder<O, HolderLookup<E>> retrieveLookup(ResourceKey<? extends Registry<? extends E>> registry) {
-        return ExtraCodecs.retrieveContext(
-            dynamicOps -> dynamicOps instanceof RegistryOps<?> registryOps
-                ? ((RegistryOpsAccessor) registryOps).getLookupProvider()
-                    .lookup(registry)
-                    .map(registryInfo -> {
-                        HolderLookup<E> foundLookup = null;
-
-                        if (registryInfo.owner() instanceof HolderLookup<?> lookup)
-                            foundLookup = (HolderLookup<E>) lookup;
-
-                        if (registryInfo.getter() instanceof HolderLookup<?> lookup)
-                            foundLookup = (HolderLookup<E>) lookup;
-
-                        if (foundLookup != null)
-                            return DataResult.success(foundLookup, registryInfo.elementsLifecycle());
-
-                        return DataResult.<HolderLookup<E>>error(() -> "Could not get HolderLookup from RegistryOps");
-                    })
-                    .orElseGet(() -> DataResult.error(() -> "Unknown registry: " + registryOps))
-                : DataResult.error(() -> "Not a registry ops")
-        ).forGetter(object -> null);
-    }
-
-    public static <A> MapCodec<Holder<A>> lookupIfEmpty(MapCodec<Holder<A>> codec, ResourceKey<A> key) {
-        return lookupIfEmpty(codec, lookup -> {
-            HolderGetter<A> getter = lookup.<A>lookup(ResourceKey.createRegistryKey(key.registry())).orElseThrow().getter();
-            return getter.getOrThrow(key);
-        });
     }
 
     public static <A> MapCodec<A> lookupIfEmpty(

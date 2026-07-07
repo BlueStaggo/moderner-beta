@@ -1,6 +1,6 @@
 package mod.bluestaggo.modernerbeta.util;
 
-import com.mojang.serialization.Lifecycle;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.core.Registry;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.RegistryOps;
@@ -11,7 +11,13 @@ import java.util.Optional;
 
 public record BootstrapDataContextInfoLookup<C>(BootstrapContext<C> context) implements RegistryOps.RegistryInfoLookup {
     @Override
+    //~ if >=26.3 'RegistryOps.RegistryInfo<T>' -> 'HolderGetter<T>'
     public <T> @NotNull Optional<RegistryOps.RegistryInfo<T>> lookup(ResourceKey<? extends Registry<? extends T>> registryKey) {
-        return Optional.of(new RegistryOps.RegistryInfo<>(null, context.lookup(registryKey), Lifecycle.stable()));
+        HolderGetter<T> lookup = context.lookup(registryKey);
+        //? if >=26.3 {
+        /*return Optional.of(lookup);
+        *///? } else {
+        return Optional.of(new RegistryOps.RegistryInfo<>(null, lookup, com.mojang.serialization.Lifecycle.stable()));
+        //? }
     }
 }

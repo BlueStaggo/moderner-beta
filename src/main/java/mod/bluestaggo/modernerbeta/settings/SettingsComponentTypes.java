@@ -134,6 +134,7 @@ public class SettingsComponentTypes {
             ModernBetaBuiltInTypes.SettingsComponentType.NOISE_GENERATOR_SETTINGS.id,
             NoiseGeneratorSettings.CODEC,
             (settings, registry) ->
+                //~ if >=26.3 '().getter()' -> '()'
                 registry.lookup(Registries.NOISE_SETTINGS).orElseThrow().getter()
                     .getOrThrow(ModernBetaNoiseGeneratorSettings.OVERWORLD_128),
             ValidationResult.Valid::new);
@@ -227,6 +228,7 @@ public class SettingsComponentTypes {
             ModernBetaBuiltInTypes.SettingsComponentType.STRUCTURE_MODIFIERS.id,
             StructureModifiers.CODEC,
             (settings, registry) ->
+                //~ if >=26.3 '().getter()' -> '()'
                 StructureModifiers.getDefault(registry.lookup(Registries.STRUCTURE).orElseThrow().getter()),
             ValidationResult.Valid::new);
 
@@ -235,6 +237,7 @@ public class SettingsComponentTypes {
             ModernBetaBuiltInTypes.SettingsComponentType.SINGLE_BIOME.id,
             Biome.CODEC,
             (settings, registry) ->
+                //~ if >=26.3 '().getter()' -> '()'
                 registry.lookup(Registries.BIOME).orElseThrow().getter().getOrThrow(ModernBetaBiomes.BETA_PLAINS),
             ValidationResult.Valid::new);
         CLIMATE_SCALE = register(

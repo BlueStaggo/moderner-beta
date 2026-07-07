@@ -22,6 +22,7 @@ import java.util.List;
 
 public final class BiomeInjectionRules {
     public static List<BiomeInjectionRule> emptyRules(RegistryOps.RegistryInfoLookup registries, BiomeInjectionRule... rules) {
+        //~ if >=26.3 '.getter();' -> ';'
         HolderGetter<Biome> biomeRegistry = registries.lookup(Registries.BIOME).orElseThrow().getter();
         ImmutableList.Builder<BiomeInjectionRule> builder = ImmutableList.builder();
 
@@ -41,6 +42,7 @@ public final class BiomeInjectionRules {
     }
 
     public static List<BiomeInjectionRule> standardRules(RegistryOps.RegistryInfoLookup registries, BiomeInjectionRule... rules) {
+        //~ if >=26.3 '.getter();' -> ';'
         HolderGetter<Biome> biomeRegistry = registries.lookup(Registries.BIOME).orElseThrow().getter();
         ImmutableList.Builder<BiomeInjectionRule> builder = ImmutableList.builder();
 
@@ -69,6 +71,7 @@ public final class BiomeInjectionRules {
     }
     
     public static BiomeInjectionRule makeBetaOceanRule(RegistryOps.RegistryInfoLookup registries, boolean pe) {
+        //~ if >=26.3 '.getter();' -> ';'
         HolderGetter<Biome> biomeRegistry = registries.lookup(Registries.BIOME).orElseThrow().getter();
 
         ImmutableMap.Builder<TagKey<Biome>, Holder<Biome>> builder = ImmutableMap.builder();
@@ -96,6 +99,7 @@ public final class BiomeInjectionRules {
     } 
     
     public static BiomeInjectionRule makeModernOceanRule(RegistryOps.RegistryInfoLookup registries) {
+        //~ if >=26.3 '.getter();' -> ';'
         HolderGetter<Biome> biomeRegistry = registries.lookup(Registries.BIOME).orElseThrow().getter();
         
         return new BiomeInjectionRule(

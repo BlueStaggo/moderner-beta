@@ -36,6 +36,7 @@ public record ClimateMapping(Holder<Biome> biome) {
     ).codec();
 
     public static Map<String, ClimateMapping> getDefaultMappings(RegistryOps.RegistryInfoLookup lookup) {
+        //~ if >=26.3 '.getter();' -> ';'
         HolderGetter<Biome> biomeRegistry = lookup.lookup(Registries.BIOME).orElseThrow().getter();
 
         return Map.ofEntries(

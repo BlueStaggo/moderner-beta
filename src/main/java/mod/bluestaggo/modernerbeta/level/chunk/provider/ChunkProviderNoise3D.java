@@ -426,7 +426,7 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
                             VersionCompat.setBlockState(chunk, pos, this.defaultBlock);
                             pos.setY(--y);
                         }
-                    } else if (surfaceTopY >= seaLevel - 4 && surfaceTopY < seaLevel + 1) {
+                    } else if (surfaceTopY >= seaLevel - 4 && surfaceTopY <= seaLevel + 1) {
                         SurfaceBlocks beach = genSandBeach ? surfaceConfig.beachSand() : genGravelBeach ? surfaceConfig.beachGravel() : null;
                         if (beach != null) {
                             if (beach.topBlock().isAir() && y < seaLevel) {

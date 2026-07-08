@@ -731,7 +731,9 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
         if (this.noiseScale.useFixedOffset())
             return this.noiseScale.fixedOffset();
 
-        double offset = (((double)noiseY - depth) * heightStretch) / scale;
+        double offset = this.noise3DSettings.oldInfdevTerrainNoise()
+                ? noiseY * this.noiseResolutionVertical - this.getSeaLevel()
+                : (((double)noiseY - depth) * heightStretch) / scale;
 
         if (offset < 0D)
             offset *= this.noiseScale.densityUnderdamp();

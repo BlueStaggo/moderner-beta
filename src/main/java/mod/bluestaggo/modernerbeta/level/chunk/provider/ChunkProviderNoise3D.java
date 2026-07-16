@@ -419,7 +419,7 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
                             VersionCompat.setBlockState(chunk, pos, this.defaultBlock);
                             pos.setY(--y);
                         }
-                    } else if (surfaceTopY >= seaLevel - 4 && surfaceTopY < seaLevel + 1) {
+                    } else if (surfaceTopY >= seaLevel - 4 && surfaceTopY <= seaLevel + 1) {
                         SurfaceBlocks beach = genSandBeach ? surfaceConfig.beachSand() : genGravelBeach ? surfaceConfig.beachGravel() : null;
                         if (beach != null) {
                             if (beach.topBlock().isAir() && y < seaLevel) {
@@ -731,7 +731,9 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
         if (this.noiseScale.useFixedOffset())
             return this.noiseScale.fixedOffset();
 
-        double offset = (((double)noiseY - depth) * heightStretch) / scale;
+        double offset = this.noise3DSettings.oldInfdevTerrainNoise()
+                ? noiseY * this.noiseResolutionVertical - this.getSeaLevel()
+                : (((double)noiseY - depth) * heightStretch) / scale;
 
         if (offset < 0D)
             offset *= this.noiseScale.densityUnderdamp();

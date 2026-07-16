@@ -111,6 +111,7 @@ public class ModernBetaChunkNoiseSampler {
          *
          */
         @Override
+        //~ if >=26.3 'preliminarySurfaceLevel' -> 'computePreliminarySurfaceLevel'
         public int preliminarySurfaceLevel(int x, int z) {
             int height = (chunkProvider instanceof ChunkProviderNoise noiseChunkProvider) ?
                     noiseChunkProvider.getHeight(null, x, z, ChunkHeightmap.Type.SURFACE_FLOOR) :

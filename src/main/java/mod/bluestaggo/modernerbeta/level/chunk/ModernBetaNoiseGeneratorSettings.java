@@ -10,17 +10,13 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.level.levelgen.DensityFunction;
-import net.minecraft.world.level.levelgen.DensityFunctions;
-import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
-import net.minecraft.world.level.levelgen.NoiseRouter;
-import net.minecraft.world.level.levelgen.NoiseSettings;
-import net.minecraft.world.level.levelgen.Noises;
-import net.minecraft.world.level.levelgen.SurfaceRules;
+import net.minecraft.world.level.levelgen.*;
 import net.minecraft.world.level.levelgen.synth.NormalNoise;
 import net.minecraft.world.level.levelgen.synth.NormalNoise.NoiseParameters;
 
 import java.util.List;
+//? if >=26.3
+//import java.util.Optional;
 
 public class ModernBetaNoiseGeneratorSettings {
     public static final ResourceKey<NoiseGeneratorSettings> INFDEV_415;
@@ -41,16 +37,20 @@ public class ModernBetaNoiseGeneratorSettings {
         HolderGetter<DensityFunction> densityFunctionLookup,
         HolderGetter<NormalNoise.NoiseParameters> noiseParametersLookup
     ) {
+        //? if <26.3 {
         Reference<NoiseParameters> aquiferBarrier = noiseParametersLookup.getOrThrow(Noises.AQUIFER_BARRIER);
         Reference<NoiseParameters> aquiferFloodedness = noiseParametersLookup.getOrThrow(Noises.AQUIFER_FLUID_LEVEL_FLOODEDNESS);
         Reference<NoiseParameters> aquiferSpread = noiseParametersLookup.getOrThrow(Noises.AQUIFER_FLUID_LEVEL_SPREAD);
         Reference<NoiseParameters> aquiferLava = noiseParametersLookup.getOrThrow(Noises.AQUIFER_LAVA);
+        //? }
         Reference<NoiseParameters> caveEntranceNoise = noiseParametersLookup.getOrThrow(Noises.CAVE_ENTRANCE);
-        
+
+        //? if <26.3 {
         DensityFunction functionAquiferBarrier = DensityFunctions.noise(aquiferBarrier, 0.5);
         DensityFunction functionAquiferFloodedness = DensityFunctions.noise(aquiferFloodedness, 0.67);
         DensityFunction functionAquiferSpread = DensityFunctions.noise(aquiferSpread, 0.7142857142857143);
         DensityFunction functionAquiferLava = DensityFunctions.noise(aquiferLava);
+        //? }
         DensityFunction functionCaveEntranceNoise = DensityFunctions.noise(caveEntranceNoise);
 
         DensityFunction functionSlopedCheeseEstimate = DensityFunctions.add(
@@ -75,10 +75,12 @@ public class ModernBetaNoiseGeneratorSettings {
         );
         
         return new NoiseRouter(
+            //? if <26.3 {
             functionAquiferBarrier,      // Barrier noise
             functionAquiferFloodedness,  // Fluid level floodedness noise
             functionAquiferSpread,       // Fluid level spread noise
             functionAquiferLava,         // Lava noise
+            //? }
             DensityFunctions.zero(),     // Temperature
             DensityFunctions.zero(),     // Vegetation
             DensityFunctions.zero(),     // Continents
@@ -86,12 +88,37 @@ public class ModernBetaNoiseGeneratorSettings {
             DensityFunctions.zero(),     // Depth
             DensityFunctions.zero(),     // Ridges
             DensityFunctions.zero(),     // Initial density
-            functionCavesWithNoodles,    // Final density (used for noise caves post-processor)
-            DensityFunctions.zero(),     // Vein Toggle
+            functionCavesWithNoodles    // Final density (used for noise caves post-processor)
+            //? if <26.3 {
+            , DensityFunctions.zero(),     // Vein Toggle
             DensityFunctions.zero(),     // Vein Ridged
             DensityFunctions.zero()      // Vein Gap
+            //? }
         );
     }
+
+    //? if >=26.3 {
+    /*private static Aquifer.Config createAquiferConfig(HolderGetter<NormalNoise.NoiseParameters> noiseParametersLookup) {
+        Reference<NoiseParameters> aquiferBarrier = noiseParametersLookup.getOrThrow(Noises.AQUIFER_BARRIER);
+        Reference<NoiseParameters> aquiferFloodedness = noiseParametersLookup.getOrThrow(Noises.AQUIFER_FLUID_LEVEL_FLOODEDNESS);
+        Reference<NoiseParameters> aquiferSpread = noiseParametersLookup.getOrThrow(Noises.AQUIFER_FLUID_LEVEL_SPREAD);
+        Reference<NoiseParameters> aquiferLava = noiseParametersLookup.getOrThrow(Noises.AQUIFER_LAVA);
+
+        DensityFunction functionAquiferBarrier = DensityFunctions.noise(aquiferBarrier, 0.5);
+        DensityFunction functionAquiferFloodedness = DensityFunctions.noise(aquiferFloodedness, 0.67);
+        DensityFunction functionAquiferSpread = DensityFunctions.noise(aquiferSpread, 0.7142857142857143);
+        DensityFunction functionAquiferLava = DensityFunctions.noise(aquiferLava);
+
+        return new Aquifer.Config(
+            functionAquiferBarrier,
+            functionAquiferFloodedness,
+            functionAquiferSpread,
+            functionAquiferLava,
+            DensityFunctions.zero(),
+            DensityFunctions.zero()
+        );
+    }
+    *///? }
 
     private static NoiseGeneratorSettings createNoiseGeneratorSettings(
         BootstrapContext<NoiseGeneratorSettings> context,
@@ -173,8 +200,13 @@ public class ModernBetaNoiseGeneratorSettings {
             List.of(),
             seaLevel,
             false,
+            //? if >=26.3 {
+            /*useAquifers ? Optional.of(createAquiferConfig(noiseParametersLookup)) : Optional.empty(),
+            List.of(),
+            *///? } else {
             useAquifers,
             false,
+            //? }
             true
         );
     }

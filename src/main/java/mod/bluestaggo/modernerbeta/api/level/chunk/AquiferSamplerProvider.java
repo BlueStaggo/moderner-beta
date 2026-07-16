@@ -2,6 +2,8 @@
 package mod.bluestaggo.modernerbeta.api.level.chunk;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;
+//? if >=26.3
+//import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaNoiseBasedAquifer;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import net.minecraft.util.Mth;
@@ -15,9 +17,16 @@ import net.minecraft.world.level.levelgen.NoiseRouter;
 import net.minecraft.world.level.levelgen.PositionalRandomFactory;
 import net.minecraft.world.level.levelgen.SingleThreadedRandomSource;
 
+//? if >=26.3 {
+/*import java.util.Optional;
+
+@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+*///? }
 public class AquiferSamplerProvider {
     private final NoiseRouter noiseRouter;
     private final PositionalRandomFactory randomFactory;
+    //? if >=26.3
+    //private final Optional<Aquifer.Config> aquiferConfig;
     
     private final FluidPicker fluidLevelSampler;
     private final FluidPicker lavalessFluidLevelSampler;
@@ -33,6 +42,8 @@ public class AquiferSamplerProvider {
     public AquiferSamplerProvider(
         NoiseRouter noiseRouter,
         BlockState defaultFluid,
+        //? if >=26.3
+        //Optional<Aquifer.Config> aquiferConfig,
         int seaLevel,
         int lavaLevel
     ) {
@@ -41,6 +52,7 @@ public class AquiferSamplerProvider {
             new SingleThreadedRandomSource(-1).forkPositional(),
             null,
             defaultFluid,
+            aquiferConfig,
             seaLevel,
             lavaLevel,
             0,
@@ -55,10 +67,12 @@ public class AquiferSamplerProvider {
         PositionalRandomFactory randomFactory,
         NoiseChunk chunkSampler,
         BlockState defaultFluid,
+        //? if >=26.3
+        //Optional<Aquifer.Config> aquiferConfig,
         int seaLevel,
         int lavaLevel,
         int worldMinY,
-        int worldHeight, 
+        int worldHeight,
         int noiseResolutionVertical,
         boolean generateAquifers
     ) {
@@ -72,11 +86,13 @@ public class AquiferSamplerProvider {
         this.lavalessFluidLevelSampler = (x, y, z) -> seaFluidLevel;
         
         this.chunkSampler = chunkSampler;
-        
+        //? if >=26.3
+        //this.aquiferConfig = aquiferConfig;
+
         this.worldMinY = worldMinY;
         this.worldHeight = worldHeight;
         this.noiseResolutionVertical = noiseResolutionVertical;
-        
+
         this.generateAquifers = generateAquifers;
     }
     
@@ -90,11 +106,19 @@ public class AquiferSamplerProvider {
         
         int noiseMinY = Mth.floorDiv(minY, this.noiseResolutionVertical);
         int noiseTopY = Mth.floorDiv(topY - minY, this.noiseResolutionVertical);
-        
+
+        //? if >=26.3 {
+        /*return ModernBetaNoiseBasedAquifer.create(
+        *///? } else {
         return Aquifer.create(
+        //? }
             this.chunkSampler,
             chunk.getPos(),
+            //? if >=26.3 {
+            /*this.aquiferConfig.orElseThrow(),
+            *///? } else {
             this.noiseRouter,
+            //? }
             this.randomFactory,
             noiseMinY * this.noiseResolutionVertical, 
             noiseTopY * this.noiseResolutionVertical, 

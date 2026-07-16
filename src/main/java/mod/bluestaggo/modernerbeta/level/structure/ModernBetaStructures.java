@@ -33,7 +33,7 @@ public class ModernBetaStructures {
                         MobCategory.MONSTER, new StructureSpawnOverride(
                             StructureSpawnOverride.BoundingBoxType.STRUCTURE,
                             WeightedList.of(new MobSpawnSettings.SpawnerData(
-                                net.minecraft.world.entity.EntityType.GUARDIAN, /*? if <1.21.5 {*//*1, *//*?}*/ 1, 2))
+                                net.minecraft.world.entity.EntityType.GUARDIAN, /*? if >=26.3 {*//*net.minecraft.util.valueproviders.UniformInt.of(*//*? }*/ /*? if <1.21.5 {*//*1, *//*?}*/ 1, 2 /*? if >=26.3 {*//*)*//*? }*/ ))
                         ),
                         MobCategory.UNDERGROUND_WATER_CREATURE, new StructureSpawnOverride(
                             StructureSpawnOverride.BoundingBoxType.STRUCTURE,

@@ -83,8 +83,12 @@ public final class VersionCompat {
         }
     }
 
+    //? if >=26.3
+    //@SuppressWarnings("deprecation")
     public static void addSpawnEntry(MobSpawnSettings.Builder spawnSettings, MobCategory spawnGroup, EntityType<?> entityType, int weight, int minGroupSize, int maxGroupSize) {
-        //? if >=1.21.5 {
+        //? if >=26.3 {
+        /*spawnSettings.addSpawn(entityType, spawnGroup, weight, new net.minecraft.util.valueproviders.UniformInt(minGroupSize, maxGroupSize));
+        *///? } else if >=1.21.5 {
         spawnSettings.addSpawn(spawnGroup, weight, new MobSpawnSettings.SpawnerData(entityType, minGroupSize, maxGroupSize));
         //?} else {
         /*spawnSettings.addSpawn(spawnGroup, new MobSpawnSettings.SpawnerData(entityType, weight, minGroupSize, maxGroupSize));

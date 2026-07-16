@@ -181,8 +181,10 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
             unboxed.spawnTarget(),
             seaLevel != null ? seaLevel : unboxed.seaLevel(),
             unboxed.disableMobGeneration(),
+            //~ if >=26.3 'Enabled()' -> '()' {
             unboxed.aquifersEnabled(),
             unboxed.oreVeinsEnabled(),
+            //~ }
             unboxed.useLegacyRandomSource()
         );
 

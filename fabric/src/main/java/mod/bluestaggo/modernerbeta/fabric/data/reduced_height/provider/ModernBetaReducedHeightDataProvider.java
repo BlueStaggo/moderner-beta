@@ -254,13 +254,32 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
 
     private static NoiseGeneratorSettings createVanillaSurfaceSettings(Provider provider, boolean amplified, boolean largeBiomes) {
         HolderLookup.RegistryLookup<DensityFunction> functions = provider.lookupOrThrow(Registries.DENSITY_FUNCTION);
+        HolderLookup.RegistryLookup<NormalNoise.NoiseParameters> noises = provider.lookupOrThrow(Registries.NOISE);
+        //? if >=26.3 {
+        /*OverworldFunctionSet<ResourceKey<DensityFunction>> functionNames;
+        if (amplified) {
+            functionNames = NoiseRouterData.AMPLIFIED_OVERWORLD_FUNCTIONS;
+        } else if (largeBiomes) {
+            functionNames = NoiseRouterData.LARGE_OVERWORLD_FUNCTIONS;
+        } else {
+            functionNames = NoiseRouterData.OVERWORLD_FUNCTIONS;
+        }
+        *///? }
 
         return new NoiseGeneratorSettings(
             ModernBetaReducedHeightNoiseSettings.VANILLA_SURFACE,
             Blocks.STONE.defaultBlockState(),
             Blocks.WATER.defaultBlockState(),
-            mod.bluestaggo.modernerbeta.fabric.mixin.NoiseRouterDataAccessor.invokeOverworld(functions,
-                provider.lookupOrThrow(Registries.NOISE), largeBiomes, amplified),
+            mod.bluestaggo.modernerbeta.fabric.mixin.NoiseRouterDataAccessor.invokeOverworld(
+                functions,
+                noises,
+                //? if >=26.3 {
+                /*functionNames,
+                *///? } else {
+                largeBiomes,
+                //? }
+                amplified
+            ),
             //? if >=26.3 {
             /*provider.lookupOrThrow(Registries.MATERIAL_RULE).getOrThrow(net.minecraft.data.worldgen.material.OverworldMaterialRules.OVERWORLD),
             *///? } else {
@@ -268,17 +287,21 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
             //? }
             (new OverworldBiomeBuilder()).spawnTarget(
                 //? if >=26.3 {
-                /*functions.getOrThrow(largeBiomes ? NoiseRouterData.TEMPERATURE_LARGE : NoiseRouterData.TEMPERATURE),
-                functions.getOrThrow(largeBiomes ? NoiseRouterData.VEGETATION_LARGE : NoiseRouterData.VEGETATION),
-                functions.getOrThrow(largeBiomes ? NoiseRouterData.CONTINENTS_LARGE : NoiseRouterData.CONTINENTS),
-                functions.getOrThrow(largeBiomes ? NoiseRouterData.EROSION_LARGE : NoiseRouterData.EROSION),
+                /*functionNames.map(functions::getOrThrow),
                 functions.getOrThrow(NoiseRouterData.RIDGES)
                 *///? }
             ),
             63,
             false,
+            //? if >=26.3 {
+            /*Optional.of(mod.bluestaggo.modernerbeta.fabric.mixin.NoiseRouterDataAccessor
+                    .invokeOverworldAquifers(functions, noises, functionNames)),
+            mod.bluestaggo.modernerbeta.fabric.mixin.NoiseRouterDataAccessor
+                    .invokeOverworldOreVeins(functions),
+            *///? } else {
             true,
             true,
+            //? }
             false
         );
     }
@@ -298,8 +321,13 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
             List.of(),
             32,
             false,
+            //? if >=26.3 {
+            /*Optional.empty(),
+            List.of(),
+            *///? } else {
             false,
             false,
+            //? }
             true
         );
     }

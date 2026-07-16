@@ -29,6 +29,7 @@ public class SurfaceRulesContextMixin {
             return;
 
         //bypass all interpolation stuff if in Moderner Beta
+        //~ if >=26.3 'preliminarySurfaceLevel' -> 'computePreliminarySurfaceLevel'
         int blockHeight = noiseChunk.preliminarySurfaceLevel(blockX, blockZ);
         cir.setReturnValue(blockHeight + surfaceDepth - 8);
     }

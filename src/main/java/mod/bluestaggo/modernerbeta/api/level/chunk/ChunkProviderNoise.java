@@ -236,12 +236,19 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
             randomDeriver,
             noiseSampler,
             this.defaultFluid,
+            //? if >=26.3
+            //this.generatorSettings.value().aquifers(),
             this.getSeaLevel(),
             this.worldMinY + 10,
             this.worldMinY,
             this.worldHeight,
             this.noiseResolutionVertical,
-            this.generatorSettings.value().aquifersEnabled() && surfaceProperties.generateLiquids()
+            //? if >=26.3 {
+            /*this.generatorSettings.value().aquifers().isPresent()
+            *///? } else {
+            this.generatorSettings.value().aquifersEnabled()
+            //? }
+                    && surfaceProperties.generateLiquids()
         );
         
         return aquiferSamplerProvider.provideAquiferSampler(chunk);

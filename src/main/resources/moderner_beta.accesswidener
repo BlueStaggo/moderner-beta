@@ -32,3 +32,10 @@ accessible method net/minecraft/world/level/levelgen/NoiseChunk cachedClimateSam
 #? } else {
 accessible class net/minecraft/world/level/levelgen/DensityFunctions$WeirdScaledSampler
 #? }
+
+#? if >=26.3 {
+#accessible field net/minecraft/world/level/levelgen/Aquifer$NoiseBasedAquifer noiseChunk Lnet/minecraft/world/level/levelgen/NoiseChunk;
+#accessible field net/minecraft/world/level/levelgen/Aquifer$NoiseBasedAquifer surfaceLevelCache Lit/unimi/dsi/fastutil/longs/Long2IntMap;
+#accessible method net/minecraft/world/level/levelgen/Aquifer$NoiseBasedAquifer <init> (Lnet/minecraft/world/level/levelgen/NoiseChunk;Lnet/minecraft/world/level/ChunkPos;Lnet/minecraft/world/level/levelgen/Aquifer$Config;Lnet/minecraft/world/level/levelgen/PositionalRandomFactory;IILnet/minecraft/world/level/levelgen/Aquifer$FluidPicker;)V
+#extendable method net/minecraft/world/level/levelgen/Aquifer$NoiseBasedAquifer surfaceLevel (II)I
+#? }

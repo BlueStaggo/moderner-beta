@@ -306,7 +306,7 @@ public class ModernBetaSettingsPresetScreen<T extends NameAndDescriptionItem> ex
                 int button = click.button();
                 //?}
 
-                if (button != 0) {
+                if (button != /*? >=26.3 {*/ /*1 *//*? } else {*/ 0 /*? }*/) {
                     return false;
                 }
 

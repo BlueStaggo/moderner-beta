@@ -35,12 +35,8 @@ public class ModernBetaNoiseBasedAquifer extends Aquifer.NoiseBasedAquifer {
 
     @Override
     public int surfaceLevel(int blockX, int blockZ) {
-        int quantizedX = QuartPos.toBlock(QuartPos.fromBlock(blockX));
-        int quantizedZ = QuartPos.toBlock(QuartPos.fromBlock(blockZ));
-
         //undoes a change done in 26.3, where the aquifer has its own preliminary surface level density function
-        return this.surfaceLevelCache.computeIfAbsent(ChunkPos.pack(quantizedX, quantizedZ),
-            k -> Mth.floor(this.noiseChunk.computePreliminarySurfaceLevel(quantizedX, quantizedZ)));
+        return this.noiseChunk.computePreliminarySurfaceLevel(blockX, blockZ);
     }
 }
 *///? }

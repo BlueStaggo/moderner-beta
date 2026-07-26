@@ -17,7 +17,8 @@ public record SurfaceProperties(
     boolean generateBeaches,
     boolean generateSandstone,
     boolean erosion,
-    boolean gravelOceanBed
+    boolean gravelOceanBed,
+    int gravelOceanBedDepth
 ) {
     public static final Codec<SurfaceProperties> CODEC = RecordCodecBuilder.create(
         instance -> instance.group(
@@ -33,7 +34,8 @@ public record SurfaceProperties(
             Codec.BOOL.fieldOf("generateBeaches").orElse(true).forGetter(SurfaceProperties::generateBeaches),
             Codec.BOOL.fieldOf("generateSandstone").orElse(true).forGetter(SurfaceProperties::generateSandstone),
             Codec.BOOL.fieldOf("erosion").orElse(true).forGetter(SurfaceProperties::erosion),
-            Codec.BOOL.fieldOf("gravelOceanBed").orElse(false).forGetter(SurfaceProperties::gravelOceanBed)
+            Codec.BOOL.fieldOf("gravelOceanBed").orElse(false).forGetter(SurfaceProperties::gravelOceanBed),
+            Codec.INT.fieldOf("gravelOceanBedDepth").orElse(7).forGetter(SurfaceProperties::gravelOceanBedDepth)
         ).apply(instance, SurfaceProperties::new)
     );
     public static final SurfaceProperties DEFAULT = CodecUtil.getDefaultByMap(CODEC);
@@ -51,7 +53,8 @@ public record SurfaceProperties(
         true,
         false,
         true,
-        false
+        false,
+        7
     );
     public static final SurfaceProperties BETA = new SurfaceProperties(
         true,
@@ -66,7 +69,8 @@ public record SurfaceProperties(
         true,
         true,
         true,
-        false
+        false,
+        7
     );
     public static final SurfaceProperties SKYLANDS = new SurfaceProperties(
         false,
@@ -81,7 +85,8 @@ public record SurfaceProperties(
         false,
         true,
         true,
-        false
+        false,
+        7
     );
     public static final SurfaceProperties EARLY_RELEASE = new SurfaceProperties(
         true,
@@ -96,7 +101,8 @@ public record SurfaceProperties(
         false,
         true,
         true,
-        false
+        false,
+        7
     );
     public static final SurfaceProperties MAJOR_RELEASE = new SurfaceProperties(
         true,
@@ -111,6 +117,7 @@ public record SurfaceProperties(
         false,
         true,
         true,
-        true
+        true,
+        7
     );
 }

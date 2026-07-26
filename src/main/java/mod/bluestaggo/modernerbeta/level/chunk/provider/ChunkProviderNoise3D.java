@@ -282,7 +282,9 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
 
                         if (y >= seaLevel - 1 || (y < seaLevel - 1 && chunk.getBlockState(pos.above()).isAir())) {
                             blockToSet = topBlock;
-                        } else if (surfaceProperties.gravelOceanBed() && y < seaLevel - 7 - surfaceDepth) {
+                        } else if (surfaceProperties.gravelOceanBed() &&
+                            y < seaLevel - surfaceProperties.gravelOceanBedDepth() - surfaceDepth
+                        ) {
                             topBlock = BlockStates.AIR;
                             fillerBlock = BlockStates.STONE;
                             blockToSet = BlockStates.GRAVEL;

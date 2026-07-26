@@ -69,7 +69,7 @@ public class SpawnLocatorRelease implements SpawnLocator {
             chunkProviderNoise.getHeight(level, x, z, ChunkHeightmap.Type.SURFACE_FLOOR) :
             this.chunkProvider.getHeight(level, x, z, Heightmap.Types.WORLD_SURFACE_WG);
         
-        return Optional.of(new BlockPos(x, y, z));
+        return SpawnLocator.getFinalSpawn(level, x, y, z);
     }
 
     private BlockPos getSuitableBiomeLocation(int x, int z, int radius) {

@@ -1,11 +1,9 @@
 //~registryOr
 package mod.bluestaggo.modernerbeta.level.chunk;
 
-import com.google.common.base.Suppliers;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.api.level.chunk.surface.SurfaceConfig;
 import mod.bluestaggo.modernerbeta.compat.ModCompat;
-import mod.bluestaggo.modernerbeta.mixin.NoiseBasedChunkGeneratorAccessor;
 import mod.bluestaggo.modernerbeta.registry.DefferedDirectHolder;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.api.level.chunk.ChunkProvider;
@@ -82,14 +80,13 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
 
     private ChunkProvider chunkProvider;
 
-    @SuppressWarnings("DataFlowIssue")
     public ModernBetaChunkGenerator(
         BiomeSource biomeSource,
         HolderGetter<ModernBetaSettingsPreset> presetRegistry,
         HolderGetter<SurfaceConfig> surfaceConfigRegistry,
         ModernBetaSettings chunkProviderSettings
     ) {
-        super(biomeSource, null);
+        super(biomeSource, createGeneratorSettings(presetRegistry, chunkProviderSettings));
 
         this.presetRegistry = presetRegistry;
         this.surfaceConfigRegistry = surfaceConfigRegistry;
@@ -98,15 +95,17 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
             this.biomeSource instanceof ModernBetaBiomeSource modernBetaBiomeSource
                 ? new BiomeInjector(this, modernBetaBiomeSource) : null);
 
-        NoiseBasedChunkGeneratorAccessor accessor = (NoiseBasedChunkGeneratorAccessor) this;
-        Holder<NoiseGeneratorSettings> settings = DefferedDirectHolder.of(this::noiseGeneratorSettings);
-        accessor.setSettings(settings);
-        accessor.setGlobalFluidPicker(Suppliers.memoize(() ->
-            NoiseBasedChunkGeneratorAccessor.invokeCreateFluidPicker(settings.value())));
-
         if (this.biomeSource instanceof ModernBetaBiomeSource modernBetaBiomeSource) {
             modernBetaBiomeSource.setChunkGenerator(this);
         }
+    }
+
+    private static Holder<NoiseGeneratorSettings> createGeneratorSettings(
+        HolderGetter<ModernBetaSettingsPreset> presetRegistry,
+        ModernBetaSettings chunkProviderSettings
+    ) {
+        ModernBetaSettings fixedSettings = fixupPreset(chunkProviderSettings);
+        return DefferedDirectHolder.of(() -> noiseGeneratorSettings(fixedSettings, presetRegistry));
     }
 
     private static ModernBetaSettings fixupPreset(ModernBetaSettings chunkProviderSettings) {
@@ -123,8 +122,11 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
         return chunkProviderSettings;
     }
 
-    private NoiseGeneratorSettings noiseGeneratorSettings() {
-        ModernBetaSettings chunkSettings = this.chunkSettings.mapPreset(this.presetRegistry, ModernBetaSettingsPreset::chunkSettings);
+    private static NoiseGeneratorSettings noiseGeneratorSettings(
+        ModernBetaSettings settings,
+        HolderGetter<ModernBetaSettingsPreset> presetRegistry
+    ) {
+        ModernBetaSettings chunkSettings = settings.mapPreset(presetRegistry, ModernBetaSettingsPreset::chunkSettings);
         Holder<NoiseGeneratorSettings> generatorSettings = chunkSettings.getOrDefault(SettingsComponentTypes.NOISE_GENERATOR_SETTINGS);
 
         NoiseSettings noiseSettings = chunkSettings.get(SettingsComponentTypes.NOISE_SETTINGS);
@@ -476,7 +478,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
     public ModernBetaSettings getChunkSettings() {
         return this.chunkSettings;
     }
-    
+
     public BiomeInjector getBiomeInjector() {
         return this.biomeInjector.get();
     }

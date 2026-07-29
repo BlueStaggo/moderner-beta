@@ -576,6 +576,7 @@ public final class ModernBetaSettingsPresets {
                 .add(NOISE_3D_SETTINGS, Noise3DSettings.PE)
                 .add(DEEPSLATE_GENERATION, DeepslateGeneration.DISABLED)
                 .add(USE_SURFACE_RULES, false)
+                .add(WORLD_BORDER, WorldBorderLocation.pe())
                 .build(),
             DEFAULT_BETA.biomeSettings().extend()
                 .add(PROVIDER, ModernBetaBuiltInTypes.Biome.PE.id)

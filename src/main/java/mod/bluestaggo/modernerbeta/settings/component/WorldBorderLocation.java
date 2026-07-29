@@ -27,6 +27,10 @@ public record WorldBorderLocation(
         return new WorldBorderLocation(true, width, CenterType.ORIGIN, FalloffType.SMOOTH_OCEAN, 54);
     }
 
+    public static WorldBorderLocation pe() {
+        return new WorldBorderLocation(false, 256, CenterType.CORNER, FalloffType.VOID, 54);
+    }
+
     public static WorldBorderLocation indev(int width, int seaLevel) {
         return new WorldBorderLocation(true, width, CenterType.ORIGIN, FalloffType.OCEAN, seaLevel - 9);
     }

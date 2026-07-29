@@ -349,6 +349,7 @@
     "createWorld.customize.modern_beta.settings.surface_properties.erosion": "Erosion",
     "createWorld.customize.modern_beta.settings.surface_properties.gravelOceanBed": "Gravel Ocean Bed",
     "createWorld.customize.modern_beta.settings.surface_properties.gravelOceanBedDepth": "Gravel Ocean Bed Depth",
+    "createWorld.customize.modern_beta.settings.surface_properties.legacyBadlandsBands": "Legacy Badlands Bands",
     "createWorld.customize.modern_beta.settings.infdev_227_structures": "Infdev Structures",
     "createWorld.customize.modern_beta.settings.infdev_227_structures.brickPyramids": "Brick Pyramids",
     "createWorld.customize.modern_beta.settings.infdev_227_structures.obsidianWalls": "Obsidian Walls",

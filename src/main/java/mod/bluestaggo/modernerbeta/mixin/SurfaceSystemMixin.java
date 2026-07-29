@@ -9,6 +9,10 @@ import mod.bluestaggo.modernerbeta.imixin.ModernBetaSurfaceSystem;
 import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.level.biome.injection.BiomeInjectionRule;
 import mod.bluestaggo.modernerbeta.level.biome.injection.InjectionNeeds;
+import mod.bluestaggo.modernerbeta.level.chunk.surface.LegacyBadlandsBands;
+import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
+import mod.bluestaggo.modernerbeta.settings.component.Noise3DSettings;
+import mod.bluestaggo.modernerbeta.settings.component.SurfaceProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.util.RandomSource;
@@ -33,11 +37,21 @@ import java.util.function.Function;
 public class SurfaceSystemMixin implements ModernBetaSurfaceSystem {
     @Unique private ChunkProvider modernerBeta$chunkProvider;
     @Unique private ModernBetaBiomeSource modernerBeta$biomeSource;
+    @Unique private LegacyBadlandsBands modernerBeta$badlandsBands;
     @Unique private final ThreadLocal<RandomSource> modernerBeta$surfaceRandom = new ThreadLocal<>();
 
     @Override
     public void modernerBeta$setupChunkContext(ChunkProvider chunkProvider) {
+        if (this.modernerBeta$chunkProvider == chunkProvider)
+            return;
+
         this.modernerBeta$chunkProvider = chunkProvider;
+
+        SurfaceProperties surface = chunkProvider.getChunkSettings().getOrDefault(SettingsComponentTypes.SURFACE_PROPERTIES);
+        Noise3DSettings noise = chunkProvider.getChunkSettings().getOrDefault(SettingsComponentTypes.NOISE_3D_SETTINGS);
+        this.modernerBeta$badlandsBands = surface.legacyBadlandsBands()
+            ? new LegacyBadlandsBands(chunkProvider.getSeed(), noise.pocketEditionRng())
+            : null;
     }
 
     @Override
@@ -149,5 +163,11 @@ public class SurfaceSystemMixin implements ModernBetaSurfaceSystem {
         int surfaceDepth = this.modernerBeta$chunkProvider
                 .getSurfaceDepth(this.modernerBeta$surfaceRandom.get(), blockX, blockZ);
         cir.setReturnValue(surfaceDepth);
+    }
+
+    @Inject(method = "getBand", at = @At("HEAD"), cancellable = true)
+    private void useLegacyBadlandsBands(int x, int y, int z, CallbackInfoReturnable<BlockState> cir) {
+        if (this.modernerBeta$badlandsBands != null)
+            cir.setReturnValue(this.modernerBeta$badlandsBands.sample(x, y, z));
     }
 }

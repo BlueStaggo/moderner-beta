@@ -16,6 +16,21 @@ public class BlockStates {
     public static final BlockState RED_SAND = Blocks.RED_SAND.defaultBlockState();
     public static final BlockState RED_SANDSTONE = Blocks.RED_SANDSTONE.defaultBlockState();
     public static final BlockState TERRACOTTA = Blocks.TERRACOTTA.defaultBlockState();
+    //? if >=26.2 {
+    /*public static final BlockState WHITE_TERRACOTTA = Blocks.DYED_TERRACOTTA.white().defaultBlockState();
+    public static final BlockState ORANGE_TERRACOTTA = Blocks.DYED_TERRACOTTA.orange().defaultBlockState();
+    public static final BlockState YELLOW_TERRACOTTA = Blocks.DYED_TERRACOTTA.yellow().defaultBlockState();
+    public static final BlockState BROWN_TERRACOTTA = Blocks.DYED_TERRACOTTA.brown().defaultBlockState();
+    public static final BlockState RED_TERRACOTTA = Blocks.DYED_TERRACOTTA.red().defaultBlockState();
+    public static final BlockState LIGHT_GRAY_TERRACOTTA = Blocks.DYED_TERRACOTTA.lightGray().defaultBlockState();
+    *///? } else {
+    public static final BlockState WHITE_TERRACOTTA = Blocks.WHITE_TERRACOTTA.defaultBlockState();
+    public static final BlockState ORANGE_TERRACOTTA = Blocks.ORANGE_TERRACOTTA.defaultBlockState();
+    public static final BlockState YELLOW_TERRACOTTA = Blocks.YELLOW_TERRACOTTA.defaultBlockState();
+    public static final BlockState BROWN_TERRACOTTA = Blocks.BROWN_TERRACOTTA.defaultBlockState();
+    public static final BlockState RED_TERRACOTTA = Blocks.RED_TERRACOTTA.defaultBlockState();
+    public static final BlockState LIGHT_GRAY_TERRACOTTA = Blocks.LIGHT_GRAY_TERRACOTTA.defaultBlockState();
+    //? }
     
     public static final BlockState STONE = Blocks.STONE.defaultBlockState();
     public static final BlockState AIR = Blocks.AIR.defaultBlockState();

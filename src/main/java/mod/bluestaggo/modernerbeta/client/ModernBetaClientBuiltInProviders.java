@@ -233,7 +233,8 @@ public class ModernBetaClientBuiltInProviders {
                     screen.booleanOption("generateSandstone"),
                     screen.booleanOption("erosion"),
                     screen.booleanOption("gravelOceanBed"),
-                    screen.intRangeOption("gravelOceanBedDepth", 0, 64)
+                    screen.intRangeOption("gravelOceanBedDepth", 0, 64),
+                    screen.booleanOption("legacyBadlandsBands")
                 );
             }
         );

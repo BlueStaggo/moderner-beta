@@ -40,6 +40,7 @@
 
     "createWorld.customize.modern_beta.preset": "World Preset",
     "createWorld.customize.modern_beta.preset.custom": "Custom",
+    "createWorld.customize.modern_beta.preset.no_results": "No matching presets",
     "createWorld.customize.modern_beta.preset.type.default": "Default",
     "createWorld.customize.modern_beta.preset.type.custom": "Custom",
 

@@ -23,13 +23,17 @@ import net.minecraft.client.gui.layouts.GridLayout;
 import net.minecraft.client.gui.screens.ConfirmScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.worldselection.WorldCreationContext;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.chunk.ChunkGenerator;
+
+import java.util.List;
 
 public class ModernBetaWorldScreen extends ModernBetaScreen {
     private static final String TEXT_TITLE = "createWorld.customize.modern_beta.title"; 
@@ -100,41 +104,7 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
 
         this.buttonPreset = Button.builder(
             this.getPresetButtonLabel(),
-            button -> this.minecraft.setScreen(new ModernBetaSettingsPresetScreen<>(
-                this,
-                this.presetCategoryRegistry
-                    //? if >=1.21.2 {
-                    .getOrThrow
-                    //?} else {
-                    /*.getOrCreateTag
-                    *///?}
-                    (ModernBetaSettingsPresetCategoryTags.SELECTABLE)
-                    .stream()
-                    .toList(),
-                    (screen, preset) -> {
-                        this.minecraft.setScreen(new ModernBetaSettingsPresetScreen<>(
-                            screen,
-                            this.presetRegistry
-                                //? if >=1.21.2 {
-                                .getOrThrow
-                                //?} else {
-                                /*.getOrCreateTag
-                                 *///?}
-                                (preset.value().presetTag())
-                                .stream()
-                                .toList(),
-                            (parentScreen, settingsPreset) -> {
-                                this.setPreset(ModernBetaSettingsPreset.referenced(settingsPreset));
-
-                            while (this.minecraft.screen instanceof ModernBetaSettingsPresetScreen<?> subPresetScreen) {
-                                this.minecraft.setScreen(subPresetScreen.parent);
-                            }
-                        },
-                        true
-                    ));
-                },
-                false
-            ))
+            button -> this.minecraft.setScreen(this.createPresetScreen())
         ).size(BUTTON_LENGTH_PRESET, BUTTON_HEIGHT_PRESET).build();
 
         HolderGetter<ModernBetaSettingsPreset> presetLookup =
@@ -302,6 +272,66 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
 
         actionRow.addChild(importExportButton);
         actionRow.addChild(dataPackExportButton);
+    }
+
+    private ModernBetaSettingsPresetScreen createPresetScreen() {
+        List<Holder<ModernBetaSettingsPresetCategory>> categories =
+            getTag(this.presetCategoryRegistry, ModernBetaSettingsPresetCategoryTags.SELECTABLE);
+
+        List<ModernBetaSettingsPresetScreen.Item> categoryItems = categories.stream()
+            .map(category -> ModernBetaSettingsPresetScreen.item(
+                category,
+                false,
+                screen -> this.minecraft.setScreen(ModernBetaSettingsPresetScreen.fromHolders(
+                    screen,
+                    this.getPresets(category),
+                    (parentScreen, preset) -> this.selectPreset(preset),
+                    true
+                ))
+            ))
+            .toList();
+        List<ModernBetaSettingsPresetScreen.Item> presetItems = categories.stream()
+            .flatMap(category -> this.getPresets(category).stream())
+            .distinct()
+            .map(preset -> ModernBetaSettingsPresetScreen.item(
+                preset,
+                true,
+                screen -> this.selectPreset(preset)
+            ))
+            .toList();
+
+        return new ModernBetaSettingsPresetScreen(
+            this,
+            categoryItems,
+            presetItems,
+            false
+        );
+    }
+
+    private List<Holder<ModernBetaSettingsPreset>> getPresets(
+        Holder<ModernBetaSettingsPresetCategory> category
+    ) {
+        return getTag(this.presetRegistry, category.value().presetTag());
+    }
+
+    private static <T> List<Holder<T>> getTag(Registry<T> registry, TagKey<T> tag) {
+        return registry
+            //? if >=1.21.2 {
+            .getOrThrow
+            //?} else {
+            /*.getOrCreateTag
+            *///?}
+            (tag)
+            .stream()
+            .toList();
+    }
+
+    private void selectPreset(Holder<ModernBetaSettingsPreset> preset) {
+        this.setPreset(ModernBetaSettingsPreset.referenced(preset));
+
+        while (this.minecraft.screen instanceof ModernBetaSettingsPresetScreen screen) {
+            this.minecraft.setScreen(screen.parent);
+        }
     }
 
     @Override

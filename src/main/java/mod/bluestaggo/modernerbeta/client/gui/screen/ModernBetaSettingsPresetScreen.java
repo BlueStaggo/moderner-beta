@@ -5,9 +5,11 @@ import mod.bluestaggo.modernerbeta.settings.NameAndDescriptionItem;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 //? if <1.21.9
 //import net.minecraft.util.Util;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.client.gui.layouts.GridLayout;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
@@ -21,32 +23,85 @@ import net.minecraft.util.FormattedCharSequence;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
-public class ModernBetaSettingsPresetScreen<T extends NameAndDescriptionItem> extends ModernBetaScreen {
+public class ModernBetaSettingsPresetScreen extends ModernBetaScreen {
     private static final String TEXT_TITLE = "createWorld.customize.modern_beta.title.preset";
+    private static final Component SEARCH_HINT = Component.translatable("createWorld.customize.modern_beta.search")
+        .withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC);
+    private static final Component NO_RESULTS = Component.translatable("createWorld.customize.modern_beta.preset.no_results");
 
-    private final List<Holder<T>> presets;
+    private final List<Item> items;
+    private final List<Item> searchItems;
     private final boolean enableSelect;
-    private final OnSelectedItem<T> onSelected;
 
     private PresetsListWidget listWidget;
     private Button selectPresetButton;
+    private String search = "";
 
     public ModernBetaSettingsPresetScreen(
         ModernBetaScreen parent,
-        List<Holder<T>> presets,
-        OnSelectedItem<T> onSelected,
+        List<Item> items,
+        List<Item> searchItems,
         boolean enableSelect
     ) {
-        super(Component.translatable(TEXT_TITLE), parent);
+        super(Component.translatable(TEXT_TITLE), parent, 40, 33);
 
-        this.presets = presets;
+        this.items = items;
+        this.searchItems = searchItems;
         this.enableSelect = enableSelect;
-        this.onSelected = onSelected;
+    }
+
+    public static <T extends NameAndDescriptionItem> ModernBetaSettingsPresetScreen fromHolders(
+        ModernBetaScreen parent,
+        List<Holder<T>> items,
+        BiConsumer<ModernBetaSettingsPresetScreen, Holder<T>> onSelected,
+        boolean enableSelect
+    ) {
+        List<Item> listItems = items.stream()
+            .map(holder -> item(holder, enableSelect, screen -> onSelected.accept(screen, holder)))
+            .toList();
+
+        return new ModernBetaSettingsPresetScreen(
+            parent,
+            listItems,
+            listItems,
+            enableSelect
+        );
+    }
+
+    public static <T extends NameAndDescriptionItem> Item item(
+        Holder<T> display,
+        boolean selectable,
+        Consumer<ModernBetaSettingsPresetScreen> onSelected
+    ) {
+        Identifier id = display.unwrapKey().orElseThrow().identifier();
+        return new Item(id, display.value(), selectable, onSelected);
+    }
+
+    @Override
+    protected void initHeader(GridLayout headerLayout) {
+        headerLayout.columnSpacing(3);
+        headerLayout.defaultCellSetting().paddingVertical(3);
+
+        super.initHeader(headerLayout);
+
+        EditBox searchBox = headerLayout.addChild(new EditBox(this.font, 0, 0, 200, 15, Component.empty()), 1, 0);
+        searchBox.setHint(SEARCH_HINT);
+        searchBox.setValue(this.search);
+        searchBox.setResponder(search -> {
+            this.search = search;
+            this.listWidget.filterEntries(search);
+        });
     }
     
     @Override
     protected void init() {
+        this.listWidget = new PresetsListWidget();
+
         super.init();
 
         this.updateSelectButton(this.listWidget.getSelected() instanceof PresetsListWidget.PresetEntry);
@@ -54,8 +109,6 @@ public class ModernBetaSettingsPresetScreen<T extends NameAndDescriptionItem> ex
 
     @Override
     protected void initContent(GridLayout contentLayout) {
-        this.listWidget = new PresetsListWidget(this.presets);
-
         //? if >=1.20.2 {
         this.layout.addToContents(this.listWidget);
         //? } else {
@@ -73,7 +126,7 @@ public class ModernBetaSettingsPresetScreen<T extends NameAndDescriptionItem> ex
                 PresetsListWidget.PresetEntry entry = this.listWidget.getSelected();
 
                 if (entry != null) {
-                    this.onSelected.onSelect(this, entry.preset);
+                    entry.item.onSelect().accept(this);
                 }
             }
         ).size(150, 20).build();
@@ -106,6 +159,16 @@ public class ModernBetaSettingsPresetScreen<T extends NameAndDescriptionItem> ex
         super.extractRenderState(graphics, mouseX, mouseY, delta);
         //? if >=1.20.5
         this.listWidget.extractRenderState(graphics, mouseX, mouseY, delta);
+
+        if (this.listWidget.children().isEmpty()) {
+            graphics.centeredText(
+                this.font,
+                NO_RESULTS,
+                this.width / 2,
+                this.layout.getHeaderHeight() + this.layout.getContentHeight() / 2 - 4,
+                CommonColors.GRAY
+            );
+        }
     }
 
     @Override
@@ -131,16 +194,18 @@ public class ModernBetaSettingsPresetScreen<T extends NameAndDescriptionItem> ex
         this.selectPresetButton.active = hasSelected;
     }
 
-    @FunctionalInterface
-    public interface OnSelectedItem<T extends NameAndDescriptionItem> {
-        void onSelect(ModernBetaSettingsPresetScreen<T> screen, Holder<T> preset);
-    }
+    public record Item(
+        Identifier id,
+        NameAndDescriptionItem display,
+        boolean selectable,
+        Consumer<ModernBetaSettingsPresetScreen> onSelect
+    ) {}
 
     private class PresetsListWidget extends ObjectSelectionList<PresetsListWidget.PresetEntry> {
         private static final int ITEM_HEIGHT = 60;
         private static final int ICON_SIZE = 56;
 
-        public PresetsListWidget(List<Holder<T>> presets) {
+        public PresetsListWidget() {
             //? if >=1.20.2 {
             super(
                 ModernBetaSettingsPresetScreen.this.minecraft,
@@ -160,16 +225,38 @@ public class ModernBetaSettingsPresetScreen<T extends NameAndDescriptionItem> ex
             );
             *///?}
 
-            presets.forEach(holder ->
-                this.addEntry(new PresetEntry(holder)));
+            this.filterEntries(ModernBetaSettingsPresetScreen.this.search);
+        }
+
+        private void filterEntries(String filter) {
+            Item selectedItem = this.getSelected() == null ? null : this.getSelected().item;
+            String query = filter.trim().toLowerCase(Locale.ROOT);
+
+            this.clearEntries();
+            List<Item> source = query.isEmpty()
+                ? ModernBetaSettingsPresetScreen.this.items
+                : ModernBetaSettingsPresetScreen.this.searchItems;
+
+            source.stream()
+                .map(PresetEntry::new)
+                .filter(entry -> entry.matches(query))
+                .forEach(this::addEntry);
+
+            if (selectedItem != null) {
+                this.setSelected(this.children().stream()
+                    .filter(entry -> Objects.equals(entry.item, selectedItem))
+                    .findFirst()
+                    .orElse(null));
+            }
+
+            this.setScrollAmount(0);
         }
         
         @Override
         public void setSelected(PresetEntry entry) {
             super.setSelected(entry);
 
-            ModernBetaSettingsPresetScreen.this.updateSelectButton(entry != null &&
-                ModernBetaSettingsPresetScreen.this.enableSelect);
+            ModernBetaSettingsPresetScreen.this.updateSelectButton(entry != null && entry.item.selectable());
         }
 
         private static final int SCROLLBAR_X_OFFSET = 30;
@@ -206,20 +293,24 @@ public class ModernBetaSettingsPresetScreen<T extends NameAndDescriptionItem> ex
             private final Identifier presetTexture;
             private final Component presetTitle;
             private final Component presetDesc;
+            private final String searchText;
 
-            protected final Holder<T> preset;
+            protected final Item item;
 
             //? if <1.21.9
             //private long time;
             
-            public PresetEntry(Holder<T> preset) {
-                this.preset = preset;
+            public PresetEntry(Item item) {
+                this.item = item;
+                this.presetTexture = item.display().getTextureLocation(item.id());
+                this.presetTitle = item.display().makeOrGetTitleComponent(item.id());
+                this.presetDesc = item.display().makeOrGetDescriptionComponent(item.id());
+                this.searchText = (this.presetTitle.getString() + " " + item.id())
+                    .toLowerCase(Locale.ROOT);
+            }
 
-                Identifier presetName = preset.unwrapKey().orElseThrow().identifier();
-
-                this.presetTexture = preset.value().getTextureLocation(presetName);
-                this.presetTitle = preset.value().makeOrGetTitleComponent(presetName);
-                this.presetDesc = preset.value().makeOrGetDescriptionComponent(presetName);
+            private boolean matches(String query) {
+                return query.isEmpty() || this.searchText.contains(query);
             }
 
             @Override
@@ -318,8 +409,7 @@ public class ModernBetaSettingsPresetScreen<T extends NameAndDescriptionItem> ex
                         SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0f)
                     );
 
-                    ModernBetaSettingsPresetScreen.this.onSelected
-                        .onSelect(ModernBetaSettingsPresetScreen.this, this.preset);
+                    this.item.onSelect().accept(ModernBetaSettingsPresetScreen.this);
                 }
 
                 //? if <1.21.9
@@ -333,8 +423,7 @@ public class ModernBetaSettingsPresetScreen<T extends NameAndDescriptionItem> ex
                 if (/*? >=1.21.9 {*/ event.isSelection() /*? } else {*/ /*net.minecraft.client.gui.navigation.CommonInputs.selected(keyCode) *//*? }*/) {
                     minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 
-                    ModernBetaSettingsPresetScreen.this.onSelected
-                        .onSelect(ModernBetaSettingsPresetScreen.this, this.preset);
+                    this.item.onSelect().accept(ModernBetaSettingsPresetScreen.this);
                 }
 
                 return super.keyPressed(/*? >=1.21.9 {*/ event /*? } else {*/ /*keyCode, scanCode, modifiers *//*? }*/);

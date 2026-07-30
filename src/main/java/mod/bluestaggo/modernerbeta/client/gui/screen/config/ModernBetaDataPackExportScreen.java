@@ -130,7 +130,7 @@ public class ModernBetaDataPackExportScreen extends ModernBetaScreen {
 
         this.categoryButton = Button.builder(
             this.getCategoryButtonLabel(),
-            button -> this.minecraft.setScreen(new ModernBetaSettingsPresetScreen<>(
+            button -> this.minecraft.setScreen(ModernBetaSettingsPresetScreen.fromHolders(
                 this,
                 this.presetCategoryRegistry
                     //? if >=1.21.2 {

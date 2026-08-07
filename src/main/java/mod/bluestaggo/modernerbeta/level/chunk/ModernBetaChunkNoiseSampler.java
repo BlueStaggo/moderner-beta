@@ -3,7 +3,6 @@ package mod.bluestaggo.modernerbeta.level.chunk;
 import mod.bluestaggo.modernerbeta.api.level.chunk.ChunkProvider;
 import mod.bluestaggo.modernerbeta.api.level.chunk.ChunkProviderNoise;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkHeightmap;
-import mod.bluestaggo.modernerbeta.util.noise.SimpleDensityFunction;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.levelgen.Aquifer;
@@ -24,6 +23,7 @@ public class ModernBetaChunkNoiseSampler {
     public static NoiseChunk create(
         ChunkAccess chunk,
         RandomState noiseConfig,
+        DensityFunctions.BeardifierOrMarker beardifier,
         NoiseGeneratorSettings chunkGeneratorSettings,
         Aquifer.FluidPicker fluidLevelSampler,
         ChunkProvider chunkProvider
@@ -39,7 +39,7 @@ public class ModernBetaChunkNoiseSampler {
             chunkPos.getMinBlockX(),
             chunkPos.getMinBlockZ(),
             shapeConfig,
-            SimpleDensityFunction.INSTANCE,
+            beardifier,
             chunkGeneratorSettings,
             fluidLevelSampler,
             Blender.empty()

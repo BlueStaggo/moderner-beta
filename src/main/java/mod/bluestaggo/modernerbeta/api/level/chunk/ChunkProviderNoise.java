@@ -226,6 +226,7 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
         NoiseChunk noiseSampler = ModernBetaChunkNoiseSampler.create(
             chunk,
             noiseConfig,
+            DensityFunctions.BeardifierMarker.INSTANCE,
             this.generatorSettings.value(),
             this.getFluidLevelSampler(),
             this

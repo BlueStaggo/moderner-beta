@@ -87,22 +87,14 @@ public record ModernBetaSettingsPreset(
     }
 
     public static ModernBetaSettingsPreset referenced(Holder<ModernBetaSettingsPreset> preset) {
-        ModernBetaSettingsPreset presetValue = preset.value();
         Identifier presetId = preset.unwrapKey().orElseThrow().identifier();
-        RegistryOps.RegistryInfoLookup lookup = presetValue.chunkSettings.registries;
+        return referencedWithMetadata(presetId, preset.value());
+    }
 
-        return new ModernBetaSettingsPreset(
-            Optional.of(presetValue.makeOrGetTitleComponent(presetId)),
-            Optional.of(presetValue.makeOrGetDescriptionComponent(presetId)),
-            ModernBetaSettings.builder(lookup)
-                .add(SettingsComponentTypes.PRESET, presetId)
-                .build(),
-            ModernBetaSettings.builder(lookup)
-                .add(SettingsComponentTypes.PRESET, presetId)
-                .build(),
-            ModernBetaSettings.builder(lookup)
-                .add(SettingsComponentTypes.PRESET, presetId)
-                .build()
+    public static ModernBetaSettingsPreset referencedWithMetadata(Identifier presetId, ModernBetaSettingsPreset preset) {
+        return referenced(presetId, preset.chunkSettings.registries).withNameAndDesc(
+            preset.makeOrGetTitleComponent(presetId),
+            preset.makeOrGetDescriptionComponent(presetId)
         );
     }
 
@@ -276,18 +268,18 @@ public record ModernBetaSettingsPreset(
             return Optional.empty();
         }
 
-        if (presetId.equals(ModernBetaSettings.DEFAULT_PRESET_ID)) {
-            presetId = ModernerBeta.config.getOrDefault(SettingsComponentTypes.CONFIG_MISCELLANEOUS).defaultSettingsPreset();
-        }
-
-        Optional<Holder.Reference<ModernBetaSettingsPreset>> preset = presetRegistry.get(ResourceKey.create(ModernBetaResourceKeys.SETTINGS_PRESET, presetId));
-
+        Identifier resolvedId = presetId.equals(ModernBetaSettings.DEFAULT_PRESET_ID) ?
+            ModernerBeta.getDefaultPresetId() :
+            presetId;
+        Optional<ModernBetaSettingsPreset> preset = presetRegistry
+            .get(ResourceKey.create(ModernBetaResourceKeys.SETTINGS_PRESET, resolvedId))
+            .map(Holder::value)
+            .or(() -> ModernBetaSavedPresetPack.getPreset(resolvedId));
         if (preset.isEmpty()) {
-            LoggingUtil.log(Level.WARN, "Attempted to get Modern Beta preset \"" + presetId + "\", which is not registered.");
-            return Optional.empty();
+            LoggingUtil.log(Level.WARN, "Attempted to get Modern Beta preset \"" + resolvedId + "\", which is not registered.");
         }
 
-        return Optional.of(preset.get().value());
+        return preset;
     }
 
     public ModernBetaSettingsPreset mapped(HolderGetter<ModernBetaSettingsPreset> presetRegistry) {

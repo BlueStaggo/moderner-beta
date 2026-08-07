@@ -1,4 +1,5 @@
 //~registryOr
+//~dotLocation
 package mod.bluestaggo.modernerbeta.client.gui.screen;
 
 import com.mojang.datafixers.util.Pair;
@@ -9,11 +10,14 @@ import mod.bluestaggo.modernerbeta.client.gui.screen.config.json.ModernBetaImpor
 import mod.bluestaggo.modernerbeta.client.gui.screen.config.json.ModernBetaSettingsScreen;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaResourceKeys;
+import mod.bluestaggo.modernerbeta.settings.ModernBetaSavedPresetPack;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
+import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPresets;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPresetCategory;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.tags.ModernBetaSettingsPresetCategoryTags;
+import mod.bluestaggo.modernerbeta.util.LoggingUtil;
 import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaChunkGenerator;
 import net.minecraft.ChatFormatting;
@@ -28,10 +32,13 @@ import net.minecraft.core.HolderGetter;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.chunk.ChunkGenerator;
+import org.slf4j.event.Level;
+
+import java.io.IOException;
+import java.nio.file.Path;
 
 import java.util.List;
 
@@ -53,11 +60,14 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
     private static final String TEXT_SETTINGS_JSON = "createWorld.customize.modern_beta.settings.json";
     private static final String TEXT_SETTINGS_IMPORT_EXPORT = "createWorld.customize.modern_beta.settings.import_export";
     private static final String TEXT_SETTINGS_DATA_PACK_EXPORT = "createWorld.customize.modern_beta.settings.data_pack_export";
+    private static final String TEXT_SETTINGS_SET_DEFAULT = "createWorld.customize.modern_beta.settings.set_default";
+    private static final String TEXT_SETTINGS_DEFAULT_SAVED = "createWorld.customize.modern_beta.settings.default_saved";
+    private static final String TEXT_SETTINGS_DEFAULT_SAVE_FAILED = "createWorld.customize.modern_beta.settings.default_save_failed";
     private static final String TEXT_SETTINGS_RESET = "createWorld.customize.modern_beta.settings.reset";
     private static final String TEXT_SETTINGS_RESET_MESSAGE = "createWorld.customize.modern_beta.settings.reset.message";
     private static final String TEXT_SETTINGS_PREVIEW = "createWorld.customize.modern_beta.settings.preview";
     private static final String TEXT_HINT_SETTINGS = "createWorld.customize.modern_beta.hint.settings";
-    
+
     private final OnSettingsSave onDone;
     private final WorldCreationContext context;
     private final Registry<ModernBetaSettingsPreset> presetRegistry;
@@ -65,6 +75,7 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
 
     private ModernBetaSettingsPreset preset;
     private Button buttonPreset;
+    private Button buttonSetDefault;
 
     public ModernBetaWorldScreen(Screen parent, WorldCreationContext context, OnSettingsSave onDone) {
         super(Component.translatable(TEXT_TITLE), parent, 33, 40);
@@ -90,16 +101,20 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
     public void setPreset(ModernBetaSettingsPreset preset) {
         this.preset = preset;
         this.buttonPreset.setMessage(this.getPresetButtonLabel());
+        this.buttonSetDefault.setMessage(Component.translatable(TEXT_SETTINGS_SET_DEFAULT));
     }
 
     @Override
     protected void initContent(GridLayout contentLayout) {
+        GridLayout gridWidgetPreset = new GridLayout();
         GridLayout gridWidgetSettings = this.createGridWidget();
         GridLayout gridWidgetActions = this.createGridWidget();
 
         GridLayout.RowHelper mainRows = contentLayout.createRowHelper(1);
+        GridLayout.RowHelper presetRow = gridWidgetPreset.createRowHelper(2);
         GridLayout.RowHelper settingsRows = gridWidgetSettings.createRowHelper(3);
         GridLayout.RowHelper actionRow = gridWidgetActions.createRowHelper(2);
+        presetRow.defaultCellSetting().paddingHorizontal(2);
         settingsRows.defaultCellSetting().alignVerticallyMiddle();
 
         this.buttonPreset = Button.builder(
@@ -107,12 +122,12 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
             button -> this.minecraft.setScreen(this.createPresetScreen())
         ).size(BUTTON_LENGTH_PRESET, BUTTON_HEIGHT_PRESET).build();
 
-        HolderGetter<ModernBetaSettingsPreset> presetLookup =
-            //? if >=1.21.2 {
-            this.presetRegistry;
-            //?} else {
-            /*this.presetRegistry.asLookup();
-            *///?}
+        this.buttonSetDefault = Button.builder(
+            Component.translatable(TEXT_SETTINGS_SET_DEFAULT),
+            this::saveDefaultPreset
+        ).size(100, BUTTON_HEIGHT).build();
+
+        HolderGetter<ModernBetaSettingsPreset> presetLookup = this.getPresetLookup();
 
         Button buttonChunk = Button.builder(
             Component.translatable(TEXT_SETTINGS),
@@ -259,7 +274,10 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
             this.minecraft.setScreen(new ModernBetaDataPackExportScreen(TEXT_SETTINGS_DATA_PACK_EXPORT, this, this.preset, this.context.worldgenLoadContext()))
         ).pos(0, 20).build();
 
-        mainRows.addChild(this.buttonPreset);
+        presetRow.addChild(this.buttonPreset);
+        presetRow.addChild(this.buttonSetDefault);
+
+        mainRows.addChild(gridWidgetPreset);
         mainRows.addChild(gridWidgetSettings);
         mainRows.addChild(gridWidgetActions);
 
@@ -371,39 +389,86 @@ public class ModernBetaWorldScreen extends ModernBetaScreen {
     }
 
     private void resetPreset() {
-        this.setPreset(ModernBetaSettingsPreset.referenced(
-                ModernerBeta.config.getOrDefault(SettingsComponentTypes.CONFIG_MISCELLANEOUS).defaultSettingsPreset()));
+        Identifier presetId = ModernerBeta.getDefaultPresetId();
+        ModernBetaSettingsPreset preset = ModernBetaSettingsPreset
+            .getPreset(presetId, this.getPresetLookup())
+            .orElse(null);
+        if (preset == null) {
+            Identifier fallbackId = ModernBetaSettingsPresets.BETA_1_7_3.identifier();
+            LoggingUtil.log(Level.WARN, "Default preset {} is unavailable; using {}", presetId, fallbackId);
+            presetId = fallbackId;
+            preset = ModernBetaSettingsPreset.getPreset(presetId, this.getPresetLookup()).orElse(null);
+        }
+        this.setPreset(preset == null ?
+            ModernBetaSettingsPreset.referenced(presetId) :
+            ModernBetaSettingsPreset.referencedWithMetadata(presetId, preset));
     }
 
-    private Identifier getPresetKey() {
-        Identifier presetKey = null;
-        for (ModernBetaSettings settings : this.preset.asList()) {
-            Identifier subPresetKey = settings.get(SettingsComponentTypes.PRESET);
-            if (ModernBetaSettings.DEFAULT_PRESET_ID.equals(subPresetKey)) {
-                subPresetKey = ModernerBeta.config.getOrDefault(SettingsComponentTypes.CONFIG_MISCELLANEOUS).defaultSettingsPreset();
-            }
+    private void saveDefaultPreset(Button button) {
+        Identifier presetId = this.getDirectPresetId();
 
-            if (subPresetKey == null || presetKey != null && !presetKey.equals(subPresetKey)) {
+        if (presetId == null) {
+            Path configDir = ModernerBeta.getConfigDir();
+            if (configDir != null) {
+                try {
+                    presetId = ModernBetaSavedPresetPack.save(
+                        configDir,
+                        this.preset,
+                        this.getPresetLookup(),
+                        this.context.worldgenLoadContext()
+                    );
+                } catch (IOException | RuntimeException exception) {
+                    LoggingUtil.log(Level.ERROR, "Failed to save custom default preset", exception);
+                }
+            }
+        }
+
+        boolean saved = presetId != null && ModernerBeta.setDefaultSettingsPreset(presetId);
+        button.setMessage(Component.translatable(
+            saved ? TEXT_SETTINGS_DEFAULT_SAVED : TEXT_SETTINGS_DEFAULT_SAVE_FAILED
+        ));
+    }
+
+    private HolderGetter<ModernBetaSettingsPreset> getPresetLookup() {
+        //? if >=1.21.2 {
+        return this.presetRegistry;
+        //?} else {
+        /*return this.presetRegistry.asLookup();
+        *///?}
+    }
+
+    private Identifier getDirectPresetId() {
+        return this.preset.asList().stream().allMatch(settings -> settings.size() == 1) ?
+            this.getPresetId() :
+            null;
+    }
+
+    private Identifier getPresetId() {
+        Identifier presetId = null;
+        for (ModernBetaSettings settings : this.preset.asList()) {
+            Identifier settingsPresetId = settings.resolveDefaultPreset().get(SettingsComponentTypes.PRESET);
+
+            if (settingsPresetId == null || presetId != null && !presetId.equals(settingsPresetId)) {
                 return null;
             }
-            presetKey = subPresetKey;
+            presetId = settingsPresetId;
         }
-        return presetKey;
+        return presetId;
     }
 
     private Component getPresetButtonLabel() {
-        MutableComponent presetText = Component.translatable(TEXT_PRESET).append(": ");
-        presetText.append(
-            preset.presetName().orElseGet(() -> {
-                Identifier presetKey = this.getPresetKey();
-
-                return presetKey == null ?
-                    Component.translatable(TEXT_PRESET_CUSTOM).withStyle(ChatFormatting.AQUA) :
-                    Component.translatable(TEXT_PRESET_NAME + "." + presetKey.toLanguageKey()).withStyle(ChatFormatting.YELLOW);
-            })
-        );
-
-        return presetText;
+        Component name = this.preset.presetName().orElse(null);
+        if (name == null) {
+            Identifier presetId = this.getPresetId();
+            name = presetId == null ?
+                Component.translatable(TEXT_PRESET_CUSTOM).withStyle(ChatFormatting.AQUA) :
+                ModernBetaSettingsPreset.getPreset(presetId, this.getPresetLookup())
+                    .map(preset -> preset.makeOrGetTitleComponent(presetId))
+                    .orElseGet(() -> Component.translatable(
+                        TEXT_PRESET_NAME + "." + presetId.toLanguageKey()
+                    ).withStyle(ChatFormatting.YELLOW));
+        }
+        return Component.translatable(TEXT_PRESET).append(": ").append(name);
     }
 
     public interface OnSettingsSave {

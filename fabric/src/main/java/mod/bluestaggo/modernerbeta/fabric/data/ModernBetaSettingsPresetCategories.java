@@ -3,6 +3,7 @@ package mod.bluestaggo.modernerbeta.fabric.data;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaResourceKeys;
+import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPresets;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPresetCategory;
 import mod.bluestaggo.modernerbeta.tags.ModernBetaSettingsPresetTags;
 import net.minecraft.data.worldgen.BootstrapContext;

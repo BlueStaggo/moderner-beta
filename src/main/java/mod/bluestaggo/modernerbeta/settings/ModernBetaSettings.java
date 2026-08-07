@@ -137,7 +137,7 @@ public class ModernBetaSettings implements Iterable<SettingsComponent<?>> {
     }
 
     public ModernBetaSettings mapPreset(HolderGetter<ModernBetaSettingsPreset> presetRegistry, Function<ModernBetaSettingsPreset, ModernBetaSettings> settingsProvider) {
-        ModernBetaSettings settings = this;
+        ModernBetaSettings settings = this.resolveDefaultPreset();
 
         while (true) {
             Identifier presetId = settings.get(SettingsComponentTypes.PRESET);
@@ -152,6 +152,16 @@ public class ModernBetaSettings implements Iterable<SettingsComponent<?>> {
                     .remove(SettingsComponentTypes.PRESET))
                 .build();
         }
+    }
+
+    public ModernBetaSettings resolveDefaultPreset() {
+        if (ModernerBeta.GENERATING_DATA || !DEFAULT_PRESET_ID.equals(this.getOrDefault(SettingsComponentTypes.PRESET))) {
+            return this;
+        }
+
+        return this.extend()
+            .add(SettingsComponentTypes.PRESET, ModernerBeta.getDefaultPresetId())
+            .build();
     }
 
     public Optional<ModernBetaSettings> getBasePresetSettings(HolderGetter<ModernBetaSettingsPreset> presetRegistry, Function<ModernBetaSettingsPreset, ModernBetaSettings> settingsProvider) {

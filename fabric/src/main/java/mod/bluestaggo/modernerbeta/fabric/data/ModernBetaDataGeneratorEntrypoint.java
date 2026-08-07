@@ -63,7 +63,7 @@ public class ModernBetaDataGeneratorEntrypoint implements DataGeneratorEntrypoin
         registryBuilder.add(Registries.NOISE_SETTINGS, ModernBetaNoiseGeneratorSettings::bootstrap);
         registryBuilder.add(Registries.STRUCTURE, ModernBetaStructures::bootstrap);
         registryBuilder.add(Registries.WORLD_PRESET, ModernBetaWorldPresets::bootstrap);
-        registryBuilder.add(ModernBetaResourceKeys.SETTINGS_PRESET, ModernBetaSettingsPresets::bootstrap);
+        registryBuilder.add(ModernBetaResourceKeys.SETTINGS_PRESET, ModernBetaSettingsPresetData::bootstrap);
         registryBuilder.add(ModernBetaResourceKeys.SETTINGS_PRESET_CATEGORY, ModernBetaSettingsPresetCategories::bootstrap);
         registryBuilder.add(ModernBetaResourceKeys.SURFACE_CONFIG, ModernBetaSurfaceConfigs::bootstrap);
     }

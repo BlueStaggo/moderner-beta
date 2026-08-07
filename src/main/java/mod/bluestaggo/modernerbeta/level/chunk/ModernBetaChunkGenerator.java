@@ -94,7 +94,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
 
         this.presetRegistry = presetRegistry;
         this.surfaceConfigRegistry = surfaceConfigRegistry;
-        this.chunkSettings = fixupPreset(chunkProviderSettings);
+        this.chunkSettings = chunkProviderSettings.resolveDefaultPreset();
 
         if (this.biomeSource instanceof ModernBetaBiomeSource modernBetaBiomeSource) {
             modernBetaBiomeSource.setChunkGenerator(this);
@@ -105,22 +105,8 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
         HolderGetter<ModernBetaSettingsPreset> presetRegistry,
         ModernBetaSettings chunkProviderSettings
     ) {
-        ModernBetaSettings fixedSettings = fixupPreset(chunkProviderSettings);
+        ModernBetaSettings fixedSettings = chunkProviderSettings.resolveDefaultPreset();
         return DefferedDirectHolder.of(() -> noiseGeneratorSettings(fixedSettings, presetRegistry));
-    }
-
-    private static ModernBetaSettings fixupPreset(ModernBetaSettings chunkProviderSettings) {
-        if (!ModernerBeta.GENERATING_DATA && ModernBetaSettings.DEFAULT_PRESET_ID.equals(
-            chunkProviderSettings.getOrDefault(SettingsComponentTypes.PRESET))) {
-            chunkProviderSettings = chunkProviderSettings
-                .extend()
-                .remove(SettingsComponentTypes.PRESET)
-                .add(SettingsComponentTypes.PRESET, ModernerBeta.config
-                    .getOrDefault(SettingsComponentTypes.CONFIG_MISCELLANEOUS).defaultSettingsPreset())
-                .build();
-        }
-
-        return chunkProviderSettings;
     }
 
     private static NoiseGeneratorSettings noiseGeneratorSettings(

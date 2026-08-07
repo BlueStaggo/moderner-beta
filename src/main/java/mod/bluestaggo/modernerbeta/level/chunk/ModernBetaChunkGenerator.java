@@ -1,6 +1,7 @@
 //~registryOr
 package mod.bluestaggo.modernerbeta.level.chunk;
 
+import com.google.common.base.Suppliers;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.api.level.chunk.surface.SurfaceConfig;
 import mod.bluestaggo.modernerbeta.compat.ModCompat;

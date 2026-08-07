@@ -5,6 +5,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.LevelHeightAccessor;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 
 import java.util.Optional;
@@ -22,9 +23,9 @@ public interface SpawnLocator {
         BlockPos.MutableBlockPos spawnPos = new BlockPos.MutableBlockPos(x, y, z);
 
         if (y > minY &&
-            levelReader.getBlockState(spawnPos.below()).blocksMotion() &&
-            !levelReader.getBlockState(spawnPos).blocksMotion() &&
-            !levelReader.getBlockState(spawnPos.above()).blocksMotion() &&
+            blocksMotion(levelReader.getBlockState(spawnPos.below())) &&
+            !blocksMotion(levelReader.getBlockState(spawnPos)) &&
+            !blocksMotion(levelReader.getBlockState(spawnPos.above())) &&
             levelReader.getFluidState(spawnPos).isEmpty() &&
             levelReader.getFluidState(spawnPos.above()).isEmpty()
         ) {
@@ -48,6 +49,14 @@ public interface SpawnLocator {
         }
 
         return Optional.empty();
+    }
+
+    private static boolean blocksMotion(BlockState state) {
+        //? if >=26.3 {
+        /*return state.is(net.minecraft.tags.BlockTags.BLOCKS_MOTION_IN_HEIGHTMAP);
+        *///? } else {
+        return state.blocksMotion();
+        //? }
     }
     
     SpawnLocator DEFAULT = level -> Optional.empty();

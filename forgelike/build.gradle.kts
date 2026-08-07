@@ -83,7 +83,9 @@ tasks.processResources {
         name = "accesstransformer.cfg"
     }
 
-    exclude("assets/moderner_beta/icon.png")
+    if (stonecutter.eval(stonecutter.current.version, "<26.2")) {
+        exclude("assets/moderner_beta/icon.png")
+    }
     exclude("moderner_beta*.accesswidener")
     exclude("META-INF/at-forge.cfg")
 }

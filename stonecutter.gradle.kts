@@ -161,3 +161,7 @@ stonecutter.parameters {
         }
     }
 }
+
+stonecutter handlers {
+    inherit("yaml", "toml")
+}

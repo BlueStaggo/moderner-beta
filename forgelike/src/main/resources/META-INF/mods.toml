@@ -18,7 +18,12 @@ credits = "SuperCoder7979, Arenovas, Amb0s, PaulEvs, comp500, ErzeKawe"
 description = '''
 Old (and not so old) world generation for modern Minecraft!
 '''
+#? if neoforge && >=26.2 {
+#bannerFile = "assets/moderner_beta/banner.png"
+#iconFile = "assets/moderner_beta/icon.png"
+#? } else {
 logoFile = "assets/moderner_beta/banner.png"
+#? }
 
 [[dependencies.moderner_beta]]
 modId = "${loader}"

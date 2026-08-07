@@ -1,5 +1,7 @@
 {
     "generator.moderner_beta.moderner_beta": "Moderner Beta",
+    "pack.moderner_beta.exported_preset": "Moderner Beta exported preset",
+    "pack.moderner_beta.saved_presets": "Moderner Beta saved default presets",
 
     "createWorld.customize.modern_beta.title": "Moderner Beta World Customization",
     "createWorld.customize.modern_beta.title.chunk": "Moderner Beta Chunk Customization",
@@ -28,6 +30,9 @@
     "createWorld.customize.modern_beta.settings.data_pack_export.preset_description": "Preset Description:",
     "createWorld.customize.modern_beta.settings.data_pack_export.export": "Export",
     "createWorld.customize.modern_beta.settings.data_pack_export.save_as_title": "Select where you want to export to",
+    "createWorld.customize.modern_beta.settings.set_default": "Set as Default",
+    "createWorld.customize.modern_beta.settings.default_saved": "Default Saved",
+    "createWorld.customize.modern_beta.settings.default_save_failed": "Save Failed",
 
     "createWorld.customize.modern_beta.settings.json": "✎",
     "createWorld.customize.modern_beta.settings.reset": "Reset settings",
@@ -40,6 +45,7 @@
 
     "createWorld.customize.modern_beta.preset": "World Preset",
     "createWorld.customize.modern_beta.preset.custom": "Custom",
+    "createWorld.customize.modern_beta.preset.no_results": "No matching presets",
     "createWorld.customize.modern_beta.preset.type.default": "Default",
     "createWorld.customize.modern_beta.preset.type.custom": "Custom",
 
@@ -348,6 +354,8 @@
     "createWorld.customize.modern_beta.settings.surface_properties.generateSandstone": "Generate Sandstone",
     "createWorld.customize.modern_beta.settings.surface_properties.erosion": "Erosion",
     "createWorld.customize.modern_beta.settings.surface_properties.gravelOceanBed": "Gravel Ocean Bed",
+    "createWorld.customize.modern_beta.settings.surface_properties.gravelOceanBedDepth": "Gravel Ocean Bed Depth",
+    "createWorld.customize.modern_beta.settings.surface_properties.legacyBadlandsBands": "Legacy Badlands Bands",
     "createWorld.customize.modern_beta.settings.infdev_227_structures": "Infdev Structures",
     "createWorld.customize.modern_beta.settings.infdev_227_structures.brickPyramids": "Brick Pyramids",
     "createWorld.customize.modern_beta.settings.infdev_227_structures.obsidianWalls": "Obsidian Walls",

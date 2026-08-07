@@ -1,8 +1,8 @@
 package mod.bluestaggo.modernerbeta.fabric.data.provider.tag;
 
-import mod.bluestaggo.modernerbeta.fabric.data.ModernBetaSettingsPresets;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaResourceKeys;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
+import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPresets;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
 import net.minecraft.core.HolderLookup;

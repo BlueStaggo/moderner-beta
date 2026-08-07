@@ -1,3 +1,4 @@
+//~dotLocation
 package mod.bluestaggo.modernerbeta;
 
 import com.google.gson.GsonBuilder;
@@ -17,9 +18,13 @@ import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaResourceKeys;
 import mod.bluestaggo.modernerbeta.services.ModernBetaServices;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
+import mod.bluestaggo.modernerbeta.settings.ModernBetaSavedPresetPack;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
+import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPresets;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPresetCategory;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
+import mod.bluestaggo.modernerbeta.settings.component.MiscConfig;
+import mod.bluestaggo.modernerbeta.util.AtomicFile;
 import mod.bluestaggo.modernerbeta.util.CodecUtil;
 import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ConfiguredLayers;
@@ -40,8 +45,8 @@ import net.minecraft.resources.Identifier;
 import org.slf4j.event.Level;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
@@ -78,6 +83,7 @@ public class ModernerBeta {
     public static List<Pair<ResourceKey<?>, Codec<?>>> CUSTOM_DYNAMIC_REGISTRIES;
     public static INetworkHelper networkHelper;
     public static ModernBetaSettings config;
+    private static Path configDir;
 
     public static void init() {
         LoggingUtil.log(Level.INFO, "Initializing Moderner Beta...");
@@ -118,6 +124,7 @@ public class ModernerBeta {
     }
 
     public static void loadConfig(Path configDir) {
+        ModernerBeta.configDir = configDir;
         Path configFile = configDir.resolve(MOD_ID + ".json");
         try (BufferedReader reader = Files.newBufferedReader(configFile)) {
             config = ModernBetaSettings.CODEC.decode(
@@ -142,24 +149,59 @@ public class ModernerBeta {
             exception.printStackTrace();
             config = ModernBetaSettings.empty();
         }
+
+        if (ModernBetaSavedPresetPack.exists(configDir)) {
+            ModernBetaSavedPresetPack.refreshMetadata(configDir);
+        }
     }
 
-    public static void saveConfig(Path configDir) {
+    public static boolean saveConfig(Path configDir) {
         Path configFile = configDir.resolve(MOD_ID + ".json");
 
         DataResult<JsonElement> encodedConfig = ModernBetaSettings.CODEC.encode(config, JsonOps.INSTANCE, new JsonObject());
         if (encodedConfig.result().isEmpty()) {
             LoggingUtil.log(Level.WARN, "Failed to serialize config to JSON: " + encodedConfig);
-            return;
+            return false;
         }
 
         try {
-            Files.createDirectories(configDir);
-            try (BufferedWriter writer = Files.newBufferedWriter(configFile)) {
-                getSettingsGson().setPrettyPrinting().create().toJson(encodedConfig.result().get(), writer);
-            }
+            byte[] bytes = getSettingsGson()
+                .setPrettyPrinting()
+                .create()
+                .toJson(encodedConfig.result().get())
+                .getBytes(StandardCharsets.UTF_8);
+            AtomicFile.write(configFile, bytes);
+            return true;
         } catch (IOException exception) {
-            exception.printStackTrace();
+            LoggingUtil.log(Level.ERROR, "Failed to save config: " + exception.getMessage());
+            return false;
         }
+    }
+
+    public static boolean setDefaultSettingsPreset(Identifier presetId) {
+        MiscConfig misc = config.getOrDefault(SettingsComponentTypes.CONFIG_MISCELLANEOUS);
+        ModernBetaSettings previousConfig = config;
+        config = previousConfig.extend()
+            .add(SettingsComponentTypes.CONFIG_MISCELLANEOUS, new MiscConfig(
+                misc.oldFogColorWeighting(),
+                presetId
+            ))
+            .build();
+        if (configDir != null && saveConfig(configDir)) {
+            return true;
+        }
+
+        config = previousConfig;
+        return false;
+    }
+
+    public static Identifier getDefaultPresetId() {
+        return config == null ?
+            ModernBetaSettingsPresets.BETA_1_7_3.identifier() :
+            config.getOrDefault(SettingsComponentTypes.CONFIG_MISCELLANEOUS).defaultSettingsPreset();
+    }
+
+    public static Path getConfigDir() {
+        return configDir;
     }
 }

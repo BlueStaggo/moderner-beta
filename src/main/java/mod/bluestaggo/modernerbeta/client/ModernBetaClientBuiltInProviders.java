@@ -232,7 +232,9 @@ public class ModernBetaClientBuiltInProviders {
                     screen.booleanOption("generateBeaches"),
                     screen.booleanOption("generateSandstone"),
                     screen.booleanOption("erosion"),
-                    screen.booleanOption("gravelOceanBed")
+                    screen.booleanOption("gravelOceanBed"),
+                    screen.intRangeOption("gravelOceanBedDepth", 0, 64),
+                    screen.booleanOption("legacyBadlandsBands")
                 );
             }
         );

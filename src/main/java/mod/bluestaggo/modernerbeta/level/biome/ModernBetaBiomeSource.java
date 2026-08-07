@@ -76,25 +76,8 @@ public class ModernBetaBiomeSource extends BiomeSource {
     ) {
         super();
 
-        if (!ModernerBeta.GENERATING_DATA && ModernBetaSettings.DEFAULT_PRESET_ID.equals(
-            biomeSettings.getOrDefault(SettingsComponentTypes.PRESET))) {
-            biomeSettings = biomeSettings
-                .extend()
-                .remove(SettingsComponentTypes.PRESET)
-                .add(SettingsComponentTypes.PRESET, ModernerBeta.config
-                    .getOrDefault(SettingsComponentTypes.CONFIG_MISCELLANEOUS).defaultSettingsPreset())
-                .build();
-        }
-
-        if (!ModernerBeta.GENERATING_DATA && ModernBetaSettings.DEFAULT_PRESET_ID.equals(
-            caveBiomeSettings.getOrDefault(SettingsComponentTypes.PRESET))) {
-            caveBiomeSettings = caveBiomeSettings
-                .extend()
-                .remove(SettingsComponentTypes.PRESET)
-                .add(SettingsComponentTypes.PRESET, ModernerBeta.config
-                    .getOrDefault(SettingsComponentTypes.CONFIG_MISCELLANEOUS).defaultSettingsPreset())
-                .build();
-        }
+        biomeSettings = biomeSettings.resolveDefaultPreset();
+        caveBiomeSettings = caveBiomeSettings.resolveDefaultPreset();
 
         this.biomeRegistry = biomeRegistry;
         this.presetRegistry = presetRegistry;

@@ -33,6 +33,7 @@ accessible method net/minecraft/world/level/levelgen/NoiseChunk cachedClimateSam
 accessible class net/minecraft/world/level/levelgen/DensityFunctions$WeirdScaledSampler
 #? }
 
+accessible class net/minecraft/world/level/levelgen/DensityFunctions$BeardifierMarker
 #? if >=26.3 {
 #accessible field net/minecraft/world/level/levelgen/Aquifer$NoiseBasedAquifer noiseChunk Lnet/minecraft/world/level/levelgen/NoiseChunk;
 #accessible field net/minecraft/world/level/levelgen/Aquifer$NoiseBasedAquifer surfaceLevelCache Lit/unimi/dsi/fastutil/longs/Long2IntMap;

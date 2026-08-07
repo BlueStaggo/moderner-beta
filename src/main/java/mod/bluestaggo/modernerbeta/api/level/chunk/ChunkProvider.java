@@ -275,6 +275,10 @@ public abstract class ChunkProvider {
         return this.chunkSettings;
     }
 
+    public long getSeed() {
+        return this.seed;
+    }
+
     protected RandomSource createRandom(long seed) {
         return new LegacyRandomSource(seed);
     }

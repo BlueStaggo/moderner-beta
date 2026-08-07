@@ -556,6 +556,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
         return ModernBetaChunkNoiseSampler.create(
             chunk,
             noiseConfig,
+            Beardifier.forStructuresInChunk(manager, chunk.getPos()),
             this.generatorSettings().value(),
             this.chunkProvider.getFluidLevelSampler(),
             this.chunkProvider

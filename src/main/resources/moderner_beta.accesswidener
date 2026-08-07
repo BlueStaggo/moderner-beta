@@ -26,3 +26,4 @@ accessible method net/minecraft/world/level/levelgen/NoiseChunk cachedClimateSam
 #? } else {
 accessible class net/minecraft/world/level/levelgen/DensityFunctions$WeirdScaledSampler
 #? }
+accessible class net/minecraft/world/level/levelgen/DensityFunctions$BeardifierMarker

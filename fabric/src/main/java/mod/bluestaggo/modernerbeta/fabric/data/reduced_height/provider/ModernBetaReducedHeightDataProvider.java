@@ -275,9 +275,9 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
                 //? if <26.3
                 noises,
                 //? if >=26.3 {
-                /*functionNames
+                /*functionNames,
                 *///? } else {
-                , largeBiomes,
+                largeBiomes,
                 amplified
                 //? }
             ),

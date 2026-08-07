@@ -5,14 +5,8 @@ import mod.bluestaggo.modernerbeta.api.level.chunk.ChunkProviderNoise;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkHeightmap;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.chunk.ChunkAccess;
-import net.minecraft.world.level.levelgen.Aquifer;
+import net.minecraft.world.level.levelgen.*;
 import net.minecraft.world.level.levelgen.Aquifer.FluidPicker;
-import net.minecraft.world.level.levelgen.DensityFunctions;
-import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.level.levelgen.NoiseChunk;
-import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
-import net.minecraft.world.level.levelgen.NoiseSettings;
-import net.minecraft.world.level.levelgen.RandomState;
 import net.minecraft.world.level.levelgen.blending.Blender;
 
 public class ModernBetaChunkNoiseSampler {
@@ -23,6 +17,7 @@ public class ModernBetaChunkNoiseSampler {
     public static NoiseChunk create(
         ChunkAccess chunk,
         RandomState noiseConfig,
+        //~ if >=26.3 'DensityFunctions.BeardifierOrMarker' -> 'Beardifier'
         DensityFunctions.BeardifierOrMarker beardifier,
         NoiseGeneratorSettings chunkGeneratorSettings,
         Aquifer.FluidPicker fluidLevelSampler,
@@ -56,6 +51,7 @@ public class ModernBetaChunkNoiseSampler {
         int startX,
         int startZ,
         NoiseSettings shapeConfig,
+        //~ if >=26.3 'DensityFunctions.BeardifierOrMarker' -> 'Beardifier'
         DensityFunctions.BeardifierOrMarker beardifying,
         NoiseGeneratorSettings settings,
         FluidPicker fluidLevelSampler,
@@ -81,6 +77,7 @@ public class ModernBetaChunkNoiseSampler {
             int startX,
             int startZ,
             NoiseSettings shapeConfig,
+            //~ if >=26.3 'DensityFunctions.BeardifierOrMarker' -> 'Beardifier'
             DensityFunctions.BeardifierOrMarker beardifying,
             NoiseGeneratorSettings settings,
             FluidPicker fluidLevelSampler,

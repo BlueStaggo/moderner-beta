@@ -7,7 +7,7 @@ import it.unimi.dsi.fastutil.doubles.DoubleList;
 import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import net.minecraft.world.level.levelgen.SingleThreadedRandomSource;
-import net.minecraft.world.level.levelgen.synth.PerlinNoise;
+import net.minecraft.world.level.levelgen.synth.*;
 
 import java.util.Comparator;
 import java.util.List;
@@ -41,6 +41,7 @@ public class MappedNoiseLayer extends Layer {
     private final double scale;
     private final DoubleList amplitudes;
     private final boolean useSaltedSeed;
+    //~ if >=26.3 'PerlinNoise' -> 'Noise'
     private transient PerlinNoise noiseSampler;
 
     public MappedNoiseLayer(String id, long seed, List<Entry> values, double scale, List<Double> amplitudes, boolean useSaltedSeed) {
@@ -77,6 +78,7 @@ public class MappedNoiseLayer extends Layer {
     public void init(long worldSeed) {
         super.init(worldSeed);
         long noiseSeed = this.useSaltedSeed ? this.getSaltedSeed() : worldSeed;
+        //~ if >=26.3 'PerlinNoise.createLegacyForLegacyNetherBiome' -> 'LegacyFbmInitializer.createForLegacyNetherBiome'
         this.noiseSampler = PerlinNoise.createLegacyForLegacyNetherBiome(new SingleThreadedRandomSource(noiseSeed), 0, amplitudes);
     }
 
@@ -84,11 +86,13 @@ public class MappedNoiseLayer extends Layer {
     @SuppressWarnings("deprecation")
     public void initUnsalted() {
         super.initUnsalted();
+        //~ if >=26.3 'PerlinNoise.createLegacyForLegacyNetherBiome' -> 'LegacyFbmInitializer.createForLegacyNetherBiome'
         this.noiseSampler = PerlinNoise.createLegacyForLegacyNetherBiome(new SingleThreadedRandomSource(0), 0, amplitudes);
     }
 
     @Override
     protected ExtendedIdentifier generate(int x, int z) {
+        //~ if >=26.3 'getValue' -> 'get'
         double noiseValue = this.noiseSampler.getValue(x / this.scale, z / this.scale, 0.0);
 
         for (Entry lowerBiome : this.lowerBiomes) {

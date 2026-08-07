@@ -13,13 +13,14 @@ public interface NoiseRouterDataAccessor {
     @Invoker
     static NoiseRouter invokeOverworld(
         HolderGetter<DensityFunction> densityFunctionLookup,
+        //? if <26.3
         HolderGetter<NormalNoise.NoiseParameters> noiseParametersLookup,
         //? if >=26.3 {
-        /*OverworldFunctionSet<ResourceKey<DensityFunction>> functionNames,
+        /*OverworldFunctionSet<ResourceKey<DensityFunction>> functionNames
         *///? } else {
-        boolean largeBiomes,
-        //? }
+        , boolean largeBiomes,
         boolean amplified
+        //? }
     ) {
         throw new AssertionError();
     }

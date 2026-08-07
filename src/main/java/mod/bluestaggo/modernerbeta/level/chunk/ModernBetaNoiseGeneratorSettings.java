@@ -12,7 +12,6 @@ import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.levelgen.*;
 import net.minecraft.world.level.levelgen.synth.NormalNoise;
-import net.minecraft.world.level.levelgen.synth.NormalNoise.NoiseParameters;
 
 import java.util.List;
 //? if >=26.3
@@ -38,12 +37,12 @@ public class ModernBetaNoiseGeneratorSettings {
         HolderGetter<NormalNoise.NoiseParameters> noiseParametersLookup
     ) {
         //? if <26.3 {
-        Reference<NoiseParameters> aquiferBarrier = noiseParametersLookup.getOrThrow(Noises.AQUIFER_BARRIER);
-        Reference<NoiseParameters> aquiferFloodedness = noiseParametersLookup.getOrThrow(Noises.AQUIFER_FLUID_LEVEL_FLOODEDNESS);
-        Reference<NoiseParameters> aquiferSpread = noiseParametersLookup.getOrThrow(Noises.AQUIFER_FLUID_LEVEL_SPREAD);
-        Reference<NoiseParameters> aquiferLava = noiseParametersLookup.getOrThrow(Noises.AQUIFER_LAVA);
+        Reference<NormalNoise.NoiseParameters> aquiferBarrier = noiseParametersLookup.getOrThrow(Noises.AQUIFER_BARRIER);
+        Reference<NormalNoise.NoiseParameters> aquiferFloodedness = noiseParametersLookup.getOrThrow(Noises.AQUIFER_FLUID_LEVEL_FLOODEDNESS);
+        Reference<NormalNoise.NoiseParameters> aquiferSpread = noiseParametersLookup.getOrThrow(Noises.AQUIFER_FLUID_LEVEL_SPREAD);
+        Reference<NormalNoise.NoiseParameters> aquiferLava = noiseParametersLookup.getOrThrow(Noises.AQUIFER_LAVA);
         //? }
-        Reference<NoiseParameters> caveEntranceNoise = noiseParametersLookup.getOrThrow(Noises.CAVE_ENTRANCE);
+        Reference<NormalNoise.NoiseParameters> caveEntranceNoise = noiseParametersLookup.getOrThrow(Noises.CAVE_ENTRANCE);
 
         //? if <26.3 {
         DensityFunction functionAquiferBarrier = DensityFunctions.noise(aquiferBarrier, 0.5);
@@ -54,19 +53,19 @@ public class ModernBetaNoiseGeneratorSettings {
         DensityFunction functionCaveEntranceNoise = DensityFunctions.noise(caveEntranceNoise);
 
         DensityFunction functionSlopedCheeseEstimate = DensityFunctions.add(
-            DensityFunctions.yClampedGradient(0, 64, 3.0, 1.0),
+            DensityFunctions.yClampedGradient(0, 64, 3.0F, 1.0F),
             DensityFunctions.mul(
-                DensityFunctions.constant(-0.5),
+                DensityFunctions.constant(-0.5F),
                 functionCaveEntranceNoise
             )
         );
         DensityFunction functionCaveEntrances = DensityFunctions.min(
             functionSlopedCheeseEstimate,
-            DensityFunctions.mul(DensityFunctions.constant(5.0),
+            DensityFunctions.mul(DensityFunctions.constant(5.0F),
                 new DensityFunctions.HolderHolder(densityFunctionLookup.getOrThrow(NoiseRouterDataAccessor.getEntrancesKey())))
         );
         DensityFunction functionCaves = DensityFunctions.rangeChoice(
-            functionSlopedCheeseEstimate, -1000000.0, 1.5625, functionCaveEntrances,
+            functionSlopedCheeseEstimate, -1000000.0F, 1.5625F, functionCaveEntrances,
             NoiseRouterDataAccessor.invokeUnderground(densityFunctionLookup, noiseParametersLookup, functionSlopedCheeseEstimate)
         );
         DensityFunction functionCavesWithNoodles = DensityFunctions.min(
@@ -99,10 +98,10 @@ public class ModernBetaNoiseGeneratorSettings {
 
     //? if >=26.3 {
     /*private static Aquifer.Config createAquiferConfig(HolderGetter<NormalNoise.NoiseParameters> noiseParametersLookup) {
-        Reference<NoiseParameters> aquiferBarrier = noiseParametersLookup.getOrThrow(Noises.AQUIFER_BARRIER);
-        Reference<NoiseParameters> aquiferFloodedness = noiseParametersLookup.getOrThrow(Noises.AQUIFER_FLUID_LEVEL_FLOODEDNESS);
-        Reference<NoiseParameters> aquiferSpread = noiseParametersLookup.getOrThrow(Noises.AQUIFER_FLUID_LEVEL_SPREAD);
-        Reference<NoiseParameters> aquiferLava = noiseParametersLookup.getOrThrow(Noises.AQUIFER_LAVA);
+        Reference<NormalNoise.NoiseParameters> aquiferBarrier = noiseParametersLookup.getOrThrow(Noises.AQUIFER_BARRIER);
+        Reference<NormalNoise.NoiseParameters> aquiferFloodedness = noiseParametersLookup.getOrThrow(Noises.AQUIFER_FLUID_LEVEL_FLOODEDNESS);
+        Reference<NormalNoise.NoiseParameters> aquiferSpread = noiseParametersLookup.getOrThrow(Noises.AQUIFER_FLUID_LEVEL_SPREAD);
+        Reference<NormalNoise.NoiseParameters> aquiferLava = noiseParametersLookup.getOrThrow(Noises.AQUIFER_LAVA);
 
         DensityFunction functionAquiferBarrier = DensityFunctions.noise(aquiferBarrier, 0.5);
         DensityFunction functionAquiferFloodedness = DensityFunctions.noise(aquiferFloodedness, 0.67);

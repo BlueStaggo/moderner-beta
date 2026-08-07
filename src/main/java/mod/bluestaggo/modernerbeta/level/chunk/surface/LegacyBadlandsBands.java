@@ -5,22 +5,21 @@ import mod.bluestaggo.modernerbeta.util.random.BedrockRandomSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.LegacyRandomSource;
-import net.minecraft.world.level.levelgen.synth.PerlinSimplexNoise;
+import net.minecraft.world.level.levelgen.synth.SimplexNoise;
 
 import java.util.Arrays;
-import java.util.List;
 
 public final class LegacyBadlandsBands {
     private static final int SIZE = 64;
 
     private final BlockState[] bands = new BlockState[SIZE];
-    private final PerlinSimplexNoise offsetNoise;
+    private final SimplexNoise offsetNoise;
 
     public LegacyBadlandsBands(long seed, boolean bedrock) {
         RandomSource random = bedrock ? new BedrockRandomSource(seed) : new LegacyRandomSource(seed);
 
         Arrays.fill(this.bands, BlockStates.TERRACOTTA);
-        this.offsetNoise = new PerlinSimplexNoise(random, List.of(0));
+        this.offsetNoise = new SimplexNoise(random /*? if >=26.3 {*//*, true *//*? }*/);
 
         for (int y = 0; y < SIZE; ++y) {
             y += random.nextInt(5) + 1;
@@ -52,7 +51,8 @@ public final class LegacyBadlandsBands {
     }
 
     public BlockState sample(int x, int y, int z) {
-        int offset = (int)Math.round(this.offsetNoise.getValue(x / 512.0, z / 512.0, false) * 2.0);
+        //~ if >=26.3 'getValue' -> 'get'
+        int offset = (int)Math.round(this.offsetNoise.getValue(x / 512.0, z / 512.0) * 2.0);
         return this.bands[Math.floorMod(y + offset, SIZE)];
     }
 

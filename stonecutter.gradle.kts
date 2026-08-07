@@ -163,6 +163,7 @@ stonecutter.parameters {
         string(eval(current.version, ">=26.3")) {
             replace("ConfiguredWorldCarver<?>>", "WorldCarver>")
             replace("import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver", "import net.minecraft.world.level.levelgen.carver.WorldCarver")
+            replace("<NormalNoise.NoiseParameters>", "<NormalNoise>")
         }
     }
 }

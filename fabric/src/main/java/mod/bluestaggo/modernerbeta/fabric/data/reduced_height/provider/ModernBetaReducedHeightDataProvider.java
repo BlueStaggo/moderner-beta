@@ -272,13 +272,14 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
             Blocks.WATER.defaultBlockState(),
             mod.bluestaggo.modernerbeta.fabric.mixin.NoiseRouterDataAccessor.invokeOverworld(
                 functions,
+                //? if <26.3
                 noises,
                 //? if >=26.3 {
-                /*functionNames,
+                /*functionNames
                 *///? } else {
-                largeBiomes,
-                //? }
+                , largeBiomes,
                 amplified
+                //? }
             ),
             //? if >=26.3 {
             /*provider.lookupOrThrow(Registries.MATERIAL_RULE).getOrThrow(net.minecraft.data.worldgen.material.OverworldMaterialRules.OVERWORLD),
@@ -339,7 +340,7 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
         DensityFunction spaghettiRarity = DensityFunctions.cacheOnce(DensityFunctions.noise(
                 noiseParametersLookup.getOrThrow(Noises.SPAGHETTI_3D_RARITY), 2.0, 1.0));
         DensityFunction spaghettiThickness = DensityFunctions.mappedNoise(
-                noiseParametersLookup.getOrThrow(Noises.SPAGHETTI_3D_THICKNESS), -0.065, -0.088);
+                noiseParametersLookup.getOrThrow(Noises.SPAGHETTI_3D_THICKNESS), -0.065F, -0.088F);
 
         //? >=26.2 {
         /*DensityFunction weirdSpaghetti1 = NoiseRouterData.QuantizedSpaghettiRarity.wrapRarity3d(spaghettiRarity,
@@ -353,14 +354,14 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
                 noiseParametersLookup.getOrThrow(Noises.SPAGHETTI_3D_2), DensityFunctions.WeirdScaledSampler.RarityValueMapper.TYPE1);
         //? }
 
-        DensityFunction mainSpaghetti = DensityFunctions.add(DensityFunctions.max(weirdSpaghetti1, weirdSpaghetti2), spaghettiThickness).clamp(-1.0, 1.0);
+        DensityFunction mainSpaghetti = DensityFunctions.add(DensityFunctions.max(weirdSpaghetti1, weirdSpaghetti2), spaghettiThickness).clamp(-1.0F, 1.0F);
         DensityFunction spaghettiRoughness = new DensityFunctions.HolderHolder(
                 densityFunctionLookup.getOrThrow(mod.bluestaggo.modernerbeta.fabric.mixin.NoiseRouterDataAccessor.getSpaghettiRoughnessFunction()));
 
         DensityFunction entranceNoise = DensityFunctions.noise(noiseParametersLookup.getOrThrow(
                 Noises.CAVE_ENTRANCE), 0.75, 0.5);
         DensityFunction mainEntrance = DensityFunctions.add(
-                DensityFunctions.add(entranceNoise, DensityFunctions.constant(0.37)), DensityFunctions.yClampedGradient(10, 30, 0.3, 0.0)
+                DensityFunctions.add(entranceNoise, DensityFunctions.constant(0.37F)), DensityFunctions.yClampedGradient(10, 30, 0.3F, 0.0F)
         );
         return DensityFunctions.cacheOnce(DensityFunctions.min(mainEntrance, DensityFunctions.add(spaghettiRoughness, mainSpaghetti)));
     }
@@ -378,17 +379,17 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
         DensityFunction noodleNoise = verticalRangeChoice(y, DensityFunctions.noise(
                 noiseParametersLookup.getOrThrow(Noises.NOODLE), 1.0, 1.0), min, max, -1);
         DensityFunction noodleThickness = verticalRangeChoice(y, DensityFunctions.mappedNoise(
-                noiseParametersLookup.getOrThrow(Noises.NOODLE_THICKNESS), 1.0, 1.0, -0.05, -0.1), min, max, 0);
+                noiseParametersLookup.getOrThrow(Noises.NOODLE_THICKNESS), 1.0, 1.0, -0.05F, -0.1F), min, max, 0);
 
         double scale = 8D / 3D;
         DensityFunction noodleRidgeA = verticalRangeChoice(y, DensityFunctions.noise(
                 noiseParametersLookup.getOrThrow(Noises.NOODLE_RIDGE_A), scale, scale), min, max, 0);
         DensityFunction noodleRidgeB = verticalRangeChoice(y, DensityFunctions.noise(
                 noiseParametersLookup.getOrThrow(Noises.NOODLE_RIDGE_B), scale, scale), min, max, 0);
-        DensityFunction noodleRidges = DensityFunctions.mul(DensityFunctions.constant(1.5),
+        DensityFunction noodleRidges = DensityFunctions.mul(DensityFunctions.constant(1.5F),
                 DensityFunctions.max(noodleRidgeA.abs(), noodleRidgeB.abs()));
 
-        return DensityFunctions.rangeChoice(noodleNoise, -1000000.0, 0.0,
+        return DensityFunctions.rangeChoice(noodleNoise, -1000000.0F, 0.0F,
                 DensityFunctions.constant(absMin + 64), DensityFunctions.add(noodleThickness, noodleRidges));
     }
 
@@ -406,16 +407,16 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
                 Noises.SPAGHETTI_2D), DensityFunctions.WeirdScaledSampler.RarityValueMapper.TYPE2);
         //? }
         DensityFunction spaghettiElevation = DensityFunctions.mappedNoise(noiseParametersLookup.getOrThrow(
-                Noises.SPAGHETTI_2D_ELEVATION), 0.0, Math.floorDiv(-64, 8), 8.0);
+                Noises.SPAGHETTI_2D_ELEVATION), 0.0, Math.floorDiv(-64, 8), 8.0F);
         DensityFunction spaghettiThicknessModulator = new DensityFunctions.HolderHolder(
                 densityFunctionLookup.getOrThrow(mod.bluestaggo.modernerbeta.fabric.mixin.NoiseRouterDataAccessor.getSpaghetti2dThicknessModulator()));
 
-        DensityFunction clampedElevation = DensityFunctions.add(spaghettiElevation, DensityFunctions.yClampedGradient(0, 320, 8.0, -40.0)).abs();
+        DensityFunction clampedElevation = DensityFunctions.add(spaghettiElevation, DensityFunctions.yClampedGradient(0, 320, 8.0F, -40.0F)).abs();
         DensityFunction minSpaghetti = DensityFunctions.add(clampedElevation, spaghettiThicknessModulator).cube();
-        double d = 0.083;
+        float d = 0.083F;
         DensityFunction maxSpaghetti = DensityFunctions.add(weirdSpaghetti, DensityFunctions.mul(
                 DensityFunctions.constant(d), spaghettiThicknessModulator));
-        return DensityFunctions.max(maxSpaghetti, minSpaghetti).clamp(-1.0, 1.0);
+        return DensityFunctions.max(maxSpaghetti, minSpaghetti).clamp(-1.0F, 1.0F);
     }
 
     private static DensityFunction verticalRangeChoice(DensityFunction y, DensityFunction whenInRange, int minInclusive, int maxInclusive, int whenOutOfRange) {

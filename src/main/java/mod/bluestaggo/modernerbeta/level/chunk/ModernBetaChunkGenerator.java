@@ -283,6 +283,8 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
             if (this.biomeSource instanceof ModernBetaBiomeSource modernBetaBiomeSource) {
                 modernBetaSurfaceSystem.modernerBeta$setupBiomeContext(modernBetaBiomeSource);
             }
+
+            modernBetaSurfaceSystem.modernerBeta$beforeSurfaceBuild(chunk);
         }
 
         ModCompat.useModernBetaSurfaceRules = true;

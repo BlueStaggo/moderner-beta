@@ -38,6 +38,7 @@ public class SurfaceSystemMixin implements ModernBetaSurfaceSystem {
     @Unique private ChunkProvider modernerBeta$chunkProvider;
     @Unique private ModernBetaBiomeSource modernerBeta$biomeSource;
     @Unique private LegacyBadlandsBands modernerBeta$badlandsBands;
+    @Unique private SurfaceProperties modernerBeta$surfaceProperties;
     @Unique private final ThreadLocal<RandomSource> modernerBeta$surfaceRandom = new ThreadLocal<>();
 
     @Override
@@ -50,6 +51,7 @@ public class SurfaceSystemMixin implements ModernBetaSurfaceSystem {
         ModernBetaSettings chunkSettings = chunkProvider.getChunkSettings();
         SurfaceProperties surface = chunkSettings.getOrDefault(SettingsComponentTypes.SURFACE_PROPERTIES);
         Noise3DSettings noise = chunkSettings.getOrDefault(SettingsComponentTypes.NOISE_3D_SETTINGS);
+        this.modernerBeta$surfaceProperties = surface;
         this.modernerBeta$badlandsBands = surface.legacyBadlandsBands()
             ? new LegacyBadlandsBands(chunkProvider.getSeed(), noise.pocketEditionRng())
             : null;
@@ -153,9 +155,32 @@ public class SurfaceSystemMixin implements ModernBetaSurfaceSystem {
         if (this.modernerBeta$chunkProvider == null)
             return;
 
-        int surfaceDepth = this.modernerBeta$chunkProvider
-                .getSurfaceDepth(this.modernerBeta$surfaceRandom.get(), blockX, blockZ);
+        RandomSource rand = this.modernerBeta$surfaceRandom.get();
+
+        //to get random values to match up with what they're supposed to be
+        if (this.modernerBeta$surfaceProperties.enableBeaches()) {
+            rand.consumeCount(2 * 2);
+        }
+
+        //because we cannot just blindly consumeCount for nextInt.
+        if (this.modernerBeta$surfaceProperties.bedrockHoles()) {
+            rand.nextInt(6);
+        } else {
+            rand.nextInt(5);
+        }
+
+        int surfaceDepth = this.modernerBeta$chunkProvider.getSurfaceDepth(rand, blockX, blockZ);
         cir.setReturnValue(surfaceDepth);
+    }
+
+    @Inject(method = "getSurfaceSecondary", at = @At("HEAD"), cancellable = true)
+    private void useMBRandomDepth(int blockX, int blockZ, CallbackInfoReturnable<Double> cir) {
+        if (this.modernerBeta$chunkProvider == null)
+            return;
+
+        RandomSource rand = this.modernerBeta$surfaceRandom.get();
+        int depth = rand.nextInt(4);
+        cir.setReturnValue((depth / 3.0) * 2.0 - 1.0);
     }
 
     @Inject(method = "getBand", at = @At("HEAD"), cancellable = true)

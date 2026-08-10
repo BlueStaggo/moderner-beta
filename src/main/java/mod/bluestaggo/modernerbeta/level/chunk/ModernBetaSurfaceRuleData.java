@@ -12,6 +12,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.Noises;
 import net.minecraft.world.level.levelgen.SurfaceRules;
 import net.minecraft.world.level.levelgen.VerticalAnchor;
+import net.minecraft.world.level.levelgen.placement.CaveSurface;
 import net.minecraft.world.level.levelgen.synth.NormalNoise;
 
 import java.util.List;
@@ -50,6 +51,9 @@ public class ModernBetaSurfaceRuleData {
     /*private static final SurfaceRules.RuleSource CINNABAR = makeStateRule(Blocks.CINNABAR);
     private static final SurfaceRules.RuleSource SULFUR = makeStateRule(Blocks.SULFUR);
     *///? }
+
+    //Moderner Beta: Changed to 0-3, from 0-6.
+    public static final SurfaceRules.ConditionSource DEEP_UNDER_FLOOR = SurfaceRules.stoneDepthCheck(0, true, 3, CaveSurface.FLOOR);
 
     private static SurfaceRules.RuleSource makeStateRule(final Block block) {
         return SurfaceRules.state(block.defaultBlockState());
@@ -277,7 +281,7 @@ public class ModernBetaSurfaceRuleData {
                 SurfaceRules.sequence(
                     //Moderner Beta: removed hole rules here
                     SurfaceRules.ifTrue(SurfaceRules.UNDER_FLOOR, biomeUnderSurfaceRule),
-                    SurfaceRules.ifTrue(biomesWithSandAndSandstone, SurfaceRules.ifTrue(SurfaceRules.DEEP_UNDER_FLOOR, SANDSTONE)),
+                    SurfaceRules.ifTrue(biomesWithSandAndSandstone, SurfaceRules.ifTrue(DEEP_UNDER_FLOOR, SANDSTONE)),
                     SurfaceRules.ifTrue(biomesWithSandAndVeryDeepSandstone, SurfaceRules.ifTrue(SurfaceRules.VERY_DEEP_UNDER_FLOOR, SANDSTONE))
                 )
             ),

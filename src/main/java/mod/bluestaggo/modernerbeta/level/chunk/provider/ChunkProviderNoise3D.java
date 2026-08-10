@@ -404,6 +404,24 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
                 boolean genSandBeach = generateBeaches && sandValue + rand.nextDouble() * 0.2D > 0.0D;
                 boolean genGravelBeach = generateBeaches && gravelValue + rand.nextDouble() * 0.2D > 3.0D;
 
+                if (this.surfaceProperties.generateBedrock()) {
+                    if (this.surfaceProperties.uniformBedrock()) {
+                        VersionCompat.setBlockState(chunk, pos.atY(this.bedrockFloor), BlockStates.BEDROCK);
+                        continue;
+                    }
+
+                    for (int y = this.bedrockFloor; y < this.bedrockFloor + 5; y++) {
+                        int bedrockOffset = this.surfaceProperties.bedrockHoles()
+                                ? rand.nextInt(6) - 1
+                                : rand.nextInt(5);
+
+                        if (y <= this.bedrockFloor + bedrockOffset) {
+                            pos.setY(y);
+                            VersionCompat.setBlockState(chunk, pos, BlockStates.BEDROCK);
+                        }
+                    }
+                }
+
                 double surfaceDepth = this.getSurfaceDepth(rand, x, z);
 
                 Holder<Biome> biome = biomeSource.getBiomeForSurfaceGen(region, pos.set(x, surfaceTopY, z));
@@ -435,24 +453,6 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
                                 VersionCompat.setBlockState(chunk, pos, beach.fillerBlock());
                                 pos.setY(--y);
                             }
-                        }
-                    }
-                }
-
-                if (this.surfaceProperties.generateBedrock()) {
-                    if (this.surfaceProperties.uniformBedrock()) {
-                        VersionCompat.setBlockState(chunk, pos.atY(this.bedrockFloor), BlockStates.BEDROCK);
-                        continue;
-                    }
-
-                    for (y = this.bedrockFloor; y < this.bedrockFloor + 5; y++) {
-                        int bedrockOffset = this.surfaceProperties.bedrockHoles()
-                            ? rand.nextInt(6) - 1
-                            : rand.nextInt(5);
-
-                        if (y <= this.bedrockFloor + bedrockOffset) {
-                            pos.setY(y);
-                            VersionCompat.setBlockState(chunk, pos, BlockStates.BEDROCK);
                         }
                     }
                 }

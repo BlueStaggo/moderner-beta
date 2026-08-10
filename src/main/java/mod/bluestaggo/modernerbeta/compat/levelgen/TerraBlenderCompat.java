@@ -1,6 +1,10 @@
 package mod.bluestaggo.modernerbeta.compat.levelgen;
 
 import mod.bluestaggo.modernerbeta.util.LoggingUtil;
+//? if >=26.2 {
+/*import net.minecraft.core.HolderGetter;
+import net.minecraft.world.level.biome.Biome;
+*///? }
 import net.minecraft.world.level.levelgen.SurfaceRules;
 import org.slf4j.event.Level;
 
@@ -21,8 +25,13 @@ public class TerraBlenderCompat implements SurfaceRuleCompatHelper {
             Class<Enum> ruleCategory = (Class<Enum>) Class.forName("terrablender.api.SurfaceRuleManager$RuleCategory");
             ruleStage = (Class<Enum>) Class.forName("terrablender.api.SurfaceRuleManager$RuleStage");
 
-            getAdditions = ruleManager.getMethod("getDefaultSurfaceRuleAdditionsForStage",
-                    ruleCategory, Class.forName("terrablender.api.SurfaceRuleManager$RuleStage"));
+            getAdditions = ruleManager.getMethod(
+                "getDefaultSurfaceRuleAdditionsForStage",
+                ruleCategory,
+                Class.forName("terrablender.api.SurfaceRuleManager$RuleStage")
+                //? if >=26.2
+                //, HolderGetter.class
+            );
             overworld = Enum.valueOf(ruleCategory, "OVERWORLD");
         } catch (Exception e) {
             throw new RuntimeException("Failed to initialise TerraBlender compatibility!", e);
@@ -31,10 +40,15 @@ public class TerraBlenderCompat implements SurfaceRuleCompatHelper {
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<SurfaceRules.RuleSource> getPreBedrockCustomRules() {
+    public List<SurfaceRules.RuleSource> getPreBedrockCustomRules(/*? >=26.2 {*/ /*HolderGetter<Biome> biomes *//*? }*/) {
         try {
-            return (List<SurfaceRules.RuleSource>)
-                    getAdditions.invoke(null, overworld, Enum.valueOf(ruleStage, "BEFORE_BEDROCK"));
+            return (List<SurfaceRules.RuleSource>) getAdditions.invoke(
+                null,
+                overworld,
+                Enum.valueOf(ruleStage, "BEFORE_BEDROCK")
+                //? if >=26.2
+                //, biomes
+            );
         } catch (Exception e) {
             LoggingUtil.log(Level.ERROR, "Failed to get custom TerraBlender rules to add!", e);
         }
@@ -44,10 +58,15 @@ public class TerraBlenderCompat implements SurfaceRuleCompatHelper {
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<SurfaceRules.RuleSource> getPostBedrockCustomRules() {
+    public List<SurfaceRules.RuleSource> getPostBedrockCustomRules(/*? >=26.2 {*/ /*HolderGetter<Biome> biomes *//*? }*/) {
         try {
-            return (List<SurfaceRules.RuleSource>)
-                    getAdditions.invoke(null, overworld, Enum.valueOf(ruleStage, "AFTER_BEDROCK"));
+            return (List<SurfaceRules.RuleSource>) getAdditions.invoke(
+                null,
+                overworld,
+                Enum.valueOf(ruleStage, "AFTER_BEDROCK")
+                //? if >=26.2
+                //, biomes
+            );
         } catch (Exception e) {
             LoggingUtil.log(Level.ERROR, "Failed to get custom TerraBlender rules to add!", e);
         }

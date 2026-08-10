@@ -5,6 +5,10 @@ import mod.bluestaggo.modernerbeta.compat.levelgen.SurfaceRuleCompatHelper;
 import mod.bluestaggo.modernerbeta.compat.levelgen.TerraBlenderCompat;
 import mod.bluestaggo.modernerbeta.compat.levelgen.ValkyrienSkiesCompat;
 import mod.bluestaggo.modernerbeta.compat.levelgen.LevelGenCompatHelper;
+//? if >=26.2 {
+/*import net.minecraft.core.HolderGetter;
+import net.minecraft.world.level.biome.Biome;
+*///? }
 import net.minecraft.world.level.levelgen.SurfaceRules;
 
 import java.util.HashSet;
@@ -44,25 +48,25 @@ public class ModCompat {
         return false;
     }
 
-    public static List<SurfaceRules.RuleSource> getPreBedrockCustomRules() {
+    public static List<SurfaceRules.RuleSource> getPreBedrockCustomRules(/*? >=26.2 {*/ /*HolderGetter<Biome> biomes *//*? }*/) {
         if (surfaceRuleHelpers.isEmpty())
             return List.of();
 
         ImmutableList.Builder<SurfaceRules.RuleSource> builder = ImmutableList.builder();
         for (SurfaceRuleCompatHelper helper : surfaceRuleHelpers) {
-            builder.addAll(helper.getPreBedrockCustomRules());
+            builder.addAll(helper.getPreBedrockCustomRules(/*? >=26.2 {*/ /*biomes *//*? }*/));
         }
 
         return builder.build();
     }
 
-    public static List<SurfaceRules.RuleSource> getPostBedrockCustomRules() {
+    public static List<SurfaceRules.RuleSource> getPostBedrockCustomRules(/*? >=26.2 {*/ /*HolderGetter<Biome> biomes *//*? }*/) {
         if (surfaceRuleHelpers.isEmpty())
             return List.of();
 
         ImmutableList.Builder<SurfaceRules.RuleSource> builder = ImmutableList.builder();
         for (SurfaceRuleCompatHelper helper : surfaceRuleHelpers) {
-            builder.addAll(helper.getPostBedrockCustomRules());
+            builder.addAll(helper.getPostBedrockCustomRules(/*? >=26.2 {*/ /*biomes *//*? }*/));
         }
 
         return builder.build();

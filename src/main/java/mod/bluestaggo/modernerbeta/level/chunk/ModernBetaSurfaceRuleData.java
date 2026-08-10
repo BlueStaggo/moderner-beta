@@ -294,7 +294,7 @@ public class ModernBetaSurfaceRuleData {
         ImmutableList.Builder<SurfaceRules.RuleSource> builder = ImmutableList.builder();
 
         //Moderner Beta: mod compat custom rules (pre-bedrock)
-        List<SurfaceRules.RuleSource> preBedrockCustomRules = ModCompat.getPreBedrockCustomRules();
+        List<SurfaceRules.RuleSource> preBedrockCustomRules = ModCompat.getPreBedrockCustomRules(/*? >=26.2 {*/ /*biomes *//*? }*/);
         builder.addAll(preBedrockCustomRules);
 
         if (bedrockRoof) {
@@ -306,7 +306,7 @@ public class ModernBetaSurfaceRuleData {
         }
 
         //Moderner Beta: mod compat custom rules (post-bedrock)
-        List<SurfaceRules.RuleSource> postBedrockCustomRules = ModCompat.getPostBedrockCustomRules();
+        List<SurfaceRules.RuleSource> postBedrockCustomRules = ModCompat.getPostBedrockCustomRules(/*? >=26.2 {*/ /*biomes *//*? }*/);
 
         if (!postBedrockCustomRules.isEmpty()) {
             ImmutableList.Builder<SurfaceRules.RuleSource> mainRebuilder = ImmutableList.builder();

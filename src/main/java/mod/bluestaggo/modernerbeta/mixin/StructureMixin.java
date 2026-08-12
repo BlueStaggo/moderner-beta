@@ -20,7 +20,8 @@ public abstract class StructureMixin {
     @Inject(method = "isValidBiome", at = @At("HEAD"), cancellable = true)
     private static void injectIsValidBiome(GenerationStub stub, GenerationContext context, CallbackInfoReturnable<Boolean> info) {
         BlockPos blockPos = stub.position();
-        
+
+        //~ if >=26.3 'biomeSource()' -> 'biomeResolver()'
         if (context.biomeSource() instanceof ModernBetaBiomeSource biomeSource) {
             if (biomeSource.getBiomeInjectionHandler() != null) {
                 Holder<Biome> biome = biomeSource.getBiomeInjectionHandler().getBiome(

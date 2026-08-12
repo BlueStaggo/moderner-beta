@@ -28,6 +28,8 @@ import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.levelgen.*;
 import net.minecraft.world.level.levelgen.carver.*;
+//? if >=26.3
+//import net.minecraft.world.level.levelgen.densityfunction.*;
 import net.minecraft.world.level.levelgen.feature.*;
 //? if <26.3 {
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
@@ -275,7 +277,7 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
                 //? if <26.3
                 noises,
                 //? if >=26.3 {
-                /*functionNames,
+                /*functionNames
                 *///? } else {
                 largeBiomes,
                 amplified

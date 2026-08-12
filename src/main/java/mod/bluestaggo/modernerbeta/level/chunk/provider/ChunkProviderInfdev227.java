@@ -22,13 +22,13 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.LevelHeightAccessor;
 import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.BiomeManager;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -117,7 +117,7 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
     }
 
     @Override
-    public void provideSurface(WorldGenRegion region, StructureManager structureAccessor, ChunkAccess chunk, ModernBetaBiomeSource biomeSource, RandomState noiseConfig) {
+    public void provideSurface(StructureManager structureAccessor, ChunkAccess chunk, ModernBetaBiomeSource biomeSource, BiomeManager biomeManager, RandomState noiseConfig) {
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
         
         ChunkPos chunkPos = chunk.getPos();
@@ -137,7 +137,7 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
                 int z = startZ + localZ;
                 int surfaceTopY = chunk.getHeight(Heightmap.Types.WORLD_SURFACE_WG, x, z) + 1;
 
-                Holder<Biome> biome = biomeSource.getBiomeForSurfaceGen(region, pos.set(x, surfaceTopY, z));
+                Holder<Biome> biome = biomeSource.getBiomeForSurfaceGen(biomeManager, pos.set(x, surfaceTopY, z));
 
                 SurfaceConfig surfaceConfig = this.surfaceBuilder.getSurfaceConfig(biome);
                 BlockState topBlock = surfaceConfig.normal().topBlock();
@@ -192,7 +192,7 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
     }
 
     @Override
-    public void provideSurfaceExtra(WorldGenRegion region, StructureManager structureAccessor, ChunkAccess chunk, ModernBetaBiomeSource biomeSource, RandomState noiseConfig) {
+    public void provideSurfaceExtra(StructureManager structureAccessor, ChunkAccess chunk, ModernBetaBiomeSource biomeSource, BiomeManager biomeManager, RandomState noiseConfig) {
         ChunkPos chunkPos = chunk.getPos();
         int chunkX = chunkPos.x();
         int chunkZ = chunkPos.z();

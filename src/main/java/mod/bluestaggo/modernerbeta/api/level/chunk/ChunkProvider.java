@@ -23,11 +23,11 @@ import mod.bluestaggo.modernerbeta.util.noise.PerlinOctaveNoise;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.LevelHeightAccessor;
 import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.BiomeManager;
 import net.minecraft.world.level.biome.Climate;
 import net.minecraft.world.level.biome.FeatureSorter.StepFeatureData;
 import net.minecraft.world.level.chunk.ChunkAccess;
@@ -100,25 +100,25 @@ public abstract class ChunkProvider {
     
     /**
      * Generates biome-specific surface for given chunk.
-     * 
-     * @param region
+     *
      * @param structureAccessor TODO
      * @param chunk
      * @param biomeSource
-     * @param noiseConfig TODO
+     * @param biomeManager
+     * @param noiseConfig       TODO
      */
-    public abstract void provideSurface(WorldGenRegion region, StructureManager structureAccessor, ChunkAccess chunk, ModernBetaBiomeSource biomeSource, RandomState noiseConfig);
+    public abstract void provideSurface(StructureManager structureAccessor, ChunkAccess chunk, ModernBetaBiomeSource biomeSource, BiomeManager biomeManager, RandomState noiseConfig);
 
     /**
      * Generates biome-specific surface for given chunk on top of surface rules.
      *
-     * @param region
      * @param structureAccessor TODO
      * @param chunk
      * @param biomeSource
-     * @param noiseConfig TODO
+     * @param biomeManager
+     * @param noiseConfig       TODO
      */
-    public void provideSurfaceExtra(WorldGenRegion region, StructureManager structureAccessor, ChunkAccess chunk, ModernBetaBiomeSource biomeSource, RandomState noiseConfig) {
+    public void provideSurfaceExtra(StructureManager structureAccessor, ChunkAccess chunk, ModernBetaBiomeSource biomeSource, BiomeManager biomeManager, RandomState noiseConfig) {
     }
 
     /**
@@ -253,7 +253,11 @@ public abstract class ChunkProvider {
      * @return A biome.
      */
     public Holder<Biome> getBiome(int biomeX, int biomeY, int biomeZ, Climate.Sampler noiseSampler) {
+        //? if >=26.3 {
+        /*return this.chunkGenerator.getBiomeSource().createResolver(noiseSampler).getNoiseBiome(biomeX, biomeY, biomeZ);
+        *///? } else {
         return this.chunkGenerator.getBiomeSource().getNoiseBiome(biomeX, biomeY, biomeZ, noiseSampler);
+        //? }
     }
     
     /**

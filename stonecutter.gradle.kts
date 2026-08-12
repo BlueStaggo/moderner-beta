@@ -164,6 +164,8 @@ stonecutter.parameters {
             replace("ConfiguredWorldCarver<?>>", "WorldCarver>")
             replace("import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver", "import net.minecraft.world.level.levelgen.carver.WorldCarver")
             replace("<NormalNoise.NoiseParameters>", "<NormalNoise>")
+            replace("net.minecraft.world.level.levelgen.DensityFunction", "net.minecraft.world.level.levelgen.densityfunction.DensityFunction")
+            replace("BiomeManager.NoiseBiomeSource", "net.minecraft.world.level.biome.BiomeResolver")
         }
     }
 }

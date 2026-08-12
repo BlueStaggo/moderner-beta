@@ -18,12 +18,12 @@ import mod.bluestaggo.modernerbeta.util.noise.SimpleNoisePos;
 import net.minecraft.util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.LevelHeightAccessor;
 import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.BiomeManager;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -118,7 +118,7 @@ public abstract class ChunkProviderFinite extends ChunkProvider implements Chunk
     }
     
     @Override
-    public void provideSurface(WorldGenRegion region, StructureManager structureAccessor, ChunkAccess chunk, ModernBetaBiomeSource biomeSource, RandomState noiseConfig) {
+    public void provideSurface(StructureManager structureAccessor, ChunkAccess chunk, ModernBetaBiomeSource biomeSource, BiomeManager biomeManager, RandomState noiseConfig) {
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
         
         int startX = chunk.getPos().getMinBlockX();
@@ -131,7 +131,7 @@ public abstract class ChunkProviderFinite extends ChunkProvider implements Chunk
             for (int localZ = 0; localZ < 16; ++localZ) {
                 int x = startX + localX;
                 int z = startZ + localZ;
-                Holder<Biome> biome = biomeSource.getBiomeForSurfaceGen(region, pos.set(x, 0, z));
+                Holder<Biome> biome = biomeSource.getBiomeForSurfaceGen(biomeManager, pos.set(x, 0, z));
                 SurfaceConfig surfaceConfig = this.surfaceBuilder.getSurfaceConfig(biome);
                 
                 boolean isCold;

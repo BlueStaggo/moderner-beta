@@ -30,12 +30,12 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.BiomeManager;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
@@ -148,7 +148,7 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
     }
 
     @Override
-    public void provideSurface(WorldGenRegion region, StructureManager structureAccessor, ChunkAccess chunk, ModernBetaBiomeSource biomeSource, RandomState noiseConfig) {
+    public void provideSurface(StructureManager structureAccessor, ChunkAccess chunk, ModernBetaBiomeSource biomeSource, BiomeManager biomeManager, RandomState noiseConfig) {
         ChunkPos chunkPos = chunk.getPos();
         int chunkX = chunkPos.x();
         int chunkZ = chunkPos.z();
@@ -217,7 +217,7 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
 
                 int runDepth = -1;
 
-                Holder<Biome> biome = biomeSource.getBiomeForSurfaceGen(region, pos.set(x, surfaceTopY, z));
+                Holder<Biome> biome = biomeSource.getBiomeForSurfaceGen(biomeManager, pos.set(x, surfaceTopY, z));
 
                 SurfaceConfig surfaceConfig = this.surfaceBuilder.getSurfaceConfig(biome);
                 BlockState topBlock = surfaceConfig.normal().topBlock();
@@ -334,7 +334,7 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
     }
 
     @Override
-    public void provideSurfaceExtra(WorldGenRegion region, StructureManager structureAccessor, ChunkAccess chunk, ModernBetaBiomeSource biomeSource, RandomState noiseConfig) {
+    public void provideSurfaceExtra(StructureManager structureAccessor, ChunkAccess chunk, ModernBetaBiomeSource biomeSource, BiomeManager biomeManager, RandomState noiseConfig) {
         ChunkPos chunkPos = chunk.getPos();
         int chunkX = chunkPos.x();
         int chunkZ = chunkPos.z();
@@ -347,7 +347,7 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
         RandomSource rand = this.createSurfaceRandom(chunkX, chunkZ);
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
 
-        ChunkHeightmap heightmapChunk = this.hasNoisePostProcessor() ? this.getChunkHeightmap(region, chunkX, chunkZ) : null;
+        ChunkHeightmap heightmapChunk = this.hasNoisePostProcessor() ? this.getChunkHeightmap(chunk.getHeightAccessorForGeneration(), chunkX, chunkZ) : null;
 
         boolean generateBeaches = surfaceProperties.generateBeaches();
 
@@ -424,7 +424,7 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
 
                 double surfaceDepth = this.getSurfaceDepth(rand, x, z);
 
-                Holder<Biome> biome = biomeSource.getBiomeForSurfaceGen(region, pos.set(x, surfaceTopY, z));
+                Holder<Biome> biome = biomeSource.getBiomeForSurfaceGen(biomeManager, pos.set(x, surfaceTopY, z));
                 SurfaceConfig surfaceConfig = this.surfaceBuilder.getSurfaceConfig(biome);
 
                 int y = surfaceTopY;

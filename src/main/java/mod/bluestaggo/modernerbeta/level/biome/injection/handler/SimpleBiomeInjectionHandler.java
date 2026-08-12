@@ -54,7 +54,11 @@ public class SimpleBiomeInjectionHandler implements BiomeInjectionHandler {
     ) {
         BiomeInjectionRule.Step curStep = step;
         if (curStep == BiomeInjectionRule.Step.ALL)
+            //? if >=26.3 {
+            /*return this.modernBetaBiomeSource.createResolver(null).getNoiseBiome(biomeX, biomeY, biomeZ);
+            *///? } else {
             return this.modernBetaBiomeSource.getNoiseBiome(biomeX, biomeY, biomeZ, null);
+            //? }
 
         int prevStepOrdinal = curStep.ordinal() - 1;
 
@@ -64,7 +68,11 @@ public class SimpleBiomeInjectionHandler implements BiomeInjectionHandler {
         }
 
         if (base) {
+            //? if >=26.3 {
+            /*return this.modernBetaBiomeSource.createResolver(null).getNoiseBiome(biomeX, biomeY, biomeZ);
+            *///? } else {
             return this.modernBetaBiomeSource.getNoiseBiome(biomeX, biomeY, biomeZ, null);
+            //? }
         }
 
         return null;

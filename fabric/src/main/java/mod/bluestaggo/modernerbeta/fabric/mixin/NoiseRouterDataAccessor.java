@@ -3,6 +3,8 @@ package mod.bluestaggo.modernerbeta.fabric.mixin;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.levelgen.*;
+//? if >=26.3
+//import net.minecraft.world.level.levelgen.DensityFunction;
 import net.minecraft.world.level.levelgen.synth.NormalNoise;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
@@ -16,7 +18,7 @@ public interface NoiseRouterDataAccessor {
         //? if <26.3
         HolderGetter<NormalNoise.NoiseParameters> noiseParametersLookup,
         //? if >=26.3 {
-        /*OverworldFunctionSet<ResourceKey<DensityFunction>> functionNames,
+        /*OverworldFunctionSet<ResourceKey<DensityFunction>> functionNames
         *///? } else {
         boolean largeBiomes,
         boolean amplified

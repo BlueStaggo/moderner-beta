@@ -25,7 +25,6 @@ import mod.bluestaggo.modernerbeta.settings.component.StructureModifiers;
 //? if >=26.3
 //import mod.bluestaggo.modernerbeta.tags.ModernBetaBlockTags;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
-import mod.bluestaggo.modernerbeta.util.CodecUtil;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.util.random.BedrockRandomSource;
 import mod.bluestaggo.modernerbeta.util.random.BedrockWorldgenRandom;
@@ -58,6 +57,8 @@ import net.minecraft.world.level.levelgen.*;
 //import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.blending.Blender;
 import net.minecraft.world.level.levelgen.carver.*;
+//? if >=26.3
+//import net.minecraft.world.level.levelgen.DensityFunction;
 import net.minecraft.world.level.levelgen.structure.StructureSet;
 import org.jetbrains.annotations.NotNull;
 
@@ -235,7 +236,13 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
     ) {
         return CompletableFuture.supplyAsync(Util.name(() -> {
             NoiseChunk noiseSampler = chunk.getOrCreateNoiseChunk(c -> this.createNoiseChunk(c, structureAccessor, blender, noiseConfig));
-            chunk.fillBiomesFromNoise(this.biomeSource, noiseSampler.cachedClimateSampler(noiseConfig.router() /*? <26.3 {*/, this.generatorSettings().value().spawnTarget() /*? }*/));
+            chunk.fillBiomesFromNoise(
+                //~ if >=26.3 ',' -> '.createResolver('
+                this.biomeSource,
+                noiseSampler.cachedClimateSampler(noiseConfig.router() /*? <26.3 {*/, this.generatorSettings().value().spawnTarget() /*? }*/)
+                //? if >=26.3
+                //)
+            );
             
             return chunk;
         }, () -> "init_biomes"), Util.backgroundExecutor());
@@ -255,7 +262,20 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
     }
 
     @Override
-    public void buildSurface(WorldGenRegion chunkRegion, StructureManager structureAccessor, RandomState noiseConfig, ChunkAccess chunk) {
+    public void buildSurface(
+        //? if <26.3
+        WorldGenRegion chunkRegion,
+        StructureManager structureAccessor,
+        RandomState noiseConfig,
+        ChunkAccess chunk
+        //? if >=26.3 {
+        /*, BiomeManager biomeManager,
+        Blender blender,
+        Set<Holder<Biome>> possibleBiomes
+        *///? }
+    ) {
+        //? if <26.3
+        BiomeManager biomeManager = chunkRegion.getBiomeManager();
         ChunkPos chunkPos = chunk.getPos();
 
         if (ModCompat.skipGeneratingChunk(chunkPos.x(), chunkPos.z()))
@@ -266,13 +286,35 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
         if (!this.chunkProvider.skipChunk(chunkPos.x(), chunkPos.z(), ModernBetaGenerationStep.SURFACE)) {
             if (this.biomeSource instanceof ModernBetaBiomeSource modernBetaBiomeSource) {
                 if (this.useSurfaceRules) {
-                    this.buildDefaultSurface(chunkRegion, structureAccessor, noiseConfig, chunk);
-                    this.chunkProvider.provideSurfaceExtra(chunkRegion, structureAccessor, chunk, modernBetaBiomeSource, noiseConfig);
+                    this.buildDefaultSurface(
+                        //? if <26.3
+                        chunkRegion,
+                        structureAccessor,
+                        noiseConfig,
+                        chunk
+                        //? if >=26.3 {
+                        /*, biomeManager,
+                        blender,
+                        possibleBiomes
+                        *///? }
+                    );
+                    this.chunkProvider.provideSurfaceExtra(structureAccessor, chunk, modernBetaBiomeSource, biomeManager, noiseConfig);
                 } else {
-                    this.chunkProvider.provideSurface(chunkRegion, structureAccessor, chunk, modernBetaBiomeSource, noiseConfig);
+                    this.chunkProvider.provideSurface(structureAccessor, chunk, modernBetaBiomeSource, biomeManager, noiseConfig);
                 }
             } else {
-                super.buildSurface(chunkRegion, structureAccessor, noiseConfig, chunk);
+                super.buildSurface(
+                    //? if <26.3
+                    chunkRegion,
+                    structureAccessor,
+                    noiseConfig,
+                    chunk
+                    //? if >=26.3 {
+                    /*, biomeManager,
+                    blender,
+                    possibleBiomes
+                    *///? }
+                );
             }
         }
 
@@ -326,24 +368,63 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
         ModCompat.useModernBetaSurfaceRules = false;
     }
 
-    public void buildDefaultSurface(WorldGenRegion chunkRegion, StructureManager structureAccessor, RandomState noiseConfig, ChunkAccess chunk) {
-        super.buildSurface(chunkRegion, structureAccessor, noiseConfig, chunk);
+    public void buildDefaultSurface(
+        //? if <26.3
+        WorldGenRegion chunkRegion,
+        StructureManager structureAccessor,
+        RandomState noiseConfig,
+        ChunkAccess chunk
+        //? if >=26.3 {
+        /*, BiomeManager biomeManager,
+        Blender blender,
+        Set<Holder<Biome>> possibleBiomes
+        *///? }
+    ) {
+        super.buildSurface(
+            //? if <26.3
+            chunkRegion,
+            structureAccessor,
+            noiseConfig,
+            chunk
+            //? if >=26.3 {
+            /*, biomeManager,
+            blender,
+            possibleBiomes
+            *///? }
+        );
     }
 
     @Override
-    public void applyCarvers(WorldGenRegion chunkRegion, long seed, RandomState noiseConfig, BiomeManager biomeAccess, StructureManager structureAccessor, ChunkAccess chunk
-                      //? if >=26.3
-                      //, CarvingMask.Filter filter
-                      //? if <1.21.2
-                      //, GenerationStep.Carving carverStep
+    public void applyCarvers(
+        WorldGenRegion chunkRegion,
+        //? if <26.3
+        long seed,
+        RandomState noiseConfig,
+        BiomeManager biomeAccess,
+        StructureManager structureAccessor,
+        ChunkAccess chunk
+        //? if >=26.3
+        //, Blender blender
+        //? if <1.21.2
+        //, GenerationStep.Carving carverStep
     ) {
+        //? if >=26.3 {
+        /*//noinspection deprecation
+        long seed = noiseConfig.seed();
+        *///? }
         ChunkPos chunkPos = chunk.getPos();
 
         if (ModCompat.skipGeneratingChunk(chunkPos.x(), chunkPos.z()) ||
             this.chunkProvider.skipChunk(chunkPos.x(), chunkPos.z(), ModernBetaGenerationStep.CARVERS))
             return;
 
-        BiomeManager biomeAccessWithSource = biomeAccess.withDifferentSource((biomeX, biomeY, biomeZ) -> this.biomeSource.getNoiseBiome(biomeX, biomeY, biomeZ, noiseConfig.sampler()));
+        BiomeManager biomeAccessWithSource = biomeAccess.withDifferentSource((biomeX, biomeY, biomeZ) ->
+            //? if >=26.3 {
+            /*this.biomeSource.createResolver(noiseConfig.sampler()).getNoiseBiome(biomeX, biomeY, biomeZ)
+            *///? } else {
+            this.biomeSource.getNoiseBiome(biomeX, biomeY, biomeZ, noiseConfig.sampler())
+            //? }
+        );
 
         int mainChunkX = chunkPos.x();
         int mainChunkZ = chunkPos.z();
@@ -420,7 +501,11 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
                 
                 @SuppressWarnings("deprecation")
                 BiomeGenerationSettings genSettings = carverChunk.carverBiome(() -> this.getBiomeGenerationSettings(
+                    //? if >=26.3 {
+                    /*this.biomeSource.createResolver(noiseConfig.sampler()).getNoiseBiome(QuartPos.fromBlock(carverPos.getMinBlockX()), 0, QuartPos.fromBlock(carverPos.getMinBlockZ())))
+                    *///? } else {
                     this.biomeSource.getNoiseBiome(QuartPos.fromBlock(carverPos.getMinBlockX()), 0, QuartPos.fromBlock(carverPos.getMinBlockZ()), noiseConfig.sampler()))
+                    //? }
                 );
                 Iterable<Holder<ConfiguredWorldCarver<?>>> carverList = genSettings.getCarvers(
                     //? if <1.21.2
@@ -522,7 +607,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
 
         //? if >=26.3 {
         /*if (!carvingMask.isEmpty()) {
-            this.applyCarvingMask(chunk, carvingMask, noiseConfig, carverContext, chunkNoiseSampler, blockToBiomeFunc, filter);
+            this.applyCarvingMask(chunk, carvingMask, noiseConfig, carverContext, chunkNoiseSampler, blockToBiomeFunc, blender.getCarvingFilter());
         }
         *///? }
     }

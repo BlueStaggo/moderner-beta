@@ -11,6 +11,8 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.levelgen.*;
+//? if >=26.3
+//import net.minecraft.world.level.levelgen.densityfunction.*;
 import net.minecraft.world.level.levelgen.synth.NormalNoise;
 
 import java.util.List;

@@ -85,7 +85,11 @@ public class SpawnLocatorRelease implements SpawnLocator {
         for (int i = 0; i < width * length; i++) {
             int biomeX = minX + i % width;
             int biomeZ = minZ + i / width;
+            //? if >=26.3 {
+            /*Holder<Biome> biome = this.biomeSource.createResolver(null).getNoiseBiome(biomeX, 16, biomeZ);
+            *///? } else {
             Holder<Biome> biome = this.biomeSource.getNoiseBiome(biomeX, 16, biomeZ, null);
+            //? }
             if (biome.is(ModernBetaBiomeTags.IS_RELEASE_SPAWN)
                 && (position == null || this.rand.nextInt(choiceChance) == 0)) {
                 position = new BlockPos(biomeX << 2, 0, biomeZ << 2);

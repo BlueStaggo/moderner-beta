@@ -30,10 +30,10 @@ import net.minecraft.core.HolderGetter;
 import net.minecraft.core.QuartPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.RegistryOps;
-import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.BiomeManager;
 import net.minecraft.world.level.biome.BiomeSource;
 import net.minecraft.world.level.biome.Climate;
 import net.minecraft.world.level.biome.Climate.Sampler;
@@ -47,7 +47,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class ModernBetaBiomeSource extends BiomeSource {
+public class ModernBetaBiomeSource extends BiomeSource /*? >=26.3 {*/ /*implements BiomeManager.NoiseBiomeSource *//*? }*/ {
     public static final com.mojang.serialization.MapCodec<ModernBetaBiomeSource> CODEC = VersionCompat.createMaybeMapCodec(
         instance -> instance.group(
             RegistryOps.retrieveGetter(Registries.BIOME),
@@ -103,14 +103,18 @@ public class ModernBetaBiomeSource extends BiomeSource {
     }
     
     @Override
-    public @NotNull Holder<Biome> getNoiseBiome(int biomeX, int biomeY, int biomeZ, Climate.Sampler noiseSampler) {
+    public @NotNull Holder<Biome> getNoiseBiome(int biomeX, int biomeY, int biomeZ /*? <26.3 {*/, Climate.Sampler noiseSampler /*? }*/) {
         return this.biomeProvider.getBiome(biomeX, biomeY, biomeZ);
     }
     
     @Override
-    public @NotNull Set<Holder<Biome>> getBiomesWithin(int startX, int startY, int startZ, int radius, Sampler noiseSampler) {
+    public @NotNull Set<Holder<Biome>> getBiomesWithin(int startX, int startY, int startZ, int radius /*? <26.3 {*/, Sampler noiseSampler /*? }*/) {
         if (this.chunkGenerator == null)
+            //? if >=26.3 {
+            /*return Set.of();
+            *///? } else {
             return super.getBiomesWithin(startX, startY, startZ, radius, noiseSampler);
+            //? }
 
         int minX = QuartPos.fromBlock(startX - radius);
         int minZ = QuartPos.fromBlock(startZ - radius);
@@ -200,6 +204,13 @@ public class ModernBetaBiomeSource extends BiomeSource {
         return null;
     }
 
+    //? if >=26.3 {
+    /*@Override
+    public BiomeManager.NoiseBiomeSource createResolver(Sampler sampler) {
+        return this;
+    }
+    *///? }
+
     public Holder<Biome> getCaveBiome(int biomeX, int biomeY, int biomeZ) {
         return this.caveBiomeProvider.getBiome(biomeX, biomeY, biomeZ);
     }
@@ -212,11 +223,11 @@ public class ModernBetaBiomeSource extends BiomeSource {
         return this.biomeProvider.getBiome(x >> 2, y >> 2, z >> 2);
     }
     
-    public Holder<Biome> getBiomeForSurfaceGen(WorldGenRegion region, BlockPos pos) {
+    public Holder<Biome> getBiomeForSurfaceGen(BiomeManager biomeManager, BlockPos pos) {
         if (this.biomeProvider instanceof BiomeResolverBlock biomeResolver)
             return biomeResolver.getBiomeBlock(pos.getX(), pos.getY(), pos.getZ());
         
-        return region.getBiome(pos);
+        return biomeManager.getBiome(pos);
     }
 
     public ExtendedIdentifier getBiomeForHeightGen(int biomeX, int biomeY, int biomeZ) {

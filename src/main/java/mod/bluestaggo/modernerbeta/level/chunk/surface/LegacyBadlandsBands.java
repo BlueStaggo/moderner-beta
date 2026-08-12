@@ -51,7 +51,7 @@ public final class LegacyBadlandsBands {
     }
 
     public BlockState sample(int x, int y, int z) {
-        //~ if >=26.3 'getValue' -> 'get'
+        //~ if >=26.3 '.getValue(' -> '.get('
         int offset = (int)Math.round(this.offsetNoise.getValue(x / 512.0, z / 512.0) * 2.0);
         return this.bands[Math.floorMod(y + offset, SIZE)];
     }

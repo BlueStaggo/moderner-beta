@@ -92,7 +92,7 @@ public class MappedNoiseLayer extends Layer {
 
     @Override
     protected ExtendedIdentifier generate(int x, int z) {
-        //~ if >=26.3 'getValue' -> 'get'
+        //~ if >=26.3 '.getValue(' -> '.get('
         double noiseValue = this.noiseSampler.getValue(x / this.scale, z / this.scale, 0.0);
 
         for (Entry lowerBiome : this.lowerBiomes) {

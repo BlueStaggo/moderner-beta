@@ -18,7 +18,7 @@ public enum TemperatureHeightScaling implements StringRepresentable {
         @Override
         public double modifyTemperature(BlockPos blockPos, double temp) {
             if (blockPos.getY() <= 64) return temp;
-            //~ if >=26.3 'getValue(' -> 'get('
+            //~ if >=26.3 '.getValue(' -> '.get('
             double g = TEMPERATURE_NOISE.getValue((float)blockPos.getX() / 8.0f, (float)blockPos.getZ() / 8.0f) * 4.0;
             return temp - (g + (float)blockPos.getY() - 64.0) * 0.05 / 30.0;
         }
@@ -32,7 +32,7 @@ public enum TemperatureHeightScaling implements StringRepresentable {
         @Override
         public double modifyTemperature(BlockPos blockPos, double temp) {
             if (blockPos.getY() <= 80) return temp;
-            //~ if >=26.3 'getValue(' -> 'get('
+            //~ if >=26.3 '.getValue(' -> '.get('
             double g = TEMPERATURE_NOISE.getValue((float)blockPos.getX() / 8.0f, (float)blockPos.getZ() / 8.0f) * 8.0;
             return temp - (g + (float)blockPos.getY() - 80.0) * 0.05 / 40.0;
         }

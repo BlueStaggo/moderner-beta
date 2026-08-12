@@ -13,6 +13,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.Noises;
 import net.minecraft.world.level.levelgen.SurfaceRules;
 import net.minecraft.world.level.levelgen.VerticalAnchor;
+import net.minecraft.world.level.levelgen.placement.CaveSurface;
 import net.minecraft.world.level.levelgen.synth.NormalNoise;
 
 import java.util.List;
@@ -51,6 +52,9 @@ public class ModernBetaSurfaceRuleData {
     /*private static final SurfaceRules.RuleSource CINNABAR = makeStateRule(Blocks.CINNABAR);
     private static final SurfaceRules.RuleSource SULFUR = makeStateRule(Blocks.SULFUR);
     *///? }
+
+    //Moderner Beta: Changed to 0-3, from 0-6.
+    public static final SurfaceRules.ConditionSource DEEP_UNDER_FLOOR = SurfaceRules.stoneDepthCheck(0, true, 3, CaveSurface.FLOOR);
 
     private static SurfaceRules.RuleSource makeStateRule(final Block block) {
         return SurfaceRules.state(block.defaultBlockState());
@@ -278,7 +282,7 @@ public class ModernBetaSurfaceRuleData {
                 SurfaceRules.sequence(
                     //Moderner Beta: removed hole rules here
                     SurfaceRules.ifTrue(SurfaceRules.UNDER_FLOOR, biomeUnderSurfaceRule),
-                    SurfaceRules.ifTrue(biomesWithSandAndSandstone, SurfaceRules.ifTrue(SurfaceRules.DEEP_UNDER_FLOOR, SANDSTONE)),
+                    SurfaceRules.ifTrue(biomesWithSandAndSandstone, SurfaceRules.ifTrue(DEEP_UNDER_FLOOR, SANDSTONE)),
                     SurfaceRules.ifTrue(biomesWithSandAndVeryDeepSandstone, SurfaceRules.ifTrue(SurfaceRules.VERY_DEEP_UNDER_FLOOR, SANDSTONE))
                 )
             ),
@@ -295,7 +299,7 @@ public class ModernBetaSurfaceRuleData {
         ImmutableList.Builder<SurfaceRules.RuleSource> builder = ImmutableList.builder();
 
         //Moderner Beta: mod compat custom rules (pre-bedrock)
-        List<SurfaceRules.RuleSource> preBedrockCustomRules = ModCompat.getPreBedrockCustomRules();
+        List<SurfaceRules.RuleSource> preBedrockCustomRules = ModCompat.getPreBedrockCustomRules(/*? >=26.2 {*/ /*biomes *//*? }*/);
         builder.addAll(preBedrockCustomRules);
 
         if (bedrockRoof) {
@@ -307,7 +311,7 @@ public class ModernBetaSurfaceRuleData {
         }
 
         //Moderner Beta: mod compat custom rules (post-bedrock)
-        List<SurfaceRules.RuleSource> postBedrockCustomRules = ModCompat.getPostBedrockCustomRules();
+        List<SurfaceRules.RuleSource> postBedrockCustomRules = ModCompat.getPostBedrockCustomRules(/*? >=26.2 {*/ /*biomes *//*? }*/);
 
         if (!postBedrockCustomRules.isEmpty()) {
             ImmutableList.Builder<SurfaceRules.RuleSource> mainRebuilder = ImmutableList.builder();

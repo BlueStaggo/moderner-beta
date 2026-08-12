@@ -10,6 +10,7 @@ import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.level.biome.injection.BiomeInjectionRule;
 import mod.bluestaggo.modernerbeta.level.biome.injection.InjectionNeeds;
 import mod.bluestaggo.modernerbeta.level.chunk.surface.LegacyBadlandsBands;
+import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.settings.component.Noise3DSettings;
 import mod.bluestaggo.modernerbeta.settings.component.SurfaceProperties;
@@ -27,7 +28,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Optional;
@@ -38,6 +38,7 @@ public class SurfaceSystemMixin implements ModernBetaSurfaceSystem {
     @Unique private ChunkProvider modernerBeta$chunkProvider;
     @Unique private ModernBetaBiomeSource modernerBeta$biomeSource;
     @Unique private LegacyBadlandsBands modernerBeta$badlandsBands;
+    @Unique private SurfaceProperties modernerBeta$surfaceProperties;
     @Unique private final ThreadLocal<RandomSource> modernerBeta$surfaceRandom = new ThreadLocal<>();
 
     @Override
@@ -47,8 +48,10 @@ public class SurfaceSystemMixin implements ModernBetaSurfaceSystem {
 
         this.modernerBeta$chunkProvider = chunkProvider;
 
-        SurfaceProperties surface = chunkProvider.getChunkSettings().getOrDefault(SettingsComponentTypes.SURFACE_PROPERTIES);
-        Noise3DSettings noise = chunkProvider.getChunkSettings().getOrDefault(SettingsComponentTypes.NOISE_3D_SETTINGS);
+        ModernBetaSettings chunkSettings = chunkProvider.getChunkSettings();
+        SurfaceProperties surface = chunkSettings.getOrDefault(SettingsComponentTypes.SURFACE_PROPERTIES);
+        Noise3DSettings noise = chunkSettings.getOrDefault(SettingsComponentTypes.NOISE_3D_SETTINGS);
+        this.modernerBeta$surfaceProperties = surface;
         this.modernerBeta$badlandsBands = surface.legacyBadlandsBands()
             ? new LegacyBadlandsBands(chunkProvider.getSeed(), noise.pocketEditionRng())
             : null;
@@ -60,21 +63,15 @@ public class SurfaceSystemMixin implements ModernBetaSurfaceSystem {
     }
 
     @Override
-    public ChunkProvider modernerBeta$getContext() {
-        return this.modernerBeta$chunkProvider;
-    }
-
-    @Inject(method = "buildSurface", at = @At("HEAD"))
-    private void setupSurfaceRandom(
-        CallbackInfo ci,
-        @Local(argsOnly = true) ChunkAccess protoChunk
-    ) {
-        if (this.modernerBeta$chunkProvider == null)
-            return;
-
-        ChunkPos chunkPos = protoChunk.getPos();
+    public void modernerBeta$beforeSurfaceBuild(ChunkAccess chunk) {
+        ChunkPos chunkPos = chunk.getPos();
         RandomSource surfaceRandom = this.modernerBeta$chunkProvider.createSurfaceRandom(chunkPos.x(), chunkPos.z());
         this.modernerBeta$surfaceRandom.set(surfaceRandom);
+    }
+
+    @Override
+    public ChunkProvider modernerBeta$getContext() {
+        return this.modernerBeta$chunkProvider;
     }
 
     @Inject(method = "topMaterial", at = @At("HEAD"))
@@ -85,9 +82,7 @@ public class SurfaceSystemMixin implements ModernBetaSurfaceSystem {
         if (this.modernerBeta$chunkProvider == null)
             return;
 
-        ChunkPos chunkPos = protoChunk.getPos();
-        RandomSource surfaceRandom = this.modernerBeta$chunkProvider.createSurfaceRandom(chunkPos.x(), chunkPos.z());
-        this.modernerBeta$surfaceRandom.set(surfaceRandom);
+        this.modernerBeta$beforeSurfaceBuild(protoChunk);
     }
 
     @ModifyArg(
@@ -160,9 +155,32 @@ public class SurfaceSystemMixin implements ModernBetaSurfaceSystem {
         if (this.modernerBeta$chunkProvider == null)
             return;
 
-        int surfaceDepth = this.modernerBeta$chunkProvider
-                .getSurfaceDepth(this.modernerBeta$surfaceRandom.get(), blockX, blockZ);
+        RandomSource rand = this.modernerBeta$surfaceRandom.get();
+
+        //to get random values to match up with what they're supposed to be
+        if (this.modernerBeta$surfaceProperties.enableBeaches()) {
+            rand.consumeCount(2 * 2);
+        }
+
+        //because we cannot just blindly consumeCount for nextInt.
+        if (this.modernerBeta$surfaceProperties.bedrockHoles()) {
+            rand.nextInt(6);
+        } else {
+            rand.nextInt(5);
+        }
+
+        int surfaceDepth = this.modernerBeta$chunkProvider.getSurfaceDepth(rand, blockX, blockZ);
         cir.setReturnValue(surfaceDepth);
+    }
+
+    @Inject(method = "getSurfaceSecondary", at = @At("HEAD"), cancellable = true)
+    private void useMBRandomDepth(int blockX, int blockZ, CallbackInfoReturnable<Double> cir) {
+        if (this.modernerBeta$chunkProvider == null)
+            return;
+
+        RandomSource rand = this.modernerBeta$surfaceRandom.get();
+        int depth = rand.nextInt(4);
+        cir.setReturnValue((depth / 3.0) * 2.0 - 1.0);
     }
 
     @Inject(method = "getBand", at = @At("HEAD"), cancellable = true)

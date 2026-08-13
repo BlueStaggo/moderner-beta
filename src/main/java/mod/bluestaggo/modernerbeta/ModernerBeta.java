@@ -115,10 +115,7 @@ public class ModernerBeta {
     }
 
     public static GsonBuilder getSettingsGson() {
-        GsonBuilder gson = new GsonBuilder();
-        CodecUtil.registerTypeAdapter(gson, ConfiguredLayers.class, ConfiguredLayers.LENIENT_CODEC);
-        CodecUtil.registerTypeAdapter(gson, Identifier.class, Identifier.CODEC);
-        return gson;
+        return new GsonBuilder();
     }
 
     public static void loadConfig(Path configDir) {

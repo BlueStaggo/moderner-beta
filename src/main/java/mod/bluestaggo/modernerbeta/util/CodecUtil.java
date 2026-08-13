@@ -84,11 +84,6 @@ public class CodecUtil {
         return elementType.listOf().xmap(ImmutableSet::copyOf, ImmutableList::copyOf);
     }
 
-    public static <T> void registerTypeAdapter(GsonBuilder gson, Class<T> clazz, Codec<T> codec) {
-        gson.registerTypeAdapter(clazz, new JsonSerializer<>(codec));
-        gson.registerTypeAdapter(clazz, new JsonDeserializer<>(codec));
-    }
-
     // Relies on the fact that all fields in the codec have default values
     public static <T> T getDefaultByMap(Codec<T> codec) {
         return VersionCompat.getOrThrow(codec.decode(JsonOps.INSTANCE, new JsonObject())).getFirst();
@@ -138,32 +133,6 @@ public class CodecUtil {
             }
         };
         *///? }
-    }
-
-    public record JsonSerializer<T>(HolderLookup.Provider registries, Codec<T> codec) implements com.google.gson.JsonSerializer<T> {
-        public JsonSerializer(Codec<T> codec) {
-            this(null, codec);
-        }
-
-        @Override
-        public JsonElement serialize(T src, Type typeOfSrc, JsonSerializationContext context) {
-            DynamicOps<JsonElement> ops = this.registries != null ?
-                    RegistryOps.create(JsonOps.INSTANCE, this.registries) : JsonOps.INSTANCE;
-            return VersionCompat.getOrThrow(codec.encodeStart(ops, src));
-        }
-    }
-
-    public record JsonDeserializer<T>(HolderLookup.Provider registries, Codec<T> codec) implements com.google.gson.JsonDeserializer<T> {
-        public JsonDeserializer(Codec<T> codec) {
-            this(null, codec);
-        }
-
-        @Override
-        public T deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-            DynamicOps<JsonElement> ops = this.registries != null ?
-                    RegistryOps.create(JsonOps.INSTANCE, this.registries) : JsonOps.INSTANCE;
-            return VersionCompat.getOrThrow(codec.decode(ops, json)).getFirst();
-        }
     }
 }
 

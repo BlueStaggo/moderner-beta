@@ -276,7 +276,7 @@ public class SettingsComponentTypes {
             });
         FRACTAL_LAYERS = register(
             ModernBetaBuiltInTypes.SettingsComponentType.FRACTAL_LAYERS.id,
-            ConfiguredLayers.LENIENT_CODEC,
+            ConfiguredLayers.CODEC,
             ConfiguredLayers.DEFAULT,
             component -> {
                 if (component.getPipeline().isEmpty())

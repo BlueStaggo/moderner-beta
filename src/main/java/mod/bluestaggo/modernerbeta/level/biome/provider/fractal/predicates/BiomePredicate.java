@@ -2,9 +2,11 @@ package mod.bluestaggo.modernerbeta.level.biome.provider.fractal.predicates;
 
 import com.mojang.serialization.Codec;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
+import mod.bluestaggo.modernerbeta.registry.ExtendedHolder;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers.Layer;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers.LayerRandom;
 import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
+import net.minecraft.world.level.biome.Biome;
 
 import java.util.List;
 import java.util.Set;
@@ -146,5 +148,5 @@ public interface BiomePredicate {
 
     BiomePredicateType<?> getType();
 
-    boolean matches(ExtendedIdentifier biome, Layer layer, Supplier<LayerRandom> randomSupplier, int x, int z);
+    boolean matches(ExtendedHolder<Biome> biome, Layer layer, Supplier<LayerRandom> randomSupplier, int x, int z);
 }

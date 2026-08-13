@@ -6,8 +6,7 @@ import com.mojang.blaze3d.platform.NativeImage;
 import it.unimi.dsi.fastutil.ints.Int2IntAVLTreeMap;
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
-import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeIds;
-import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
+import mod.bluestaggo.modernerbeta.registry.ExtendedHolder;
 import mod.bluestaggo.modernerbeta.mixin.client.ScreenshotAccessor;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.api.level.biome.BiomeProvider;
@@ -542,11 +541,11 @@ public class ModernBetaBiomePreviewScreen extends ModernBetaScreen {
                         Holder<Biome> biome = biomeProvider instanceof BiomeResolverStepped resolverStepped
                             ? resolverStepped.getBiomeForStep(sampleX, 64, sampleY, step)
                             : biomeProvider.getBiome(sampleX, 64, sampleY);
-                        ExtendedIdentifier extendedBiome = biomeProvider instanceof BiomeResolverExtendedId resolverExtendedId
+                        ExtendedHolder<Biome> extendedBiome = biomeProvider instanceof BiomeResolverExtendedId resolverExtendedId
                             ? resolverExtendedId instanceof BiomeResolverExtendedIdStepped resolverExtendedIdStepped
                                 ? resolverExtendedIdStepped.getExtendedBiomeIdForStep(sampleX, 64, sampleY, step)
                                 : resolverExtendedId.getExtendedBiomeId(sampleX, 64, sampleY)
-                            : ExtendedBiomeIds.NULL;
+                            : new ExtendedHolder<>(biome);
 
                         int color = this.getBiomeColor(biome, extendedBiome.ext(), sampleX, sampleY, randColors, random);
 

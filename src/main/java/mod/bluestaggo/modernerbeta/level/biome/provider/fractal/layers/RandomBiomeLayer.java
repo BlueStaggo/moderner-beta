@@ -1,7 +1,10 @@
 package mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers;
 
+import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeResolver;
+import mod.bluestaggo.modernerbeta.registry.ExtendedHolder;
 import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
+import net.minecraft.world.level.biome.Biome;
 
 import java.util.List;
 import java.util.Set;
@@ -14,6 +17,7 @@ public class RandomBiomeLayer extends Layer {
     );
 
     private final List<ExtendedIdentifier> biomes;
+    private transient List<ExtendedHolder<Biome>> resolvedBiomes;
 
     public RandomBiomeLayer(String id, long seed, List<ExtendedIdentifier> biomes) {
         super(id, seed);
@@ -26,13 +30,20 @@ public class RandomBiomeLayer extends Layer {
     }
 
     @Override
-    protected ExtendedIdentifier generate(int x, int z) {
+    protected ExtendedHolder<Biome> generate(int x, int z) {
         LayerRandom random = this.getRandom(x, z);
-        return random.nextItem(this.biomes);
+        return random.nextItem(this.resolvedBiomes);
     }
 
     @Override
-    protected void addPossibleBiomes(Set<ExtendedIdentifier> biomes) {
-        biomes.addAll(this.biomes);
+    protected void addPossibleBiomes(Set<ExtendedHolder<Biome>> biomes) {
+        biomes.addAll(this.resolvedBiomes);
+    }
+
+    @Override
+    protected void bindOwnBiomes(ExtendedBiomeResolver biomeResolver) {
+        this.resolvedBiomes = this.biomes.stream()
+            .map(biomeResolver::resolve)
+            .toList();
     }
 }

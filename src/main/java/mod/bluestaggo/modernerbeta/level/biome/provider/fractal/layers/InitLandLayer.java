@@ -1,8 +1,10 @@
 package mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers;
 
 import com.mojang.serialization.Codec;
-import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
+import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeResolver;
+import mod.bluestaggo.modernerbeta.registry.ExtendedHolder;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
+import net.minecraft.world.level.biome.Biome;
 
 import java.util.Set;
 
@@ -17,6 +19,8 @@ public class InitLandLayer extends Layer {
     );
 
     public final int landChance;
+    private transient ExtendedHolder<Biome> ocean;
+    private transient ExtendedHolder<Biome> plains;
 
     public InitLandLayer(String id, long seed) {
         this(id, seed, 10);
@@ -33,16 +37,22 @@ public class InitLandLayer extends Layer {
     }
 
     @Override
-    protected ExtendedIdentifier generate(int x, int z) {
+    protected ExtendedHolder<Biome> generate(int x, int z) {
         if (x == 0 && z == 0 || this.getRandom(x, z).nextInt(this.landChance) == 0) {
-            return PLAINS;
+            return this.plains;
         }
-        return OCEAN;
+        return this.ocean;
     }
 
     @Override
-    protected void addPossibleBiomes(Set<ExtendedIdentifier> biomes) {
-        biomes.add(OCEAN);
-        biomes.add(PLAINS);
+    protected void addPossibleBiomes(Set<ExtendedHolder<Biome>> biomes) {
+        biomes.add(this.ocean);
+        biomes.add(this.plains);
+    }
+
+    @Override
+    protected void bindOwnBiomes(ExtendedBiomeResolver biomeResolver) {
+        this.ocean = biomeResolver.resolve(OCEAN);
+        this.plains = biomeResolver.resolve(PLAINS);
     }
 }

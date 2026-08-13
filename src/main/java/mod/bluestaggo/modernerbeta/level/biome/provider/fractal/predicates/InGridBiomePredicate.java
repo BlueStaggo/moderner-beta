@@ -1,10 +1,11 @@
 package mod.bluestaggo.modernerbeta.level.biome.provider.fractal.predicates;
 
 import com.mojang.serialization.Codec;
-import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
+import mod.bluestaggo.modernerbeta.registry.ExtendedHolder;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers.Layer;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers.LayerRandom;
+import net.minecraft.world.level.biome.Biome;
 
 import java.util.function.Supplier;
 
@@ -23,7 +24,7 @@ public record InGridBiomePredicate(int size, int spacing, int offset) implements
     }
 
     @Override
-    public boolean matches(ExtendedIdentifier biome, Layer layer, Supplier<LayerRandom> randomSupplier, int x, int z) {
+    public boolean matches(ExtendedHolder<Biome> biome, Layer layer, Supplier<LayerRandom> randomSupplier, int x, int z) {
         return Math.floorMod(x - this.offset, this.size + this.spacing) <= this.size
             && Math.floorMod(z - this.offset, this.size + this.spacing) <= this.size;
     }

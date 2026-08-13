@@ -1,7 +1,10 @@
 package mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers;
 
+import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeResolver;
+import mod.bluestaggo.modernerbeta.registry.ExtendedHolder;
 import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
+import net.minecraft.world.level.biome.Biome;
 
 import java.util.Set;
 
@@ -13,6 +16,7 @@ public class ConstantBiomeLayer extends Layer {
     );
 
     private final ExtendedIdentifier biome;
+    private transient ExtendedHolder<Biome> resolvedBiome;
 
     public ConstantBiomeLayer(String id, long seed, ExtendedIdentifier biome) {
         super(id, seed);
@@ -25,17 +29,22 @@ public class ConstantBiomeLayer extends Layer {
     }
 
     @Override
-    protected ExtendedIdentifier generate(int x, int z) {
-        return this.biome;
+    protected ExtendedHolder<Biome> generate(int x, int z) {
+        return this.resolvedBiome;
     }
 
     @Override
-    public ExtendedIdentifier sample(int x, int z) {
-        return this.biome;
+    public ExtendedHolder<Biome> sample(int x, int z) {
+        return this.resolvedBiome;
     }
 
     @Override
-    protected void addPossibleBiomes(Set<ExtendedIdentifier> biomes) {
-        biomes.add(this.biome);
+    protected void addPossibleBiomes(Set<ExtendedHolder<Biome>> biomes) {
+        biomes.add(this.resolvedBiome);
+    }
+
+    @Override
+    protected void bindOwnBiomes(ExtendedBiomeResolver biomeResolver) {
+        this.resolvedBiome = biomeResolver.resolve(this.biome);
     }
 }

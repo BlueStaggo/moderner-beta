@@ -3,8 +3,10 @@ package mod.bluestaggo.modernerbeta.level.biome.provider.fractal;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers.Layer;
+import mod.bluestaggo.modernerbeta.registry.ExtendedHolder;
 import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
 import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.level.biome.Biome;
 
 import java.util.Optional;
 import java.util.Set;
@@ -61,9 +63,10 @@ public record LayerTarget(Type type, String value) {
 
     public interface Configured {
         Optional<Layer> asLayer();
-        ExtendedIdentifier sample(int x, int z);
+        ExtendedHolder<Biome> sample(int x, int z);
         boolean isEquivalentToOrNull(Layer layer);
-        void addPossibleBiomes(Set<ExtendedIdentifier> biomes);
+        void addPossibleBiomes(Set<ExtendedHolder<Biome>> biomes);
+        void bindBiomes(ExtendedBiomeResolver biomeResolver);
 
         record OfLayer(Layer layer) implements Configured {
             @Override
@@ -72,7 +75,7 @@ public record LayerTarget(Type type, String value) {
             }
 
             @Override
-            public ExtendedIdentifier sample(int x, int z) {
+            public ExtendedHolder<Biome> sample(int x, int z) {
                 return this.layer.sample(x, z);
             }
 
@@ -82,30 +85,46 @@ public record LayerTarget(Type type, String value) {
             }
 
             @Override
-            public void addPossibleBiomes(Set<ExtendedIdentifier> biomes) {
+            public void addPossibleBiomes(Set<ExtendedHolder<Biome>> biomes) {
                 this.layer.addPossibleBiomesRecursive(biomes);
+            }
+
+            @Override
+            public void bindBiomes(ExtendedBiomeResolver biomeResolver) {
             }
         }
 
-        record OfBiome(ExtendedIdentifier biome) implements Configured {
+        final class OfBiome implements Configured {
+            private final ExtendedIdentifier biomeId;
+            private ExtendedHolder<Biome> biome;
+
+            private OfBiome(ExtendedIdentifier biomeId) {
+                this.biomeId = biomeId;
+            }
+
             @Override
             public Optional<Layer> asLayer() {
                 return Optional.empty();
             }
 
             @Override
-            public ExtendedIdentifier sample(int x, int z) {
+            public ExtendedHolder<Biome> sample(int x, int z) {
                 return this.biome;
             }
 
             @Override
             public boolean isEquivalentToOrNull(Layer layer) {
-                return ExtendedBiomeIds.NULL.equals(this.biome);
+                return ExtendedBiomeIds.NULL.equals(this.biomeId);
             }
 
             @Override
-            public void addPossibleBiomes(Set<ExtendedIdentifier> biomes) {
+            public void addPossibleBiomes(Set<ExtendedHolder<Biome>> biomes) {
                 biomes.add(this.biome);
+            }
+
+            @Override
+            public void bindBiomes(ExtendedBiomeResolver biomeResolver) {
+                this.biome = biomeResolver.resolve(this.biomeId);
             }
         }
     }

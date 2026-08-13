@@ -8,10 +8,12 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
+import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.event.server.ServerAboutToStartEvent;
 import net.neoforged.neoforge.event.server.ServerStartedEvent;
 //?} else {
 /*import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.event.OnDatapackSyncEvent;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -47,5 +49,12 @@ public class GameEventsCommon {
     @SubscribeEvent
     public static void serverStarting(ServerStartedEvent event) {
         ModernBetaLevelInitializer.initStarted(event.getServer());
+    }
+
+    @SubscribeEvent
+    public static void datapackSync(OnDatapackSyncEvent event) {
+        if (event.getPlayer() == null) {
+            ModernBetaLevelInitializer.clearBiomeInjectionCaches(event.getPlayerList().getServer());
+        }
     }
 }

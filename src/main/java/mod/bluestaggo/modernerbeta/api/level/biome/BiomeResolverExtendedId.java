@@ -1,6 +1,7 @@
 package mod.bluestaggo.modernerbeta.api.level.biome;
 
-import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
+import mod.bluestaggo.modernerbeta.registry.ExtendedHolder;
+import net.minecraft.world.level.biome.Biome;
 
 public interface BiomeResolverExtendedId {
      /**
@@ -13,5 +14,5 @@ public interface BiomeResolverExtendedId {
      *
      * @return A biome at given biome coordinates.
      */
-    ExtendedIdentifier getExtendedBiomeId(int biomeX, int biomeY, int biomeZ);
+    ExtendedHolder<Biome> getExtendedBiomeId(int biomeX, int biomeY, int biomeZ);
 }

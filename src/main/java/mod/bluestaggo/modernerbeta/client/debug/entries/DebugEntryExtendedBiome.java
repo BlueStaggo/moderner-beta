@@ -3,6 +3,7 @@ package mod.bluestaggo.modernerbeta.client.debug.entries;
 import mod.bluestaggo.modernerbeta.api.level.chunk.ChunkProvider;
 import mod.bluestaggo.modernerbeta.api.level.chunk.ChunkProviderForcedHeight;
 import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaChunkGenerator;
+import mod.bluestaggo.modernerbeta.registry.ExtendedHolder;
 //? if >=1.21.9 {
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.debug.DebugScreenDisplayer;
@@ -12,9 +13,9 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.chunk.LevelChunk;
 import org.jetbrains.annotations.Nullable;
 //?}
-import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 
 public class DebugEntryExtendedBiome /*? >=1.21.9 {*/ implements DebugScreenEntry /*?}*/ {
@@ -46,10 +47,10 @@ public class DebugEntryExtendedBiome /*? >=1.21.9 {*/ implements DebugScreenEntr
         if (chunkGenerator instanceof ModernBetaChunkGenerator modernBetaChunkGenerator) {
             ChunkProvider chunkProvider = modernBetaChunkGenerator.getChunkProvider();
             if (chunkProvider instanceof ChunkProviderForcedHeight chunkProviderForcedHeight) {
-                ExtendedIdentifier extendedBiomeId = chunkProviderForcedHeight.getExtendedBiomeId(x >> 2, z >> 2);
+                ExtendedHolder<Biome> extendedBiome = chunkProviderForcedHeight.getExtendedBiomeId(x >> 2, z >> 2);
                 return String.format(
                         "[Modern Beta] Extended biome: %s",
-                        extendedBiomeId
+                        extendedBiome
                 );
             }
         }

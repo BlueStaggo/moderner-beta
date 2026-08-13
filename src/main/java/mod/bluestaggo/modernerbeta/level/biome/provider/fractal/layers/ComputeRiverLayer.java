@@ -1,8 +1,10 @@
 package mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers;
 
 import com.mojang.serialization.Codec;
-import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
+import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeResolver;
+import mod.bluestaggo.modernerbeta.registry.ExtendedHolder;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
 
 import static mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeIds.*;
@@ -15,6 +17,8 @@ public class ComputeRiverLayer extends SingleParentLayer {
     );
 
     private final boolean convertOceans;
+    private transient ExtendedHolder<Biome> river;
+    private transient ExtendedHolder<Biome> nullBiome;
 
     public ComputeRiverLayer(String id, long seed, String parent, boolean convertOceans) {
         super(id, seed, parent);
@@ -27,20 +31,20 @@ public class ComputeRiverLayer extends SingleParentLayer {
     }
 
     @Override
-    protected ExtendedIdentifier generate(int x, int z) {
-        ExtendedIdentifier base = this.parentLayer.sample(x, z);
-        ExtendedIdentifier[] neighbors = this.parentLayer.sampleNeighbors(x, z);
+    protected ExtendedHolder<Biome> generate(int x, int z) {
+        ExtendedHolder<Biome> base = this.parentLayer.sample(x, z);
+        ExtendedHolder<Biome>[] neighbors = this.parentLayer.sampleNeighbors(x, z);
 
         return (!this.convertOceans
             ? neighborsRiverBorder(neighbors, base)
-            : ((base.isOf(Biomes.OCEAN) || neighborsContain(neighbors, OCEAN))
+            : ((base.is(Biomes.OCEAN) || neighborsContain(neighbors, OCEAN))
                 || !allNeighborsEqual(neighbors, base)))
-            ? RIVER : NULL;
+            ? this.river : this.nullBiome;
     }
 
-    private static boolean neighborsRiverBorder(ExtendedIdentifier[] neighbors, ExtendedIdentifier match) {
+    private static boolean neighborsRiverBorder(ExtendedHolder<Biome>[] neighbors, ExtendedHolder<Biome> match) {
         byte matchType = getRiverType(match);
-        for (ExtendedIdentifier neighbor : neighbors) {
+        for (ExtendedHolder<Biome> neighbor : neighbors) {
             if (getRiverType(neighbor) != matchType) {
                 return true;
             }
@@ -48,10 +52,16 @@ public class ComputeRiverLayer extends SingleParentLayer {
         return false;
     }
 
-    private static byte getRiverType(ExtendedIdentifier biome) {
-        return RIVER_REGION_A.equals(biome) ? (byte)1
-            : RIVER_REGION_B.equals(biome) ? (byte)2
-            : biome.isOf(RANDOM.baseId()) ? (byte)(1 + (biome.ext().charAt(biome.ext().length() - 1) & 1))
+    private static byte getRiverType(ExtendedHolder<Biome> biome) {
+        return biome.is(RIVER_REGION_A) ? (byte)1
+            : biome.is(RIVER_REGION_B) ? (byte)2
+            : biome.is(RANDOM.baseId()) ? (byte)(1 + (biome.ext().charAt(biome.ext().length() - 1) & 1))
             : (byte)0;
+    }
+
+    @Override
+    protected void bindOwnBiomes(ExtendedBiomeResolver biomeResolver) {
+        this.river = biomeResolver.resolve(RIVER);
+        this.nullBiome = biomeResolver.resolve(NULL);
     }
 }

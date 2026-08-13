@@ -51,4 +51,14 @@ public class ModernBetaLevelInitializer {
             }
         }
     }
+
+    public static void clearBiomeInjectionCaches(MinecraftServer server) {
+        for (ServerLevel level : server.getAllLevels()) {
+            BiomeSource biomeSource = level.getChunkSource().getGenerator().getBiomeSource();
+            if (biomeSource instanceof ModernBetaBiomeSource modernBetaBiomeSource &&
+                modernBetaBiomeSource.getBiomeInjectionHandler() != null) {
+                modernBetaBiomeSource.getBiomeInjectionHandler().clear();
+            }
+        }
+    }
 }

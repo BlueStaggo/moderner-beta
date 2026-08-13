@@ -12,15 +12,16 @@ import mod.bluestaggo.modernerbeta.api.level.biome.BiomeResolverExtendedId;
 import mod.bluestaggo.modernerbeta.level.biome.injection.BiomeInjectionRule;
 import mod.bluestaggo.modernerbeta.level.biome.injection.InjectionNeeds;
 import mod.bluestaggo.modernerbeta.level.biome.injection.handler.BiomeInjectionHandler;
+import mod.bluestaggo.modernerbeta.level.biome.injection.handler.CachedBiomeInjectionHandler;
 import mod.bluestaggo.modernerbeta.level.biome.injection.handler.SimpleBiomeInjectionHandler;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
+import mod.bluestaggo.modernerbeta.registry.ExtendedHolder;
 import mod.bluestaggo.modernerbeta.api.level.cavebiome.CaveBiomeProvider;
 import mod.bluestaggo.modernerbeta.registry.IRegistryHandler;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaResourceKeys;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
-import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaChunkGenerator;
 import net.minecraft.core.BlockPos;
@@ -99,7 +100,9 @@ public class ModernBetaBiomeSource extends BiomeSource {
             .apply(caveBiomeSettings, this.biomeRegistry, seed);
         this.caveBiomeProvider.init();
 
-        this.biomeInjectionHandler = new SimpleBiomeInjectionHandler(this.chunkGenerator, this);
+        this.biomeInjectionHandler = new CachedBiomeInjectionHandler(
+            new SimpleBiomeInjectionHandler(this.chunkGenerator, this)
+        );
     }
     
     @Override
@@ -219,15 +222,13 @@ public class ModernBetaBiomeSource extends BiomeSource {
         return region.getBiome(pos);
     }
 
-    public ExtendedIdentifier getBiomeForHeightGen(int biomeX, int biomeY, int biomeZ) {
-        ExtendedIdentifier biome;
+    public ExtendedHolder<Biome> getBiomeForHeightGen(int biomeX, int biomeY, int biomeZ) {
+        ExtendedHolder<Biome> biome;
         if (this.biomeProvider instanceof BiomeResolverExtendedId biomeResolver) {
             biome = biomeResolver.getExtendedBiomeId(biomeX, biomeY, biomeZ);
         } else {
-            biome = ExtendedIdentifier.of(this.biomeProvider.getBiome(biomeX, biomeY, biomeZ).unwrapKey().orElseThrow().identifier());
+            biome = new ExtendedHolder<>(this.biomeProvider.getBiome(biomeX, biomeY, biomeZ));
         }
-
-//        this.chunkGenerator.getBiomeInjector().getOptionalBiome(null, biomeX, biomeY, biomeZ, )
 
         return biome;
     }

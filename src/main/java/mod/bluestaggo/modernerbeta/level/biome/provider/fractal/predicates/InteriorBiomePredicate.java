@@ -1,10 +1,11 @@
 package mod.bluestaggo.modernerbeta.level.biome.provider.fractal.predicates;
 
-import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
+import mod.bluestaggo.modernerbeta.registry.ExtendedHolder;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers.Layer;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers.LayerRandom;
 import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.level.biome.Biome;
 
 import java.util.function.Supplier;
 
@@ -21,7 +22,7 @@ public record InteriorBiomePredicate(Type type) implements BiomePredicate {
     }
 
     @Override
-    public boolean matches(ExtendedIdentifier biome, Layer layer, Supplier<LayerRandom> randomSupplier, int x, int z) {
+    public boolean matches(ExtendedHolder<Biome> biome, Layer layer, Supplier<LayerRandom> randomSupplier, int x, int z) {
         return this.type.matches(biome, layer, x, z);
     }
 
@@ -41,8 +42,8 @@ public record InteriorBiomePredicate(Type type) implements BiomePredicate {
             this.diagonal = diagonal;
         }
 
-        public boolean matches(ExtendedIdentifier biome, Layer layer, int x, int z) {
-            ExtendedIdentifier[] neighbors = this.diagonal ? layer.sampleDiagonalNeighbors(x, z) : layer.sampleNeighbors(x, z);
+        public boolean matches(ExtendedHolder<Biome> biome, Layer layer, int x, int z) {
+            ExtendedHolder<Biome>[] neighbors = this.diagonal ? layer.sampleDiagonalNeighbors(x, z) : layer.sampleNeighbors(x, z);
             return this.border != Layer.allNeighborsEqual(neighbors, biome);
         }
 

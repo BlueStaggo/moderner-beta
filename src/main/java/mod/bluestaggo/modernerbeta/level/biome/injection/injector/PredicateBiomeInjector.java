@@ -39,6 +39,18 @@ public record PredicateBiomeInjector(
     }
 
     @Override
+    public void initIfNeeded() {
+        this.onMatch.initIfNeeded();
+        this.otherwise.ifPresent(BiomeInjector::initIfNeeded);
+    }
+
+    @Override
+    public void clear() {
+        this.onMatch.clear();
+        this.otherwise.ifPresent(BiomeInjector::clear);
+    }
+
+    @Override
     public Holder<Biome> apply(BiomeInjectionContext context, int biomeX, int biomeY, int biomeZ) {
         if (predicate.shouldApply(context)) {
             return onMatch.apply(context, biomeX, biomeY, biomeZ);

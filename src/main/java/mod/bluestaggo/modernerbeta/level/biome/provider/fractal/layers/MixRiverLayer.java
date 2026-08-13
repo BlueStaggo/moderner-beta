@@ -2,11 +2,14 @@ package mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers;
 
 import com.mojang.serialization.Codec;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeIds;
+import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeResolver;
+import mod.bluestaggo.modernerbeta.registry.ExtendedHolder;
 import mod.bluestaggo.modernerbeta.util.CodecUtil;
 import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomes;
 import net.minecraft.world.level.biome.Biomes;
+import net.minecraft.world.level.biome.Biome;
 
 import java.util.*;
 import java.util.function.Function;
@@ -27,6 +30,8 @@ public class MixRiverLayer extends SingleParentLayer {
     private final Map<ExtendedIdentifier, ExtendedIdentifier> biomeSpecificRivers;
 
     private transient Layer riverSourceLayer;
+    private transient ExtendedHolder<Biome> defaultRiver;
+    private transient Map<ExtendedIdentifier, ExtendedHolder<Biome>> resolvedBiomeSpecificRivers;
 
     public static MixRiverLayer forEarlyRelease(String id, long seed, String parent, String riverSource) {
         return new MixRiverLayer(id, seed, parent, riverSource, Set.of(ExtendedBiomeIds.OCEAN), Map.of(
@@ -69,27 +74,37 @@ public class MixRiverLayer extends SingleParentLayer {
     }
 
     @Override
-    protected ExtendedIdentifier generate(int x, int z) {
-        ExtendedIdentifier base = this.parentLayer.sample(x, z);
-        if (this.ignoredBiomes.contains(base)) {
+    protected ExtendedHolder<Biome> generate(int x, int z) {
+        ExtendedHolder<Biome> base = this.parentLayer.sample(x, z);
+        if (matches(this.ignoredBiomes, base)) {
             return base;
         }
 
-        ExtendedIdentifier river = this.riverSourceLayer.sample(x, z);
-        if (!river.equals(ExtendedBiomeIds.RIVER)) {
+        ExtendedHolder<Biome> river = this.riverSourceLayer.sample(x, z);
+        if (!river.is(ExtendedBiomeIds.RIVER)) {
             return base;
         }
 
-        return this.biomeSpecificRivers.getOrDefault(base, ExtendedBiomeIds.RIVER);
+        ExtendedHolder<Biome> biomeRiver = getMatching(this.resolvedBiomeSpecificRivers, base);
+        return biomeRiver == null ? this.defaultRiver : biomeRiver;
     }
 
     @Override
-    protected void addPossibleBiomes(Set<ExtendedIdentifier> biomes) {
-        biomes.add(ExtendedBiomeIds.RIVER);
-        for (Map.Entry<ExtendedIdentifier, ExtendedIdentifier> entry : this.biomeSpecificRivers.entrySet()) {
-            if (biomes.contains(entry.getKey())) {
+    protected void addPossibleBiomes(Set<ExtendedHolder<Biome>> biomes) {
+        biomes.add(this.defaultRiver);
+        for (Map.Entry<ExtendedIdentifier, ExtendedHolder<Biome>> entry : this.resolvedBiomeSpecificRivers.entrySet()) {
+            if (biomes.stream().anyMatch(biome -> biome.is(entry.getKey()))) {
                 biomes.add(entry.getValue());
             }
+        }
+    }
+
+    @Override
+    protected void bindOwnBiomes(ExtendedBiomeResolver biomeResolver) {
+        this.defaultRiver = biomeResolver.resolve(ExtendedBiomeIds.RIVER);
+        this.resolvedBiomeSpecificRivers = new LinkedHashMap<>();
+        for (Map.Entry<ExtendedIdentifier, ExtendedIdentifier> entry : this.biomeSpecificRivers.entrySet()) {
+            this.resolvedBiomeSpecificRivers.put(entry.getKey(), biomeResolver.resolve(entry.getValue()));
         }
     }
 }

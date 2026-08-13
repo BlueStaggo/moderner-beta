@@ -4,10 +4,13 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.doubles.DoubleImmutableList;
 import it.unimi.dsi.fastutil.doubles.DoubleList;
+import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeResolver;
+import mod.bluestaggo.modernerbeta.registry.ExtendedHolder;
 import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import net.minecraft.world.level.levelgen.SingleThreadedRandomSource;
 import net.minecraft.world.level.levelgen.synth.PerlinNoise;
+import net.minecraft.world.level.biome.Biome;
 
 import java.util.Comparator;
 import java.util.List;
@@ -42,6 +45,9 @@ public class MappedNoiseLayer extends Layer {
     private final DoubleList amplitudes;
     private final boolean useSaltedSeed;
     private transient PerlinNoise noiseSampler;
+    private transient List<ResolvedEntry> resolvedLowerBiomes;
+    private transient List<ResolvedEntry> resolvedUpperBiomes;
+    private transient ExtendedHolder<Biome> resolvedMiddleBiome;
 
     public MappedNoiseLayer(String id, long seed, List<Entry> values, double scale, List<Double> amplitudes, boolean useSaltedSeed) {
         this(id, seed, values, scale, new DoubleImmutableList(amplitudes), useSaltedSeed);
@@ -88,29 +94,40 @@ public class MappedNoiseLayer extends Layer {
     }
 
     @Override
-    protected ExtendedIdentifier generate(int x, int z) {
+    protected ExtendedHolder<Biome> generate(int x, int z) {
         double noiseValue = this.noiseSampler.getValue(x / this.scale, z / this.scale, 0.0);
 
-        for (Entry lowerBiome : this.lowerBiomes) {
+        for (ResolvedEntry lowerBiome : this.resolvedLowerBiomes) {
             if (noiseValue < lowerBiome.value) {
                 return lowerBiome.biome;
             }
         }
 
-        for (Entry upperBiome : this.upperBiomes) {
+        for (ResolvedEntry upperBiome : this.resolvedUpperBiomes) {
             if (noiseValue > upperBiome.value) {
                 return upperBiome.biome;
             }
         }
 
-        return this.middleBiome;
+        return this.resolvedMiddleBiome;
     }
 
     @Override
-    protected void addPossibleBiomes(Set<ExtendedIdentifier> biomes) {
-        this.lowerBiomes.forEach(pair -> biomes.add(pair.biome));
-        this.upperBiomes.forEach(pair -> biomes.add(pair.biome));
-        biomes.add(this.middleBiome);
+    protected void addPossibleBiomes(Set<ExtendedHolder<Biome>> biomes) {
+        this.resolvedLowerBiomes.forEach(pair -> biomes.add(pair.biome));
+        this.resolvedUpperBiomes.forEach(pair -> biomes.add(pair.biome));
+        biomes.add(this.resolvedMiddleBiome);
+    }
+
+    @Override
+    protected void bindOwnBiomes(ExtendedBiomeResolver biomeResolver) {
+        this.resolvedLowerBiomes = this.lowerBiomes.stream()
+            .map(entry -> new ResolvedEntry(entry.value, biomeResolver.resolve(entry.biome)))
+            .toList();
+        this.resolvedUpperBiomes = this.upperBiomes.stream()
+            .map(entry -> new ResolvedEntry(entry.value, biomeResolver.resolve(entry.biome)))
+            .toList();
+        this.resolvedMiddleBiome = biomeResolver.resolve(this.middleBiome);
     }
 
     public record Entry(double value, ExtendedIdentifier biome) {
@@ -120,5 +137,8 @@ public class MappedNoiseLayer extends Layer {
                 ExtendedIdentifier.CODEC.fieldOf("biome").forGetter(Entry::biome)
             ).apply(instance, Entry::new)
         );
+    }
+
+    private record ResolvedEntry(double value, ExtendedHolder<Biome> biome) {
     }
 }

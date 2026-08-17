@@ -642,7 +642,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
                     }
 
                     //TODO: #minecraft:overworld_carver_replaceables was removed, but this change does not translate well
-                    //      in Moderner Beta. Investigate a proper solution.
+                    //      in Moderner Beta. Investigate a proper solution. And no, #minecraft:uncarvable will not work.
                     if (blockState.is(ModernBetaBlockTags.OVERWORLD_CARVER_REPLACEABLES)) {
                         BlockState state = this.getCarveState(blockPos, aquifer);
                         if (state == null) {

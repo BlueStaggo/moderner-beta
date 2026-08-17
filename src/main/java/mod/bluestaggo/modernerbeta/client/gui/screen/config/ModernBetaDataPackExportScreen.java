@@ -2,6 +2,7 @@ package mod.bluestaggo.modernerbeta.client.gui.screen.config;
 
 import com.google.gson.JsonElement;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
+import mod.bluestaggo.modernerbeta.client.gui.FileDialog;
 import mod.bluestaggo.modernerbeta.client.gui.screen.ModernBetaScreen;
 import mod.bluestaggo.modernerbeta.client.gui.screen.ModernBetaSettingsPresetScreen;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaResourceKeys;
@@ -27,9 +28,6 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagEntry;
 import net.minecraft.tags.TagFile;
 import net.minecraft.tags.TagKey;
-import org.lwjgl.PointerBuffer;
-import org.lwjgl.system.MemoryStack;
-import org.lwjgl.util.tinyfd.TinyFileDialogs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -211,9 +209,13 @@ public class ModernBetaDataPackExportScreen extends ModernBetaScreen {
             String title = language.getOrDefault(DATA_PACK_EXPORT_SAVE_AS_TITLE);
 
             File path = new File(this.minecraft.gameDirectory, presetID.getPath());
-            String writeTo = getOutputPathFromSelection(path, title, "*.zip");
-
-            this.exportDatapack(writeTo);
+            FileDialog.saveFileDialog(
+                this.minecraft.getWindow(),
+                title,
+                path.toPath(),
+                List.of(new FileDialog.Filter(".zip", "ZIP file")),
+                this::exportDatapack
+            );
         }).size(BUTTON_LENGTH, BUTTON_HEIGHT).build();
         this.exportButton.active = false;
 
@@ -249,26 +251,8 @@ public class ModernBetaDataPackExportScreen extends ModernBetaScreen {
         return category;
     }
 
-    private static String getOutputPathFromSelection(File path, String title, String... filterPatterns) {
-        try (MemoryStack stack = MemoryStack.stackPush()) {
-            PointerBuffer pointers = stack.mallocPointer(filterPatterns.length);
-            for (String pattern : filterPatterns) {
-                pointers.put(stack.UTF8(pattern));
-                pointers.flip();
-            }
-
-            return TinyFileDialogs.tinyfd_saveFileDialog(
-                title,
-                path.toString(),
-                pointers,
-                null
-            );
-        }
-    }
-
-    private void exportDatapack(String outputPath) {
-        //TODO: maybe make this async?
-        if (outputPath == null)
+    private void exportDatapack(boolean hasResult, String outputPath) {
+        if (!hasResult)
             return;
 
         try (DataPackExporter exporter = new DataPackExporter(outputPath)) {

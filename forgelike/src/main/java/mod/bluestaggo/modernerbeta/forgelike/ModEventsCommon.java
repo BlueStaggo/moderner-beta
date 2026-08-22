@@ -143,7 +143,7 @@ public class ModEventsCommon {
     public static void registerPayloadHandlers(RegisterPayloadHandlersEvent event) {
         ModernerBeta.networkHelper = new NetworkHelperImpl();
 
-        PayloadRegistrar registrar = event.registrar("1");
+        PayloadRegistrar registrar = event.registrar("1").optional();
         registrar.playToClient(
                 BiomeProviderInfoPayload.ID,
                 BiomeProviderInfoPayload.CODEC,

@@ -1,9 +1,7 @@
 plugins {
     id("multiloader-common")
     id("net.fabricmc.fabric-loom-remap")
-    kotlin("jvm")
-    id("com.google.devtools.ksp")
-    id("dev.kikugie.fletching-table")
+    alias(ft.plugins.mixin)
 }
 
 loom {
@@ -21,17 +19,12 @@ loom {
 }
 
 fletchingTable {
-    mixins.create("main") {
-        mixin("default", "moderner_beta-common.mixins.json") {
-            env("DEFAULT")
+    mixins.configure(sourceSets.main) {
+        mixin("moderner_beta-common.mixins.json", "default") {
+            env("MAIN")
             env("CLIENT", "mod.bluestaggo.modernerbeta.mixin.client")
             env("SERVER", "mod.bluestaggo.modernerbeta.mixin.server")
         }
-    }
-
-    j52j.register("main") {
-        extension("mcmeta", "resourcepacks/*/pack.json5")
-        extension("json", "resourcepacks/*/data/**/*.json5")
     }
 }
 

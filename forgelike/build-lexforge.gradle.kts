@@ -1,9 +1,7 @@
 plugins {
     id("multiloader-loader").apply(false)
     id("net.neoforged.moddev.legacyforge")
-    kotlin("jvm")
-    id("com.google.devtools.ksp")
-    id("dev.kikugie.fletching-table")
+    alias(ft.plugins.mixin)
     id("me.modmuss50.mod-publish-plugin")
 }
 
@@ -36,8 +34,8 @@ fletchingTable {
         add("moderner_beta.accesswidener")
     }*/
 
-    mixins.create("main") {
-        mixin("default", "moderner_beta-forgelike.mixins.json")
+    mixins.configure(sourceSets.main) {
+        mixin("moderner_beta-forgelike.mixins.json", "default")
     }
 }
 

@@ -6,7 +6,7 @@ dependencyResolutionManagement {
     }
 
     versionCatalogs {
-        create("ft") { from("dev.kikugie.fletching-table:fletching-table.catalog:0.2.0-alpha.6") }
+        create("ft") { from("dev.kikugie.fletching-table:fletching-table.catalog:0.2.0-alpha.7") }
     }
 }
 

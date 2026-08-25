@@ -2,8 +2,6 @@
 package mod.bluestaggo.modernerbeta.api.level.chunk;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;
-//? if >=26.3
-//import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaNoiseBasedAquifer;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import net.minecraft.util.Mth;
@@ -109,20 +107,24 @@ public class AquiferSamplerProvider {
         int noiseTopY = Mth.floorDiv(topY - minY, this.noiseResolutionVertical);
 
         //? if >=26.3 {
-        /*return ModernBetaNoiseBasedAquifer.create(
+        /*return aquiferConfig.orElseThrow().create(
         *///? } else {
         return Aquifer.create(
         //? }
+            //? if >=26.3 {
+            /*this.chunkSampler.cachingSamplers(),
+            *///? } else {
             this.chunkSampler,
             chunk.getPos(),
-            //? if >=26.3 {
-            /*this.aquiferConfig.orElseThrow(),
-            *///? } else {
             this.noiseRouter,
             //? }
             this.randomFactory,
-            noiseMinY * this.noiseResolutionVertical, 
-            noiseTopY * this.noiseResolutionVertical, 
+            //? if <26.3 {
+            noiseMinY * this.noiseResolutionVertical,
+            noiseTopY * this.noiseResolutionVertical,
+            //? }
+            //? if >=26.3
+            //this.chunkSampler.volume(),
             this.fluidLevelSampler
         );
     }

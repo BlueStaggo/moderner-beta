@@ -39,6 +39,7 @@ import net.minecraft.world.level.biome.BiomeSource;
 import net.minecraft.world.level.biome.Climate;
 import net.minecraft.world.level.biome.Climate.Sampler;
 import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.levelgen.RandomState;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
@@ -156,6 +157,7 @@ public class ModernBetaBiomeSource extends BiomeSource /*? >=26.3 {*/ /*implemen
         int horizontalBlockCheckInterval,
         int verticalBlockCheckInterval,
         Predicate<Holder<Biome>> predicate,
+        //~ if >=26.3 'Climate.Sampler' -> 'RandomState'
         Climate.Sampler noiseSampler,
         LevelReader level
     ) {

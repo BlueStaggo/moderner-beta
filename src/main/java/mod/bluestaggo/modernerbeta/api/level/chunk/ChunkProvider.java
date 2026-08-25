@@ -24,6 +24,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.Util;
 import net.minecraft.world.level.LevelHeightAccessor;
 import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.biome.Biome;
@@ -96,8 +97,23 @@ public abstract class ChunkProvider {
      * @param noiseConfig TODO
      * @return A completed chunk.
      */
-    public abstract CompletableFuture<ChunkAccess> provideChunk(Blender blender, StructureManager structureAccessor, ChunkAccess chunk, RandomState noiseConfig);
-    
+    public abstract ChunkAccess provideChunk(Blender blender, StructureManager structureAccessor, ChunkAccess chunk, RandomState noiseConfig);
+
+    /**
+     * Generates base terrain for given chunk and returns it.
+     *
+     * @param blender TODO
+     * @param structureAccessor
+     * @param chunk
+     * @param noiseConfig TODO
+     * @return A completed chunk.
+     */
+    public CompletableFuture<ChunkAccess> provideChunkAsync(Blender blender, StructureManager structureAccessor, ChunkAccess chunk, RandomState noiseConfig) {
+        return CompletableFuture.supplyAsync(
+            () -> provideChunk(blender, structureAccessor, chunk, noiseConfig), Util.backgroundExecutor()
+        );
+    }
+
     /**
      * Generates biome-specific surface for given chunk.
      *
@@ -259,7 +275,8 @@ public abstract class ChunkProvider {
         return this.chunkGenerator.getBiomeSource().getNoiseBiome(biomeX, biomeY, biomeZ, noiseSampler);
         //? }
     }
-    
+
+    //? if <26.3 {
     /**
      * Creates a ModernBetaChunkNoiseSampler
      *
@@ -274,6 +291,7 @@ public abstract class ChunkProvider {
             blender
         );
     }
+    //? }
     
     public ModernBetaSettings getChunkSettings() {
         return this.chunkSettings;

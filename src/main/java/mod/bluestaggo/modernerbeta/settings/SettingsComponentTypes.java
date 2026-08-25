@@ -22,7 +22,6 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
-import net.minecraft.world.level.levelgen.NoiseSettings;
 
 import java.util.HashMap;
 import java.util.List;
@@ -142,7 +141,7 @@ public class SettingsComponentTypes {
             ModernBetaBuiltInTypes.SettingsComponentType.NOISE_SETTINGS.id,
             NoiseSettings.CODEC,
             (settings, registry) ->
-                settings.getOrDefault(NOISE_GENERATOR_SETTINGS).value().noiseSettings(),
+                NoiseSettings.fromVanilla(settings.getOrDefault(NOISE_GENERATOR_SETTINGS).value().noiseSettings()),
             ValidationResult.Valid::new);
         NOISE_3D_SETTINGS = register(
             ModernBetaBuiltInTypes.SettingsComponentType.NOISE_3D_SETTINGS.id,

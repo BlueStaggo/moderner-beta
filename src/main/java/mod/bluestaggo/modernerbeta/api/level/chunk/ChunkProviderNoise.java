@@ -8,17 +8,18 @@ import mod.bluestaggo.modernerbeta.api.level.chunk.noise.NoiseProviderBase;
 import mod.bluestaggo.modernerbeta.api.level.chunk.noise.NoiseSampler;
 import mod.bluestaggo.modernerbeta.level.blocksource.BlockSourceRules;
 import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaChunkGenerator;
+//? if <26.3
 import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaChunkNoiseSampler;
 import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaGenerationStep;
 import mod.bluestaggo.modernerbeta.level.chunk.provider.island.IslandShape;
 import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.settings.component.*;
+import mod.bluestaggo.modernerbeta.settings.component.NoiseSettings;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.util.chunk.AuxChunkCache;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkCache;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkHeightmap;
-import mod.bluestaggo.modernerbeta.util.noise.SimpleNoisePos;
 import mod.bluestaggo.modernerbeta.util.noise.SimplexNoise;
 import net.minecraft.util.Util;
 import net.minecraft.core.BlockPos;
@@ -93,7 +94,7 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
 
         this.defaultBlock = generatorSettings.defaultBlock();
         this.defaultFluid = generatorSettings.defaultFluid();
-        
+
         this.noiseResolutionVertical = noiseSettings.noiseSizeVertical() * 4;
         this.noiseResolutionHorizontal = noiseSettings.noiseSizeHorizontal() * 4;
         
@@ -137,7 +138,32 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
      * @return A completed chunk.
      */
     @Override
-    public CompletableFuture<ChunkAccess> provideChunk(Blender blender, StructureManager structureAccessor, ChunkAccess chunk, RandomState noiseConfig) {
+    public ChunkAccess provideChunk(Blender blender, StructureManager structureAccessor, ChunkAccess chunk, RandomState noiseConfig) {
+        this.setNoiseConfig(noiseConfig);
+
+        NoiseSettings noiseSettings = this.getNoiseSettings().clampToHeightAccessor(chunk.getHeightAccessorForGeneration());
+        int minY = noiseSettings.minY();
+        int minimumCellY = Mth.floorDiv(minY, noiseSettings.getCellHeight());
+        int cellHeight = Mth.floorDiv(noiseSettings.height(), noiseSettings.getCellHeight());
+
+        if (cellHeight <= 0) {
+            return chunk;
+        }
+
+        this.generateTerrain(chunk, structureAccessor, noiseConfig, minimumCellY, cellHeight);
+        return chunk;
+    }
+
+    /**
+     * Generates base terrain for given chunk and returns it.
+     * @param blender
+     * @param structureAccessor
+     * @param chunk
+     * @param noiseConfig
+     * @return A completed chunk.
+     */
+    @Override
+    public CompletableFuture<ChunkAccess> provideChunkAsync(Blender blender, StructureManager structureAccessor, ChunkAccess chunk, RandomState noiseConfig) {
         this.setNoiseConfig(noiseConfig);
 
         NoiseSettings noiseSettings = this.getNoiseSettings().clampToHeightAccessor(chunk.getHeightAccessorForGeneration());
@@ -168,6 +194,7 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
             return chunk;
         }, Util.backgroundExecutor());
     }
+
 
     @Override
     public boolean skipChunk(int chunkX, int chunkZ, ModernBetaGenerationStep step) {
@@ -223,14 +250,19 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
         SurfaceProperties surfaceProperties = this.getChunkSettings().getOrDefault(SettingsComponentTypes.SURFACE_PROPERTIES);
 
         PositionalRandomFactory randomDeriver = this.createRandom(this.seed).forkPositional();
+        //~ if >=26.3 'ModernBetaChunkNoiseSampler.create' -> 'new NoiseChunk'
         NoiseChunk noiseSampler = ModernBetaChunkNoiseSampler.create(
+            //? if <26.3
             chunk,
             noiseConfig,
             //~ if >=26.3 'DensityFunctions.BeardifierMarker.INSTANCE' -> 'Beardifier.EMPTY'
             DensityFunctions.BeardifierMarker.INSTANCE,
             this.generatorSettings.value(),
             this.getFluidLevelSampler(),
+            //~ if >=26.3 'this' -> 'Blender.empty(),'
             this
+            //? if >=26.3
+            //new net.minecraft.world.level.levelgen.densityfunction.DensityVolume(16, this.getNoiseSettings().height(), 16, chunk.getPos().getMinBlockX(), this.getNoiseSettings().minY(), chunk.getPos().getMinBlockZ())
         );
         
         AquiferSamplerProvider aquiferSamplerProvider = new AquiferSamplerProvider(
@@ -628,7 +660,12 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
         Beardifier weightSampler,
         Aquifer aquiferSampler
     ) {
-        SimpleNoisePos noisePos = new SimpleNoisePos();
+        //? if >=26.3 {
+        /*net.minecraft.world.level.levelgen.densityfunction.SamplerContext noisePos =
+                net.minecraft.world.level.levelgen.densityfunction.SamplerContext.builder().enableCaches().build();
+        *///? } else {
+        mod.bluestaggo.modernerbeta.util.noise.SimpleNoisePos noisePos = new mod.bluestaggo.modernerbeta.util.noise.SimpleNoisePos();
+        //? }
         return (x, y, z) -> {
             if (!worldBorderLocation.containsPoint(x, z)) {
                 return switch (worldBorderLocation.falloffType()) {
@@ -644,8 +681,10 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
             double clampedDensity = Mth.clamp(density / 200.0, -1.0, 1.0);
             
             clampedDensity = clampedDensity / 2.0 - clampedDensity * clampedDensity * clampedDensity / 24.0;
+            //~ if >=26.3 'compute(noisePos.set(x, y, z))' -> 'sampleValue(noisePos, x, y, z)'
             clampedDensity += weightSampler.compute(noisePos.set(x, y, z));
 
+            //~ if >=26.3 'noisePos' -> 'x, y, z'
             return aquiferSampler.computeSubstance(noisePos, clampedDensity);
         };
     }
@@ -662,7 +701,8 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
     }
 
     private NoiseSettings getNoiseSettings() {
-        return this.generatorSettings.value().noiseSettings();
+        NoiseSettings settings = this.getChunkSettings().get(SettingsComponentTypes.NOISE_SETTINGS);
+        return settings != null ? settings : NoiseSettings.fromVanilla(this.generatorSettings.value().noiseSettings());
     }
 }
 

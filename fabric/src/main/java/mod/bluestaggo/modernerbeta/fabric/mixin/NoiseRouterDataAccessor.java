@@ -36,11 +36,6 @@ public interface NoiseRouterDataAccessor {
     ) {
         throw new AssertionError();
     }
-
-    @Invoker
-    static java.util.List<OreVeinifier> invokeOverworldOreVeins(final HolderGetter<DensityFunction> functions) {
-        throw new AssertionError();
-    }
     *///? }
 
     @Invoker

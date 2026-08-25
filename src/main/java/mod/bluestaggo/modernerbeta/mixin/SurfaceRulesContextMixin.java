@@ -1,3 +1,4 @@
+//? if <26.3 {
 package mod.bluestaggo.modernerbeta.mixin;
 
 import mod.bluestaggo.modernerbeta.imixin.ModernBetaSurfaceSystem;
@@ -34,3 +35,4 @@ public class SurfaceRulesContextMixin {
         cir.setReturnValue(blockHeight + surfaceDepth - 8);
     }
 }
+//? }

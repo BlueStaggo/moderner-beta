@@ -1,3 +1,4 @@
+//? if <26.3 {
 package mod.bluestaggo.modernerbeta.mixin;
 
 import net.minecraft.world.level.levelgen.SurfaceRules;
@@ -11,3 +12,4 @@ public interface SequenceRuleSourceAccessor {
     @Accessor("sequence")
     List<SurfaceRules.RuleSource> sequence();
 }
+//? }

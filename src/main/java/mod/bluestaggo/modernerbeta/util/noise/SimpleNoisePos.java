@@ -1,3 +1,4 @@
+//? if <26.3 {
 package mod.bluestaggo.modernerbeta.util.noise;
 
 import net.minecraft.world.level.levelgen.DensityFunction;
@@ -43,3 +44,4 @@ public class SimpleNoisePos implements DensityFunction.FunctionContext {
     }
 
 }
+//? }

@@ -5,6 +5,7 @@ import mod.bluestaggo.modernerbeta.fabric.data.reduced_height.ModernBetaReducedH
 import mod.bluestaggo.modernerbeta.level.carver.configured.ModernBetaConfiguredCarvers;
 import mod.bluestaggo.modernerbeta.level.feature.configured.ModernBetaConfiguredFeatures;
 import mod.bluestaggo.modernerbeta.mixin.NoiseRouterDataAccessor;
+import mod.bluestaggo.modernerbeta.settings.component.NoiseSettings;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;
 import net.minecraft.core.*;
@@ -110,8 +111,19 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
                 EnvironmentAttributeMap.builder()
                     .set(EnvironmentAttributes.FOG_COLOR, 0xFFC0D8FF)
                     .set(EnvironmentAttributes.SKY_COLOR,
-                            net.minecraft.data.worldgen.biome.OverworldBiomes.calculateSkyColor(0.8F))
-                    .set(EnvironmentAttributes.CLOUD_COLOR, net.minecraft.util.ARGB.white(0.8F))
+                        //? if >=26.3
+                        //net.minecraft.util.ARGB.vector3fFromRGB24(
+                        net.minecraft.data.worldgen.biome.OverworldBiomes.calculateSkyColor(0.8F)
+                        //? if >=26.3
+                        //)
+                    )
+                    .set(EnvironmentAttributes.CLOUD_COLOR,
+                        //? if >=26.3
+                        //net.minecraft.util.ARGB.vector4fFromARGB32(
+                        net.minecraft.util.ARGB.white(0.8F)
+                        //? if >=26.3
+                        //)
+                    )
                     .set(EnvironmentAttributes.CLOUD_HEIGHT, 192.33F)
                     .set(EnvironmentAttributes.BACKGROUND_MUSIC, BackgroundMusic.OVERWORLD)
                     .set(EnvironmentAttributes.BED_RULE, BedRule.CAN_SLEEP_WHEN_DARK)
@@ -189,7 +201,7 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
 
         entries.add(mod.bluestaggo.modernerbeta.fabric.mixin.NoiseRouterDataAccessor.getSpaghetti2d(), createCavesSpaghetti2dOverworldFunction(densityFunctionLookup, noiseParametersLookup));
         entries.add(NoiseRouterDataAccessor.getEntrancesKey(), createCavesEntrancesOverworldFunction(densityFunctionLookup, noiseParametersLookup));
-        entries.add(NoiseRouterDataAccessor.getNoodleKey(), createCavesNoodleOverworldFunction(densityFunctionLookup, noiseParametersLookup));
+        entries.add(NoiseRouterDataAccessor.getNoodleKey(), createCavesNoodleOverworldFunction(ModernBetaReducedHeightNoiseSettings.VANILLA_SURFACE, densityFunctionLookup, noiseParametersLookup));
 
         //Placed features
         //~ if >=26.3 'ConfiguredFeature<?, ?>>' -> 'Feature>', 'CONFIGURED_FEATURE' -> 'FEATURE' {
@@ -269,7 +281,7 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
         *///? }
 
         return new NoiseGeneratorSettings(
-            ModernBetaReducedHeightNoiseSettings.VANILLA_SURFACE,
+            ModernBetaReducedHeightNoiseSettings.VANILLA_SURFACE.toVanilla(),
             Blocks.STONE.defaultBlockState(),
             Blocks.WATER.defaultBlockState(),
             mod.bluestaggo.modernerbeta.fabric.mixin.NoiseRouterDataAccessor.invokeOverworld(
@@ -284,7 +296,7 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
                 //? }
             ),
             //? if >=26.3 {
-            /*provider.lookupOrThrow(Registries.MATERIAL_RULE).getOrThrow(net.minecraft.data.worldgen.material.OverworldMaterialRules.OVERWORLD),
+            /*provider.lookupOrThrow(Registries.MATERIAL_RULE).getOrThrow(net.minecraft.data.worldgen.material.OverworldSurfaceRules.OVERWORLD),
             *///? } else {
             SurfaceRuleData.overworld(/*? >=26.2 {*//*provider.lookupOrThrow(Registries.BIOME)*//*?}*/),
             //? }
@@ -299,25 +311,25 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
             //? if >=26.3 {
             /*Optional.of(mod.bluestaggo.modernerbeta.fabric.mixin.NoiseRouterDataAccessor
                     .invokeOverworldAquifers(functions, noises, functionNames)),
-            mod.bluestaggo.modernerbeta.fabric.mixin.NoiseRouterDataAccessor
-                    .invokeOverworldOreVeins(functions),
             *///? } else {
             true,
             true,
             //? }
             false
+            //? if >=26.3
+            //, NoiseGeneratorSettings.DebugFunctions.EMPTY
         );
     }
 
     private static NoiseGeneratorSettings createVanillaCavesSettings(Provider provider) {
         return new NoiseGeneratorSettings(
-            ModernBetaReducedHeightNoiseSettings.VANILLA_CAVES,
+            ModernBetaReducedHeightNoiseSettings.VANILLA_CAVES.toVanilla(),
             Blocks.STONE.defaultBlockState(),
             Blocks.WATER.defaultBlockState(),
             mod.bluestaggo.modernerbeta.fabric.mixin.NoiseRouterDataAccessor.invokeNether(provider.lookupOrThrow(Registries.DENSITY_FUNCTION),
                 provider.lookupOrThrow(Registries.NOISE)),
             //? if >=26.3 {
-            /*provider.lookupOrThrow(Registries.MATERIAL_RULE).getOrThrow(net.minecraft.data.worldgen.material.OverworldMaterialRules.OVERWORLD_CAVES),
+            /*provider.lookupOrThrow(Registries.MATERIAL_RULE).getOrThrow(net.minecraft.data.worldgen.material.OverworldSurfaceRules.OVERWORLD_CAVES),
             *///? } else {
             SurfaceRuleData.overworldLike(/*? >=26.2 {*//*provider.lookupOrThrow(Registries.BIOME), *//*?}*/ false, true, true),
             //? }
@@ -326,12 +338,13 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
             false,
             //? if >=26.3 {
             /*Optional.empty(),
-            List.of(),
             *///? } else {
             false,
             false,
             //? }
             true
+            //? if >=26.3
+            //, NoiseGeneratorSettings.DebugFunctions.EMPTY
         );
     }
 
@@ -339,6 +352,7 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
             HolderGetter<DensityFunction> densityFunctionLookup,
             HolderGetter<NormalNoise.NoiseParameters> noiseParametersLookup
     ) {
+        //~ if >=26.3 'cacheOnce' -> 'cache'
         DensityFunction spaghettiRarity = DensityFunctions.cacheOnce(DensityFunctions.noise(
                 noiseParametersLookup.getOrThrow(Noises.SPAGHETTI_3D_RARITY), 2.0, 1.0));
         DensityFunction spaghettiThickness = DensityFunctions.mappedNoise(
@@ -365,12 +379,14 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
         DensityFunction mainEntrance = DensityFunctions.add(
                 DensityFunctions.add(entranceNoise, DensityFunctions.constant(0.37F)), DensityFunctions.yClampedGradient(10, 30, 0.3F, 0.0F)
         );
+        //~ if >=26.3 'cacheOnce' -> 'cache'
         return DensityFunctions.cacheOnce(DensityFunctions.min(mainEntrance, DensityFunctions.add(spaghettiRoughness, mainSpaghetti)));
     }
 
     private static DensityFunction createCavesNoodleOverworldFunction(
-            HolderGetter<DensityFunction> densityFunctionLookup,
-            HolderGetter<NormalNoise.NoiseParameters> noiseParametersLookup
+        NoiseSettings noiseSettings,
+        HolderGetter<DensityFunction> densityFunctionLookup,
+        HolderGetter<NormalNoise.NoiseParameters> noiseParametersLookup
     ) {
         DensityFunction y = new DensityFunctions.HolderHolder(
                 densityFunctionLookup.getOrThrow(mod.bluestaggo.modernerbeta.fabric.mixin.NoiseRouterDataAccessor.getY()));
@@ -378,15 +394,15 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
         int absMin = 0;
         int min = absMin + 4;
         int max = 320;
-        DensityFunction noodleNoise = verticalRangeChoice(y, DensityFunctions.noise(
+        DensityFunction noodleNoise = verticalRangeChoice(noiseSettings, y, DensityFunctions.noise(
                 noiseParametersLookup.getOrThrow(Noises.NOODLE), 1.0, 1.0), min, max, -1);
-        DensityFunction noodleThickness = verticalRangeChoice(y, DensityFunctions.mappedNoise(
+        DensityFunction noodleThickness = verticalRangeChoice(noiseSettings, y, DensityFunctions.mappedNoise(
                 noiseParametersLookup.getOrThrow(Noises.NOODLE_THICKNESS), 1.0, 1.0, -0.05F, -0.1F), min, max, 0);
 
         double scale = 8D / 3D;
-        DensityFunction noodleRidgeA = verticalRangeChoice(y, DensityFunctions.noise(
+        DensityFunction noodleRidgeA = verticalRangeChoice(noiseSettings, y, DensityFunctions.noise(
                 noiseParametersLookup.getOrThrow(Noises.NOODLE_RIDGE_A), scale, scale), min, max, 0);
-        DensityFunction noodleRidgeB = verticalRangeChoice(y, DensityFunctions.noise(
+        DensityFunction noodleRidgeB = verticalRangeChoice(noiseSettings, y, DensityFunctions.noise(
                 noiseParametersLookup.getOrThrow(Noises.NOODLE_RIDGE_B), scale, scale), min, max, 0);
         DensityFunction noodleRidges = DensityFunctions.mul(DensityFunctions.constant(1.5F),
                 DensityFunctions.max(noodleRidgeA.abs(), noodleRidgeB.abs()));
@@ -421,9 +437,15 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
         return DensityFunctions.max(maxSpaghetti, minSpaghetti).clamp(-1.0F, 1.0F);
     }
 
-    private static DensityFunction verticalRangeChoice(DensityFunction y, DensityFunction whenInRange, int minInclusive, int maxInclusive, int whenOutOfRange) {
-        return DensityFunctions.interpolated(DensityFunctions.rangeChoice(y, minInclusive, maxInclusive + 1,
-                whenInRange, DensityFunctions.constant(whenOutOfRange)));
+    private static DensityFunction verticalRangeChoice(NoiseSettings noiseSettings, DensityFunction y, DensityFunction whenInRange, int minInclusive, int maxInclusive, int whenOutOfRange) {
+        return DensityFunctions.interpolated(
+            DensityFunctions.rangeChoice(y, minInclusive, maxInclusive + 1,
+                    whenInRange, DensityFunctions.constant(whenOutOfRange))
+            //? if >=26.3 {
+            /*, noiseSettings.noiseSizeHorizontal(),
+            noiseSettings.noiseSizeVertical()
+            *///? }
+        );
     }
 
     protected static List<PlacementModifier> modifiers(PlacementModifier countModifier, PlacementModifier heightModifier) {

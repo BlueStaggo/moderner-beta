@@ -3,6 +3,7 @@ package mod.bluestaggo.modernerbeta.level.chunk;
 import mod.bluestaggo.modernerbeta.ModernBetaBuiltInTypes;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
 import mod.bluestaggo.modernerbeta.mixin.NoiseRouterDataAccessor;
+import mod.bluestaggo.modernerbeta.settings.component.NoiseSettings;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
 import net.minecraft.core.Holder.Reference;
 import net.minecraft.core.HolderGetter;
@@ -11,8 +12,10 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.levelgen.*;
-//? if >=26.3
-//import net.minecraft.world.level.levelgen.densityfunction.*;
+//? if >=26.3 {
+/*import net.minecraft.world.level.levelgen.densityfunction.*;
+import net.minecraft.world.level.levelgen.material.rule.SurfaceRules.RuleSource;
+*///? }
 import net.minecraft.world.level.levelgen.synth.NormalNoise;
 
 import java.util.List;
@@ -35,6 +38,7 @@ public class ModernBetaNoiseGeneratorSettings {
     }
     
     private static NoiseRouter createDensityFunctions(
+        NoiseSettings noiseSettings,
         HolderGetter<DensityFunction> densityFunctionLookup,
         HolderGetter<NormalNoise.NoiseParameters> noiseParametersLookup
     ) {
@@ -71,7 +75,13 @@ public class ModernBetaNoiseGeneratorSettings {
             NoiseRouterDataAccessor.invokeUnderground(densityFunctionLookup, noiseParametersLookup, functionSlopedCheeseEstimate)
         );
         DensityFunction functionCavesWithNoodles = DensityFunctions.min(
-            NoiseRouterDataAccessor.invokePostProcess(NoiseRouterDataAccessor.invokeSlideOverworld(false, functionCaves)),
+            NoiseRouterDataAccessor.invokePostProcess(
+                NoiseRouterDataAccessor.invokeSlideOverworld(false, functionCaves)
+                //? if >=26.3 {
+                /*, noiseSettings.noiseSizeHorizontal(),
+                noiseSettings.noiseSizeVertical()
+                *///? }
+            ),
             new DensityFunctions.HolderHolder(densityFunctionLookup.getOrThrow(NoiseRouterDataAccessor.getNoodleKey()))
         );
         
@@ -193,22 +203,23 @@ public class ModernBetaNoiseGeneratorSettings {
         SurfaceRules.RuleSource materialRule = ModernBetaSurfaceRuleData.overworldLike(biomeLookup, true, false, false, false);
 
         return new NoiseGeneratorSettings(
-            shapeConfig,
+            shapeConfig.toVanilla(),
             BlockStates.STONE,
             BlockStates.WATER,
-            createDensityFunctions(densityFunctionLookup, noiseParametersLookup),
-            /*? >=26.3 {*/ /*materialRuleLookup.getOrThrow(net.minecraft.data.worldgen.material.OverworldMaterialRules.OVERWORLD) *//*? } else {*/ materialRule /*? }*/,
+            createDensityFunctions(shapeConfig, densityFunctionLookup, noiseParametersLookup),
+            /*? >=26.3 {*/ /*materialRuleLookup.getOrThrow(net.minecraft.data.worldgen.material.OverworldSurfaceRules.OVERWORLD) *//*? } else {*/ materialRule /*? }*/,
             List.of(),
             seaLevel,
             false,
             //? if >=26.3 {
             /*useAquifers ? Optional.of(createAquiferConfig(noiseParametersLookup)) : Optional.empty(),
-            List.of(),
             *///? } else {
             useAquifers,
             false,
             //? }
             true
+            //? if >=26.3
+            //, NoiseGeneratorSettings.DebugFunctions.EMPTY
         );
     }
 

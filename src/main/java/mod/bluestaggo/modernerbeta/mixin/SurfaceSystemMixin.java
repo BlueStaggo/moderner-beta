@@ -33,6 +33,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.Optional;
 import java.util.function.Function;
 
+//~ if >=26.3 'SurfaceSystem' -> 'net.minecraft.world.level.levelgen.material.MaterialSystem'
 @Mixin(SurfaceSystem.class)
 public class SurfaceSystemMixin implements ModernBetaSurfaceSystem {
     @Unique private ChunkProvider modernerBeta$chunkProvider;
@@ -89,7 +90,16 @@ public class SurfaceSystemMixin implements ModernBetaSurfaceSystem {
         method = "buildSurface",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/world/level/levelgen/SurfaceRules$Context;<init>(Lnet/minecraft/world/level/levelgen/SurfaceSystem;Lnet/minecraft/world/level/levelgen/RandomState;Lnet/minecraft/world/level/chunk/ChunkAccess;Lnet/minecraft/world/level/levelgen/NoiseChunk;Ljava/util/function/Function;"
+            //~ if >=26.3 'MaterialRules$Context' -> 'material/MaterialRuleContext', 'SurfaceSystem' -> 'material/MaterialSystem'
+            target = "Lnet/minecraft/world/level/levelgen/MaterialRules$Context;<init>(Lnet/minecraft/world/level/levelgen/SurfaceSystem;Lnet/minecraft/world/level/levelgen/RandomState;"
+                    //? if >=26.3 {
+                    /*+ "Lnet/minecraft/world/level/levelgen/densityfunction/DensityVolume;Lnet/minecraft/world/level/levelgen/densityfunction/DensitySamplerSet;"
+                    *///? } else {
+                    + "Lnet/minecraft/world/level/chunk/ChunkAccess;"
+                    //? }
+                    //? if <26.3
+                    + "Lnet/minecraft/world/level/levelgen/NoiseChunk;"
+                    + "Ljava/util/function/Function;"
                     //? if <26.2
                     + "Lnet/minecraft/core/Registry;"
                     + "Lnet/minecraft/world/level/levelgen/WorldGenerationContext;"

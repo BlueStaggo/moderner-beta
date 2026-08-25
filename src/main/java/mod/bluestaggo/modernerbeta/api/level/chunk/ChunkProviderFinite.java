@@ -14,7 +14,6 @@ import mod.bluestaggo.modernerbeta.settings.component.FiniteLevelProperties;
 import mod.bluestaggo.modernerbeta.util.BlockStates;
 import mod.bluestaggo.modernerbeta.util.LoggingUtil;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
-import mod.bluestaggo.modernerbeta.util.noise.SimpleNoisePos;
 import net.minecraft.util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -102,7 +101,7 @@ public abstract class ChunkProviderFinite extends ChunkProvider implements Chunk
     }
 
     @Override
-    public CompletableFuture<ChunkAccess> provideChunk(Blender blender, StructureManager structureAccessor, ChunkAccess chunk, RandomState noiseConfig) {
+    public ChunkAccess provideChunk(Blender blender, StructureManager structureAccessor, ChunkAccess chunk, RandomState noiseConfig) {
         ChunkPos pos = chunk.getPos();
 
         if (this.inWorldBounds(pos.getMinBlockX(), pos.getMinBlockZ())) {
@@ -112,9 +111,7 @@ public abstract class ChunkProviderFinite extends ChunkProvider implements Chunk
             this.generateBorder(chunk);
         }
 
-        return CompletableFuture.supplyAsync(
-            () -> chunk, Util.backgroundExecutor()
-        );
+        return chunk;
     }
     
     @Override
@@ -287,8 +284,13 @@ public abstract class ChunkProviderFinite extends ChunkProvider implements Chunk
         
         Beardifier structureWeightSampler = Beardifier.forStructuresInChunk(structureAccessor, chunk.getPos());
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
-        SimpleNoisePos noisePos = new SimpleNoisePos();
-        
+        //? if >=26.3 {
+        /*net.minecraft.world.level.levelgen.densityfunction.SamplerContext noisePos =
+                net.minecraft.world.level.levelgen.densityfunction.SamplerContext.builder().enableCaches().build();
+        *///? } else {
+        mod.bluestaggo.modernerbeta.util.noise.SimpleNoisePos noisePos = new mod.bluestaggo.modernerbeta.util.noise.SimpleNoisePos();
+        //? }
+
         BlockHolder blockHolder = new BlockHolder();
         BlockSource baseBlockSource = this.getBaseBlockSource(structureWeightSampler, noisePos, blockHolder, this.defaultBlock.getBlock(), this.getLevelFluidBlock());
         BlockSourceRules blockSources = new BlockSourceRules.Builder()

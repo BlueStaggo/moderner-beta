@@ -99,6 +99,7 @@ public class SimpleBiomeInjectionHandler implements BiomeInjectionHandler {
             );
             return biome != null || !shouldDelegate
                 ? biome
+                //~ if >=26.3 ', null);' -> ');'
                 : this.modernBetaBiomeSource.getNoiseBiome(biomeX, biomeY, biomeZ, null);
         }
 

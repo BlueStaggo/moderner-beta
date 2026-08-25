@@ -1,3 +1,4 @@
+//? if <26.3 {
 package mod.bluestaggo.modernerbeta.level.chunk;
 
 import mod.bluestaggo.modernerbeta.api.level.chunk.ChunkProvider;
@@ -117,3 +118,4 @@ public class ModernBetaChunkNoiseSampler {
         }
     }
 }
+//? }

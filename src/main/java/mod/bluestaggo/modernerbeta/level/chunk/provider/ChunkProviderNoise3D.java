@@ -15,7 +15,6 @@ import mod.bluestaggo.modernerbeta.util.chunk.ChunkCache;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkHeightmap;
 import mod.bluestaggo.modernerbeta.util.noise.OctaveNoise;
 import mod.bluestaggo.modernerbeta.util.noise.PerlinOctaveNoise;
-import mod.bluestaggo.modernerbeta.util.noise.SimpleNoisePos;
 import mod.bluestaggo.modernerbeta.util.noise.SimplexOctaveNoise;
 import mod.bluestaggo.modernerbeta.util.random.BedrockRandomSource;
 import mod.bluestaggo.modernerbeta.level.biome.HeightConfig;
@@ -162,7 +161,8 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
 
         Aquifer aquiferSampler = this.getAquiferSampler(chunk, noiseConfig);
-        SimpleNoisePos noisePos = new SimpleNoisePos();
+        //? if <26.3
+        mod.bluestaggo.modernerbeta.util.noise.SimpleNoisePos noisePos = new mod.bluestaggo.modernerbeta.util.noise.SimpleNoisePos();
 
         boolean generateBeaches = surfaceProperties.generateBeaches();
 
@@ -274,6 +274,7 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
                         runDepth = surfaceDepth;
 
                         if (this.surfaceProperties.generateLiquids() && y < seaLevel && topBlock.isAir()) { // Generate water bodies
+                            //~ if >=26.3 'noisePos.set(x, y, z)' -> 'x, y, z'
                             BlockState fluidBlock = aquiferSampler.computeSubstance(noisePos.set(x, y, z), 0.0);
 
                             boolean isAir = fluidBlock == null;

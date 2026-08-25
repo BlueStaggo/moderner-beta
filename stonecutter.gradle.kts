@@ -164,6 +164,15 @@ stonecutter.parameters {
             replace("<NormalNoise.NoiseParameters>", "<NormalNoise>")
             replace("net.minecraft.world.level.levelgen.DensityFunction", "net.minecraft.world.level.levelgen.densityfunction.DensityFunction")
             replace("BiomeManager.NoiseBiomeSource", "net.minecraft.world.level.biome.BiomeResolver")
+            replace("SurfaceRules.RuleSource", "MaterialRule")
+            replace("SurfaceRules", "MaterialRules")
+        }
+
+        regex(eval(current.version, ">=26.3")) {
+            replace("\\(EnvironmentAttributes.((?!CLOUD)[A-Z_]+)_COLOR, ([^()]+)\\)", "(EnvironmentAttributes.$1_COLOR, net.minecraft.util.ARGB.vector3fFromRGB24($2))",
+                "\\(EnvironmentAttributes.((?!CLOUD)[A-Z_]+)_COLOR, net.minecraft.util.ARGB.vector3fFromRGB24\\(([^()]+)\\)\\)", "(EnvironmentAttributes.$1_COLOR, $2)")
+            replace("\\(EnvironmentAttributes.CLOUD_COLOR, ([^()]+)\\)", "(EnvironmentAttributes.CLOUD_COLOR, net.minecraft.util.ARGB.vector4fFromARGB32($1))",
+                "\\(EnvironmentAttributes.CLOUD_COLOR, net.minecraft.util.ARGB.vector4fFromARGB32\\(([^()]+)\\)\\)", "(EnvironmentAttributes.CLOUD_COLOR, $1)")
         }
     }
 }

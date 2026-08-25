@@ -15,11 +15,19 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+//~ if >=26.3 'Structure.class' -> 'Structure.GenerationContext.class'
 @Mixin(Structure.class)
 public abstract class StructureMixin {
     @Inject(method = "isValidBiome", at = @At("HEAD"), cancellable = true)
-    private static void injectIsValidBiome(GenerationStub stub, GenerationContext context, CallbackInfoReturnable<Boolean> info) {
+    private /*? <26.3 {*/ static /*? }*/ void injectIsValidBiome(
+        GenerationStub stub,
+        //? if <26.3
+        GenerationContext context,
+        CallbackInfoReturnable<Boolean> info
+    ) {
         BlockPos blockPos = stub.position();
+        //? if >=26.3
+        //GenerationContext context = (Structure.GenerationContext)(Object) this;
 
         //~ if >=26.3 'biomeSource()' -> 'biomeResolver()'
         if (context.biomeSource() instanceof ModernBetaBiomeSource biomeSource) {

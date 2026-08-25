@@ -15,8 +15,8 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(targets = "terrablender.api.SurfaceRuleManager")
 public abstract class SurfaceRuleManagerMixin {
     @WrapOperation(
-        //~ if >=26.2 'getDefaultSurfaceRules' -> 'repopulateRules'
-        method = "getDefaultSurfaceRules",
+        //~ if >=26.2 'getDefaultMaterialRules' -> 'repopulateRules'
+        method = "getDefaultMaterialRules",
         at = @At(
             value = "INVOKE",
             target =

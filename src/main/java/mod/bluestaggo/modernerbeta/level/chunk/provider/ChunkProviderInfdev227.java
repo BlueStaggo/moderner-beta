@@ -12,7 +12,6 @@ import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.util.chunk.ChunkCache;
 import mod.bluestaggo.modernerbeta.util.noise.OctaveNoise;
 import mod.bluestaggo.modernerbeta.util.noise.PerlinOctaveNoise;
-import mod.bluestaggo.modernerbeta.util.noise.SimpleNoisePos;
 import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomeSource;
 import mod.bluestaggo.modernerbeta.level.blocksource.BlockSourceRules;
 import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaChunkGenerator;
@@ -108,12 +107,10 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
     }
 
     @Override
-    public CompletableFuture<ChunkAccess> provideChunk(Blender blender, StructureManager structureAccessor, ChunkAccess chunk, RandomState noiseConfig) {
+    public ChunkAccess provideChunk(Blender blender, StructureManager structureAccessor, ChunkAccess chunk, RandomState noiseConfig) {
         this.generateTerrain(chunk, structureAccessor);  
         
-        return CompletableFuture.<ChunkAccess>supplyAsync(
-            () -> chunk, Util.backgroundExecutor()
-        );
+        return chunk;
     }
 
     @Override
@@ -250,7 +247,12 @@ public class ChunkProviderInfdev227 extends ChunkProvider implements ChunkProvid
 
         Beardifier structureWeightSampler = Beardifier.forStructuresInChunk(structureAccessor, chunk.getPos());
         BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
-        SimpleNoisePos noisePos = new SimpleNoisePos();
+        //? if >=26.3 {
+        /*net.minecraft.world.level.levelgen.densityfunction.SamplerContext noisePos =
+                net.minecraft.world.level.levelgen.densityfunction.SamplerContext.builder().enableCaches().build();
+        *///? } else {
+        mod.bluestaggo.modernerbeta.util.noise.SimpleNoisePos noisePos = new mod.bluestaggo.modernerbeta.util.noise.SimpleNoisePos();
+        //? }
         
         int chunkX = chunk.getPos().x();
         int chunkZ = chunk.getPos().z();

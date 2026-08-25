@@ -1,8 +1,10 @@
 package mod.bluestaggo.modernerbeta.client.color;
 
 import mod.bluestaggo.modernerbeta.api.level.biome.climate.ClimateSamplerSky;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Vector3fc;
 
 public class SkyColorSampler {
     public static final SkyColorSampler INSTANCE = new SkyColorSampler();
@@ -17,7 +19,9 @@ public class SkyColorSampler {
         this.climateSampler = climateSampler;
     }
 
-    public /*? >=1.21.11 {*/int/*?} else {*//*Vec3*//*?}*/ getSkyColor(Vec3 cameraPos) {
+    //~ if >=26.3 'int' -> 'Vector3fc'
+    //~ if >=1.21.11 'public Vec3' -> 'public int'
+    public int getSkyColor(Vec3 cameraPos) {
         int x = (int)cameraPos.x();
         int z = (int)cameraPos.z();
 
@@ -26,7 +30,9 @@ public class SkyColorSampler {
         temp = Mth.clamp(temp, -1F, 1F);
 
         int color = Mth.hsvToRgb(0.6222222F - temp * 0.05F, 0.5F + temp * 0.1F, 1.0F);
-        //? if >=1.21.11 {
+        //? if >=26.3 {
+        /*return ARGB.vector3fFromRGB24(color);
+        *///? } else if >=1.21.11 {
         return color;
         //? } else {
         /*return Vec3.fromRGB24(color);

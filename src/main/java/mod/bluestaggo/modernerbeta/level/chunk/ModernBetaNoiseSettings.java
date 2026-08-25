@@ -1,6 +1,6 @@
 package mod.bluestaggo.modernerbeta.level.chunk;
 
-import net.minecraft.world.level.levelgen.NoiseSettings;
+import mod.bluestaggo.modernerbeta.settings.component.NoiseSettings;
 
 public class ModernBetaNoiseSettings {
     public static final NoiseSettings OVERWORLD_128;

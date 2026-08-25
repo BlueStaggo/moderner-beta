@@ -33,6 +33,8 @@ public interface NoiseRouterDataAccessor {
     @Invoker
     static DensityFunction invokePostProcess(
         DensityFunction density
+        //? if >=26.3
+        //, int cellSizeXz, int cellSizeY
     ) {
         throw new AssertionError();
     }

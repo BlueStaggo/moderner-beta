@@ -5,7 +5,12 @@ accessible class net/minecraft/world/level/biome/Biome$ClimateSettings
 
 extendable class net/minecraft/world/level/levelgen/NoiseBasedChunkGenerator
 extendable class net/minecraft/world/level/chunk/ChunkGenerator
+#~ if >=26.3 ')' -> 'Lnet/minecraft/world/level/levelgen/NoiseSettings;)'
 extendable method net/minecraft/world/level/levelgen/NoiseBasedChunkGenerator createNoiseChunk (Lnet/minecraft/world/level/chunk/ChunkAccess;Lnet/minecraft/world/level/StructureManager;Lnet/minecraft/world/level/levelgen/blending/Blender;Lnet/minecraft/world/level/levelgen/RandomState;)Lnet/minecraft/world/level/levelgen/NoiseChunk;
+#? if >=26.3 {
+#extendable method net/minecraft/world/level/levelgen/NoiseBasedChunkGenerator buildSurface (Lnet/minecraft/world/level/chunk/ChunkAccess;Lnet/minecraft/world/level/levelgen/NoiseChunk;Lnet/minecraft/world/level/levelgen/RandomState;Lnet/minecraft/world/level/biome/BiomeManager;Ljava/util/Set;Lnet/minecraft/world/level/levelgen/material/rule/SurfaceRules.RuleSource;)V
+#extendable method net/minecraft/world/level/levelgen/NoiseBasedChunkGenerator generateCarvers (Lnet/minecraft/world/level/chunk/ChunkAccess;Lnet/minecraft/world/level/levelgen/blending/Blender;Lnet/minecraft/world/level/levelgen/NoiseChunk;Lnet/minecraft/world/level/levelgen/RandomState;Lnet/minecraft/world/level/biome/BiomeManager;Lnet/minecraft/server/level/WorldGenRegion;Lnet/minecraft/world/level/levelgen/material/rule/SurfaceRules.RuleSource;)V
+#? }
 
 extendable class net/minecraft/client/OptionInstance$ValueSet
 extendable class net/minecraft/client/OptionInstance$SliderableValueSet
@@ -21,11 +26,8 @@ extendable method net/minecraft/world/level/levelgen/carver/WorldCarver getCarve
 accessible field net/minecraft/world/level/levelgen/carver/CaveCarverConfiguration floorLevel Lnet/minecraft/util/valueproviders/FloatProvider;
 #? }
 
-#? if >=26.3 {
-#accessible method net/minecraft/world/level/levelgen/NoiseChunk cachedClimateSampler (Lnet/minecraft/world/level/levelgen/NoiseRouter;)Lnet/minecraft/world/level/biome/Climate$Sampler;
-#? } else {
+#? if <26.3
 accessible method net/minecraft/world/level/levelgen/NoiseChunk cachedClimateSampler (Lnet/minecraft/world/level/levelgen/NoiseRouter;Ljava/util/List;)Lnet/minecraft/world/level/biome/Climate$Sampler;
-#? }
 
 #? if >=26.2 {
 #accessible class net/minecraft/world/level/levelgen/NoiseRouterData$QuantizedSpaghettiRarity
@@ -36,8 +38,9 @@ accessible class net/minecraft/world/level/levelgen/DensityFunctions$WeirdScaled
 #? if <26.3
 accessible class net/minecraft/world/level/levelgen/DensityFunctions$BeardifierMarker
 #? if >=26.3 {
-#accessible field net/minecraft/world/level/levelgen/Aquifer$NoiseBasedAquifer noiseChunk Lnet/minecraft/world/level/levelgen/NoiseChunk;
 #accessible field net/minecraft/world/level/levelgen/Aquifer$NoiseBasedAquifer surfaceLevelCache Lit/unimi/dsi/fastutil/longs/Long2IntMap;
-#accessible method net/minecraft/world/level/levelgen/Aquifer$NoiseBasedAquifer <init> (Lnet/minecraft/world/level/levelgen/NoiseChunk;Lnet/minecraft/world/level/ChunkPos;Lnet/minecraft/world/level/levelgen/Aquifer$Config;Lnet/minecraft/world/level/levelgen/PositionalRandomFactory;IILnet/minecraft/world/level/levelgen/Aquifer$FluidPicker;)V
 #extendable method net/minecraft/world/level/levelgen/Aquifer$NoiseBasedAquifer surfaceLevel (II)I
 #? }
+
+#? if >=26.3
+#accessible field net/minecraft/world/level/levelgen/RandomState router Lnet/minecraft/world/level/levelgen/NoiseRouter;

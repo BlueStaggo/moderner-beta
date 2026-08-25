@@ -1,6 +1,6 @@
 package mod.bluestaggo.modernerbeta.fabric.data.reduced_height;
 
-import net.minecraft.world.level.levelgen.NoiseSettings;
+import mod.bluestaggo.modernerbeta.settings.component.NoiseSettings;
 
 public class ModernBetaReducedHeightNoiseSettings {
     public static final NoiseSettings VANILLA_SURFACE;

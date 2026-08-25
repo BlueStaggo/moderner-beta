@@ -78,6 +78,7 @@ public class ConfiguredLayers {
         RegistryOps<JsonElement> ops = RegistryOps.create(JsonOps.INSTANCE, new RegistryOps.RegistryInfoLookup() {
             @Override
             @SuppressWarnings("unchecked")
+            //~ if >=26.3 'RegistryOps.RegistryInfo<T>' -> 'HolderGetter<T>'
             public <T> Optional<RegistryOps.RegistryInfo<T>> lookup(
                 ResourceKey<? extends Registry<? extends T>> registryKey
             ) {
@@ -85,11 +86,15 @@ public class ConfiguredLayers {
                     return Optional.empty();
                 }
 
+                //? if >=26.3 {
+                /*return Optional.of((HolderGetter<T>) biomeRegistry);
+                *///? } else {
                 return Optional.of(new RegistryOps.RegistryInfo<>(
                     null,
                     (HolderGetter<T>) biomeRegistry,
                     Lifecycle.stable()
                 ));
+                //? }
             }
         });
 

@@ -10,6 +10,7 @@ import mod.bluestaggo.modernerbeta.level.carver.*;
 import mod.bluestaggo.modernerbeta.mixin.BiomeManagerAccessor;
 import mod.bluestaggo.modernerbeta.mixin.ChunkGeneratorStructureStateAccessor;
 import mod.bluestaggo.modernerbeta.level.biome.injection.BiomeInjectionRule;
+//? if <26.3
 import mod.bluestaggo.modernerbeta.mixin.SequenceRuleSourceAccessor;
 import mod.bluestaggo.modernerbeta.registry.DefferedDirectHolder;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
@@ -44,10 +45,7 @@ import net.minecraft.world.level.LevelHeightAccessor;
 import net.minecraft.world.level.NoiseColumn;
 import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.WorldGenLevel;
-import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.biome.BiomeGenerationSettings;
-import net.minecraft.world.level.biome.BiomeManager;
-import net.minecraft.world.level.biome.BiomeSource;
+import net.minecraft.world.level.biome.*;
 //? if >=26.3
 //import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -57,8 +55,11 @@ import net.minecraft.world.level.levelgen.*;
 //import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.blending.Blender;
 import net.minecraft.world.level.levelgen.carver.*;
-//? if >=26.3
-//import net.minecraft.world.level.levelgen.DensityFunction;
+//? if >=26.3 {
+/*import net.minecraft.world.level.levelgen.densityfunction.*;
+import net.minecraft.world.level.levelgen.material.*;
+import net.minecraft.world.level.levelgen.material.rule.*;
+*///? }
 import net.minecraft.world.level.levelgen.structure.StructureSet;
 import org.jetbrains.annotations.NotNull;
 
@@ -120,7 +121,8 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
         ModernBetaSettings chunkSettings = settings.mapPreset(presetRegistry, ModernBetaSettingsPreset::chunkSettings);
         Holder<NoiseGeneratorSettings> generatorSettings = chunkSettings.getOrDefault(SettingsComponentTypes.NOISE_GENERATOR_SETTINGS);
 
-        NoiseSettings noiseSettings = chunkSettings.get(SettingsComponentTypes.NOISE_SETTINGS);
+        mod.bluestaggo.modernerbeta.settings.component.NoiseSettings noiseSettings =
+                chunkSettings.get(SettingsComponentTypes.NOISE_SETTINGS);
         Integer seaLevel = chunkSettings.get(SettingsComponentTypes.SEA_LEVEL);
         DeepslateGeneration deepslateGeneration = chunkSettings.getOrDefault(SettingsComponentTypes.DEEPSLATE_GENERATION);
         boolean deepslateEnabled = deepslateGeneration.enabled();
@@ -147,6 +149,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
                 SurfaceRules.state(deepslateBlock)
             );
 
+            //~ if >=26.3 'SequenceRuleSourceAccessor' -> 'SequenceRule'
             if (surfaceRules instanceof SequenceRuleSourceAccessor sequenceRule) {
                 List<SurfaceRules.RuleSource> ruleSequence = new ArrayList<>(sequenceRule.sequence());
                 ruleSequence.add(deepslateRule);
@@ -162,7 +165,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
 
         //noinspection deprecation
         unboxed = new NoiseGeneratorSettings(
-            noiseSettings != null ? noiseSettings : unboxed.noiseSettings(),
+            noiseSettings != null ? noiseSettings.toVanilla() : unboxed.noiseSettings(),
             unboxed.defaultBlock(),
             unboxed.defaultFluid(),
             unboxed.noiseRouter(),
@@ -170,11 +173,13 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
             unboxed.spawnTarget(),
             seaLevel != null ? seaLevel : unboxed.seaLevel(),
             unboxed.disableMobGeneration(),
-            //~ if >=26.3 'Enabled()' -> '()' {
+            //~ if >=26.3 'Enabled()' -> '()'
             unboxed.aquifersEnabled(),
+            //? if <26.3
             unboxed.oreVeinsEnabled(),
-            //~ }
             unboxed.useLegacyRandomSource()
+            //? if >=26.3
+            //, unboxed.debugFunctions()
         );
 
         return unboxed;
@@ -235,19 +240,67 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
         RandomState noiseConfig, Blender blender, StructureManager structureAccessor, ChunkAccess chunk
     ) {
         return CompletableFuture.supplyAsync(Util.name(() -> {
+            //? if >=26.3 {
+            /*DensityBufferPool bufferPool = noiseConfig.acquireDensityBufferPool();
+
+            try {
+                Climate.Sampler climateSampler = noiseConfig.createClimateSampler(SamplerContext.builder()
+                        .enableCaches().useBufferArena(bufferPool).build());
+
+                BiomeResolver biomeResolver = this.biomeSource.createResolver(climateSampler);
+                chunk.fillBiomesFromNoise(this.decorateBiomeResolver(blender, chunk, biomeResolver));
+            } finally {
+                noiseConfig.releaseDensityBufferPool(bufferPool);
+            }
+            *///? } else {
             NoiseChunk noiseSampler = chunk.getOrCreateNoiseChunk(c -> this.createNoiseChunk(c, structureAccessor, blender, noiseConfig));
             chunk.fillBiomesFromNoise(
-                //~ if >=26.3 ',' -> '.createResolver('
                 this.biomeSource,
-                noiseSampler.cachedClimateSampler(noiseConfig.router() /*? <26.3 {*/, this.generatorSettings().value().spawnTarget() /*? }*/)
-                //? if >=26.3
-                //)
+                noiseSampler.cachedClimateSampler(noiseConfig.router(), this.generatorSettings().value().spawnTarget())
             );
+            //? }
             
             return chunk;
         }, () -> "init_biomes"), Util.backgroundExecutor());
     }
-    
+
+    //? if >=26.3 {
+    /*@Override
+    public CompletableFuture<ChunkAccess> buildTerrain(ChunkAccess chunk, Blender blender, RandomState randomState, StructureManager structureManager, BiomeManager biomeManager, WorldGenRegion carverBiomeRegion, Set<Holder<Biome>> possibleBiomes) {
+        ChunkPos chunkPos = chunk.getPos();
+        NoiseSettings noiseSettings = this.generatorSettings().value().noiseSettings().clampToHeightAccessor(chunk.getHeightAccessorForGeneration());
+        return noiseSettings.height() > 0 && !ModCompat.skipGeneratingChunk(chunkPos.x(), chunkPos.z()) ? CompletableFuture.supplyAsync(() -> {
+            try (NoiseChunk noiseChunk = this.createNoiseChunk(chunk, structureManager, blender, randomState, noiseSettings)) {
+                DensityVolume volume = noiseChunk.volume();
+                int topSectionIndex = chunk.getSectionIndex(volume.maxBlockY());
+                int bottomSectionIndex = chunk.getSectionIndex(volume.minBlockY());
+                Set<LevelChunkSection> sections = com.google.common.collect.Sets.newHashSet();
+
+                for (int sectionIndex = topSectionIndex; sectionIndex >= bottomSectionIndex; sectionIndex--) {
+                    LevelChunkSection section = chunk.getSection(sectionIndex);
+                    section.acquire();
+                    sections.add(section);
+                }
+
+                try {
+                    this.chunkProvider.provideChunk(blender, structureManager, chunk, randomState);
+                } finally {
+                    for (LevelChunkSection section : sections) {
+                        section.release();
+                    }
+                }
+
+                SurfaceRules.RuleSource materialRule = this.generatorSettings().value().materialRule().value();
+                this.buildSurface(structureManager, randomState, chunk, biomeManager, blender, possibleBiomes, materialRule);
+                this.generateCarvers(chunk, blender, noiseChunk, randomState, biomeManager, carverBiomeRegion, materialRule);
+
+                return chunk;
+            }
+        }, Util.backgroundExecutor().forName("buildTerrain")) : CompletableFuture.completedFuture(chunk);
+    }
+    *///? }
+
+    //? if <26.3 {
     @Override
     public @NotNull CompletableFuture<ChunkAccess> fillFromNoise(
         //? if <1.21
@@ -258,9 +311,11 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
         if (ModCompat.skipGeneratingChunk(chunkPos.x(), chunkPos.z()))
             return CompletableFuture.completedFuture(chunk);
 
-        return this.chunkProvider.provideChunk(Blender.empty(), structureAccessor, chunk, noiseConfig);
+        return this.chunkProvider.provideChunkAsync(Blender.empty(), structureAccessor, chunk, noiseConfig);
     }
+    //? }
 
+    //? if <26.3
     @Override
     public void buildSurface(
         //? if <26.3
@@ -271,7 +326,8 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
         //? if >=26.3 {
         /*, BiomeManager biomeManager,
         Blender blender,
-        Set<Holder<Biome>> possibleBiomes
+        Set<Holder<Biome>> possibleBiomes,
+        SurfaceRules.RuleSource materialRule
         *///? }
     ) {
         //? if <26.3
@@ -303,7 +359,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
                     this.chunkProvider.provideSurface(structureAccessor, chunk, modernBetaBiomeSource, biomeManager, noiseConfig);
                 }
             } else {
-                super.buildSurface(
+                this.buildDefaultSurface(
                     //? if <26.3
                     chunkRegion,
                     structureAccessor,
@@ -324,17 +380,26 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
     @Override
     public void buildSurface(
         ChunkAccess chunk,
+        //~ if >=26.3 'WorldGenerationContext context' -> 'NoiseChunk noiseChunk'
         WorldGenerationContext context,
         RandomState random,
+        //? if <26.3
         StructureManager structureManager,
-        BiomeManager biomeManager,
+        BiomeManager biomeManager
         //? if <26.2
-        Registry<Biome> biomes,
-        Blender blender
+        , Registry<Biome> biomes
+        //? if <26.3
+        , Blender blender
         //? if >=26.2
         //, Set<Holder<Biome>> possibleBiomes
+        //? if >=26.3
+        //, SurfaceRules.RuleSource materialRule
     ) {
+        //? if >= 26.3 {
+        /*WorldGenerationContext context = new WorldGenerationContext(this, chunk.getHeightAccessorForGeneration());
+        *///? } else {
         NoiseChunk noiseChunk = chunk.getOrCreateNoiseChunk(chunkAccess -> this.createNoiseChunk(chunkAccess, structureManager, blender, random));
+        //? }
         NoiseGeneratorSettings noiseGeneratorSettings = this.generatorSettings().value();
         if (random.surfaceSystem() instanceof ModernBetaSurfaceSystem modernBetaSurfaceSystem) {
             modernBetaSurfaceSystem.modernerBeta$setupChunkContext(this.chunkProvider);
@@ -380,33 +445,58 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
         Set<Holder<Biome>> possibleBiomes
         *///? }
     ) {
+        //? if >=26.3 {
+        /*NoiseChunk noiseChunk = this.createNoiseChunk(
+            chunk,
+            structureAccessor,
+            blender,
+            noiseConfig,
+            generatorSettings().value().noiseSettings()
+        );
+        *///? }
+
         super.buildSurface(
-            //? if <26.3
+            //? if >=26.3 {
+            /*chunk,
+            noiseChunk,
+            noiseConfig,
+            biomeManager,
+            possibleBiomes,
+            generatorSettings().value().materialRule().value()
+            *///? } else {
             chunkRegion,
             structureAccessor,
             noiseConfig,
             chunk
-            //? if >=26.3 {
-            /*, biomeManager,
-            blender,
-            possibleBiomes
-            *///? }
+            //? }
         );
     }
 
     @Override
+    //~ if >=26.3 'applyCarvers' -> 'generateCarvers'
     public void applyCarvers(
+        //? if >=26.3 {
+        /*ChunkAccess chunk,
+        Blender blender,
+        NoiseChunk chunkNoiseSampler,
+        *///? } else {
         WorldGenRegion chunkRegion,
+        //? }
         //? if <26.3
         long seed,
         RandomState noiseConfig,
         BiomeManager biomeAccess,
+        //? if <26.3
         StructureManager structureAccessor,
+        //? if >=26.3 {
+        /*WorldGenRegion chunkRegion
+        *///? } else {
         ChunkAccess chunk
-        //? if >=26.3
-        //, Blender blender
+        //? }
         //? if <1.21.2
         //, GenerationStep.Carving carverStep
+        //? if >=26.3
+        //, SurfaceRules.RuleSource materialRule
     ) {
         //? if >=26.3 {
         /*//noinspection deprecation
@@ -418,13 +508,14 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
             this.chunkProvider.skipChunk(chunkPos.x(), chunkPos.z(), ModernBetaGenerationStep.CARVERS))
             return;
 
-        BiomeManager biomeAccessWithSource = biomeAccess.withDifferentSource((biomeX, biomeY, biomeZ) ->
+        BiomeManager biomeAccessWithSource = biomeAccess.withDifferentSource((biomeX, biomeY, biomeZ) -> {
             //? if >=26.3 {
-            /*this.biomeSource.createResolver(noiseConfig.sampler()).getNoiseBiome(biomeX, biomeY, biomeZ)
+            /*Climate.Sampler climateSampler = noiseConfig.createClimateSampler(SamplerContext.builder().enableCaches().build());
+            return this.biomeSource.createResolver(climateSampler).getNoiseBiome(biomeX, biomeY, biomeZ);
             *///? } else {
-            this.biomeSource.getNoiseBiome(biomeX, biomeY, biomeZ, noiseConfig.sampler())
+            return this.biomeSource.getNoiseBiome(biomeX, biomeY, biomeZ, noiseConfig.sampler());
             //? }
-        );
+        });
 
         int mainChunkX = chunkPos.x();
         int mainChunkZ = chunkPos.z();
@@ -432,6 +523,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
         Aquifer aquiferSampler = this.chunkProvider.getAquiferSampler(chunk, noiseConfig);
         
         // Chunk Noise Sampler used to sample surface level
+        //? if <26.3
         NoiseChunk chunkNoiseSampler = chunk.getOrCreateNoiseChunk(c -> this.createNoiseChunk(c, structureAccessor, Blender.of(chunkRegion), noiseConfig));
 
         //~ if >=26.3 'CONFIGURED_CARVER' -> 'CARVER'
@@ -502,7 +594,8 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
                 @SuppressWarnings("deprecation")
                 BiomeGenerationSettings genSettings = carverChunk.carverBiome(() -> this.getBiomeGenerationSettings(
                     //? if >=26.3 {
-                    /*this.biomeSource.createResolver(noiseConfig.sampler()).getNoiseBiome(QuartPos.fromBlock(carverPos.getMinBlockX()), 0, QuartPos.fromBlock(carverPos.getMinBlockZ())))
+                    /*this.biomeSource.createResolver(noiseConfig.createClimateSampler(SamplerContext.builder().enableCaches().build()))
+                        .getNoiseBiome(QuartPos.fromBlock(carverPos.getMinBlockX()), 0, QuartPos.fromBlock(carverPos.getMinBlockZ())))
                     *///? } else {
                     this.biomeSource.getNoiseBiome(QuartPos.fromBlock(carverPos.getMinBlockX()), 0, QuartPos.fromBlock(carverPos.getMinBlockZ()), noiseConfig.sampler()))
                     //? }
@@ -607,7 +700,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
 
         //? if >=26.3 {
         /*if (!carvingMask.isEmpty()) {
-            this.applyCarvingMask(chunk, carvingMask, noiseConfig, carverContext, chunkNoiseSampler, blockToBiomeFunc, blender.getCarvingFilter());
+            this.applyCarvingMask(chunk, carvingMask, noiseConfig, materialRule, carverContext, chunkNoiseSampler, blockToBiomeFunc, blender.getCarvingFilter());
         }
         *///? }
     }
@@ -618,6 +711,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
         ChunkAccess chunk,
         CarvingMask mask,
         RandomState randomState,
+        SurfaceRules.RuleSource materialRule,
         WorldGenerationContext context,
         NoiseChunk noiseChunk,
         Function<BlockPos, Holder<Biome>> biomeGetter,
@@ -627,7 +721,6 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
         BlockPos.MutableBlockPos blockPos = new BlockPos.MutableBlockPos();
         BlockPos.MutableBlockPos helperPos = new BlockPos.MutableBlockPos();
         Aquifer aquifer = noiseChunk.aquifer();
-        SurfaceRules.RuleSource materialRule = this.generatorSettings().value().materialRule().value();
         mask.visit((x, z, bottomY, topY) -> {
             boolean hasGrass = false;
             int worldX = chunkPos.getBlockX(x);
@@ -658,7 +751,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
                             if (chunk.getBlockState(helperPos).is(Blocks.DIRT)) {
                                 if (useSurfaceRules) {
                                     randomState.surfaceSystem()
-                                        .topMaterial(materialRule, randomState, context, biomeGetter, chunk, noiseChunk, helperPos, !state.getFluidState().isEmpty())
+                                        .topMaterial(materialRule, randomState, context, biomeGetter, chunk, noiseChunk.cachingSamplers(), helperPos, !state.getFluidState().isEmpty())
                                         .ifPresent(topMaterial -> {
                                             VersionCompat.setBlockState(chunk, helperPos, topMaterial);
                                             if (!topMaterial.getFluidState().isEmpty()) {
@@ -694,6 +787,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
         int x = pos.getX();
         int y = pos.getY();
         int z = pos.getZ();
+        //~ if >=26.3 'new DensityFunction.SinglePointContext(x, y, z)' -> 'x, y, z'
         return aquiferSampler.computeSubstance(new DensityFunction.SinglePointContext(x, y, z), 0.0);
     }
     *///? }
@@ -779,8 +873,14 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
         return this.chunkProvider.getSeaLevel();
     }
 
+    //? if <26.3 {
     @Override
-    protected @NotNull NoiseChunk createNoiseChunk(ChunkAccess chunk, StructureManager manager, Blender blender, RandomState noiseConfig) {
+    protected @NotNull NoiseChunk createNoiseChunk(
+        ChunkAccess chunk,
+        StructureManager manager,
+        Blender blender,
+        RandomState noiseConfig
+    ) {
         return ModernBetaChunkNoiseSampler.create(
             chunk,
             noiseConfig,
@@ -790,6 +890,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
             this.chunkProvider
         );
     }
+    //? }
 
     public HolderGetter<ModernBetaSettingsPreset> getPresetRegistry() {
         return this.presetRegistry;

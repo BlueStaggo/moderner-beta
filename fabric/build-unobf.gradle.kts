@@ -1,9 +1,7 @@
 plugins {
     `multiloader-loader`
     id("net.fabricmc.fabric-loom")
-    kotlin("jvm")
-    id("com.google.devtools.ksp")
-    id("dev.kikugie.fletching-table")
+    alias(ft.plugins.mixin)
 }
 
 loom {
@@ -26,8 +24,8 @@ loom {
 }
 
 fletchingTable {
-    mixins.create("main") {
-        mixin("default", "moderner_beta-fabric.mixins.json")
+    mixins.configure(sourceSets.main) {
+        mixin("moderner_beta-fabric.mixins.json", "default")
     }
 }
 

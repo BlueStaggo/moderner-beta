@@ -66,6 +66,11 @@ public class ModernerBetaFabric implements ModInitializer {
 
         ServerLifecycleEvents.SERVER_STARTING.register(ModernBetaLevelInitializer::initStarting);
         ServerLifecycleEvents.SERVER_STARTED.register(ModernBetaLevelInitializer::initStarted);
+        ServerLifecycleEvents.END_DATA_PACK_RELOAD.register((server, resources, success) -> {
+            if (success) {
+                ModernBetaLevelInitializer.clearBiomeInjectionCaches(server);
+            }
+        });
 
         ModernerBeta.networkHelper = new NetworkHelperImpl();
 

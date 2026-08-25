@@ -1,9 +1,11 @@
 package mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers;
 
-import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
+import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeResolver;
+import mod.bluestaggo.modernerbeta.registry.ExtendedHolder;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.LayerTarget;
 import net.minecraft.util.random.WeightedList;
+import net.minecraft.world.level.biome.Biome;
 
 import java.util.List;
 import java.util.Optional;
@@ -47,7 +49,14 @@ public class WeightedPoolLayer extends Layer {
     }
 
     @Override
-    protected ExtendedIdentifier generate(int x, int z) {
+    protected void bindOwnBiomes(ExtendedBiomeResolver biomeResolver) {
+        this.configuredTargets.unwrap().stream()
+            .map(VersionCompat::getWeightedValue)
+            .forEach(target -> target.bindBiomes(biomeResolver));
+    }
+
+    @Override
+    protected ExtendedHolder<Biome> generate(int x, int z) {
         return VersionCompat.accessPool(this.configuredTargets, this.getRandom(x, z)).sample(x, z);
     }
 
@@ -61,7 +70,7 @@ public class WeightedPoolLayer extends Layer {
     }
 
     @Override
-    protected void addPossibleBiomes(Set<ExtendedIdentifier> biomes) {
+    protected void addPossibleBiomes(Set<ExtendedHolder<Biome>> biomes) {
         this.configuredTargets.unwrap().stream()
             .map(VersionCompat::getWeightedValue)
             .forEach(target -> target.addPossibleBiomes(biomes));

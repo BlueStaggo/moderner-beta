@@ -19,6 +19,9 @@ public interface BiomeInjector {
     default void initIfNeeded() {
     }
 
+    default void clear() {
+    }
+
     Holder<Biome> apply(BiomeInjectionContext context, int biomeX, int biomeY, int biomeZ);
 
     Set<Holder<Biome>> getPossibleBiomes();

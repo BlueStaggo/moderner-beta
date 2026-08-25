@@ -6,14 +6,18 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.longs.Long2ObjectLinkedOpenHashMap;
 import mod.bluestaggo.modernerbeta.ModernerBeta;
+import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeResolver;
+import mod.bluestaggo.modernerbeta.registry.ExtendedHolder;
 import mod.bluestaggo.modernerbeta.registry.ModernBetaRegistries;
 import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ColumnPos;
 import net.minecraft.util.LinearCongruentialGenerator;
+import net.minecraft.world.level.biome.Biome;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -30,7 +34,8 @@ public abstract class Layer {
     private transient ThreadLocal<LayerRandom> random = ThreadLocal.withInitial(() -> new LayerRandom(0));
     private transient int initialSkip;
 
-    private transient ThreadLocal<Long2ObjectLinkedOpenHashMap<ExtendedIdentifier>> cache = createCache();
+    private transient ThreadLocal<Long2ObjectLinkedOpenHashMap<ExtendedHolder<Biome>>> cache = createCache();
+    private transient ExtendedBiomeResolver biomeResolver;
 
     protected static <L extends Layer> Products.P2<
         RecordCodecBuilder.Mu<L>,
@@ -56,7 +61,7 @@ public abstract class Layer {
 
     public abstract LayerType<?> getType();
 
-    protected abstract ExtendedIdentifier generate(int x, int z);
+    protected abstract ExtendedHolder<Biome> generate(int x, int z);
 
     public void configure(Function<String, Layer> layerMap) {
     }
@@ -65,7 +70,7 @@ public abstract class Layer {
         this.initialSkip = initialSkip;
     }
 
-    protected void addPossibleBiomes(Set<ExtendedIdentifier> biomes) {
+    protected void addPossibleBiomes(Set<ExtendedHolder<Biome>> biomes) {
     }
 
     protected List<Layer> getParents() {
@@ -102,10 +107,10 @@ public abstract class Layer {
         this.random = ThreadLocal.withInitial(() -> new LayerRandom(0));
     }
 
-    public ExtendedIdentifier sample(int x, int z) {
-        Long2ObjectLinkedOpenHashMap<ExtendedIdentifier> cache = this.cache.get();
+    public ExtendedHolder<Biome> sample(int x, int z) {
+        Long2ObjectLinkedOpenHashMap<ExtendedHolder<Biome>> cache = this.cache.get();
         long pos = ColumnPos.asLong(x, z);
-        ExtendedIdentifier biome = cache.get(pos);
+        ExtendedHolder<Biome> biome = cache.get(pos);
         if (biome != null) {
             return biome;
         }
@@ -131,15 +136,50 @@ public abstract class Layer {
         return this.saltedSeed;
     }
 
-    public final void addPossibleBiomesRecursive(Set<ExtendedIdentifier> biomes) {
+    public final void bindBiomes(ExtendedBiomeResolver biomeResolver) {
+        if (this.biomeResolver == biomeResolver) {
+            return;
+        }
+        this.biomeResolver = biomeResolver;
+        this.cache = createCache();
+        this.bindOwnBiomes(biomeResolver);
+        for (Layer parent : this.getParents()) {
+            parent.bindBiomes(biomeResolver);
+        }
+    }
+
+    protected void bindOwnBiomes(ExtendedBiomeResolver biomeResolver) {
+    }
+
+    protected static boolean matches(Set<ExtendedIdentifier> biomes, ExtendedHolder<Biome> biome) {
+        return biomes.stream().anyMatch(biome::is);
+    }
+
+    protected static <V> V getMatching(Map<ExtendedIdentifier, V> map, ExtendedHolder<Biome> biome) {
+        for (Map.Entry<ExtendedIdentifier, V> entry : map.entrySet()) {
+            ExtendedIdentifier identifier = entry.getKey();
+            if (!identifier.weak() && biome.base().is(identifier.baseId()) && biome.ext().equals(identifier.ext())) {
+                return entry.getValue();
+            }
+        }
+        for (Map.Entry<ExtendedIdentifier, V> entry : map.entrySet()) {
+            if (biome.is(entry.getKey())) {
+                return entry.getValue();
+            }
+        }
+        return null;
+    }
+
+    public final void addPossibleBiomesRecursive(Set<ExtendedHolder<Biome>> biomes) {
         for (Layer parent : this.getParents()) {
             parent.addPossibleBiomesRecursive(biomes);
         }
         this.addPossibleBiomes(biomes);
     }
 
-    public final ExtendedIdentifier[] sampleNeighbors(int x, int z) {
-        return new ExtendedIdentifier[] {
+    @SuppressWarnings("unchecked")
+    public final ExtendedHolder<Biome>[] sampleNeighbors(int x, int z) {
+        return new ExtendedHolder[] {
             this.sample(x - 1, z),
             this.sample(x + 1, z),
             this.sample(x, z - 1),
@@ -147,8 +187,9 @@ public abstract class Layer {
         };
     }
 
-    public final ExtendedIdentifier[] sampleDiagonalNeighbors(int x, int z) {
-        return new ExtendedIdentifier[] {
+    @SuppressWarnings("unchecked")
+    public final ExtendedHolder<Biome>[] sampleDiagonalNeighbors(int x, int z) {
+        return new ExtendedHolder[] {
             this.sample(x - 1, z - 1),
             this.sample(x + 1, z - 1),
             this.sample(x - 1, z + 1),
@@ -193,15 +234,23 @@ public abstract class Layer {
         return string;
     }
 
-    public static boolean allNeighborsEqual(ExtendedIdentifier[] neighbors, ExtendedIdentifier i) {
-        return neighbors[0].equals(i) && neighbors[1].equals(i) && neighbors[2].equals(i) && neighbors[3].equals(i);
+    public static boolean allNeighborsEqual(ExtendedHolder<Biome>[] neighbors, ExtendedHolder<Biome> biome) {
+        return neighbors[0].is(biome) && neighbors[1].is(biome) && neighbors[2].is(biome) && neighbors[3].is(biome);
     }
 
-    public static boolean neighborsContain(ExtendedIdentifier[] neighbors, ExtendedIdentifier i) {
-        return neighbors[0].equals(i) || neighbors[1].equals(i) || neighbors[2].equals(i) || neighbors[3].equals(i);
+    public static boolean allNeighborsEqual(ExtendedHolder<Biome>[] neighbors, ExtendedIdentifier biome) {
+        return neighbors[0].is(biome) && neighbors[1].is(biome) && neighbors[2].is(biome) && neighbors[3].is(biome);
     }
 
-    private static ThreadLocal<Long2ObjectLinkedOpenHashMap<ExtendedIdentifier>> createCache() {
+    public static boolean neighborsContain(ExtendedHolder<Biome>[] neighbors, ExtendedHolder<Biome> biome) {
+        return neighbors[0].is(biome) || neighbors[1].is(biome) || neighbors[2].is(biome) || neighbors[3].is(biome);
+    }
+
+    public static boolean neighborsContain(ExtendedHolder<Biome>[] neighbors, ExtendedIdentifier biome) {
+        return neighbors[0].is(biome) || neighbors[1].is(biome) || neighbors[2].is(biome) || neighbors[3].is(biome);
+    }
+
+    private static ThreadLocal<Long2ObjectLinkedOpenHashMap<ExtendedHolder<Biome>>> createCache() {
         return ThreadLocal.withInitial(() -> new Long2ObjectLinkedOpenHashMap<>(CACHE_CAPACITY));
     }
 }

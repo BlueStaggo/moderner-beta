@@ -1,7 +1,8 @@
 package mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers;
 
-import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
+import mod.bluestaggo.modernerbeta.registry.ExtendedHolder;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
+import net.minecraft.world.level.biome.Biome;
 
 public class ProxyLayer extends SingleParentLayer {
     public static final com.mojang.serialization.MapCodec<ProxyLayer> CODEC = VersionCompat.createMaybeMapCodec(
@@ -19,12 +20,12 @@ public class ProxyLayer extends SingleParentLayer {
     }
 
     @Override
-    protected ExtendedIdentifier generate(int x, int z) {
+    protected ExtendedHolder<Biome> generate(int x, int z) {
         return this.parentLayer.generate(x, z);
     }
 
     @Override
-    public ExtendedIdentifier sample(int x, int z) {
+    public ExtendedHolder<Biome> sample(int x, int z) {
         return this.parentLayer.sample(x, z);
     }
 }

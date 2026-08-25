@@ -22,6 +22,10 @@ public record BiomeInjectionRule(BiomeInjector injector, Step stepFor) {
         this.injector.initIfNeeded();
     }
 
+    public void clear() {
+        this.injector.clear();
+    }
+
     public Holder<Biome> apply(BiomeInjectionContext context, int biomeX, int biomeY, int biomeZ) {
         return this.injector.apply(context, biomeX, biomeY, biomeZ);
     }

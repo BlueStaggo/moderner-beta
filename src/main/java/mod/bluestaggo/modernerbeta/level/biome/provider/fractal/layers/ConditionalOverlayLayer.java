@@ -3,7 +3,8 @@ package mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableList;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeIds;
-import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
+import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeResolver;
+import mod.bluestaggo.modernerbeta.registry.ExtendedHolder;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.LayerTarget;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.predicates.BiomePredicate;
@@ -11,6 +12,7 @@ import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.predicates.Biome
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
+import net.minecraft.world.level.biome.Biome;
 
 public class ConditionalOverlayLayer extends SingleParentLayer {
     public static final com.mojang.serialization.MapCodec<ConditionalOverlayLayer> CODEC = VersionCompat.createMaybeMapCodec(
@@ -62,6 +64,16 @@ public class ConditionalOverlayLayer extends SingleParentLayer {
     }
 
     @Override
+    protected void bindOwnBiomes(ExtendedBiomeResolver biomeResolver) {
+        if (this.onMatchConfigured != null) {
+            this.onMatchConfigured.bindBiomes(biomeResolver);
+        }
+        if (this.otherwiseConfigured != null) {
+            this.otherwiseConfigured.bindBiomes(biomeResolver);
+        }
+    }
+
+    @Override
     public LayerType<?> getType() {
         return LayerType.CONDITIONAL_OVERLAY;
     }
@@ -80,7 +92,7 @@ public class ConditionalOverlayLayer extends SingleParentLayer {
     }
 
     @Override
-    protected void addPossibleBiomes(Set<ExtendedIdentifier> biomes) {
+    protected void addPossibleBiomes(Set<ExtendedHolder<Biome>> biomes) {
         if (this.onMatchConfigured != null && !(this.onMatchConfigured instanceof LayerTarget.Configured.OfLayer)) {
             this.onMatchConfigured.addPossibleBiomes(biomes);
         }
@@ -90,16 +102,16 @@ public class ConditionalOverlayLayer extends SingleParentLayer {
     }
 
     @Override
-    protected ExtendedIdentifier generate(int x, int z) {
-        ExtendedIdentifier biome = this.parentLayer.sample(x, z);
+    protected ExtendedHolder<Biome> generate(int x, int z) {
+        ExtendedHolder<Biome> biome = this.parentLayer.sample(x, z);
         LayerTarget.Configured target = this.predicate.matches(biome, this.parentLayer, Suppliers.memoize(() -> this.getRandom(x, z)), x, z)
             ? this.onMatchConfigured : this.otherwiseConfigured;
         if (target == null) {
             return biome;
         }
 
-        ExtendedIdentifier output = target.sample(x, z);
-        if (ExtendedBiomeIds.NULL.equals(output)) {
+        ExtendedHolder<Biome> output = target.sample(x, z);
+        if (output.is(ExtendedBiomeIds.NULL)) {
             return biome;
         }
 

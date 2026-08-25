@@ -1,11 +1,16 @@
 package mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers;
 
 import com.mojang.serialization.Codec;
+import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeResolver;
+import mod.bluestaggo.modernerbeta.registry.ExtendedHolder;
 import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomes;
 import net.minecraft.world.level.biome.Biomes;
+import net.minecraft.world.level.biome.Biome;
 
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -32,6 +37,10 @@ public class AddLandLayer extends SingleParentLayer {
     private final Map<ExtendedIdentifier, ExtendedIdentifier> biomeSpecificOceans;
     private final int landChance;
     private final int oceanChance;
+    private transient ExtendedHolder<Biome> resolvedOcean;
+    private transient ExtendedHolder<Biome> resolvedLand;
+    private transient Map<ExtendedIdentifier, ExtendedHolder<Biome>> resolvedBiomeSpecificOceans;
+    private transient Set<ExtendedHolder<Biome>> resolvedPossibleBiomes;
 
     public AddLandLayer(String id, long seed, String parent, boolean betaShape, ExtendedIdentifier ocean, ExtendedIdentifier land, Map<ExtendedIdentifier, ExtendedIdentifier> biomeSpecificOceans) {
         this(id, seed, parent, betaShape, ocean, land, biomeSpecificOceans, 3, 5);
@@ -81,47 +90,61 @@ public class AddLandLayer extends SingleParentLayer {
     }
 
     @Override
-    protected ExtendedIdentifier generate(int x, int z) {
-        ExtendedIdentifier base = this.parentLayer.sample(x, z);
-        ExtendedIdentifier[] neighbors = this.parentLayer.sampleDiagonalNeighbors(x, z);
+    protected ExtendedHolder<Biome> generate(int x, int z) {
+        ExtendedHolder<Biome> base = this.parentLayer.sample(x, z);
+        ExtendedHolder<Biome>[] neighbors = this.parentLayer.sampleDiagonalNeighbors(x, z);
 
-        if (base.equals(this.ocean) && !allNeighborsEqual(neighbors, this.ocean)) {
+        if (base.is(this.ocean) && !allNeighborsEqual(neighbors, this.ocean)) {
             int landSampleChance = 1;
-            ExtendedIdentifier sampledLand = this.land;
+            ExtendedHolder<Biome> sampledLand = this.resolvedLand;
             LayerRandom random = this.getRandom(x, z);
 
             boolean addLand;
             if (this.betaShape) {
                 addLand = random.nextInt(this.landChance) == this.landChance - 1;
             } else {
-                for (ExtendedIdentifier neighbor : neighbors) {
-                    if (!neighbor.equals(this.ocean) && random.nextInt(landSampleChance++) == 0) {
+                for (ExtendedHolder<Biome> neighbor : neighbors) {
+                    if (!neighbor.is(this.ocean) && random.nextInt(landSampleChance++) == 0) {
                         sampledLand = neighbor;
                     }
                 }
                 addLand = random.nextInt(this.landChance) == 0;
             }
 
-            return addLand ? sampledLand : this.biomeSpecificOceans.getOrDefault(sampledLand, this.ocean);
+            ExtendedHolder<Biome> sampledOcean = getMatching(this.resolvedBiomeSpecificOceans, sampledLand);
+            return addLand ? sampledLand : sampledOcean == null ? this.resolvedOcean : sampledOcean;
         } else if (this.betaShape
-            ? base.equals(this.land) && !allNeighborsEqual(neighbors, this.land)
-            : !base.equals(this.ocean) && neighborsContain(neighbors, this.ocean)
+            ? base.is(this.land) && !allNeighborsEqual(neighbors, this.land)
+            : !base.is(this.ocean) && neighborsContain(neighbors, this.ocean)
         ) {
             LayerRandom random = this.getRandom(x, z);
             if (random.nextInt(this.oceanChance) == (this.betaShape ? this.oceanChance - 1 : 0)) {
-                return this.biomeSpecificOceans.getOrDefault(base, this.ocean);
+                ExtendedHolder<Biome> sampledOcean = getMatching(this.resolvedBiomeSpecificOceans, base);
+                return sampledOcean == null ? this.resolvedOcean : sampledOcean;
             }
         }
         return base;
     }
 
     @Override
-    protected void addPossibleBiomes(Set<ExtendedIdentifier> biomes) {
-        biomes.add(this.ocean);
-        biomes.add(this.land);
+    protected void addPossibleBiomes(Set<ExtendedHolder<Biome>> biomes) {
+        biomes.addAll(this.resolvedPossibleBiomes);
+    }
+
+    @Override
+    protected void bindOwnBiomes(ExtendedBiomeResolver biomeResolver) {
+        this.resolvedOcean = biomeResolver.resolve(this.ocean);
+        this.resolvedLand = biomeResolver.resolve(this.land);
+        this.resolvedBiomeSpecificOceans = new LinkedHashMap<>();
+        this.resolvedPossibleBiomes = new HashSet<>();
+        this.resolvedPossibleBiomes.add(this.resolvedOcean);
+        this.resolvedPossibleBiomes.add(this.resolvedLand);
         for (Map.Entry<ExtendedIdentifier, ExtendedIdentifier> entry : this.biomeSpecificOceans.entrySet()) {
-            biomes.add(entry.getKey());
-            biomes.add(entry.getValue());
+            ExtendedHolder<Biome> key = biomeResolver.resolve(entry.getKey());
+            ExtendedHolder<Biome> value = biomeResolver.resolve(entry.getValue());
+            this.resolvedBiomeSpecificOceans.put(entry.getKey(), value);
+            this.resolvedPossibleBiomes.add(key);
+            this.resolvedPossibleBiomes.add(value);
         }
     }
 }

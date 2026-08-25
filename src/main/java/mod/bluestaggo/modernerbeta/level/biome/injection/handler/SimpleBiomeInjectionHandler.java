@@ -64,7 +64,10 @@ public class SimpleBiomeInjectionHandler implements BiomeInjectionHandler {
 
         if (prevStepOrdinal >= 0) {
             curStep = BiomeInjectionRule.Step.values()[prevStepOrdinal];
-            return this.getBiome(level, biomeX, biomeY, biomeZ, curStep, ableToFulfill, true);
+            Holder<Biome> biome = this.getBiome(level, biomeX, biomeY, biomeZ, curStep, ableToFulfill, true);
+            if (biome != null || !base) {
+                return biome;
+            }
         }
 
         if (base) {
@@ -86,12 +89,28 @@ public class SimpleBiomeInjectionHandler implements BiomeInjectionHandler {
         EnumSet<InjectionNeeds> ableToFulfill,
         boolean shouldDelegate
     ) {
-        List<BiomeInjectionRule> rules = this.getRulesForStep(step, ableToFulfill);
-        if (rules.isEmpty()) {
-            return null;
+        if (step == BiomeInjectionRule.Step.ALL) {
+            Holder<Biome> biome = this.getBiome(
+                level,
+                biomeX, biomeY, biomeZ,
+                BiomeInjectionRule.Step.POST,
+                ableToFulfill,
+                shouldDelegate
+            );
+            return biome != null || !shouldDelegate
+                ? biome
+                : this.modernBetaBiomeSource.getNoiseBiome(biomeX, biomeY, biomeZ, null);
         }
 
-        BiomeInjectionContext context = this.setupContext(level, biomeX, biomeY, biomeZ, ableToFulfill);
+        EnumSet<InjectionNeeds> fulfillableNeeds = this.getFulfillableNeeds(ableToFulfill);
+        List<BiomeInjectionRule> rules = this.getRulesForStep(step, fulfillableNeeds);
+        if (rules.isEmpty()) {
+            return shouldDelegate
+                ? this.delegateBiome(level, biomeX, biomeY, biomeZ, step, fulfillableNeeds, false)
+                : null;
+        }
+
+        BiomeInjectionContext context = this.setupContext(level, biomeX, biomeY, biomeZ, fulfillableNeeds);
 
         Holder<Biome> biome = null;
 
@@ -99,14 +118,14 @@ public class SimpleBiomeInjectionHandler implements BiomeInjectionHandler {
             if (step != BiomeInjectionRule.Step.ALL && step != rule.stepFor())
                 continue;
 
-            if (!rule.canFulfill(ableToFulfill))
+            if (!rule.canFulfill(fulfillableNeeds))
                 continue;
 
             if (rule.needs().contains(InjectionNeeds.BIOMES) && context.getBiome() == null) {
                 if (!shouldDelegate)
                     throw new IllegalStateException("Injector needs a biome, we do not have one, and are unable to delegate.");
 
-                context.setBiome(this.delegateBiome(level, biomeX, biomeY, biomeZ, step, ableToFulfill, true));
+                context.setBiome(this.delegateBiome(level, biomeX, biomeY, biomeZ, step, fulfillableNeeds, true));
             }
 
             rule.initIfNeeded();
@@ -118,7 +137,7 @@ public class SimpleBiomeInjectionHandler implements BiomeInjectionHandler {
         }
 
         if (biome == null && shouldDelegate)
-            return this.delegateBiome(level, biomeX, biomeY, biomeZ, step, ableToFulfill, false);
+            return this.delegateBiome(level, biomeX, biomeY, biomeZ, step, fulfillableNeeds, false);
 
         return biome;
     }
@@ -128,14 +147,28 @@ public class SimpleBiomeInjectionHandler implements BiomeInjectionHandler {
         BiomeInjectionRule.Step step,
         EnumSet<InjectionNeeds> ableToFulfill
     ) {
-        if (ableToFulfill.contains(InjectionNeeds.CLIMATE) &&
-                !(this.modernBetaBiomeSource.getBiomeProvider() instanceof ClimateSampler)) {
-            ableToFulfill.remove(InjectionNeeds.CLIMATE);
-        }
+        EnumSet<InjectionNeeds> fulfillableNeeds = this.getFulfillableNeeds(ableToFulfill);
 
         return this.allRules.stream()
             .filter(rule -> step == BiomeInjectionRule.Step.ALL || step == rule.stepFor())
+            .filter(rule -> rule.canFulfill(fulfillableNeeds))
             .toList();
+    }
+
+    @Override
+    public void clear() {
+        this.allRules.forEach(BiomeInjectionRule::clear);
+    }
+
+    private EnumSet<InjectionNeeds> getFulfillableNeeds(EnumSet<InjectionNeeds> ableToFulfill) {
+        EnumSet<InjectionNeeds> fulfillableNeeds = ableToFulfill.clone();
+
+        if (fulfillableNeeds.contains(InjectionNeeds.CLIMATE) &&
+                !(this.modernBetaBiomeSource.getBiomeProvider() instanceof ClimateSampler)) {
+            fulfillableNeeds.remove(InjectionNeeds.CLIMATE);
+        }
+
+        return fulfillableNeeds;
     }
 
     private BiomeInjectionContext setupContext(

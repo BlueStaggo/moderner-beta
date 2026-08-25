@@ -2,7 +2,6 @@ package mod.bluestaggo.modernerbeta.level.biome.provider.fractal.intlayers;
 
 import mod.bluestaggo.modernerbeta.mixin.BiomeAccessor;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers.Layer;
-import net.minecraft.core.HolderGetter;
 import net.minecraft.world.level.biome.Biome;
 
 public class IntClimateSampleLayer extends IntLayer {
@@ -32,11 +31,8 @@ public class IntClimateSampleLayer extends IntLayer {
     }
 
     @Override
-    public int generate(HolderGetter<Biome> biomeRegistry, int x, int z) {
-        Biome biome = getBiomeFromLayer(biomeRegistry, this.biomeLayer, x, z);
-        if (biome == null) {
-            return 32768;
-        }
+    public int generate(int x, int z) {
+        Biome biome = getBiomeFromLayer(this.biomeLayer, x, z);
 
         Biome.ClimateSettings weather = ((BiomeAccessor)(Object)biome).getClimateSettings();
         float floatValue = downfall ? weather.downfall() : weather.temperature();
@@ -46,7 +42,7 @@ public class IntClimateSampleLayer extends IntLayer {
             return intValue;
         }
 
-        int baseValue = this.parent.sample(biomeRegistry, x, z);
+        int baseValue = this.parent.sample(x, z);
         return baseValue + (intValue - baseValue) / this.mixLevel;
     }
 }

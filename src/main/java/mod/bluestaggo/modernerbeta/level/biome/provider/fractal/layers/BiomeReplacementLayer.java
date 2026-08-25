@@ -2,9 +2,12 @@ package mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers;
 
 import com.mojang.serialization.Codec;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeIds;
+import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeResolver;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.LayerTarget;
+import mod.bluestaggo.modernerbeta.registry.ExtendedHolder;
 import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
+import net.minecraft.world.level.biome.Biome;
 
 import java.util.List;
 import java.util.Map;
@@ -55,15 +58,15 @@ public class BiomeReplacementLayer extends SingleParentLayer {
     }
 
     @Override
-    protected ExtendedIdentifier generate(int x, int z) {
-        ExtendedIdentifier baseBiome = this.parentLayer.sample(x, z);
-        LayerTarget.Configured target = this.configuredTargets.get(baseBiome);
+    protected ExtendedHolder<Biome> generate(int x, int z) {
+        ExtendedHolder<Biome> baseBiome = this.parentLayer.sample(x, z);
+        LayerTarget.Configured target = getMatching(this.configuredTargets, baseBiome);
         if (target == null) {
             return baseBiome;
         }
 
-        ExtendedIdentifier replacementBiome = target.sample(x, z);
-        if (ExtendedBiomeIds.NULL.equals(replacementBiome)) {
+        ExtendedHolder<Biome> replacementBiome = target.sample(x, z);
+        if (replacementBiome.is(ExtendedBiomeIds.NULL)) {
             return baseBiome;
         }
 
@@ -78,7 +81,12 @@ public class BiomeReplacementLayer extends SingleParentLayer {
     }
 
     @Override
-    protected void addPossibleBiomes(Set<ExtendedIdentifier> biomes) {
+    protected void bindOwnBiomes(ExtendedBiomeResolver biomeResolver) {
+        this.configuredTargets.values().forEach(target -> target.bindBiomes(biomeResolver));
+    }
+
+    @Override
+    protected void addPossibleBiomes(Set<ExtendedHolder<Biome>> biomes) {
         for (LayerTarget.Configured target : this.configuredTargets.values()) {
             if (target instanceof LayerTarget.Configured.OfLayer) {
                 continue;

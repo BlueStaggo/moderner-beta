@@ -2,8 +2,10 @@ package mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers;
 
 import com.mojang.serialization.Codec;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeIds;
-import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
+import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeResolver;
+import mod.bluestaggo.modernerbeta.registry.ExtendedHolder;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
+import net.minecraft.world.level.biome.Biome;
 
 public class SupplyRandomLayer extends Layer {
     public static final com.mojang.serialization.MapCodec<SupplyRandomLayer> CODEC = VersionCompat.createMaybeMapCodec(
@@ -13,6 +15,7 @@ public class SupplyRandomLayer extends Layer {
     );
 
     private final int range;
+    private transient ExtendedHolder<Biome> randomBiome;
 
     public SupplyRandomLayer(String id, long seed, int range) {
         super(id, seed);
@@ -25,7 +28,12 @@ public class SupplyRandomLayer extends Layer {
     }
 
     @Override
-    protected ExtendedIdentifier generate(int x, int z) {
-        return ExtendedBiomeIds.RANDOM.withExt(String.valueOf(this.getRandom(x, z).nextInt(this.range)));
+    protected ExtendedHolder<Biome> generate(int x, int z) {
+        return this.randomBiome.withExt(String.valueOf(this.getRandom(x, z).nextInt(this.range)));
+    }
+
+    @Override
+    protected void bindOwnBiomes(ExtendedBiomeResolver biomeResolver) {
+        this.randomBiome = biomeResolver.resolve(ExtendedBiomeIds.RANDOM);
     }
 }

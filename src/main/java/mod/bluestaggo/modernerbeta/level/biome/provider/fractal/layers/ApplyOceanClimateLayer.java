@@ -2,9 +2,13 @@ package mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers;
 
 import com.mojang.serialization.Codec;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeIds;
+import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.ExtendedBiomeResolver;
+import mod.bluestaggo.modernerbeta.registry.ExtendedHolder;
 import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
 import mod.bluestaggo.modernerbeta.util.VersionCompat;
+import net.minecraft.world.level.biome.Biome;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -31,6 +35,9 @@ public class ApplyOceanClimateLayer extends SingleParentLayer {
     private final String oceanClimate;
     private final boolean applyCoasts;
     private transient Layer oceanClimateLayer;
+    private transient ExtendedHolder<Biome> lukewarmOcean;
+    private transient ExtendedHolder<Biome> coldOcean;
+    private transient Map<ExtendedIdentifier, ExtendedHolder<Biome>> deepOceans;
 
     public ApplyOceanClimateLayer(String id, long seed, String parent, String oceanClimate, boolean applyCoasts) {
         super(id, seed, parent);
@@ -55,31 +62,44 @@ public class ApplyOceanClimateLayer extends SingleParentLayer {
     }
 
     @Override
-    protected ExtendedIdentifier generate(int x, int z) {
-        ExtendedIdentifier base = this.parentLayer.sample(x, z);
-        if (!BASE_OCEANS.contains(base)) {
+    protected ExtendedHolder<Biome> generate(int x, int z) {
+        ExtendedHolder<Biome> base = this.parentLayer.sample(x, z);
+        if (!matches(BASE_OCEANS, base)) {
             return base;
         }
 
-        ExtendedIdentifier ocean = this.oceanClimateLayer.sample(x, z);
+        ExtendedHolder<Biome> ocean = this.oceanClimateLayer.sample(x, z);
 
         if (this.applyCoasts) {
-            boolean isWarm = ExtendedBiomeIds.WARM_OCEAN.equals(ocean);
-            if (isWarm || ExtendedBiomeIds.FROZEN_OCEAN.equals(ocean)) {
+            boolean isWarm = ocean.is(ExtendedBiomeIds.WARM_OCEAN);
+            if (isWarm || ocean.is(ExtendedBiomeIds.FROZEN_OCEAN)) {
                 for (int ox = -8; ox <= 8; ox += 4) {
                     for (int oz = -8; oz <= 8; oz += 4) {
-                        ExtendedIdentifier nearBiome = this.parentLayer.sample(x + ox, z + oz);
-                        if (!BASE_OCEANS.contains(nearBiome)) {
-                            return isWarm ? ExtendedBiomeIds.LUKEWARM_OCEAN : ExtendedBiomeIds.COLD_OCEAN;
+                        ExtendedHolder<Biome> nearBiome = this.parentLayer.sample(x + ox, z + oz);
+                        if (!matches(BASE_OCEANS, nearBiome)) {
+                            return isWarm ? this.lukewarmOcean : this.coldOcean;
                         }
                     }
                 }
             }
         }
 
-        if (ExtendedBiomeIds.DEEP_OCEAN.equals(base)) {
-            ocean = DEEP_MAP.getOrDefault(ocean, ocean);
+        if (base.is(ExtendedBiomeIds.DEEP_OCEAN)) {
+            ExtendedHolder<Biome> deepOcean = getMatching(this.deepOceans, ocean);
+            if (deepOcean != null) {
+                ocean = deepOcean;
+            }
         }
         return ocean;
+    }
+
+    @Override
+    protected void bindOwnBiomes(ExtendedBiomeResolver biomeResolver) {
+        this.lukewarmOcean = biomeResolver.resolve(ExtendedBiomeIds.LUKEWARM_OCEAN);
+        this.coldOcean = biomeResolver.resolve(ExtendedBiomeIds.COLD_OCEAN);
+        this.deepOceans = new LinkedHashMap<>();
+        for (Map.Entry<ExtendedIdentifier, ExtendedIdentifier> entry : DEEP_MAP.entrySet()) {
+            this.deepOceans.put(entry.getKey(), biomeResolver.resolve(entry.getValue()));
+        }
     }
 }

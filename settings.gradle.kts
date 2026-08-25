@@ -1,5 +1,15 @@
 @file:Suppress("LocalVariableName")
 
+dependencyResolutionManagement {
+    repositories {
+        maven("https://maven.kikugie.dev/snapshots")
+    }
+
+    versionCatalogs {
+        create("ft") { from("dev.kikugie.fletching-table:fletching-table.catalog:0.2.0-alpha.7") }
+    }
+}
+
 pluginManagement {
     repositories {
         maven {

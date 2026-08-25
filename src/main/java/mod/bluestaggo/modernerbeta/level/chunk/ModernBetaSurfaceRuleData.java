@@ -279,11 +279,15 @@ public class ModernBetaSurfaceRuleData {
             ),
             SurfaceRules.ifTrue(
                 notUnderDeepWater,
-                SurfaceRules.sequence(
-                    //Moderner Beta: removed hole rules here
-                    SurfaceRules.ifTrue(SurfaceRules.UNDER_FLOOR, biomeUnderSurfaceRule),
-                    SurfaceRules.ifTrue(biomesWithSandAndSandstone, SurfaceRules.ifTrue(DEEP_UNDER_FLOOR, SANDSTONE)),
-                    SurfaceRules.ifTrue(biomesWithSandAndVeryDeepSandstone, SurfaceRules.ifTrue(SurfaceRules.VERY_DEEP_UNDER_FLOOR, SANDSTONE))
+                //Moderner Beta: added hole check here
+                SurfaceRules.ifTrue(
+                    SurfaceRules.not(hole),
+                    SurfaceRules.sequence(
+                        //Moderner Beta: removed hole rules here
+                        SurfaceRules.ifTrue(SurfaceRules.UNDER_FLOOR, biomeUnderSurfaceRule),
+                        SurfaceRules.ifTrue(biomesWithSandAndSandstone, SurfaceRules.ifTrue(DEEP_UNDER_FLOOR, SANDSTONE)),
+                        SurfaceRules.ifTrue(biomesWithSandAndVeryDeepSandstone, SurfaceRules.ifTrue(SurfaceRules.VERY_DEEP_UNDER_FLOOR, SANDSTONE))
+                    )
                 )
             ),
             SurfaceRules.ifTrue(

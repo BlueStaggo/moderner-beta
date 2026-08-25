@@ -35,6 +35,9 @@ public interface BiomeInjectionHandler {
         EnumSet<InjectionNeeds> ableToFulfill
     );
 
+    default void clear() {
+    }
+
     default @NotNull Holder<Biome> getBiomeAtBlock(
         LevelHeightAccessor level,
         BiomeProvider baseBiomeProvider,

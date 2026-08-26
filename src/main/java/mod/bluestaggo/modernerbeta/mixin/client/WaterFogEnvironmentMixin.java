@@ -55,8 +55,12 @@ public abstract class WaterFogEnvironmentMixin {
             int z = (int)modernBeta_pos.z();
 
             Clime clime = BlockColorSampler.INSTANCE.getClimateSampler().sample(x, z);
-
-            return BlockColorSampler.INSTANCE.colormapUnderwater.getColor(clime.temp(), clime.rain());
+            int color = BlockColorSampler.INSTANCE.colormapUnderwater.getColor(clime.temp(), clime.rain());
+            //? if >=26.3 {
+            /*return net.minecraft.util.ARGB.vector3fFromRGB24(color);
+            /*///?} else {
+            return color;
+            //? }
         }
 
         return original.call(instance /*? >=1.21.11{*/, environmentAttribute, f/*?}*/);

@@ -701,8 +701,7 @@ public abstract class ChunkProviderNoise extends ChunkProvider {
     }
 
     private NoiseSettings getNoiseSettings() {
-        NoiseSettings settings = this.getChunkSettings().get(SettingsComponentTypes.NOISE_SETTINGS);
-        return settings != null ? settings : NoiseSettings.fromVanilla(this.generatorSettings.value().noiseSettings());
+        return this.getChunkSettings().getOrDefault(SettingsComponentTypes.NOISE_SETTINGS);
     }
 }
 

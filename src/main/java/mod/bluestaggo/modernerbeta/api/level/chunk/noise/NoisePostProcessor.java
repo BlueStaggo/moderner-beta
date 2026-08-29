@@ -10,8 +10,7 @@ import net.minecraft.world.level.levelgen.RandomState;
 
 public interface NoisePostProcessor {
     NoisePostProcessor NOISE_CAVES = (noise, noiseX, noiseY, noiseZ, noiseConfig, generatorSettings, chunkSettings) -> {
-        NoiseSettings settings = chunkSettings.get(SettingsComponentTypes.NOISE_SETTINGS);
-        settings = settings != null ? settings : NoiseSettings.fromVanilla(generatorSettings.noiseSettings());
+        NoiseSettings settings = chunkSettings.getOrDefault(SettingsComponentTypes.NOISE_SETTINGS);
 
         int hBlock = settings.getCellWidth();
         int vBlock = settings.getCellHeight();

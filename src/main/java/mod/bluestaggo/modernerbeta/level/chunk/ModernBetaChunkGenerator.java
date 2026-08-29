@@ -2,6 +2,7 @@
 package mod.bluestaggo.modernerbeta.level.chunk;
 
 import mod.bluestaggo.modernerbeta.ModernerBeta;
+import mod.bluestaggo.modernerbeta.api.level.biome.BiomeProvider;
 import mod.bluestaggo.modernerbeta.api.level.chunk.surface.SurfaceConfig;
 import mod.bluestaggo.modernerbeta.compat.ModCompat;
 import mod.bluestaggo.modernerbeta.imixin.ModernBetaSurfaceSystem;
@@ -66,6 +67,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 //? if <1.21
 //import java.util.concurrent.Executor;
@@ -88,6 +90,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
     private CaveGeneration caveSettings = CaveGeneration.DEFAULT;
 
     private ChunkProvider chunkProvider;
+    private final ChunkProviderHolder chunkProviderHolder;
 
     public ModernBetaChunkGenerator(
         BiomeSource biomeSource,
@@ -95,11 +98,22 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
         HolderGetter<SurfaceConfig> surfaceConfigRegistry,
         ModernBetaSettings chunkProviderSettings
     ) {
-        super(biomeSource, createGeneratorSettings(presetRegistry, chunkProviderSettings));
+        this(biomeSource, presetRegistry, surfaceConfigRegistry, chunkProviderSettings, new ChunkProviderHolder());
+    }
+
+    private ModernBetaChunkGenerator(
+        BiomeSource biomeSource,
+        HolderGetter<ModernBetaSettingsPreset> presetRegistry,
+        HolderGetter<SurfaceConfig> surfaceConfigRegistry,
+        ModernBetaSettings chunkProviderSettings,
+        ChunkProviderHolder chunkProviderHolder
+    ) {
+        super(biomeSource, createGeneratorSettings(biomeSource, presetRegistry, chunkProviderSettings, chunkProviderHolder));
 
         this.presetRegistry = presetRegistry;
         this.surfaceConfigRegistry = surfaceConfigRegistry;
         this.chunkSettings = chunkProviderSettings.resolveDefaultPreset();
+        this.chunkProviderHolder = chunkProviderHolder;
 
         if (this.biomeSource instanceof ModernBetaBiomeSource modernBetaBiomeSource) {
             modernBetaBiomeSource.setChunkGenerator(this);
@@ -107,16 +121,20 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
     }
 
     private static Holder<NoiseGeneratorSettings> createGeneratorSettings(
+        BiomeSource biomeSource,
         HolderGetter<ModernBetaSettingsPreset> presetRegistry,
-        ModernBetaSettings chunkProviderSettings
+        ModernBetaSettings chunkProviderSettings,
+        ChunkProviderHolder chunkProviderHolder
     ) {
         ModernBetaSettings fixedSettings = chunkProviderSettings.resolveDefaultPreset();
-        return DefferedDirectHolder.of(() -> noiseGeneratorSettings(fixedSettings, presetRegistry));
+        return DefferedDirectHolder.of(() -> noiseGeneratorSettings(biomeSource, fixedSettings, presetRegistry, chunkProviderHolder));
     }
 
     private static NoiseGeneratorSettings noiseGeneratorSettings(
+        BiomeSource biomeSource,
         ModernBetaSettings settings,
-        HolderGetter<ModernBetaSettingsPreset> presetRegistry
+        HolderGetter<ModernBetaSettingsPreset> presetRegistry,
+        ChunkProviderHolder chunkProviderHolder
     ) {
         ModernBetaSettings chunkSettings = settings.mapPreset(presetRegistry, ModernBetaSettingsPreset::chunkSettings);
         Holder<NoiseGeneratorSettings> generatorSettings = chunkSettings.getOrDefault(SettingsComponentTypes.NOISE_GENERATOR_SETTINGS);
@@ -134,8 +152,38 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
                 .defaultBlockState();
 
         NoiseGeneratorSettings unboxed = generatorSettings.value();
-        if (noiseSettings == null && seaLevel == null && !deepslateEnabled)
+        //? if <26.3 {
+        if (!(biomeSource instanceof ModernBetaBiomeSource) && noiseSettings == null && seaLevel == null && !deepslateEnabled)
             return unboxed;
+        //? }
+
+        NoiseRouter noiseRouter = unboxed.noiseRouter();
+        if (biomeSource instanceof ModernBetaBiomeSource modernBetaBiomeSource) {
+            noiseRouter = createClimateNoiseRouter(noiseRouter, modernBetaBiomeSource::getBiomeProvider);
+        }
+
+        //? if >=26.3 {
+        /*DensityFunction chunkSurfaceLevel = new ModernBetaChunkSurfaceLevel(chunkProviderHolder);
+        noiseRouter = new NoiseRouter(
+            noiseRouter.temperature(),
+            noiseRouter.vegetation(),
+            noiseRouter.continents(),
+            noiseRouter.erosion(),
+            noiseRouter.depth(),
+            noiseRouter.ridges(),
+            chunkSurfaceLevel,
+            noiseRouter.finalDensity()
+        );
+
+        Optional<Aquifer.Config> aquifers = unboxed.aquifers().map(config -> new Aquifer.Config(
+            config.barrierNoise(),
+            config.fluidLevelFloodednessNoise(),
+            config.fluidLevelSpreadNoise(),
+            config.lavaNoise(),
+            config.exclusion(),
+            chunkSurfaceLevel
+        ));
+        *///? }
 
         //~ if >=26.3 '.surfaceRule()' -> '.materialRule().value()'
         SurfaceRules.RuleSource surfaceRules = unboxed.surfaceRule();
@@ -168,21 +216,64 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
             noiseSettings != null ? noiseSettings.toVanilla() : unboxed.noiseSettings(),
             unboxed.defaultBlock(),
             unboxed.defaultFluid(),
-            unboxed.noiseRouter(),
+            noiseRouter,
             /*? >=26.3 {*/ /*boxedSurfaceRules *//*? } else {*/ surfaceRules /*? }*/,
             unboxed.spawnTarget(),
             seaLevel != null ? seaLevel : unboxed.seaLevel(),
             unboxed.disableMobGeneration(),
-            //~ if >=26.3 'Enabled()' -> '()'
+            //? if >=26.3 {
+            /*aquifers,
+            *///? } else {
             unboxed.aquifersEnabled(),
-            //? if <26.3
             unboxed.oreVeinsEnabled(),
+            //? }
             unboxed.useLegacyRandomSource()
             //? if >=26.3
             //, unboxed.debugFunctions()
         );
 
         return unboxed;
+    }
+
+    private static NoiseRouter createClimateNoiseRouter(NoiseRouter noiseRouter, Supplier<BiomeProvider> biomeProvider) {
+        return new NoiseRouter(
+            //? if <26.3 {
+            noiseRouter.barrierNoise(),
+            noiseRouter.fluidLevelFloodednessNoise(),
+            noiseRouter.fluidLevelSpreadNoise(),
+            noiseRouter.lavaNoise(),
+            //? }
+            new ModernBetaClimateDensityFunction(
+                biomeProvider,
+                noiseRouter.temperature(),
+                ModernBetaClimateDensityFunction.Type.TEMPERATURE
+            ),
+            new ModernBetaClimateDensityFunction(
+                biomeProvider,
+                noiseRouter.vegetation(),
+                ModernBetaClimateDensityFunction.Type.HUMIDITY
+            ),
+            noiseRouter.continents(),
+            noiseRouter.erosion(),
+            noiseRouter.depth(),
+            new ModernBetaClimateDensityFunction(
+                biomeProvider,
+                noiseRouter.ridges(),
+                ModernBetaClimateDensityFunction.Type.WEIRDNESS
+            ),
+            //? if <1.21.9
+            //noiseRouter.initialDensityWithoutJaggedness(),
+            //? if >=1.21.9 && <26.3
+            noiseRouter.preliminarySurfaceLevel(),
+            //? if >=26.3
+            //noiseRouter.chunkSurfaceLevel(),
+            noiseRouter.finalDensity()
+            //? if <26.3 {
+            , noiseRouter.veinToggle(),
+            noiseRouter.veinRidged(),
+            noiseRouter.veinGap()
+            //? }
+        );
     }
 
     public void initProvider(long seed) {
@@ -198,6 +289,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
             .apply(this, seed);
         
         this.chunkProvider.initForestOctaveNoise();
+        this.chunkProviderHolder.set(this.chunkProvider);
 
         this.useSurfaceRules = chunkSettings.getOrDefault(SettingsComponentTypes.USE_SURFACE_RULES);
         this.caveSettings = chunkSettings.getOrDefault(SettingsComponentTypes.CAVE_GENERATION);
@@ -906,6 +998,19 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
     
     public ModernBetaSettings getChunkSettings() {
         return this.chunkSettings;
+    }
+
+    private static final class ChunkProviderHolder implements Supplier<ChunkProvider> {
+        private volatile ChunkProvider chunkProvider;
+
+        @Override
+        public ChunkProvider get() {
+            return this.chunkProvider;
+        }
+
+        private void set(ChunkProvider chunkProvider) {
+            this.chunkProvider = chunkProvider;
+        }
     }
 
     public boolean allowSurfaceRules() {

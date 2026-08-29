@@ -5,6 +5,10 @@ import mod.bluestaggo.modernerbeta.fabric.data.reduced_height.ModernBetaReducedH
 import mod.bluestaggo.modernerbeta.level.carver.configured.ModernBetaConfiguredCarvers;
 import mod.bluestaggo.modernerbeta.level.feature.configured.ModernBetaConfiguredFeatures;
 import mod.bluestaggo.modernerbeta.mixin.NoiseRouterDataAccessor;
+import mod.bluestaggo.modernerbeta.registry.ModernBetaResourceKeys;
+import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
+import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPresets;
+import mod.bluestaggo.modernerbeta.settings.SettingsComponentTypes;
 import mod.bluestaggo.modernerbeta.settings.component.NoiseSettings;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;
@@ -194,6 +198,19 @@ public class ModernBetaReducedHeightDataProvider extends FabricDynamicRegistryPr
         entries.add(INFDEV_415, createNoiseGeneratorSettings(provider, ModernBetaReducedHeightNoiseSettings.INFDEV_415, 64, true));
         entries.add(OVERWORLD_128, createNoiseGeneratorSettings(provider, ModernBetaReducedHeightNoiseSettings.OVERWORLD_128, 64, true));
         entries.add(OVERWORLD_256, createNoiseGeneratorSettings(provider, ModernBetaReducedHeightNoiseSettings.OVERWORLD_256, 64, true));
+
+        ModernBetaSettingsPreset infdev415Preset = provider.lookupOrThrow(ModernBetaResourceKeys.SETTINGS_PRESET)
+            .getOrThrow(ModernBetaSettingsPresets.INFDEV_415)
+            .value();
+        entries.add(ModernBetaSettingsPresets.INFDEV_415, new ModernBetaSettingsPreset(
+            infdev415Preset.presetName(),
+            infdev415Preset.presetDescription(),
+            infdev415Preset.chunkSettings().extend()
+                .add(SettingsComponentTypes.NOISE_SETTINGS, ModernBetaReducedHeightNoiseSettings.INFDEV_415)
+                .build(),
+            infdev415Preset.biomeSettings(),
+            infdev415Preset.caveBiomeSettings()
+        ));
 
         //Density functions
         HolderGetter<DensityFunction> densityFunctionLookup = provider.lookupOrThrow(Registries.DENSITY_FUNCTION);

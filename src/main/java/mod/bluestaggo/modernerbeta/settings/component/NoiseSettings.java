@@ -1,8 +1,10 @@
+//~minBuild
 package mod.bluestaggo.modernerbeta.settings.component;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import mod.bluestaggo.modernerbeta.util.VersionCompat;
 import net.minecraft.core.QuartPos;
 import net.minecraft.world.level.LevelHeightAccessor;
 import net.minecraft.world.level.dimension.DimensionType;
@@ -72,7 +74,7 @@ public record NoiseSettings(int minY, int height, int noiseSizeHorizontal, int n
 
     public NoiseSettings clampToHeightAccessor(final LevelHeightAccessor heightAccessor) {
         int newMinY = Math.max(this.minY, heightAccessor.getMinY());
-        int newHeight = Math.min(this.minY + this.height, heightAccessor.getMaxY() + 1) - newMinY;
+        int newHeight = Math.min(this.minY + this.height, VersionCompat.getTopYExclusive(heightAccessor)) - newMinY;
         return new NoiseSettings(newMinY, newHeight, this.noiseSizeHorizontal, this.noiseSizeVertical);
     }
 }

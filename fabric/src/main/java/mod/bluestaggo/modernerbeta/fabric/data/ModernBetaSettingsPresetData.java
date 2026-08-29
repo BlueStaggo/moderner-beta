@@ -12,6 +12,7 @@ import mod.bluestaggo.modernerbeta.level.biome.voronoi.VoronoiPointCaveBiome;
 import mod.bluestaggo.modernerbeta.util.ExtendedIdentifier;
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers.*;
 import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaNoiseGeneratorSettings;
+import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaNoiseSettings;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettings;
 import mod.bluestaggo.modernerbeta.settings.ModernBetaSettingsPreset;
 import mod.bluestaggo.modernerbeta.settings.component.*;
@@ -207,6 +208,7 @@ public final class ModernBetaSettingsPresetData {
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.NOISE_3D.id)
                 .add(NOISE_GENERATOR_SETTINGS, context.lookup(Registries.NOISE_SETTINGS)
                         .get(ModernBetaNoiseGeneratorSettings.SKY_128).orElseThrow())
+                .add(NOISE_SETTINGS, ModernBetaNoiseSettings.SKY_128)
                 .add(DEEPSLATE_GENERATION, DeepslateGeneration.DISABLED)
                 .add(USE_SURFACE_RULES, false)
                 .add(CAVE_GENERATION, CaveGeneration.BETA)
@@ -242,6 +244,7 @@ public final class ModernBetaSettingsPresetData {
                 .add(PROVIDER, ModernBetaBuiltInTypes.Chunk.NOISE_3D.id)
                 .add(NOISE_GENERATOR_SETTINGS, context.lookup(Registries.NOISE_SETTINGS)
                         .get(ModernBetaNoiseGeneratorSettings.INFDEV_415).orElseThrow())
+                .add(NOISE_SETTINGS, ModernBetaNoiseSettings.INFDEV_415)
                 .add(DEEPSLATE_GENERATION, DeepslateGeneration.DISABLED)
                 .add(USE_SURFACE_RULES, false)
                 .add(CAVE_GENERATION, CaveGeneration.DISABLED)

@@ -166,6 +166,7 @@ stonecutter.parameters {
             replace("BiomeManager.NoiseBiomeSource", "net.minecraft.world.level.biome.BiomeResolver")
             replace("SurfaceRules.RuleSource", "MaterialRule")
             replace("SurfaceRules", "MaterialRules")
+            replace("BlockStateProvider.simple", "BlockStateProvider.of")
         }
 
         regex(eval(current.version, ">=26.3")) {

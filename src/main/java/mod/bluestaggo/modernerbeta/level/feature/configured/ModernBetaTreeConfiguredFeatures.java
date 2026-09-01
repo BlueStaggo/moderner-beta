@@ -51,8 +51,10 @@ public class ModernBetaTreeConfiguredFeatures {
 
     //~ if >=26.3 'TreeConfiguration' -> 'TreeFeature', '.TreeConfigurationBuilder' -> '.Builder' {
     private static TreeConfiguration getOak14a08Config(BootstrapContext<?> context, boolean bees) {
-        //? >=26.2
+        //? if >=26.2
         //net.minecraft.core.HolderGetter<net.minecraft.world.level.biome.Biome> biomes = context.lookup(net.minecraft.core.registries.Registries.BIOME);
+        //? if >=26.3
+        //net.minecraft.core.HolderGetter<BlockStateProvider> blockStateProviders = context.lookup(net.minecraft.core.registries.Registries.BLOCK_STATE_PROVIDER);
 
         TreeConfiguration.TreeConfigurationBuilder builder = new TreeConfiguration.TreeConfigurationBuilder(
                 BlockStateProvider.simple(Blocks.OAK_LOG),
@@ -60,8 +62,11 @@ public class ModernBetaTreeConfiguredFeatures {
                 BlockStateProvider.simple(Blocks.OAK_LEAVES),
                 new Oak14a08FoliagePlacer(ConstantInt.of(1), ConstantInt.of(0), 2),
                 new TwoLayersFeatureSize(1, 0, 1)
-                //? >=26.2
-                //, TreeConfiguration.defaultPlaceBelowTreeTrunkProvider(biomes)
+                //? if >=26.3 {
+                /*, blockStateProviders.getOrThrow(net.minecraft.data.worldgen.BlockStateProviders.SOIL_BENEATH_TREE)
+                *///? } else if >=26.2 {
+                /*, TreeConfiguration.defaultPlaceBelowTreeTrunkProvider(biomes)
+                *///? }
         );
 
         if (bees) {
@@ -72,8 +77,10 @@ public class ModernBetaTreeConfiguredFeatures {
     }
 
     private static TreeConfiguration getOldFancyTreeConfig(BootstrapContext<?> context) {
-        //? >=26.2
+        //? if >=26.2
         //net.minecraft.core.HolderGetter<net.minecraft.world.level.biome.Biome> biomes = context.lookup(net.minecraft.core.registries.Registries.BIOME);
+        //? if >=26.3
+        //net.minecraft.core.HolderGetter<BlockStateProvider> blockStateProviders = context.lookup(net.minecraft.core.registries.Registries.BLOCK_STATE_PROVIDER);
 
         TreeConfiguration.TreeConfigurationBuilder builder = new TreeConfiguration.TreeConfigurationBuilder(
                 BlockStateProvider.simple(Blocks.OAK_LOG),
@@ -81,8 +88,11 @@ public class ModernBetaTreeConfiguredFeatures {
                 BlockStateProvider.simple(Blocks.OAK_LEAVES),
                 new BetaLargeOakFoliagePlacer(ConstantInt.of(2), ConstantInt.of(4), 4),
                 new TwoLayersFeatureSize(0, 0, 0, OptionalInt.of(8))
-                //? >=26.2
-                //, TreeConfiguration.defaultPlaceBelowTreeTrunkProvider(biomes)
+                //? if >=26.3 {
+                /*, blockStateProviders.getOrThrow(net.minecraft.data.worldgen.BlockStateProviders.SOIL_BENEATH_TREE)
+                *///? } else if >=26.2 {
+                /*, TreeConfiguration.defaultPlaceBelowTreeTrunkProvider(biomes)
+                *///? }
         );
 
         return builder.build();

@@ -90,8 +90,8 @@ public class SurfaceSystemMixin implements ModernBetaSurfaceSystem {
         method = "buildSurface",
         at = @At(
             value = "INVOKE",
-            //~ if >=26.3 'MaterialRules$Context' -> 'material/MaterialRuleContext', 'SurfaceSystem' -> 'material/MaterialSystem'
-            target = "Lnet/minecraft/world/level/levelgen/MaterialRules$Context;<init>(Lnet/minecraft/world/level/levelgen/SurfaceSystem;Lnet/minecraft/world/level/levelgen/RandomState;"
+            //~ if >=26.3 'SurfaceRules$Context' -> 'material/MaterialRuleContext', 'SurfaceSystem' -> 'material/MaterialSystem'
+            target = "Lnet/minecraft/world/level/levelgen/SurfaceRules$Context;<init>(Lnet/minecraft/world/level/levelgen/SurfaceSystem;Lnet/minecraft/world/level/levelgen/RandomState;"
                     //? if >=26.3 {
                     /*+ "Lnet/minecraft/world/level/levelgen/densityfunction/DensityVolume;Lnet/minecraft/world/level/levelgen/densityfunction/DensitySamplerSet;"
                     *///? } else {

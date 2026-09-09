@@ -12,6 +12,8 @@ import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
+//? if >=26.3
+//import net.minecraft.world.level.levelgen.material.rule.MaterialRule;
 import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
 //? if >=26.3 {
 /*import net.minecraft.world.level.levelgen.feature.Feature;
@@ -41,6 +43,8 @@ public class ModernBetaWorldGenProvider extends FabricDynamicRegistryProvider {
         //~ if >=26.3 'CONFIGURED_CARVER' -> 'CARVER'
         HolderLookup.RegistryLookup<ConfiguredWorldCarver<?>> registryConfiguredCarver = provider.lookupOrThrow(Registries.CONFIGURED_CARVER);
         HolderLookup.RegistryLookup<NoiseGeneratorSettings> registrySettings = provider.lookupOrThrow(Registries.NOISE_SETTINGS);
+        //? if >=26.3
+        //HolderLookup.RegistryLookup<SurfaceRules.RuleSource> registryMaterialRule = provider.lookupOrThrow(Registries.MATERIAL_RULE);
         HolderLookup.RegistryLookup<Structure> registryStructure = provider.lookupOrThrow(Registries.STRUCTURE);
         HolderLookup.RegistryLookup<StructureSet> registryStructureSet = provider.lookupOrThrow(Registries.STRUCTURE_SET);
         HolderLookup.RegistryLookup<WorldPreset> registryWorldPreset = provider.lookupOrThrow(Registries.WORLD_PRESET);
@@ -53,6 +57,8 @@ public class ModernBetaWorldGenProvider extends FabricDynamicRegistryProvider {
         entries.addAll(registryPlacedFeature);
         entries.addAll(registryConfiguredCarver);
         entries.addAll(registrySettings);
+        //? if >=26.3
+        //entries.addAll(registryMaterialRule);
         entries.addAll(registryStructure);
         entries.addAll(registryStructureSet);
         entries.addAll(registryWorldPreset);

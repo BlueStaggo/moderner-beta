@@ -493,15 +493,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
         NoiseChunk noiseChunk = chunk.getOrCreateNoiseChunk(chunkAccess -> this.createNoiseChunk(chunkAccess, structureManager, blender, random));
         //? }
         NoiseGeneratorSettings noiseGeneratorSettings = this.generatorSettings().value();
-        if (random.surfaceSystem() instanceof ModernBetaSurfaceSystem modernBetaSurfaceSystem) {
-            modernBetaSurfaceSystem.modernerBeta$setupChunkContext(this.chunkProvider);
-
-            if (this.biomeSource instanceof ModernBetaBiomeSource modernBetaBiomeSource) {
-                modernBetaSurfaceSystem.modernerBeta$setupBiomeContext(modernBetaBiomeSource);
-            }
-
-            modernBetaSurfaceSystem.modernerBeta$beforeSurfaceBuild(chunk);
-        }
+        this.setupSurfaceSystem(random, chunk);
 
         //? if <26.3
         ModCompat.useModernBetaSurfaceRules = true;
@@ -525,6 +517,16 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
         ModCompat.useModernBetaSurfaceRules = false;
     }
 
+    private void setupSurfaceSystem(RandomState random, ChunkAccess chunk) {
+        if (!(random.surfaceSystem() instanceof ModernBetaSurfaceSystem surfaceSystem))
+            return;
+
+        surfaceSystem.modernerBeta$setupChunkContext(this.chunkProvider);
+        if (this.biomeSource instanceof ModernBetaBiomeSource biomeSource)
+            surfaceSystem.modernerBeta$setupBiomeContext(biomeSource);
+        surfaceSystem.modernerBeta$beforeSurfaceBuild(chunk);
+    }
+
     public void buildDefaultSurface(
         //? if <26.3
         WorldGenRegion chunkRegion,
@@ -545,6 +547,7 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
             noiseConfig,
             generatorSettings().value().noiseSettings()
         );
+        this.setupSurfaceSystem(noiseConfig, chunk);
         *///? }
 
         super.buildSurface(
@@ -599,6 +602,8 @@ public class ModernBetaChunkGenerator extends NoiseBasedChunkGenerator {
         if (ModCompat.skipGeneratingChunk(chunkPos.x(), chunkPos.z()) ||
             this.chunkProvider.skipChunk(chunkPos.x(), chunkPos.z(), ModernBetaGenerationStep.CARVERS))
             return;
+
+        this.setupSurfaceSystem(noiseConfig, chunk);
 
         BiomeManager biomeAccessWithSource = biomeAccess.withDifferentSource((biomeX, biomeY, biomeZ) -> {
             //? if >=26.3 {

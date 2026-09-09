@@ -4,7 +4,7 @@ package mod.bluestaggo.modernerbeta.mixin.compat.terrablender;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import mod.bluestaggo.modernerbeta.compat.ModCompat;
-import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaSurfaceRuleData;
+import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaMaterialRules;
 import net.minecraft.world.level.levelgen.SurfaceRules;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
@@ -15,8 +15,8 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(targets = "terrablender.api.SurfaceRuleManager")
 public abstract class SurfaceRuleManagerMixin {
     @WrapOperation(
-        //~ if >=26.2 'getDefaultMaterialRules' -> 'repopulateRules'
-        method = "getDefaultMaterialRules",
+        //~ if >=26.2 'getDefaultSurfaceRules' -> 'repopulateRules'
+        method = "getDefaultSurfaceRules",
         at = @At(
             value = "INVOKE",
             target =
@@ -32,7 +32,7 @@ public abstract class SurfaceRuleManagerMixin {
         Operation<SurfaceRules.RuleSource> original
     ) {
         if (ModCompat.useModernBetaSurfaceRules) {
-            return ModernBetaSurfaceRuleData.overworldLike(/*? >=26.2 {*//*biomeLookup*//*?} else { */null/*?}*/, true, false, false, false);
+            return ModernBetaMaterialRules.overworldLike(/*? >=26.2 {*//*biomeLookup*//*?} else { */null/*?}*/, true, false, false, false);
         }
 
         return original.call(/*? >=26.2 {*//*biomeLookup*//*?}*/);

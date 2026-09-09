@@ -297,12 +297,12 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
                         blockToSet = fillerBlock;
 
                         // Generates layer of sandstone starting at lowest block of sand, of height 1 to 4.
-                        if (runDepth == 0 && fillerBlock.is(Blocks.SAND)) {
+                        if (surfaceProperties.generateSandstone() && runDepth == 0 && fillerBlock.is(Blocks.SAND)) {
                             runDepth = rand.nextInt(4);
                             fillerBlock = BlockStates.SANDSTONE;
                         }
 
-                        if (runDepth == 0 && fillerBlock.is(Blocks.RED_SAND)) {
+                        if (surfaceProperties.generateSandstone() && runDepth == 0 && fillerBlock.is(Blocks.RED_SAND)) {
                             runDepth = rand.nextInt(4);
                             fillerBlock = BlockStates.RED_SANDSTONE;
                         }
@@ -453,6 +453,17 @@ public class ChunkProviderNoise3D extends ChunkProviderForcedHeight {
                             while (this.isBlockSuitableForSurface(chunk.getBlockState(pos))) {
                                 VersionCompat.setBlockState(chunk, pos, beach.fillerBlock());
                                 pos.setY(--y);
+                            }
+
+                            BlockState sandstone = beach.fillerBlock().is(Blocks.SAND) ? BlockStates.SANDSTONE :
+                                beach.fillerBlock().is(Blocks.RED_SAND) ? BlockStates.RED_SANDSTONE : null;
+
+                            if (sandstone != null && surfaceProperties.generateSandstone()) {
+                                for (int depth = rand.nextInt(4);
+                                     depth > 0 && chunk.getBlockState(pos).is(this.defaultBlock.getBlock()); depth--) {
+                                    VersionCompat.setBlockState(chunk, pos, sandstone);
+                                    pos.setY(--y);
+                                }
                             }
                         }
                     }

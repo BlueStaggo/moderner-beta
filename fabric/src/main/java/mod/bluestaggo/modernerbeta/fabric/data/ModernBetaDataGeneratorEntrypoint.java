@@ -9,6 +9,8 @@ import mod.bluestaggo.modernerbeta.registry.ModernBetaResourceKeys;
 import mod.bluestaggo.modernerbeta.level.biome.ModernBetaBiomes;
 import mod.bluestaggo.modernerbeta.level.carver.configured.ModernBetaConfiguredCarvers;
 import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaNoiseGeneratorSettings;
+//? if >=26.3
+//import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaMaterialRules;
 import mod.bluestaggo.modernerbeta.level.feature.configured.ModernBetaConfiguredFeatures;
 import mod.bluestaggo.modernerbeta.level.feature.placed.ModernBetaPlacedFeatures;
 import mod.bluestaggo.modernerbeta.level.preset.ModernBetaWorldPresets;
@@ -62,6 +64,8 @@ public class ModernBetaDataGeneratorEntrypoint implements DataGeneratorEntrypoin
         //~ if >=26.3 'CONFIGURED_CARVER' -> 'CARVER'
         registryBuilder.add(Registries.CONFIGURED_CARVER, ModernBetaConfiguredCarvers::bootstrap);
         registryBuilder.add(Registries.BIOME, ModernBetaBiomes::bootstrap);
+        //? if >=26.3
+        //registryBuilder.add(Registries.MATERIAL_RULE, ModernBetaMaterialRules::bootstrap);
         registryBuilder.add(Registries.NOISE_SETTINGS, ModernBetaNoiseGeneratorSettings::bootstrap);
         registryBuilder.add(Registries.STRUCTURE, ModernBetaStructures::bootstrap);
         registryBuilder.add(Registries.WORLD_PRESET, ModernBetaWorldPresets::bootstrap);

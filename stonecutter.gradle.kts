@@ -164,12 +164,16 @@ stonecutter.parameters {
             replace("<NormalNoise.NoiseParameters>", "<NormalNoise>")
             replace("net.minecraft.world.level.levelgen.DensityFunction", "net.minecraft.world.level.levelgen.densityfunction.DensityFunction")
             replace("BiomeManager.NoiseBiomeSource", "net.minecraft.world.level.biome.BiomeResolver")
-            replace("SurfaceRules.RuleSource", "MaterialRule")
-            replace("SurfaceRules", "MaterialRules")
             replace("BlockStateProvider.simple", "BlockStateProvider.of")
         }
 
         regex(eval(current.version, ">=26.3")) {
+            replace("\\bSurfaceRules\\.RuleSource\\b", "MaterialRule", "\\bMaterialRule\\b", "SurfaceRules.RuleSource")
+            replace("\\bSurfaceRules\\.ConditionSource\\b", "MaterialCondition", "\\bMaterialCondition\\b", "SurfaceRules.ConditionSource")
+            replace("\\bSurfaceRules\\.Condition\\b", "ConditionEvaluator", "\\bConditionEvaluator\\b", "SurfaceRules.Condition")
+            replace("\\bSurfaceRules\\.Context\\b", "MaterialRuleContext", "\\bMaterialRuleContext\\b", "SurfaceRules.Context")
+            replace("\\bOverworldSurfaceRules\\b", "OverworldMaterialRules", "\\bOverworldMaterialRules\\b", "OverworldSurfaceRules")
+            replace("\\bSurfaceRules\\b", "MaterialRules", "\\bMaterialRules\\b", "SurfaceRules")
             replace("\\(EnvironmentAttributes.((?!CLOUD)[A-Z_]+)_COLOR, ([^()]+)\\)", "(EnvironmentAttributes.$1_COLOR, net.minecraft.util.ARGB.vector3fFromRGB24($2))",
                 "\\(EnvironmentAttributes.((?!CLOUD)[A-Z_]+)_COLOR, net.minecraft.util.ARGB.vector3fFromRGB24\\(([^()]+)\\)\\)", "(EnvironmentAttributes.$1_COLOR, $2)")
             replace("\\(EnvironmentAttributes.CLOUD_COLOR, ([^()]+)\\)", "(EnvironmentAttributes.CLOUD_COLOR, net.minecraft.util.ARGB.vector4fFromARGB32($1))",

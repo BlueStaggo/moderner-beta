@@ -32,6 +32,7 @@ import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.layers.LayerType
 import mod.bluestaggo.modernerbeta.level.biome.provider.fractal.predicates.BiomePredicateType;
 import mod.bluestaggo.modernerbeta.level.carver.ModernBetaCarvers;
 import mod.bluestaggo.modernerbeta.level.chunk.ModernBetaChunkGenerator;
+import mod.bluestaggo.modernerbeta.level.chunk.surface.ModernBetaSurfaceRules;
 import mod.bluestaggo.modernerbeta.level.feature.ModernBetaFoliagePlacers;
 import mod.bluestaggo.modernerbeta.level.feature.ModernBetaTrunkPlacers;
 import mod.bluestaggo.modernerbeta.level.feature.placement.ModernBetaPlacementTypes;
@@ -76,6 +77,8 @@ public class ModernerBeta {
         //~ if >=26.3 'CARVER' -> 'CARVER_TYPE'
         new Pair<>(BuiltInRegistries.CARVER, ModernBetaCarvers::register),
         new Pair<>(BuiltInRegistries.BIOME_SOURCE, ModernBetaBiomeSource::register),
+        //~ if >=26.3 'MATERIAL_CONDITION' -> 'MATERIAL_CONDITION_TYPE'
+        new Pair<>(BuiltInRegistries.MATERIAL_CONDITION, ModernBetaSurfaceRules::register),
         new Pair<>(BuiltInRegistries.CHUNK_GENERATOR, ModernBetaChunkGenerator::register)
     );
 

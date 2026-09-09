@@ -29,6 +29,11 @@ accessible field net/minecraft/world/level/levelgen/carver/CaveCarverConfigurati
 #? if <26.3
 accessible method net/minecraft/world/level/levelgen/NoiseChunk cachedClimateSampler (Lnet/minecraft/world/level/levelgen/NoiseRouter;Ljava/util/List;)Lnet/minecraft/world/level/biome/Climate$Sampler;
 
+#? if <26.3 {
+accessible class net/minecraft/world/level/levelgen/SurfaceRules$Context
+accessible class net/minecraft/world/level/levelgen/SurfaceRules$Condition
+#? }
+
 #? if >=26.2 {
 #accessible class net/minecraft/world/level/levelgen/NoiseRouterData$QuantizedSpaghettiRarity
 #? } else {

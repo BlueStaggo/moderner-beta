@@ -166,13 +166,13 @@ public final class ModernBetaMaterialRules {
         SurfaceRules.ConditionSource aboveWater = SurfaceRules.waterBlockCheck(0, 0);
         SurfaceRules.ConditionSource hole = SurfaceRules.hole();
 
-        SurfaceRules.ConditionSource woodedBadlandsTop = ModernBetaSurfaceRules.yBlockCheck(ModernBetaSurfaceRules.Height.SEA_LEVEL, 22, 2);
+        SurfaceRules.ConditionSource woodedBadlandsTop = ModernBetaSurfaceRules.yBlockCheck(ModernBetaSurfaceRules.Height.SEA_LEVEL, 23, 2);
         SurfaceRules.ConditionSource badlandsTop = SurfaceRules.yBlockCheck(VerticalAnchor.absolute(256), 0);
-        SurfaceRules.ConditionSource badlandsHeight = ModernBetaSurfaceRules.yStartCheck(ModernBetaSurfaceRules.Height.SEA_LEVEL, -1, -1);
-        SurfaceRules.ConditionSource badlandsMid = ModernBetaSurfaceRules.yStartCheck(ModernBetaSurfaceRules.Height.SEA_LEVEL, 2, 1);
-        SurfaceRules.ConditionSource mangrovePuddle = ModernBetaSurfaceRules.yBlockCheck(ModernBetaSurfaceRules.Height.SEA_LEVEL, -4, 0);
-        SurfaceRules.ConditionSource swampPuddle = ModernBetaSurfaceRules.yBlockCheck(ModernBetaSurfaceRules.Height.SEA_LEVEL, -2, 0);
-        SurfaceRules.ConditionSource aboveSeaLevel = ModernBetaSurfaceRules.yBlockCheck(ModernBetaSurfaceRules.Height.SEA_LEVEL, -1, 0);
+        SurfaceRules.ConditionSource badlandsHeight = ModernBetaSurfaceRules.yStartCheck(ModernBetaSurfaceRules.Height.SEA_LEVEL, 0, -1);
+        SurfaceRules.ConditionSource badlandsMid = ModernBetaSurfaceRules.yStartCheck(ModernBetaSurfaceRules.Height.SEA_LEVEL, 3, 1);
+        SurfaceRules.ConditionSource mangrovePuddle = ModernBetaSurfaceRules.yBlockCheck(ModernBetaSurfaceRules.Height.SEA_LEVEL, -3, 0);
+        SurfaceRules.ConditionSource swampPuddle = ModernBetaSurfaceRules.yBlockCheck(ModernBetaSurfaceRules.Height.SEA_LEVEL, -1, 0);
+        SurfaceRules.ConditionSource aboveSeaLevel = ModernBetaSurfaceRules.yBlockCheck(ModernBetaSurfaceRules.Height.SEA_LEVEL, 0, 0);
         SurfaceRules.ConditionSource aboveGravelBed = ModernBetaSurfaceRules.yBlockCheck(ModernBetaSurfaceRules.Height.GRAVEL_OCEAN_BED, 0, -1);
         SurfaceRules.ConditionSource generateSandstone = ModernBetaSurfaceRules.surfaceProperty(ModernBetaSurfaceRules.SurfaceProperty.GENERATE_SANDSTONE);
         SurfaceRules.ConditionSource gravelOceanBed = ModernBetaSurfaceRules.surfaceProperty(ModernBetaSurfaceRules.SurfaceProperty.GRAVEL_OCEAN_BED);
